@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { useThree, extend, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RigidBody, Physics } from "@react-three/rapier";
-import Yut from "./Yut";
 
 extend({ OrbitControls });
 
@@ -15,6 +14,12 @@ export default function Experience() {
   const yut3 = useRef();
   const yut4 = useRef();
   const yuts = [yut, yut2, yut3, yut4];
+  const positions = [
+    [0, 0, 0],
+    [0.5, 0, 0],
+    [1, 0, 0],
+    [1.5, 0, 0],
+  ];
 
   useFrame((state, delta) => {
     const angle = state.clock.elapsedTime;
@@ -35,24 +40,71 @@ export default function Experience() {
   }
 
   function yutThrow() {
-    for (let yut in yuts) {
-      yut.current.applyImpulse(
-        {
-          x: 0,
-          y: 0.04,
-          z: 0,
-        },
-        true
-      );
-      yut.current.applyTorqueImpulse(
-        {
-          x: 0.0004,
-          y: 0.0004,
-          z: 0,
-        },
-        true
-      );
-    }
+    console.log(yuts[0]);
+    yut.current.applyImpulse(
+      {
+        x: 0,
+        y: 0.04,
+        z: 0,
+      },
+      true
+    );
+    yut.current.applyTorqueImpulse(
+      {
+        x: 0.0004,
+        y: 0.0004,
+        z: 0,
+      },
+      true
+    );
+    yut2.current.applyImpulse(
+      {
+        x: 0,
+        y: 0.04,
+        z: 0,
+      },
+      true
+    );
+    yut2.current.applyTorqueImpulse(
+      {
+        x: 0.0004,
+        y: 0.0004,
+        z: 0,
+      },
+      true
+    );
+    yut3.current.applyImpulse(
+      {
+        x: 0,
+        y: 0.04,
+        z: 0,
+      },
+      true
+    );
+    yut3.current.applyTorqueImpulse(
+      {
+        x: 0.0004,
+        y: 0.0004,
+        z: 0,
+      },
+      true
+    );
+    yut4.current.applyImpulse(
+      {
+        x: 0,
+        y: 0.04,
+        z: 0,
+      },
+      true
+    );
+    yut4.current.applyTorqueImpulse(
+      {
+        x: 0.0004,
+        y: 0.0004,
+        z: 0,
+      },
+      true
+    );
   }
 
   function stars() {
@@ -87,16 +139,63 @@ export default function Experience() {
 
       <Physics>
         <group ref={groupRef}>{stars()}</group>
-        <mesh
-          type="fixed"
-          rotation={[-Math.PI * 0.5, 0, 0]}
-          position={[0, -0.5, 0]}
+        <RigidBody type="fixed">
+          <mesh position={[0, -0.5, 0]}>
+            <cylinderGeometry args={[3, 3, 1]}></cylinderGeometry>
+          </mesh>
+        </RigidBody>
+        <RigidBody
+          ref={yut}
+          position={[0, 1, 0]}
+          colliders="hull"
+          rotation={[Math.PI * 0.5, 0, 0]}
+          restitution={0.5}
+          friction={0.5}
         >
-          <circleGeometry args={[3]}></circleGeometry>
-        </mesh>
-        {[...Array(yuts.length)].map((ref, index) =>
-          Yut(yuts[index], yutThrow)
-        )}
+          <mesh castShadow onClick={yutThrow}>
+            <boxGeometry args={[0.1, 0.5, 0.1]} />
+            <meshStandardMaterial color="brown" />
+          </mesh>
+        </RigidBody>
+        <RigidBody
+          ref={yut2}
+          position={[1, 2, 0]}
+          colliders="hull"
+          rotation={[Math.PI * 0.5, 0, 0]}
+          restitution={0.5}
+          friction={0.5}
+        >
+          <mesh castShadow onClick={yutThrow}>
+            <boxGeometry args={[0.1, 0.5, 0.1]} />
+            <meshStandardMaterial color="brown" />
+          </mesh>
+        </RigidBody>
+        <RigidBody
+          ref={yut3}
+          position={[2, 3, 0]}
+          colliders="hull"
+          rotation={[Math.PI * 0.5, 0, 0]}
+          restitution={0.5}
+          friction={0.5}
+        >
+          <mesh castShadow onClick={yutThrow}>
+            <boxGeometry args={[0.1, 0.5, 0.1]} />
+            <meshStandardMaterial color="brown" />
+          </mesh>
+        </RigidBody>
+        <RigidBody
+          ref={yut4}
+          position={[0, 4, -1]}
+          colliders="hull"
+          rotation={[Math.PI * 0.5, 0, 0]}
+          restitution={0.5}
+          friction={0.5}
+        >
+          <mesh castShadow onClick={yutThrow}>
+            <boxGeometry args={[0.1, 0.5, 0.1]} />
+            <meshStandardMaterial color="brown" />
+          </mesh>
+        </RigidBody>
       </Physics>
     </>
   );
