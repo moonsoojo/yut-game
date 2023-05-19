@@ -61,10 +61,10 @@ export default function Experience() {
         <group ref={groupRef}>{stars()}</group>
         <RigidBody type="fixed" collision="hull">
           <mesh position={[0, -1, 0]}>
-            <cylinderGeometry args={[3, 3, 1]}></cylinderGeometry>
+            <cylinderGeometry args={[5, 5, 1]}></cylinderGeometry>
           </mesh>
         </RigidBody>
-        {Yuts()}
+        <Yuts />
       </Physics>
     </>
   );
