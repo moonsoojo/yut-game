@@ -54,14 +54,26 @@ export default function Experience() {
     <>
       <orbitControls args={[camera, gl.domElement]} />
 
-      <directionalLight position={[1, 2, 3]} intensity={0.3} color="white" />
+      <directionalLight
+        position={[1, 15, 3]}
+        intensity={1.5}
+        // color="white"
+        castShadow
+      />
       <ambientLight intensity={0.5} />
 
-      <Physics>
-        <group ref={groupRef}>{stars()}</group>
-        <RigidBody type="fixed" collision="hull">
-          <mesh position={[0, -1, 0]}>
-            <cylinderGeometry args={[5, 5, 1]}></cylinderGeometry>
+      <Physics gravity={[0, -100, 0]}>
+        {/* <group ref={groupRef}>{stars()}</group> */}
+        <RigidBody
+          type="fixed"
+          collision="hull"
+          restitution={0.01}
+          position={[0, -1, 0]}
+          friction={0.9}
+        >
+          <mesh receiveShadow>
+            <boxGeometry args={[50, 1, 50]} />
+            <meshStandardMaterial color="limegreen" />
           </mesh>
         </RigidBody>
         <Yuts />

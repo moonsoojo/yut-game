@@ -1,0 +1,47 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\moonsoo_jo\job\rhoman_aerospace\my-app\%Moonsoo Jo%\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add --dev r3f-perf
+
+PATH: 
+  C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310;C:\Users\Moonsoo Jo\AppData\Local\Git\cmd;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\nodejs\;C:\Users\Moonsoo Jo\.cargo\bin;C:\Users\Moonsoo Jo\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Moonsoo Jo\AppData\Local\GitHubDesktop\bin;C:\moonsoo_jo\job\rhoman_aerospace\my-app\%Moonsoo Jo%\AppData\Roaming\npm;C:\Program Files\Git\cmd;C:\Users\Moonsoo Jo\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.15.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\beat_rhino_studio\yut_game_2\yut-game\node_modules\@esbuild\win32-x64\esbuild.exe'
+
+npm manifest: 
+  {
+    "name": "threejs-journey-exercise",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build"
+    },
+    "devDependencies": {
+      "@vitejs/plugin-react": "3.0",
+      "vite": "^4.0.4"
+    },
+    "dependencies": {
+      "@react-three/drei": "^9.68.3",
+      "@react-three/fiber": "8.9",
+      "@react-three/rapier": "^0.15.1",
+      "react": "18.2",
+      "react-dom": "18.2",
+      "three": "^0.148.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
