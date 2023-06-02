@@ -1,8 +1,12 @@
 import { useRef } from "react";
 import { useThree, extend, useFrame } from "@react-three/fiber";
+import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
+import { useGLTF } from "@react-three/drei";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { RigidBody, Physics } from "@react-three/rapier";
 import Yuts from "./Yuts";
+import Star from "./Star";
+import Neptune from "./Neptune";
+import NeptuneRay from "./NeptuneRay";
 
 extend({ OrbitControls });
 
@@ -20,63 +24,144 @@ export default function Experience() {
 
   useFrame((state, delta) => {
     const angle = state.clock.elapsedTime;
-    // state.camera.position.x = Math.sin(angle) * 8;
-    // state.camera.position.z = Math.cos(angle) * 8;
-    // state.camera.lookAt(0, 0, 0);
-    // starRef.current.rotation.y += delta * 0.5;
-    // groupRef.current.rotation.y += delta * 0.5;
   });
 
-  function stars() {
+  function Tiles() {
     const numStars = 20;
-    let stars = [];
+    let tiles = [];
     const radius = 2;
+    const { nodes, materials } = useGLTF("/star.glb");
+
+    //circle
     for (let i = 0; i < numStars; i++) {
-      const star = (
-        <mesh
-          ref={starRef}
-          position={[
-            Math.sin((i * (Math.PI * 2)) / numStars) * radius,
-            0,
-            Math.cos((i * (Math.PI * 2)) / numStars) * radius,
-          ]}
-        >
-          <boxGeometry args={[0.1, 0.1, 0.1]} />
-          <meshStandardMaterial color="yellow" />
-        </mesh>
-      );
-      stars.push(star);
+      if (i == 0) {
+        tiles.push(
+          <mesh
+            castShadow
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+            ]}
+          >
+            <sphereGeometry args={[0.1, 32, 16]} />
+            <meshStandardMaterial color="red" />
+          </mesh>
+        );
+      } else if (i == 5) {
+        tiles.push(
+          <mesh
+            castShadow
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+            ]}
+          >
+            <sphereGeometry args={[0.1, 32, 16]} />
+            <meshStandardMaterial color="yellow" />
+          </mesh>
+        );
+      } else if (i == 10) {
+        tiles.push(
+          <mesh
+            castShadow
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+            ]}
+          >
+            <sphereGeometry args={[0.1, 32, 16]} />
+            <meshStandardMaterial color="green" />
+          </mesh>
+        );
+      } else if (i == 15) {
+        tiles.push(
+          <Neptune
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius - 1,
+            ]}
+          />
+        );
+      } else {
+        tiles.push(
+          <Star
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+            ]}
+            scale={0.1}
+            nodes={nodes}
+            materials={materials}
+          />
+        );
+      }
     }
-    return stars;
+
+    //shortcuts
+    const radiusShortcut1 = 1.3;
+    const radiusShortcut2 = 0.6;
+    for (let i = 0; i < numStars; i++) {
+      if (i == 0 || i == 5 || i == 10 || i == 15) {
+        tiles.push(
+          <Star
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1,
+            ]}
+            scale={0.1}
+            nodes={nodes}
+            materials={materials}
+          />
+        );
+        tiles.push(
+          <Star
+            position={[
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2,
+              0,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2,
+            ]}
+            scale={0.1}
+            nodes={nodes}
+            materials={materials}
+          />
+        );
+      }
+    }
+
+    return tiles;
   }
 
   return (
     <>
+      <color args={["#313557"]} attach="background" />
       <orbitControls args={[camera, gl.domElement]} />
 
-      <directionalLight
-        position={[1, 15, 3]}
-        intensity={1.5}
-        // color="white"
-        castShadow
-      />
+      <directionalLight position={[1, 10, 3]} intensity={3} castShadow />
       <ambientLight intensity={0.5} />
 
-      <Physics gravity={[0, -100, 0]}>
-        {/* <group ref={groupRef}>{stars()}</group> */}
+      <Physics maxVelocityIterations={10}>
         <RigidBody
           type="fixed"
-          collision="hull"
           restitution={0.01}
           position={[0, -1, 0]}
           friction={0.9}
         >
-          <mesh receiveShadow>
-            <boxGeometry args={[50, 1, 50]} />
-            <meshStandardMaterial color="limegreen" />
-          </mesh>
+          <CuboidCollider
+            args={[3.5, 0.5, 3.5]}
+            restitution={0.2}
+            friction={1}
+          />
         </RigidBody>
         <Yuts />
+        <Tiles />
+        {/* <Background />
+        <Scene /> */}
       </Physics>
     </>
   );
