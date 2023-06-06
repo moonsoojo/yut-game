@@ -1,5 +1,8 @@
-export default function star({ position, scale, nodes, materials }) {
-  
+import { useGLTF } from "@react-three/drei";
+
+export default function star({ position, scale }) {
+  const { nodes, materials } = useGLTF("/models/star.glb");
+
   return (
     <mesh
       castShadow

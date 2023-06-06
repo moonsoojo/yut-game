@@ -1,14 +1,11 @@
 import { useRef } from "react";
 import { useThree, extend, useFrame } from "@react-three/fiber";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import { useGLTF } from "@react-three/drei";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { CameraControls, useGLTF } from "@react-three/drei";
 import Yuts from "./Yuts";
 import Star from "./Star";
 import Neptune from "./Neptune";
-import NeptuneRay from "./NeptuneRay";
-
-extend({ OrbitControls });
+import Earth from "./Earth";
 
 export default function Experience() {
   const { camera, gl } = useThree();
@@ -30,32 +27,41 @@ export default function Experience() {
     const numStars = 20;
     let tiles = [];
     const radius = 2;
-    const { nodes, materials } = useGLTF("/star.glb");
 
     //circle
     for (let i = 0; i < numStars; i++) {
       if (i == 0) {
+        // tiles.push(
+        //   <mesh
+        //     castShadow
+        //     position={[
+        //       Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
+        //       0,
+        //       Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
+        //     ]}
+        //   >
+        //     <sphereGeometry args={[0.1, 32, 16]} />
+        //     <meshStandardMaterial color="green" />
+        //   </mesh>
+        // );
         tiles.push(
-          <mesh
-            castShadow
+          <Earth
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
               0,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
             ]}
-          >
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color="red" />
-          </mesh>
+            scale={0.14}
+          />
         );
       } else if (i == 5) {
         tiles.push(
           <mesh
             castShadow
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
               0,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
             ]}
           >
             <sphereGeometry args={[0.1, 32, 16]} />
@@ -67,36 +73,35 @@ export default function Experience() {
           <mesh
             castShadow
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
               0,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
             ]}
           >
             <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color="green" />
+            <meshStandardMaterial color="red" />
           </mesh>
         );
       } else if (i == 15) {
         tiles.push(
           <Neptune
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
               0,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius - 1,
+              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius + 0.15,
             ]}
+            scale={0.1}
           />
         );
       } else {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
               0,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radius,
+              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
             ]}
             scale={0.1}
-            nodes={nodes}
-            materials={materials}
           />
         );
       }
@@ -115,8 +120,6 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1,
             ]}
             scale={0.1}
-            nodes={nodes}
-            materials={materials}
           />
         );
         tiles.push(
@@ -127,8 +130,6 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2,
             ]}
             scale={0.1}
-            nodes={nodes}
-            materials={materials}
           />
         );
       }
@@ -140,9 +141,9 @@ export default function Experience() {
   return (
     <>
       <color args={["#313557"]} attach="background" />
-      <orbitControls args={[camera, gl.domElement]} />
+      {/* <CameraControls /> */}
 
-      <directionalLight position={[1, 10, 3]} intensity={3} castShadow />
+      <directionalLight position={[1, 10, 3]} intensity={1.3} castShadow />
       <ambientLight intensity={0.5} />
 
       <Physics maxVelocityIterations={10}>

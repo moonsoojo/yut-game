@@ -6,31 +6,31 @@ import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 
 export default function Neptune(props) {
-  const { nodes, materials } = useGLTF("/neptune.glb");
+  const { nodes, materials } = useGLTF("/models/neptune-2.glb");
   return (
     <group {...props} dispose={null}>
-      <group position={props.position} scale={0.1}>
+      <group position={props.position}>
         <mesh
           castShadow
           receiveShadow
-          geometry={nodes.Sphere_1.geometry}
+          geometry={nodes.Circle002_1.geometry}
+          material={materials["Material.003"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Circle002_2.geometry}
           material={materials.Material}
         />
         <mesh
           castShadow
           receiveShadow
-          geometry={nodes.Sphere_2.geometry}
+          geometry={nodes.Circle002_3.geometry}
           material={materials["Material.001"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Sphere_3.geometry}
-          material={materials["Material.003"]}
         />
       </group>
     </group>
   );
 }
 
-useGLTF.preload("/neptune.glb");
+useGLTF.preload("/neptune-2.glb");
