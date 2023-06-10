@@ -10,8 +10,8 @@ export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const { nodes, materials } = useGLTF("/models/yut (5).glb");
-  const nodesRhino = useGLTF("/models/yut-rhino.glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
+  const nodesRhino = useGLTF("/models/yut(2) (3).glb").nodes;
+  const materialsRhino = useGLTF("/models/yut(2) (3).glb").materials;
 
   const textureRegular = new THREE.TextureLoader().load("textures/dots2.png");
   const textureBackdo = new THREE.TextureLoader().load("textures/dots.png");
@@ -101,20 +101,12 @@ export default function Yuts(props) {
             <mesh
               castShadow
               receiveShadow
-              geometry={
-                index == 0
-                  ? nodesRhino.Cube002.geometry
-                  : nodes.Cube001.geometry
-              }
-              material={
-                index == 0
-                  ? materialsRhino["Material.002"]
-                  : materials["Material.004"]
-              }
+              geometry={nodes.Cube001.geometry}
+              material={materials["Material.004"]}
             />
-            {/* <meshBasicMaterial
+            <meshBasicMaterial
               map={index == 0 ? textureBackdo : textureRegular}
-            /> */}
+            />
           </RigidBody>
         );
       })}

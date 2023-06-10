@@ -1,6 +1,7 @@
 import "./style.css";
 import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
+// import Experience from "./ExperienceBackup";
 import Experience from "./Experience";
 import * as THREE from "three";
 import { CameraControls, KeyboardControls } from "@react-three/drei";

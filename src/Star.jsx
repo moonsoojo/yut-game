@@ -1,7 +1,16 @@
 import { useGLTF } from "@react-three/drei";
+import React, { useRef, useState } from "react";
 
-export default function star({ position, scale }) {
+export default function Star({ position, scale, hover, setHover }) {
   const { nodes, materials } = useGLTF("/models/star.glb");
+
+  const handleHover = () => {
+    if (!hover) {
+      setHover(true);
+    } else {
+      setHover(false);
+    }
+  };
 
   return (
     <mesh
@@ -11,6 +20,8 @@ export default function star({ position, scale }) {
       material={materials.GlowingStar}
       position={position}
       scale={scale}
+      onPointerEnter={handleHover}
+      onPointerOut={handleHover}
     />
   );
 }

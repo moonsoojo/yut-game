@@ -5,7 +5,7 @@ import { CameraControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import Yuts from "./Yuts";
 // import Star from "./Star";
-// import Neptune from "./Neptune";
+import Neptune from "./Neptune";
 // import Earth from "./Earth";
 
 export default function Experience() {
@@ -16,24 +16,15 @@ export default function Experience() {
   const [earth3Color, setEarth3Color] = useState({});
   const [earth4Color, setEarth4Color] = useState({});
   const [earth5Color, setEarth5Color] = useState({});
-  const [neptune1Color, setNeptune1Color] = useState({});
-  const [neptune2Color, setNeptune2Color] = useState({});
-  const [neptune3Color, setNeptune3Color] = useState({});
   const earth1Ref = useRef();
   const earth2Ref = useRef();
   const earth3Ref = useRef();
   const earth4Ref = useRef();
   const earth5Ref = useRef();
-  const earthWrapRef = useRef();
   const [earthHover, setEarthHover] = useState(false);
-  const [neptuneHover, setNeptuneHover] = useState(false);
-  const neptune1Ref = useRef();
-  const neptune2Ref = useRef();
-  const neptune3Ref = useRef();
 
   useEffect(() => {
     //can only set state variables
-    console.log(earth1Ref.current.material.color.toArray());
     setEarth1Color({
       r: earth1Ref.current.material.color.toArray()[0],
       g: earth1Ref.current.material.color.toArray()[1],
@@ -59,178 +50,63 @@ export default function Experience() {
       g: earth5Ref.current.material.color.toArray()[1],
       b: earth5Ref.current.material.color.toArray()[2],
     });
-    setNeptune1Color({
-      r: neptune1Ref.current.material.color.toArray()[0],
-      g: neptune1Ref.current.material.color.toArray()[1],
-      b: neptune1Ref.current.material.color.toArray()[2],
-    });
-    setNeptune2Color({
-      r: neptune2Ref.current.material.color.toArray()[0],
-      g: neptune2Ref.current.material.color.toArray()[1],
-      b: neptune2Ref.current.material.color.toArray()[2],
-    });
-    setNeptune3Color({
-      r: neptune3Ref.current.material.color.toArray()[0],
-      g: neptune3Ref.current.material.color.toArray()[1],
-      b: neptune3Ref.current.material.color.toArray()[2],
-    });
   }, []);
 
-  const handleStarPointerEnter = (event) => {
-    console.log("[handleStarPointerEnter]");
-    event.stopPropagation();
+  const handleStarPointerEnter = () => {
     if (!starHover) {
       setStarHover(true);
-      starRef.current.material.color = new THREE.Color("white");
+      starRef.current.material.color.set(`white`);
     }
   };
 
-  const handleStarPointerOut = (event) => {
-    console.log("[handleStarPointerOut]");
-    event.stopPropagation();
+  const handleStarPointerOut = () => {
     if (starHover) {
       setStarHover(false);
-      starRef.current.material.color = new THREE.Color("black");
+      starRef.current.material.color.set(`black`);
     }
   };
 
-  const handleEarthWrapPointerOver = (event) => {
-    console.log("[handleEarthWrapPointerOver]");
-    event.stopPropagation();
+  const handleEarthPointerEnter = () => {
     if (!earthHover) {
       setEarthHover(true);
-      earth1Ref.current.material.color = new THREE.Color(
-        earth1Color.r + 0.2,
-        earth1Color.g + 0.2,
-        earth1Color.b + 0.2
-      );
-      earth2Ref.current.material.color = new THREE.Color(
-        earth2Color.r + 0.2,
-        earth2Color.g + 0.2,
-        earth2Color.b + 0.2
-      );
-      earth3Ref.current.material.color = new THREE.Color(
-        earth3Color.r + 0.2,
-        earth3Color.g + 0.2,
-        earth3Color.b + 0.2
-      );
-      earth4Ref.current.material.color = new THREE.Color(
-        earth4Color.r + 0.2,
-        earth4Color.g + 0.2,
-        earth4Color.b + 0.2
-      );
-      earth5Ref.current.material.color = new THREE.Color(
-        earth5Color.r + 0.2,
-        earth5Color.g + 0.2,
-        earth5Color.b + 0.2
-      );
+      earth1Ref.current.material.color = new THREE.Color(`rgb(1, 1, 1)`);
+      earth2Ref.current.material.color = `rgb(1, 1, 1)`;
+      earth3Ref.current.material.color = `rgb(1, 1, 1)`;
+      earth4Ref.current.material.color = `rgb(1, 1, 1)`;
+      earth5Ref.current.material.color = `rgb(1, 1, 1)`;
     }
   };
 
-  const handleEarthWrapPointerOut = (event) => {
-    event.stopPropagation();
+  const handleEarthPointerOut = () => {
     if (earthHover) {
       setEarthHover(false);
       earth1Ref.current.material.color = new THREE.Color(
-        earth1Color.r,
-        earth1Color.g,
-        earth1Color.b
+        `rgb(${Math.ceil(earth1Color.r * 255)}, ${Math.ceil(
+          earth1Color.g * 255
+        )}, ${Math.ceil(earth1Color.b * 255)})`
       );
       earth2Ref.current.material.color = new THREE.Color(
-        earth2Color.r,
-        earth2Color.g,
-        earth2Color.b
+        `rgb(${Math.ceil(earth2Color.r * 255)}, ${Math.ceil(
+          earth2Color.g * 255
+        )}, ${Math.ceil(earth2Color.b * 255)})`
       );
       earth3Ref.current.material.color = new THREE.Color(
-        earth3Color.r,
-        earth3Color.g,
-        earth3Color.b
+        `rgb(${Math.ceil(earth3Color.r * 255)}, ${Math.ceil(
+          earth3Color.g * 255
+        )}, ${Math.ceil(earth3Color.b * 255)})`
       );
       earth4Ref.current.material.color = new THREE.Color(
-        earth4Color.r,
-        earth4Color.g,
-        earth4Color.b
+        `rgb(${Math.ceil(earth4Color.r * 255)}, ${Math.ceil(
+          earth4Color.g * 255
+        )}, ${Math.ceil(earth4Color.b * 255)})`
       );
       earth5Ref.current.material.color = new THREE.Color(
-        earth5Color.r,
-        earth5Color.g,
-        earth5Color.b
+        `rgb(${Math.ceil(earth5Color.r * 255)}, ${Math.ceil(
+          earth5Color.g * 255
+        )}, ${Math.ceil(earth5Color.b * 255)})`
       );
     }
   };
-
-  const handleEarthWrapPointerDown = (event) => {
-    event.stopPropagation();
-    if (earthHover) {
-      earth1Ref.current.material.color = new THREE.Color("black");
-      earth2Ref.current.material.color = new THREE.Color("black");
-      earth3Ref.current.material.color = new THREE.Color("black");
-      earth4Ref.current.material.color = new THREE.Color("black");
-      earth5Ref.current.material.color = new THREE.Color("black");
-    }
-  };
-
-  const handleNeptuneWrapPointerOver = (event) => {
-    console.log("handleNeptuneWrapPointerOver");
-    event.stopPropagation();
-    if (!neptuneHover) {
-      setNeptuneHover(true);
-      neptune1Ref.current.material.color = new THREE.Color(
-        neptune1Color.r + 0.2,
-        neptune1Color.g + 0.2,
-        neptune1Color.b + 0.2
-      );
-      neptune2Ref.current.material.color = new THREE.Color(
-        neptune2Color.r + 0.2,
-        neptune2Color.g + 0.2,
-        neptune2Color.b + 0.2
-      );
-      neptune3Ref.current.material.color = new THREE.Color(
-        neptune3Color.r + 0.2,
-        neptune3Color.g + 0.2,
-        neptune3Color.b + 0.2
-      );
-    }
-  };
-
-  const handleNeptuneWrapPointerOut = (event) => {
-    console.log("handleNeptuneWrapPointerOut");
-    event.stopPropagation();
-    if (neptuneHover) {
-      setNeptuneHover(false);
-      neptune1Ref.current.material.color = new THREE.Color(
-        neptune1Color.r,
-        neptune1Color.g,
-        neptune1Color.b
-      );
-      neptune2Ref.current.material.color = new THREE.Color(
-        neptune2Color.r,
-        neptune2Color.g,
-        neptune2Color.b
-      );
-      neptune3Ref.current.material.color = new THREE.Color(
-        neptune3Color.r,
-        neptune3Color.g,
-        neptune3Color.b
-      );
-    }
-  };
-
-  function EarthWrap({ position }) {
-    return (
-      <mesh
-        castShadow
-        position={[position[0], position[1], position[2]]}
-        ref={earthWrapRef}
-        onPointerOver={(event) => handleEarthWrapPointerOver(event)}
-        onPointerOut={(event) => handleEarthWrapPointerOut(event)}
-        onPointerDown={(event) => handleEarthWrapPointerDown(event)}
-        visible={false}
-      >
-        <sphereGeometry args={[0.2, 32, 16]} />
-      </mesh>
-    );
-  }
 
   function Earth({ position }) {
     const { nodes, materials } = useGLTF("/models/earth-round.glb");
@@ -238,6 +114,8 @@ export default function Experience() {
     return (
       <group scale={0.1} position={position}>
         <mesh
+          onPointerEnter={handleEarthPointerEnter}
+          onPointerOut={handleEarthPointerOut}
           castShadow
           receiveShadow
           geometry={nodes.low_poly_earth.geometry}
@@ -247,6 +125,8 @@ export default function Experience() {
           ref={earth1Ref}
         >
           <mesh
+            onPointerEnter={handleEarthPointerEnter}
+            onPointerOut={handleEarthPointerOut}
             castShadow
             receiveShadow
             geometry={nodes.Cylinder.geometry}
@@ -256,6 +136,8 @@ export default function Experience() {
             ref={earth2Ref}
           >
             <mesh
+              onPointerEnter={handleEarthPointerEnter}
+              onPointerOut={handleEarthPointerOut}
               castShadow
               receiveShadow
               geometry={nodes.Plane.geometry}
@@ -266,6 +148,8 @@ export default function Experience() {
             />
           </mesh>
           <mesh
+            onPointerEnter={handleEarthPointerEnter}
+            onPointerOut={handleEarthPointerOut}
             castShadow
             receiveShadow
             geometry={nodes.Mesh.geometry}
@@ -273,6 +157,8 @@ export default function Experience() {
             ref={earth4Ref}
           />
           <mesh
+            onPointerEnter={handleEarthPointerEnter}
+            onPointerOut={handleEarthPointerOut}
             castShadow
             receiveShadow
             geometry={nodes.Mesh_1.geometry}
@@ -296,54 +182,9 @@ export default function Experience() {
         position={position}
         scale={0.1}
         ref={starRef}
-        onPointerEnter={(event) => handleStarPointerEnter(event)}
-        onPointerOut={(event) => handleStarPointerOut(event)}
+        onPointerEnter={handleStarPointerEnter}
+        onPointerOut={handleStarPointerOut}
       />
-    );
-  }
-
-  function Neptune({ position }) {
-    const { nodes, materials } = useGLTF("/models/neptune-2.glb");
-
-    return (
-      <group dispose={null} scale={0.1} position={position}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002_1.geometry}
-          material={materials["Material.003"]}
-          ref={neptune1Ref}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002_2.geometry}
-          material={materials.Material}
-          ref={neptune2Ref}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002_3.geometry}
-          material={materials["Material.001"]}
-          ref={neptune3Ref}
-        />
-      </group>
-    );
-  }
-
-  function NeptuneWrap({ position }) {
-    return (
-      <mesh
-        castShadow
-        position={position}
-        ref={earthWrapRef}
-        onPointerOver={(event) => handleNeptuneWrapPointerOver(event)}
-        onPointerOut={(event) => handleNeptuneWrapPointerOut(event)}
-        visible={false} //fix
-      >
-        <sphereGeometry args={[0.23, 32, 16]} />
-      </mesh>
     );
   }
 
@@ -471,7 +312,7 @@ export default function Experience() {
       <directionalLight position={[1, 10, 3]} intensity={1.3} castShadow />
       <ambientLight intensity={0.5} />
 
-      <Physics maxVelocityIterations={10}>
+      <Physics debug maxVelocityIterations={10}>
         <RigidBody
           type="fixed"
           restitution={0.01}
@@ -497,28 +338,6 @@ export default function Experience() {
             Math.sin(((0 - 5) * (Math.PI * 2)) / 20) * 2,
             0,
             Math.cos(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-          // position={[0, 0, 0]}
-        />
-        <EarthWrap
-          position={[
-            Math.sin(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        <Neptune
-          position={[
-            Math.sin(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        <NeptuneWrap
-          position={[
-            Math.sin(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
           ]}
         />
         {/* <Tiles /> */}
