@@ -9,12 +9,10 @@ THREE.ColorManagement.legacyMode = false;
 export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
-  const { nodes, materials } = useGLTF("/models/yut (5).glb");
-  const nodesRhino = useGLTF("/models/yut(2) (3).glb").nodes;
-  const materialsRhino = useGLTF("/models/yut(2) (3).glb").materials;
-
-  const textureRegular = new THREE.TextureLoader().load("textures/dots2.png");
-  const textureBackdo = new THREE.TextureLoader().load("textures/dots.png");
+  const nodes = useGLTF("/models/yut-working-normal.glb").nodes;
+  const materials = useGLTF("/models/yut-working-normal.glb").materials;
+  const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
+  const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
 
   useEffect(() => {
     subscribeKeys(
@@ -38,6 +36,28 @@ export default function Yuts(props) {
     [0, 5, 0],
     [0, 7, 0],
   ];
+  const rotationsInitial = [
+    [
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+    ],
+    [
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+    ],
+    [
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+    ],
+    [
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+      getRandomNumberInRange(Math.PI, Math.PI),
+    ],
+  ];
   const positionsInHand = [
     { x: 0, y: 1, z: -0.3 },
     { x: 0, y: 1, z: -0.6 },
@@ -53,9 +73,9 @@ export default function Yuts(props) {
     let index = 0;
     for (const yut of yuts) {
       yut.current.setTranslation(positionsInHand[index], true);
-      const rotation = new THREE.Quaternion();
-      rotation.setFromEuler(new THREE.Euler(0, 0, 0));
-      yut.current.setRotation(rotation, true);
+      yut.current.rotation.x = getRandomNumberInRange(Math.PI, Math.PI);
+      yut.current.rotation.y = getRandomNumberInRange(Math.PI, Math.PI);
+      yut.current.rotation.z = getRandomNumberInRange(Math.PI, Math.PI);
       yut.current.userData = `yut${index}`;
       const yImpulse = getRandomNumberInRange(0.1, 0.02); // value between 0.15 and 0.25
       yut.current.applyImpulse(
@@ -86,11 +106,12 @@ export default function Yuts(props) {
           <RigidBody
             ref={ref}
             position={positionsInitial[index]}
+            rotation={rotationsInitial[index]}
             colliders="hull"
             restitution={0.3}
             friction={0.6}
             name={`yut${index}`}
-            rotation={[Math.PI, 0, 0]}
+            // rotation={[Math.PI, 0, 0]}
             onWake={() => console.log("woke")}
             onSleep={() => console.log("schleep")}
             linearDamping={0.99}
@@ -98,15 +119,22 @@ export default function Yuts(props) {
             scale={0.1}
             gravityScale={1.5}
           >
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Cube001.geometry}
-              material={materials["Material.004"]}
-            />
-            <meshBasicMaterial
-              map={index == 0 ? textureBackdo : textureRegular}
-            />
+            {index != 0 ? (
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cube001.geometry}
+                material={materials["Material.004"]}
+                position={[0, 0, -4.19]}
+              />
+            ) : (
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodesRhino.Cube003.geometry}
+                material={materialsRhino["Material.002"]}
+              />
+            )}
           </RigidBody>
         );
       })}

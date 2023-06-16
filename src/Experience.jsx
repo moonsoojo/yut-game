@@ -7,8 +7,14 @@ import Yuts from "./Yuts";
 // import Star from "./Star";
 // import Neptune from "./Neptune";
 // import Earth from "./Earth";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelection, setTiles } from "./state/gameSlice";
 
 export default function Experience() {
+  const tiles = useSelector((state) => state.game.tiles);
+  const dispatch = useDispatch();
+  const numTiles = 29;
+
   const starRef = useRef();
   const [starHover, setStarHover] = useState(false);
   const [earth1Color, setEarth1Color] = useState({});
@@ -30,10 +36,16 @@ export default function Experience() {
   const neptune1Ref = useRef();
   const neptune2Ref = useRef();
   const neptune3Ref = useRef();
+  const neptuneWrapRef = useRef();
+  const saturnWrapRef = useRef();
+  const marsWrapRef = useRef();
+  const tileRefs = [...Array(numTiles)];
+  for (let i = 0; i < numTiles; i++) {
+    tileRefs[i] = useRef();
+  }
 
   useEffect(() => {
     //can only set state variables
-    console.log(earth1Ref.current.material.color.toArray());
     setEarth1Color({
       r: earth1Ref.current.material.color.toArray()[0],
       g: earth1Ref.current.material.color.toArray()[1],
@@ -76,167 +88,134 @@ export default function Experience() {
     });
   }, []);
 
-  const handleStarPointerEnter = (event) => {
-    console.log("[handleStarPointerEnter]");
+  const handleStarPointerOver = (event, index) => {
     event.stopPropagation();
-    if (!starHover) {
-      setStarHover(true);
-      starRef.current.material.color = new THREE.Color("white");
-    }
+    tileRefs[index].current.material.color = new THREE.Color("white");
   };
 
-  const handleStarPointerOut = (event) => {
-    console.log("[handleStarPointerOut]");
+  const handleStarPointerOut = (event, index) => {
     event.stopPropagation();
-    if (starHover) {
-      setStarHover(false);
-      starRef.current.material.color = new THREE.Color("black");
+    tileRefs[index].current.material.color = new THREE.Color("yellow");
+  };
+
+  //game state
+  //render piece on tile
+  //click adds piece onto state
+  const handleStarClick = (event, index) => {
+    event.stopPropagation();
+    if (tiles[index] == null) {
+      let piece = { team: 0, count: 1 };
+      dispatch(setTiles({ index, piece }));
+    } else {
+      dispatch(setTiles({ index, piece: null }));
     }
   };
 
   const handleEarthWrapPointerOver = (event) => {
-    console.log("[handleEarthWrapPointerOver]");
     event.stopPropagation();
-    if (!earthHover) {
-      setEarthHover(true);
-      earth1Ref.current.material.color = new THREE.Color(
-        earth1Color.r + 0.2,
-        earth1Color.g + 0.2,
-        earth1Color.b + 0.2
-      );
-      earth2Ref.current.material.color = new THREE.Color(
-        earth2Color.r + 0.2,
-        earth2Color.g + 0.2,
-        earth2Color.b + 0.2
-      );
-      earth3Ref.current.material.color = new THREE.Color(
-        earth3Color.r + 0.2,
-        earth3Color.g + 0.2,
-        earth3Color.b + 0.2
-      );
-      earth4Ref.current.material.color = new THREE.Color(
-        earth4Color.r + 0.2,
-        earth4Color.g + 0.2,
-        earth4Color.b + 0.2
-      );
-      earth5Ref.current.material.color = new THREE.Color(
-        earth5Color.r + 0.2,
-        earth5Color.g + 0.2,
-        earth5Color.b + 0.2
-      );
-    }
+    earth1Ref.current.material.color = new THREE.Color(
+      earth1Color.r + 0.2,
+      earth1Color.g + 0.2,
+      earth1Color.b + 0.2
+    );
+    earth2Ref.current.material.color = new THREE.Color(
+      earth2Color.r + 0.2,
+      earth2Color.g + 0.2,
+      earth2Color.b + 0.2
+    );
+    earth3Ref.current.material.color = new THREE.Color(
+      earth3Color.r + 0.2,
+      earth3Color.g + 0.2,
+      earth3Color.b + 0.2
+    );
+    earth4Ref.current.material.color = new THREE.Color(
+      earth4Color.r + 0.2,
+      earth4Color.g + 0.2,
+      earth4Color.b + 0.2
+    );
+    earth5Ref.current.material.color = new THREE.Color(
+      earth5Color.r + 0.2,
+      earth5Color.g + 0.2,
+      earth5Color.b + 0.2
+    );
   };
 
   const handleEarthWrapPointerOut = (event) => {
     event.stopPropagation();
-    if (earthHover) {
-      setEarthHover(false);
-      earth1Ref.current.material.color = new THREE.Color(
-        earth1Color.r,
-        earth1Color.g,
-        earth1Color.b
-      );
-      earth2Ref.current.material.color = new THREE.Color(
-        earth2Color.r,
-        earth2Color.g,
-        earth2Color.b
-      );
-      earth3Ref.current.material.color = new THREE.Color(
-        earth3Color.r,
-        earth3Color.g,
-        earth3Color.b
-      );
-      earth4Ref.current.material.color = new THREE.Color(
-        earth4Color.r,
-        earth4Color.g,
-        earth4Color.b
-      );
-      earth5Ref.current.material.color = new THREE.Color(
-        earth5Color.r,
-        earth5Color.g,
-        earth5Color.b
-      );
-    }
-  };
-
-  const handleEarthWrapPointerDown = (event) => {
-    event.stopPropagation();
-    if (earthHover) {
-      earth1Ref.current.material.color = new THREE.Color("black");
-      earth2Ref.current.material.color = new THREE.Color("black");
-      earth3Ref.current.material.color = new THREE.Color("black");
-      earth4Ref.current.material.color = new THREE.Color("black");
-      earth5Ref.current.material.color = new THREE.Color("black");
-    }
-  };
-
-  const handleNeptuneWrapPointerOver = (event) => {
-    console.log("handleNeptuneWrapPointerOver");
-    event.stopPropagation();
-    if (!neptuneHover) {
-      setNeptuneHover(true);
-      neptune1Ref.current.material.color = new THREE.Color(
-        neptune1Color.r + 0.2,
-        neptune1Color.g + 0.2,
-        neptune1Color.b + 0.2
-      );
-      neptune2Ref.current.material.color = new THREE.Color(
-        neptune2Color.r + 0.2,
-        neptune2Color.g + 0.2,
-        neptune2Color.b + 0.2
-      );
-      neptune3Ref.current.material.color = new THREE.Color(
-        neptune3Color.r + 0.2,
-        neptune3Color.g + 0.2,
-        neptune3Color.b + 0.2
-      );
-    }
-  };
-
-  const handleNeptuneWrapPointerOut = (event) => {
-    console.log("handleNeptuneWrapPointerOut");
-    event.stopPropagation();
-    if (neptuneHover) {
-      setNeptuneHover(false);
-      neptune1Ref.current.material.color = new THREE.Color(
-        neptune1Color.r,
-        neptune1Color.g,
-        neptune1Color.b
-      );
-      neptune2Ref.current.material.color = new THREE.Color(
-        neptune2Color.r,
-        neptune2Color.g,
-        neptune2Color.b
-      );
-      neptune3Ref.current.material.color = new THREE.Color(
-        neptune3Color.r,
-        neptune3Color.g,
-        neptune3Color.b
-      );
-    }
-  };
-
-  function EarthWrap({ position }) {
-    return (
-      <mesh
-        castShadow
-        position={[position[0], position[1], position[2]]}
-        ref={earthWrapRef}
-        onPointerOver={(event) => handleEarthWrapPointerOver(event)}
-        onPointerOut={(event) => handleEarthWrapPointerOut(event)}
-        onPointerDown={(event) => handleEarthWrapPointerDown(event)}
-        visible={false}
-      >
-        <sphereGeometry args={[0.2, 32, 16]} />
-      </mesh>
+    earth1Ref.current.material.color = new THREE.Color(
+      earth1Color.r,
+      earth1Color.g,
+      earth1Color.b
     );
-  }
+    earth2Ref.current.material.color = new THREE.Color(
+      earth2Color.r,
+      earth2Color.g,
+      earth2Color.b
+    );
+    earth3Ref.current.material.color = new THREE.Color(
+      earth3Color.r,
+      earth3Color.g,
+      earth3Color.b
+    );
+    earth4Ref.current.material.color = new THREE.Color(
+      earth4Color.r,
+      earth4Color.g,
+      earth4Color.b
+    );
+    earth5Ref.current.material.color = new THREE.Color(
+      earth5Color.r,
+      earth5Color.g,
+      earth5Color.b
+    );
+  };
+
+  const handleNeptuneWrapPointerOver = (event, index) => {
+    event.stopPropagation();
+    neptune1Ref.current.material.color = new THREE.Color(
+      neptune1Color.r + 0.2,
+      neptune1Color.g + 0.2,
+      neptune1Color.b + 0.2
+    );
+    neptune2Ref.current.material.color = new THREE.Color(
+      neptune2Color.r + 0.2,
+      neptune2Color.g + 0.2,
+      neptune2Color.b + 0.2
+    );
+    neptune3Ref.current.material.color = new THREE.Color(
+      neptune3Color.r + 0.2,
+      neptune3Color.g + 0.2,
+      neptune3Color.b + 0.2
+    );
+    console.log("[handleNeptuneWrapPointerOver] index", index);
+    // dispatch(setSelection(index));
+  };
+
+  const handleNeptuneWrapPointerOut = (event, index) => {
+    event.stopPropagation();
+    neptune1Ref.current.material.color = new THREE.Color(
+      neptune1Color.r,
+      neptune1Color.g,
+      neptune1Color.b
+    );
+    neptune2Ref.current.material.color = new THREE.Color(
+      neptune2Color.r,
+      neptune2Color.g,
+      neptune2Color.b
+    );
+    neptune3Ref.current.material.color = new THREE.Color(
+      neptune3Color.r,
+      neptune3Color.g,
+      neptune3Color.b
+    );
+    console.log("[handleNeptuneWrapPointerOut]", tiles);
+    // dispatch(setSelection(-1));
+  };
 
   function Earth({ position }) {
     const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
     return (
-      <group scale={0.1} position={position}>
+      <group scale={0.15} position={position}>
         <mesh
           castShadow
           receiveShadow
@@ -284,21 +263,52 @@ export default function Experience() {
     );
   }
 
-  function Star({ position }) {
-    const { nodes, materials } = useGLTF("/models/star-yellow.glb");
-
+  function EarthWrap({ position }) {
     return (
       <mesh
         castShadow
-        receiveShadow
-        geometry={nodes.star.geometry}
-        material={materials.GlowingStar}
         position={position}
-        scale={0.1}
-        ref={starRef}
-        onPointerEnter={(event) => handleStarPointerEnter(event)}
-        onPointerOut={(event) => handleStarPointerOut(event)}
-      />
+        ref={earthWrapRef}
+        onPointerOver={(event) => handleEarthWrapPointerOver(event)}
+        onPointerOut={(event) => handleEarthWrapPointerOut(event)}
+        onPointerDown={(event) => handleEarthWrapPointerDown(event)}
+        visible={false}
+      >
+        <sphereGeometry args={[0.27, 32, 16]} />
+      </mesh>
+    );
+  }
+
+  function Star({ position, index }) {
+    const { nodes, materials } = useGLTF("/models/star-yellow.glb");
+
+    return (
+      <group>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.star.geometry}
+          position={position}
+          scale={0.1}
+          ref={tileRefs[index]}
+          onPointerEnter={(event) => handleStarPointerOver(event, index)}
+          onPointerOut={(event) => handleStarPointerOut(event, index)}
+          onClick={(event) => handleStarClick(event, index)}
+        >
+          <meshStandardMaterial color={"yellow"} />
+        </mesh>
+        {tiles[index] != null ? (
+          <mesh
+            castShadow
+            position={[position[0], position[1] + 0.5, position[2]]}
+          >
+            <sphereGeometry args={[0.1, 32, 16]} />
+            <meshStandardMaterial color={"red"} />
+          </mesh>
+        ) : (
+          <></>
+        )}
+      </group>
     );
   }
 
@@ -332,18 +342,97 @@ export default function Experience() {
     );
   }
 
-  function NeptuneWrap({ position }) {
+  function NeptuneWrap({ position, index }) {
     return (
       <mesh
         castShadow
         position={position}
-        ref={earthWrapRef}
-        onPointerOver={(event) => handleNeptuneWrapPointerOver(event)}
-        onPointerOut={(event) => handleNeptuneWrapPointerOut(event)}
-        visible={false} //fix
+        ref={neptuneWrapRef}
+        onPointerOver={(event) => handleNeptuneWrapPointerOver(event, index)}
+        onPointerOut={(event) => handleNeptuneWrapPointerOut(event, index)}
+        visible={false}
       >
         <sphereGeometry args={[0.23, 32, 16]} />
       </mesh>
+    );
+  }
+
+  function Saturn({ position }) {
+    const { nodes, materials } = useGLTF("/models/Saturn 2.glb");
+    return (
+      <group dispose={null} position={position}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Sphere.geometry}
+          material={materials["Saturn 2"]}
+          scale={0.15}
+        >
+          <group scale={0.63}>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle_1.geometry}
+              material={materials["Material.003"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle_2.geometry}
+              material={materials["Material.004"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle_3.geometry}
+              material={materials["Material.005"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle_4.geometry}
+              material={materials["Material.006"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle_5.geometry}
+              material={materials["Material.007"]}
+            />
+          </group>
+        </mesh>
+      </group>
+    );
+  }
+
+  function SaturnWrap({ position, index }) {
+    return (
+      <mesh
+        castShadow
+        position={position}
+        ref={saturnWrapRef}
+        // onPointerOver={(event) => handleSaturnPointerOver(event, index)}
+        // onPointerOut={(event) => handleSaturnWrapPointerOut(event, index)}
+        visible={false}
+      >
+        <sphereGeometry args={[0.23, 32, 16]} />
+      </mesh>
+    );
+  }
+
+  function Mars({ position }) {
+    const { nodes, materials } = useGLTF("/models/Mars 3.glb");
+    return (
+      <group dispose={null}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Mars.geometry}
+          material={materials.Mars}
+          position={position}
+          scale={0.2}
+        />
+      </group>
     );
   }
 
@@ -354,82 +443,40 @@ export default function Experience() {
 
     //circle
     for (let i = 0; i < numStars; i++) {
+      let position = [
+        Math.cos(((i - 10) * (Math.PI * 2)) / numStars) * radius,
+        0,
+        Math.sin(((i - 10) * (Math.PI * 2)) / numStars) * radius,
+      ];
       if (i == 0) {
         tiles.push(
-          <Earth
-            position={[
-              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              0,
-              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-            ]}
-            scale={0.14}
-          />
+          <group>
+            <Earth position={position} index={i} />
+            <EarthWrap position={position} index={i} />
+          </group>
         );
       } else if (i == 5) {
         tiles.push(
-          <mesh
-            castShadow
-            position={[
-              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              0,
-              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-            ]}
-          >
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color="yellow" />
-          </mesh>
+          <group>
+            <Neptune position={position} />
+            <NeptuneWrap position={position} index={i} />
+          </group>
         );
       } else if (i == 10) {
         tiles.push(
-          <mesh
-            castShadow
-            position={[
-              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              0,
-              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-            ]}
-          >
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color="red" />
-          </mesh>
+          <group>
+            <Mars position={position} />
+          </group>
         );
       } else if (i == 15) {
         tiles.push(
-          <Neptune
-            position={[
-              Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              0,
-              Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius + 0.15,
-            ]}
-            scale={0.1}
-          />
+          <group>
+            <Saturn position={position} />
+            <SaturnWrap position={position} />
+          </group>
         );
       } else {
-        if (i == 1) {
-          tiles.push(
-            <Star
-              position={[
-                Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-                0,
-                Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              ]}
-              scale={0.1}
-              hover={star1Hover}
-              setHover={setStar1Hover}
-            />
-          );
-        } else {
-          tiles.push(
-            <Star
-              position={[
-                Math.sin(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-                0,
-                Math.cos(((i - 5) * (Math.PI * 2)) / numStars) * radius,
-              ]}
-              scale={0.1}
-            />
-          );
-        }
+        tiles.push(<Star position={position} index={i} />);
       }
     }
 
@@ -437,6 +484,21 @@ export default function Experience() {
     const radiusShortcut1 = 1.3;
     const radiusShortcut2 = 0.6;
     for (let i = 0; i < numStars; i++) {
+      let indexShortcut1;
+      let indexShortcut2;
+      if (i == 0) {
+        indexShortcut1 = 28;
+        indexShortcut2 = 27;
+      } else if (i == 5) {
+        indexShortcut1 = 20;
+        indexShortcut2 = 21;
+      } else if (i == 10) {
+        indexShortcut1 = 24;
+        indexShortcut2 = 25;
+      } else if (i == 15) {
+        indexShortcut1 = 23;
+        indexShortcut2 = 22;
+      }
       if (i == 0 || i == 5 || i == 10 || i == 15) {
         tiles.push(
           <Star
@@ -446,6 +508,7 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1,
             ]}
             scale={0.1}
+            index={indexShortcut1}
           />
         );
         tiles.push(
@@ -456,6 +519,7 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2,
             ]}
             scale={0.1}
+            index={indexShortcut2}
           />
         );
       }
@@ -485,43 +549,7 @@ export default function Experience() {
           />
         </RigidBody>
         <Yuts />
-        <Star
-          position={[
-            Math.sin(((1 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((1 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        <Earth
-          position={[
-            Math.sin(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-          // position={[0, 0, 0]}
-        />
-        <EarthWrap
-          position={[
-            Math.sin(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((0 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        <Neptune
-          position={[
-            Math.sin(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        <NeptuneWrap
-          position={[
-            Math.sin(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-            0,
-            Math.cos(((-1 - 5) * (Math.PI * 2)) / 20) * 2,
-          ]}
-        />
-        {/* <Tiles /> */}
+        <Tiles />
         {/* <Background />
         <Scene /> */}
       </Physics>
