@@ -358,14 +358,15 @@ export default function Experience() {
   }
 
   function Saturn({ position }) {
-    const { nodes, materials } = useGLTF("/models/Saturn 2.glb");
+    const { nodes, materials } = useGLTF("/models/Saturn 3.glb");
     return (
-      <group dispose={null} position={position}>
+      <group dispose={null}>
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Sphere.geometry}
           material={materials["Saturn 2"]}
+          position={position}
           scale={0.15}
         >
           <group scale={0.63}>
@@ -421,7 +422,7 @@ export default function Experience() {
   }
 
   function Mars({ position }) {
-    const { nodes, materials } = useGLTF("/models/Mars 3.glb");
+    const { nodes, materials } = useGLTF("/models/Mars 4.glb");
     return (
       <group dispose={null}>
         <mesh
@@ -431,7 +432,7 @@ export default function Experience() {
           material={materials.Mars}
           position={position}
           scale={0.2}
-        />
+        ></mesh>
       </group>
     );
   }
