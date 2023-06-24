@@ -21,7 +21,7 @@
     "r3f-perf": "^7.1.2",
     "react": "18.2",
     "react-dom": "18.2",
-    "react-redux": "^8.0.7",
+    "react-redux": "^8.1.1",
     "three": "^0.148.0"
   }
 }

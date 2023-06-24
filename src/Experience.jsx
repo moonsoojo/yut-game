@@ -38,7 +38,7 @@ export default function Experience() {
   const neptune3Ref = useRef();
   const neptuneWrapRef = useRef();
   const saturnWrapRef = useRef();
-  const marsWrapRef = useRef();
+  const ufoGlassRef = useRef();
   const tileRefs = [...Array(numTiles)];
   for (let i = 0; i < numTiles; i++) {
     tileRefs[i] = useRef();
@@ -86,6 +86,7 @@ export default function Experience() {
       g: neptune3Ref.current.material.color.toArray()[1],
       b: neptune3Ref.current.material.color.toArray()[2],
     });
+    ufoGlassRef.current.material.opacity = 0.3
   }, []);
 
   const handleStarPointerOver = (event, index) => {
@@ -297,14 +298,22 @@ export default function Experience() {
         >
           <meshStandardMaterial color={"yellow"} />
         </mesh>
-        {tiles[index] != null ? (
-          <mesh
-            castShadow
-            position={[position[0], position[1] + 0.5, position[2]]}
-          >
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color={"red"} />
-          </mesh>
+        {(tiles[index] != null && tiles[index].team == 0) ? (
+          <>
+          <Ufo position={[position[0], position[1] + 0.4, position[2] - 0.1]} />
+          <Ufo position={[position[0], position[1] + 0.4, position[2] + 0.1]} />
+          <Ufo position={[position[0]+0.2, position[1] + 0.4, position[2] - 0.1]} />
+          <Ufo position={[position[0]+0.2, position[1] + 0.4, position[2] + 0.1]} />
+          </>
+          
+        ) : (
+          <></>
+        )}
+        {(tiles[index] != null && tiles[index].team == 1) ? (
+          <><Rocket position={[position[0], position[1] + 0.6, position[2] - 0.2]} />
+          <Rocket position={[position[0], position[1] + 0.6, position[2] - 0.4]} />
+          <Rocket position={[position[0]-0.25, position[1] + 0.6, position[2] - 0.2]} />
+          <Rocket position={[position[0]-0.25, position[1] + 0.6, position[2] - 0.4]} /></>
         ) : (
           <></>
         )}
@@ -437,10 +446,436 @@ export default function Experience() {
     );
   }
 
+  function Rocket({ position }) {
+    const { nodes, materials } = useGLTF("/models/rocket-with-astronaut.glb");
+    return (
+      <group dispose={null}>
+        <group
+          position={position}
+          rotation={[Math.PI *3/4, 0, -Math.PI]}
+          scale={0.007}
+        >
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle007.geometry}
+            material={materials["Ship White"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle007_1.geometry}
+            material={materials["Ship red"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle007_2.geometry}
+            material={materials["Alien Black"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle003.geometry}
+            material={materials["Ship red"]}
+            position={[-6.703, -24.668, -6.925]}
+            rotation={[0.806, -0.595, 2.119]}
+            scale={18.152}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle005.geometry}
+            material={materials["Ship red"]}
+            position={[0.008, -48.617, 12.536]}
+            rotation={[0.009, -1.571, 0]}
+            scale={[1.225, 1.376, 1.225]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle006.geometry}
+            material={materials["Ship red"]}
+            position={[12.544, -48.617, 0]}
+            rotation={[0, 0, -0.009]}
+            scale={[1.225, 1.376, 1.225]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle008.geometry}
+            material={materials["Astronaut red"]}
+            position={[-8.273, -26.198, -2.835]}
+            rotation={[0.634, 0.103, Math.PI / 2]}
+            scale={0.33}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cube.geometry}
+            material={nodes.Cube.material}
+            position={[-7.987, -26.625, -3.186]}
+            rotation={[0.634, -1.467, Math.PI / 2]}
+            scale={8.171}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Icosphere.geometry}
+            material={materials.Fire}
+            position={[0.008, -50.335, 0]}
+            rotation={[0.024, 1.289, 0]}
+            scale={3.393}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Plane.geometry}
+            material={materials["Ship red"]}
+            position={[0.008, -43.911, 6.028]}
+            rotation={[0.702, 0, Math.PI / 2]}
+            scale={13.763}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Plane001.geometry}
+            material={materials["Ship red"]}
+            position={[6.036, -43.911, 0]}
+            rotation={[Math.PI / 2, 0.869, 0]}
+            scale={13.763}
+          />
+          <group
+            position={[-6.539, -22.012, -9.453]}
+            rotation={[-0.936, -Math.PI / 2, 0]}
+            scale={4.202}
+          >
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube006_1.geometry}
+              material={materials.Black}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube006_2.geometry}
+              material={materials["Astro White"]}
+            />
+          </group>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube007.geometry}
+            material={materials["Astro White"]}
+            position={[-6.539, -18.893, -7.157]}
+            rotation={[-0.936, -1.571, 0]}
+            scale={[-0.79, -1.12, -1.12]}
+          />
+          <group
+            position={[-5.718, -24.503, -6.068]}
+            rotation={[-0.936, -Math.PI / 2, 0]}
+            scale={[2.608, 2.608, 2.062]}
+          >
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube008_1.geometry}
+              material={materials["Astronaut red"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube008_2.geometry}
+              material={materials["Astro White"]}
+            />
+          </group>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube009.geometry}
+            material={materials["Astro White"]}
+            position={[-5.718, -26.617, -3.197]}
+            rotation={[-0.936, -Math.PI / 2, 0]}
+            scale={[2.548, 2.548, 2.014]}
+          />
+          <group
+            position={[-5.718, -27.179, -2.433]}
+            rotation={[-0.936, -Math.PI / 2, 0]}
+            scale={10.73}
+          >
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube010_1.geometry}
+              material={materials["Astronaut red"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Roundcube010_2.geometry}
+              material={materials["Astro White"]}
+            />
+          </group>
+        </group>
+      </group>
+    );
+  }
+
+  function Ufo({ position }) {
+    const { nodes, materials } = useGLTF("/models/ufo.glb");
+    return (
+      <group dispose={null}>
+        <group position={position} scale={0.2} rotation={[0, Math.PI/2, 0]}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024_1.geometry}
+            material={materials.White}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024_2.geometry}
+            material={materials.Blue}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024_3.geometry}
+            material={materials.Grey}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024_4.geometry}
+            material={materials["Alien Black"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024_5.geometry}
+            material={materials["Inside Grey"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle.geometry}
+            material={materials["Panel Grey"]}
+            position={[-0.164, -0.051, 0.411]}
+            scale={[0.015, 0.047, 0.015]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle002.geometry}
+            material={materials.Blue}
+            position={[0, 0, 0.765]}
+            scale={0.087}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle013.geometry}
+            material={materials["Inside Grey"]}
+            position={[0, -0.051, 0]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Circle024.geometry}
+            material={materials.Blue}
+            position={[0.765, 0, 0]}
+            rotation={[0, 1.571, 0]}
+            scale={0.087}
+          />
+          <group position={[0, -0.051, 0]} rotation={[0, -0.365, 0]}>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle038.geometry}
+              material={materials["Panel Grey"]}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle038_1.geometry}
+              material={materials.red}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Circle038_2.geometry}
+              material={materials.Green}
+            />
+          </group>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.NurbsPath002.geometry}
+            material={materials["Alien Black"]}
+            position={[0.001, 0.182, 0.375]}
+            scale={0.37}
+          />
+          {/* ball front right */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube001.geometry}
+            material={materials.Blue}
+            position={[0.252, -0.592, 0.252]}
+            scale={0.128}
+          /> 
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube002.geometry}
+            material={materials["Blue Alien"]}
+            position={[0, 0.492, 0.138]}
+            scale={0.299}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube003.geometry}
+            material={materials["White Alien"]}
+            position={[0, 0.096, 0.125]}
+            scale={0.104}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube004.geometry}
+            material={materials["White Alien"]}
+            position={[0.138, 0.026, 0.324]}
+            rotation={[1.869, -0.449, -0.197]}
+            scale={[-0.037, -0.043, -0.037]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube005.geometry}
+            material={materials["Blue Alien"]}
+            position={[0.163, -0.006, 0.397]}
+            rotation={[2.426, -1.563, -2.477]}
+            scale={[0.029, 0.042, 0.042]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube027.geometry}
+            material={materials["Blue Alien"]}
+            position={[0.142, -0.022, 0.381]}
+            rotation={[-2.03, -1.157, -0.683]}
+            scale={[0.01, 0.023, 0.014]}
+          />
+          {/* ball front left */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube028.geometry}
+            material={materials.Blue}
+            position={[-0.252, -0.592, 0.252]}
+            scale={0.128}
+          />
+          {/* ball back right */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube029.geometry}
+            material={materials.Blue}
+            position={[0.252, -0.592, -0.252]}
+            scale={0.128}
+          />
+          {/* ball back left */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube030.geometry}
+            material={materials.Blue}
+            position={[-0.252, -0.592, -0.252]}
+            scale={0.128}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube031.geometry}
+            material={materials["White Alien"]}
+            position={[-0.127, 0.026, 0.326]}
+            rotation={[-1.107, 0.274, -0.261]}
+            scale={[0.037, 0.043, 0.037]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube032.geometry}
+            material={materials["Blue Alien"]}
+            position={[-0.165, 0.007, 0.389]}
+            rotation={[-1.107, 0.274, -0.261]}
+            scale={[0.029, 0.042, 0.042]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube033.geometry}
+            material={materials["Blue Alien"]}
+            position={[-0.139, 0.023, 0.389]}
+            rotation={[-1.294, 0.655, -0.208]}
+            scale={[0.01, 0.023, 0.014]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sphere.geometry}
+            material={materials["Panel Grey"]}
+            position={[-0.164, 0.062, 0.411]}
+            scale={-0.041}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sphere001.geometry}
+            material={materials["Eyes Black"]}
+            position={[0.138, 0.361, 0.37]}
+            rotation={[1.401, -0.566, -0.511]}
+            scale={[-0.08, -0.052, -0.115]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sphere002.geometry}
+            material={materials["Eyes White"]}
+            position={[0.154, 0.387, 0.415]}
+            rotation={[1.489, -0.121, -0.36]}
+            scale={[0.037, 0.012, 0.037]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sphere003.geometry}
+            material={materials["Eyes White"]}
+            position={[0.115, 0.308, 0.418]}
+            rotation={[1.895, -0.107, -0.153]}
+            scale={[0.017, 0.006, 0.017]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Sphere008.geometry}
+            material={materials.Glass}
+            position={[0, 0.33, 0]}
+            scale={0.404}
+            ref={ufoGlassRef}
+          />
+        </group>
+      </group>
+    );
+  }
+
   function Tiles() {
     const numStars = 20;
     let tiles = [];
-    const radius = 2;
+    const radius = 3;
 
     //circle
     for (let i = 0; i < numStars; i++) {
@@ -482,8 +917,8 @@ export default function Experience() {
     }
 
     //shortcuts
-    const radiusShortcut1 = 1.3;
-    const radiusShortcut2 = 0.6;
+    const radiusShortcut1 = 1.8;
+    const radiusShortcut2 = 0.8;
     for (let i = 0; i < numStars; i++) {
       let indexShortcut1;
       let indexShortcut2;
