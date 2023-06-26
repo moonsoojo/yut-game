@@ -21,13 +21,12 @@ root.render(
           toneMapping: THREE.ACESFilmicToneMapping,
           outputEncoding: THREE.sRGBEncoding,
         }}
-        camera={{ fov: 45, near: 0.1, far: 200, position: [5.5, 7, -2] }}
+        camera={{ fov: 45, near: 0.1, far: 200, position: [6, 7.5, -2.5] }}
         // pan: move about a plane
       >
-        <CameraControls />
+        
         <Experience />
-        <Perf />
-        {/* <Galaxy /> */}
+        {/* <Perf /> */}
       </Canvas>
     </KeyboardControls>
   </Provider>

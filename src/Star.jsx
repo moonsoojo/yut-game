@@ -1,27 +1,23 @@
 import { useGLTF } from "@react-three/drei";
-import React, { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import RocketUpright from "./RocketUpright";
+import Rocket from "./Rocket";
 
-export default function Star({ position, scale, hover, setHover }) {
-  const { nodes, materials } = useGLTF("/models/star.glb");
-
-  const handleHover = () => {
-    if (!hover) {
-      setHover(true);
-    } else {
-      setHover(false);
-    }
-  };
+export default function Star({ position, index }) {
+  const { nodes, materials } = useGLTF("/models/star-yellow.glb");
 
   return (
-    <mesh
-      castShadow
-      receiveShadow
-      geometry={nodes.star.geometry}
-      material={materials.GlowingStar}
-      position={position}
-      scale={scale}
-      onPointerEnter={handleHover}
-      onPointerOut={handleHover}
-    />
+    <group>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.star.geometry}
+        position={position}
+        scale={0.1}
+      >
+        <meshStandardMaterial color={"yellow"} />
+      </mesh>
+      {/* {(index == 9 || index == 1 || index == 24) && <Rocket position={[position[0]-0.1, position[1] + 0.2, position[2]-0.15]}/>} */}
+    </group>
   );
 }

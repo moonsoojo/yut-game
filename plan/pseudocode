@@ -1,0 +1,20 @@
+- state: pieces on board
+- pieces to select
+  - state: pieces in array
+  - map through array for rendering (piecesTeam0, piecesTeam1)
+- click piece
+  - state: selectedPiece
+- click tile
+- piece disappears from where it was
+  - state: pop piece in array
+- piece appears above tile
+  - if it's on a planet, it circles it
+  - if it's multiple pieces, it circles in a line
+
+
+
+- make dots clearer on normal yuts
+- more chance to flip on the rounded side
+- yuts darker
+- animate UFO
+- yuts jump on re-render

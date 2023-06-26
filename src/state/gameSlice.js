@@ -6,43 +6,43 @@ export const gameSlice = createSlice({
     selection: -1,
     tiles: [
       null,
-      { team: 0, count: 1 },
-      { team: 1, count: 1},
       null,
       null,
       null,
       null,
       null,
-      { team: 1, count: 1},
-      null,
-      null,
-      null,
-      { team: 1, count: 1},
       null,
       null,
       null,
       null,
       null,
-      { team: 1, count: 1},
       null,
       null,
       null,
       null,
       null,
-      { team: 1, count: 1},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       null,
       null,
       null,
       null,
     ],
+    piecesTeam0: 4,
+    piecesTeam1: 4,
   },
   reducers: {
     setSelection: (state, action) => {
-      // console.log("[gameSlice][setSelection] action", action);
       state.selection = action.payload;
     },
     setTiles: (state, action) => {
-      // console.log("[gameSlice][setTiles] action", action);
       let index = action.payload.index;
       let piece = action.payload.piece;
       state.tiles[index] = piece;
