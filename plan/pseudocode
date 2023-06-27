@@ -1,7 +1,8 @@
-- state: pieces on board
-- pieces to select
-  - state: pieces in array
-  - map through array for rendering (piecesTeam0, piecesTeam1)
+- move pieces around as objects
+- when you click one on a tile, copy everything on the tile
+- assign indices to each tile. get pieces on tile via the state and the index
+- pass number of pieces as an argument to the piece
+
 - click piece
   - state: selectedPiece
 - click tile
@@ -18,3 +19,6 @@
 - yuts darker
 - animate UFO
 - yuts jump on re-render
+
+- possible bug: invisible mesh covers a visible one
+- operation notes: clicking a star without a selection clears it

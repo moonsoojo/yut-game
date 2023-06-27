@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const gameSlice = createSlice({
   name: "game",
   initialState: {
-    selection: -1,
+    selection: null,
     tiles: [
       null,
       null,
@@ -36,20 +36,22 @@ export const gameSlice = createSlice({
       null,
     ],
     piecesTeam0: 4,
-    piecesTeam1: 4,
+    piecesTeam1: [{tile: -1, team: 1}, {tile: -1, team: 1}, {tile: -1, team: 1}, {tile: -1, team: 1}],
   },
   reducers: {
     setSelection: (state, action) => {
       state.selection = action.payload;
     },
-    setTiles: (state, action) => {
+    placePiece: (state, action) => {
+      console.log("[placePiece] action", action)
       let index = action.payload.index;
-      let piece = action.payload.piece;
+      let piece = action.payload.selection;
       state.tiles[index] = piece;
+      state.selection = null;
     },
   },
 });
 
-export const { setSelection, setTiles } = gameSlice.actions;
+export const { setSelection, placePiece } = gameSlice.actions;
 
 export default gameSlice.reducer;

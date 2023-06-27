@@ -11,16 +11,14 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import { useSelector, useDispatch } from "react-redux";
-import { setSelection, setTiles } from "./state/gameSlice";
+import { useSelector } from "react-redux";
 // import { CameraControls } from "@react-three/drei";
 
 
 export default function Experience() {
-  const tiles = useSelector((state) => state.game.tiles);
+  
   const piecesTeam0 = useSelector((state) => state.game.piecesTeam0);
   const piecesTeam1 = useSelector((state) => state.game.piecesTeam1);;
-  const dispatch = useDispatch();
   const numTiles = 29;
   const cameraControlsRef = useRef();
 
@@ -28,18 +26,6 @@ export default function Experience() {
   for (let i = 0; i < numTiles; i++) {
     tileRefs[i] = useRef();
   }
-
-  const camera = useThree(state => state.camera) // this doesn't set its properties
-
-  useEffect(() => {
-    // cameraControlsRef.current.setPosition(6.4, 4.5, -2.7)
-    // cameraControlsRef.current.rotate(6.4, 6.5, -2.7)
-  }, [])
-
-  useFrame(({camera}) => {
-    // console.log(camera.rotation)
-    // console.log(camera.position) //desired position: 6.4, 6.5, -2.7, desired rotation: -1.9, 0.69, 2.09, 'XYZ'
-  })
 
   function Tiles() {
     const numStars = 20;
@@ -89,9 +75,9 @@ export default function Experience() {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1-0.5,
-              1,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1+0.25,
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1-1,
+              0.5,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1+0.5,
             ]}
             scale={0.1}
             index={indexShortcut1}
@@ -100,9 +86,9 @@ export default function Experience() {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2-0.5,
-              1,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2+0.25,
+              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2-1,
+              0.5,
+              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2+0.5,
             ]}
             scale={0.1}
             index={indexShortcut2}
@@ -123,10 +109,15 @@ export default function Experience() {
   }
 
   function PiecesTeam1() {
-    return <>{[...Array(piecesTeam1)].map((value, index) => 
+    return <>{piecesTeam1.map((value, index) => 
+      value.tile === -1 && 
       <Rocket
         position={[2.5, 0, -3 + index * 0.4]}
-        keyName={ `count${index}`}/>
+        keyName={ `count${index}`}
+        tile={-1}
+        team={1}
+      />
+        
     )}</>
   }
 

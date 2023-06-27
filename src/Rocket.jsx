@@ -1,10 +1,13 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber"
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelection } from "./state/gameSlice";
 
-export default function Rocket({ position }) {
+export default function Rocket({ position, tile, team }) {
     const { nodes, materials } = useGLTF("/models/rocket-with-astronaut.glb");
-    
+    const dispatch = useDispatch()
+
     const rocketRef = useRef();
     const flameRef = useRef();
 
@@ -19,8 +22,24 @@ export default function Rocket({ position }) {
       // rocketRef.current.position.z = Math.cos(state.clock.elapsedTime * 1) * 0.4 
       // rocketRef.current.position.y = -Math.cos(state.clock.elapsedTime * 1) * 0.4 
     })
+
+    function handlePointerDown(event) {
+      event.stopPropagation();
+      dispatch(setSelection({tile, team}))
+    }
+
+    const wrapPosition = [position[0], position[1]-0.2, position[2]+0.2]
     return (
-      <group dispose={null} ref={rocketRef}>
+      <group dispose={null} ref={rocketRef} >
+        <mesh
+          castShadow
+          position={wrapPosition}
+          visible={false}
+          rotation={[-Math.PI/4, 0, 0]}
+          onPointerDown={(event) => handlePointerDown(event)}
+        >
+          <boxGeometry args={[0.3, 0.6, 0.25]} />
+        </mesh>
         <group
           position={position}
           rotation={[Math.PI *3/4, 0, -Math.PI]}
