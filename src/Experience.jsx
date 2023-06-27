@@ -17,8 +17,7 @@ import { useSelector } from "react-redux";
 
 export default function Experience() {
   
-  const piecesTeam0 = useSelector((state) => state.game.piecesTeam0);
-  const piecesTeam1 = useSelector((state) => state.game.piecesTeam1);;
+  const pieces = useSelector((state) => state.game.pieces);
   const numTiles = 29;
   const cameraControlsRef = useRef();
 
@@ -40,15 +39,15 @@ export default function Experience() {
         Math.sin(((i - 10) * (Math.PI * 2)) / numStars) * radius+0.5,
       ];
       if (i == 0) {
-        tiles.push(<Earth position={position} index={i}/>);
+        tiles.push(<Earth position={position} tile={i}/>);
       } else if (i == 5) {
-        tiles.push(<Mars position={position} index={i}/>);
+        tiles.push(<Mars position={position} tile={i}/>);
       } else if (i == 10) {
-        tiles.push(<Saturn position={position} index={i}/>);
+        tiles.push(<Saturn position={position} tile={i}/>);
       } else if (i == 15) {
-        tiles.push(<Neptune position={position} index={i}/>)
+        tiles.push(<Neptune position={position} tile={i}/>)
       } else {
-        tiles.push(<Star position={position} index={i} />);
+        tiles.push(<Star position={position} tile={i} />);
       }
     }
 
@@ -80,7 +79,7 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1+0.5,
             ]}
             scale={0.1}
-            index={indexShortcut1}
+            tile={indexShortcut1}
           />
         );
         tiles.push(
@@ -91,7 +90,7 @@ export default function Experience() {
               Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2+0.5,
             ]}
             scale={0.1}
-            index={indexShortcut2}
+            tile={indexShortcut2}
           />
         );
       }
@@ -101,15 +100,19 @@ export default function Experience() {
 
   function PiecesTeam0() {
     //deleting brackets around function after '=>' made the meshes appear
-    return <>{[...Array(piecesTeam0)].map((value, index) => 
+    return <>{pieces[0].map((value, index) => 
+      value.tile === -1 && 
       <Ufo
         position={[3.5, 0, -0.3 + index * 0.4]}
-        keyName={ `count${index}`}/>
+        keyName={ `count${index}`}
+        tile={-1}
+        team={0}
+      />
     )}</>
   }
 
   function PiecesTeam1() {
-    return <>{piecesTeam1.map((value, index) => 
+    return <>{pieces[1].map((value, index) => 
       value.tile === -1 && 
       <Rocket
         position={[2.5, 0, -3 + index * 0.4]}

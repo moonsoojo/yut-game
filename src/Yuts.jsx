@@ -112,8 +112,8 @@ export default function Yuts(props) {
             friction={0.6}
             name={`yut${index}`}
             // rotation={[Math.PI, 0, 0]}
-            onWake={() => console.log("woke")}
-            onSleep={() => console.log("schleep")}
+            // onWake={() => console.log("woke")}
+            // onSleep={() => console.log("schleep")}
             linearDamping={0.99}
             angularDamping={0.99}
             scale={0.1}

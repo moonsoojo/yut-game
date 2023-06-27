@@ -1,18 +1,5 @@
-- move pieces around as objects
-- when you click one on a tile, copy everything on the tile
-- assign indices to each tile. get pieces on tile via the state and the index
-- pass number of pieces as an argument to the piece
-
-- click piece
-  - state: selectedPiece
-- click tile
-- piece disappears from where it was
-  - state: pop piece in array
-- piece appears above tile
-  - if it's on a planet, it circles it
-  - if it's multiple pieces, it circles in a line
-
-
+- refactor piecesTeam# logic
+  - use index in array as team id
 
 - make dots clearer on normal yuts
 - more chance to flip on the rounded side
@@ -22,3 +9,17 @@
 
 - possible bug: invisible mesh covers a visible one
 - operation notes: clicking a star without a selection clears it
+
+- click piece
+  - state: selectedPiece
+- click tile
+- piece disappears from where it was
+  - state: pop piece in array
+- piece appears above tile
+  - if it's on a planet, it circles it
+  - if it's multiple pieces, it circles in a line
+- move pieces around as objects
+- when you click one on a tile, copy everything on the tile
+- assign indices to each tile. get pieces on tile via the state and the index
+- pass number of pieces as an argument to the piece
+
