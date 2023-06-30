@@ -204,7 +204,7 @@ export default function Experience() {
         <Tiles />
         <PiecesTeam0/>
         <PiecesTeam1/>
-        <ScoreButton position={[4, 0, 1]}/>
+        <ScoreButton position={[4, 0, 2]}/>
       </Physics>
     </>
   );

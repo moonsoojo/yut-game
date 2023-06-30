@@ -121,7 +121,7 @@ export default function Yuts(props) {
                 castShadow
                 receiveShadow
                 geometry={nodes.Cube001.geometry}
-                material={materials["Material.004"]}
+                material={materials["Material.002"]}
                 position={[0, 0, -4.19]}
               />
             ) : (
