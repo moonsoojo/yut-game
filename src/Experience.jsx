@@ -1,8 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import { useThree, extend, useFrame } from "@react-three/fiber";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import { CameraControls, useGLTF } from "@react-three/drei";
-import * as THREE from "three";
+import { CameraControls } from "@react-three/drei";
 import Yuts from "./Yuts";
 import Star from "./Star";
 import Neptune from "./Neptune";
@@ -11,13 +9,19 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import { useSelector } from "react-redux";
-// import { CameraControls } from "@react-three/drei";
-
+import Sun from "./Sun";
+import Polaris from "./Polaris";
+import { useSelector, useDispatch } from "react-redux";
+import { finishPiece } from "./state/gameSlice.js"
 
 export default function Experience() {
   
   const pieces = useSelector((state) => state.game.pieces);
+  const scores = useSelector((state) => state.game.scores)
+  const selection = useSelector((state) => state.game.selection);
+  const tiles = useSelector((state) => state.game.tiles);
+  const dispatch = useDispatch()
+
   const numTiles = 29;
   const cameraControlsRef = useRef();
 
@@ -29,7 +33,7 @@ export default function Experience() {
   function Tiles() {
     const numStars = 20;
     let tiles = [];
-    const radius = 3;
+    const radius = 4;
 
     //circle
     for (let i = 0; i < numStars; i++) {
@@ -52,23 +56,23 @@ export default function Experience() {
     }
 
     //shortcuts
-    const radiusShortcut1 = 1.8;
-    const radiusShortcut2 = 0.8;
+    const radiusShortcut1 = 2.7;
+    const radiusShortcut2 = 1.4;
     for (let i = 0; i < numStars; i++) {
       let indexShortcut1;
       let indexShortcut2;
       if (i == 0) {
-        indexShortcut1 = 28;
-        indexShortcut2 = 27;
+        indexShortcut1 = 27;
+        indexShortcut2 = 28;
       } else if (i == 5) {
         indexShortcut1 = 20;
         indexShortcut2 = 21;
       } else if (i == 10) {
-        indexShortcut1 = 24;
-        indexShortcut2 = 25;
+        indexShortcut1 = 25;
+        indexShortcut2 = 26;
       } else if (i == 15) {
-        indexShortcut1 = 23;
-        indexShortcut2 = 22;
+        indexShortcut1 = 24;
+        indexShortcut2 = 23;
       }
       if (i == 0 || i == 5 || i == 10 || i == 15) {
         tiles.push(
@@ -95,6 +99,28 @@ export default function Experience() {
         );
       }
     }
+    
+    //center piece
+    tiles.push(
+      <Sun
+        position={[
+          -1,
+          0.5,
+          0.5,
+        ]}
+        scale={0.15}
+        tile={22}
+      />
+      // <Polaris
+      //   position={[
+      //     -1,
+      //     0.5,
+      //     0.5,
+      //   ]}
+      //   scale={0.1}
+      //   tile={28}
+      // />
+    )
     return tiles;
   }
 
@@ -103,25 +129,53 @@ export default function Experience() {
     return <>{pieces[0].map((value, index) => 
       value.tile === -1 && 
       <Ufo
-        position={[3.5, 0, -0.3 + index * 0.4]}
+        position={[3.5, 0, -0.9 + index * 0.4]}
         keyName={ `count${index}`}
         tile={-1}
         team={0}
       />
+    )}
+    {[...Array(scores[0])].map((value, index) => 
+      <mesh
+        position={[3.1, 0, -0.9 + index * 0.4]}
+        keyName={ `count${index}`}>
+        <sphereGeometry args={[0.1, 32, 16]}/>
+        <meshStandardMaterial color={'green'}/>
+      </mesh>
     )}</>
   }
 
   function PiecesTeam1() {
     return <>{pieces[1].map((value, index) => 
-      value.tile === -1 && 
+      value.tile === -1 &&  
       <Rocket
         position={[2.5, 0, -3 + index * 0.4]}
         keyName={ `count${index}`}
         tile={-1}
         team={1}
       />
-        
+    )}
+    {[...Array(scores[1])].map((value, index) => 
+      <mesh
+        position={[3.1, 0, -3 + index * 0.4]}
+        keyName={ `count${index}`}>
+        <sphereGeometry args={[0.1, 32, 16]}/>
+        <meshStandardMaterial color={'red'}/>
+      </mesh>
     )}</>
+  }
+
+  function handleScoreButtonClick (event) {
+    event.stopPropagation()
+    console.log("handle score button click")
+    dispatch(finishPiece({selection}))
+  }
+
+  function ScoreButton({position}) {
+    return <mesh position={position} onPointerDown={(event) => handleScoreButtonClick(event)}>
+      <sphereGeometry args={[0.4, 32, 16]}/>
+      <meshStandardMaterial color={'green'}/>
+    </mesh>
   }
 
   return (
@@ -150,6 +204,7 @@ export default function Experience() {
         <Tiles />
         <PiecesTeam0/>
         <PiecesTeam1/>
+        <ScoreButton position={[4, 0, 1]}/>
       </Physics>
     </>
   );

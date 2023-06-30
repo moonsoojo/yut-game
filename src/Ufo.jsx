@@ -1,10 +1,10 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 import { setSelection } from "./state/gameSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { MeshStandardMaterial } from "three";
+import { useDispatch } from "react-redux";
+import React from 'react';
 
-export default function Ufo({ position, tile, team }) {
+export default function Ufo ({ position, tile, team, scale }) {
   const { nodes, materials } = useGLTF("/models/ufo.glb");
   const dispatch = useDispatch()
 
@@ -22,15 +22,15 @@ export default function Ufo({ position, tile, team }) {
   const wrapPosition = [position[0], position[1], position[2]]
   
   return (
-    <group dispose={null}>
+    <group dispose={null} scale={scale}>
       <mesh
         castShadow
         position={wrapPosition}
-        visible={false}
+        visible={true}
         onPointerDown={(event) => handlePointerDown(event)}
       >
         <sphereGeometry args={[0.2]}/>
-        {/* <meshStandardMaterial transparent opacity={0.7}/> */}
+        <meshStandardMaterial transparent opacity={0.1}/>
       </mesh>
       <group position={position} scale={0.2} rotation={[0, Math.PI/2, 0]}>
         <mesh

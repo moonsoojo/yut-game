@@ -1,7 +1,13 @@
-- refactor piecesTeam# logic
-  - use index in array as team id
+- pieces circle planets
+- ufo idle animation
+- rocket idle animation
+  - bug: moving piece when it's animated causes error
+- finishing pieces
+- bug: clicking a piece twice and clicking a tile doesn't reset tile
+# - placing pieces on planets
+# - sun
 
-- make dots clearer on normal yuts
+# - make dots clearer on normal yuts
 - more chance to flip on the rounded side
 - yuts darker
 - animate UFO
@@ -22,4 +28,5 @@
 - when you click one on a tile, copy everything on the tile
 - assign indices to each tile. get pieces on tile via the state and the index
 - pass number of pieces as an argument to the piece
-
+- refactor piecesTeam# logic
+  - use index in array as team id

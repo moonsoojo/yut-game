@@ -9,8 +9,8 @@ THREE.ColorManagement.legacyMode = false;
 export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
-  const nodes = useGLTF("/models/yut-working-normal.glb").nodes;
-  const materials = useGLTF("/models/yut-working-normal.glb").materials;
+  const nodes = useGLTF("/models/yut-regular.glb").nodes;
+  const materials = useGLTF("/models/yut-regular.glb").materials;
   const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
   const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
 

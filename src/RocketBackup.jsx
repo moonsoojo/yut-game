@@ -5,28 +5,27 @@ import { useSelector, useDispatch } from "react-redux";
 import { setSelection } from "./state/gameSlice";
 import React from 'react';
 
-export default function Rocket({ position, tile, team }) {
+export const Rocket = React.forwardRef(({ position, tile, team }, ref) => {
     const { nodes, materials } = useGLTF("/models/rocket-with-astronaut.glb");
     const dispatch = useDispatch()
 
-    const rocketRef = useRef();
+    // const rocketRef = useRef();
     const flameRef = useRef();
 
-    // useFrame((state, delta) => {
-    //   if (tile >= 0) {
-    //     // flame alive
-    //     flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7
+    useFrame((state, delta) => {
+      if (tile >= 0) {
+        // flame alive
+        flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7
 
-    //     // hovering
-    //     if (tile != 0 && tile != 5 && tile != 10 && tile != 15 && tile != 22) {
-    //       console.log('hovering')
-    //       rocketRef.current.position.y = Math.sin(state.clock.elapsedTime * 1.5) * 0.07
-    //     } else { // orbiting
-    //       rocketRef.current.position.x = Math.sin(state.clock.elapsedTime * 1) * 0.4
-    //       rocketRef.current.position.z = Math.cos(state.clock.elapsedTime * 1) * 0.4 
-    //     }
-    //   }
-    // })
+        // hovering
+        // if (tile != 0 && tile != 5 && tile != 10 && tile != 15 && tile != 22) {
+        //   rocketRef.current.position.y = Math.sin(state.clock.elapsedTime * 1.5) * 0.07
+        // } else { // orbiting
+        //   rocketRef.current.position.x = Math.sin(state.clock.elapsedTime * 1) * 0.4
+        //   rocketRef.current.position.z = Math.cos(state.clock.elapsedTime * 1) * 0.4 
+        // }
+      }
+    })
 
     function handlePointerDown(event) {
       event.stopPropagation();
@@ -35,7 +34,7 @@ export default function Rocket({ position, tile, team }) {
 
     const wrapPosition = [position[0], position[1]-0.2, position[2]+0.2]
     return (
-      <group dispose={null} >
+      <group dispose={null} ref={ref} >
         <mesh
           castShadow
           position={wrapPosition}
@@ -217,4 +216,6 @@ export default function Rocket({ position, tile, team }) {
         </group>
       </group>
     );
-  }
+  })
+
+  export default Rocket
