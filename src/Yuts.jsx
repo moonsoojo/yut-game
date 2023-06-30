@@ -77,7 +77,7 @@ export default function Yuts(props) {
       yut.current.rotation.y = getRandomNumberInRange(Math.PI, Math.PI);
       yut.current.rotation.z = getRandomNumberInRange(Math.PI, Math.PI);
       yut.current.userData = `yut${index}`;
-      const yImpulse = getRandomNumberInRange(0.1, 0.02); // value between 0.15 and 0.25
+      const yImpulse = getRandomNumberInRange(0.05, 0.01); // value between 0.15 and 0.25
       yut.current.applyImpulse(
         {
           x: 0,
@@ -88,8 +88,8 @@ export default function Yuts(props) {
       );
       yut.current.applyTorqueImpulse(
         {
-          x: getRandomNumberInRange(0.0004, 0.0001),
-          y: getRandomNumberInRange(0.02, 0.01),
+          x: getRandomNumberInRange(0.0001, 0.00005),
+          y: getRandomNumberInRange(0.015, 0.005),
           z: getRandomNumberInRange(0.0004, 0.0001),
         },
         true
@@ -111,11 +111,8 @@ export default function Yuts(props) {
             restitution={0.3}
             friction={0.6}
             name={`yut${index}`}
-            // rotation={[Math.PI, 0, 0]}
-            // onWake={() => console.log("woke")}
-            // onSleep={() => console.log("schleep")}
-            linearDamping={0.99}
-            angularDamping={0.99}
+            linearDamping={0.3}
+            angularDamping={0.1} // when this value is high, yuts spinned more
             scale={0.1}
             gravityScale={1.5}
           >
