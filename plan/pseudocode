@@ -1,15 +1,13 @@
-- pieces circle planets
-- ufo idle animation
-- rocket idle animation
-  - bug: moving piece when it's animated causes error
-- finishing pieces
-- bug: clicking a piece twice and clicking a tile doesn't reset tile
-# - placing pieces on planets
-# - sun
+moving piece logic
+- when Vani wants to move a ufo to eat a rocket, she clicks the rocket, not the star.
+  - make the whole tile clickable
+  - if you click piece and it's not home, disable selection
+  - if you click home and select piece, disable selection
+- move a piece to a star by mistake
+  - right click to clear star
 
 # - make dots clearer on normal yuts
-- more chance to flip on the rounded side
-- yuts darker
+# - more chance to flip on the rounded side
 - animate UFO
 - yuts jump on re-render
 
@@ -30,3 +28,12 @@
 - pass number of pieces as an argument to the piece
 - refactor piecesTeam# logic
   - use index in array as team id
+
+animations
+- pieces circle planets
+- ufo idle animation
+- rocket idle animation
+  - bug: moving piece when it's animated causes error
+# - finishing pieces
+# - placing pieces on planets
+# - sun
