@@ -9,6 +9,7 @@ import { Perf } from "r3f-perf";
 import Galaxy from "./Galaxy";
 import store from "./state/store";
 import { Provider } from "react-redux";
+import React from 'react';
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 

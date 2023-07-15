@@ -4,6 +4,7 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import { useSelector, useDispatch } from "react-redux";
 import { placePiece } from "./state/gameSlice.js"
+import React from 'react';
 // import { useFrame } from "@react-three/fiber"
 
 export default function Neptune({ position, tile }) {

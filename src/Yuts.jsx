@@ -3,6 +3,7 @@ import { RigidBody, Physics, vec3 } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
+import React from 'react';
 
 THREE.ColorManagement.legacyMode = false;
 

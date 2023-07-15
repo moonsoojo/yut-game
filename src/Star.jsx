@@ -3,6 +3,7 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import { useSelector, useDispatch } from "react-redux";
 import { placePiece } from "./state/gameSlice.js"
+import React from 'react';
 
 export default function Star({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/star-yellow.glb");

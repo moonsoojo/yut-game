@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { placePiece } from "./state/gameSlice.js"
 // import { useFrame } from "@react-three/fiber"
 import { useRef } from "react";
+import React from 'react';
 
 export default function Saturn({ position, tile }) {
     const { nodes, materials } = useGLTF("/models/Saturn 3.glb");

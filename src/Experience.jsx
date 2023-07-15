@@ -9,10 +9,11 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import Sun from "./Sun";
+import Sun2 from "./Sun2";
 import Polaris from "./Polaris";
 import { useSelector, useDispatch } from "react-redux";
 import { finishPiece } from "./state/gameSlice.js"
+import React from 'react';
 
 export default function Experience() {
   
@@ -102,24 +103,15 @@ export default function Experience() {
     
     //center piece
     tiles.push(
-      <Sun
-        position={[
-          -1,
-          0.5,
-          0.5,
-        ]}
-        scale={0.15}
-        tile={22}
-      />
-      // <Polaris
-      //   position={[
-      //     -1,
-      //     0.5,
-      //     0.5,
-      //   ]}
-      //   scale={0.1}
-      //   tile={28}
-      // />
+          //center piece
+    tiles.push(
+      <Sun2 position={[
+        -1,
+        0.5,
+        0.5,
+      ]}
+      tile={22}/>
+    )
     )
     return tiles;
   }
