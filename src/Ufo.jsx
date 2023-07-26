@@ -2,28 +2,28 @@ import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 import { setSelection } from "./state/gameSlice";
 import { useDispatch } from "react-redux";
-import React from 'react';
+import React from "react";
 
-export default function Ufo ({ position, tile, team, scale }) {
+export default function Ufo({ position, tile, team, scale }) {
   const { nodes, materials } = useGLTF("/models/ufo.glb");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const ufoGlassRef = useRef();
 
   useEffect(() => {
-    ufoGlassRef.current.material.opacity = 0.1
-  }, [])
+    ufoGlassRef.current.material.opacity = 0.1;
+  }, []);
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    dispatch(setSelection({tile, team}))
+    dispatch(setSelection({ tile, team }));
   }
 
-  const wrapPosition = [position[0], position[1], position[2]]
-  
+  const wrapPosition = [position[0], position[1], position[2]];
+
   return (
     <group dispose={null} scale={scale}>
-      <mesh
+      {/* <mesh
         castShadow
         position={wrapPosition}
         visible={true}
@@ -31,8 +31,8 @@ export default function Ufo ({ position, tile, team, scale }) {
       >
         <sphereGeometry args={[0.2]}/>
         <meshStandardMaterial transparent opacity={0.1}/>
-      </mesh>
-      <group position={position} scale={0.2} rotation={[0, Math.PI/2, 0]}>
+      </mesh> */}
+      <group position={position} scale={0.2} rotation={[-Math.PI / 4, 0, Math.PI / 4]}>
         <mesh
           castShadow
           receiveShadow
@@ -131,7 +131,7 @@ export default function Ufo ({ position, tile, team, scale }) {
           material={materials.Blue}
           position={[0.252, -0.592, 0.252]}
           scale={0.128}
-        /> 
+        />
         <mesh
           castShadow
           receiveShadow

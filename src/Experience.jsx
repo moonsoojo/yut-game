@@ -17,7 +17,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { finishPiece } from "./state/gameSlice.js";
 import React from "react";
 import { useControls } from "leva";
-
+import {
+  Environment,
+  Sky,
+  ContactShadows,
+  RandomizedLight,
+  AccumulativeShadows,
+  SoftShadows,
+  Stars,
+} from "@react-three/drei";
+import Universe from "./Universe";
+import { useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
 export default function Experience() {
   const pieces = useSelector((state) => state.game.pieces);
@@ -27,7 +38,6 @@ export default function Experience() {
   const dispatch = useDispatch();
 
   const numTiles = 29;
-  const cameraControlsRef = useRef();
 
   const tileRefs = [...Array(numTiles)];
   for (let i = 0; i < numTiles; i++) {
@@ -198,7 +208,8 @@ export default function Experience() {
     randomnessPower,
     insideColor,
     outsideColor,
-  } = useControls({
+    envMapIntensity,
+  } = useControls("galaxy", {
     count: {
       value: 100000,
       min: 0,
@@ -212,10 +223,10 @@ export default function Experience() {
       step: 0.01,
     },
     radius: {
-      value: 11,
+      value: 1.4,
       min: 1,
       max: 50,
-      step: 1,
+      step: 0.1,
     },
     branches: {
       value: 19,
@@ -247,10 +258,168 @@ export default function Experience() {
     outsideColor: {
       value: "#1b3984",
     },
+    envMapIntensity: { value: 1, min: 0, max: 12, step: 1 },
   });
+
+  // const {
+  //   countStars,
+  //   sizeStars,
+  //   distanceMin,
+  //   distanceMax,
+  //   firstColorStars,
+  //   secondColorStars,
+  // } = useControls("stars", {
+  //   countStars: {
+  //     value: 100000,
+  //     min: 0,
+  //     max: 100000,
+  //     step: 1000,
+  //   },
+  //   sizeStars: {
+  //     value: 0.02,
+  //     min: 0.01,
+  //     max: 0.2,
+  //     step: 0.01,
+  //   },
+  //   distanceMin: {
+  //     value: 10,
+  //     min: 0.01,
+  //     max: 1000,
+  //     step: 1,
+  //   },
+  //   distanceMax: {
+  //     value: 10,
+  //     min: 0.01,
+  //     max: 1000,
+  //     step: 1,
+  //   },
+  //   firstColorStars: {
+  //     value: "#794c40",
+  //   },
+  //   secondColorStars: {
+  //     value: "#1b3984",
+  //   },
+  //   envMapIntensity: { value: 1, min: 0, max: 12, step: 1 },
+  // });
+
+  const {
+    turbidity,
+    rayleigh,
+    mieCoefficient,
+    mieDirectionalG,
+    inclination,
+    azimuth,
+    distance,
+    exposure,
+    sunPosition,
+    lightPosition,
+    lightIntensity,
+  } = useControls("sky", {
+    turbidity: {
+      value: 1.5,
+      min: 0,
+      max: 20,
+      step: 0.1,
+    },
+    rayleigh: {
+      value: 0.07,
+      min: 0.01,
+      max: 4,
+      step: 0.001,
+    },
+    mieCoefficient: {
+      value: 0.1,
+      min: 0,
+      max: 0.1,
+      step: 0.001,
+    },
+    mieDirectionalG: {
+      value: 1.0,
+      min: 0,
+      max: 1,
+      step: 0.001,
+    },
+    inclination: {
+      value: 0.57,
+      min: 0,
+      max: 3.14,
+      step: 0.01,
+    },
+    azimuth: {
+      value: -81.1,
+      min: -180,
+      max: 180,
+      step: 0.1,
+    },
+    distance: {
+      value: 80.3,
+      min: 0,
+      max: 100,
+      step: 0.01,
+    },
+    exposure: {
+      value: 0.25,
+      min: 0,
+      max: 1,
+      step: 0.0001,
+    },
+    sunPosition: {
+      value: [-0.49, 0.11, 0.3],
+      step: 0.01,
+    },
+    lightPosition: {
+      value: [0.8, 1.77, -0.07],
+      step: 0.01,
+    },
+    lightIntensity: {
+      value: 5.62,
+      min: 0,
+      max: 10,
+      step: 0.01,
+    },
+  });
+
+  const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
+
+  useEffect(() => {
+    gl.toneMapping = THREE.ACESFilmicToneMapping;
+    gl.toneMappingExposure = exposure;
+  }, [gl, scene, exposure]);
 
   return (
     <>
+      {/* <color args={["#000001"]} attach="background" /> */}
+      {/* <Environment
+        background
+        files={"./environmentMaps/empty-galaxy-small.hdr"}
+      /> */}
+      <Sky
+        turbidity={turbidity}
+        rayleigh={rayleigh}
+        mieCoefficient={mieCoefficient}
+        mieDirectionalG={mieDirectionalG}
+        elevation={inclination}
+        azimuth={azimuth}
+        distance={distance}
+        sunPosition={sunPosition}
+      />
+      <Stars
+        radius={100}
+        depth={50}
+        count={5000}
+        factor={4}
+        saturation={0}
+        fade
+        speed={1}
+      />
+      {/* <Universe
+        countStars={countStars}
+        sizeStars={sizeStars}
+        distanceMin={distanceMin}
+        distanceMax={distanceMax}
+        firstColorStars={firstColorStars}
+        secondColorStars={secondColorStars}
+      /> */}
       <Galaxy
         count={count}
         size={size}
@@ -263,21 +432,12 @@ export default function Experience() {
         outsideColor={outsideColor}
         position={[-1, 0.5, 0.5]}
       />
-      {/* <Galaxy2
-        count={count}
-        size={size}
-        radius={radius}
-        branches={branches}
-        spin={spin}
-        randomness={randomness}
-        randomnessPower={randomnessPower}
-        insideColor={insideColor}
-        outsideColor={outsideColor}
-        position={[-1, 0.5, 0.5]}
-      /> */}
-      {/* <color args={["#313557"]} attach="background" /> */}
 
-      <directionalLight position={[1, 10, 3]} intensity={1.3} castShadow />
+      <directionalLight
+        position={lightPosition}
+        intensity={lightIntensity}
+        castShadow
+      />
       <ambientLight intensity={0.5} />
 
       <Physics maxVelocityIterations={10}>

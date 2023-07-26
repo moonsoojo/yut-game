@@ -1,3 +1,6 @@
+background
+
+
 moving piece logic
 - when Vani wants to move a ufo to eat a rocket, she clicks the rocket, not the star.
   - make the whole tile clickable

@@ -7,7 +7,7 @@ import { placePiece } from "./state/gameSlice.js";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 
-export default function Earth({ position, tile }) {
+export default function Earth({ position, tile, envMapIntensity }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
   const selection = useSelector((state) => state.game.selection);
@@ -26,6 +26,19 @@ export default function Earth({ position, tile }) {
   const earth5Ref = useRef();
   const earthWrapRef = useRef();
   const earthRef = useRef();
+
+  useEffect(() => {
+    earth1Ref.current.geometry.dispose();
+    earth1Ref.current.material.dispose();
+    earth2Ref.current.geometry.dispose();
+    earth2Ref.current.material.dispose();
+    earth3Ref.current.geometry.dispose();
+    earth3Ref.current.material.dispose();
+    earth4Ref.current.geometry.dispose();
+    earth4Ref.current.material.dispose();
+    earth5Ref.current.geometry.dispose();
+    earth5Ref.current.material.dispose();
+  }, [envMapIntensity]);
 
   useFrame((state, delta) => {
     const elapsedTime = state.clock.elapsedTime;
