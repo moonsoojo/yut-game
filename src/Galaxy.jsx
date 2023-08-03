@@ -1,10 +1,7 @@
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
-import { Points } from "@react-three/drei";
 import React from "react";
-import { TextureLoader } from "three/src/loaders/TextureLoader";
-import { useLoader } from "@react-three/fiber";
 
 export default function Galaxy({
   count,

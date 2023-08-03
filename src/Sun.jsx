@@ -7,42 +7,57 @@ import { useGLTF } from "@react-three/drei";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import { useSelector, useDispatch } from "react-redux";
-import { placePiece } from "./state/gameSlice.js"
+import { placePiece } from "./state/gameSlice.js";
 
-export default function Sun({position, tile, scale}) {
+export default function Sun({ position, tile, scale }) {
   const { nodes, materials } = useGLTF("/models/Sun 03.glb");
 
   const selection = useSelector((state) => state.game.selection);
   const tiles = useSelector((state) => state.game.tiles);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   function handlePointerDown(event) {
-    console.log("click")
     event.stopPropagation();
     //tile will not be clicked unless a piece is selected already
-    dispatch(placePiece({tile, selection}))
+    dispatch(placePiece({ tile, selection }));
   }
 
   function Piece() {
-    let position2Start = position[2]-0.2 + tiles[tile].length * 0.05
+    let position2Start = position[2] - 0.2 + tiles[tile].length * 0.05;
     if (tiles[tile][0].team == 1) {
-      return <>{tiles[tile].map((value, index) => 
-        <Rocket
-          position={[position[0]-0.2, position[1]+0.8, position2Start - index * 0.2]}
-          keyName={ `count${index}`}
-          tile={tile}
-          team={1}
-        />
-      )}</>
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Rocket
+              position={[
+                position[0] - 0.2,
+                position[1] + 0.8,
+                position2Start - index * 0.2,
+              ]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={1}
+            />
+          ))}
+        </>
+      );
     } else {
-      return <>{tiles[tile].map((value, index) => 
-        <Ufo 
-          position={[position[0], position[1]+0.5, position2Start - index * 0.3 + 0.2]}
-          keyName={ `count${index}`} 
-          tile={tile} 
-          team={0} 
-        />
-      )}</>
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Ufo
+              position={[
+                position[0],
+                position[1] + 0.5,
+                position2Start - index * 0.3 + 0.2,
+              ]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={0}
+            />
+          ))}
+        </>
+      );
     }
   }
 
@@ -56,7 +71,7 @@ export default function Sun({position, tile, scale}) {
         onPointerDown={(event) => handlePointerDown(event)}
       >
         <sphereGeometry args={[0.2, 32, 16]} />
-        <meshStandardMaterial transparent opacity={0.1}/>
+        <meshStandardMaterial transparent opacity={0.1} />
       </mesh>
     );
   }
@@ -69,7 +84,7 @@ export default function Sun({position, tile, scale}) {
           receiveShadow
           geometry={nodes.Sphere.geometry}
           material={materials.Yellow}
-          rotation={[0, Math.PI/2, 0]}
+          rotation={[0, Math.PI / 2, 0]}
           scale={scale}
         >
           <mesh
@@ -219,7 +234,7 @@ export default function Sun({position, tile, scale}) {
         </mesh>
         <SunWrap />
       </group>
-      {tiles[tile].length != 0 && <Piece/>}
+      {tiles[tile].length != 0 && <Piece />}
     </>
   );
 }

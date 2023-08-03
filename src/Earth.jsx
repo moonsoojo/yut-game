@@ -10,43 +10,33 @@ import { useFrame } from "@react-three/fiber";
 export default function Earth({ position, tile, envMapIntensity }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
-  const selection = useSelector((state) => state.game.selection);
-  const tiles = useSelector((state) => state.game.tiles);
-  const dispatch = useDispatch();
-
-  const [earth1Color, setEarth1Color] = useState({});
-  const [earth2Color, setEarth2Color] = useState({});
-  const [earth3Color, setEarth3Color] = useState({});
-  const [earth4Color, setEarth4Color] = useState({});
-  const [earth5Color, setEarth5Color] = useState({});
+  // const selection = useSelector((state) => state.game.selection);
+  // const tiles = useSelector((state) => state.game.tiles);
+  // const dispatch = useDispatch();
   const earth1Ref = useRef();
   const earth2Ref = useRef();
   const earth3Ref = useRef();
   const earth4Ref = useRef();
   const earth5Ref = useRef();
   const earthWrapRef = useRef();
-  const earthRef = useRef();
-
-  useEffect(() => {
-    earth1Ref.current.geometry.dispose();
-    earth1Ref.current.material.dispose();
-    earth2Ref.current.geometry.dispose();
-    earth2Ref.current.material.dispose();
-    earth3Ref.current.geometry.dispose();
-    earth3Ref.current.material.dispose();
-    earth4Ref.current.geometry.dispose();
-    earth4Ref.current.material.dispose();
-    earth5Ref.current.geometry.dispose();
-    earth5Ref.current.material.dispose();
-  }, [envMapIntensity]);
+  const earthGroupRef = useRef();
 
   useFrame((state, delta) => {
     const elapsedTime = state.clock.elapsedTime;
-    earthRef.current.rotation.y += delta * 0.5;
+    earthGroupRef.current.rotation.y += delta * 0.5;
   });
 
+  function handlePointerEnter(event) {
+    event.stopPropagation();
+    earth1Ref.current.material.color.r += 0.1;
+  }
+
+  function handlePointerLeave(event) {
+    event.stopPropagation();
+    earth1Ref.current.material.color.r -= 0.1;
+  }
+
   function handlePointerDown(event) {
-    console.log("click");
     event.stopPropagation();
     //tile will not be clicked unless a piece is selected already
     dispatch(placePiece({ tile, selection }));
@@ -67,7 +57,7 @@ export default function Earth({ position, tile, envMapIntensity }) {
               keyName={`count${index}`}
               tile={tile}
               team={1}
-              // ref={refs[index]}
+              id={value.id}
             />
           ))}
         </>
@@ -85,7 +75,7 @@ export default function Earth({ position, tile, envMapIntensity }) {
               keyName={`count${index}`}
               tile={tile}
               team={0}
-              // ref={refs[index]}
+              id={value.id}
             />
           ))}
         </>
@@ -93,45 +83,17 @@ export default function Earth({ position, tile, envMapIntensity }) {
     }
   }
 
-  useEffect(() => {
-    //can only set state variables
-    setEarth1Color({
-      r: earth1Ref.current.material.color.toArray()[0],
-      g: earth1Ref.current.material.color.toArray()[1],
-      b: earth1Ref.current.material.color.toArray()[2],
-    });
-    setEarth2Color({
-      r: earth2Ref.current.material.color.toArray()[0],
-      g: earth2Ref.current.material.color.toArray()[1],
-      b: earth2Ref.current.material.color.toArray()[2],
-    });
-    setEarth3Color({
-      r: earth3Ref.current.material.color.toArray()[0],
-      g: earth3Ref.current.material.color.toArray()[1],
-      b: earth3Ref.current.material.color.toArray()[2],
-    });
-    setEarth4Color({
-      r: earth4Ref.current.material.color.toArray()[0],
-      g: earth4Ref.current.material.color.toArray()[1],
-      b: earth4Ref.current.material.color.toArray()[2],
-    });
-    setEarth5Color({
-      r: earth5Ref.current.material.color.toArray()[0],
-      g: earth5Ref.current.material.color.toArray()[1],
-      b: earth5Ref.current.material.color.toArray()[2],
-    });
-  }, []);
-
-  function EarthWrap({ position }) {
+  function EarthWrap() {
     return (
       <mesh
         castShadow
-        position={position}
         ref={earthWrapRef}
         visible={true}
         onPointerDown={(event) => handlePointerDown(event)}
+        onPointerEnter={(event) => handlePointerEnter(event)}
+        onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[1.9, 32, 16]} />
+        <sphereGeometry args={[4, 32, 16]} />
         <meshStandardMaterial transparent opacity={0.1} />
       </mesh>
     );
@@ -140,7 +102,7 @@ export default function Earth({ position, tile, envMapIntensity }) {
   return (
     <>
       <group
-        ref={earthRef}
+        ref={earthGroupRef}
         scale={0.15}
         position={position}
         rotation={[Math.PI / 16, Math.PI / 4, 0]}
@@ -188,11 +150,9 @@ export default function Earth({ position, tile, envMapIntensity }) {
             ref={earth5Ref}
           />
         </mesh>
-        <EarthWrap
-          position={[position[0] - 2.9, position[1] - 0.4, position[2] - 0.4]}
-        />
+        <EarthWrap />
       </group>
-      {tiles[tile].length != 0 && <Piece />}
+      {/* {tiles[tile].length != 0 && <Piece />} */}
     </>
   );
 }

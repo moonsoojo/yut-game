@@ -13,10 +13,11 @@ import Galaxy from "./Galaxy";
 import Galaxy2 from "./Galaxy2";
 import Polaris from "./Polaris";
 import Polaris2 from "./Polaris2";
-import { useSelector, useDispatch } from "react-redux";
+import PiecesTeam1 from "./PiecesTeam1";
+// import { useSelector, useDispatch } from "react-redux";
 import { finishPiece } from "./state/gameSlice.js";
 import React from "react";
-import { useControls } from "leva";
+import { Leva, useControls } from "leva";
 import {
   Environment,
   Sky,
@@ -29,13 +30,22 @@ import {
 import Universe from "./Universe";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { useRocketStore } from "./state/zstore";
 
 export default function Experience() {
-  const pieces = useSelector((state) => state.game.pieces);
-  const scores = useSelector((state) => state.game.scores);
-  const selection = useSelector((state) => state.game.selection);
-  const tiles = useSelector((state) => state.game.tiles);
-  const dispatch = useDispatch();
+  const pieces = useRocketStore((state) => state.pieces);
+  console.log('[Experience]', pieces)
+  // const scores = useSelector((state) => state.game.scores);
+  // const selection = useSelector((state) => state.game.selection);
+  // const tiles = useSelector((state) => state.game.tiles);
+  const tiles = useRocketStore((state) => state.tiles);
+
+  console.log("[Experience] render");
+  // const scratchRef = useRef(useScratchStore.getState().tiles)
+  // // Connect to the store on mount, disconnect on unmount, catch state-changes in a reference
+  // useEffect(() => useRocketStore.subscribe(
+  //   state => (scratchRef.current = state.tiles)
+  // ), [])
 
   const numTiles = 29;
 
@@ -57,15 +67,15 @@ export default function Experience() {
         Math.sin(((i - 10) * (Math.PI * 2)) / numStars) * radius + 0.5,
       ];
       if (i == 0) {
-        tiles.push(<Earth position={position} tile={i} />);
+        tiles.push(<Earth position={position} tile={i} key={i} />);
       } else if (i == 5) {
-        tiles.push(<Mars position={position} tile={i} />);
+        tiles.push(<Mars position={position} tile={i} key={i} />);
       } else if (i == 10) {
-        tiles.push(<Saturn position={position} tile={i} />);
+        tiles.push(<Saturn position={position} tile={i} key={i} />);
       } else if (i == 15) {
-        tiles.push(<Neptune position={position} tile={i} />);
+        tiles.push(<Neptune position={position} tile={i} key={i} />);
       } else {
-        tiles.push(<Star position={position} tile={i} />);
+        tiles.push(<Star position={position} tile={i} key={i} />);
       }
     }
 
@@ -100,6 +110,7 @@ export default function Experience() {
             ]}
             scale={0.1}
             tile={indexShortcut1}
+            key={i + 30}
           />
         );
         tiles.push(
@@ -113,18 +124,17 @@ export default function Experience() {
             ]}
             scale={0.1}
             tile={indexShortcut2}
+            key={i + 41}
           />
         );
       }
     }
 
     //center piece
-    tiles
-      .push
-      //center piece
-      // tiles.push(<Sun2 position={[-1, 0.5, 0.5]} tile={22} />)
-      // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
-      ();
+    tiles.push;
+    //center piece
+    tiles.push(<Sun2 position={[-1, 0.5, 0.5]} tile={22} key={100} />);
+    // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
   }
 
@@ -140,10 +150,11 @@ export default function Experience() {
                 keyName={`count${index}`}
                 tile={-1}
                 team={0}
+                key={index}
               />
             )
         )}
-        {[...Array(scores[0])].map((value, index) => (
+        {/* {[...Array(scores[0])].map((value, index) => (
           <mesh
             position={[3.1, 0, -0.9 + index * 0.4]}
             keyName={`count${index}`}
@@ -151,7 +162,7 @@ export default function Experience() {
             <sphereGeometry args={[0.1, 32, 16]} />
             <meshStandardMaterial color={"green"} />
           </mesh>
-        ))}
+        ))} */}
       </>
     );
   }
@@ -163,28 +174,50 @@ export default function Experience() {
           (value, index) =>
             value.tile === -1 && (
               <Rocket
-                position={[2.5, 0, -3 + index * 0.4]}
+                position={[2.5, 0, -4 + index * 0.5]}
                 keyName={`count${index}`}
                 tile={-1}
                 team={1}
+                id={value.id}
+                key={index}
               />
             )
         )}
-        {[...Array(scores[1])].map((value, index) => (
+        {/* <Rocket
+          position={[2.5, 0, -4 + 0 * 0.5]}
+          keyName={`count${0}`}
+          tile={-1}
+          team={1}
+          id={0}
+          key={0}
+        />
+        <Rocket
+          position={[2.5, 0, -4 + 1 * 0.5]}
+          keyName={`count${1}`}
+          tile={-1}
+          team={1}
+          id={1}
+          key={1}
+        /> */}
+      </>
+    );
+  }
+  {
+    /* {[...Array(scores[1])].map((value, index) => (
           <mesh position={[3.1, 0, -3 + index * 0.4]} keyName={`count${index}`}>
             <sphereGeometry args={[0.1, 32, 16]} />
             <meshStandardMaterial color={"red"} />
           </mesh>
-        ))}
+        ))} 
       </>
     );
+  }*/
   }
 
-  function handleScoreButtonClick(event) {
-    event.stopPropagation();
-    console.log("handle score button click");
-    dispatch(finishPiece({ selection }));
-  }
+  // function handleScoreButtonClick(event) {
+  //   event.stopPropagation();
+  //   dispatch(finishPiece({ selection }));
+  // }
 
   function ScoreButton({ position }) {
     return (
@@ -393,6 +426,7 @@ export default function Experience() {
         background
         files={"./environmentMaps/empty-galaxy-small.hdr"}
       /> */}
+      <Leva hidden />
       <Sky
         turbidity={turbidity}
         rayleigh={rayleigh}
@@ -412,15 +446,7 @@ export default function Experience() {
         fade
         speed={1}
       />
-      {/* <Universe
-        countStars={countStars}
-        sizeStars={sizeStars}
-        distanceMin={distanceMin}
-        distanceMax={distanceMax}
-        firstColorStars={firstColorStars}
-        secondColorStars={secondColorStars}
-      /> */}
-      <Galaxy
+      {/* <Galaxy
         count={count}
         size={size}
         radius={radius}
@@ -431,7 +457,7 @@ export default function Experience() {
         insideColor={insideColor}
         outsideColor={outsideColor}
         position={[-1, 0.5, 0.5]}
-      />
+      /> */}
 
       <directionalLight
         position={lightPosition}
@@ -455,8 +481,10 @@ export default function Experience() {
         </RigidBody>
         <Yuts />
         <Tiles />
+
         <PiecesTeam0 />
         <PiecesTeam1 />
+
         <ScoreButton position={[4, 0, 2]} />
       </Physics>
     </>

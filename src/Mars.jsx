@@ -70,6 +70,13 @@ export default function Mars({ position, tile }) {
   return (
     <group dispose={null}>
       <mesh
+        position={position}
+        onPointerDown={(event) => handlePointerDown(event)}
+      >
+        <sphereGeometry args={[0.6]} />
+        <meshStandardMaterial transparent opacity={0.1} />
+      </mesh>
+      <mesh
         castShadow
         receiveShadow
         geometry={nodes.Mars.geometry}

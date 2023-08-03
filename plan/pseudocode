@@ -1,13 +1,17 @@
-background
+selection
+- highlight on hover - piece
+- highlight on hover
+- you can't click a piece when it's on a tile
+- place the pieces in the correct locations
+- you're selecting the whole tile
+- show that the tile or piece was selected
+- animations
+- play a game with mom
+- flag animation
 
 
 moving piece logic
 - when Vani wants to move a ufo to eat a rocket, she clicks the rocket, not the star.
-  - make the whole tile clickable
-  - if you click piece and it's not home, disable selection
-  - if you click home and select piece, disable selection
-- move a piece to a star by mistake
-  - right click to clear star
 
 # - make dots clearer on normal yuts
 # - more chance to flip on the rounded side

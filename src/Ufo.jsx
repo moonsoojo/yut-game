@@ -2,6 +2,7 @@ import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 import { setSelection } from "./state/gameSlice";
 import { useDispatch } from "react-redux";
+import { useFrame } from "@react-three/fiber";
 import React from "react";
 
 export default function Ufo({ position, tile, team, scale }) {
@@ -9,30 +10,45 @@ export default function Ufo({ position, tile, team, scale }) {
   const dispatch = useDispatch();
 
   const ufoGlassRef = useRef();
+  const ufoRef = useRef();
+  const ballsRef = useRef();
 
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.1;
   }, []);
 
+  useFrame((state, delta) => {
+    if (tile >= 0) {
+      ballsRef.current.rotation.y += delta * 0.7;
+      ufoRef.current.position.y +=
+        Math.sin(state.clock.elapsedTime * 3) * 0.001;
+    }
+  });
+
   function handlePointerDown(event) {
     event.stopPropagation();
-    dispatch(setSelection({ tile, team }));
+    dispatch(setSelection({ tile, team, type: "piece" }));
   }
 
   const wrapPosition = [position[0], position[1], position[2]];
 
   return (
-    <group dispose={null} scale={scale}>
-      {/* <mesh
+    <group dispose={null} scale={scale} ref={ufoRef}>
+      <mesh
         castShadow
         position={wrapPosition}
         visible={true}
         onPointerDown={(event) => handlePointerDown(event)}
       >
-        <sphereGeometry args={[0.2]}/>
-        <meshStandardMaterial transparent opacity={0.1}/>
-      </mesh> */}
-      <group position={position} scale={0.2} rotation={[-Math.PI / 4, 0, Math.PI / 4]}>
+        <sphereGeometry args={[0.2]} />
+        <meshStandardMaterial transparent opacity={0.1} />
+      </mesh>
+      <group
+        position={position}
+        scale={0.2}
+        rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}
+      >
+        {/* x: earth to saturn, z: mars to neptune */}
         <mesh
           castShadow
           receiveShadow
@@ -124,14 +140,44 @@ export default function Ufo({ position, tile, team, scale }) {
           scale={0.37}
         />
         {/* ball front right */}
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Roundcube001.geometry}
-          material={materials.Blue}
-          position={[0.252, -0.592, 0.252]}
-          scale={0.128}
-        />
+        <group ref={ballsRef}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube001.geometry}
+            material={materials.Blue}
+            position={[0.252, -0.592, 0.252]}
+            scale={0.128}
+          />
+          {/* ball front left */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube028.geometry}
+            material={materials.Blue}
+            position={[-0.252, -0.592, 0.252]}
+            scale={0.128}
+          />
+          {/* ball back right */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube029.geometry}
+            material={materials.Blue}
+            position={[0.252, -0.592, -0.252]}
+            scale={0.128}
+          />
+          {/* ball back left */}
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Roundcube030.geometry}
+            material={materials.Blue}
+            position={[-0.252, -0.592, -0.252]}
+            scale={0.128}
+          />
+        </group>
+
         <mesh
           castShadow
           receiveShadow
@@ -175,33 +221,7 @@ export default function Ufo({ position, tile, team, scale }) {
           rotation={[-2.03, -1.157, -0.683]}
           scale={[0.01, 0.023, 0.014]}
         />
-        {/* ball front left */}
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Roundcube028.geometry}
-          material={materials.Blue}
-          position={[-0.252, -0.592, 0.252]}
-          scale={0.128}
-        />
-        {/* ball back right */}
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Roundcube029.geometry}
-          material={materials.Blue}
-          position={[0.252, -0.592, -0.252]}
-          scale={0.128}
-        />
-        {/* ball back left */}
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Roundcube030.geometry}
-          material={materials.Blue}
-          position={[-0.252, -0.592, -0.252]}
-          scale={0.128}
-        />
+
         <mesh
           castShadow
           receiveShadow

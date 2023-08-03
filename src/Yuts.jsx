@@ -3,7 +3,7 @@ import { RigidBody, Physics, vec3 } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
-import React from 'react';
+import React from "react";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -116,6 +116,7 @@ export default function Yuts(props) {
             angularDamping={0.1} // when this value is high, yuts spinned more
             scale={0.1}
             gravityScale={1.5}
+            key={index}
           >
             {index != 0 ? (
               <mesh

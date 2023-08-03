@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import React from "react";
 import { useLoader } from "@react-three/fiber";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import Star from "./Star";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
