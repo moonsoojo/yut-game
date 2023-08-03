@@ -223,7 +223,9 @@ export default function NeptuneParticles({
   // const sparkles1Ref = useRef();
   // const sparkles2Ref = useRef();
 
-  const [updated, setUpdated] = useState(false);
+  const pointsMap = textureLoader.load("/textures/particles/2.png");
+const sparklesMap = textureLoader.load("/textures/particles/9.png");
+
 
   // useFrame((state, delta) => {
   //   for (let i = 0; i < countSparkles2; i++) {
@@ -264,10 +266,10 @@ export default function NeptuneParticles({
   //   countSparkles2,
   // ]);
   const [dummy, setDummy] = useState(1);
-  const neptuneParticles = useMemo(
-    () => NeptuneParticles2(position),
-    [position]
-  );
+  // const neptuneParticles = useMemo(
+  //   () => NeptuneParticles2(position),
+  //   [position]
+  // );
 
-  return neptuneParticles;
+  return NeptuneParticles2(position);
 }
