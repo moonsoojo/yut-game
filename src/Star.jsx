@@ -22,7 +22,7 @@ export default function Star({ position, tile }) {
       setPiece({ tile, team: selection.team, id: selection.id });
       setSelection(null);
     } else {
-      console.log("[Star]", selection);
+      setPiece({ tile, team: 1, id: 4 });
       // setSelection({ type: "tile", tile });
       // if tile is selected, and component's tile matches the selected tile, enlarge it (will enlarge its pieces too)
       //clicking on star keeps resetting the animation

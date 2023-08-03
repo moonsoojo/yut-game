@@ -22,8 +22,7 @@ export default function Earth({ position, tile, envMapIntensity }) {
   const earthGroupRef = useRef();
 
   useFrame((state, delta) => {
-    const elapsedTime = state.clock.elapsedTime;
-    earthGroupRef.current.rotation.y += delta * 0.5;
+    earthGroupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   function handlePointerEnter(event) {

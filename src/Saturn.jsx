@@ -48,8 +48,8 @@ export default function Saturn({ position, tile, scale }) {
   const satellitesRef = useRef();
 
   useFrame((state, delta) => {
-    saturnRef.current.rotation.y += delta * 0.01;
-    satellitesRef.current.rotation.x += delta * 0.5;
+    saturnRef.current.rotation.y = state.clock.elapsedTime * 0.01;
+    satellitesRef.current.rotation.x = state.clock.elapsedTime * 0.5;
   });
 
   function handlePointerDown(event) {

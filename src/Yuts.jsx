@@ -7,6 +7,40 @@ import React from "react";
 
 THREE.ColorManagement.legacyMode = false;
 
+const positionsInitial = [
+  [0, 1, 0],
+  [0, 3, 0],
+  [0, 5, 0],
+  [0, 7, 0],
+];
+
+function getRandomNumberInRange(num, plusMinus) {
+  return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+}
+
+const rotationsInitial = [
+  [
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+  ],
+  [
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+  ],
+  [
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+  ],
+  [
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+    getRandomNumberInRange(Math.PI, Math.PI),
+  ],
+];
+
 export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
@@ -31,44 +65,13 @@ export default function Yuts(props) {
   const yut3 = useRef();
   const yut4 = useRef();
   const yuts = [yut, yut2, yut3, yut4];
-  const positionsInitial = [
-    [0, 1, 0],
-    [0, 3, 0],
-    [0, 5, 0],
-    [0, 7, 0],
-  ];
-  const rotationsInitial = [
-    [
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-    ],
-    [
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-    ],
-    [
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-    ],
-    [
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-      getRandomNumberInRange(Math.PI, Math.PI),
-    ],
-  ];
+
   const positionsInHand = [
     { x: 0, y: 1, z: -0.3 },
     { x: 0, y: 1, z: -0.6 },
     { x: 0, y: 1, z: 0.3 },
     { x: 0, y: 1, z: 0.6 },
   ];
-
-  function getRandomNumberInRange(num, plusMinus) {
-    return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-  }
 
   function yutThrow() {
     let index = 0;

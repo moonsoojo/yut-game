@@ -1,5 +1,5 @@
 import { useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,13 +9,14 @@ import NeptuneParticles from "./NeptuneParticles";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useRocketStore } from "./state/zstore";
 
 export default function Neptune({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
 
-  // const selection = useSelector((state) => state.game.selection);
-  // const tiles = useSelector((state) => state.game.tiles);
-  // const dispatch = useDispatch();
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  const pieces = useRocketStore((state) => state.pieces);
 
   const [neptune1Color, setNeptune1Color] = useState({});
   const [neptune2Color, setNeptune2Color] = useState({});
@@ -27,7 +28,7 @@ export default function Neptune({ position, tile }) {
   const neptuneGroupRef = useRef();
 
   useFrame((state, delta) => {
-    neptuneGroupRef.current.rotation.y += delta * 0.5;
+    neptuneGroupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   useEffect(() => {
@@ -184,6 +185,27 @@ export default function Neptune({ position, tile }) {
     },
   });
 
+  function NeptuneParticles2(dummy) {
+    console.log("[NeptuneParticles]");
+    return (
+      <NeptuneParticles
+        countNeptune1={countNeptune1}
+        countNeptune2={countNeptune2}
+        sizeNeptune={sizeNeptune}
+        radius1MinNeptune={radius1MinNeptune}
+        radius1MaxNeptune={radius1MaxNeptune}
+        radius2MinNeptune={radius2MinNeptune}
+        radius2MaxNeptune={radius2MaxNeptune}
+        colorOne={colorOne}
+        colorTwo={colorTwo}
+        countSparkles1={countSparkles1}
+        countSparkles2={countSparkles2}
+      />
+    );
+  }
+
+  // const neptuneParticles = useMemo(() => NeptuneParticles)
+
   return (
     <group dispose={null}>
       <group ref={neptuneGroupRef} position={position} scale={0.15}>
@@ -196,19 +218,7 @@ export default function Neptune({ position, tile }) {
           ref={neptune1Ref}
         ></mesh>
         {/* remove rings */}
-        <NeptuneParticles
-          countNeptune1={countNeptune1}
-          countNeptune2={countNeptune2}
-          sizeNeptune={sizeNeptune}
-          radius1MinNeptune={radius1MinNeptune}
-          radius1MaxNeptune={radius1MaxNeptune}
-          radius2MinNeptune={radius2MinNeptune}
-          radius2MaxNeptune={radius2MaxNeptune}
-          colorOne={colorOne}
-          colorTwo={colorTwo}
-          countSparkles1={countSparkles1}
-          countSparkles2={countSparkles2}
-        />
+        <NeptuneParticles2/>
         <NeptuneWrap />
       </group>
     </group>

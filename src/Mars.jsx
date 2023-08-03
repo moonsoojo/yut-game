@@ -17,7 +17,7 @@ export default function Mars({ position, tile }) {
 
   useFrame((state, delta) => {
     const elapsedTime = state.clock.elapsedTime;
-    marsRef.current.rotation.y += delta * 0.5;
+    marsRef.current.rotation.y = elapsedTime * 0.5;
   });
 
   function handlePointerDown(event) {

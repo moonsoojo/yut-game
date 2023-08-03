@@ -50,23 +50,23 @@ export const useRocketStore = create((set) => ({
   ],
   setPiece: (payload) =>
     set((state) => {
-      console.log(state.tiles);
-      console.log(state.selection);
-      console.log(state.pieces);
-      // let newTiles = JSON.parse(JSON.stringify(state.tiles));
-      // let newPieces = JSON.parse(JSON.stringify(state.pieces));
-      let newTiles = state.tiles;
+      console.log("[useRocketStore][setPiece]", payload);
+      const newTiles = JSON.parse(JSON.stringify(state.tiles));
+      // const newPieces = JSON.parse(JSON.stringify(state.pieces));
+      // let newTiles = state.tiles;
       let newPieces = state.pieces;
       newTiles[payload.tile].push({
         id: payload.id,
         team: payload.team,
         tile: payload.tile,
       });
-      if (state.selection.tile == -1) {
+      if (state.selection == null) {
+      } else if (state.selection.tile == -1) {
         newPieces[state.selection.team].splice(state.selection.id, 1);
+        state.pieces = newPieces;
       } else {
-        newTiles[state.selection.tile] = [];
+        state.tiles[state.selection.tile] = [];
       }
-      return { tiles: newTiles, pieces: newPieces };
+      return { tiles: newTiles, pieces: state.pieces };
     }),
 }));
