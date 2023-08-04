@@ -19,7 +19,7 @@ export default function Ufo({ position, tile, team, scale }) {
 
   useFrame((state, delta) => {
     if (tile >= 0) {
-      ballsRef.current.rotation.y += delta * 0.7;
+      ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
       ufoRef.current.position.y +=
         Math.sin(state.clock.elapsedTime * 3) * 0.001;
     }

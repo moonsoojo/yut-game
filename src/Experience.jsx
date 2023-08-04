@@ -13,8 +13,7 @@ import Galaxy from "./Galaxy";
 import Galaxy2 from "./Galaxy2";
 import Polaris from "./Polaris";
 import Polaris2 from "./Polaris2";
-import PiecesTeam1 from "./PiecesTeam1";
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { finishPiece } from "./state/gameSlice.js";
 import React from "react";
 import { Leva, useControls } from "leva";
@@ -34,18 +33,6 @@ import { useRocketStore } from "./state/zstore";
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
-  console.log('[Experience]', pieces)
-  // const scores = useSelector((state) => state.game.scores);
-  // const selection = useSelector((state) => state.game.selection);
-  // const tiles = useSelector((state) => state.game.tiles);
-  const tiles = useRocketStore((state) => state.tiles);
-
-  console.log("[Experience] render");
-  // const scratchRef = useRef(useScratchStore.getState().tiles)
-  // // Connect to the store on mount, disconnect on unmount, catch state-changes in a reference
-  // useEffect(() => useRocketStore.subscribe(
-  //   state => (scratchRef.current = state.tiles)
-  // ), [])
 
   const numTiles = 29;
 

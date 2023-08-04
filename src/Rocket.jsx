@@ -1,6 +1,8 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
+import { setSelection } from "./state/gameSlice";
+import { useSelector, useDispatch } from "react-redux";
 import { useRocketStore } from "./state/zstore";
 import React from "react";
 
@@ -11,7 +13,6 @@ export default function Rocket({ position, tile, team, id }) {
 
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
-  const pieces = useRocketStore((state) => state.pieces);
 
   // const [active, setActive] = useState(false); // doesn't reset animation
   const rocketRef = useRef();
@@ -19,7 +20,6 @@ export default function Rocket({ position, tile, team, id }) {
   const rocketPart1Ref = useRef();
 
   useFrame((state, delta) => {
-    // console.log("[Rocket]", state.clock.elapsedTime);
     if (tile >= 0) {
       flameRef.current.scale.y =
         4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
@@ -30,28 +30,33 @@ export default function Rocket({ position, tile, team, id }) {
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    rocketPart1Ref.current.material.color.r += 2;
+    if (tile == -1) {
+      rocketPart1Ref.current.material.color.r += 2;
+    }
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    rocketPart1Ref.current.material.color.r -= 2;
+    if (tile == -1) {
+      rocketPart1Ref.current.material.color.r -= 2;
+    }
   }
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    if (selection == null) {
-      console.log(pieces);
-      setSelection({ tile, team, id, type: "piece" });
-    } else {
-      setSelection(null);
+    if (tile == -1) {
+      console.log("[Rocket][handlePointerDown]");
+      if (selection == null) {
+        setSelection({ tile, team, id });
+      } else {
+        setSelection(null);
+      }
     }
   }
 
   const wrapPosition = [0, -0.2, +0.2];
   return (
     <group
-      // position={tile == -1 ? position : tileLocs[1]}
       position={position}
       ref={rocketRef}
       dispose={null}
@@ -63,7 +68,7 @@ export default function Rocket({ position, tile, team, id }) {
         visible={true}
         rotation={[-Math.PI / 4, 0, 0]}
         onPointerDown={(event) => handlePointerDown(event)}
-        onPointerEnter={(event) => handlePointerEnter(event)}
+        onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
         <capsuleGeometry args={[0.15, 0.3]} />

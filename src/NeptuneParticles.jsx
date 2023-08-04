@@ -86,8 +86,6 @@ for (let i = 0; i < countNeptune2; i++) {
   colors2[i3 + 2] = mixedColor.b;
 }
 
-console.log("[NeptuneParticles]");
-
 function NeptuneParticles2(position) {
   return (
     <group position={position}>

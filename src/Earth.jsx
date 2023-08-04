@@ -7,12 +7,13 @@ import { placePiece } from "./state/gameSlice.js";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 
-export default function Earth({ position, tile, envMapIntensity }) {
+export default function Earth({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
-  // const selection = useSelector((state) => state.game.selection);
-  // const tiles = useSelector((state) => state.game.tiles);
-  // const dispatch = useDispatch();
+  const selection = useSelector((state) => state.game.selection);
+  const tiles = useSelector((state) => state.game.tiles);
+  const dispatch = useDispatch();
+
   const earth1Ref = useRef();
   const earth2Ref = useRef();
   const earth3Ref = useRef();

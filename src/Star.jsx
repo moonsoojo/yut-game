@@ -16,38 +16,45 @@ export default function Star({ position, tile }) {
   const tiles = useRocketStore((state) => state.tiles);
   const starMatRef = useRef();
 
-  function handlePointerDown(event) {
-    event.stopPropagation();
-    if (selection != null) {
-      setPiece({ tile, team: selection.team, id: selection.id });
-      setSelection(null);
-    } else {
-      setPiece({ tile, team: 1, id: 4 });
-      // setSelection({ type: "tile", tile });
-      // if tile is selected, and component's tile matches the selected tile, enlarge it (will enlarge its pieces too)
-      //clicking on star keeps resetting the animation
-    }
-  }
-
   //draw a circle with hover, and through shortcuts
   function handlePointerEnter(event) {
     event.stopPropagation();
     starMatRef.current.color.r -= 1;
+    starMatRef.current.color.g -= 0.5;
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     starMatRef.current.color.r += 1;
+    starMatRef.current.color.g += 0.5;
   }
 
+  function handlePointerDown(event) {
+    event.stopPropagation();
+    if (selection == null) {
+      setSelection({ tile });
+    } else {
+      if (selection.tile != tile) {
+        setPiece({ destination: tile });
+      }
+      setSelection(null);
+    }
+  }
+
+  const rocketPositions = [
+    [0, 0.9, 0 * 0.3],
+    [0, 0.9, -1 * 0.3],
+    [-0.3, 0.9, 0 * 0.3],
+    [-0.3, 0.9, -1 * 0.3],
+  ];
+
   function Piece() {
-    let position2Start = -0.2 + tiles[tile].length * 0.05;
     if (tiles[tile][0].team == 1) {
       return (
         <>
           {tiles[tile].map((value, index) => (
             <Rocket
-              position={[0, 0.7, position2Start - index * 0.3]}
+              position={rocketPositions[index]}
               keyName={`count${index}`}
               tile={tile}
               team={1}
@@ -76,7 +83,10 @@ export default function Star({ position, tile }) {
   }
 
   return (
-    <group position={position}>
+    <group
+      position={position}
+      scale={selection != null && selection.tile == tile ? 1.5 : 1}
+    >
       <mesh
         onPointerDown={(event) => handlePointerDown(event)}
         onPointerEnter={(e) => handlePointerEnter(e)}
@@ -85,7 +95,7 @@ export default function Star({ position, tile }) {
         <sphereGeometry args={[0.5]} />
         <meshStandardMaterial transparent opacity={0.1} />
       </mesh>
-      <mesh castShadow receiveShadow geometry={nodes.star.geometry} scale={0.1}>
+      <mesh castShadow receiveShadow geometry={nodes.star.geometry} scale={0.15}>
         <meshStandardMaterial color={"yellow"} ref={starMatRef} />
       </mesh>
       {tiles[tile].length != 0 && <Piece />}

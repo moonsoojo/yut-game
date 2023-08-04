@@ -1,9 +1,10 @@
 selection
+- button to return pieces to home
+- when you double click a tile, it cancels selection
 - highlight on hover - piece
 - highlight on hover
 - you can't click a piece when it's on a tile
 - place the pieces in the correct locations
-- you're selecting the whole tile
 - show that the tile or piece was selected
 - animations
 - play a game with mom

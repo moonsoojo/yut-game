@@ -185,27 +185,6 @@ export default function Neptune({ position, tile }) {
     },
   });
 
-  function NeptuneParticles2(dummy) {
-    console.log("[NeptuneParticles]");
-    return (
-      <NeptuneParticles
-        countNeptune1={countNeptune1}
-        countNeptune2={countNeptune2}
-        sizeNeptune={sizeNeptune}
-        radius1MinNeptune={radius1MinNeptune}
-        radius1MaxNeptune={radius1MaxNeptune}
-        radius2MinNeptune={radius2MinNeptune}
-        radius2MaxNeptune={radius2MaxNeptune}
-        colorOne={colorOne}
-        colorTwo={colorTwo}
-        countSparkles1={countSparkles1}
-        countSparkles2={countSparkles2}
-      />
-    );
-  }
-
-  // const neptuneParticles = useMemo(() => NeptuneParticles)
-
   return (
     <group dispose={null}>
       <group ref={neptuneGroupRef} position={position} scale={0.15}>
@@ -218,7 +197,19 @@ export default function Neptune({ position, tile }) {
           ref={neptune1Ref}
         ></mesh>
         {/* remove rings */}
-        <NeptuneParticles2/>
+        <NeptuneParticles
+        countNeptune1={countNeptune1}
+        countNeptune2={countNeptune2}
+        sizeNeptune={sizeNeptune}
+        radius1MinNeptune={radius1MinNeptune}
+        radius1MaxNeptune={radius1MaxNeptune}
+        radius2MinNeptune={radius2MinNeptune}
+        radius2MaxNeptune={radius2MaxNeptune}
+        colorOne={colorOne}
+        colorTwo={colorTwo}
+        countSparkles1={countSparkles1}
+        countSparkles2={countSparkles2}
+      />
         <NeptuneWrap />
       </group>
     </group>
