@@ -15,18 +15,21 @@ export default function Star({ position, tile }) {
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
   const starMatRef = useRef();
+  const wrapperMatRef = useRef();
 
   //draw a circle with hover, and through shortcuts
   function handlePointerEnter(event) {
     event.stopPropagation();
     starMatRef.current.color.r -= 1;
     starMatRef.current.color.g -= 0.5;
+    wrapperMatRef.current.opacity += 0.5
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     starMatRef.current.color.r += 1;
     starMatRef.current.color.g += 0.5;
+    wrapperMatRef.current.opacity -= 0.5
   }
 
   function handlePointerDown(event) {
@@ -46,6 +49,13 @@ export default function Star({ position, tile }) {
     [0, 0.9, -1 * 0.3],
     [-0.3, 0.9, 0 * 0.3],
     [-0.3, 0.9, -1 * 0.3],
+  ];
+
+  const ufoPositions = [
+    [0, 0.1, 0 * 0.3],
+    [0, 0.1, -1 * 0.3],
+    [-0.3, 0.1, 0 * 0.3],
+    [-0.3, 0.1, -1 * 0.3],
   ];
 
   function Piece() {
@@ -69,7 +79,7 @@ export default function Star({ position, tile }) {
         <>
           {tiles[tile].map((value, index) => (
             <Ufo
-              position={[0, 0.7, position2Start - index * 0.3]}
+              position={ufoPositions[index]}
               keyName={`count${index}`}
               tile={tile}
               team={0}
@@ -93,9 +103,14 @@ export default function Star({ position, tile }) {
         onPointerLeave={(e) => handlePointerLeave(e)}
       >
         <sphereGeometry args={[0.5]} />
-        <meshStandardMaterial transparent opacity={0.1} />
+        <meshStandardMaterial transparent opacity={0.1} ref={wrapperMatRef} />
       </mesh>
-      <mesh castShadow receiveShadow geometry={nodes.star.geometry} scale={0.15}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.star.geometry}
+        scale={0.15}
+      >
         <meshStandardMaterial color={"yellow"} ref={starMatRef} />
       </mesh>
       {tiles[tile].length != 0 && <Piece />}

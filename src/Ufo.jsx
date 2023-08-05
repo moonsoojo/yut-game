@@ -1,20 +1,21 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect } from "react";
-import { setSelection } from "./state/gameSlice";
-import { useDispatch } from "react-redux";
 import { useFrame } from "@react-three/fiber";
+import { useRocketStore } from "./state/zstore";
 import React from "react";
 
-export default function Ufo({ position, tile, team, scale }) {
-  const { nodes, materials } = useGLTF("/models/ufo.glb");
-  const dispatch = useDispatch();
+export default function Ufo({ position, tile, team, id }) {
+  const { nodes, materials } = useGLTF(`/models/ufos/ufo${id}.glb`);
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
   const ballsRef = useRef();
+  const alienRef = useRef();
 
   useEffect(() => {
-    ufoGlassRef.current.material.opacity = 0.1;
+    ufoGlassRef.current.material.opacity = 0.2;
   }, []);
 
   useFrame((state, delta) => {
@@ -25,30 +26,54 @@ export default function Ufo({ position, tile, team, scale }) {
     }
   });
 
-  function handlePointerDown(event) {
+  function handlePointerEnter(event) {
     event.stopPropagation();
-    dispatch(setSelection({ tile, team, type: "piece" }));
+    if (tile == -1) {
+      alienRef.current.material.color.r += 2;
+      alienRef.current.material.color.g -= 4;
+    }
   }
 
-  const wrapPosition = [position[0], position[1], position[2]];
+  function handlePointerLeave(event) {
+    event.stopPropagation();
+    if (tile == -1) {
+      alienRef.current.material.color.r -= 2;
+      alienRef.current.material.color.g += 4;
+    }
+  }
+
+  function handlePointerDown(event) {
+    event.stopPropagation();
+    console.log("[Ufo]", selection);
+    if (tile == -1) {
+      if (selection == null) {
+        setSelection({ tile, team, id });
+      } else {
+        setSelection(null);
+      }
+    }
+  }
 
   return (
-    <group dispose={null} scale={scale} ref={ufoRef}>
+    <group
+      position={position}
+      ref={ufoRef}
+      dispose={null}
+      scale={
+        selection != null && selection.team == 0 && selection.id == id ? 1.5 : 1
+      }
+    >
       <mesh
         castShadow
-        position={wrapPosition}
         visible={true}
         onPointerDown={(event) => handlePointerDown(event)}
+        onPointerOver={(event) => handlePointerEnter(event)}
+        onPointerLeave={(event) => handlePointerLeave(event)}
       >
         <sphereGeometry args={[0.2]} />
         <meshStandardMaterial transparent opacity={0.1} />
       </mesh>
-      <group
-        position={position}
-        scale={0.2}
-        rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}
-      >
-        {/* x: earth to saturn, z: mars to neptune */}
+      <group scale={0.2} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh
           castShadow
           receiveShadow
@@ -185,6 +210,7 @@ export default function Ufo({ position, tile, team, scale }) {
           material={materials["Blue Alien"]}
           position={[0, 0.492, 0.138]}
           scale={0.299}
+          ref={alienRef}
         />
         <mesh
           castShadow

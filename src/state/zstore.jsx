@@ -53,16 +53,15 @@ export const useRocketStore = create((set) => ({
       let newTiles = JSON.parse(JSON.stringify(state.tiles));
       let newPieces = JSON.parse(JSON.stringify(state.pieces));
 
-      console.log("[setPiece]", newTiles);
+      //overtaking
       if (state.selection.tile == -1) {
         //starting
-        // console.log("[setPiece] starting"); // piece disappears
         newTiles[payload.destination].push({
           id: state.selection.id,
           team: state.selection.team,
           tile: payload.destination,
         });
-        newPieces[state.selection.team].splice(state.selection.id, 1);
+        newPieces[state.selection.team][state.selection.id] = null;
       } else {
         //moving from tile to another tile
         for (const piece of newTiles[state.selection.tile]) {
@@ -71,7 +70,9 @@ export const useRocketStore = create((set) => ({
         newTiles[state.selection.tile] = [];
       }
 
-      // console.log("[setPiece]", newTiles)
       return { tiles: newTiles, pieces: newPieces };
     }),
+  //remove
+  //move
+  //stack
 }));

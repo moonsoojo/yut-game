@@ -129,17 +129,21 @@ export default function Experience() {
     //deleting brackets around function after '=>' made the meshes appear
     return (
       <>
-        {pieces[0].map(
-          (value, index) =>
-            value.tile === -1 && (
-              <Ufo
-                position={[3.5, 0, -0.9 + index * 0.4]}
-                keyName={`count${index}`}
-                tile={-1}
-                team={0}
-                key={index}
-              />
-            )
+        {pieces[0].map((value, index) =>
+          value != null ? (
+            <Ufo
+              position={[3.5, 0, -0.9 + index * 0.4]}
+              keyName={`count${index}`}
+              tile={-1}
+              team={0}
+              id={value.id}
+              key={index}
+            />
+          ) : (
+            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
+              <sphereGeometry args={[0.1]} />
+            </mesh>
+          )
         )}
         {/* {[...Array(scores[0])].map((value, index) => (
           <mesh
@@ -157,18 +161,21 @@ export default function Experience() {
   function PiecesTeam1() {
     return (
       <>
-        {pieces[1].map(
-          (value, index) =>
-            value.tile === -1 && (
-              <Rocket
-                position={[2.5, 0, -4 + index * 0.5]}
-                keyName={`count${index}`}
-                tile={-1}
-                team={1}
-                id={value.id}
-                key={index}
-              />
-            )
+        {pieces[1].map((value, index) =>
+          value != null ? (
+            <Rocket
+              position={[2.5, 0, -4 + index * 0.5]}
+              keyName={`count${index}`}
+              tile={-1}
+              team={1}
+              id={value.id}
+              key={index}
+            />
+          ) : (
+            <mesh position={[2.5, 0, -3.8 + index * 0.5]} key={index}>
+              <sphereGeometry args={[0.1]} />
+            </mesh>
+          )
         )}
         {/* <Rocket
           position={[2.5, 0, -4 + 0 * 0.5]}

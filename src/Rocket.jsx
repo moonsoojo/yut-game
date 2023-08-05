@@ -1,8 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
-import { setSelection } from "./state/gameSlice";
-import { useSelector, useDispatch } from "react-redux";
 import { useRocketStore } from "./state/zstore";
 import React from "react";
 
@@ -60,7 +58,9 @@ export default function Rocket({ position, tile, team, id }) {
       position={position}
       ref={rocketRef}
       dispose={null}
-      scale={selection != null && selection.id == id ? 1.5 : 1}
+      scale={
+        selection != null && selection.team == 1 && selection.id == id ? 1.5 : 1
+      }
     >
       <mesh
         castShadow
