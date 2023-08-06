@@ -44,10 +44,10 @@ export default function Ufo({ position, tile, team, id }) {
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    console.log("[Ufo]", selection);
+
     if (tile == -1) {
       if (selection == null) {
-        setSelection({ tile, team, id });
+        setSelection({ type: "piece", tile, team, id });
       } else {
         setSelection(null);
       }
@@ -60,7 +60,9 @@ export default function Ufo({ position, tile, team, id }) {
       ref={ufoRef}
       dispose={null}
       scale={
-        selection != null && selection.team == 0 && selection.id == id ? 1.5 : 1
+        selection != null && selection[0].team == 0 && selection[0].id == id
+          ? 1.5
+          : 1
       }
     >
       <mesh

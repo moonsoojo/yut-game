@@ -1,5 +1,6 @@
 selection
-- button to return pieces to home
+- selection should always be pieces
+- if you click a tile, the pieces on it should be chosen
 - when you double click a tile, it cancels selection
 - highlight on hover - piece
 - highlight on hover

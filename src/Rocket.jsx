@@ -22,7 +22,7 @@ export default function Rocket({ position, tile, team, id }) {
       flameRef.current.scale.y =
         4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocketRef.current.position.y =
-        Math.sin(state.clock.elapsedTime * 3) * 0.07;
+        position[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
     }
   });
 
@@ -45,7 +45,7 @@ export default function Rocket({ position, tile, team, id }) {
     if (tile == -1) {
       console.log("[Rocket][handlePointerDown]");
       if (selection == null) {
-        setSelection({ tile, team, id });
+        setSelection({ type: "piece", tile, team, id });
       } else {
         setSelection(null);
       }
@@ -59,7 +59,7 @@ export default function Rocket({ position, tile, team, id }) {
       ref={rocketRef}
       dispose={null}
       scale={
-        selection != null && selection.team == 1 && selection.id == id ? 1.5 : 1
+        selection != null && selection[0].team == 1 && selection[0].id == id ? 1.5 : 1
       }
     >
       <mesh

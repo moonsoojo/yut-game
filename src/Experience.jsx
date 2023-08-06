@@ -9,13 +9,8 @@ import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
 import Sun2 from "./Sun2";
-import Galaxy from "./Galaxy";
-import Galaxy2 from "./Galaxy2";
-import Polaris from "./Polaris";
-import Polaris2 from "./Polaris2";
-import { useSelector, useDispatch } from "react-redux";
-import { finishPiece } from "./state/gameSlice.js";
 import React from "react";
+import ScoreButton from "./ScoreButton";
 import { Leva, useControls } from "leva";
 import {
   Environment,
@@ -130,7 +125,16 @@ export default function Experience() {
     return (
       <>
         {pieces[0].map((value, index) =>
-          value != null ? (
+          value == null ? (
+            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
+              <sphereGeometry args={[0.1]} />
+            </mesh>
+          ) : value === "scored" ? (
+            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
+              <sphereGeometry args={[0.1]} />
+              <meshStandardMaterial color={"green"} />
+            </mesh>
+          ) : (
             <Ufo
               position={[3.5, 0, -0.9 + index * 0.4]}
               keyName={`count${index}`}
@@ -139,60 +143,35 @@ export default function Experience() {
               id={value.id}
               key={index}
             />
-          ) : (
-            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
-              <sphereGeometry args={[0.1]} />
-            </mesh>
           )
         )}
-        {/* {[...Array(scores[0])].map((value, index) => (
-          <mesh
-            position={[3.1, 0, -0.9 + index * 0.4]}
-            keyName={`count${index}`}
-          >
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color={"green"} />
-          </mesh>
-        ))} */}
       </>
     );
   }
-
   function PiecesTeam1() {
     return (
       <>
         {pieces[1].map((value, index) =>
-          value != null ? (
+          value == null ? (
+            <mesh position={[2.8, 0, -3.5 + index * 0.5]} key={index}>
+              <sphereGeometry args={[0.1]} />
+            </mesh>
+          ) : value === "scored" ? (
+            <mesh position={[2.8, 0, -3.5 + index * 0.5]} key={index}>
+              <sphereGeometry args={[0.1]} />
+              <meshStandardMaterial color={"green"} />
+            </mesh>
+          ) : (
             <Rocket
-              position={[2.5, 0, -4 + index * 0.5]}
+              position={[2.8, 0, -3.7 + index * 0.5]}
               keyName={`count${index}`}
               tile={-1}
               team={1}
               id={value.id}
               key={index}
             />
-          ) : (
-            <mesh position={[2.5, 0, -3.8 + index * 0.5]} key={index}>
-              <sphereGeometry args={[0.1]} />
-            </mesh>
           )
         )}
-        {/* <Rocket
-          position={[2.5, 0, -4 + 0 * 0.5]}
-          keyName={`count${0}`}
-          tile={-1}
-          team={1}
-          id={0}
-          key={0}
-        />
-        <Rocket
-          position={[2.5, 0, -4 + 1 * 0.5]}
-          keyName={`count${1}`}
-          tile={-1}
-          team={1}
-          id={1}
-          key={1}
-        /> */}
       </>
     );
   }
@@ -206,23 +185,6 @@ export default function Experience() {
       </>
     );
   }*/
-  }
-
-  // function handleScoreButtonClick(event) {
-  //   event.stopPropagation();
-  //   dispatch(finishPiece({ selection }));
-  // }
-
-  function ScoreButton({ position }) {
-    return (
-      <mesh
-        position={position}
-        onPointerDown={(event) => handleScoreButtonClick(event)}
-      >
-        <sphereGeometry args={[0.4, 32, 16]} />
-        <meshStandardMaterial color={"green"} />
-      </mesh>
-    );
   }
 
   const {

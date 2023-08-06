@@ -22,22 +22,22 @@ export default function Star({ position, tile }) {
     event.stopPropagation();
     starMatRef.current.color.r -= 1;
     starMatRef.current.color.g -= 0.5;
-    wrapperMatRef.current.opacity += 0.5
+    wrapperMatRef.current.opacity += 0.5;
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     starMatRef.current.color.r += 1;
     starMatRef.current.color.g += 0.5;
-    wrapperMatRef.current.opacity -= 0.5
+    wrapperMatRef.current.opacity -= 0.5;
   }
 
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      setSelection({ tile });
+      setSelection({ type: "tile", tile });
     } else {
-      if (selection.tile != tile) {
+      if (selection.length > 0 && selection[0].tile != tile) {
         setPiece({ destination: tile });
       }
       setSelection(null);
@@ -45,17 +45,17 @@ export default function Star({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.9, 0 * 0.3],
-    [0, 0.9, -1 * 0.3],
-    [-0.3, 0.9, 0 * 0.3],
-    [-0.3, 0.9, -1 * 0.3],
+    [0, 0.2, 0 * 0.3],
+    [0, 0.2, -1 * 0.3],
+    [-0.3, 0.2, 0 * 0.3],
+    [-0.3, 0.2, -1 * 0.3],
   ];
 
   const ufoPositions = [
-    [0, 0.1, 0 * 0.3],
-    [0, 0.1, -1 * 0.3],
-    [-0.3, 0.1, 0 * 0.3],
-    [-0.3, 0.1, -1 * 0.3],
+    [0, -0.1, 1 * 0.3],
+    [0, -0.1, -1 * 0.3],
+    [-0.3, -0.1, 1 * 0.3],
+    [-0.3, -0.1, -1 * 0.3],
   ];
 
   function Piece() {
@@ -95,7 +95,11 @@ export default function Star({ position, tile }) {
   return (
     <group
       position={position}
-      scale={selection != null && selection.tile == tile ? 1.5 : 1}
+      scale={
+        selection != null && selection.length != 0 && selection[0].tile == tile
+          ? 1.5
+          : 1
+      }
     >
       <mesh
         onPointerDown={(event) => handlePointerDown(event)}

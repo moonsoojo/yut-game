@@ -2,17 +2,19 @@ import { useGLTF } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
-import { useSelector, useDispatch } from "react-redux";
-import { placePiece } from "./state/gameSlice.js";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
+import { useRocketStore } from "./state/zstore";
 
 export default function Earth({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
-  const selection = useSelector((state) => state.game.selection);
-  const tiles = useSelector((state) => state.game.tiles);
-  const dispatch = useDispatch();
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  const setPiece = useRocketStore((state) => state.setPiece);
+  const tiles = useRocketStore((state) => state.tiles);
+  console.log("[Earth]", tiles);
+  console.log("[Earth]", tile);
 
   const earth1Ref = useRef();
   const earth2Ref = useRef();
@@ -38,26 +40,42 @@ export default function Earth({ position, tile }) {
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    //tile will not be clicked unless a piece is selected already
-    dispatch(placePiece({ tile, selection }));
+    if (selection == null) {
+      setSelection({ type: "tile", tile });
+    } else {
+      if (selection.length > 0 && selection[0].tile != tile) {
+        setPiece({ destination: tile });
+      }
+      setSelection(null);
+    }
   }
 
+  const rocketPositions = [
+    [0, 0.2, 0 * 0.3],
+    [0, 0.2, -1 * 0.3],
+    [-0.3, 0.2, 0 * 0.3],
+    [-0.3, 0.2, -1 * 0.3],
+  ];
+
+  const ufoPositions = [
+    [0, -0.1, 1 * 0.3],
+    [0, -0.1, -1 * 0.3],
+    [-0.3, -0.1, 1 * 0.3],
+    [-0.3, -0.1, -1 * 0.3],
+  ];
+
   function Piece() {
-    let position2Start = position[2] - 0.2 + tiles[tile].length * 0.05;
     if (tiles[tile][0].team == 1) {
       return (
         <>
           {tiles[tile].map((value, index) => (
             <Rocket
-              position={[
-                position[0] - 0.2,
-                position[1] + 0.8,
-                position2Start - index * 0.2,
-              ]}
+              position={rocketPositions[index]}
               keyName={`count${index}`}
               tile={tile}
               team={1}
               id={value.id}
+              key={index}
             />
           ))}
         </>
@@ -67,15 +85,12 @@ export default function Earth({ position, tile }) {
         <>
           {tiles[tile].map((value, index) => (
             <Ufo
-              position={[
-                position[0] - 0.3,
-                position[1] + 0.5,
-                position2Start - index * 0.3 + 0.2,
-              ]}
+              position={ufoPositions[index]}
               keyName={`count${index}`}
               tile={tile}
               team={0}
               id={value.id}
+              key={index}
             />
           ))}
         </>
@@ -151,8 +166,8 @@ export default function Earth({ position, tile }) {
           />
         </mesh>
         <EarthWrap />
+        {tiles[tile].length != 0 && <Piece />}
       </group>
-      {/* {tiles[tile].length != 0 && <Piece />} */}
     </>
   );
 }
