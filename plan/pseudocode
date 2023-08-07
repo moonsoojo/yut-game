@@ -1,13 +1,8 @@
 selection
-- selection should always be pieces
-- if you click a tile, the pieces on it should be chosen
-- when you double click a tile, it cancels selection
-- highlight on hover - piece
-- highlight on hover
-- you can't click a piece when it's on a tile
-- place the pieces in the correct locations
-- show that the tile or piece was selected
-- animations
+- you can't tell if a tile's clicked
+- collect all "tiles" under one component
+- bubble opacity 0 to 0.5
+
 - play a game with mom
 - flag animation
 

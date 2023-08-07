@@ -1,7 +1,8 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useRocketStore } from "./state/zstore";
+// import { useRocketStore } from "./state/zstore";
+import { useRocketStore } from "./state/zstore2";
 import React from "react";
 
 export default function Ufo({ position, tile, team, id }) {
@@ -13,6 +14,7 @@ export default function Ufo({ position, tile, team, id }) {
   const ufoRef = useRef();
   const ballsRef = useRef();
   const alienRef = useRef();
+  const wrapperMatRef = useRef();
 
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.2;
@@ -23,6 +25,7 @@ export default function Ufo({ position, tile, team, id }) {
       ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
       ufoRef.current.position.y +=
         Math.sin(state.clock.elapsedTime * 3) * 0.001;
+      // console.log("[Ufo]", ufoRef.current.position.y);
     }
   });
 
@@ -31,6 +34,7 @@ export default function Ufo({ position, tile, team, id }) {
     if (tile == -1) {
       alienRef.current.material.color.r += 2;
       alienRef.current.material.color.g -= 4;
+      wrapperMatRef.current.opacity += 0.5;
     }
   }
 
@@ -39,6 +43,7 @@ export default function Ufo({ position, tile, team, id }) {
     if (tile == -1) {
       alienRef.current.material.color.r -= 2;
       alienRef.current.material.color.g += 4;
+      wrapperMatRef.current.opacity -= 0.5;
     }
   }
 
@@ -60,7 +65,10 @@ export default function Ufo({ position, tile, team, id }) {
       ref={ufoRef}
       dispose={null}
       scale={
-        selection != null && selection[0].team == 0 && selection[0].id == id
+        selection != null &&
+        selection.type === "piece" &&
+        selection.team == 0 &&
+        selection.id == id
           ? 1.5
           : 1
       }
@@ -73,7 +81,7 @@ export default function Ufo({ position, tile, team, id }) {
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
         <sphereGeometry args={[0.2]} />
-        <meshStandardMaterial transparent opacity={0.1} />
+        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
       <group scale={0.2} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh

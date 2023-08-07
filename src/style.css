@@ -8,5 +8,19 @@ body,
   height: 100%;
   overflow: hidden;
   /* background: rgb(201, 234, 255); */
-  background: 		#100456
+  background: 		#cc8b12
+}
+
+.label > div
+{
+    font-family: Helvetica, Arial;
+    position: absolute;
+    background: #00000088;
+    color: white;
+    padding: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 30px;
+    user-select: none;
+    font-size: 20px;
 }

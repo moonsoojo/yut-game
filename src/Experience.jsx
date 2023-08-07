@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import Yuts from "./Yuts";
 import Star from "./Star";
-import Neptune from "./Neptune";
+import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
@@ -24,7 +24,8 @@ import {
 import Universe from "./Universe";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useRocketStore } from "./state/zstore";
+// import { useRocketStore } from "./state/zstore";
+import { useRocketStore } from "./state/zstore2";
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
@@ -55,7 +56,7 @@ export default function Experience() {
       } else if (i == 10) {
         tiles.push(<Saturn position={position} tile={i} key={i} />);
       } else if (i == 15) {
-        tiles.push(<Neptune position={position} tile={i} key={i} />);
+        tiles.push(<Neptune2 position={position} tile={i} key={i} />);
       } else {
         tiles.push(<Star position={position} tile={i} key={i} />);
       }
@@ -113,8 +114,6 @@ export default function Experience() {
     }
 
     //center piece
-    tiles.push;
-    //center piece
     tiles.push(<Sun2 position={[-1, 0.5, 0.5]} tile={22} key={100} />);
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
@@ -126,17 +125,17 @@ export default function Experience() {
       <>
         {pieces[0].map((value, index) =>
           value == null ? (
-            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
+            <mesh position={[4, 0, -0.7 + index * 0.4]} key={index}>
               <sphereGeometry args={[0.1]} />
             </mesh>
           ) : value === "scored" ? (
-            <mesh position={[3.5, 0, -0.9 + index * 0.4]} key={index}>
+            <mesh position={[4, 0, -0.7 + index * 0.4]} key={index}>
               <sphereGeometry args={[0.1]} />
               <meshStandardMaterial color={"green"} />
             </mesh>
           ) : (
             <Ufo
-              position={[3.5, 0, -0.9 + index * 0.4]}
+              position={[4, 0, -0.9 + index * 0.5]}
               keyName={`count${index}`}
               tile={-1}
               team={0}

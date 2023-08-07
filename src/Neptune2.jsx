@@ -1,31 +1,29 @@
 import { useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
+import { useSelector, useDispatch } from "react-redux";
+import { placePiece } from "./state/gameSlice.js";
 import React from "react";
+import NeptuneParticles from "./NeptuneParticles";
+import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
-// import { useRocketStore } from "./state/zstore";
+import * as THREE from "three";
 import { useRocketStore } from "./state/zstore2";
 
-export default function Earth({ position, tile }) {
-  const { nodes, materials } = useGLTF("/models/earth-round.glb");
+export default function Neptune2({ position, tile }) {
+  const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
 
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
 
-  const earth1Ref = useRef();
-  const earth2Ref = useRef();
-  const earth3Ref = useRef();
-  const earth4Ref = useRef();
-  const earth5Ref = useRef();
-  const earthWrapRef = useRef();
-  const earthGroupRef = useRef();
   const wrapperMatRef = useRef();
+  const neptuneGroupRef = useRef();
 
   useFrame((state, delta) => {
-    earthGroupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+    neptuneGroupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   function handlePointerEnter(event) {
@@ -102,21 +100,95 @@ export default function Earth({ position, tile }) {
     }
   }
 
-  function EarthWrap() {
+  function NeptuneWrap() {
     return (
       <mesh
         castShadow
-        ref={earthWrapRef}
         visible={true}
         onPointerDown={(event) => handlePointerDown(event)}
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[4, 32, 16]} />
+        <sphereGeometry args={[5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );
   }
+
+  const {
+    countNeptune1,
+    countNeptune2,
+    sizeNeptune,
+    radius1MinNeptune,
+    radius1MaxNeptune,
+    countSparkles1,
+    colorOne,
+    colorTwo,
+    radius2MinNeptune,
+    radius2MaxNeptune,
+    countSparkles2,
+  } = useControls("neptune", {
+    countNeptune1: {
+      value: 261,
+      min: 0,
+      max: 1000,
+      step: 1,
+    },
+    countNeptune2: {
+      value: 327,
+      min: 0,
+      max: 1000,
+      step: 1,
+    },
+    sizeNeptune: {
+      value: 0.07,
+      min: 0.01,
+      max: 0.4,
+      step: 0.01,
+    },
+    radius1MinNeptune: {
+      value: 1.74,
+      min: 0.1,
+      max: 10,
+      step: 0.01,
+    },
+    radius1MaxNeptune: {
+      value: 2.72,
+      min: 0.5,
+      max: 10,
+      step: 0.01,
+    },
+    countSparkles1: {
+      value: 7,
+      min: 1,
+      max: 20,
+      step: 1,
+    },
+    radius2MinNeptune: {
+      value: 3.09,
+      min: 0.1,
+      max: 10,
+      step: 0.01,
+    },
+    radius2MaxNeptune: {
+      value: 4.27,
+      min: 0.5,
+      max: 10,
+      step: 0.01,
+    },
+    countSparkles2: {
+      value: 6,
+      min: 1,
+      max: 20,
+      step: 1,
+    },
+    colorOne: {
+      value: "#3289FF",
+    },
+    colorTwo: {
+      value: "#6EF2FE",
+    },
+  });
 
   return (
     <group
@@ -127,57 +199,32 @@ export default function Earth({ position, tile }) {
           : 1
       }
     >
-      <group
-        ref={earthGroupRef}
-        scale={0.15}
-        rotation={[Math.PI / 16, Math.PI / 4, 0]}
-      >
+      {tiles[tile].length != 0 && <Piece />}
+      <group ref={neptuneGroupRef} scale={0.15}>
         <mesh
           castShadow
           receiveShadow
-          geometry={nodes.low_poly_earth.geometry}
-          material={materials.water}
-          position={[0, 0.12, 0]}
-          rotation={[-0.4, -0.4, 0.3]}
-          ref={earth1Ref}
-        >
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Cylinder.geometry}
-            material={materials["Material.001"]}
-            position={[1.1, 0.98, 0.38]}
-            rotation={[0.49, 0.02, 0.39]}
-            ref={earth2Ref}
-          >
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.Plane.geometry}
-              material={materials.Material}
-              position={[0.24, 1.29, 0]}
-              scale={0.77}
-              ref={earth3Ref}
-            />
-          </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh.geometry}
-            material={materials.water}
-            ref={earth4Ref}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh_1.geometry}
-            material={materials.earth}
-            ref={earth5Ref}
-          />
-        </mesh>
-        <EarthWrap />
+          geometry={nodes.Sphere002.geometry}
+          material={materials["Blue Planet"]}
+          scale={1.1}
+          // ref={neptune1Ref}
+        ></mesh>
+        {/* remove rings */}
+        <NeptuneParticles
+          countNeptune1={countNeptune1}
+          countNeptune2={countNeptune2}
+          sizeNeptune={sizeNeptune}
+          radius1MinNeptune={radius1MinNeptune}
+          radius1MaxNeptune={radius1MaxNeptune}
+          radius2MinNeptune={radius2MinNeptune}
+          radius2MaxNeptune={radius2MaxNeptune}
+          colorOne={colorOne}
+          colorTwo={colorTwo}
+          countSparkles1={countSparkles1}
+          countSparkles2={countSparkles2}
+        />
+        <NeptuneWrap />
       </group>
-      {tiles[tile].length != 0 && <Piece />}
     </group>
   );
 }

@@ -9,14 +9,15 @@ import NeptuneParticles from "./NeptuneParticles";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useRocketStore } from "./state/zstore";
+import { useRocketStore } from "./state/zstore2";
 
 export default function Neptune({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
 
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
-  const pieces = useRocketStore((state) => state.pieces);
+  const setPiece = useRocketStore((state) => state.setPiece);
+  const tiles = useRocketStore((state) => state.tiles);
 
   const [neptune1Color, setNeptune1Color] = useState({});
   const [neptune2Color, setNeptune2Color] = useState({});
@@ -105,7 +106,7 @@ export default function Neptune({ position, tile }) {
         onPointerDown={(event) => handlePointerDown(event)}
       >
         <sphereGeometry args={[5, 32, 16]} />
-        <meshStandardMaterial transparent opacity={0.1} />
+        <meshStandardMaterial transparent opacity={0} />
       </mesh>
     );
   }
@@ -198,18 +199,18 @@ export default function Neptune({ position, tile }) {
         ></mesh>
         {/* remove rings */}
         <NeptuneParticles
-        countNeptune1={countNeptune1}
-        countNeptune2={countNeptune2}
-        sizeNeptune={sizeNeptune}
-        radius1MinNeptune={radius1MinNeptune}
-        radius1MaxNeptune={radius1MaxNeptune}
-        radius2MinNeptune={radius2MinNeptune}
-        radius2MaxNeptune={radius2MaxNeptune}
-        colorOne={colorOne}
-        colorTwo={colorTwo}
-        countSparkles1={countSparkles1}
-        countSparkles2={countSparkles2}
-      />
+          countNeptune1={countNeptune1}
+          countNeptune2={countNeptune2}
+          sizeNeptune={sizeNeptune}
+          radius1MinNeptune={radius1MinNeptune}
+          radius1MaxNeptune={radius1MaxNeptune}
+          radius2MinNeptune={radius2MinNeptune}
+          radius2MaxNeptune={radius2MaxNeptune}
+          colorOne={colorOne}
+          colorTwo={colorTwo}
+          countSparkles1={countSparkles1}
+          countSparkles2={countSparkles2}
+        />
         <NeptuneWrap />
       </group>
     </group>

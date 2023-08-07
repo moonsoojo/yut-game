@@ -3,7 +3,8 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import React from "react";
 import { useRef } from "react";
-import { useRocketStore } from "./state/zstore";
+// import { useRocketStore } from "./state/zstore";
+import { useRocketStore } from "./state/zstore2";
 
 export default function Star({ position, tile }) {
   const { nodes, materials } = useGLTF(
@@ -20,15 +21,17 @@ export default function Star({ position, tile }) {
   //draw a circle with hover, and through shortcuts
   function handlePointerEnter(event) {
     event.stopPropagation();
-    starMatRef.current.color.r -= 1;
-    starMatRef.current.color.g -= 0.5;
+    document.body.style.cursor = "pointer";
+    // starMatRef.current.color.r -= 1;
+    // starMatRef.current.color.g -= 0.5;
     wrapperMatRef.current.opacity += 0.5;
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    starMatRef.current.color.r += 1;
-    starMatRef.current.color.g += 0.5;
+    document.body.style.cursor = "default";
+    // starMatRef.current.color.r += 1;
+    // starMatRef.current.color.g += 0.5;
     wrapperMatRef.current.opacity -= 0.5;
   }
 
@@ -37,9 +40,7 @@ export default function Star({ position, tile }) {
     if (selection == null) {
       setSelection({ type: "tile", tile });
     } else {
-      if (selection.length > 0 && selection[0].tile != tile) {
-        setPiece({ destination: tile });
-      }
+      setPiece({ destination: tile });
       setSelection(null);
     }
   }
@@ -96,7 +97,7 @@ export default function Star({ position, tile }) {
     <group
       position={position}
       scale={
-        selection != null && selection.length != 0 && selection[0].tile == tile
+        selection != null && selection.type === "tile" && selection.tile == tile
           ? 1.5
           : 1
       }
@@ -107,7 +108,7 @@ export default function Star({ position, tile }) {
         onPointerLeave={(e) => handlePointerLeave(e)}
       >
         <sphereGeometry args={[0.5]} />
-        <meshStandardMaterial transparent opacity={0.1} ref={wrapperMatRef} />
+        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
       <mesh
         castShadow

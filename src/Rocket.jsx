@@ -1,7 +1,8 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
-import { useRocketStore } from "./state/zstore";
+// import { useRocketStore } from "./state/zstore";
+import { useRocketStore } from "./state/zstore2";
 import React from "react";
 
 export default function Rocket({ position, tile, team, id }) {
@@ -16,6 +17,7 @@ export default function Rocket({ position, tile, team, id }) {
   const rocketRef = useRef();
   const flameRef = useRef();
   const rocketPart1Ref = useRef();
+  const wrapperMatRef = useRef();
 
   useFrame((state, delta) => {
     if (tile >= 0) {
@@ -30,6 +32,7 @@ export default function Rocket({ position, tile, team, id }) {
     event.stopPropagation();
     if (tile == -1) {
       rocketPart1Ref.current.material.color.r += 2;
+      wrapperMatRef.current.opacity += 0.5;
     }
   }
 
@@ -37,6 +40,7 @@ export default function Rocket({ position, tile, team, id }) {
     event.stopPropagation();
     if (tile == -1) {
       rocketPart1Ref.current.material.color.r -= 2;
+      wrapperMatRef.current.opacity -= 0.5;
     }
   }
 
@@ -59,7 +63,12 @@ export default function Rocket({ position, tile, team, id }) {
       ref={rocketRef}
       dispose={null}
       scale={
-        selection != null && selection[0].team == 1 && selection[0].id == id ? 1.5 : 1
+        selection != null &&
+        selection.type === "piece" &&
+        selection.team == 1 &&
+        selection.id == id
+          ? 1.5
+          : 1
       }
     >
       <mesh
@@ -72,7 +81,7 @@ export default function Rocket({ position, tile, team, id }) {
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
         <capsuleGeometry args={[0.15, 0.3]} />
-        <meshBasicMaterial transparent opacity={0.1} />
+        <meshBasicMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
       <group rotation={[(Math.PI * 3) / 4, 0, -Math.PI]} scale={0.009}>
         <mesh
