@@ -59,6 +59,7 @@ export const useRocketStore = create((set) => ({
       let starting = state.selection.type === "piece" ? true : false;
       let piecesIncoming;
       let incomingTeam;
+
       if (state.selection.type === "tile") {
         piecesIncoming = JSON.parse(
           JSON.stringify(newTiles[state.selection.tile])

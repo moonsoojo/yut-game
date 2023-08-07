@@ -25,7 +25,6 @@ export default function Ufo({ position, tile, team, id }) {
       ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
       ufoRef.current.position.y +=
         Math.sin(state.clock.elapsedTime * 3) * 0.001;
-      // console.log("[Ufo]", ufoRef.current.position.y);
     }
   });
 
@@ -49,7 +48,6 @@ export default function Ufo({ position, tile, team, id }) {
 
   function handlePointerDown(event) {
     event.stopPropagation();
-
     if (tile == -1) {
       if (selection == null) {
         setSelection({ type: "piece", tile, team, id });

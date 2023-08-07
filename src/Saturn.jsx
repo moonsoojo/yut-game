@@ -77,7 +77,9 @@ export default function Saturn({ position, tile, scale }) {
     if (selection == null) {
       setSelection({ type: "tile", tile });
     } else {
-      setPiece({ destination: tile });
+      if (selection.tile != tile) {
+        setPiece({ destination: tile });
+      }
       setSelection(null);
     }
   }

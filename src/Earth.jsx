@@ -49,7 +49,9 @@ export default function Earth({ position, tile }) {
     if (selection == null) {
       setSelection({ type: "tile", tile });
     } else {
-      setPiece({ destination: tile });
+      if (selection.tile != tile) {
+        setPiece({ destination: tile });
+      }
       setSelection(null);
     }
   }
