@@ -9,6 +9,7 @@ import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
 import Sun2 from "./Sun2";
+import Starfighter from "./Starfighter";
 import React from "react";
 import ScoreButton from "./ScoreButton";
 import { Leva, useControls } from "leva";
@@ -26,9 +27,12 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
+import { charactersAtom } from "./SocketManager";
+import { useAtom } from "jotai";
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
+  const [characters] = useAtom(charactersAtom);
 
   const numTiles = 29;
 
@@ -441,6 +445,13 @@ export default function Experience() {
         <PiecesTeam1 />
 
         <ScoreButton position={[4, 0, 2]} />
+        {characters.map((character) => (
+          <Starfighter
+            key={character.id}
+            position={character.position}
+            color={character.color}
+          />
+        ))}
       </Physics>
     </>
   );

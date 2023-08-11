@@ -12,27 +12,27 @@ import React from "react";
 import { useLoader } from "@react-three/fiber";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import Star from "./Star";
+import { SocketManager } from "./SocketManager";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
 root.render(
-  <Provider store={store}>
-    <KeyboardControls map={[{ name: "throw", keys: ["Space"] }]}>
-      <Canvas
-        gl={{
-          antialias: true,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          outputEncoding: THREE.sRGBEncoding,
-        }}
-        camera={{ fov: 45, near: 0.1, far: 500, position: [7, 8.5, -3.5] }}
-        // pan: move about a plane
-      >
-        <CameraControls />
+  <KeyboardControls map={[{ name: "throw", keys: ["Space"] }]}>
+    <SocketManager />
+    <Canvas
+      gl={{
+        antialias: true,
+        toneMapping: THREE.ACESFilmicToneMapping,
+        outputEncoding: THREE.sRGBEncoding,
+      }}
+      camera={{ fov: 45, near: 0.1, far: 500, position: [7, 8.5, -3.5] }}
+      // pan: move about a plane
+    >
+      <CameraControls />
 
-        <Experience />
+      <Experience />
 
-        {/* <Perf /> */}
-      </Canvas>
-    </KeyboardControls>
-  </Provider>
+      {/* <Perf /> */}
+    </Canvas>
+  </KeyboardControls>
 );

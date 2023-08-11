@@ -1,64 +1,73 @@
 import { useGLTF } from "@react-three/drei";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
-import React from "react";
+import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-// import { useRocketStore } from "./state/zstore";
+import React from "react";
 import { useRocketStore } from "./state/zstore2";
+import { selectionAtom, socket } from "./SocketManager";
+import { useAtom } from "jotai";
 
-export default function Star({ position, tile }) {
-  const { nodes, materials } = useGLTF(
-    `/models/stars/star-yellow copy ${tile}.glb`
-  );
+export default function Mars({ position, tile }) {
+  const { nodes, materials } = useGLTF("/models/Mars 4.glb");
+
+  const [selection] = useAtom(selectionAtom);
 
   const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+  // const selection = useRocketStore((state) => state.selection);
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
-  const starMatRef = useRef();
+
+  const marsRef = useRef();
   const wrapperMatRef = useRef();
 
-  //draw a circle with hover, and through shortcuts
+  useFrame((state, delta) => {
+    const elapsedTime = state.clock.elapsedTime;
+    marsRef.current.rotation.y = elapsedTime * 0.5;
+  });
+
   function handlePointerEnter(event) {
     event.stopPropagation();
     document.body.style.cursor = "pointer";
-    // starMatRef.current.color.r -= 1;
-    // starMatRef.current.color.g -= 0.5;
+    // earth1Ref.current.material.color.r += 0.1;
+    // waterMatRef.current.color.r += 1;
     wrapperMatRef.current.opacity += 0.5;
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     document.body.style.cursor = "default";
-    // starMatRef.current.color.r += 1;
-    // starMatRef.current.color.g += 0.5;
+    // earth1Ref.current.material.color.r -= 0.1;
+    // waterMatRef.current.color.r -= 1;
     wrapperMatRef.current.opacity -= 0.5;
   }
 
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      setSelection({ type: "tile", tile });
+      // setSelection({ type: "tile", tile });
+      socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
         setPiece({ destination: tile });
       }
-      setSelection(null);
+      // setSelection(null);
+      socket.emit("select", null);
     }
   }
 
   const rocketPositions = [
-    [0, 0.2, 0 * 0.3],
-    [0, 0.2, -1 * 0.3],
-    [-0.3, 0.2, 0 * 0.3],
-    [-0.3, 0.2, -1 * 0.3],
+    [0, 0.5, 0 * 0.3],
+    [0, 0.5, -1 * 0.3],
+    [-0.3, 0.5, 0 * 0.3],
+    [-0.3, 0.5, -1 * 0.3],
   ];
 
   const ufoPositions = [
-    [0, -0.1, 1 * 0.3],
-    [0, -0.1, -1 * 0.3],
-    [-0.3, -0.1, 1 * 0.3],
-    [-0.3, -0.1, -1 * 0.3],
+    [0, 0.3, 1 * 0.3],
+    [0, 0.3, -1 * 0.3],
+    [-0.3, 0.3, 1 * 0.3],
+    [-0.3, 0.3, -1 * 0.3],
   ];
 
   function Piece() {
@@ -104,23 +113,24 @@ export default function Star({ position, tile }) {
           : 1
       }
     >
+      {tiles[tile].length != 0 && <Piece />}
       <mesh
+        onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerDown={(event) => handlePointerDown(event)}
-        onPointerEnter={(e) => handlePointerEnter(e)}
-        onPointerLeave={(e) => handlePointerLeave(e)}
+        onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.5]} />
+        <sphereGeometry args={[0.6]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.star.geometry}
-        scale={0.15}
-      >
-        <meshStandardMaterial color={"yellow"} ref={starMatRef} />
-      </mesh>
-      {tiles[tile].length != 0 && <Piece />}
+        geometry={nodes.Mars.geometry}
+        material={materials.Mars}
+        scale={0.25}
+        onPointerDown={(event) => handlePointerDown(event)}
+        ref={marsRef}
+      />
     </group>
   );
 }

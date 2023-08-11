@@ -10,12 +10,15 @@ import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRocketStore } from "./state/zstore2";
+import { selectionAtom, socket } from "./SocketManager";
+import { useAtom } from "jotai";
 
 export default function Neptune2({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
 
   const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+  // const selection = useRocketStore((state) => state.selection);
+  const [selection] = useAtom(selectionAtom);
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
 
@@ -45,12 +48,14 @@ export default function Neptune2({ position, tile }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      setSelection({ type: "tile", tile });
+      // setSelection({ type: "tile", tile });
+      socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
         setPiece({ destination: tile });
       }
-      setSelection(null);
+      // setSelection(null);
+      socket.emit("select", null);
     }
   }
 
