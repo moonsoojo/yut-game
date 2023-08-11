@@ -4,11 +4,15 @@ import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 import React from "react";
+import { selectionAtom, socket } from "./SocketManager";
+import { useAtom } from "jotai";
 
 export default function Ufo({ position, tile, team, id }) {
   const { nodes, materials } = useGLTF(`/models/ufos/ufo${id}.glb`);
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+
+  const [selection] = useAtom(selectionAtom);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
@@ -50,9 +54,11 @@ export default function Ufo({ position, tile, team, id }) {
     event.stopPropagation();
     if (tile == -1) {
       if (selection == null) {
-        setSelection({ type: "piece", tile, team, id });
+        // setSelection({ type: "piece", tile, team, id });
+        socket.emit("select", { type: "piece", tile, team, id });
       } else {
-        setSelection(null);
+        // setSelection(null);
+        socket.emit("select", null);
       }
     }
   }

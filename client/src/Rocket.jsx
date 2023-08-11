@@ -3,6 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
+import { selectionAtom, socket } from "./SocketManager";
+import { useAtom } from "jotai";
 import React from "react";
 
 export default function Rocket({ position, tile, team, id }) {
@@ -10,8 +12,9 @@ export default function Rocket({ position, tile, team, id }) {
     `/models/rockets/rocket-with-astronaut${id}.glb`
   );
 
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+  const [selection] = useAtom(selectionAtom);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
 
   // const [active, setActive] = useState(false); // doesn't reset animation
   const rocketRef = useRef();
@@ -47,11 +50,13 @@ export default function Rocket({ position, tile, team, id }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (tile == -1) {
-      console.log("[Rocket][handlePointerDown]");
+      // console.log("[Rocket][handlePointerDown]");
       if (selection == null) {
-        setSelection({ type: "piece", tile, team, id });
+        // setSelection({ type: "piece", tile, team, id });
+        socket.emit("select", { type: "piece", tile, team, id });
       } else {
-        setSelection(null);
+        // setSelection(null);
+        socket.emit("select", null);
       }
     }
   }

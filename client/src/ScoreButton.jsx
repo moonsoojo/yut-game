@@ -2,19 +2,24 @@ import React, { useRef } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 import { Html } from "@react-three/drei";
+import { selectionAtom, socket } from "./SocketManager";
+import { useAtom } from "jotai";
 
 export default function ScoreButton({ position }) {
-  const finishPiece = useRocketStore((state) => state.finishPiece);
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+  // const finishPiece = useRocketStore((state) => state.finishPiece);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
+  const [selection] = useAtom(selectionAtom);
   const matRef = useRef();
 
   function handleScoreButtonClick(event) {
     event.stopPropagation();
     if (selection != null) {
-      finishPiece();
-      setSelection(null);
+      // finishPiece();
+      // setSelection(null);
+      socket.emit("finishPiece");
     }
+    socket.emit("select", null);
   }
 
   function handlePointerEnter(event) {

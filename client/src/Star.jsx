@@ -5,7 +5,7 @@ import React from "react";
 import { useRef } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Star({ position, tile }) {
@@ -16,8 +16,9 @@ export default function Star({ position, tile }) {
   // const setSelection = useRocketStore((state) => state.setSelection);
   // const selection = useRocketStore((state) => state.selection);
   const [selection] = useAtom(selectionAtom);
-  const setPiece = useRocketStore((state) => state.setPiece);
-  const tiles = useRocketStore((state) => state.tiles);
+  const [tiles] = useAtom(tilesAtom);
+  // const setPiece = useRocketStore((state) => state.setPiece);
+  // const tiles = useRocketStore((state) => state.tiles);
   const starMatRef = useRef();
   const wrapperMatRef = useRef();
 
@@ -46,6 +47,7 @@ export default function Star({ position, tile }) {
     } else {
       if (selection.tile != tile) {
         // setPiece({ destination: tile });
+        socket.emit("placePiece", tile);
       }
       // setSelection(null);
       socket.emit("select", null);

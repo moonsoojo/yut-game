@@ -29,10 +29,12 @@ import * as THREE from "three";
 import { useRocketStore } from "./state/zstore2";
 import { charactersAtom } from "./SocketManager";
 import { useAtom } from "jotai";
+import { piecesAtom, socket } from "./SocketManager";
 
 export default function Experience() {
-  const pieces = useRocketStore((state) => state.pieces);
+  // const pieces = useRocketStore((state) => state.pieces);
   const [characters] = useAtom(charactersAtom);
+  const [pieces] = useAtom(piecesAtom);
 
   const numTiles = 29;
 
