@@ -6,21 +6,21 @@ import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function ScoreButton({ position }) {
-  // const finishPiece = useRocketStore((state) => state.finishPiece);
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
-  const [selection] = useAtom(selectionAtom);
+  const finishPiece = useRocketStore((state) => state.finishPiece);
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  // const [selection] = useAtom(selectionAtom);
   const [hover, setHover] = useState(false);
   const matRef = useRef();
 
   function handleScoreButtonClick(event) {
     event.stopPropagation();
     if (selection != null) {
-      // finishPiece();
-      // setSelection(null);
-      socket.emit("finishPiece");
+      finishPiece();
+      setSelection(null);
+      // socket.emit("finishPiece");
     }
-    socket.emit("select", null);
+    // socket.emit("select", null);
   }
 
   function handlePointerEnter(event) {

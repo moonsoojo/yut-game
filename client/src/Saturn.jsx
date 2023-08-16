@@ -45,8 +45,8 @@ export default function Saturn({ position, tile, scale }) {
   );
 
   const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
-  const [selection] = useAtom(selectionAtom);
+  const selection = useRocketStore((state) => state.selection);
+  // const [selection] = useAtom(selectionAtom);
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
 
@@ -78,14 +78,14 @@ export default function Saturn({ position, tile, scale }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      // setSelection({ type: "tile", tile });
-      socket.emit("select", { type: "tile", tile });
+      setSelection({ type: "tile", tile });
+      // socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
         setPiece({ destination: tile });
       }
-      // setSelection(null);
-      socket.emit("select", null);
+      setSelection(null);
+      // socket.emit("select", null);
     }
   }
 

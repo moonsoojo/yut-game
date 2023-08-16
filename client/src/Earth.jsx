@@ -12,10 +12,10 @@ import { useAtom } from "jotai";
 export default function Earth({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
-  const [selection] = useAtom(selectionAtom);
+  // const [selection] = useAtom(selectionAtom);
 
   const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
+  const selection = useRocketStore((state) => state.selection);
   const setPiece = useRocketStore((state) => state.setPiece);
   const tiles = useRocketStore((state) => state.tiles);
 
@@ -51,14 +51,14 @@ export default function Earth({ position, tile }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      // setSelection({ type: "tile", tile });
-      socket.emit("select", { type: "tile", tile });
+      setSelection({ type: "tile", tile });
+      // socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
         setPiece({ destination: tile });
       }
-      // setSelection(null);
-      socket.emit("select", null);
+      setSelection(null);
+      // socket.emit("select", null);
     }
   }
 

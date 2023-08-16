@@ -9,6 +9,7 @@ import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
 import SunBagus from "./SunBagus.jsx";
+import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import React from "react";
 import ScoreButton from "./ScoreButton";
@@ -32,9 +33,9 @@ import { useAtom } from "jotai";
 import { piecesAtom, socket } from "./SocketManager";
 
 export default function Experience() {
-  // const pieces = useRocketStore((state) => state.pieces);
+  const pieces = useRocketStore((state) => state.pieces);
   const [characters] = useAtom(charactersAtom);
-  const [pieces] = useAtom(piecesAtom);
+  // const [pieces] = useAtom(piecesAtom);
 
   const numTiles = 29;
 
@@ -121,7 +122,8 @@ export default function Experience() {
 
     //center piece
     tiles.push(
-      <SunBagus position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
+      // <SunBagus position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
+      <Sun2 position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
     );
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
@@ -431,7 +433,7 @@ export default function Experience() {
             friction={1}
           />
         </RigidBody>
-        {/* <Yuts /> */}
+        <Yuts />
         <Tiles />
 
         <PiecesTeam0 />

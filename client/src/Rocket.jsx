@@ -12,9 +12,9 @@ export default function Rocket({ position, tile, team, id }) {
     `/models/rockets/rocket-with-astronaut${id}.glb`
   );
 
-  const [selection] = useAtom(selectionAtom);
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
+  // const [selection] = useAtom(selectionAtom);
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
 
   // const [active, setActive] = useState(false); // doesn't reset animation
   const rocketRef = useRef();
@@ -52,11 +52,11 @@ export default function Rocket({ position, tile, team, id }) {
     if (tile == -1) {
       // console.log("[Rocket][handlePointerDown]");
       if (selection == null) {
-        // setSelection({ type: "piece", tile, team, id });
-        socket.emit("select", { type: "piece", tile, team, id });
+        setSelection({ type: "piece", tile, team, id });
+        // socket.emit("select", { type: "piece", tile, team, id });
       } else {
-        // setSelection(null);
-        socket.emit("select", null);
+        setSelection(null);
+        // socket.emit("select", null);
       }
     }
   }

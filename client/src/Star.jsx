@@ -13,12 +13,12 @@ export default function Star({ position, tile }) {
     `/models/stars/star-yellow copy ${tile}.glb`
   );
 
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
-  const [selection] = useAtom(selectionAtom);
-  const [tiles] = useAtom(tilesAtom);
-  // const setPiece = useRocketStore((state) => state.setPiece);
-  // const tiles = useRocketStore((state) => state.tiles);
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  // const [selection] = useAtom(selectionAtom);
+  // const [tiles] = useAtom(tilesAtom);
+  const setPiece = useRocketStore((state) => state.setPiece);
+  const tiles = useRocketStore((state) => state.tiles);
   const starMatRef = useRef();
   const wrapperMatRef = useRef();
 
@@ -42,15 +42,15 @@ export default function Star({ position, tile }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      // setSelection({ type: "tile", tile });
-      socket.emit("select", { type: "tile", tile });
+      setSelection({ type: "tile", tile });
+      // socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
-        // setPiece({ destination: tile });
-        socket.emit("placePiece", tile);
+        setPiece({ destination: tile });
+        // socket.emit("placePiece", tile);
       }
-      // setSelection(null);
-      socket.emit("select", null);
+      setSelection(null);
+      // socket.emit("select", null);
     }
   }
 
