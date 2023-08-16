@@ -75,6 +75,7 @@ export default function Rocket({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
+      rotation={[-Math.PI / 8, Math.PI / 4, 0, "YZX"]}
     >
       <mesh
         castShadow

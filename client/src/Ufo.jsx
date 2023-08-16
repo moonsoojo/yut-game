@@ -76,6 +76,7 @@ export default function Ufo({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
+      rotation={[-Math.PI / 8, Math.PI / 4, -Math.PI / 8, "YXZ"]}
     >
       <mesh
         castShadow

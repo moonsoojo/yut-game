@@ -8,8 +8,8 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import Sun2 from "./Sun2";
-import Starfighter from "./Starfighter";
+import SunBagus from "./SunBagus.jsx";
+// import Starfighter from "./Starfighter";
 import React from "react";
 import ScoreButton from "./ScoreButton";
 import { Leva, useControls } from "leva";
@@ -120,7 +120,9 @@ export default function Experience() {
     }
 
     //center piece
-    tiles.push(<Sun2 position={[-1, 0.5, 0.5]} tile={22} key={100} />);
+    tiles.push(
+      <SunBagus position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
+    );
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
   }
@@ -179,17 +181,6 @@ export default function Experience() {
         )}
       </>
     );
-  }
-  {
-    /* {[...Array(scores[1])].map((value, index) => (
-          <mesh position={[3.1, 0, -3 + index * 0.4]} keyName={`count${index}`}>
-            <sphereGeometry args={[0.1, 32, 16]} />
-            <meshStandardMaterial color={"red"} />
-          </mesh>
-        ))} 
-      </>
-    );
-  }*/
   }
 
   const {
@@ -440,20 +431,20 @@ export default function Experience() {
             friction={1}
           />
         </RigidBody>
-        <Yuts />
+        {/* <Yuts /> */}
         <Tiles />
 
         <PiecesTeam0 />
         <PiecesTeam1 />
 
         <ScoreButton position={[4, 0, 2]} />
-        {characters.map((character) => (
+        {/* {characters.map((character) => (
           <Starfighter
             key={character.id}
             position={character.position}
             color={character.color}
           />
-        ))}
+        ))} */}
       </Physics>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 import { Html } from "@react-three/drei";
@@ -10,6 +10,7 @@ export default function ScoreButton({ position }) {
   // const setSelection = useRocketStore((state) => state.setSelection);
   // const selection = useRocketStore((state) => state.selection);
   const [selection] = useAtom(selectionAtom);
+  const [hover, setHover] = useState(false);
   const matRef = useRef();
 
   function handleScoreButtonClick(event) {
@@ -25,11 +26,13 @@ export default function ScoreButton({ position }) {
   function handlePointerEnter(event) {
     event.stopPropagation();
     matRef.current.color.r += 1;
+    setHover(true);
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     matRef.current.color.r -= 1;
+    setHover(false);
   }
 
   return (
@@ -39,12 +42,14 @@ export default function ScoreButton({ position }) {
       onPointerEnter={(e) => handlePointerEnter(e)}
       onPointerLeave={(e) => handlePointerLeave(e)}
     >
-      <sphereGeometry args={[0.4, 32, 16]} />
+      <sphereGeometry args={[0.2, 32, 16]} />
       <meshStandardMaterial color={"green"} ref={matRef} />
-      <Html position={[0, 1, 0]} wrapperClass="label">
-        {" "}
-        Score here 🏁
-      </Html>
+      {hover && (
+        <Html position={[0, 1, -0.3]} wrapperClass="label">
+          {" "}
+          Score here 🏁
+        </Html>
+      )}
     </mesh>
   );
 }

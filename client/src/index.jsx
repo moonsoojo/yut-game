@@ -25,7 +25,7 @@ root.render(
         toneMapping: THREE.ACESFilmicToneMapping,
         outputEncoding: THREE.sRGBEncoding,
       }}
-      camera={{ fov: 45, near: 0.1, far: 500, position: [7, 8.5, -3.5] }}
+      camera={{ fov: 45, near: 0.1, far: 500, position: [5, 6.5, -2.5] }}
       // pan: move about a plane
     >
       <CameraControls />
