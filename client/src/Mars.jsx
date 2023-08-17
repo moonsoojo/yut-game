@@ -57,17 +57,17 @@ export default function Mars({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.5, 0 * 0.3],
-    [0, 0.5, -1 * 0.3],
-    [-0.3, 0.5, 0 * 0.3],
-    [-0.3, 0.5, -1 * 0.3],
+    [0.1, 0.65, 0],
+    [0.1, 0.65, -0.3],
+    [-0.4, 0.65, 0],
+    [-0.4, 0.65, -0.3],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 1 * 0.3],
-    [0, 0.3, -1 * 0.3],
-    [-0.3, 0.3, 1 * 0.3],
-    [-0.3, 0.3, -1 * 0.3],
+    [0, 0.45, 0.2],
+    [0, 0.45, -0.1],
+    [-0.3, 0.45, 0.2],
+    [-0.3, 0.45, -0.1],
   ];
 
   function Piece() {
@@ -110,7 +110,7 @@ export default function Mars({ position, tile }) {
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile
           ? 1.5
-          : 1
+          : 1.0
       }
     >
       {tiles[tile].length != 0 && <Piece />}
@@ -127,7 +127,7 @@ export default function Mars({ position, tile }) {
         receiveShadow
         geometry={nodes.Mars.geometry}
         material={materials.Mars}
-        scale={0.25}
+        scale={0.32}
         onPointerDown={(event) => handlePointerDown(event)}
         ref={marsRef}
       />

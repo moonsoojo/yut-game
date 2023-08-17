@@ -63,17 +63,17 @@ export default function Earth({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.5, 0 * 0.3],
-    [0, 0.5, -1 * 0.3],
-    [-0.3, 0.5, 0 * 0.3],
-    [-0.3, 0.5, -1 * 0.3],
+    [0, 0.6, -0.1],
+    [0, 0.6, -0.4],
+    [-0.3, 0.6, -0.1],
+    [-0.3, 0.6, -0.4],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 1 * 0.3],
-    [0, 0.3, -1 * 0.3],
-    [-0.3, 0.3, 1 * 0.3],
-    [-0.3, 0.3, -1 * 0.3],
+    [0, 0.55, 0.1],
+    [0, 0.55, -0.3],
+    [-0.3, 0.55, 0.1],
+    [-0.3, 0.55, -0.3],
   ];
 
   function Piece() {
@@ -137,7 +137,7 @@ export default function Earth({ position, tile }) {
     >
       <group
         ref={earthGroupRef}
-        scale={0.15}
+        scale={0.17}
         rotation={[Math.PI / 16, Math.PI / 4, 0]}
       >
         <mesh

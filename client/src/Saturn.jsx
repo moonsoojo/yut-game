@@ -55,7 +55,7 @@ export default function Saturn({ position, tile, scale }) {
   const wrapperMatRef = useRef();
 
   useFrame((state, delta) => {
-    saturnRef.current.rotation.y = state.clock.elapsedTime * 0.01;
+    // saturnRef.current.rotation.y = state.clock.elapsedTime * 0.01;
     satellitesRef.current.rotation.x = state.clock.elapsedTime * 0.5;
   });
 
@@ -90,17 +90,17 @@ export default function Saturn({ position, tile, scale }) {
   }
 
   const rocketPositions = [
-    [0, 0.5, 0 * 0.3],
-    [0, 0.5, -1 * 0.3],
-    [-0.3, 0.5, 0 * 0.3],
-    [-0.3, 0.5, -1 * 0.3],
+    [0, 0.6, 0],
+    [0, 0.6, -0.3],
+    [-0.3, 0.65, -0.1],
+    [-0.3, 0.65, -0.4],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 1 * 0.3],
-    [0, 0.3, -1 * 0.3],
-    [-0.3, 0.3, 1 * 0.3],
-    [-0.3, 0.3, -1 * 0.3],
+    [0.1, 0.4, 0.2],
+    [0.1, 0.4, -0.2],
+    [-0.3, 0.4, 0.2],
+    [-0.3, 0.4, -0.2],
   ];
 
   function Piece() {
@@ -162,7 +162,7 @@ export default function Saturn({ position, tile, scale }) {
       }
     >
       {tiles[tile].length != 0 && <Piece />}
-      <group scale={0.2}>
+      <group scale={0.22}>
         <mesh
           castShadow
           receiveShadow

@@ -60,17 +60,17 @@ export default function Neptune2({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.5, 0 * 0.3],
-    [0, 0.5, -1 * 0.3],
-    [-0.3, 0.5, 0 * 0.3],
-    [-0.3, 0.5, -1 * 0.3],
+    [0, 0.55, 0],
+    [0, 0.55, -0.4],
+    [-0.4, 0.55, 0],
+    [-0.4, 0.55, -0.4],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 1 * 0.3],
-    [0, 0.3, -1 * 0.3],
-    [-0.3, 0.3, 1 * 0.3],
-    [-0.3, 0.3, -1 * 0.3],
+    [0, 0.3, 0.2],
+    [0, 0.3, -0.2],
+    [-0.3, 0.3, 0.2],
+    [-0.3, 0.3, -0.2],
   ];
 
   function Piece() {
@@ -207,7 +207,7 @@ export default function Neptune2({ position, tile }) {
       }
     >
       {tiles[tile].length != 0 && <Piece />}
-      <group ref={neptuneGroupRef} scale={0.15}>
+      <group ref={neptuneGroupRef} scale={0.17 }>
         <mesh
           castShadow
           receiveShadow
