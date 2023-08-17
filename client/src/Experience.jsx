@@ -22,19 +22,21 @@ import {
   AccumulativeShadows,
   SoftShadows,
   Stars,
+  Html,
 } from "@react-three/drei";
 import Universe from "./Universe";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { charactersAtom } from "./SocketManager";
+// import { charactersAtom } from "./SocketManager";
 import { useAtom } from "jotai";
-import { piecesAtom, socket } from "./SocketManager";
+// import { piecesAtom, socket } from "./SocketManager";
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
-  const [characters] = useAtom(charactersAtom);
+  // const [characters] = useAtom(charactersAtom);
+
   // const [pieces] = useAtom(piecesAtom);
 
   const numTiles = 29;
@@ -122,8 +124,8 @@ export default function Experience() {
 
     //center piece
     tiles.push(
-      // <SunBagus position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
-      <Sun2 position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
+      <SunBagus position={[-1, 0.5, 0.5]} tile={22} key={100} />
+      // <Sun2 position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
     );
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
@@ -172,7 +174,7 @@ export default function Experience() {
             </mesh>
           ) : (
             <Rocket
-              position={[2.8, 0, -3.7 + index * 0.5]}
+              position={[2.3, 0, -3.7 + index * 0.4]}
               keyName={`count${index}`}
               tile={-1}
               team={1}

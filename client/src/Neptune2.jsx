@@ -10,7 +10,7 @@ import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Neptune2({ position, tile }) {
@@ -235,3 +235,5 @@ export default function Neptune2({ position, tile }) {
     </group>
   );
 }
+
+useGLTF.preload("/models/neptune-sphere.glb");

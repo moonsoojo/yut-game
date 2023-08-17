@@ -7,7 +7,7 @@ import React from "react";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 import Rocket from "./Rocket";
@@ -275,3 +275,5 @@ export default function Saturn({ position, tile, scale }) {
     </group>
   );
 }
+
+useGLTF.preload("/models/Saturn 3.glb");

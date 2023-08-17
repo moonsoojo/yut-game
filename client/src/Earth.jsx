@@ -6,7 +6,7 @@ import React from "react";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Earth({ position, tile }) {
@@ -189,3 +189,4 @@ export default function Earth({ position, tile }) {
     </group>
   );
 }
+useGLTF.preload("./models/earth-round.glb");

@@ -1,17 +1,21 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useMemo } from "react";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
 
 export default function Rocket({ position, tile, team, id }) {
-  const { nodes, materials } = useGLTF(
-    `/models/rockets/rocket-with-astronaut${id}.glb`
+  const { scene, materials, animations } = useGLTF(
+    "/models/rockets/rocket-with-astronaut0.glb"
   );
 
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
   // const [selection] = useAtom(selectionAtom);
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
@@ -34,16 +38,18 @@ export default function Rocket({ position, tile, team, id }) {
   function handlePointerEnter(event) {
     event.stopPropagation();
     if (tile == -1) {
-      rocketPart1Ref.current.material.color.r += 2;
-      wrapperMatRef.current.opacity += 0.5;
+      // rocketPart1Ref.current.material.color.r += 2;
+      wrapperMatRef.current.opacity += 0.4;
+      document.body.style.cursor = "pointer";
     }
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     if (tile == -1) {
-      rocketPart1Ref.current.material.color.r -= 2;
-      wrapperMatRef.current.opacity -= 0.5;
+      // rocketPart1Ref.current.material.color.r -= 2;
+      wrapperMatRef.current.opacity -= 0.4;
+      document.body.style.cursor = "default";
     }
   }
 
@@ -75,7 +81,7 @@ export default function Rocket({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
-      rotation={[-Math.PI / 8, Math.PI / 4, 0, "YZX"]}
+      rotation={[0, Math.PI / 8, Math.PI / 8, "YZX"]}
     >
       <mesh
         castShadow
@@ -87,7 +93,12 @@ export default function Rocket({ position, tile, team, id }) {
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
         <capsuleGeometry args={[0.15, 0.3]} />
-        <meshBasicMaterial transparent opacity={0} ref={wrapperMatRef} />
+        <meshBasicMaterial
+          transparent
+          opacity={0}
+          ref={wrapperMatRef}
+          color="white"
+        />
       </mesh>
       <group rotation={[(Math.PI * 3) / 4, 0, -Math.PI]} scale={0.009}>
         <mesh
@@ -258,3 +269,5 @@ export default function Rocket({ position, tile, team, id }) {
     </group>
   );
 }
+
+useGLTF.preload("/models/rockets/rocket-with-astronaut0.glb");

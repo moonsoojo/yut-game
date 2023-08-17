@@ -51,6 +51,7 @@ export const useRocketStore = create((set) => ({
       { tile: -1, team: 1, id: 3 },
     ],
   ],
+  appLoading: true,
   setPiece: (payload) =>
     set((state) => {
       let newTiles = JSON.parse(JSON.stringify(state.tiles));

@@ -1,14 +1,19 @@
 import { useGLTF } from "@react-three/drei";
-import { useRef, useEffect } from "react";
+import { useRef, useMemo, useEffect } from "react";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 import React from "react";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Ufo({ position, tile, team, id }) {
-  const { nodes, materials } = useGLTF(`/models/ufos/ufo${id}.glb`);
+  const { scene, materials, animations } = useGLTF("/models/ufos/ufo0.glb");
+
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
 
   // const [selection] = useAtom(selectionAtom);
   const setSelection = useRocketStore((state) => state.setSelection);
@@ -35,18 +40,20 @@ export default function Ufo({ position, tile, team, id }) {
   function handlePointerEnter(event) {
     event.stopPropagation();
     if (tile == -1) {
-      alienRef.current.material.color.r += 2;
-      alienRef.current.material.color.g -= 4;
+      // alienRef.current.material.color.r += 2;
+      // alienRef.current.material.color.g -= 4;
       wrapperMatRef.current.opacity += 0.5;
+      document.body.style.cursor = "pointer";
     }
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     if (tile == -1) {
-      alienRef.current.material.color.r -= 2;
-      alienRef.current.material.color.g += 4;
+      // alienRef.current.material.color.r -= 2;
+      // alienRef.current.material.color.g += 4;
       wrapperMatRef.current.opacity -= 0.5;
+      document.body.style.cursor = "default";
     }
   }
 
@@ -76,7 +83,7 @@ export default function Ufo({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
-      rotation={[-Math.PI / 8, Math.PI / 4, -Math.PI / 8, "YXZ"]}
+      rotation={[-Math.PI / 8, 0, 0, "YXZ"]}
     >
       <mesh
         castShadow
@@ -338,3 +345,5 @@ export default function Ufo({ position, tile, team, id }) {
     </group>
   );
 }
+
+useGLTF.preload("/models/ufos/ufo0.glb");

@@ -1,4 +1,4 @@
-import { Server } from "socket.io";
+/*import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
@@ -74,8 +74,8 @@ io.on("connection", (socket) => {
   });
 
   io.emit("characters", characters);
-  io.emit("pieces", pieces)
-  io.emit("tiles", tiles)
+  io.emit("pieces", pieces);
+  io.emit("tiles", tiles);
 
   socket.on("select", (payload) => {
     console.log("[server][select]", payload);
@@ -173,8 +173,6 @@ io.on("connection", (socket) => {
     io.emit("finishPiece", { tiles, pieces });
   });
 
-
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
 
@@ -185,3 +183,4 @@ io.on("connection", (socket) => {
     io.emit("characters", characters);
   });
 });
+*/

@@ -9,9 +9,9 @@ THREE.ColorManagement.legacyMode = false;
 
 const positionsInitial = [
   [0, 1, 0],
+  [0, 2, 0],
   [0, 3, 0],
-  [0, 5, 0],
-  [0, 7, 0],
+  [0, 4, 0],
 ];
 
 function getRandomNumberInRange(num, plusMinus) {
@@ -143,3 +143,6 @@ export default function Yuts(props) {
     </group>
   );
 }
+
+useGLTF.preload("/models/yut-regular.glb");
+useGLTF.preload("/models/yut-working (1).glb");

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 import { Html } from "@react-three/drei";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function ScoreButton({ position }) {
@@ -27,12 +27,14 @@ export default function ScoreButton({ position }) {
     event.stopPropagation();
     matRef.current.color.r += 1;
     setHover(true);
+    document.body.style.cursor = "pointer";
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
     matRef.current.color.r -= 1;
     setHover(false);
+    document.body.style.cursor = "default";
   }
 
   return (
@@ -47,7 +49,7 @@ export default function ScoreButton({ position }) {
       {hover && (
         <Html position={[0, 1, -0.3]} wrapperClass="label">
           {" "}
-          Score here 🏁
+          Select a piece to score 🏁
         </Html>
       )}
     </mesh>

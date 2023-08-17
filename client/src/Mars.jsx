@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import React from "react";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+// import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Mars({ position, tile }) {

@@ -402,12 +402,17 @@ const vertexShader = `
   }
 `;
 
+import { useRocketStore } from "./state/zstore2";
+import Ufo from "./Ufo";
+import Rocket from "./Rocket";
+
 function Sun({ position, scale, tile, ...props }) {
   const meshRef = useRef();
   const childMeshRef = useRef();
   var scene1 = new THREE.Scene();
   const { gl, camera, scene } = useThree();
 
+  // Shader
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
     generateMipmaps: true,
@@ -438,6 +443,7 @@ function Sun({ position, scale, tile, ...props }) {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
     childMeshRef.current.material.transparent = true;
+    // meshRef.current.rotation.y = state.clock.elapsedTime;
   }, 0);
 
   useFrame(({ gl, scene, camera }) => {
@@ -475,21 +481,122 @@ function Sun({ position, scale, tile, ...props }) {
     []
   );
 
+  // Game
+  const wrapperMatRef = useRef();
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  const setPiece = useRocketStore((state) => state.setPiece);
+  const tiles = useRocketStore((state) => state.tiles);
+
+  function handlePointerEnter(event) {
+    event.stopPropagation();
+    document.body.style.cursor = "pointer";
+    // earth1Ref.current.material.color.r += 0.1;
+    // waterMatRef.current.color.r += 1;
+    wrapperMatRef.current.opacity += 0.5;
+  }
+
+  function handlePointerLeave(event) {
+    event.stopPropagation();
+    document.body.style.cursor = "default";
+    // earth1Ref.current.material.color.r -= 0.1;
+    // waterMatRef.current.color.r -= 1;
+    wrapperMatRef.current.opacity -= 0.5;
+  }
+
+  function handlePointerDown(event) {
+    event.stopPropagation();
+    if (selection == null) {
+      setSelection({ type: "tile", tile });
+    } else {
+      if (selection.tile != tile) {
+        setPiece({ destination: tile });
+      }
+      setSelection(null);
+    }
+  }
+
+  const rocketPositions = [
+    [0, 0.8, 0],
+    [0, 0.8, -0.4],
+    [-0.4, 0.8, -0.1],
+    [-0.4, 0.8, -0.5],
+  ];
+
+  const ufoPositions = [
+    [0, 0.6, 0.2],
+    [0, 0.6, -0.2],
+    [-0.3, 0.6, 0.2],
+    [-0.3, 0.6, -0.2],
+  ];
+
+  function Piece() {
+    if (tiles[tile][0].team == 1) {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Rocket
+              position={rocketPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={1}
+              id={value.id}
+              key={index}
+            />
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Ufo
+              position={ufoPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={0}
+              id={value.id}
+              key={index}
+            />
+          ))}
+        </>
+      );
+    }
+  }
+
   return (
-    <group scale={scale} position={position}>
-      <mesh {...props} ref={meshRef} scale={1}>
-        <OrbitControls></OrbitControls>
-        <sphereGeometry args={[1, 32, 16]} />
-        <shaderMaterial attach="material" {...data} />
-        <mesh ref={childMeshRef} scale={1}>
-          <sphereGeometry args={[1.2, 32, 32]} />
-          <shaderMaterial attach="material" {...outerData} />
-          <pointLight
-            intensity={props.intensity}
-            distance={props.distance}
-          ></pointLight>
+    <group position={position}>
+      <group scale={0.4}>
+        <mesh {...props} ref={meshRef} scale={1}>
+          <OrbitControls></OrbitControls>
+          <sphereGeometry args={[1, 32, 16]} />
+          <shaderMaterial attach="material" {...data} />
+          <mesh ref={childMeshRef} scale={1}>
+            <sphereGeometry args={[1.2, 32, 32]} />
+            <shaderMaterial attach="material" {...outerData} />
+            <pointLight
+              intensity={props.intensity}
+              distance={props.distance}
+            ></pointLight>
+          </mesh>
         </mesh>
-      </mesh>
+        <mesh
+          castShadow
+          visible={true}
+          onPointerDown={(event) => handlePointerDown(event)}
+          onPointerEnter={(event) => handlePointerEnter(event)}
+          onPointerLeave={(event) => handlePointerLeave(event)}
+        >
+          <sphereGeometry args={[1.6, 32, 16]} />
+          <meshStandardMaterial
+            transparent
+            opacity={0}
+            color={"orange"}
+            ref={wrapperMatRef}
+          />
+        </mesh>
+      </group>
+      {tiles[tile].length != 0 && <Piece />}
     </group>
   );
 }

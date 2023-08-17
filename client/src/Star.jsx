@@ -2,16 +2,21 @@ import { useGLTF } from "@react-three/drei";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import React from "react";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, tilesAtom, socket } from "./SocketManager";
+// import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Star({ position, tile }) {
-  const { nodes, materials } = useGLTF(
-    `/models/stars/star-yellow copy ${tile}.glb`
+  const { scene, materials, animations } = useGLTF(
+    "/models/stars/star-yellow copy 1.glb"
   );
+
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
 
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
@@ -55,17 +60,17 @@ export default function Star({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.2, 0 * 0.3],
-    [0, 0.2, -1 * 0.3],
-    [-0.3, 0.2, 0 * 0.3],
-    [-0.3, 0.2, -1 * 0.3],
+    [-0.2, 0.4, 0],
+    [-0.2, 0.4, -0.3],
+    [-0.5, 0.4, 0],
+    [-0.5, 0.4, -0.3],
   ];
 
   const ufoPositions = [
-    [0, -0.1, 1 * 0.3],
-    [0, -0.1, -1 * 0.3],
-    [-0.3, -0.1, 1 * 0.3],
-    [-0.3, -0.1, -1 * 0.3],
+    [0, 0.3, 0.2],
+    [0, 0.3, -0.2],
+    [-0.4, 0.2, 0.2],
+    [-0.4, 0.2, -0.2],
   ];
 
   function Piece() {
@@ -131,3 +136,5 @@ export default function Star({ position, tile }) {
     </group>
   );
 }
+
+useGLTF.preload(`/models/stars/star-yellow copy 1.glb`);
