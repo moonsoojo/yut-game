@@ -92,10 +92,10 @@ export default function Ufo({ position, tile, team, id }) {
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.2]} />
+        <sphereGeometry args={[0.22]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
-      <group scale={0.2} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
+      <group scale={0.22} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh
           castShadow
           receiveShadow

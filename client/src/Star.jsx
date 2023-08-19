@@ -60,17 +60,17 @@ export default function Star({ position, tile }) {
   }
 
   const rocketPositions = [
-    [-0.2, 0.4, 0],
-    [-0.2, 0.4, -0.3],
-    [-0.5, 0.4, 0],
-    [-0.5, 0.4, -0.3],
+    [-0.1, 0.4, 0],
+    [-0.1, 0.4, -0.3],
+    [-0.4, 0.4, 0],
+    [-0.4, 0.4, -0.3],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 0.2],
-    [0, 0.3, -0.2],
-    [-0.4, 0.2, 0.2],
-    [-0.4, 0.2, -0.2],
+    [0.1, 0.3, 0.1],
+    [0.1, 0.3, -0.3],
+    [-0.3, 0.2, 0.1],
+    [-0.3, 0.2, -0.3],
   ];
 
   function Piece() {
@@ -112,7 +112,7 @@ export default function Star({ position, tile }) {
       position={position}
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.5
+          ? 1.3
           : 1
       }
     >
@@ -121,7 +121,7 @@ export default function Star({ position, tile }) {
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
       >
-        <sphereGeometry args={[0.5]} />
+        <sphereGeometry args={[0.6]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
       <mesh

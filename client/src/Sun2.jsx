@@ -53,17 +53,17 @@ export default function Sun2({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.7, 0 * 0.3],
-    [0, 0.7, -1 * 0.3],
-    [-0.3, 0.7, 0 * 0.3],
-    [-0.3, 0.7, -1 * 0.3],
+    [0, 0.6, 0 * 0.3],
+    [0, 0.6, -1 * 0.3],
+    [-0.3, 0.6, 0 * 0.3],
+    [-0.3, 0.6, -1 * 0.3],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 1 * 0.3],
-    [0, 0.3, -1 * 0.3],
-    [-0.3, 0.3, 1 * 0.3],
-    [-0.3, 0.3, -1 * 0.3],
+    [0.1, 0.4, 0.2],
+    [0.1, 0.4, -0.2],
+    [-0.3, 0.4, 0.2],
+    [-0.3, 0.4, -0.2],
   ];
 
   function Piece() {
@@ -108,7 +108,7 @@ export default function Sun2({ position, tile }) {
           selection != null &&
           selection.type === "tile" &&
           selection.tile == tile
-            ? 1.5
+            ? 1.3
             : 1
         }
       >
@@ -119,7 +119,7 @@ export default function Sun2({ position, tile }) {
           onPointerEnter={(event) => handlePointerEnter(event)}
           onPointerLeave={(event) => handlePointerLeave(event)}
         >
-          <sphereGeometry args={[0.8, 32, 16]} />
+          <sphereGeometry args={[0.7, 32, 16]} />
           <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
         </mesh>
         <sphereGeometry args={[0.35, 30, 30]} />

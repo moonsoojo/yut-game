@@ -70,10 +70,10 @@ export default function Earth({ position, tile }) {
   ];
 
   const ufoPositions = [
-    [0, 0.55, 0.1],
-    [0, 0.55, -0.3],
-    [-0.3, 0.55, 0.1],
-    [-0.3, 0.55, -0.3],
+    [0.2, 0.45, 0.1],
+    [0.2, 0.35, -0.3],
+    [-0.2, 0.35, 0.1],
+    [-0.2, 0.25, -0.3],
   ];
 
   function Piece() {
@@ -131,7 +131,7 @@ export default function Earth({ position, tile }) {
       position={position}
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.5
+          ? 1.3
           : 1
       }
     >

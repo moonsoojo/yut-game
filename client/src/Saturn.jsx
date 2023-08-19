@@ -146,7 +146,7 @@ export default function Saturn({ position, tile, scale }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[3, 32, 16]} />
+        <sphereGeometry args={[3.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );
@@ -157,7 +157,7 @@ export default function Saturn({ position, tile, scale }) {
       position={position}
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.5
+          ? 1.3
           : 1
       }
     >

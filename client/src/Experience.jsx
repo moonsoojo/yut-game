@@ -137,11 +137,11 @@ export default function Experience() {
       <>
         {pieces[0].map((value, index) =>
           value == null ? (
-            <mesh position={[4, 0, -0.7 + index * 0.4]} key={index}>
+            <mesh position={[4, 0, -0.8 + index * 0.45]} key={index}>
               <sphereGeometry args={[0.1]} />
             </mesh>
           ) : value === "scored" ? (
-            <mesh position={[4, 0, -0.7 + index * 0.4]} key={index}>
+            <mesh position={[4, 0, -0.7 + index * 0.45]} key={index}>
               <sphereGeometry args={[0.1]} />
               <meshStandardMaterial color={"green"} />
             </mesh>
@@ -164,11 +164,11 @@ export default function Experience() {
       <>
         {pieces[1].map((value, index) =>
           value == null ? (
-            <mesh position={[2.8, 0, -3.5 + index * 0.5]} key={index}>
+            <mesh position={[2.5, 0, -3.5 + index * 0.37]} key={index}>
               <sphereGeometry args={[0.1]} />
             </mesh>
           ) : value === "scored" ? (
-            <mesh position={[2.8, 0, -3.5 + index * 0.5]} key={index}>
+            <mesh position={[2.5, 0, -3.5 + index * 0.37]} key={index}>
               <sphereGeometry args={[0.1]} />
               <meshStandardMaterial color={"green"} />
             </mesh>

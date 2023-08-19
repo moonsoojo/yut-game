@@ -116,7 +116,7 @@ export default function Neptune2({ position, tile }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[5, 32, 16]} />
+        <sphereGeometry args={[4.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );
@@ -202,12 +202,12 @@ export default function Neptune2({ position, tile }) {
       position={position}
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.5
+          ? 1.3
           : 1
       }
     >
       {tiles[tile].length != 0 && <Piece />}
-      <group ref={neptuneGroupRef} scale={0.17 }>
+      <group ref={neptuneGroupRef} scale={0.17}>
         <mesh
           castShadow
           receiveShadow
