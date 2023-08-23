@@ -46,39 +46,44 @@ export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/models/yut-physics-2.glb");
-  const { actions } = useAnimations(animations, group);
-  const [animation, setAnimation] = useState("");
+  const meshRef = useRef();
+  const yut = useGLTF("/models/yut-physics.glb");
+  const nodes = yut.nodes;
+  const materials = yut.materials;
+  const animations = useAnimations(yut.animations, yut.scene);
   useEffect(() => {
-    actions[animation].reset();
-  });
-  console.log("[Yuts]", actions);
-  const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
+    // action.play();
+    console.log(animations.actions.Animation);
+  }, []);
 
   useEffect(() => {
     subscribeKeys(
       (state) => state.throw,
       (value) => {
         if (value) {
-          yutThrow();
+          let action = animations.actions.Animation.setLoop(
+            THREE.LoopOnce
+          ).reset(); //must reset after setLoop to trigger animation again
+          action.play();
         }
       }
     );
   }, []);
 
   return (
-    <group ref={group} dispose={null}>
-      <group name="Scene">
-        <mesh
-          name="Cube003"
-          castShadow
-          receiveShadow
-          geometry={nodes.Cube003.geometry}
-          material={materials["Material.002"]}
-          position={[0, 0, -4.194]}
-        />
-      </group>
-    </group>
+    // <group ref={group} {...props} dispose={null}>
+    //   <group name="Scene">
+    //     <mesh
+    //       name="Cube003"
+    //       castShadow
+    //       receiveShadow
+    //       geometry={nodes.Cube003.geometry}
+    //       material={materials["Material.002"]}
+    //       position={[0, 0, -4.194]}
+    //       ref={meshRef}
+    //     />
+    //   </group>
+    // </group>
+    <primitive object={yut.scene} />
   );
 }
