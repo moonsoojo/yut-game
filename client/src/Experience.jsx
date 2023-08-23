@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import Yuts from "./Yuts";
+import YutsNew from "./YutsNew";
 import Star from "./Star";
 import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
@@ -435,7 +436,7 @@ export default function Experience() {
             friction={1}
           />
         </RigidBody>
-        <Yuts />
+        <YutsNew />
         <Tiles />
 
         <PiecesTeam0 />
