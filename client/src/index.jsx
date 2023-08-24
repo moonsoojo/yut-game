@@ -16,6 +16,7 @@ import React from "react";
 import { useLoader } from "@react-three/fiber";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import Star from "./Star";
+import Controls from "./Controls";
 // import { SocketManager } from "./SocketManager";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
@@ -38,5 +39,6 @@ root.render(
 
       {/* <Perf /> */}
     </Canvas>
+    <Controls />
   </KeyboardControls>
 );

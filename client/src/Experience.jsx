@@ -11,6 +11,8 @@ import Saturn from "./Saturn";
 import SunBagus from "./SunBagus.jsx";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
+import Controls3d from "./Controls3d";
+
 import React from "react";
 import ScoreButton from "./ScoreButton";
 import { Leva, useControls } from "leva";
@@ -421,6 +423,7 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
+      <Controls3d />
 
       <Physics maxVelocityIterations={10}>
         <RigidBody
@@ -435,6 +438,7 @@ export default function Experience() {
             friction={1}
           />
         </RigidBody>
+        {/* <YutsNew /> */}
         <Yuts />
         <Tiles />
 

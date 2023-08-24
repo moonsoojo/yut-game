@@ -222,8 +222,7 @@ export default function NeptuneParticles({
   // const sparkles2Ref = useRef();
 
   const pointsMap = textureLoader.load("/textures/particles/2.png");
-const sparklesMap = textureLoader.load("/textures/particles/9.png");
-
+  const sparklesMap = textureLoader.load("/textures/particles/9.png");
 
   // useFrame((state, delta) => {
   //   for (let i = 0; i < countSparkles2; i++) {

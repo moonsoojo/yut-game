@@ -137,7 +137,7 @@ export default function Earth({ position, tile }) {
     >
       <group
         ref={earthGroupRef}
-        scale={0.17}
+        scale={0.2}
         rotation={[Math.PI / 16, Math.PI / 4, 0]}
       >
         <mesh
