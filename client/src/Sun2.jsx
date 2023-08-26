@@ -9,6 +9,7 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 
 import { useRocketStore } from "./state/zstore2";
+import HelperArrow from "./HelperArrow";
 
 export default function Sun2({ position, tile }) {
   const setSelection = useRocketStore((state) => state.setSelection);
@@ -101,17 +102,15 @@ export default function Sun2({ position, tile }) {
   }
 
   return (
-    <>
-      <mesh
-        position={position}
-        scale={
-          selection != null &&
-          selection.type === "tile" &&
-          selection.tile == tile
-            ? 1.3
-            : 1
-        }
-      >
+    <group
+      position={position}
+      scale={
+        selection != null && selection.type === "tile" && selection.tile == tile
+          ? 1.3
+          : 1
+      }
+    >
+      <mesh>
         <mesh
           castShadow
           visible={true}
@@ -135,6 +134,14 @@ export default function Sun2({ position, tile }) {
         />
         {tiles[tile].length != 0 && <Piece />}
       </mesh>
-    </>
+      <HelperArrow
+        position={[0, 0, 0.8]}
+        rotation={[0, Math.PI / 2, Math.PI / 2]}
+      />
+      <HelperArrow
+        position={[0.8, 0, 0]}
+        rotation={[0, Math.PI, Math.PI / 2]}
+      />
+    </group>
   );
 }

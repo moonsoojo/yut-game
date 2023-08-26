@@ -46,8 +46,8 @@ export default function Yuts(props) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut-regular.glb").nodes;
   const materials = useGLTF("/models/yut-regular.glb").materials;
-  const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
+  const nodesRhino = useGLTF("/models/yut-backdo.glb").nodes;
+  const materialsRhino = useGLTF("/models/yut-backdo.glb").materials;
 
   useEffect(() => {
     subscribeKeys(
@@ -145,4 +145,4 @@ export default function Yuts(props) {
 }
 
 useGLTF.preload("/models/yut-regular.glb");
-useGLTF.preload("/models/yut-working (1).glb");
+useGLTF.preload("/models/yut-backdo.glb");

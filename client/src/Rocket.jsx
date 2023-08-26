@@ -9,7 +9,7 @@ import { useRocketStore } from "./state/zstore2";
 import { useAtom } from "jotai";
 import React from "react";
 
-export default function Rocket({ position, tile, team, id }) {
+export default function Rocket({ position, rotation, tile, team, id }) {
   const { scene, materials, animations } = useGLTF(
     "/models/rockets/rocket-with-astronaut0.glb"
   );
@@ -81,7 +81,7 @@ export default function Rocket({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
-      rotation={[0, Math.PI / 8, Math.PI / 8, "YZX"]}
+      rotation={rotation}
     >
       <mesh
         castShadow

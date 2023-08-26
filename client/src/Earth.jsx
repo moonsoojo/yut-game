@@ -2,6 +2,7 @@ import { useGLTF } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
+import HelperArrow from "./HelperArrow";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
@@ -127,65 +128,74 @@ export default function Earth({ position, tile }) {
   }
 
   return (
-    <group
-      position={position}
-      scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.3
-          : 1
-      }
-    >
+    <group>
       <group
-        ref={earthGroupRef}
-        scale={0.2}
-        rotation={[Math.PI / 16, Math.PI / 4, 0]}
+        position={position}
+        scale={
+          selection != null &&
+          selection.type === "tile" &&
+          selection.tile == tile
+            ? 1.3
+            : 1
+        }
       >
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.low_poly_earth.geometry}
-          material={materials.water}
-          position={[0, 0.12, 0]}
-          rotation={[-0.4, -0.4, 0.3]}
-          ref={earth1Ref}
+        <group
+          ref={earthGroupRef}
+          scale={0.25}
+          rotation={[Math.PI / 16, Math.PI / 4, 0]}
         >
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes.Cylinder.geometry}
-            material={materials["Material.001"]}
-            position={[1.1, 0.98, 0.38]}
-            rotation={[0.49, 0.02, 0.39]}
-            ref={earth2Ref}
+            geometry={nodes.low_poly_earth.geometry}
+            material={materials.water}
+            position={[0, 0.12, 0]}
+            rotation={[-0.4, -0.4, 0.3]}
+            ref={earth1Ref}
           >
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.Plane.geometry}
-              material={materials.Material}
-              position={[0.24, 1.29, 0]}
-              scale={0.77}
-              ref={earth3Ref}
+              geometry={nodes.Cylinder.geometry}
+              material={materials["Material.001"]}
+              position={[1.1, 0.98, 0.38]}
+              rotation={[0.49, 0.02, 0.39]}
+              ref={earth2Ref}
+            >
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Plane.geometry}
+                material={materials.Material}
+                position={[0.24, 1.29, 0]}
+                scale={0.77}
+                ref={earth3Ref}
+              />
+            </mesh>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Mesh.geometry}
+              material={materials.water}
+              ref={earth4Ref}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Mesh_1.geometry}
+              material={materials.earth}
+              ref={earth5Ref}
             />
           </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh.geometry}
-            material={materials.water}
-            ref={earth4Ref}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh_1.geometry}
-            material={materials.earth}
-            ref={earth5Ref}
-          />
-        </mesh>
-        <EarthWrap />
+          <EarthWrap />
+        </group>
+        {tiles[tile].length != 0 && <Piece />}
+        <HelperArrow
+          position={[-0.5, 0, -0.5]}
+          rotation={[-Math.PI / 2, 0, (3 * Math.PI) / 8]}
+          scale={0.9}
+        />
       </group>
-      {tiles[tile].length != 0 && <Piece />}
     </group>
   );
 }

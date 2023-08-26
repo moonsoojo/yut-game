@@ -4,7 +4,7 @@ import Ufo from "./Ufo";
 import React from "react";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
-import { useGraph } from "@react-three/fiber";
+import { useFrame, useGraph } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 // import { selectionAtom, tilesAtom, socket } from "./SocketManager";
@@ -26,6 +26,15 @@ export default function Star({ position, tile }) {
   const tiles = useRocketStore((state) => state.tiles);
   const starMatRef = useRef();
   const wrapperMatRef = useRef();
+  const star = useRef();
+
+  // useFrame((state, delta) => {
+  //   if (tile < 20) {
+  //     star.current.position.y =
+  //       position[1] +
+  //       Math.sin(state.clock.elapsedTime * 2 + 0.5 * tile) * -0.05;
+  //   }
+  // });
 
   //draw a circle with hover, and through shortcuts
   function handlePointerEnter(event) {
@@ -109,6 +118,7 @@ export default function Star({ position, tile }) {
 
   return (
     <group
+      ref={star}
       position={position}
       scale={
         selection != null && selection.type === "tile" && selection.tile == tile

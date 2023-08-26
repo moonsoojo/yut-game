@@ -8,6 +8,8 @@ import {
   CameraControls,
   KeyboardControls,
   useProgress,
+  OrbitControls,
+  OrthographicCamera,
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import store from "./state/store";
@@ -30,15 +32,26 @@ root.render(
         toneMapping: THREE.ACESFilmicToneMapping,
         outputEncoding: THREE.sRGBEncoding,
       }}
-      camera={{ fov: 45, near: 0.1, far: 500, position: [7, 8.5, -4.5] }}
+      // camera={{ fov: 45, near: 0.1, far: 500, position: [6, 6, 6] }}
       // pan: move about a plane
     >
-      <CameraControls />
-
+      {/* <CameraControls /> */}
+      <OrbitControls />
+      <OrthographicCamera
+        makeDefault
+        zoom={175}
+        top={200}
+        bottom={-200}
+        left={200}
+        right={-200}
+        near={1}
+        far={2000}
+        position={[4, 3, 0]}
+      />
       <Experience />
 
       {/* <Perf /> */}
     </Canvas>
-    <Controls />
+    {/* <Controls /> */}
   </KeyboardControls>
 );

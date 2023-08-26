@@ -1,0 +1,46 @@
+rulebook
+how to play:
+(hover for details)
+
+# goal
+
+make a circle from Earth to Earth (animate stars) to finish your ships.
+
+- add arrows around circle
+- add arrows
+  - make existing arrows overlap
+- animate
+
+you can move by throwing the dice (yuts).
+
+- chart - dark background, 6 sets of dice with label in THREE
+- diagram - should display while playing
+
+click a ship to select it, and click it on a star to place it.
+
+- add counts and arrows between stars
+- arrow above ship
+- animate
+  - hide all pieces in play
+
+each team takes turns. when you want to score, select a piece and click the 'score' button.
+
+- score button in text
+- highlight score button
+- arrow above ship
+- animate
+  - hide all pieces in play
+
+# additional rules
+
+you can move across the shortcut on your next turn on planets.
+you can throw again if you threw a four or a five. (animation)
+you can throw again if you captured a piece.
+
+# implementation notes
+
+move controls and rules panel
+top banner position scales with text
+tilt board more up
+america in the middle of the spin so flag stays consistently in the middle
+check on portfolio

@@ -9,7 +9,7 @@ import React from "react";
 // import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
-export default function Ufo({ position, tile, team, id }) {
+export default function Ufo({ position, rotation, tile, team, id }) {
   const { scene, materials, animations } = useGLTF("/models/ufos/ufo0.glb");
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -83,7 +83,7 @@ export default function Ufo({ position, tile, team, id }) {
           ? 1.5
           : 1
       }
-      rotation={[-Math.PI / 8, 0, 0, "YXZ"]}
+      rotation={rotation}
     >
       <mesh
         castShadow

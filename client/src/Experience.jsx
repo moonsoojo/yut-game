@@ -12,6 +12,7 @@ import SunBagus from "./SunBagus.jsx";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
+import GoalArrows from "./GoalDetails";
 
 import React from "react";
 import ScoreButton from "./ScoreButton";
@@ -25,6 +26,7 @@ import {
   SoftShadows,
   Stars,
   Html,
+  Text3D,
 } from "@react-three/drei";
 import Universe from "./Universe";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -32,11 +34,14 @@ import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
-import { useAtom } from "jotai";
+import { useAtom, atom } from "jotai";
 // import { piecesAtom, socket } from "./SocketManager";
+
+export const bannerAtom = atom("throw the yuts!");
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
+  const [banner] = useAtom(bannerAtom);
   // const [characters] = useAtom(charactersAtom);
 
   // const [pieces] = useAtom(piecesAtom);
@@ -48,17 +53,17 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
 
+  const TILE_RADIUS = 4;
+  const NUM_STARS = 20;
   function Tiles() {
-    const numStars = 20;
     let tiles = [];
-    const radius = 4;
 
     //circle
-    for (let i = 0; i < numStars; i++) {
+    for (let i = 0; i < NUM_STARS; i++) {
       let position = [
-        -Math.cos(((i - 10) * (Math.PI * 2)) / numStars) * radius - 1,
-        0.5,
-        Math.sin(((i - 10) * (Math.PI * 2)) / numStars) * radius + 0.5,
+        -Math.cos(((i - 7.5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        0,
+        Math.sin(((i - 7.5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
       if (i == 0) {
         tiles.push(<Earth position={position} tile={i} key={i} />);
@@ -76,12 +81,12 @@ export default function Experience() {
     //shortcuts
     const radiusShortcut1 = 2.7;
     const radiusShortcut2 = 1.4;
-    for (let i = 0; i < numStars; i++) {
+    for (let i = 0; i < NUM_STARS; i++) {
       let indexShortcut1;
       let indexShortcut2;
       if (i == 0) {
-        indexShortcut1 = 27;
-        indexShortcut2 = 28;
+        indexShortcut1 = 28;
+        indexShortcut2 = 27;
       } else if (i == 5) {
         indexShortcut1 = 20;
         indexShortcut2 = 21;
@@ -96,11 +101,11 @@ export default function Experience() {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1 -
-                1,
-              0.5,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut1 +
-                0.5,
+              Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+                radiusShortcut1,
+              0,
+              Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+                radiusShortcut1,
             ]}
             scale={0.1}
             tile={indexShortcut1}
@@ -110,11 +115,11 @@ export default function Experience() {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2 -
-                1,
-              0.5,
-              Math.cos(((i + 5) * (Math.PI * 2)) / numStars) * radiusShortcut2 +
-                0.5,
+              Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+                radiusShortcut2,
+              0,
+              Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+                radiusShortcut2,
             ]}
             scale={0.1}
             tile={indexShortcut2}
@@ -127,29 +132,53 @@ export default function Experience() {
     //center piece
     tiles.push(
       // <SunBagus position={[-1, 0.5, 0.5]} tile={22} key={100} />
-      <Sun2 position={[-1, 0.5, 0.5]} scale={0.4} tile={22} key={100} />
+      <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
     );
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
   }
 
   function PiecesTeam0() {
-    //deleting brackets around function after '=>' made the meshes appear
+    let positionStartX = 5;
+    let positionStartY = 0;
+    let positionStartZ = 0;
+    let spaceX = 0.4;
+    let spaceZ = -0.2;
+
     return (
       <>
         {pieces[0].map((value, index) =>
           value == null ? (
-            <mesh position={[4, 0, -0.8 + index * 0.45]} key={index}>
+            <mesh
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              key={index}
+            >
               <sphereGeometry args={[0.1]} />
             </mesh>
           ) : value === "scored" ? (
-            <mesh position={[4, 0, -0.7 + index * 0.45]} key={index}>
+            <mesh
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              key={index}
+            >
               <sphereGeometry args={[0.1]} />
               <meshStandardMaterial color={"green"} />
             </mesh>
           ) : (
             <Ufo
-              position={[4, 0, -0.9 + index * 0.5]}
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              rotation={[0, -Math.PI / 2, -Math.PI / 16, "YZX"]}
               keyName={`count${index}`}
               tile={-1}
               team={0}
@@ -162,21 +191,45 @@ export default function Experience() {
     );
   }
   function PiecesTeam1() {
+    let positionStartX = 4.7;
+    let positionStartY = 0;
+    let positionStartZ = -1.5;
+    let spaceX = 0.4;
+    let spaceZ = -0.2;
     return (
       <>
         {pieces[1].map((value, index) =>
           value == null ? (
-            <mesh position={[2.5, 0, -3.5 + index * 0.37]} key={index}>
+            <mesh
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              key={index}
+            >
               <sphereGeometry args={[0.1]} />
             </mesh>
           ) : value === "scored" ? (
-            <mesh position={[2.5, 0, -3.5 + index * 0.37]} key={index}>
+            <mesh
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              key={index}
+            >
               <sphereGeometry args={[0.1]} />
               <meshStandardMaterial color={"green"} />
             </mesh>
           ) : (
             <Rocket
-              position={[2.3, 0, -3.7 + index * 0.4]}
+              position={[
+                positionStartX + index * spaceX,
+                positionStartY,
+                positionStartZ + index * spaceZ,
+              ]}
+              rotation={[0, -Math.PI / 2, 0]}
               keyName={`count${index}`}
               tile={-1}
               team={1}
@@ -359,7 +412,7 @@ export default function Experience() {
       step: 0.01,
     },
     lightPosition: {
-      value: [0.8, 1.77, -0.07],
+      value: [0.13, 0.42, 0.25],
       step: 0.01,
     },
     lightIntensity: {
@@ -423,7 +476,7 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
-      <Controls3d />
+      <Controls3d tileRadius={TILE_RADIUS} numStars={NUM_STARS} />
 
       <Physics maxVelocityIterations={10}>
         <RigidBody
@@ -432,11 +485,11 @@ export default function Experience() {
           position={[0, -0.5, 0]}
           friction={0.9}
         >
-          <CuboidCollider
-            args={[3.5, 0.5, 3.5]}
-            restitution={0.2}
-            friction={1}
-          />
+          <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
+          {/* <mesh>
+            <boxGeometry args={[8, 1, 8]} />
+            <meshStandardMaterial transparent opacity={0.3} />
+          </mesh> */}
         </RigidBody>
         {/* <YutsNew /> */}
         <Yuts />
@@ -453,6 +506,17 @@ export default function Experience() {
             color={character.color}
           />
         ))} */}
+        {/* <Text3D
+          position={[-8, 1.5, 0]}
+          rotation={[0, Math.PI / 4, 0]}
+          font="./fonts/Luckiest Guy_Regular.json"
+          castShadow={false}
+          size={0.3}
+          height={0.01}
+          receiveShadow
+        >
+          {banner}
+        </Text3D> */}
       </Physics>
     </>
   );

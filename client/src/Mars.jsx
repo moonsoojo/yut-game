@@ -1,6 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
+import HelperArrow from "./HelperArrow";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import React from "react";
@@ -105,31 +106,54 @@ export default function Mars({ position, tile }) {
   }
 
   return (
-    <group
-      position={position}
-      scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.3
-          : 1
-      }
-    >
-      {tiles[tile].length != 0 && <Piece />}
-      <mesh
-        onPointerEnter={(event) => handlePointerEnter(event)}
-        onPointerDown={(event) => handlePointerDown(event)}
-        onPointerLeave={(event) => handlePointerLeave(event)}
+    <group>
+      <group
+        position={position}
+        scale={
+          selection != null &&
+          selection.type === "tile" &&
+          selection.tile == tile
+            ? 1.3
+            : 1
+        }
       >
-        <sphereGeometry args={[0.6]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
-      </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Mars.geometry}
-        material={materials.Mars}
-        scale={0.32}
-        onPointerDown={(event) => handlePointerDown(event)}
-        ref={marsRef}
+        {tiles[tile].length != 0 && <Piece />}
+        <mesh
+          onPointerEnter={(event) => handlePointerEnter(event)}
+          onPointerDown={(event) => handlePointerDown(event)}
+          onPointerLeave={(event) => handlePointerLeave(event)}
+        >
+          <sphereGeometry args={[0.6]} />
+          <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
+        </mesh>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Mars.geometry}
+          material={materials.Mars}
+          scale={0.32}
+          onPointerDown={(event) => handlePointerDown(event)}
+          ref={marsRef}
+        />
+        {/* <HelperArrow
+          position={[-0.7, 0, 0]}
+          rotation={[0, Math.PI / 16, Math.PI / 2]}
+        /> */}
+        <HelperArrow
+          position={[0, 0, 0.7]}
+          rotation={[0, Math.PI / 2, Math.PI / 2]}
+        />
+      </group>
+      <HelperArrow
+        position={[
+          -Math.cos(((5 - 10) * (Math.PI * 2)) / 20 + (Math.PI * 2) / 20 / 2) *
+            4,
+          0,
+          Math.sin(((5 - 10) * (Math.PI * 2)) / 20 + (Math.PI * 2) / 20 / 2) *
+            4,
+        ]}
+        rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+        scale={0.9}
       />
     </group>
   );
