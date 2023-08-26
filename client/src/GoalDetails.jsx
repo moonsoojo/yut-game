@@ -11,21 +11,21 @@ export default function GoalDetails({ tileRadius, numStars }) {
     let arrows = [];
     //circle
     for (let i = 0; i < numStars; i++) {
-      let fix;
-      if (i == 15) {
-        fix = 0.2;
-      } else {
-        fix = 0;
-      }
+      // let fix;
+      // if (i == 15) {
+      //   fix = 0.2;
+      // } else {
+      //   fix = 0;
+      // }
       let position = [
         -Math.cos(
-          ((i - 10 + fix) * (Math.PI * 2)) / numStars +
+          ((i - 10) * (Math.PI * 2)) / numStars +
             (Math.PI * 2) / numStars / 2 -
             Math.PI / 20
         ) * tileRadius,
         0,
         Math.sin(
-          ((i - 10 + fix) * (Math.PI * 2)) / numStars +
+          ((i - 10) * (Math.PI * 2)) / numStars +
             (Math.PI * 2) / numStars / 2 -
             Math.PI / 20
         ) * tileRadius,

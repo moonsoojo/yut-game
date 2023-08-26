@@ -10,6 +10,7 @@ const fragmentShaderSun = `
   varying vec3 Position;
   varying vec2 vUv;
   varying vec3 eyeVector;
+  varying vec3 vNN;
 
   uniform vec3 Ka;
   uniform vec3 Kd;
@@ -36,7 +37,7 @@ const fragmentShaderSun = `
 
   
   float Freshnel(vec3 eyeVector, vec3 worldNormal){
-    return pow(1.0 + dot(eyeVector, worldNormal), 3.0);
+    return pow(-min(dot(eyeVector,normalize(worldNormal)),0.0),2.0);
   }
 
   float supersun(){
@@ -52,8 +53,8 @@ const fragmentShaderSun = `
     float brightness = supersun();
     brightness = (brightness*4.0)+1.0;
 
-    float fres = Freshnel(eyeVector, Normal);
-    brightness += pow(fres,0.2);
+    float fres = 1.0-Freshnel(eyeVector, vNN);
+    brightness += pow(fres,1.);
 
     vec3 col = brightnessToColor(brightness);
     gl_FragColor = vec4(col,1);
@@ -64,6 +65,7 @@ const fragmentShaderSun = `
 const vertexShaderSun = `
   varying vec3 Normal;
   varying vec3 Position;
+  varying vec4 GN;
 
 
   varying vec3 vLayer0;
@@ -71,6 +73,7 @@ const vertexShaderSun = `
   varying vec3 vLayer2;
   varying vec3 eyeVector;
   uniform float time;
+  varying vec3 vNN;
 
   mat2 rotate(float a){
     float s= sin(a);
@@ -84,9 +87,20 @@ const vertexShaderSun = `
     float t = time*0.05;
     Normal = normal;
 
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+    
+    mat4 LM = modelMatrix;
+    LM[2][3] = 0.0;
+    LM[3][0] = 0.0;
+    LM[3][1] = 0.0;
+    LM[3][2] = 0.0;
 
-    eyeVector = normalize(worldPosition.xyz - cameraPosition.xyz);
+
+    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+    GN = LM * vec4(normal.xyz,1.0);
+    vNN = normalize(normalMatrix*normal);
+
+    //eyeVector = -normalize(GN.xyz - cameraPosition.xyz);
+    eyeVector = normalize(vec3(modelViewMatrix * vec4(position,1.0)).xyz);
 
     mat2 rot = rotate(t);
     vec3 p0 = position;
@@ -112,11 +126,12 @@ const vertexShaderSun = `
 `;
 const fragmentShaderOuterSun = `
 
-  precision mediump float;
   varying vec3 Normal;
   varying vec3 Position;
+  varying vec4 vPos;
   varying vec2 vUv;
   varying vec3 eyeVector;
+  varying vec3 vNN;
 
   uniform vec3 Ka;
   uniform vec3 Kd;
@@ -124,6 +139,8 @@ const fragmentShaderOuterSun = `
   uniform vec4 LightPosition;
   uniform vec3 LightIntensity;
   uniform float Shininess;
+  uniform float time;
+  uniform vec3 normalizedScreenSpacePos;
 
   
   uniform float progress;
@@ -136,14 +153,38 @@ const fragmentShaderOuterSun = `
   varying vec3 vLayer1;
   varying vec3 vLayer2;
 
+  float random (in vec2 p) {
+    vec3 p3  = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+  }
+
+
   vec3 brightnessToColor(float b){
     b*=0.25;
     return(vec3(b,b*b,b*b*b*b)/0.25) * 0.8;
   }
 
+  float noise (in vec2 _st) {
+    vec2 i = floor(_st);
+    vec2 f = fract(_st);
+
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+
+    vec2 u = f * f * (3. - 2.0 * f);
+
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1. - u.x) +
+            (d - b) * u.x * u.y;
+}
+
   
   float Freshnel(vec3 eyeVector, vec3 worldNormal){
-    return pow(1.0 + dot(eyeVector, worldNormal), 3.0);
+    return pow(-min(dot(eyeVector,normalize(worldNormal)),0.0),2.0);
   }
 
   float supersun(){
@@ -155,24 +196,62 @@ const fragmentShaderOuterSun = `
     return sum;
   }
 
+  float flare(in float angle,in float alpha,in float _time){
+    float t = _time;
+      float n = noise(vec2(t+0.5+abs(angle)+pow(alpha,0.6),t-abs(angle)+pow(alpha+0.1,0.6))*3.0);
+     //	n = 1.0;
+      float split = (15.0+sin(t*2.0+n*0.5+angle*10.0+alpha*1.0*n)*(.3+.1+alpha*.3*n));
+  
+      float rotate = sin(angle*3.0 + sin(angle*5.0+alpha*4.0+t*30.0+n*5.0+alpha*8.0))*(.5 + alpha*1.5);
+  
+      float g = pow((2.0+sin(split+n*1.*alpha+rotate)*1.4)*n*4.0,n*(1.5-0.8*alpha));
+  
+      g *= alpha * alpha * alpha * .5;
+    g += alpha*.7 + g * g * g;
+    return g;
+  }
+
+  #define SIZE 2.8
+  #define RADIUS 0.07
+  #define INNER_FADE 1.
+  #define OUTER_FADE 0.01
+  #define SPEED .1
+  #define BORDER 0.21
 
   void main() {
-    float brightness = 1.-Freshnel(eyeVector, Normal);
-    gl_FragColor = vec4(brightness,brightness,brightness,1);
-    gl_FragColor.rgb = brightnessToColor(brightness-0.2)*8.5;
-    gl_FragColor.a = (brightness-0.35)*2.;
+    vec2 vCoords = vPos.xy;
+    vCoords /= vPos.w;
+    vCoords = vCoords * 0.5 + 0.5;
+    vec2 screenSpacePos = fract(vCoords * 1.0);
+    float angle = atan(screenSpacePos.x -normalizedScreenSpacePos.x , screenSpacePos.y-normalizedScreenSpacePos.y);
+    float n = noise(vec2(screenSpacePos.x*56.+time*0.1,screenSpacePos.y*50.+time*0.1));
+
+
+    float brightness = Freshnel(eyeVector, vNN)*1.2;
+    
+    float sunFlare = flare(angle, brightness, time*0.05)*1.3;
+    //gl_FragColor = vec4(brightness,brightness,brightness,1);
+    gl_FragColor.rgb = brightnessToColor((brightness)*sunFlare)*9.5;
+    //gl_FragColor.rgb = vec3(sunFlare-0.7,sunFlare-0.7,sunFlare-0.7);
+    gl_FragColor.a =gl_FragColor.g+(gl_FragColor.r)/4.0;
   }`;
 
 const vertexShaderOuterSun = `
   varying vec3 Normal;
   varying vec3 Position;
+  varying vec4 vPos;
+  varying vec4 GN;
 
 
   varying vec3 vLayer0;
   varying vec3 vLayer1;
   varying vec3 vLayer2;
+  varying vec3 vNN;
   varying vec3 eyeVector;
   uniform float time;
+  uniform vec3 normalizedScreenSpacePos;
+
+  
 
   mat2 rotate(float a){
     float s= sin(a);
@@ -183,12 +262,22 @@ const vertexShaderOuterSun = `
 
   void main() {
 
+    mat4 LM = modelMatrix;
+    LM[2][3] = 0.0;
+    LM[3][0] = 0.0;
+    LM[3][1] = 0.0;
+    LM[3][2] = 0.0;
+
     float t = time*0.05;
     Normal = normal;
 
     vec4 worldPosition = modelMatrix * vec4(position, 1.0);
 
-    eyeVector = -normalize(worldPosition.xyz - cameraPosition.xyz);
+    GN = LM * vec4(normal.xyz,1.0);
+    vNN = -normalize(normalMatrix*normal);
+
+    //eyeVector = -normalize(GN.xyz - cameraPosition.xyz);
+    eyeVector = normalize(vec3(modelViewMatrix * vec4(position,1.0)).xyz);
 
     mat2 rot = rotate(t);
     vec3 p0 = position;
@@ -207,9 +296,10 @@ const vertexShaderOuterSun = `
     p2.xy = rot2*p2.xy;
     vLayer2 = p2;
 
-    //Normal = normalize(normalMatrix * normal);
+    Normal = normalize(normalMatrix * normal);
     Position = position;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vPos = gl_Position;
   }
 `;
 
@@ -402,17 +492,12 @@ const vertexShader = `
   }
 `;
 
-import { useRocketStore } from "./state/zstore2";
-import Ufo from "./Ufo";
-import Rocket from "./Rocket";
-
-function Sun({ position, scale, tile, ...props }) {
+function Sun(props) {
   const meshRef = useRef();
   const childMeshRef = useRef();
   var scene1 = new THREE.Scene();
-  const { gl, camera, scene } = useThree();
+  const { gl, camera, scene, size } = useThree();
 
-  // Shader
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
     generateMipmaps: true,
@@ -441,9 +526,13 @@ function Sun({ position, scale, tile, ...props }) {
 
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+    meshRef.current.rotation.x += delta * 0.1;
+    meshRef.current.rotation.y += delta * 0.1;
+    meshRef.current.rotation.z += delta * 0.1;
     MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
     childMeshRef.current.material.transparent = true;
-    // meshRef.current.rotation.y = state.clock.elapsedTime;
+    childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+    childMeshRef.current.rotation.x += delta * 0.1;
   }, 0);
 
   useFrame(({ gl, scene, camera }) => {
@@ -451,8 +540,15 @@ function Sun({ position, scale, tile, ...props }) {
     perlin.position.copy(meshRef.current.position);
     cubeCamera.position.copy(perlin.position);
     cubeCamera.update(gl, scene1);
-    gl.render(scene, camera);
     meshRef.current.material.uniforms.uPerlin.value = cubeRenderTarget1.texture;
+    var updatePosition = new THREE.Vector3();
+    updatePosition = meshRef.current.position.clone();
+    updatePosition.project(camera);
+    updatePosition.x = (updatePosition.x + 1) / 2;
+    updatePosition.y = (updatePosition.y + 1) / 2;
+    childMeshRef.current.material.uniforms.normalizedScreenSpacePos.value =
+      updatePosition;
+    gl.render(scene, camera);
   }, 1);
   const data = useMemo(
     () => ({
@@ -474,6 +570,10 @@ function Sun({ position, scale, tile, ...props }) {
 
   const outerData = useMemo(
     () => ({
+      uniforms: {
+        time: { type: "f", value: "0.0" },
+        normalizedScreenSpacePos: { value: new THREE.Vector3(0.5, 0.5, 1) },
+      },
       side: THREE.BackSide,
       fragmentShader: fragmentShaderOuterSun,
       vertexShader: vertexShaderOuterSun,
@@ -481,123 +581,22 @@ function Sun({ position, scale, tile, ...props }) {
     []
   );
 
-  // Game
-  const wrapperMatRef = useRef();
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
-  const setPiece = useRocketStore((state) => state.setPiece);
-  const tiles = useRocketStore((state) => state.tiles);
-
-  function handlePointerEnter(event) {
-    event.stopPropagation();
-    document.body.style.cursor = "pointer";
-    // earth1Ref.current.material.color.r += 0.1;
-    // waterMatRef.current.color.r += 1;
-    wrapperMatRef.current.opacity += 0.5;
-  }
-
-  function handlePointerLeave(event) {
-    event.stopPropagation();
-    document.body.style.cursor = "default";
-    // earth1Ref.current.material.color.r -= 0.1;
-    // waterMatRef.current.color.r -= 1;
-    wrapperMatRef.current.opacity -= 0.5;
-  }
-
-  function handlePointerDown(event) {
-    event.stopPropagation();
-    if (selection == null) {
-      setSelection({ type: "tile", tile });
-    } else {
-      if (selection.tile != tile) {
-        setPiece({ destination: tile });
-      }
-      setSelection(null);
-    }
-  }
-
-  const rocketPositions = [
-    [0, 0.8, 0],
-    [0, 0.8, -0.4],
-    [-0.4, 0.8, -0.1],
-    [-0.4, 0.8, -0.5],
-  ];
-
-  const ufoPositions = [
-    [0, 0.6, 0.2],
-    [0, 0.6, -0.2],
-    [-0.3, 0.6, 0.2],
-    [-0.3, 0.6, -0.2],
-  ];
-
-  function Piece() {
-    if (tiles[tile][0].team == 1) {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Rocket
-              position={rocketPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={1}
-              id={value.id}
-              key={index}
-            />
-          ))}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Ufo
-              position={ufoPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={0}
-              id={value.id}
-              key={index}
-            />
-          ))}
-        </>
-      );
-    }
-  }
-
   return (
-    <group position={position}>
-      <group scale={0.4}>
-        <mesh {...props} ref={meshRef} scale={1}>
-          <OrbitControls></OrbitControls>
-          <sphereGeometry args={[1, 32, 16]} />
-          <shaderMaterial attach="material" {...data} />
-          <mesh ref={childMeshRef} scale={1}>
-            <sphereGeometry args={[1.2, 32, 32]} />
-            <shaderMaterial attach="material" {...outerData} />
-            <pointLight
-              intensity={props.intensity}
-              distance={props.distance}
-            ></pointLight>
-          </mesh>
+    <>
+      <mesh {...props} ref={meshRef} scale={props.scale}>
+        {/* <OrbitControls></OrbitControls> */}
+        <sphereGeometry args={[1, 32, 16]} />
+        <shaderMaterial attach="material" {...data} />
+        <mesh ref={childMeshRef} scale={1}>
+          <sphereGeometry args={[1.35, 32, 32]} />
+          <shaderMaterial attach="material" {...outerData} />
+          {/* <pointLight
+            intensity={props.intensity}
+            distance={props.distance}
+          ></pointLight> */}
         </mesh>
-        <mesh
-          castShadow
-          visible={true}
-          onPointerDown={(event) => handlePointerDown(event)}
-          onPointerEnter={(event) => handlePointerEnter(event)}
-          onPointerLeave={(event) => handlePointerLeave(event)}
-        >
-          <sphereGeometry args={[1.6, 32, 16]} />
-          <meshStandardMaterial
-            transparent
-            opacity={0}
-            color={"orange"}
-            ref={wrapperMatRef}
-          />
-        </mesh>
-      </group>
-      {tiles[tile].length != 0 && <Piece />}
-    </group>
+      </mesh>
+    </>
   );
 }
 

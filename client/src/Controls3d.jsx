@@ -7,6 +7,7 @@ import { useThree } from "@react-three/fiber";
 // Components
 import DiceDetails from "./DiceDetails";
 import GoalDetails from "./GoalDetails";
+import MoveDetails from "./MoveDetails";
 import Yut from "./Yut";
 
 // State
@@ -22,7 +23,7 @@ export default function Controls3d({ tileRadius, numStars }) {
   const [hoverGoalsText, setHoverGoalsText] = useState(false);
   const [showDice, setShowDice] = useState(false);
   const [hoverDiceText, setHoverDiceText] = useState(false);
-  const [showMoves, setShowMoves] = useState(false);
+  const [showMoves, setShowMoves] = useState(true);
   const [hoverMovesText, setHoverMovesText] = useState(false);
   const [_banner, setBanner] = useAtom(bannerAtom);
 
@@ -283,12 +284,9 @@ export default function Controls3d({ tileRadius, numStars }) {
           </>
         )}
       </group>
-      {showGoals && (
-        <>
-          <GoalDetails tileRadius={tileRadius} numStars={numStars} />
-        </>
-      )}
+      {showGoals && <GoalDetails tileRadius={tileRadius} numStars={numStars} />}
       {showDice && <DiceDetails />}
+      {showMoves && <MoveDetails />}
     </group>
   );
 }

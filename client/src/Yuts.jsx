@@ -8,10 +8,10 @@ import React from "react";
 THREE.ColorManagement.legacyMode = false;
 
 const positionsInitial = [
-  [0, 1, 0],
-  [0, 2, 0],
-  [0, 3, 0],
-  [0, 4, 0],
+  [2, 1, 0],
+  [2, 2, 0],
+  [2, 3, 0],
+  [2, 4, 0],
 ];
 
 function getRandomNumberInRange(num, plusMinus) {
@@ -67,10 +67,10 @@ export default function Yuts(props) {
   const yuts = [yut, yut2, yut3, yut4];
 
   const positionsInHand = [
-    { x: 0, y: 1, z: -0.3 },
-    { x: 0, y: 1, z: -0.6 },
-    { x: 0, y: 1, z: 0.3 },
-    { x: 0, y: 1, z: 0.6 },
+    { x: 2, y: 1, z: -0.3 },
+    { x: 2, y: 1, z: -0.6 },
+    { x: 2, y: 1, z: 0.3 },
+    { x: 2, y: 1, z: 0.6 },
   ];
 
   function yutThrow() {

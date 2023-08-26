@@ -199,60 +199,44 @@ export default function Neptune2({ position, tile }) {
   });
 
   return (
-    <group>
-      <group
-        position={position}
-        scale={
-          selection != null &&
-          selection.type === "tile" &&
-          selection.tile == tile
-            ? 1.3
-            : 1
-        }
-      >
-        {tiles[tile].length != 0 && <Piece />}
-        <group ref={neptuneGroupRef} scale={0.2}>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Sphere002.geometry}
-            material={materials["Blue Planet"]}
-            scale={1.3}
-            // ref={neptune1Ref}
-          ></mesh>
-          {/* remove rings */}
-          <NeptuneParticles
-            countNeptune1={countNeptune1}
-            countNeptune2={countNeptune2}
-            sizeNeptune={sizeNeptune}
-            radius1MinNeptune={radius1MinNeptune}
-            radius1MaxNeptune={radius1MaxNeptune}
-            radius2MinNeptune={radius2MinNeptune}
-            radius2MaxNeptune={radius2MaxNeptune}
-            colorOne={colorOne}
-            colorTwo={colorTwo}
-            countSparkles1={countSparkles1}
-            countSparkles2={countSparkles2}
-          />
-          <NeptuneWrap />
-        </group>
-        {/* <HelperArrow
-          position={[0.8, 0, 0]}
-          rotation={[0, (Math.PI * 17) / 16, Math.PI / 2]}
-        /> */}
+    <group
+      position={position}
+      scale={
+        selection != null && selection.type === "tile" && selection.tile == tile
+          ? 1.3
+          : 1
+      }
+    >
+      {tiles[tile].length != 0 && <Piece />}
+      <group ref={neptuneGroupRef} scale={0.2}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Sphere002.geometry}
+          material={materials["Blue Planet"]}
+          scale={1.3}
+          // ref={neptune1Ref}
+        ></mesh>
+        {/* remove rings */}
+        <NeptuneParticles
+          countNeptune1={countNeptune1}
+          countNeptune2={countNeptune2}
+          sizeNeptune={sizeNeptune}
+          radius1MinNeptune={radius1MinNeptune}
+          radius1MaxNeptune={radius1MaxNeptune}
+          radius2MinNeptune={radius2MinNeptune}
+          radius2MaxNeptune={radius2MaxNeptune}
+          colorOne={colorOne}
+          colorTwo={colorTwo}
+          countSparkles1={countSparkles1}
+          countSparkles2={countSparkles2}
+        />
+        <NeptuneWrap />
       </group>
       <HelperArrow
-        position={[
-          -Math.cos(
-            ((15.2 - 10) * (Math.PI * 2)) / 20 + (Math.PI * 2) / 20 / 2
-          ) * 4,
-          0,
-          Math.sin(
-            ((15.2 - 10) * (Math.PI * 2)) / 20 + (Math.PI * 2) / 20 / 2
-          ) * 4,
-        ]}
-        rotation={[-Math.PI / 2, 0, (Math.PI * 3) / 2]}
-        scale={0.95}
+        position={[0.5, 0, -0.5]}
+        rotation={[Math.PI / 2, 0, (5 * Math.PI) / 4]}
+        scale={0.9}
       />
     </group>
   );

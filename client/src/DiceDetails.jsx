@@ -6,8 +6,8 @@ export default function DiceDetails() {
   return (
     <>
       <Text3D
-        position={[-8, 0, 0]}
-        rotation={[0, Math.PI / 4, 0]}
+        position={[-5, 0, 1.5]}
+        rotation={[0, Math.PI / 2, 0]}
         font="./fonts/Luckiest Guy_Regular.json"
         castShadow={false}
         size={0.3}
@@ -17,11 +17,11 @@ export default function DiceDetails() {
         Press the Spacebar!
         <meshStandardMaterial color="yellow" />
       </Text3D>
-      <group position={[-7, 0, 2]} rotation={[0, -Math.PI / 4, 0]}>
+      <group position={[-4, 0, 6.5]} rotation={[0, 0, 0]}>
         <Text3D
           font="./fonts/Luckiest Guy_Regular.json"
           height={0.01}
-          size={0.25}
+          size={0.2}
           rotation={[0, Math.PI / 2, 0]}
           position={[-1, 0, 0]}
         >
@@ -52,62 +52,131 @@ export default function DiceDetails() {
           scale={0.1}
         />
       </group>
-      <group position={[-6, 0, 3]} rotation={[0, -Math.PI / 4, 0]}>
+      <group position={[-4, 0, 4.5]} rotation={[0, 0, 0]}>
         <Text3D
           font="./fonts/Luckiest Guy_Regular.json"
           height={0.01}
-          size={0.25}
+          size={0.2}
           rotation={[0, Math.PI / 2, 0]}
-          position={[-1, 0.5, 0]}
+          position={[-1, 0, 0]}
+        >
+          Back Step (BackDo)
+        </Text3D>
+        <Yut
+          type="regular"
+          position={[0, 0, 0]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="regular"
+          position={[0, 0, -0.3]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="regular"
+          position={[0, 0, -0.6]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut type="backdo" position={[0, 0, -0.9]} scale={0.1} />
+      </group>
+      <group position={[-2, 0, 6.5]} rotation={[0, 0, 0]}>
+        <Text3D
+          font="./fonts/Luckiest Guy_Regular.json"
+          height={0.01}
+          size={0.2}
+          rotation={[0, Math.PI / 2, 0]}
+          position={[-1, 0, 0]}
         >
           2 Steps (Ge)
         </Text3D>
-        <group rotation={[0, 0, -Math.PI / 4]}>
-          <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
-          <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
-          <Yut
-            type="regular"
-            position={[0, 0, -0.6]}
-            rotation={[Math.PI, 0, 0]}
-            scale={0.1}
-          />
-          <Yut
-            type="backdo"
-            position={[0, 0, -0.9]}
-            rotation={[Math.PI, 0, 0]}
-            scale={0.1}
-          />
-        </group>
+        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yut
+          type="regular"
+          position={[0, 0, -0.6]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="backdo"
+          position={[0, 0, -0.9]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
       </group>
-      <group position={[-4.5, 0, -6]} rotation={[0, -Math.PI / 4, 0, "ZXY"]}>
+      <group position={[0, 0, 6.5]} rotation={[0, 0, 0]}>
         <Text3D
           font="./fonts/Luckiest Guy_Regular.json"
           height={0.01}
-          size={0.25}
+          size={0.2}
           rotation={[0, Math.PI / 2, 0]}
-          position={[-1, 0.5, 0]}
+          position={[-1, 0, 0]}
         >
           3 Steps (Gul)
         </Text3D>
-        <group rotation={[0, 0, -Math.PI / 4]}>
-          <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
-          <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
-          <Yut
-            type="regular"
-            position={[0, 0, -0.6]}
-            rotation={[Math.PI, 0, 0]}
-            scale={0.1}
-          />
-          <Yut
-            type="backdo"
-            position={[0, 0, -0.9]}
-            rotation={[Math.PI, 0, 0]}
-            scale={0.1}
-          />
-        </group>
+        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yut type="regular" position={[0, 0, -0.6]} scale={0.1} />
+        <Yut
+          type="backdo"
+          position={[0, 0, -0.9]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
       </group>
-      <group></group>
-      <group></group>
+      <group position={[2, 0, 6.5]} rotation={[0, 0, 0]}>
+        <Text3D
+          font="./fonts/Luckiest Guy_Regular.json"
+          height={0.01}
+          size={0.2}
+          rotation={[0, Math.PI / 2, 0]}
+          position={[-1, 0, 0]}
+        >
+          4 Steps (Yut)
+        </Text3D>
+        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yut type="regular" position={[0, 0, -0.6]} scale={0.1} />
+        <Yut type="backdo" position={[0, 0, -0.9]} scale={0.1} />
+      </group>
+      <group position={[4, 0, 6.5]} rotation={[0, 0, 0]}>
+        <Text3D
+          font="./fonts/Luckiest Guy_Regular.json"
+          height={0.01}
+          size={0.2}
+          rotation={[0, Math.PI / 2, 0]}
+          position={[-1, 0, 0]}
+        >
+          5 Steps (Mo)
+        </Text3D>
+        <Yut
+          type="regular"
+          position={[0, 0, 0]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="regular"
+          position={[0, 0, -0.3]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="regular"
+          position={[0, 0, -0.6]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+        <Yut
+          type="backdo"
+          position={[0, 0, -0.9]}
+          rotation={[Math.PI, 0, 0]}
+          scale={0.1}
+        />
+      </group>
       <group></group>
     </>
   );

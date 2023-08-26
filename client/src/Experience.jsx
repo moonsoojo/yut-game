@@ -130,10 +130,10 @@ export default function Experience() {
     }
 
     //center piece
-    tiles.push(
-      // <SunBagus position={[-1, 0.5, 0.5]} tile={22} key={100} />
-      <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
-    );
+    tiles.push(<SunBagus position={[0, 0, 0]} intensity={3} scale={0.3} />);
+    // <SunBagus />;
+    // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
+    // <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
     // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
     return tiles;
   }
