@@ -8,8 +8,16 @@ import { useRocketStore } from "./state/zstore2";
 import React from "react";
 // import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import { animated } from "@react-spring/three";
 
-export default function Ufo({ position, rotation, tile, team, id }) {
+export default function Ufo({
+  position,
+  rotation,
+  tile,
+  team,
+  id,
+  scale = 0.22,
+}) {
   const { scene, materials, animations } = useGLTF("/models/ufos/ufo0.glb");
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -71,7 +79,7 @@ export default function Ufo({ position, rotation, tile, team, id }) {
   }
 
   return (
-    <group
+    <animated.group
       position={position}
       ref={ufoRef}
       dispose={null}
@@ -95,7 +103,7 @@ export default function Ufo({ position, rotation, tile, team, id }) {
         <sphereGeometry args={[0.22]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
-      <group scale={0.22} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
+      <group scale={scale} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh
           castShadow
           receiveShadow
@@ -342,7 +350,7 @@ export default function Ufo({ position, rotation, tile, team, id }) {
           ref={ufoGlassRef}
         />
       </group>
-    </group>
+    </animated.group>
   );
 }
 

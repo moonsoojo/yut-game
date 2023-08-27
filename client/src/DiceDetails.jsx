@@ -26,6 +26,7 @@ export default function DiceDetails() {
           position={[-1, 0, 0]}
         >
           1 Step (Do)
+          <meshStandardMaterial color="white" />
         </Text3D>
         <Yut
           type="regular"
@@ -60,6 +61,7 @@ export default function DiceDetails() {
           rotation={[0, Math.PI / 2, 0]}
           position={[-1, 0, 0]}
         >
+          <meshStandardMaterial color="white" />
           Back Step (BackDo)
         </Text3D>
         <Yut
@@ -91,6 +93,7 @@ export default function DiceDetails() {
           position={[-1, 0, 0]}
         >
           2 Steps (Ge)
+          <meshStandardMaterial color="white" />
         </Text3D>
         <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
         <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
@@ -116,6 +119,7 @@ export default function DiceDetails() {
           position={[-1, 0, 0]}
         >
           3 Steps (Gul)
+          <meshStandardMaterial color="white" />
         </Text3D>
         <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
         <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
@@ -136,6 +140,7 @@ export default function DiceDetails() {
           position={[-1, 0, 0]}
         >
           4 Steps (Yut)
+          <meshStandardMaterial color="white" />
         </Text3D>
         <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
         <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
@@ -151,6 +156,7 @@ export default function DiceDetails() {
           position={[-1, 0, 0]}
         >
           5 Steps (Mo)
+          <meshStandardMaterial color="white" />
         </Text3D>
         <Yut
           type="regular"
