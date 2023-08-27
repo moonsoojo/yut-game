@@ -1,19 +1,31 @@
 import React, { useRef, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 import { useRocketStore } from "./state/zstore2";
-import { Html } from "@react-three/drei";
+import { Text3D } from "@react-three/drei";
 // import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
-export default function ScoreButton({ position }) {
+export default function ScoreButton() {
   const finishPiece = useRocketStore((state) => state.finishPiece);
   const setSelection = useRocketStore((state) => state.setSelection);
   const selection = useRocketStore((state) => state.selection);
   // const [selection] = useAtom(selectionAtom);
   const [hover, setHover] = useState(false);
   const matRef = useRef();
+  const [hoverScoreText, setHoverScoreText] = useState(false);
 
-  function handleScoreButtonClick(event) {
+  function scorePointerEnter() {
+    setHoverScoreText(true);
+    document.body.style.cursor = "pointer";
+  }
+
+  function scorePointerOut() {
+    setHoverScoreText(false);
+    document.body.style.cursor = "default";
+  }
+
+  function clickScore(event) {
+    //if no piece is selected, display a warning
     event.stopPropagation();
     if (selection != null) {
       finishPiece();
@@ -23,35 +35,26 @@ export default function ScoreButton({ position }) {
     // socket.emit("select", null);
   }
 
-  function handlePointerEnter(event) {
-    event.stopPropagation();
-    matRef.current.color.r += 1;
-    setHover(true);
-    document.body.style.cursor = "pointer";
-  }
-
-  function handlePointerLeave(event) {
-    event.stopPropagation();
-    matRef.current.color.r -= 1;
-    setHover(false);
-    document.body.style.cursor = "default";
-  }
-
+  function handleScoreButtonClick(event) {}
   return (
-    <mesh
-      position={position}
-      onPointerDown={(event) => handleScoreButtonClick(event)}
-      onPointerEnter={(e) => handlePointerEnter(e)}
-      onPointerLeave={(e) => handlePointerLeave(e)}
-    >
-      <sphereGeometry args={[0.2, 32, 16]} />
-      <meshStandardMaterial color={"green"} ref={matRef} />
-      {hover && (
-        <Html position={[0, 1, -0.3]} wrapperClass="label">
-          {" "}
-          Select a piece to score 🏁
-        </Html>
-      )}
-    </mesh>
+    <group position={[4.9, 0, -2.5]} rotation={[0, Math.PI / 2, 0]}>
+      <mesh
+        position={[0.5, 0.125, 0]}
+        onPointerEnter={scorePointerEnter}
+        onPointerOut={scorePointerOut}
+        onPointerDown={(e) => clickScore(e)}
+      >
+        <boxGeometry args={[1, 0.25, 0.1]} />
+        <meshStandardMaterial transparent opacity={0} />
+      </mesh>
+      <Text3D
+        font="./fonts/Luckiest Guy_Regular.json"
+        height={0.01}
+        size={0.25}
+      >
+        Score
+        <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
+      </Text3D>
+    </group>
   );
 }

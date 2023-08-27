@@ -176,7 +176,7 @@ export default function MoveDetails() {
           </Text3D>
         </animated.group>
         <Text3D
-          position={[3, 0, -3.5]}
+          position={[1.5, 0, -4]}
           rotation={[0, Math.PI / 2, 0]}
           height={0.01}
           size={0.25}

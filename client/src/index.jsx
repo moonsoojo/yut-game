@@ -44,7 +44,7 @@ root.render(
         bottom={-200}
         left={200}
         right={-200}
-        near={1}
+        near={0.1}
         far={2000}
         position={[4, 3, 0]}
       />

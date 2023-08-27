@@ -139,11 +139,10 @@ export default function Experience() {
   }
 
   function PiecesTeam0() {
-    let positionStartX = 5;
+    let positionStartX = 3;
     let positionStartY = 0;
-    let positionStartZ = 0;
-    let spaceX = 0.4;
-    let spaceZ = -0.2;
+    let positionStartZ = -6;
+    let space = 0.6;
 
     return (
       <>
@@ -151,9 +150,9 @@ export default function Experience() {
           value == null ? (
             <mesh
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
               key={index}
             >
@@ -162,9 +161,9 @@ export default function Experience() {
           ) : value === "scored" ? (
             <mesh
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
               key={index}
             >
@@ -174,16 +173,17 @@ export default function Experience() {
           ) : (
             <Ufo
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
-              rotation={[0, -Math.PI / 2, -Math.PI / 16, "YZX"]}
+              rotation={[0, 0, -Math.PI / 8]}
               keyName={`count${index}`}
               tile={-1}
               team={0}
               id={value.id}
               key={index}
+              scale={0.4}
             />
           )
         )}
@@ -191,20 +191,19 @@ export default function Experience() {
     );
   }
   function PiecesTeam1() {
-    let positionStartX = 4.7;
+    let positionStartX = 4.5;
     let positionStartY = 0;
-    let positionStartZ = -1.5;
-    let spaceX = 0.4;
-    let spaceZ = -0.2;
+    let positionStartZ = -6;
+    let space = 0.6;
     return (
       <>
         {pieces[1].map((value, index) =>
           value == null ? (
             <mesh
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
               key={index}
             >
@@ -213,9 +212,9 @@ export default function Experience() {
           ) : value === "scored" ? (
             <mesh
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
               key={index}
             >
@@ -225,16 +224,17 @@ export default function Experience() {
           ) : (
             <Rocket
               position={[
-                positionStartX + index * spaceX,
+                positionStartX,
                 positionStartY,
-                positionStartZ + index * spaceZ,
+                positionStartZ + index * space,
               ]}
-              rotation={[0, -Math.PI / 2, 0]}
+              rotation={[0, 0, 0]}
               keyName={`count${index}`}
               tile={-1}
               team={1}
               id={value.id}
               key={index}
+              scale={1}
             />
           )
         )}
@@ -498,7 +498,7 @@ export default function Experience() {
         <PiecesTeam0 />
         <PiecesTeam1 />
 
-        <ScoreButton position={[4, 0, 2]} />
+        <ScoreButton />
         {/* {characters.map((character) => (
           <Starfighter
             key={character.id}
@@ -506,17 +506,6 @@ export default function Experience() {
             color={character.color}
           />
         ))} */}
-        {/* <Text3D
-          position={[-8, 1.5, 0]}
-          rotation={[0, Math.PI / 4, 0]}
-          font="./fonts/Luckiest Guy_Regular.json"
-          castShadow={false}
-          size={0.3}
-          height={0.01}
-          receiveShadow
-        >
-          {banner}
-        </Text3D> */}
       </Physics>
     </>
   );

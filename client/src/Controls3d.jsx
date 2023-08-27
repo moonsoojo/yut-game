@@ -8,28 +8,25 @@ import { useThree } from "@react-three/fiber";
 import DiceDetails from "./DiceDetails";
 import GoalDetails from "./GoalDetails";
 import MoveDetails from "./MoveDetails";
+import ScoreDetails from "./ScoreDetails";
 import Yut from "./Yut";
 
 // State
-import { bannerAtom } from "./Experience";
 import { useAtom } from "jotai";
 
 export default function Controls3d({ tileRadius, numStars }) {
   const [showControls, setShowControls] = useState(false);
   const [hoverControls, setHoverControls] = useState(false);
-  const [showRules, setShowRules] = useState(true);
+  const [showRules, setShowRules] = useState(false);
   const [hoverRules, setHoverRules] = useState(false);
   const [showGoals, setShowGoals] = useState(false);
   const [hoverGoalsText, setHoverGoalsText] = useState(false);
   const [showDice, setShowDice] = useState(false);
   const [hoverDiceText, setHoverDiceText] = useState(false);
-  const [showMoves, setShowMoves] = useState(true);
+  const [showMoves, setShowMoves] = useState(false);
   const [hoverMovesText, setHoverMovesText] = useState(false);
-  const [_banner, setBanner] = useAtom(bannerAtom);
-
-  let camera = useThree((state) => state.camera);
-
-  const controlsTextRef = useRef();
+  const [showScore, setShowScore] = useState(false);
+  const [hoverScoreText, setHoverScoreText] = useState(false);
 
   function controlsPointerEnter() {
     // setShowControls(true);
@@ -46,25 +43,29 @@ export default function Controls3d({ tileRadius, numStars }) {
   function clickControls() {
     if (showControls == false) {
       setShowControls(true);
+      setShowRules(false);
+      setShowDice(false);
+      setShowMoves(false);
+      setShowGoals(false);
+      setShowScore(false);
     } else {
       setShowControls(false);
     }
   }
 
   function rulesPointerEnter() {
-    // setShowControls(true);
     setHoverRules(true);
     document.body.style.cursor = "pointer";
   }
 
   function rulesPointerOut() {
-    // setShowControls(false);
     setHoverRules(false);
     document.body.style.cursor = "default";
   }
 
   function clickRules() {
     if (showRules == false) {
+      setShowControls(false);
       setShowRules(true);
     } else {
       setShowRules(false);
@@ -72,13 +73,11 @@ export default function Controls3d({ tileRadius, numStars }) {
   }
 
   function goalsPointerEnter() {
-    // setShowControls(true);
     setHoverGoalsText(true);
     document.body.style.cursor = "pointer";
   }
 
   function goalsPointerOut() {
-    // setShowControls(false);
     setHoverGoalsText(false);
     document.body.style.cursor = "default";
   }
@@ -88,10 +87,9 @@ export default function Controls3d({ tileRadius, numStars }) {
       setShowGoals(true);
       setShowDice(false);
       setShowMoves(false);
-      // setBanner("Make a circle from Earth to Earth around the solar system.");
+      setShowScore(false);
     } else {
       setShowGoals(false);
-      // setBanner("");
     }
   }
 
@@ -110,10 +108,9 @@ export default function Controls3d({ tileRadius, numStars }) {
       setShowDice(true);
       setShowGoals(false);
       setShowMoves(false);
-      // setBanner("Press the spacebar!");
+      setShowScore(false);
     } else {
       setShowDice(false);
-      // setBanner("");
     }
   }
 
@@ -134,10 +131,30 @@ export default function Controls3d({ tileRadius, numStars }) {
       setShowMoves(true);
       setShowGoals(false);
       setShowDice(false);
-      setBanner("You can move by throwing the dice. Press the spacebar!");
+      setShowScore(false);
     } else {
       setShowMoves(false);
-      setBanner("");
+    }
+  }
+
+  function scorePointerEnter() {
+    setHoverScoreText(true);
+    document.body.style.cursor = "pointer";
+  }
+
+  function scorePointerOut() {
+    setHoverScoreText(false);
+    document.body.style.cursor = "default";
+  }
+
+  function clickScore() {
+    if (showScore == false) {
+      setShowMoves(false);
+      setShowGoals(false);
+      setShowDice(false);
+      setShowScore(true);
+    } else {
+      setShowScore(false);
     }
   }
 
@@ -151,7 +168,7 @@ export default function Controls3d({ tileRadius, numStars }) {
           onPointerDown={clickControls}
         >
           <boxGeometry args={[2, 0.3, 0.1]} />
-          <meshStandardMaterial transparent opacity={0.3} />
+          <meshStandardMaterial transparent opacity={0} />
         </mesh>
         <Text3D
           font="./fonts/Luckiest Guy_Regular.json"
@@ -161,11 +178,13 @@ export default function Controls3d({ tileRadius, numStars }) {
           receiveShadow
         >
           CONTROLS
-          <meshStandardMaterial color={hoverControls ? "white" : "yellow"} />
+          <meshStandardMaterial
+            color={hoverControls || showControls ? "white" : "yellow"}
+          />
         </Text3D>
         {showControls && (
           <Text3D
-            position={[-1, 1.5, 0]}
+            position={[-1.75, 1.75, 0]}
             font="./fonts/Luckiest Guy_Regular.json"
             castShadow={false}
             size={0.2}
@@ -185,7 +204,7 @@ export default function Controls3d({ tileRadius, numStars }) {
           onPointerDown={clickRules}
         >
           <boxGeometry args={[1.2, 0.4, 0.1]} />
-          <meshStandardMaterial transparent opacity={0.3} />
+          <meshStandardMaterial transparent opacity={0} />
         </mesh>
         <Text3D
           font="./fonts/Luckiest Guy_Regular.json"
@@ -195,7 +214,9 @@ export default function Controls3d({ tileRadius, numStars }) {
           receiveShadow
         >
           RULES
-          <meshStandardMaterial color={hoverRules ? "white" : "yellow"} />
+          <meshStandardMaterial
+            color={hoverRules || showRules ? "white" : "yellow"}
+          />
         </Text3D>
         {showRules && (
           <>
@@ -208,7 +229,7 @@ export default function Controls3d({ tileRadius, numStars }) {
                 onPointerDown={clickGoals}
               >
                 <boxGeometry args={[0.85, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0.3} />
+                <meshStandardMaterial transparent opacity={0} />
               </mesh>
               <Text3D
                 font="./fonts/Luckiest Guy_Regular.json"
@@ -219,7 +240,7 @@ export default function Controls3d({ tileRadius, numStars }) {
               >
                 Goal
                 <meshStandardMaterial
-                  color={hoverGoalsText ? "white" : "yellow"}
+                  color={hoverGoalsText || showGoals ? "white" : "yellow"}
                 />
               </Text3D>
             </group>
@@ -231,7 +252,7 @@ export default function Controls3d({ tileRadius, numStars }) {
                 onPointerDown={clickDice}
               >
                 <boxGeometry args={[1.9, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0.3} />
+                <meshStandardMaterial transparent opacity={0} />
               </mesh>
               <Text3D
                 position={[0, 0, 0]}
@@ -243,7 +264,7 @@ export default function Controls3d({ tileRadius, numStars }) {
               >
                 Dice (yuts)
                 <meshStandardMaterial
-                  color={hoverDiceText ? "white" : "yellow"}
+                  color={hoverDiceText || showDice ? "white" : "yellow"}
                 />
               </Text3D>
             </group>
@@ -255,7 +276,7 @@ export default function Controls3d({ tileRadius, numStars }) {
                 onPointerDown={clickMoves}
               >
                 <boxGeometry args={[1.2, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0.3} />
+                <meshStandardMaterial transparent opacity={0} />
               </mesh>
               <Text3D
                 position={[0, 0, 0]}
@@ -267,26 +288,41 @@ export default function Controls3d({ tileRadius, numStars }) {
               >
                 Moves
                 <meshStandardMaterial
-                  color={hoverMovesText ? "white" : "yellow"}
+                  color={hoverMovesText || showMoves ? "white" : "yellow"}
                 />
               </Text3D>
             </group>
-            <Text3D
-              position={[0, -2, 0]}
-              font="./fonts/Luckiest Guy_Regular.json"
-              castShadow={false}
-              size={0.25}
-              height={0.01}
-              receiveShadow
-            >
-              Score
-            </Text3D>
+            <group position={[0, -2, 0]}>
+              <mesh
+                position={[0.5, 0.125, 0]}
+                onPointerEnter={scorePointerEnter}
+                onPointerOut={scorePointerOut}
+                onPointerDown={clickScore}
+              >
+                <boxGeometry args={[1, 0.25, 0.1]} />
+                <meshStandardMaterial transparent opacity={0} />
+              </mesh>
+              <Text3D
+                position={[0, 0, 0]}
+                font="./fonts/Luckiest Guy_Regular.json"
+                castShadow={false}
+                size={0.25}
+                height={0.01}
+                receiveShadow
+              >
+                Score
+                <meshStandardMaterial
+                  color={hoverScoreText || showScore ? "white" : "yellow"}
+                />
+              </Text3D>
+            </group>
           </>
         )}
       </group>
       {showGoals && <GoalDetails tileRadius={tileRadius} numStars={numStars} />}
       {showDice && <DiceDetails />}
       {showMoves && <MoveDetails />}
+      {showScore && <ScoreDetails />}
     </group>
   );
 }

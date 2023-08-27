@@ -88,8 +88,8 @@ export default function Ufo({
         selection.type === "piece" &&
         selection.team == 0 &&
         selection.id == id
-          ? 1.5
-          : 1
+          ? scale * 1.5
+          : scale
       }
       rotation={rotation}
     >
@@ -100,10 +100,10 @@ export default function Ufo({
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.22]} />
+        <sphereGeometry args={[1.2]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
-      <group scale={scale} rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
+      <group rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh
           castShadow
           receiveShadow

@@ -9,7 +9,14 @@ import { useRocketStore } from "./state/zstore2";
 import { useAtom } from "jotai";
 import React from "react";
 
-export default function Rocket({ position, rotation, tile, team, id }) {
+export default function Rocket({
+  position,
+  rotation,
+  tile,
+  team,
+  id,
+  scale = 0.009,
+}) {
   const { scene, materials, animations } = useGLTF(
     "/models/rockets/rocket-with-astronaut0.glb"
   );
@@ -67,10 +74,11 @@ export default function Rocket({ position, rotation, tile, team, id }) {
     }
   }
 
-  const wrapPosition = [0, -0.2, +0.2];
+  const wrapPosition = [0, -0.4, 0.4];
+  const adjustedPosition = [position[0], position[1] + 0.5, position[2] - 0.5];
   return (
     <group
-      position={position}
+      position={adjustedPosition}
       ref={rocketRef}
       dispose={null}
       scale={
@@ -92,7 +100,7 @@ export default function Rocket({ position, rotation, tile, team, id }) {
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <capsuleGeometry args={[0.15, 0.3]} />
+        <capsuleGeometry args={[0.4, 0.6]} />
         <meshBasicMaterial
           transparent
           opacity={0}
@@ -100,7 +108,7 @@ export default function Rocket({ position, rotation, tile, team, id }) {
           color="white"
         />
       </mesh>
-      <group rotation={[(Math.PI * 3) / 4, 0, -Math.PI]} scale={0.009}>
+      <group scale={0.02} rotation={[(Math.PI * 3) / 4, 0, -Math.PI]}>
         <mesh
           castShadow
           receiveShadow
