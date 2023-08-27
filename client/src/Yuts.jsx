@@ -4,6 +4,8 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
+import { playAtom } from "./Experience";
+import { useAtom } from "jotai";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -42,7 +44,7 @@ const rotationsInitial = [
 ];
 
 export default function Yuts(props) {
-  const [hover, setHover] = useState(false);
+  const [play, setPlay] = useAtom(playAtom);
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut-regular.glb").nodes;
   const materials = useGLTF("/models/yut-regular.glb").materials;
@@ -74,6 +76,9 @@ export default function Yuts(props) {
   ];
 
   function yutThrow() {
+    if (!play) {
+      setPlay(true);
+    }
     let index = 0;
     for (const yut of yuts) {
       yut.current.setTranslation(positionsInHand[index], true);

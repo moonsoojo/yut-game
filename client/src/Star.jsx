@@ -10,7 +10,13 @@ import { useRocketStore } from "./state/zstore2";
 // import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
-export default function Star({ position, tile }) {
+export default function Star({
+  position,
+  tile,
+  color = "yellow",
+  scale = 1,
+  isDecoration = false,
+}) {
   const { scene, materials, animations } = useGLTF(
     "/models/stars/star-yellow copy 1.glb"
   );
@@ -121,28 +127,33 @@ export default function Star({ position, tile }) {
       ref={star}
       position={position}
       scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.3
-          : 1
+        !isDecoration &&
+        selection != null &&
+        selection.type === "tile" &&
+        selection.tile == tile
+          ? scale * 1.3
+          : scale * 1
       }
     >
-      <mesh
-        onPointerDown={(event) => handlePointerDown(event)}
-        onPointerEnter={(e) => handlePointerEnter(e)}
-        onPointerLeave={(e) => handlePointerLeave(e)}
-      >
-        <sphereGeometry args={[0.6]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
-      </mesh>
+      {!isDecoration && (
+        <mesh
+          onPointerDown={(event) => handlePointerDown(event)}
+          onPointerEnter={(e) => handlePointerEnter(e)}
+          onPointerLeave={(e) => handlePointerLeave(e)}
+        >
+          <sphereGeometry args={[0.6]} />
+          <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
+        </mesh>
+      )}
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.star.geometry}
         scale={0.15}
       >
-        <meshStandardMaterial color={"yellow"} ref={starMatRef} />
+        <meshStandardMaterial color={color} ref={starMatRef} />
       </mesh>
-      {tiles[tile].length != 0 && <Piece />}
+      {tile && tiles[tile].length != 0 && <Piece />}
     </group>
   );
 }

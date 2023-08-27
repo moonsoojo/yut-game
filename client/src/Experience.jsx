@@ -12,7 +12,7 @@ import SunBagus from "./SunBagus.jsx";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
-import GoalArrows from "./GoalDetails";
+import Decorations from "./Decorations";
 
 import React from "react";
 import ScoreButton from "./ScoreButton";
@@ -38,6 +38,7 @@ import { useAtom, atom } from "jotai";
 // import { piecesAtom, socket } from "./SocketManager";
 
 export const bannerAtom = atom("throw the yuts!");
+export const playAtom = atom(false);
 
 export default function Experience() {
   const pieces = useRocketStore((state) => state.pieces);
@@ -107,7 +108,6 @@ export default function Experience() {
               Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut1,
             ]}
-            scale={0.1}
             tile={indexShortcut1}
             key={i + 30}
           />
@@ -121,7 +121,6 @@ export default function Experience() {
               Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut2,
             ]}
-            scale={0.1}
             tile={indexShortcut2}
             key={i + 41}
           />
@@ -130,7 +129,9 @@ export default function Experience() {
     }
 
     //center piece
-    tiles.push(<SunBagus position={[0, 0, 0]} intensity={3} scale={0.3} />);
+    tiles.push(
+      <SunBagus position={[0, 0, 0]} intensity={3} scale={0.4} key={100} />
+    );
     // <SunBagus />;
     // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
     // <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
@@ -506,6 +507,7 @@ export default function Experience() {
             color={character.color}
           />
         ))} */}
+        <Decorations />
       </Physics>
     </>
   );

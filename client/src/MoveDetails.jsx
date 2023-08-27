@@ -149,6 +149,44 @@ export default function MoveDetails() {
     },
     loop: true,
   });
+  const { direction2ScaleStep1 } = useSpring({
+    from: {
+      direction2ScaleStep1: 0.01,
+    },
+    to: [
+      {
+        direction2ScaleStep1: 1,
+      },
+      {
+        direction2ScaleStep1: 0.02,
+      },
+    ],
+    config: {
+      mass: 2,
+      tension: 100,
+      friction: 36,
+    },
+    loop: true,
+  });
+  const { direction2ScaleStep2 } = useSpring({
+    from: {
+      direction2ScaleStep2: 0.01,
+    },
+    to: [
+      {
+        direction2ScaleStep2: 0.02,
+      },
+      {
+        direction2ScaleStep2: 1,
+      },
+    ],
+    config: {
+      mass: 2,
+      tension: 100,
+      friction: 36,
+    },
+    loop: true,
+  });
 
   return (
     <>
@@ -215,6 +253,28 @@ export default function MoveDetails() {
         </animated.group>
       </group>
       <group>
+        <animated.group scale={direction2ScaleStep1} position={[-4, 0, 3.5]}>
+          <Text3D
+            rotation={[0, Math.PI / 2, 0]}
+            height={0.01}
+            size={0.3}
+            font="./fonts/Luckiest Guy_Regular.json"
+          >
+            1
+            <meshStandardMaterial color="yellow" />
+          </Text3D>
+        </animated.group>
+        <animated.group scale={direction2ScaleStep2} position={[-3, 0, 4.5]}>
+          <Text3D
+            rotation={[0, Math.PI / 2, 0]}
+            height={0.01}
+            size={0.3}
+            font="./fonts/Luckiest Guy_Regular.json"
+          >
+            2
+            <meshStandardMaterial color="yellow" />
+          </Text3D>
+        </animated.group>
         <Text3D
           position={[-5, 0, 5]}
           rotation={[0, Math.PI / 2, 0]}
