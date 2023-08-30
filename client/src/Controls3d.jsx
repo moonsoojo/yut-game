@@ -193,7 +193,7 @@ export default function Controls3d({ tileRadius, numStars }) {
           >
             left click and drag to look &#10; spacebar to throw the dice &#10;
             click to select a piece &#10; and place it on a star
-            <meshStandardMaterial color="white" />
+            <meshStandardMaterial color="grey" />
           </Text3D>
         )}
       </group>

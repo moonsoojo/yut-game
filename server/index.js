@@ -1,4 +1,4 @@
-/*import { Server } from "socket.io";
+import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
@@ -84,7 +84,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("placePiece", (destination) => {
-    console.log("[server][placePiece]", destination);
     let starting = selection.type === "piece" ? true : false;
     let piecesIncoming;
     let incomingTeam;
@@ -132,7 +131,7 @@ io.on("connection", (socket) => {
         let newPiece = { tile: destination, team: piece.team, id: piece.id };
         tiles[destination].push(newPiece);
       }
-      newTiles[fromTile] = [];
+      tiles[fromTile] = [];
     }
 
     io.emit("placePiece", { tiles, pieces });
@@ -183,4 +182,3 @@ io.on("connection", (socket) => {
     io.emit("characters", characters);
   });
 });
-*/

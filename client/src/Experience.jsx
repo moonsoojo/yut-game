@@ -32,20 +32,20 @@ import Universe from "./Universe";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore";
-import { useRocketStore } from "./state/zstore2";
+// import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
-// import { piecesAtom, socket } from "./SocketManager";
+import { piecesAtom, socket } from "./SocketManager";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
 
 export default function Experience() {
-  const pieces = useRocketStore((state) => state.pieces);
+  // const pieces = useRocketStore((state) => state.pieces);
   const [banner] = useAtom(bannerAtom);
   // const [characters] = useAtom(charactersAtom);
 
-  // const [pieces] = useAtom(piecesAtom);
+  const [pieces] = useAtom(piecesAtom);
 
   const numTiles = 29;
 
@@ -130,7 +130,13 @@ export default function Experience() {
 
     //center piece
     tiles.push(
-      <SunBagus position={[0, 0, 0]} intensity={3} scale={0.4} key={100} />
+      <SunBagus
+        position={[0, 0, 0]}
+        intensity={3}
+        scale={0.4}
+        key={100}
+        tile={22}
+      />
     );
     // <SunBagus />;
     // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
@@ -508,6 +514,17 @@ export default function Experience() {
           />
         ))} */}
         <Decorations />
+        {/* START text */}
+        <Text3D
+          font="./fonts/Luckiest Guy_Regular.json"
+          size={0.3}
+          height={0.01}
+          position={[2.7, 0.7, -2.2]}
+          rotation={[0, Math.PI / 2, 0]}
+        >
+          Start
+          <meshStandardMaterial color="yellow" />
+        </Text3D>
       </Physics>
     </>
   );

@@ -7,7 +7,7 @@ import React from "react";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
 import { useRocketStore } from "./state/zstore2";
-// import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 import Rocket from "./Rocket";
@@ -45,11 +45,12 @@ export default function Saturn({ position, tile, scale }) {
     "/textures/saturn-satellite-texture-map-7.jpg"
   );
 
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
-  // const [selection] = useAtom(selectionAtom);
-  const setPiece = useRocketStore((state) => state.setPiece);
-  const tiles = useRocketStore((state) => state.tiles);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
+  const [selection] = useAtom(selectionAtom);
+  const [tiles] = useAtom(tilesAtom);
+  // const setPiece = useRocketStore((state) => state.setPiece);
+  // const tiles = useRocketStore((state) => state.tiles);
 
   const saturnRef = useRef();
   const satellitesRef = useRef();
@@ -79,14 +80,15 @@ export default function Saturn({ position, tile, scale }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      setSelection({ type: "tile", tile });
-      // socket.emit("select", { type: "tile", tile });
+      // setSelection({ type: "tile", tile });
+      socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
-        setPiece({ destination: tile });
+        // setPiece({ destination: tile });
+        socket.emit("placePiece", tile);
       }
-      setSelection(null);
-      // socket.emit("select", null);
+      // setSelection(null);
+      socket.emit("select", null);
     }
   }
 

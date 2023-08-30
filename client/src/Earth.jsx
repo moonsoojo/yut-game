@@ -6,19 +6,20 @@ import HelperArrow from "./HelperArrow";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
-import { useRocketStore } from "./state/zstore2";
-// import { selectionAtom, socket } from "./SocketManager";
+// import { useRocketStore } from "./state/zstore2";
+import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 export default function Earth({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
-  // const [selection] = useAtom(selectionAtom);
+  const [selection] = useAtom(selectionAtom);
+  const [tiles] = useAtom(tilesAtom);
 
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
-  const setPiece = useRocketStore((state) => state.setPiece);
-  const tiles = useRocketStore((state) => state.tiles);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
+  // const setPiece = useRocketStore((state) => state.setPiece);
+  // const tiles = useRocketStore((state) => state.tiles);
 
   const earth1Ref = useRef();
   const earth2Ref = useRef();
@@ -52,14 +53,15 @@ export default function Earth({ position, tile }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      setSelection({ type: "tile", tile });
-      // socket.emit("select", { type: "tile", tile });
+      // setSelection({ type: "tile", tile });
+      socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
-        setPiece({ destination: tile });
+        // setPiece({ destination: tile });
+        socket.emit("placePiece", tile);
       }
-      setSelection(null);
-      // socket.emit("select", null);
+      // setSelection(null);
+      socket.emit("select", null);
     }
   }
 
@@ -121,7 +123,7 @@ export default function Earth({ position, tile }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[3.5, 32, 16]} />
+        <sphereGeometry args={[2.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );

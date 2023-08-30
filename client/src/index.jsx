@@ -19,13 +19,13 @@ import { useLoader } from "@react-three/fiber";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import Star from "./Star";
 import Controls from "./Controls";
-// import { SocketManager } from "./SocketManager";
+import { SocketManager } from "./SocketManager";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
 root.render(
   <KeyboardControls map={[{ name: "throw", keys: ["Space"] }]}>
-    {/* <SocketManager /> */}
+    <SocketManager />
     <Canvas
       gl={{
         antialias: true,

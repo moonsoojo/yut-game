@@ -4,9 +4,9 @@ import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
-import { useRocketStore } from "./state/zstore2";
+// import { useRocketStore } from "./state/zstore2";
 import React from "react";
-// import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 
@@ -23,9 +23,9 @@ export default function Ufo({
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
 
-  // const [selection] = useAtom(selectionAtom);
-  const setSelection = useRocketStore((state) => state.setSelection);
-  const selection = useRocketStore((state) => state.selection);
+  const [selection] = useAtom(selectionAtom);
+  // const setSelection = useRocketStore((state) => state.setSelection);
+  // const selection = useRocketStore((state) => state.selection);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
@@ -69,11 +69,11 @@ export default function Ufo({
     event.stopPropagation();
     if (tile == -1) {
       if (selection == null) {
-        setSelection({ type: "piece", tile, team, id });
-        // socket.emit("select", { type: "piece", tile, team, id });
+        // setSelection({ type: "piece", tile, team, id });
+        socket.emit("select", { type: "piece", tile, team, id });
       } else {
-        setSelection(null);
-        // socket.emit("select", null);
+        // setSelection(null);
+        socket.emit("select", null);
       }
     }
   }
