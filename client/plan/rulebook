@@ -1,16 +1,5 @@
-Pass Earth to score.
-
-- 2 steps - star, Earth, score button
-- update score button
-- place pieces
-
 # additional rules
 
 you can move across the shortcut on your next turn on planets.
 you can throw again if you threw a four or a five. (animation)
 you can throw again if you captured a piece.
-
-# implementation notes
-
-check on portfolio
-lay tiles out in a spiral

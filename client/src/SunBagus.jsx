@@ -202,7 +202,7 @@ const fragmentShaderOuterSun = `
      //	n = 1.0;
       float split = (15.0+sin(t*2.0+n*0.5+angle*10.0+alpha*1.0*n)*(.3+.1+alpha*.3*n));
   
-      float rotate = sin(angle*3.0 + sin(angle*5.0+alpha*4.0+t*30.0+n*5.0+alpha*8.0))*(.5 + alpha*1.5);
+      float rotate = sin(angle*3.0+ sin(angle*5.0+alpha*4.0+t*30.0+n*5.0+alpha*8.0))*(.5 + alpha*1.5);
   
       float g = pow((2.0+sin(split+n*1.*alpha+rotate)*1.4)*n*4.0,n*(1.5-0.8*alpha));
   
@@ -211,12 +211,17 @@ const fragmentShaderOuterSun = `
     return g;
   }
 
-  #define SIZE 2.8
+  #define SIZE 14.5
   #define RADIUS 0.07
-  #define INNER_FADE 1.
-  #define OUTER_FADE 0.01
+  #define INNER_FADE 1.6
+  #define OUTER_FADE 0.1
   #define SPEED .1
-  #define BORDER 0.21
+  #define BORDER 1.21
+
+  float light(in vec2 pos,in float size,in float radius,in float inner_fade,in float outer_fade){
+    float len = length(pos/size);
+    return pow(clamp((1.0 - pow( clamp(len-radius,0.0,1.0) , 1.0/inner_fade)),0.0,1.0),1.0/outer_fade);
+  }
 
   void main() {
     vec2 vCoords = vPos.xy;
@@ -228,12 +233,16 @@ const fragmentShaderOuterSun = `
 
 
     float brightness = Freshnel(eyeVector, vNN)*1.2;
-    
-    float sunFlare = flare(angle, brightness, time*0.05)*1.3;
+    brightness = light(Position.xy,SIZE,RADIUS,INNER_FADE,OUTER_FADE);
+    //angle = atan(vCoords.x,vCoords.y);
+
+    float sunFlare = flare(angle, brightness, time*0.05)*1.;
     //gl_FragColor = vec4(brightness,brightness,brightness,1);
-    gl_FragColor.rgb = brightnessToColor((brightness)*sunFlare)*9.5;
+    gl_FragColor.rgb = brightnessToColor((brightness)*sunFlare)*1.5;
     //gl_FragColor.rgb = vec3(sunFlare-0.7,sunFlare-0.7,sunFlare-0.7);
-    gl_FragColor.a =gl_FragColor.g+(gl_FragColor.r)/4.0;
+    //gl_FragColor.rgb = Position;
+    gl_FragColor.a = gl_FragColor.g+(gl_FragColor.r*0.1)/4.0;
+    gl_FragColor.a = gl_FragColor.a<0.3?0.0:gl_FragColor.a;
   }`;
 
 const vertexShaderOuterSun = `
@@ -250,6 +259,7 @@ const vertexShaderOuterSun = `
   varying vec3 eyeVector;
   uniform float time;
   uniform vec3 normalizedScreenSpacePos;
+  uniform float objectScale;
 
   
 
@@ -299,6 +309,7 @@ const vertexShaderOuterSun = `
     Normal = normalize(normalMatrix * normal);
     Position = position;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    gl_Position = (projectionMatrix * (modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0) + (vec4(position.x, position.y, 0.0, 0.0)*objectScale)));
     vPos = gl_Position;
   }
 `;
@@ -498,6 +509,9 @@ function Sun(props) {
   var scene1 = new THREE.Scene();
   const { gl, camera, scene, size } = useThree();
 
+  //Use this to scale the sun
+  // var sphereGeometryScale = 0.15;
+
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
     generateMipmaps: true,
@@ -520,19 +534,17 @@ function Sun(props) {
     fragmentShader: fragmentShader,
   });
 
-  var geometry = new THREE.SphereGeometry(4, 32, 16);
+  var geometry = new THREE.SphereGeometry(1, 32, 16);
   var perlin = new THREE.Mesh(geometry, MaterialPerlin);
   scene1.add(perlin);
 
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
-    meshRef.current.rotation.x += delta * 0.1;
-    meshRef.current.rotation.y += delta * 0.1;
-    meshRef.current.rotation.z += delta * 0.1;
+    meshRef.current.rotation.y = state.clock.elapsedTime / 10;
+    childMeshRef.current.material.uniforms.objectScale.value = props.scale;
     MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
     childMeshRef.current.material.transparent = true;
     childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
-    childMeshRef.current.rotation.x += delta * 0.1;
   }, 0);
 
   useFrame(({ gl, scene, camera }) => {
@@ -573,27 +585,28 @@ function Sun(props) {
       uniforms: {
         time: { type: "f", value: "0.0" },
         normalizedScreenSpacePos: { value: new THREE.Vector3(0.5, 0.5, 1) },
+        objectScale: { value: props.scale },
       },
-      side: THREE.BackSide,
+      side: THREE.FrontSide,
+      transparent: true,
       fragmentShader: fragmentShaderOuterSun,
       vertexShader: vertexShaderOuterSun,
     }),
     []
   );
-
   return (
     <>
       <mesh {...props} ref={meshRef} scale={props.scale}>
-        {/* <OrbitControls></OrbitControls> */}
+        <OrbitControls></OrbitControls>
         <sphereGeometry args={[1, 32, 16]} />
         <shaderMaterial attach="material" {...data} />
-        <mesh ref={childMeshRef} scale={1}>
-          <sphereGeometry args={[1.35, 32, 32]} />
+        <mesh ref={childMeshRef} scale={props.scale}>
+          <planeGeometry args={[2.5, 2.5, 32]} />
           <shaderMaterial attach="material" {...outerData} />
-          {/* <pointLight
+          <pointLight
             intensity={props.intensity}
             distance={props.distance}
-          ></pointLight> */}
+          ></pointLight>
         </mesh>
       </mesh>
     </>

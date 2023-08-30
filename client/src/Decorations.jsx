@@ -9,28 +9,28 @@ export default function Decorations() {
     <group>
       {!play && (
         <group>
-          <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          {/* <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <torusGeometry args={[1, 0.005, 16, 100]} />
-            <meshStandardMaterial color={"#EBCC5F"} />
+            <meshStandardMaterial color={"#F27D11"} />
           </mesh>
           <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <torusGeometry args={[2, 0.005, 16, 100]} />
-            <meshStandardMaterial color={"#F29811"} />
+            <meshStandardMaterial color={"#F2B311"} />
           </mesh>
           <mesh
             position={[0, 0, 0]}
             rotation={[Math.PI / 2, 0, (Math.PI * 5) / 16]}
           >
             <torusGeometry args={[3.2, 0.005, 16, 100]} />
-            <meshStandardMaterial color={"#E17755"} />
+            <meshStandardMaterial color={"#EEF211"} />
           </mesh>
           <mesh
             position={[0, 0, 0]}
             rotation={[Math.PI / 2, 0, (Math.PI * 5) / 16]}
           >
             <torusGeometry args={[4.8, 0.005, 16, 100]} />
-            <meshStandardMaterial color={"orange"} />
-          </mesh>
+            <meshStandardMaterial color={"#AAF211"} />
+          </mesh> */}
         </group>
       )}
       <group>
