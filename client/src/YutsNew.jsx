@@ -46,15 +46,17 @@ export default function Yuts(props) {
   const [hover, setHover] = useState(false);
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/models/yut-physics-2.glb");
+  const { nodes, materials, animations } = useGLTF(
+    "/models/yut-physics-combined.glb"
+  );
   const { actions } = useAnimations(animations, group);
   const [animation, setAnimation] = useState("");
-  useEffect(() => {
-    actions[animation].reset();
-  });
-  console.log("[Yuts]", actions);
-  const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
+  // useEffect(() => {
+  //   actions[animation].reset();
+  // });
+  console.log("[YutsNew]", actions);
+  // const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
+  // const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
 
   useEffect(() => {
     subscribeKeys(
@@ -68,15 +70,43 @@ export default function Yuts(props) {
   }, []);
 
   return (
-    <group ref={group} dispose={null}>
+    <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <mesh
-          name="Cube003"
+          name="Cube009"
           castShadow
           receiveShadow
-          geometry={nodes.Cube003.geometry}
-          material={materials["Material.002"]}
-          position={[0, 0, -4.194]}
+          geometry={nodes.Cube009.geometry}
+          material={materials["Material.012"]}
+          position={[0, 0, -115.393]}
+          rotation={[2.884, 0, 0]}
+        />
+        <mesh
+          name="Cube010"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cube010.geometry}
+          material={materials["Material.013"]}
+          position={[0, 1.033, -118.012]}
+          rotation={[-0.653, 0.085, -0.099]}
+        />
+        <mesh
+          name="Cube011"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cube011.geometry}
+          material={materials["Material.014"]}
+          position={[0, 2.453, -120.689]}
+          rotation={[1.981, 0.085, -0.099]}
+        />
+        <mesh
+          name="Cube012"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cube012.geometry}
+          material={materials["Material.015"]}
+          position={[0, 2.453, -122.839]}
+          rotation={[-0.282, 0.01, 0.088]}
         />
       </group>
     </group>

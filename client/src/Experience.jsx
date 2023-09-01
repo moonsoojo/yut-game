@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import Yuts from "./Yuts";
+import YutsNew from "./YutsNew";
 import Star from "./Star";
 import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
@@ -9,6 +10,7 @@ import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
 import SunBagus from "./SunBagus.jsx";
+import Moon from "./Moon";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
@@ -498,8 +500,8 @@ export default function Experience() {
             <meshStandardMaterial transparent opacity={0.3} />
           </mesh> */}
         </RigidBody>
-        {/* <YutsNew /> */}
-        <Yuts />
+        <YutsNew />
+        {/* <Yuts /> */}
         <Tiles />
 
         <PiecesTeam0 />
@@ -526,6 +528,7 @@ export default function Experience() {
           <meshStandardMaterial color="yellow" />
         </Text3D>
       </Physics>
+      <Moon />
     </>
   );
 }
