@@ -505,7 +505,6 @@ export default function Experience() {
         <PiecesTeam0 />
         <PiecesTeam1 />
 
-        
         {/* {characters.map((character) => (
           <Starfighter
             key={character.id}
@@ -513,8 +512,7 @@ export default function Experience() {
             color={character.color}
           />
         ))} */}
-        <Decorations />
-
+        {/* <Decorations /> */}
       </Physics>
     </>
   );
