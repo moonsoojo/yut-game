@@ -46,7 +46,7 @@ root.render(
         right={-200}
         near={0.1}
         far={2000}
-        position={[4, 3, 0]}
+        position={[3, 3, 0]}
       />
       <Experience />
 

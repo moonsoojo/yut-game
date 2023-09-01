@@ -91,17 +91,17 @@ export default function Saturn({ position, tile, scale }) {
   }
 
   const rocketPositions = [
-    [0, 0.6, 0],
-    [0, 0.6, -0.3],
-    [-0.3, 0.65, -0.1],
-    [-0.3, 0.65, -0.4],
+    [0, 1, 0.25],
+    [0, 1, 0],
+    [-0.25, 1, 0.25],
+    [-0.25, 1, 0],
   ];
 
   const ufoPositions = [
-    [0.1, 0.4, 0.2],
-    [0.1, 0.4, -0.2],
-    [-0.3, 0.4, 0.2],
-    [-0.3, 0.4, -0.2],
+    [0, 0.5, 0.25],
+    [0, 0.5, 0],
+    [-0.25, 0.5, 0.25],
+    [-0.25, 0.5, 0],
   ];
 
   function Piece() {
@@ -116,6 +116,7 @@ export default function Saturn({ position, tile, scale }) {
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -131,6 +132,7 @@ export default function Saturn({ position, tile, scale }) {
               team={0}
               id={value.id}
               key={index}
+              scale={0.32}
             />
           ))}
         </>

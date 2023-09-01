@@ -61,17 +61,17 @@ export default function Neptune2({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.55, 0],
-    [0, 0.55, -0.4],
-    [-0.4, 0.55, 0],
-    [-0.4, 0.55, -0.4],
+    [0, 1, 0.25],
+    [0, 1, 0],
+    [-0.25, 1, 0.25],
+    [-0.25, 1, 0],
   ];
 
   const ufoPositions = [
-    [0, 0.3, 0.2],
-    [0, 0.3, -0.2],
-    [-0.3, 0.3, 0.2],
-    [-0.3, 0.3, -0.2],
+    [0, 0.5, 0.25],
+    [0, 0.5, 0],
+    [-0.25, 0.5, 0.25],
+    [-0.25, 0.5, 0],
   ];
 
   function Piece() {
@@ -86,6 +86,7 @@ export default function Neptune2({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -101,6 +102,7 @@ export default function Neptune2({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={0.32}
             />
           ))}
         </>
@@ -117,7 +119,7 @@ export default function Neptune2({ position, tile }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[4.5, 32, 16]} />
+        <sphereGeometry args={[3.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );

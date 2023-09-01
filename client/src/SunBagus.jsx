@@ -503,14 +503,134 @@ const vertexShader = `
   }
 `;
 
-function Sun(props) {
+import { useRocketStore } from "./state/zstore2";
+import Rocket from "./Rocket";
+import Ufo from "./Ufo";
+import HelperArrow from "./HelperArrow";
+
+function Sun({ tile, ...props }) {
+  const setSelection = useRocketStore((state) => state.setSelection);
+  const selection = useRocketStore((state) => state.selection);
+  // const [selection] = useAtom(selectionAtom);
+  const setPiece = useRocketStore((state) => state.setPiece);
+  const tiles = useRocketStore((state) => state.tiles);
+
+  // const saturnRef = useRef();
+  // const satellitesRef = useRef();
+  const wrapperMatRef = useRef();
+
+  function handlePointerEnter(event) {
+    event.stopPropagation();
+    document.body.style.cursor = "pointer";
+    // earth1Ref.current.material.color.r += 0.1;
+    // waterMatRef.current.color.r += 1;
+    wrapperMatRef.current.opacity += 0.5;
+  }
+
+  function handlePointerLeave(event) {
+    event.stopPropagation();
+    document.body.style.cursor = "default";
+    // earth1Ref.current.material.color.r -= 0.1;
+    // waterMatRef.current.color.r -= 1;
+    wrapperMatRef.current.opacity -= 0.5;
+  }
+
+  function handlePointerDown(event) {
+    event.stopPropagation();
+    if (selection == null) {
+      setSelection({ type: "tile", tile });
+      // socket.emit("select", { type: "tile", tile });
+    } else {
+      if (selection.tile != tile) {
+        setPiece({ destination: tile });
+      }
+      setSelection(null);
+      // socket.emit("select", null);
+    }
+  }
+
+  const rocketPositions = [
+    [0, 1, 0.25],
+    [0, 1, 0],
+    [-0.25, 1, 0.25],
+    [-0.25, 1, 0],
+  ];
+
+  const ufoPositions = [
+    [0, 0.5, 0],
+    [0, 0.5, -0.25],
+    [-0.3, 0.5, 0],
+    [-0.3, 0.5, -0.25],
+  ];
+
+  function Piece() {
+    if (tiles[tile][0].team == 1) {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Rocket
+              position={rocketPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={1}
+              id={value.id}
+              key={index}
+              scale={
+                selection != null &&
+                selection.type === "tile" &&
+                selection.tile == tile
+                  ? 0.7 * 1.3
+                  : 0.7 * 1
+              }
+            />
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Ufo
+              position={ufoPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={0}
+              id={value.id}
+              key={index}
+              scale={
+                selection != null &&
+                selection.type === "tile" &&
+                selection.tile == tile
+                  ? 0.32 * 1.3
+                  : 0.32 * 1
+              }
+            />
+          ))}
+        </>
+      );
+    }
+  }
+
+  function Wrap() {
+    return (
+      <mesh
+        castShadow
+        visible={true}
+        onPointerDown={(event) => handlePointerDown(event)}
+        onPointerEnter={(event) => handlePointerEnter(event)}
+        onPointerLeave={(event) => handlePointerLeave(event)}
+      >
+        <sphereGeometry args={[2, 32, 16]} />
+        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
+      </mesh>
+    );
+  }
+
+  // shader
   const meshRef = useRef();
   const childMeshRef = useRef();
   var scene1 = new THREE.Scene();
   const { gl, camera, scene, size } = useThree();
-
-  //Use this to scale the sun
-  // var sphereGeometryScale = 0.15;
 
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
@@ -595,12 +715,30 @@ function Sun(props) {
     []
   );
   return (
-    <>
-      <mesh {...props} ref={meshRef} scale={props.scale}>
+    <group position={props.position}>
+      <mesh
+        ref={meshRef}
+        scale={
+          selection != null &&
+          selection.type === "tile" &&
+          selection.tile == tile
+            ? props.scale * 1.3
+            : props.scale * 1
+        }
+      >
         <OrbitControls></OrbitControls>
         <sphereGeometry args={[1, 32, 16]} />
         <shaderMaterial attach="material" {...data} />
-        <mesh ref={childMeshRef} scale={props.scale}>
+        <mesh
+          ref={childMeshRef}
+          scale={
+            selection != null &&
+            selection.type === "tile" &&
+            selection.tile == tile
+              ? props.scale * 1.3
+              : props.scale * 1
+          }
+        >
           <planeGeometry args={[2.5, 2.5, 32]} />
           <shaderMaterial attach="material" {...outerData} />
           <pointLight
@@ -608,8 +746,20 @@ function Sun(props) {
             distance={props.distance}
           ></pointLight>
         </mesh>
+        <Wrap />
       </mesh>
-    </>
+      {tiles[tile].length != 0 && <Piece />}
+      <HelperArrow
+        position={[0.5, 0, 0.5]}
+        rotation={[Math.PI / 2, 0, -Math.PI / 4]}
+        scale={0.9}
+      />
+      <HelperArrow
+        position={[0.5, 0, -0.5]}
+        rotation={[Math.PI / 2, 0, (-Math.PI * 3) / 4]}
+        scale={0.9}
+      />
+    </group>
   );
 }
 

@@ -58,17 +58,17 @@ export default function Mars({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0.1, 0.5, 0],
-    [0.1, 0.5, -0.3],
-    [-0.4, 0.5, 0],
-    [-0.4, 0.5, -0.3],
+    [0, 1, 0],
+    [0, 1, -0.25],
+    [-0.25, 1, 0],
+    [-0.25, 1, -0.25],
   ];
 
   const ufoPositions = [
-    [0.15, 0.45, 0.2],
-    [0.15, 0.45, -0.1],
-    [-0.15, 0.45, 0.2],
-    [-0.15, 0.45, -0.1],
+    [0, 0.5, 0],
+    [0, 0.5, -0.25],
+    [-0.25, 0.5, 0],
+    [-0.25, 0.5, -0.25],
   ];
 
   function Piece() {
@@ -83,6 +83,7 @@ export default function Mars({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -98,6 +99,7 @@ export default function Mars({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={0.32}
             />
           ))}
         </>

@@ -15,7 +15,7 @@ export default function Rocket({
   tile,
   team,
   id,
-  scale = 0.009,
+  scale = 0.22,
 }) {
   const { scene, materials, animations } = useGLTF(
     "/models/rockets/rocket-with-astronaut0.glb"
@@ -86,8 +86,8 @@ export default function Rocket({
         selection.type === "piece" &&
         selection.team == 1 &&
         selection.id == id
-          ? 1.5
-          : 1
+          ? scale * 1.5
+          : scale * 1
       }
       rotation={rotation}
     >

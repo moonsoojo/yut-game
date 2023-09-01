@@ -234,7 +234,7 @@ export default function MoveDetails() {
       </group>
       <group>
         <Text3D
-          position={[-5, 0, -2]}
+          position={[-4.5, 0, -2]}
           rotation={[0, Math.PI / 2, 0]}
           height={0.01}
           size={0.25}
@@ -276,7 +276,7 @@ export default function MoveDetails() {
           </Text3D>
         </animated.group>
         <Text3D
-          position={[-5, 0, 5]}
+          position={[-4.5, 0, 5]}
           rotation={[0, Math.PI / 2, 0]}
           height={0.01}
           size={0.25}

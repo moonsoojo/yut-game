@@ -1,8 +1,9 @@
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Text3D } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import HelperArrow from "./HelperArrow";
+import ScoreButton from "./ScoreButton";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore";
@@ -64,17 +65,17 @@ export default function Earth({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.6, -0.1],
-    [0, 0.6, -0.4],
-    [-0.3, 0.6, -0.1],
-    [-0.3, 0.6, -0.4],
+    [0, 1, 0.25],
+    [0, 1, 0],
+    [-0.25, 1, 0.25],
+    [-0.25, 1, 0],
   ];
 
   const ufoPositions = [
-    [0.2, 0.45, 0.1],
-    [0.2, 0.35, -0.3],
-    [-0.2, 0.35, 0.1],
-    [-0.2, 0.25, -0.3],
+    [0, 0.6, 0],
+    [0, 0.6, -0.25],
+    [-0.3, 0.6, 0],
+    [-0.3, 0.6, -0.25],
   ];
 
   function Piece() {
@@ -89,6 +90,7 @@ export default function Earth({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -104,6 +106,7 @@ export default function Earth({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={0.32}
             />
           ))}
         </>
@@ -121,77 +124,91 @@ export default function Earth({ position, tile }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[3.5, 32, 16]} />
+        <sphereGeometry args={[2.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );
   }
 
   return (
-    <group
-      position={position}
-      scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.3
-          : 1
-      }
-    >
+    <group position={position}>
       <group
-        ref={earthGroupRef}
-        scale={0.25}
-        rotation={[Math.PI / 16, Math.PI / 4, 0]}
+        scale={
+          selection != null &&
+          selection.type === "tile" &&
+          selection.tile == tile
+            ? 1.3
+            : 1
+        }
       >
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.low_poly_earth.geometry}
-          material={materials.water}
-          position={[0, 0.12, 0]}
-          rotation={[-0.4, -0.4, 0.3]}
-          ref={earth1Ref}
+        <group
+          ref={earthGroupRef}
+          scale={0.25}
+          rotation={[Math.PI / 16, Math.PI / 4, 0]}
         >
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes.Cylinder.geometry}
-            material={materials["Material.001"]}
-            position={[1.1, 0.98, 0.38]}
-            rotation={[0.49, 0.02, 0.39]}
-            ref={earth2Ref}
+            geometry={nodes.low_poly_earth.geometry}
+            material={materials.water}
+            position={[0, 0.12, 0]}
+            rotation={[-0.4, -0.4, 0.3]}
+            ref={earth1Ref}
           >
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.Plane.geometry}
-              material={materials.Material}
-              position={[0.24, 1.29, 0]}
-              scale={0.77}
-              ref={earth3Ref}
+              geometry={nodes.Cylinder.geometry}
+              material={materials["Material.001"]}
+              position={[1.1, 0.98, 0.38]}
+              rotation={[0.49, 0.02, 0.39]}
+              ref={earth2Ref}
+            >
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Plane.geometry}
+                material={materials.Material}
+                position={[0.24, 1.29, 0]}
+                scale={0.77}
+                ref={earth3Ref}
+              />
+            </mesh>
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Mesh.geometry}
+              material={materials.water}
+              ref={earth4Ref}
+            />
+            <mesh
+              castShadow
+              receiveShadow
+              geometry={nodes.Mesh_1.geometry}
+              material={materials.earth}
+              ref={earth5Ref}
             />
           </mesh>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh.geometry}
-            material={materials.water}
-            ref={earth4Ref}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Mesh_1.geometry}
-            material={materials.earth}
-            ref={earth5Ref}
-          />
-        </mesh>
-        <EarthWrap />
+          <EarthWrap />
+        </group>
+        {tiles[tile].length != 0 && <Piece />}
+        <HelperArrow
+          position={[-0.5, 0, -0.5]}
+          rotation={[Math.PI / 2, 0, (Math.PI * 5) / 8]}
+          scale={0.9}
+        />
       </group>
-      {tiles[tile].length != 0 && <Piece />}
-      <HelperArrow
-        position={[-0.5, 0, -0.5]}
-        rotation={[Math.PI / 2, 0, (Math.PI * 5) / 8]}
-        scale={0.9}
-      />
+      <Text3D
+        font="./fonts/Luckiest Guy_Regular.json"
+        size={0.3}
+        height={0.01}
+        position={[-0.3, 0.8, 0.6]}
+        rotation={[0, Math.PI / 2, 0]}
+      >
+        Start
+        <meshStandardMaterial color="yellow" />
+      </Text3D>
+      <ScoreButton />
     </group>
   );
 }

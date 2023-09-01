@@ -46,27 +46,7 @@ export default function GoalDetails({ tileRadius, numStars }) {
   return (
     <>
       <Text3D
-        font="./fonts/Luckiest Guy_Regular.json"
-        size={0.3}
-        height={0.01}
-        position={[2.7, 0.7, -2.2]}
-        rotation={[0, Math.PI / 2, 0]}
-      >
-        Start
-        <meshStandardMaterial color="yellow" />
-      </Text3D>
-      <Text3D
-        font="./fonts/Luckiest Guy_Regular.json"
-        size={0.3}
-        height={0.01}
-        position={[2.7, -1, -2.2]}
-        rotation={[0, Math.PI / 2, 0]}
-      >
-        Finish
-        <meshStandardMaterial color="yellow" />
-      </Text3D>
-      <Text3D
-        position={[-5, 0, 6]}
+        position={[-4.5, 0, 6]}
         rotation={[0, Math.PI / 2, 0]}
         font="./fonts/Luckiest Guy_Regular.json"
         castShadow={false}

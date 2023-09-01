@@ -75,17 +75,17 @@ export default function Star({
   }
 
   const rocketPositions = [
-    [-0.1, 0.4, 0],
-    [-0.1, 0.4, -0.3],
-    [-0.4, 0.4, 0],
-    [-0.4, 0.4, -0.3],
+    [0, 0.5, 0.25],
+    [0, 0.5, 0],
+    [-0.25, 0.5, 0.25],
+    [-0.25, 0.5, 0],
   ];
 
   const ufoPositions = [
-    [0.1, 0.3, 0.1],
-    [0.1, 0.3, -0.3],
-    [-0.3, 0.2, 0.1],
-    [-0.3, 0.2, -0.3],
+    [0, 0, 0],
+    [0, 0, -0.25],
+    [-0.3, 0, 0],
+    [-0.3, 0, -0.25],
   ];
 
   function Piece() {
@@ -100,6 +100,7 @@ export default function Star({
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -115,6 +116,7 @@ export default function Star({
               team={0}
               id={value.id}
               key={index}
+              scale={0.32}
             />
           ))}
         </>

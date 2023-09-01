@@ -130,7 +130,13 @@ export default function Experience() {
 
     //center piece
     tiles.push(
-      <SunBagus position={[0, 0, 0]} intensity={3} scale={0.4} key={100} />
+      <SunBagus
+        position={[0, 0, 0]}
+        intensity={3}
+        scale={0.4}
+        key={100}
+        tile={22}
+      />
     );
     // <SunBagus />;
     // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
@@ -499,7 +505,7 @@ export default function Experience() {
         <PiecesTeam0 />
         <PiecesTeam1 />
 
-        <ScoreButton />
+        
         {/* {characters.map((character) => (
           <Starfighter
             key={character.id}
@@ -508,6 +514,7 @@ export default function Experience() {
           />
         ))} */}
         <Decorations />
+
       </Physics>
     </>
   );

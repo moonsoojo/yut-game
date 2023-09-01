@@ -36,25 +36,28 @@ export default function ScoreButton() {
   }
 
   function handleScoreButtonClick(event) {}
+
   return (
-    <group position={[4.9, 0, -2.5]} rotation={[0, Math.PI / 2, 0]}>
+    <group position={[0, -1.3, 0.5]}>
+      <Text3D
+        font="./fonts/Luckiest Guy_Regular.json"
+        size={0.3}
+        height={0.01}
+        rotation={[0, Math.PI / 2, 0]}
+      >
+        Finish
+        <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
+      </Text3D>
       <mesh
-        position={[0.5, 0.125, 0]}
+        position={[0, 0.125, -0.6]}
+        rotation={[0, Math.PI / 2, 0]}
         onPointerEnter={scorePointerEnter}
         onPointerOut={scorePointerOut}
         onPointerDown={(e) => clickScore(e)}
       >
-        <boxGeometry args={[1, 0.25, 0.1]} />
+        <boxGeometry args={[1.3, 0.25, 0.1]} />
         <meshStandardMaterial transparent opacity={0} />
       </mesh>
-      <Text3D
-        font="./fonts/Luckiest Guy_Regular.json"
-        height={0.01}
-        size={0.25}
-      >
-        Score
-        <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
-      </Text3D>
     </group>
   );
 }
