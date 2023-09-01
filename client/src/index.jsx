@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 // import Experience from "./ExperienceBackup";
 import Experience from "./Experience";
+import MouseGame from "./minigames/MouseGame";
 import * as THREE from "three";
 import {
   CameraControls,
@@ -48,7 +49,8 @@ root.render(
         far={2000}
         position={[4, 3, 0]}
       />
-      <Experience />
+      {/* <Experience /> */}
+      <MouseGame />
 
       {/* <Perf /> */}
     </Canvas>
