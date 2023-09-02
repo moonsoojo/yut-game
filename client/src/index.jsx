@@ -38,19 +38,9 @@ root.render(
     >
       {/* <CameraControls /> */}
       <OrbitControls />
-      <OrthographicCamera
-        makeDefault
-        zoom={175}
-        top={200}
-        bottom={-200}
-        left={200}
-        right={-200}
-        near={0.1}
-        far={2000}
-        position={[4, 3, 0]}
-      />
-      {/* <Experience /> */}
-      <MouseGame />
+
+      <Experience />
+      {/* <MouseGame /> */}
 
       {/* <Perf /> */}
     </Canvas>

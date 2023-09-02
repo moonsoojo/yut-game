@@ -501,11 +501,18 @@ const vertexShader = `
 import React, { useRef, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+
+// assets
+import Ufo from "./Ufo";
+import Rocket from "./Rocket";
 
 function Sun({ tile, ...props }) {
   // game logic
 
+  const [selection] = useAtom(selectionAtom);
+  const [tiles] = useAtom(tilesAtom);
   const wrapperMatRef = useRef();
 
   function handlePointerEnter(event) {
@@ -539,6 +546,20 @@ function Sun({ tile, ...props }) {
     }
   }
 
+  const rocketPositions = [
+    [0, 0.6, 0 * 0.3],
+    [0, 0.6, -1 * 0.3],
+    [-0.3, 0.6, 0 * 0.3],
+    [-0.3, 0.6, -1 * 0.3],
+  ];
+
+  const ufoPositions = [
+    [0.1, 0.4, 0.2],
+    [0.1, 0.4, -0.2],
+    [-0.3, 0.4, 0.2],
+    [-0.3, 0.4, -0.2],
+  ];
+
   function SunWrap() {
     return (
       <mesh
@@ -552,6 +573,40 @@ function Sun({ tile, ...props }) {
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );
+  }
+
+  function Piece() {
+    if (tiles[tile][0].team == 1) {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Rocket
+              position={rocketPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={1}
+              id={value.id}
+              key={index}
+            />
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Ufo
+              position={ufoPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={0}
+              id={value.id}
+              key={index}
+            />
+          ))}
+        </>
+      );
+    }
   }
 
   // shader

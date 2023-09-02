@@ -54,7 +54,6 @@ export default function Yuts(props) {
   // useEffect(() => {
   //   actions[animation].reset();
   // });
-  console.log("[YutsNew]", actions);
   // const nodesRhino = useGLTF("/models/yut-working (1).glb").nodes;
   // const materialsRhino = useGLTF("/models/yut-working (1).glb").materials;
 

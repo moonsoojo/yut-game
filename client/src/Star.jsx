@@ -100,6 +100,7 @@ export default function Star({
               team={1}
               id={value.id}
               key={index}
+              scale={0.7}
             />
           ))}
         </>
@@ -115,6 +116,7 @@ export default function Star({
               team={0}
               id={value.id}
               key={index}
+              scale={0.25}
             />
           ))}
         </>
@@ -142,7 +144,7 @@ export default function Star({
           onPointerLeave={(e) => handlePointerLeave(e)}
         >
           <sphereGeometry args={[0.6]} />
-          <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
+          <meshStandardMaterial transparent opacity={0.3} ref={wrapperMatRef} />
         </mesh>
       )}
       <mesh

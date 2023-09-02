@@ -9,13 +9,13 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import SunBagus from "./SunBagus.jsx";
+import SunBagus from "./SunBagusBackup.jsx";
 import Moon from "./Moon";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
-
+import layout from "./layout";
 import React from "react";
 import ScoreButton from "./ScoreButton";
 import { Leva, useControls } from "leva";
@@ -29,6 +29,7 @@ import {
   Stars,
   Html,
   Text3D,
+  OrthographicCamera,
 } from "@react-three/drei";
 import Universe from "./Universe";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -42,7 +43,18 @@ import { piecesAtom, socket } from "./SocketManager";
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
 
+let device = window.innerWidth > 1000 ? "desktop" : "mobile";
+
 export default function Experience() {
+  // window resize
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1000) {
+      device = "desktop";
+    } else {
+      device = "mobile";
+    }
+  });
+
   // const pieces = useRocketStore((state) => state.pieces);
   const [banner] = useAtom(bannerAtom);
   // const [characters] = useAtom(charactersAtom);
@@ -77,7 +89,14 @@ export default function Experience() {
       } else if (i == 15) {
         tiles.push(<Neptune2 position={position} tile={i} key={i} />);
       } else {
-        tiles.push(<Star position={position} tile={i} key={i} />);
+        tiles.push(
+          <Star
+            position={position}
+            tile={i}
+            key={i}
+            scale={layout[device].star.scale}
+          />
+        );
       }
     }
 
@@ -112,6 +131,7 @@ export default function Experience() {
             ]}
             tile={indexShortcut1}
             key={i + 30}
+            scale={layout[device].star.scale}
           />
         );
         tiles.push(
@@ -125,6 +145,7 @@ export default function Experience() {
             ]}
             tile={indexShortcut2}
             key={i + 41}
+            scale={layout[device].star.scale}
           />
         );
       }
@@ -148,10 +169,10 @@ export default function Experience() {
   }
 
   function PiecesTeam0() {
-    let positionStartX = 3;
-    let positionStartY = 0;
-    let positionStartZ = -6;
-    let space = 0.6;
+    let positionStartX = layout[device].piecesTeam0.positionStartX;
+    let positionStartY = layout[device].piecesTeam0.positionStartY;
+    let positionStartZ = layout[device].piecesTeam0.positionStartZ;
+    let space = layout[device].piecesTeam0.space;
 
     return (
       <>
@@ -186,7 +207,7 @@ export default function Experience() {
                 positionStartY,
                 positionStartZ + index * space,
               ]}
-              rotation={[0, 0, -Math.PI / 8]}
+              rotation={layout[device].piecesTeam0.rotation}
               keyName={`count${index}`}
               tile={-1}
               team={0}
@@ -200,10 +221,11 @@ export default function Experience() {
     );
   }
   function PiecesTeam1() {
-    let positionStartX = 4.5;
-    let positionStartY = 0;
-    let positionStartZ = -6;
-    let space = 0.6;
+    let positionStartX = layout[device].piecesTeam1.positionStartX;
+    let positionStartY = layout[device].piecesTeam1.positionStartY;
+    let positionStartZ = layout[device].piecesTeam1.positionStartZ;
+    let space = layout[device].piecesTeam1.space;
+
     return (
       <>
         {pieces[1].map((value, index) =>
@@ -237,7 +259,7 @@ export default function Experience() {
                 positionStartY,
                 positionStartZ + index * space,
               ]}
-              rotation={[0, 0, 0]}
+              rotation={layout[device].piecesTeam1.rotation}
               keyName={`count${index}`}
               tile={-1}
               team={1}
@@ -441,6 +463,17 @@ export default function Experience() {
 
   return (
     <>
+      <OrthographicCamera
+        makeDefault
+        zoom={layout[device].camera.zoom}
+        top={200}
+        bottom={-200}
+        left={200}
+        right={-200}
+        near={0.1}
+        far={2000}
+        position={layout[device].camera.position}
+      />
       {/* <color args={["#000001"]} attach="background" /> */}
       {/* <Environment
         background
@@ -507,7 +540,10 @@ export default function Experience() {
         <PiecesTeam0 />
         <PiecesTeam1 />
 
-        <ScoreButton />
+        <ScoreButton
+          position={layout[device].scoreButton.position}
+          rotation={layout[device].scoreButton.rotation}
+        />
         {/* {characters.map((character) => (
           <Starfighter
             key={character.id}
@@ -521,8 +557,8 @@ export default function Experience() {
           font="./fonts/Luckiest Guy_Regular.json"
           size={0.3}
           height={0.01}
-          position={[2.7, 0.7, -2.2]}
-          rotation={[0, Math.PI / 2, 0]}
+          position={layout[device].startBanner.position}
+          rotation={layout[device].startBanner.rotation}
         >
           Start
           <meshStandardMaterial color="yellow" />

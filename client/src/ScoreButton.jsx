@@ -5,7 +5,7 @@ import { Text3D } from "@react-three/drei";
 import { selectionAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
-export default function ScoreButton() {
+export default function ScoreButton({ position, rotation }) {
   // const finishPiece = useRocketStore((state) => state.finishPiece);
   // const setSelection = useRocketStore((state) => state.setSelection);
   // const selection = useRocketStore((state) => state.selection);
@@ -37,7 +37,7 @@ export default function ScoreButton() {
 
   function handleScoreButtonClick(event) {}
   return (
-    <group position={[2.7, -1, -2.2]} rotation={[0, Math.PI / 2, 0]}>
+    <group position={position} rotation={rotation}>
       <mesh
         position={[0.5, 0.125, 0]}
         onPointerEnter={scorePointerEnter}
