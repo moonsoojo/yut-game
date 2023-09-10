@@ -5,7 +5,7 @@ export default {
       position: [1, 5, 0],
     },
     star: {
-      scale: 1.5,
+      scale: 2,
     },
     piecesTeam0: {
       positionStartX: 5,

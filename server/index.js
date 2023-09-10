@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
-    origin: "http://192.168.86.158:5173",
+    origin: "http://localhost:5173",
   },
 });
 
@@ -55,6 +55,10 @@ let pieces = [
   ],
 ];
 const characters = [];
+
+const generateRandomNumberInRange = (num, plusMinus) => {
+  return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+};
 
 const generateRandomPosition = () => {
   return [Math.random() * 3, 0, Math.random() * 3];
@@ -138,7 +142,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("finishPiece", () => {
-    console.log("[server][finishPiece]");
     let piecesIncoming;
     let scoringTeam;
     let fromTile;
@@ -170,6 +173,39 @@ io.on("connection", (socket) => {
     tiles[fromTile] = [];
 
     io.emit("finishPiece", { tiles, pieces });
+  });
+
+  let positionsInHand = [
+    { x: -2, y: 1, z: 0 },
+    { x: 0, y: 1, z: 2 },
+    { x: 2, y: 1, z: 0 },
+    { x: 0, y: 1, z: -2 },
+  ];
+  socket.on("throwYuts", () => {
+    console.log("[server] throwYuts");
+    const yutForceVectors = [];
+    for (let i = 0; i < 4; i++) {
+      yutForceVectors.push({
+        rotation: {
+          x: generateRandomNumberInRange(3.14, 3.14),
+          y: generateRandomNumberInRange(3.14, 3.14),
+          z: generateRandomNumberInRange(3.14, 3.14),
+          w: 0,
+        },
+        yImpulse: generateRandomNumberInRange(0.05, 0.01),
+        torqueImpulse: {
+          x: generateRandomNumberInRange(0.00001, 0.000005),
+          y: generateRandomNumberInRange(0.0015, 0.0005),
+          z: generateRandomNumberInRange(0.00004, 0.00001),
+        },
+        positionInHand: positionsInHand[i],
+      });
+    }
+    io.emit("throwYuts", yutForceVectors);
+  });
+
+  socket.on("yutThrowFlag", (value) => {
+    io.emit("yutThrowFlag", value);
   });
 
   socket.on("disconnect", () => {

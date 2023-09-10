@@ -144,7 +144,7 @@ export default function Star({
           onPointerLeave={(e) => handlePointerLeave(e)}
         >
           <sphereGeometry args={[0.6]} />
-          <meshStandardMaterial transparent opacity={0.3} ref={wrapperMatRef} />
+          <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
         </mesh>
       )}
       <mesh

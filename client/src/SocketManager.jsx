@@ -3,6 +3,81 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 
 export const socket = io("http://localhost:3000");
+export const yutThrowValuesAtom = atom([
+  {
+    rotation: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    yImpulse: 0,
+    torqueImpulse: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    positionInHand: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  },
+  {
+    rotation: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    yImpulse: 0,
+    torqueImpulse: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    positionInHand: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  },
+  {
+    rotation: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    yImpulse: 0,
+    torqueImpulse: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    positionInHand: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  },
+  {
+    rotation: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    yImpulse: 0,
+    torqueImpulse: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    positionInHand: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+  },
+]);
+
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
 export const piecesAtom = atom([
@@ -56,6 +131,8 @@ export const SocketManager = () => {
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
   const [_pieces, setPieces] = useAtom(piecesAtom);
+  const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
+
   useEffect(() => {
     function onConnect() {
       console.log("connected");
@@ -67,7 +144,6 @@ export const SocketManager = () => {
       console.log("hello");
     }
     function onSelect(value) {
-      console.log("[SocketManager][onSelect]");
       setSelection(value);
     }
     function onCharacters(value) {
@@ -77,11 +153,9 @@ export const SocketManager = () => {
       setPieces(value);
     }
     function onTiles(value) {
-      console.log("[SocketManager][onTiles]");
       setTiles(value);
     }
     function onPlacePiece({ tiles, pieces }) {
-      console.log("[SocketManager][onPlacePiece]", pieces);
       setTiles(tiles);
       setPieces(pieces);
     }
@@ -89,7 +163,9 @@ export const SocketManager = () => {
       setTiles(tiles);
       setPieces(pieces);
     }
-
+    function onYutThrow(yutForceVectors) {
+      setYutThrowValues(yutForceVectors);
+    }
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("hello", onHello);
@@ -99,6 +175,7 @@ export const SocketManager = () => {
     socket.on("pieces", onPieces);
     socket.on("placePiece", onPlacePiece);
     socket.on("finishPiece", onFinishPiece);
+    socket.on("throwYuts", onYutThrow);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -109,6 +186,7 @@ export const SocketManager = () => {
       socket.off("pieces", onPieces);
       socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
+      socket.off("yutThrow", onYutThrow);
     };
   }, []);
 };

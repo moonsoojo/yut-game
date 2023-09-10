@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import Yuts from "./Yuts";
 import YutsNew from "./YutsNew";
+// import YutsNew2 from "./YutsNew2";
+import YutsNew3 from "./YutsNew3";
 import Star from "./Star";
 import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
@@ -152,15 +154,16 @@ export default function Experience() {
     }
 
     //center piece
-    tiles.push(
-      <SunBagus
-        position={[0, 0, 0]}
-        intensity={3}
-        scale={0.4}
-        key={100}
-        tile={22}
-      />
-    );
+    tiles
+      .push
+      // <SunBagus
+      //   position={[0, 0, 0]}
+      //   intensity={3}
+      //   scale={0.4}
+      //   key={100}
+      //   tile={22}
+      // />
+      ();
     // <SunBagus />;
     // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
     // <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
@@ -533,8 +536,9 @@ export default function Experience() {
             <meshStandardMaterial transparent opacity={0.3} />
           </mesh> */}
         </RigidBody>
-        <YutsNew />
+        {/* <YutsNew /> */}
         {/* <Yuts /> */}
+        <YutsNew3 />
         <Tiles />
 
         <PiecesTeam0 />
