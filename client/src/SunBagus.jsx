@@ -1,3 +1,7 @@
+import React, { useRef, useMemo, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+
 const fragmentShaderSun = `
 
   precision mediump float;
@@ -498,15 +502,15 @@ const vertexShader = `
   }
 `;
 
-import React, { useRef, useMemo } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 
 function Sun({ tile, ...props }) {
   // game logic
 
   const wrapperMatRef = useRef();
+  const [selection] = useAtom(selectionAtom);
+  const [tiles] = useAtom(tilesAtom);
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -527,15 +531,64 @@ function Sun({ tile, ...props }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection == null) {
-      // setSelection({ type: "tile", tile });
+      // setSelected(true);
       socket.emit("select", { type: "tile", tile });
     } else {
       if (selection.tile != tile) {
-        // setPiece({ destination: tile });
+        // setSelected(false);
         socket.emit("placePiece", tile);
       }
-      // setSelection(null);
       socket.emit("select", null);
+    }
+  }
+
+  const rocketPositions = [
+    [-0.1, 0.4, 0],
+    [-0.1, 0.4, -0.3],
+    [-0.4, 0.4, 0],
+    [-0.4, 0.4, -0.3],
+  ];
+
+  const ufoPositions = [
+    [0.1, 0.3, 0.1],
+    [0.1, 0.3, -0.3],
+    [-0.3, 0.2, 0.1],
+    [-0.3, 0.2, -0.3],
+  ];
+
+  function Piece() {
+    if (tiles[tile][0].team == 1) {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Rocket
+              position={rocketPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={1}
+              id={value.id}
+              key={index}
+              scale={0.7}
+            />
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Ufo
+              position={ufoPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={0}
+              id={value.id}
+              key={index}
+              scale={0.25}
+            />
+          ))}
+        </>
+      );
     }
   }
 
@@ -548,8 +601,13 @@ function Sun({ tile, ...props }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.6, 32, 16]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
+        <sphereGeometry args={[0.5, 32, 16]} />
+        <meshStandardMaterial
+          transparent
+          opacity={0}
+          ref={wrapperMatRef}
+          color="grey"
+        />
       </mesh>
     );
   }
@@ -561,7 +619,7 @@ function Sun({ tile, ...props }) {
   const { gl, camera, scene, size } = useThree();
 
   //Use this to scale the sun
-  // var sphereGeometryScale = 0.15;
+  var sphereGeometryScale;
 
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
@@ -592,7 +650,10 @@ function Sun({ tile, ...props }) {
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     meshRef.current.rotation.y = state.clock.elapsedTime / 10;
-    childMeshRef.current.material.uniforms.objectScale.value = props.scale;
+    childMeshRef.current.material.uniforms.objectScale.value =
+      selection != null && selection.type === "tile" && selection.tile == tile
+        ? props.scale * 1.3
+        : props.scale;
     MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
     childMeshRef.current.material.transparent = true;
     childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
@@ -636,7 +697,14 @@ function Sun({ tile, ...props }) {
       uniforms: {
         time: { type: "f", value: "0.0" },
         normalizedScreenSpacePos: { value: new THREE.Vector3(0.5, 0.5, 1) },
-        objectScale: { value: props.scale },
+        objectScale: {
+          value:
+            selection != null &&
+            selection.type === "tile" &&
+            selection.tile == tile
+              ? props.scale * 1.3
+              : props.scale,
+        },
       },
       side: THREE.FrontSide,
       transparent: true,
@@ -645,6 +713,7 @@ function Sun({ tile, ...props }) {
     }),
     []
   );
+
   return (
     <>
       <mesh
@@ -678,6 +747,7 @@ function Sun({ tile, ...props }) {
           ></pointLight>
         </mesh>
       </mesh>
+      {tile && tiles[tile].length != 0 && <Piece />}
       <SunWrap />
     </>
   );

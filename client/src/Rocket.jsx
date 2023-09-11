@@ -61,7 +61,7 @@ export default function Rocket({
   }
 
   function handlePointerDown(event) {
-    console.log(selection)
+    console.log(selection);
     event.stopPropagation();
     if (tile == -1) {
       if (selection == null) {
@@ -86,8 +86,8 @@ export default function Rocket({
         selection.type === "piece" &&
         selection.team == 1 &&
         selection.id == id
-          ? 1.5
-          : 1
+          ? scale * 1.5
+          : scale * 1
       }
       rotation={rotation}
     >

@@ -9,8 +9,9 @@ import { useFrame } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore2";
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
-export default function Earth({ position, tile }) {
+export default function Earth({ position, tile, device = "mobile" }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
   const [selection] = useAtom(selectionAtom);
@@ -66,10 +67,10 @@ export default function Earth({ position, tile }) {
   }
 
   const rocketPositions = [
-    [0, 0.6, -0.1],
-    [0, 0.6, -0.4],
-    [-0.3, 0.6, -0.1],
-    [-0.3, 0.6, -0.4],
+    [0, 1, 0.1],
+    [0, 1, -0.1],
+    [-0.3, 1, 0.1],
+    [-0.3, 1, -0.1],
   ];
 
   const ufoPositions = [
@@ -91,6 +92,7 @@ export default function Earth({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={layout[device].mars.rocketScale}
             />
           ))}
         </>
@@ -106,6 +108,7 @@ export default function Earth({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={layout[device].mars.ufoScale}
             />
           ))}
         </>

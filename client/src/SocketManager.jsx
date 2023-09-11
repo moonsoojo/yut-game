@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 
-export const socket = io("http://localhost:3000");
+export const socket = io("http://192.168.86.158:3000");
+export const throwVisibleFlagAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
     rotation: {
@@ -132,6 +133,8 @@ export const SocketManager = () => {
   const [_tiles, setTiles] = useAtom(tilesAtom);
   const [_pieces, setPieces] = useAtom(piecesAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
+  const [_throwVisibleFlag, setThrowVisibleFlag] =
+    useAtom(throwVisibleFlagAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -166,6 +169,9 @@ export const SocketManager = () => {
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
+    function onThrowVisibleFlag(flag) {
+      setThrowVisibleFlag(flag);
+    }
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("hello", onHello);
@@ -176,6 +182,7 @@ export const SocketManager = () => {
     socket.on("placePiece", onPlacePiece);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
+    socket.on("throwVisibleFlag", onThrowVisibleFlag);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -187,6 +194,7 @@ export const SocketManager = () => {
       socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
       socket.off("yutThrow", onYutThrow);
+      socket.off("throwVisibleFlag", onThrowVisibleFlag);
     };
   }, []);
 };

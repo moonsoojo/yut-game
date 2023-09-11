@@ -9,6 +9,7 @@ import { useFrame, useGraph } from "@react-three/fiber";
 // import { useRocketStore } from "./state/zstore2";
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
 export default function Star({
   position,
@@ -16,7 +17,9 @@ export default function Star({
   color = "yellow",
   scale = 1,
   isDecoration = false,
+  device = "mobile",
 }) {
+  console.log(device);
   const { scene, materials, animations } = useGLTF(
     "/models/stars/star-yellow copy 1.glb"
   );
@@ -75,17 +78,17 @@ export default function Star({
   }
 
   const rocketPositions = [
-    [-0.1, 0.4, 0],
-    [-0.1, 0.4, -0.3],
-    [-0.4, 0.4, 0],
-    [-0.4, 0.4, -0.3],
+    [-0.1, 0.4, 0.4],
+    [-0.1, 0.4, 0.1],
+    [-0.3, 0.4, 0.4],
+    [-0.3, 0.4, 0.1],
   ];
 
   const ufoPositions = [
     [0.1, 0.3, 0.1],
-    [0.1, 0.3, -0.3],
-    [-0.3, 0.2, 0.1],
-    [-0.3, 0.2, -0.3],
+    [0.1, 0.3, -0.2],
+    [-0.2, 0.2, 0.1],
+    [-0.2, 0.2, -0.2],
   ];
 
   function Piece() {
@@ -100,7 +103,7 @@ export default function Star({
               team={1}
               id={value.id}
               key={index}
-              scale={0.7}
+              scale={layout[device].star.rocketScale}
             />
           ))}
         </>
@@ -116,7 +119,7 @@ export default function Star({
               team={0}
               id={value.id}
               key={index}
-              scale={0.25}
+              scale={layout[device].star.ufoScale}
             />
           ))}
         </>
@@ -143,7 +146,7 @@ export default function Star({
           onPointerEnter={(e) => handlePointerEnter(e)}
           onPointerLeave={(e) => handlePointerLeave(e)}
         >
-          <sphereGeometry args={[0.6]} />
+          <sphereGeometry args={[0.4]} />
           <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
         </mesh>
       )}

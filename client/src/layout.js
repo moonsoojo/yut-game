@@ -6,6 +6,24 @@ export default {
     },
     star: {
       scale: 2,
+      rocketScale: 0.4,
+      ufoScale: 0.2,
+    },
+    mars: {
+      rocketScale: 0.6,
+      ufoScale: 0.3,
+    },
+    saturn: {
+      rocketScale: 0.4,
+      ufoScale: 0.2,
+    },
+    moon: {
+      rocketScale: 0.6,
+      ufoScale: 0.3,
+    },
+    earth: {
+      rocketScale: 0.4,
+      ufoScale: 0.2,
     },
     piecesTeam0: {
       positionStartX: 5,
@@ -25,8 +43,12 @@ export default {
       position: [3, 0, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    scoreButton: {
+    scoreButton: { 
       position: [3.9, 0, -2.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    throwButton: {
+      position: [6, 0, 3],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
   },
@@ -37,6 +59,24 @@ export default {
     },
     star: {
       scale: 1,
+      rocketScale: 0.6,
+      ufoScale: 0.3,
+    },
+    mars: {
+      rocketScale: 0.6,
+      ufoScale: 0.3,
+    },
+    saturn: {
+      rocketScale: 0.4,
+      ufoScale: 0.2,
+    },
+    moon: {
+      rocketScale: 0.4,
+      ufoScale: 0.2,
+    },
+    earth: {
+      rocketScale: 0.4,
+      ufoScale: 0.2,
     },
     piecesTeam0: {
       positionStartX: 3,

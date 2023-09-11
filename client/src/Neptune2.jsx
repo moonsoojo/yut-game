@@ -13,8 +13,9 @@ import * as THREE from "three";
 import { useRocketStore } from "./state/zstore2";
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
-export default function Neptune2({ position, tile }) {
+export default function Neptune2({ position, tile, device = "mobile" }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
 
   // const setSelection = useRocketStore((state) => state.setSelection);
@@ -88,6 +89,7 @@ export default function Neptune2({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={layout[device].mars.rocketScale}
             />
           ))}
         </>
@@ -103,6 +105,7 @@ export default function Neptune2({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={layout[device].mars.ufoScale}
             />
           ))}
         </>

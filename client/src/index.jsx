@@ -41,7 +41,7 @@ root.render(
       <OrbitControls />
 
       <Experience />
-      {/* <Sandbox/> */}
+      {/* <Sandbox /> */}
       {/* <MouseGame /> */}
 
       {/* <Perf /> */}

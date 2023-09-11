@@ -1,3 +1,7 @@
+import React, { useRef, useMemo, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+
 const fragmentShaderSun = `
 
   precision mediump float;
@@ -498,11 +502,6 @@ const vertexShader = `
   }
 `;
 
-import React, { useRef, useMemo, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { useAtom } from "jotai";
-
 function Sun({ tile, ...props }) {
   // game logic
 
@@ -561,7 +560,7 @@ function Sun({ tile, ...props }) {
   const { gl, camera, scene, size } = useThree();
 
   //Use this to scale the sun
-  // var sphereGeometryScale = 0.15;
+  var sphereGeometryScale;
 
   var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
     format: THREE.RGBAFormat,
@@ -592,7 +591,8 @@ function Sun({ tile, ...props }) {
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     meshRef.current.rotation.y = state.clock.elapsedTime / 10;
-    childMeshRef.current.material.uniforms.objectScale.value = props.scale;
+    childMeshRef.current.material.uniforms.objectScale.value =
+      selected === true ? props.scale * 1.3 : props.scale;
     MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
     childMeshRef.current.material.transparent = true;
     childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
@@ -636,7 +636,9 @@ function Sun({ tile, ...props }) {
       uniforms: {
         time: { type: "f", value: "0.0" },
         normalizedScreenSpacePos: { value: new THREE.Vector3(0.5, 0.5, 1) },
-        objectScale: { value: props.scale },
+        objectScale: {
+          value: selected === true ? props.scale * 1.3 : props.scale,
+        },
       },
       side: THREE.FrontSide,
       transparent: true,
@@ -645,18 +647,19 @@ function Sun({ tile, ...props }) {
     }),
     []
   );
+
   return (
     <>
       <mesh
         {...props}
         ref={meshRef}
-        scale={selected == true ? props.scale * 1.3 : props.scale}
+        scale={selected === true ? props.scale * 1.3 : props.scale}
       >
         <sphereGeometry args={[1, 32, 16]} />
         <shaderMaterial attach="material" {...data} />
         <mesh
           ref={childMeshRef}
-          scale={selected == true ? props.scale * 1.3 : props.scale}
+          scale={selected === true ? props.scale * 1.3 : props.scale}
         >
           <planeGeometry args={[2.5, 2.5, 32]} />
           <shaderMaterial attach="material" {...outerData} />

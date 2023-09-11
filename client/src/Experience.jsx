@@ -11,7 +11,8 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-import SunBagus from "./SunBagusBackup.jsx";
+// import SunBagus from "./SunBagusBackup.jsx";
+import SunBagus from "./SunBagus.jsx";
 import Moon from "./Moon";
 import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
@@ -41,6 +42,7 @@ import * as THREE from "three";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
 import { piecesAtom, socket } from "./SocketManager";
+import SunTemp from "./SunTemp";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -97,6 +99,7 @@ export default function Experience() {
             tile={i}
             key={i}
             scale={layout[device].star.scale}
+            device={device}
           />
         );
       }
@@ -154,20 +157,16 @@ export default function Experience() {
     }
 
     //center piece
-    tiles
-      .push
-      // <SunBagus
-      //   position={[0, 0, 0]}
-      //   intensity={3}
-      //   scale={0.4}
-      //   key={100}
-      //   tile={22}
-      // />
-      ();
-    // <SunBagus />;
-    // <SunBagus position={[0, 0, 0]} tile={22} key={100} />
-    // <Sun2 position={[0, 0, 0]} scale={0.4} tile={22} key={100} />
-    // tiles.push(<Polaris2 position={[-1, 0.5, 0.5]} tile={22} />)
+    tiles.push(
+      <SunTemp position={[0, 0, 0]} scale={0.8} key={100} tile={22} />
+    );
+    // <SunBagus
+    //   position={[0, 0, 0]}
+    //   intensity={3}
+    //   scale={0.4}
+    //   key={100}
+    //   tile={22}
+    // />
     return tiles;
   }
 

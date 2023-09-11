@@ -9,12 +9,13 @@ import { useLoader } from "@react-three/fiber";
 import { useRocketStore } from "./state/zstore2";
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import HelperArrow from "./HelperArrow";
 
-export default function Saturn({ position, tile, scale }) {
+export default function Saturn({ position, tile, scale, device = "mobile" }) {
   const { nodes, materials } = useGLTF("/models/Saturn 3.glb");
   const satelliteTexture1 = useLoader(
     TextureLoader,
@@ -118,6 +119,7 @@ export default function Saturn({ position, tile, scale }) {
               team={1}
               id={value.id}
               key={index}
+              scale={layout[device].mars.rocketScale}
             />
           ))}
         </>
@@ -133,6 +135,7 @@ export default function Saturn({ position, tile, scale }) {
               team={0}
               id={value.id}
               key={index}
+              scale={layout[device].mars.ufoScale}
             />
           ))}
         </>

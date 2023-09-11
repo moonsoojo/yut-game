@@ -8,8 +8,9 @@ import React from "react";
 // import { useRocketStore } from "./state/zstore2";
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
-export default function Mars({ position, tile }) {
+export default function Mars({ position, tile, device = "mobile" }) {
   const { nodes, materials } = useGLTF("/models/Mars 4.glb");
 
   const [selection] = useAtom(selectionAtom);
@@ -85,6 +86,7 @@ export default function Mars({ position, tile }) {
               team={1}
               id={value.id}
               key={index}
+              scale={layout[device].mars.rocketScale}
             />
           ))}
         </>
@@ -100,6 +102,7 @@ export default function Mars({ position, tile }) {
               team={0}
               id={value.id}
               key={index}
+              scale={layout[device].mars.ufoScale}
             />
           ))}
         </>

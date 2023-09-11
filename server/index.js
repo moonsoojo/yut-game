@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://192.168.86.158:5173"],
   },
 });
 
@@ -88,18 +88,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("placePiece", (destination) => {
-    let starting = selection.type === "piece" ? true : false;
+    let starting =
+      selection != null && selection.type === "piece" ? true : false;
     let piecesIncoming;
     let incomingTeam;
 
-    if (selection.type === "tile") {
+    if (selection != null && selection.type === "tile") {
       piecesIncoming = JSON.parse(JSON.stringify(tiles[selection.tile]));
       if (piecesIncoming.length == 0) {
         incomingTeam = -1;
       } else {
         incomingTeam = piecesIncoming[0].team;
       }
-    } else if (selection.type === "piece") {
+    } else if (selection != null && selection.type === "piece") {
       piecesIncoming = [
         {
           tile: selection.tile,
@@ -145,7 +146,7 @@ io.on("connection", (socket) => {
     let piecesIncoming;
     let scoringTeam;
     let fromTile;
-    if (selection.type === "tile") {
+    if (selection != null && selection.type === "tile") {
       fromTile = selection.tile;
       piecesIncoming = JSON.parse(JSON.stringify(tiles[fromTile]));
       if (piecesIncoming.length == 0) {
@@ -153,7 +154,7 @@ io.on("connection", (socket) => {
       } else {
         scoringTeam = piecesIncoming[0].team;
       }
-    } else if (selection.type === "piece") {
+    } else if (selection != null && selection.type === "piece") {
       piecesIncoming = [
         {
           tile: selection.tile,
@@ -181,17 +182,24 @@ io.on("connection", (socket) => {
     { x: 2, y: 1, z: 0 },
     { x: 0, y: 1, z: -2 },
   ];
+  let rotations = [
+    { x: 1, y: 1, z: 1, w: 0 },
+    { x: 2, y: 2, z: 2, w: 0 },
+    { x: -1, y: -1, z: -1, w: 0 },
+    { x: -2, y: -2, z: -2, w: 0 },
+  ];
   socket.on("throwYuts", () => {
     console.log("[server] throwYuts");
     const yutForceVectors = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
-        rotation: {
-          x: generateRandomNumberInRange(3.14, 3.14),
-          y: generateRandomNumberInRange(3.14, 3.14),
-          z: generateRandomNumberInRange(3.14, 3.14),
-          w: 0,
-        },
+        // rotation: {
+        //   x: generateRandomNumberInRange(3.14, 3.14),
+        //   y: generateRandomNumberInRange(3.14, 3.14),
+        //   z: generateRandomNumberInRange(3.14, 3.14),
+        //   w: 0,
+        // },
+        rotation: rotations[i],
         yImpulse: generateRandomNumberInRange(0.05, 0.01),
         torqueImpulse: {
           x: generateRandomNumberInRange(0.00001, 0.000005),
@@ -204,8 +212,9 @@ io.on("connection", (socket) => {
     io.emit("throwYuts", yutForceVectors);
   });
 
-  socket.on("yutThrowFlag", (value) => {
-    io.emit("yutThrowFlag", value);
+  socket.on("throwVisibleFlag", (value) => {
+    console.log("[server] throw visible flag", value);
+    io.emit("throwVisibleFlag", value);
   });
 
   socket.on("disconnect", () => {

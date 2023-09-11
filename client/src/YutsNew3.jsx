@@ -4,8 +4,13 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, socket } from "./SocketManager";
+import {
+  yutThrowValuesAtom,
+  throwVisibleFlagAtom,
+  socket,
+} from "./SocketManager";
 import { useAtom } from "jotai";
+import layout from "./layout";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -16,21 +21,30 @@ const positionsInitial = [
   [2, 4, 0],
 ];
 
-export default function YutsNew3(props) {
+export default function YutsNew3({ device = "mobile", ...props }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut-regular.glb").nodes;
   const materials = useGLTF("/models/yut-regular.glb").materials;
   const nodesRhino = useGLTF("/models/yut-backdo.glb").nodes;
   const materialsRhino = useGLTF("/models/yut-backdo.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
+  const [sleepCount, setSleepCount] = useState(0);
+  // const [throwVisible, setThrowVisible] = useState(false);
+  const [throwVisible] = useAtom(throwVisibleFlagAtom);
+  const [throwVisibleLocal, setThrowVisibleLocal] = useState(false);
 
-  function handleThrowClick() {}
+  function handleThrowClick() {
+    socket.emit("throwVisibleFlag", false);
+    socket.emit("throwYuts");
+  }
 
   useEffect(() => {
     subscribeKeys(
       (state) => state.throw,
       (value) => {
         if (value) {
+          console.log("throw");
+          socket.emit("throwVisibleFlag", false);
           socket.emit("throwYuts");
         }
       }
@@ -38,21 +52,33 @@ export default function YutsNew3(props) {
   }, []);
 
   useEffect(() => {
+    console.log("yut throw values use effect");
     for (let i = 0; i < 4; i++) {
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
-      yuts[i].current.setRotation(yutThrowValues[i].rotation, false);
-      // yuts[i].current.applyImpulse({
-      //   x: 0,
-      //   y: yutThrowValues[i].yImpulse,
-      //   z: 0,
-      // });
-      // yuts[i].current.applyTorqueImpulse({
-      //   x: yutThrowValues[i].torqueImpulse.x,
-      //   y: yutThrowValues[i].torqueImpulse.y,
-      //   z: yutThrowValues[i].torqueImpulse.z,
-      // });
+      yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
+      yuts[i].current.applyImpulse({
+        x: 0,
+        y: yutThrowValues[i].yImpulse,
+        z: 0,
+      });
+      yuts[i].current.applyTorqueImpulse({
+        x: yutThrowValues[i].torqueImpulse.x,
+        y: yutThrowValues[i].torqueImpulse.y,
+        z: yutThrowValues[i].torqueImpulse.z,
+      });
     }
   }, [yutThrowValues]);
+
+  useEffect(() => {
+    console.log(sleepCount);
+    if (sleepCount % 4 == 0 && sleepCount > 0) {
+      socket.emit("throwVisibleFlag", true);
+    }
+  }, [sleepCount]);
+
+  useEffect(() => {
+    setThrowVisibleLocal(throwVisible)
+  }, [throwVisible])
 
   const yut = useRef();
   const yut2 = useRef();
@@ -78,19 +104,24 @@ export default function YutsNew3(props) {
       // });
     }
   }
+  function onSleepHandler() {
+    setSleepCount((count) => count + 1);
+  }
 
   return (
     <group {...props} dispose={null}>
-      <Text3D
-        font="./fonts/Luckiest Guy_Regular.json"
-        height={0.01}
-        size={0.2}
-        rotation={[0, Math.PI / 2, 0]}
-        position={[-2, 0, 0]}
-        onPointerDown={handleThrowClick}
-      >
-        Throw
-      </Text3D>
+      {throwVisible && (
+        <Text3D
+          font="./fonts/Luckiest Guy_Regular.json"
+          height={0.01}
+          size={0.3}
+          rotation={layout[device].throwButton.rotation}
+          position={layout[device].throwButton.position}
+          onPointerDown={handleThrowClick}
+        >
+          Throw
+        </Text3D>
+      )}
 
       {yuts.map((ref, index) => {
         return (
@@ -106,6 +137,7 @@ export default function YutsNew3(props) {
             scale={0.1}
             gravityScale={1.5}
             key={index}
+            onSleep={onSleepHandler}
           >
             {index != 0 ? (
               <mesh
