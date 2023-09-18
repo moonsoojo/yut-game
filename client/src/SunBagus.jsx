@@ -650,13 +650,13 @@ function Sun({ tile, ...props }) {
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     meshRef.current.rotation.y = state.clock.elapsedTime / 10;
-    childMeshRef.current.material.uniforms.objectScale.value =
-      selection != null && selection.type === "tile" && selection.tile == tile
-        ? props.scale * 1.3
-        : props.scale;
-    MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
-    childMeshRef.current.material.transparent = true;
-    childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+    // childMeshRef.current.material.uniforms.objectScale.value =
+    //   selection != null && selection.type === "tile" && selection.tile == tile
+    //     ? props.scale * 1.3
+    //     : props.scale;
+    // MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
+    // childMeshRef.current.material.transparent = true;
+    // childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
   }, 0);
 
   useFrame(({ gl, scene, camera }) => {
@@ -670,8 +670,8 @@ function Sun({ tile, ...props }) {
     updatePosition.project(camera);
     updatePosition.x = (updatePosition.x + 1) / 2;
     updatePosition.y = (updatePosition.y + 1) / 2;
-    childMeshRef.current.material.uniforms.normalizedScreenSpacePos.value =
-      updatePosition;
+    // childMeshRef.current.material.uniforms.normalizedScreenSpacePos.value =
+    //   updatePosition;
     gl.render(scene, camera);
   }, 1);
   const data = useMemo(
@@ -729,7 +729,7 @@ function Sun({ tile, ...props }) {
       >
         <sphereGeometry args={[1, 32, 16]} />
         <shaderMaterial attach="material" {...data} />
-        <mesh
+        {/* <mesh
           ref={childMeshRef}
           scale={
             selection != null &&
@@ -745,7 +745,7 @@ function Sun({ tile, ...props }) {
             intensity={props.intensity}
             distance={props.distance}
           ></pointLight>
-        </mesh>
+        </mesh> */}
       </mesh>
       {tile && tiles[tile].length != 0 && <Piece />}
       <SunWrap />

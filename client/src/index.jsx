@@ -13,14 +13,7 @@ import {
   OrbitControls,
   OrthographicCamera,
 } from "@react-three/drei";
-import { Perf } from "r3f-perf";
-import store from "./state/store";
-import { Provider } from "react-redux";
 import React from "react";
-import { useLoader } from "@react-three/fiber";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
-import Star from "./Star";
-import Controls from "./Controls";
 import { SocketManager } from "./SocketManager";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));

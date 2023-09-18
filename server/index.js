@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import initialState from "./initialState.js";
 
 const io = new Server({
   cors: {
@@ -9,51 +10,8 @@ const io = new Server({
 io.listen(3000);
 
 let selection = null;
-let tiles = [
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-];
-let pieces = [
-  [
-    { tile: -1, team: 0, id: 0 },
-    { tile: -1, team: 0, id: 1 },
-    { tile: -1, team: 0, id: 2 },
-    { tile: -1, team: 0, id: 3 },
-  ],
-  [
-    { tile: -1, team: 1, id: 0 },
-    { tile: -1, team: 1, id: 1 },
-    { tile: -1, team: 1, id: 2 },
-    { tile: -1, team: 1, id: 3 },
-  ],
-];
+let tiles = JSON.parse(JSON.stringify(initialState.tiles));
+let pieces = JSON.parse(JSON.stringify(initialState.pieces));
 const characters = [];
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -80,6 +38,7 @@ io.on("connection", (socket) => {
   io.emit("characters", characters);
   io.emit("pieces", pieces);
   io.emit("tiles", tiles);
+  io.emit("selection", selection);
 
   socket.on("select", (payload) => {
     console.log("[server][select]", payload);
@@ -88,6 +47,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("placePiece", (destination) => {
+    console.log(destination);
     let starting =
       selection != null && selection.type === "piece" ? true : false;
     let piecesIncoming;
@@ -189,7 +149,6 @@ io.on("connection", (socket) => {
     { x: -2, y: -2, z: -2, w: 0 },
   ];
   socket.on("throwYuts", () => {
-    console.log("[server] throwYuts");
     const yutForceVectors = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
@@ -213,8 +172,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("throwVisibleFlag", (value) => {
-    console.log("[server] throw visible flag", value);
     io.emit("throwVisibleFlag", value);
+  });
+
+  socket.on("reset", () => {
+    tiles = JSON.parse(JSON.stringify(initialState.tiles));
+    pieces = JSON.parse(JSON.stringify(initialState.pieces));
+    io.emit("reset", {
+      tiles: tiles,
+      pieces: pieces,
+      selection: null,
+    });
   });
 
   socket.on("disconnect", () => {

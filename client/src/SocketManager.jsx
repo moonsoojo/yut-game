@@ -81,51 +81,8 @@ export const yutThrowValuesAtom = atom([
 
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
-export const piecesAtom = atom([
-  [
-    { tile: -1, team: 0, id: 0 },
-    { tile: -1, team: 0, id: 1 },
-    { tile: -1, team: 0, id: 2 },
-    { tile: -1, team: 0, id: 3 },
-  ],
-  [
-    { tile: -1, team: 1, id: 0 },
-    { tile: -1, team: 1, id: 1 },
-    { tile: -1, team: 1, id: 2 },
-    { tile: -1, team: 1, id: 3 },
-  ],
-]);
-export const tilesAtom = atom([
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-]);
+export const piecesAtom = atom([]);
+export const tilesAtom = atom([]);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -141,7 +98,7 @@ export const SocketManager = () => {
       console.log("connected");
     }
     function onDisconnect() {
-      console.log("connected");
+      console.log("disconnected");
     }
     function onHello() {
       console.log("hello");
@@ -172,6 +129,13 @@ export const SocketManager = () => {
     function onThrowVisibleFlag(flag) {
       setThrowVisibleFlag(flag);
     }
+    function onReset({ tiles, pieces, selection }) {
+      console.log("[onReset]", tiles, pieces, selection);
+      setTiles(tiles);
+      setPieces(pieces);
+      setSelection(selection);
+    }
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("hello", onHello);
@@ -183,6 +147,7 @@ export const SocketManager = () => {
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
     socket.on("throwVisibleFlag", onThrowVisibleFlag);
+    socket.on("reset", onReset);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -194,7 +159,7 @@ export const SocketManager = () => {
       socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
       socket.off("yutThrow", onYutThrow);
-      socket.off("throwVisibleFlag", onThrowVisibleFlag);
+      socket.off("reset", onReset);
     };
   }, []);
 };

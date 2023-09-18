@@ -46,28 +46,28 @@ export default function Ufo({
   });
 
   function handlePointerEnter(event) {
-    event.stopPropagation();
     if (tile == -1) {
       // alienRef.current.material.color.r += 2;
       // alienRef.current.material.color.g -= 4;
+      event.stopPropagation();
       wrapperMatRef.current.opacity += 0.5;
       document.body.style.cursor = "pointer";
     }
   }
 
   function handlePointerLeave(event) {
-    event.stopPropagation();
     if (tile == -1) {
       // alienRef.current.material.color.r -= 2;
       // alienRef.current.material.color.g += 4;
+      event.stopPropagation();
       wrapperMatRef.current.opacity -= 0.5;
       document.body.style.cursor = "default";
     }
   }
 
   function handlePointerDown(event) {
-    event.stopPropagation();
     if (tile == -1) {
+      event.stopPropagation();
       if (selection == null) {
         // setSelection({ type: "piece", tile, team, id });
         socket.emit("select", { type: "piece", tile, team, id });

@@ -69,6 +69,10 @@ export default function Controls3d({ tileRadius, numStars }) {
       setShowRules(true);
     } else {
       setShowRules(false);
+      setShowDice(false);
+      setShowMoves(false);
+      setShowGoals(false);
+      setShowScore(false);
     }
   }
 

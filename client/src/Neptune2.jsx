@@ -122,7 +122,7 @@ export default function Neptune2({ position, tile, device = "mobile" }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[4.5, 32, 16]} />
+        <sphereGeometry args={[3.5, 32, 16]} />
         <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
       </mesh>
     );

@@ -31,7 +31,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [sleepCount, setSleepCount] = useState(0);
   // const [throwVisible, setThrowVisible] = useState(false);
   const [throwVisible] = useAtom(throwVisibleFlagAtom);
-  const [throwVisibleLocal, setThrowVisibleLocal] = useState(false);
+  const [throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
+  const [hoverThrowText, setHoverThrowText] = useState(false);
 
   function handleThrowClick() {
     socket.emit("throwVisibleFlag", false);
@@ -70,15 +71,15 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    console.log(sleepCount);
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("throwVisibleFlag", true);
     }
   }, [sleepCount]);
 
   useEffect(() => {
-    setThrowVisibleLocal(throwVisible)
-  }, [throwVisible])
+    setThrowVisibleLocal(throwVisible);
+    setHoverThrowText(false);
+  }, [throwVisible]);
 
   const yut = useRef();
   const yut2 = useRef();
@@ -86,41 +87,45 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const yut4 = useRef();
   const yuts = [yut, yut2, yut3, yut4];
 
-  function throwYuts(values) {
-    for (let i = 0; i < 4; i++) {
-      yuts[i].current.setTranslation(values[i].positionInHand);
-      // yuts[i].current.rotation.x = values[i].rotation.x;
-      // yuts[i].current.rotation.y = values[i].rotation.y;
-      // yuts[i].current.rotation.z = values[i].rotation.z;
-      // yuts[i].current.applyImpulse({
-      //   x: 0,
-      //   y: values[i].yImpulse,
-      //   z: 0,
-      // });
-      // yuts[i].current.applyTorqueImpulse({
-      //   x: values[i].torqueImpulse.x,
-      //   y: values[i].torqueImpulse.y,
-      //   z: values[i].torqueImpulse.z,
-      // });
-    }
-  }
   function onSleepHandler() {
     setSleepCount((count) => count + 1);
+  }
+
+  function throwButtonPointerEnter() {
+    setHoverThrowText(true);
+    document.body.style.cursor = "pointer";
+  }
+
+  function throwButtonPointerOut() {
+    setHoverThrowText(false);
+    document.body.style.cursor = "default";
   }
 
   return (
     <group {...props} dispose={null}>
       {throwVisible && (
-        <Text3D
-          font="./fonts/Luckiest Guy_Regular.json"
-          height={0.01}
-          size={0.3}
+        <group
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
-          onPointerDown={handleThrowClick}
         >
-          Throw
-        </Text3D>
+          <Text3D
+            font="./fonts/Luckiest Guy_Regular.json"
+            height={0.01}
+            size={0.3}
+          >
+            Throw
+            <meshStandardMaterial color={hoverThrowText ? "white" : "yellow"} />
+          </Text3D>
+          <mesh
+            position={[0.7, 0.15, 0]}
+            onPointerEnter={throwButtonPointerEnter}
+            onPointerOut={throwButtonPointerOut}
+            onPointerDown={handleThrowClick}
+          >
+            <boxGeometry args={[1.4, 0.3, 0.1]} />
+            <meshStandardMaterial transparent opacity={0} />
+          </mesh>
+        </group>
       )}
 
       {yuts.map((ref, index) => {

@@ -43,8 +43,8 @@ export default {
       position: [3, 0, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    scoreButton: { 
-      position: [3.9, 0, -2.5],
+    scoreButton: {
+      position: [3, -0.5, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     throwButton: {
@@ -93,11 +93,19 @@ export default {
       rotation: [0, 0, 0],
     },
     startBanner: {
-      position: [2.7, 0.7, -2.2],
+      position: [2.7, -1.2, -2.5],
       rotation: [0, Math.PI / 2, 0],
     },
     scoreButton: {
-      position: [2.7, -1, -2.2],
+      position: [-3, -3.5, -5],
+      rotation: [0, Math.PI / 2, 0],
+    },
+    throwButton: {
+      position: [-3, -3, -5],
+      rotation: [0, Math.PI / 2, 0],
+    },
+    resetButton: {
+      position: [2.7, -1.7, -2.5],
       rotation: [0, Math.PI / 2, 0],
     },
   },

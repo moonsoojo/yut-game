@@ -35,7 +35,6 @@ export default function ScoreButton({ position, rotation }) {
     socket.emit("select", null);
   }
 
-  function handleScoreButtonClick(event) {}
   return (
     <group position={position} rotation={rotation}>
       <mesh
@@ -56,7 +55,7 @@ export default function ScoreButton({ position, rotation }) {
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D> */}
       <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
-        Finish
+        Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D>
     </group>

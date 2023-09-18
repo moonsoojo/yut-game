@@ -19,7 +19,6 @@ export default function Star({
   isDecoration = false,
   device = "mobile",
 }) {
-  console.log(device);
   const { scene, materials, animations } = useGLTF(
     "/models/stars/star-yellow copy 1.glb"
   );

@@ -21,6 +21,7 @@ import Decorations from "./Decorations";
 import layout from "./layout";
 import React from "react";
 import ScoreButton from "./ScoreButton";
+import ResetButton from "./ResetButton";
 import { Leva, useControls } from "leva";
 import {
   Environment,
@@ -157,9 +158,19 @@ export default function Experience() {
     }
 
     //center piece
+    // tiles.push(
+    //   <SunBagus
+    //     position={[0, 0, 0]}
+    //     intensity={3}
+    //     scale={0.4}
+    //     key={100}
+    //     tile={22}
+    //   />
+    // );
     tiles.push(
       <SunTemp position={[0, 0, 0]} scale={0.8} key={100} tile={22} />
     );
+
     // <SunBagus
     //   position={[0, 0, 0]}
     //   intensity={3}
@@ -537,7 +548,7 @@ export default function Experience() {
         </RigidBody>
         {/* <YutsNew /> */}
         {/* <Yuts /> */}
-        <YutsNew3 />
+        <YutsNew3 device={device} />
         <Tiles />
 
         <PiecesTeam0 />
@@ -546,6 +557,10 @@ export default function Experience() {
         <ScoreButton
           position={layout[device].scoreButton.position}
           rotation={layout[device].scoreButton.rotation}
+        />
+        <ResetButton
+          position={layout[device].resetButton.position}
+          rotation={layout[device].resetButton.rotation}
         />
         {/* {characters.map((character) => (
           <Starfighter
