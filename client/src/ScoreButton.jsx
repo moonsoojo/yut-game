@@ -46,14 +46,6 @@ export default function ScoreButton({ position, rotation }) {
         <boxGeometry args={[1, 0.25, 0.1]} />
         <meshStandardMaterial transparent opacity={0} />
       </mesh>
-      {/* <Text3D
-        font="./fonts/Luckiest Guy_Regular.json"
-        height={0.01}
-        size={0.25}
-      >
-        Score
-        <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
-      </Text3D> */}
       <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
         Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
