@@ -11,10 +11,8 @@ import Rocket from "./Rocket";
 import Ufo from "./Ufo";
 import Mars from "./Mars";
 import Saturn from "./Saturn";
-// import SunBagus from "./SunBagusBackup.jsx";
 import SunBagus from "./SunBagus.jsx";
 import Moon from "./Moon";
-import Sun2 from "./Sun2.jsx";
 // import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
@@ -42,8 +40,9 @@ import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
-import { piecesAtom, socket } from "./SocketManager";
+import { piecesAtom, selectionAtom, socket } from "./SocketManager";
 import SunTemp from "./SunTemp";
+import TextButton from "./components/TextButton";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -65,6 +64,7 @@ export default function Experience() {
   // const [characters] = useAtom(charactersAtom);
 
   const [pieces] = useAtom(piecesAtom);
+  const [selection] = useAtom(selectionAtom);
 
   const numTiles = 29;
 
@@ -157,19 +157,19 @@ export default function Experience() {
       }
     }
 
-    //center piece
-    // tiles.push(
-    //   <SunBagus
-    //     position={[0, 0, 0]}
-    //     intensity={3}
-    //     scale={0.4}
-    //     key={100}
-    //     tile={22}
-    //   />
-    // );
+    // center piece
     tiles.push(
-      <SunTemp position={[0, 0, 0]} scale={0.8} key={100} tile={22} />
+      <SunBagus
+        position={[0, 0, 0]}
+        intensity={3}
+        scale={0.4}
+        key={100}
+        tile={22}
+      />
     );
+    // tiles.push(
+    //   <SunTemp position={[0, 0, 0]} scale={0.8} key={100} tile={22} />
+    // );
 
     // <SunBagus
     //   position={[0, 0, 0]}
@@ -531,7 +531,11 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
-      <Controls3d tileRadius={TILE_RADIUS} numStars={NUM_STARS} />
+      <Controls3d
+        tileRadius={TILE_RADIUS}
+        numStars={NUM_STARS}
+        device={device}
+      />
 
       <Physics maxVelocityIterations={10}>
         <RigidBody
@@ -554,33 +558,42 @@ export default function Experience() {
         <PiecesTeam0 />
         <PiecesTeam1 />
 
-        <ScoreButton
+        {/* score button */}
+        <TextButton
+          text="Score"
           position={layout[device].scoreButton.position}
           rotation={layout[device].scoreButton.rotation}
+          handlePointerClick={() => {
+            if (selection != null) {
+              // finishPiece();
+              // setSelection(null);
+              socket.emit("finishPiece");
+            }
+            socket.emit("select", null);
+          }}
+          boxWidth={1.2}
+          boxHeight={0.3}
         />
-        <ResetButton
+        {/* reset button */}
+        <TextButton
+          text="Reset"
           position={layout[device].resetButton.position}
           rotation={layout[device].resetButton.rotation}
+          handlePointerClick={() => {
+            socket.emit("reset");
+          }}
+          boxWidth={1.2}
+          boxHeight={0.3}
         />
-        {/* {characters.map((character) => (
-          <Starfighter
-            key={character.id}
-            position={character.position}
-            color={character.color}
-          />
-        ))} */}
         <Decorations />
         {/* START text */}
-        <Text3D
-          font="./fonts/Luckiest Guy_Regular.json"
-          size={0.3}
-          height={0.01}
+        <TextButton
+          text="Start"
           position={layout[device].startBanner.position}
           rotation={layout[device].startBanner.rotation}
-        >
-          Start
-          <meshStandardMaterial color="yellow" />
-        </Text3D>
+          boxWidth={1.2}
+          boxHeight={0.3}
+        />
       </Physics>
       <Moon />
     </>

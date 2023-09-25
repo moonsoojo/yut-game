@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import { Text3D } from "@react-three/drei";
 
 export default function TextButton({
   position,
   rotation,
   handlePointerClick,
   text,
+  boxWidth,
+  boxHeight,
 }) {
   const [hover, setHover] = useState(false);
 
@@ -18,17 +21,23 @@ export default function TextButton({
     document.body.style.cursor = "default";
   }
 
+  const boxAdjustedPosition = [boxWidth / 2, boxHeight / 2, 0];
+
   return (
     <group position={position} rotation={rotation}>
-      <mesh
-        onPointerEnter={handlePointerEnter}
-        onPointerOut={handlePointerOut}
-        onPointerDown={handlePointerClick}
-      >
-        {/* scale this with text */}
-        <boxGeometry args={[1, 0.25, 0.1]} />
-        <meshStandardMaterial transparent opacity={0} />
-      </mesh>
+      {handlePointerClick == undefined ? (
+        <></>
+      ) : (
+        <mesh
+          position={boxAdjustedPosition}
+          onPointerEnter={handlePointerEnter}
+          onPointerOut={handlePointerOut}
+          onPointerDown={handlePointerClick}
+        >
+          <boxGeometry args={[boxWidth, boxHeight, 0.1]} />
+          <meshStandardMaterial transparent opacity={0.5} />
+        </mesh>
+      )}
       <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
         {text} <meshStandardMaterial color={hover ? "white" : "yellow"} />
       </Text3D>

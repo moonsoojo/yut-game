@@ -11,6 +11,7 @@ import {
 } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
+import TextButton from "./components/TextButton";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -104,28 +105,17 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   return (
     <group {...props} dispose={null}>
       {throwVisible && (
-        <group
+        <TextButton
+          text="Throw"
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
-        >
-          <Text3D
-            font="./fonts/Luckiest Guy_Regular.json"
-            height={0.01}
-            size={0.3}
-          >
-            Throw
-            <meshStandardMaterial color={hoverThrowText ? "white" : "yellow"} />
-          </Text3D>
-          <mesh
-            position={[0.7, 0.15, 0]}
-            onPointerEnter={throwButtonPointerEnter}
-            onPointerOut={throwButtonPointerOut}
-            onPointerDown={handleThrowClick}
-          >
-            <boxGeometry args={[1.4, 0.3, 0.1]} />
-            <meshStandardMaterial transparent opacity={0} />
-          </mesh>
-        </group>
+          handlePointerClick={() => {
+            socket.emit("throwVisibleFlag", false);
+            socket.emit("throwYuts");
+          }}
+          boxWidth={1.4}
+          boxHeight={0.3}
+        />
       )}
 
       {yuts.map((ref, index) => {

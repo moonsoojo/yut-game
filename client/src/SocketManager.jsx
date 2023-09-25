@@ -130,7 +130,6 @@ export const SocketManager = () => {
       setThrowVisibleFlag(flag);
     }
     function onReset({ tiles, pieces, selection }) {
-      console.log("[onReset]", tiles, pieces, selection);
       setTiles(tiles);
       setPieces(pieces);
       setSelection(selection);

@@ -9,12 +9,17 @@ import DiceDetails from "./DiceDetails";
 import GoalDetails from "./GoalDetails";
 import MoveDetails from "./MoveDetails";
 import ScoreDetails from "./ScoreDetails";
-import Yut from "./Yut";
+import TextButton from "./components/TextButton";
+import layout from "./layout";
 
 // State
 import { useAtom } from "jotai";
 
-export default function Controls3d({ tileRadius, numStars }) {
+export default function Controls3d({
+  tileRadius,
+  numStars,
+  device = "mobile",
+}) {
   const [showControls, setShowControls] = useState(false);
   const [hoverControls, setHoverControls] = useState(false);
   const [showRules, setShowRules] = useState(false);
@@ -164,28 +169,18 @@ export default function Controls3d({ tileRadius, numStars }) {
 
   return (
     <group>
-      <group position={[-3, 0, -5]} rotation={[0, Math.PI / 2, 0]}>
-        <mesh
-          position={[1, 0.15, 0]}
-          onPointerEnter={controlsPointerEnter}
-          onPointerOut={controlsPointerOut}
-          onPointerDown={clickControls}
-        >
-          <boxGeometry args={[2, 0.3, 0.1]} />
-          <meshStandardMaterial transparent opacity={0} />
-        </mesh>
-        <Text3D
-          font="./fonts/Luckiest Guy_Regular.json"
-          castShadow={false}
-          size={0.3}
-          height={0.01}
-          receiveShadow
-        >
-          CONTROLS
-          <meshStandardMaterial
-            color={hoverControls || showControls ? "white" : "yellow"}
-          />
-        </Text3D>
+      <group
+        position={layout[device].controlsButton.position}
+        rotation={layout[device].controlsButton.rotation}
+      >
+        <TextButton
+          text="Controls"
+          position={[0, 0, 0]}
+          rotation={[0, 0, 0]}
+          handlePointerClick={clickControls}
+          boxWidth={1.93}
+          boxHeight={0.3}
+        />
         {showControls && (
           <Text3D
             position={[-1.75, 1.75, 0]}
@@ -201,28 +196,18 @@ export default function Controls3d({ tileRadius, numStars }) {
           </Text3D>
         )}
       </group>
-      <group position={[-3, -0.5, -5]} rotation={[0, Math.PI / 2, 0]}>
-        <mesh
-          position={[0.6, 0.2, 0]}
-          onPointerEnter={rulesPointerEnter}
-          onPointerOut={rulesPointerOut}
-          onPointerDown={clickRules}
-        >
-          <boxGeometry args={[1.2, 0.4, 0.1]} />
-          <meshStandardMaterial transparent opacity={0} />
-        </mesh>
-        <Text3D
-          font="./fonts/Luckiest Guy_Regular.json"
-          castShadow={false}
-          size={0.3}
-          height={0.01}
-          receiveShadow
-        >
-          RULES
-          <meshStandardMaterial
-            color={hoverRules || showRules ? "white" : "yellow"}
-          />
-        </Text3D>
+      <group
+        position={layout[device].rulesButton.position}
+        rotation={layout[device].rulesButton.rotation}
+      >
+        <TextButton
+          text="Rules"
+          position={[0, 0, 0]}
+          rotation={[0, 0, 0]}
+          handlePointerClick={clickRules}
+          boxWidth={1.2}
+          boxHeight={0.3}
+        />
         {showRules && (
           <>
             {" "}

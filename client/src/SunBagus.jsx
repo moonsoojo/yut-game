@@ -17,7 +17,6 @@ const fragmentShaderSun = `
   uniform vec4 LightPosition;
   uniform vec3 LightIntensity;
   uniform float Shininess;
-
   
   uniform float progress;
   uniform samplerCube uPerlin;
@@ -502,15 +501,11 @@ const vertexShader = `
   }
 `;
 
-import { selectionAtom, tilesAtom, socket } from "./SocketManager";
-import { useAtom } from "jotai";
-
 function Sun({ tile, ...props }) {
   // game logic
 
+  const [selected, setSelected] = useState(false);
   const wrapperMatRef = useRef();
-  const [selection] = useAtom(selectionAtom);
-  const [tiles] = useAtom(tilesAtom);
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -530,65 +525,10 @@ function Sun({ tile, ...props }) {
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    if (selection == null) {
-      // setSelected(true);
-      socket.emit("select", { type: "tile", tile });
+    if (selected == false) {
+      setSelected(true);
     } else {
-      if (selection.tile != tile) {
-        // setSelected(false);
-        socket.emit("placePiece", tile);
-      }
-      socket.emit("select", null);
-    }
-  }
-
-  const rocketPositions = [
-    [-0.1, 0.4, 0],
-    [-0.1, 0.4, -0.3],
-    [-0.4, 0.4, 0],
-    [-0.4, 0.4, -0.3],
-  ];
-
-  const ufoPositions = [
-    [0.1, 0.3, 0.1],
-    [0.1, 0.3, -0.3],
-    [-0.3, 0.2, 0.1],
-    [-0.3, 0.2, -0.3],
-  ];
-
-  function Piece() {
-    if (tiles[tile][0].team == 1) {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Rocket
-              position={rocketPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={1}
-              id={value.id}
-              key={index}
-              scale={0.7}
-            />
-          ))}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Ufo
-              position={ufoPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={0}
-              id={value.id}
-              key={index}
-              scale={0.25}
-            />
-          ))}
-        </>
-      );
+      setSelected(false);
     }
   }
 
@@ -601,7 +541,7 @@ function Sun({ tile, ...props }) {
         onPointerEnter={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.5, 32, 16]} />
+        <sphereGeometry args={[2, 32, 16]} />
         <meshStandardMaterial
           transparent
           opacity={0}
@@ -610,6 +550,19 @@ function Sun({ tile, ...props }) {
         />
       </mesh>
     );
+  }
+
+  function CalculateLOD(cameraPosition, sunPosition) {
+    var distanceToCamera = cameraPosition.distanceTo(sunPosition);
+
+    if (distanceToCamera < 3) {
+      return 1;
+    }
+    if (distanceToCamera < 13) {
+      return 2;
+    }
+
+    return 3;
   }
 
   // shader
@@ -621,7 +574,19 @@ function Sun({ tile, ...props }) {
   //Use this to scale the sun
   var sphereGeometryScale;
 
-  var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(1024, {
+  var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(512, {
+    format: THREE.RGBAFormat,
+    generateMipmaps: true,
+    minFilter: THREE.LinearMipmapLinearFilter,
+    colorSpace: THREE.SRGBColorSpace,
+  });
+  var cubeRenderTarget2 = new THREE.WebGLCubeRenderTarget(256, {
+    format: THREE.RGBAFormat,
+    generateMipmaps: true,
+    minFilter: THREE.LinearMipmapLinearFilter,
+    colorSpace: THREE.SRGBColorSpace,
+  });
+  var cubeRenderTarget3 = new THREE.WebGLCubeRenderTarget(64, {
     format: THREE.RGBAFormat,
     generateMipmaps: true,
     minFilter: THREE.LinearMipmapLinearFilter,
@@ -650,28 +615,45 @@ function Sun({ tile, ...props }) {
   useFrame((state, delta) => {
     meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
     meshRef.current.rotation.y = state.clock.elapsedTime / 10;
-    // childMeshRef.current.material.uniforms.objectScale.value =
-    //   selection != null && selection.type === "tile" && selection.tile == tile
-    //     ? props.scale * 1.3
-    //     : props.scale;
-    // MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
-    // childMeshRef.current.material.transparent = true;
-    // childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+    childMeshRef.current.material.uniforms.objectScale.value =
+      selected === true ? props.scale * 1.3 : props.scale;
+    MaterialPerlin.uniforms.time.value = state.clock.elapsedTime;
+    childMeshRef.current.material.transparent = true;
+    childMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
   }, 0);
 
   useFrame(({ gl, scene, camera }) => {
     scene.background = new THREE.Color(0x000d1c);
+    var lodLevel = CalculateLOD(camera.position, meshRef.current.position);
+    // console.log(lodLevel);
+    switch (lodLevel) {
+      case 1:
+        cubeCamera.renderTarget = cubeRenderTarget1;
+        meshRef.current.material.uniforms.uPerlin.value =
+          cubeRenderTarget1.texture;
+        break;
+      case 2:
+        cubeCamera.renderTarget = cubeRenderTarget2;
+        meshRef.current.material.uniforms.uPerlin.value =
+          cubeRenderTarget2.texture;
+        break;
+      case 3:
+        cubeCamera.renderTarget = cubeRenderTarget3;
+        meshRef.current.material.uniforms.uPerlin.value =
+          cubeRenderTarget3.texture;
+        break;
+    }
     perlin.position.copy(meshRef.current.position);
     cubeCamera.position.copy(perlin.position);
     cubeCamera.update(gl, scene1);
-    meshRef.current.material.uniforms.uPerlin.value = cubeRenderTarget1.texture;
+
     var updatePosition = new THREE.Vector3();
     updatePosition = meshRef.current.position.clone();
     updatePosition.project(camera);
     updatePosition.x = (updatePosition.x + 1) / 2;
     updatePosition.y = (updatePosition.y + 1) / 2;
-    // childMeshRef.current.material.uniforms.normalizedScreenSpacePos.value =
-    //   updatePosition;
+    childMeshRef.current.material.uniforms.normalizedScreenSpacePos.value =
+      updatePosition;
     gl.render(scene, camera);
   }, 1);
   const data = useMemo(
@@ -698,12 +680,7 @@ function Sun({ tile, ...props }) {
         time: { type: "f", value: "0.0" },
         normalizedScreenSpacePos: { value: new THREE.Vector3(0.5, 0.5, 1) },
         objectScale: {
-          value:
-            selection != null &&
-            selection.type === "tile" &&
-            selection.tile == tile
-              ? props.scale * 1.3
-              : props.scale,
+          value: selected === true ? props.scale * 1.3 : props.scale,
         },
       },
       side: THREE.FrontSide,
@@ -719,25 +696,13 @@ function Sun({ tile, ...props }) {
       <mesh
         {...props}
         ref={meshRef}
-        scale={
-          selection != null &&
-          selection.type === "tile" &&
-          selection.tile == tile
-            ? props.scale * 1.3
-            : props.scale
-        }
+        scale={selected === true ? props.scale * 1.3 : props.scale}
       >
         <sphereGeometry args={[1, 32, 16]} />
         <shaderMaterial attach="material" {...data} />
-        {/* <mesh
+        <mesh
           ref={childMeshRef}
-          scale={
-            selection != null &&
-            selection.type === "tile" &&
-            selection.tile == tile
-              ? props.scale * 1.3
-              : props.scale
-          }
+          scale={selected === true ? props.scale * 1.3 : props.scale}
         >
           <planeGeometry args={[2.5, 2.5, 32]} />
           <shaderMaterial attach="material" {...outerData} />
@@ -745,9 +710,8 @@ function Sun({ tile, ...props }) {
             intensity={props.intensity}
             distance={props.distance}
           ></pointLight>
-        </mesh> */}
+        </mesh>
       </mesh>
-      {tile && tiles[tile].length != 0 && <Piece />}
       <SunWrap />
     </>
   );

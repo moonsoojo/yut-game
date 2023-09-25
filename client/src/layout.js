@@ -44,12 +44,24 @@ export default {
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     scoreButton: {
-      position: [3, -0.5, -3.5],
+      position: [3, -2, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    resetButton: {
+      position: [3, -4, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     throwButton: {
-      position: [6, 0, 3],
+      position: [3, -6, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    controlsButton: {
+      position: [-3, 0, -5],
+      rotation: [0, Math.PI / 2, 0],
+    },
+    rulesButton: {
+      position: [-3, -0.5, -5],
+      rotation: [0, Math.PI / 2, 0],
     },
   },
   desktop: {
@@ -106,6 +118,14 @@ export default {
     },
     resetButton: {
       position: [2.7, -1.7, -2.5],
+      rotation: [0, Math.PI / 2, 0],
+    },
+    controlsButton: {
+      position: [-3, 0, -5],
+      rotation: [0, Math.PI / 2, 0],
+    },
+    rulesButton: {
+      position: [-3, -0.5, -5],
       rotation: [0, Math.PI / 2, 0],
     },
   },
