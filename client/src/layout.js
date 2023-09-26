@@ -63,6 +63,18 @@ export default {
       position: [-3, -0.5, -5],
       rotation: [0, Math.PI / 2, 0],
     },
+    goalButton: {
+      position: [0, -0.5, 0],
+    },
+    diceButton: {
+      position: [0, -1, 0],
+    },
+    movesButton: {
+      position: [0, -1.5, 0],
+    },
+    scoreDetailsButton: {
+      position: [0, -2, 0],
+    },
   },
   desktop: {
     camera: {
@@ -127,6 +139,18 @@ export default {
     rulesButton: {
       position: [-3, -0.5, -5],
       rotation: [0, Math.PI / 2, 0],
+    },
+    goalButton: {
+      position: [0, -0.5, 0],
+    },
+    diceButton: {
+      position: [0, -1, 0],
+    },
+    movesButton: {
+      position: [0, -1.5, 0],
+    },
+    scoreDetailsButton: {
+      position: [0, -2, 0],
     },
   },
 };

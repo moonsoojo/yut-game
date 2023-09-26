@@ -169,33 +169,28 @@ export default function Controls3d({
 
   return (
     <group>
-      <group
+      <TextButton
+        text="Controls"
         position={layout[device].controlsButton.position}
         rotation={layout[device].controlsButton.rotation}
-      >
-        <TextButton
-          text="Controls"
-          position={[0, 0, 0]}
-          rotation={[0, 0, 0]}
-          handlePointerClick={clickControls}
-          boxWidth={1.93}
-          boxHeight={0.3}
-        />
-        {showControls && (
-          <Text3D
-            position={[-1.75, 1.75, 0]}
-            font="./fonts/Luckiest Guy_Regular.json"
-            castShadow={false}
-            size={0.2}
-            height={0.01}
-            receiveShadow
-          >
-            left click and drag to look &#10; spacebar to throw the dice &#10;
-            click to select a piece &#10; and place it on a star
-            <meshStandardMaterial color="grey" />
-          </Text3D>
-        )}
-      </group>
+        handlePointerClick={clickControls}
+        boxWidth={1.93}
+        boxHeight={0.3}
+      />
+      {showControls && (
+        <Text3D
+          position={[-1.75, 1.75, 0]}
+          font="./fonts/Luckiest Guy_Regular.json"
+          castShadow={false}
+          size={0.2}
+          height={0.01}
+          receiveShadow
+        >
+          left click and drag to look &#10; spacebar to throw the dice &#10;
+          click to select a piece &#10; and place it on a star
+          <meshStandardMaterial color="grey" />
+        </Text3D>
+      )}
       <group
         position={layout[device].rulesButton.position}
         rotation={layout[device].rulesButton.rotation}
@@ -211,101 +206,38 @@ export default function Controls3d({
         {showRules && (
           <>
             {" "}
-            <group position={[0, -0.5, 0]}>
-              <mesh
-                position={[0.425, 0.125, 0]}
-                onPointerEnter={goalsPointerEnter}
-                onPointerOut={goalsPointerOut}
-                onPointerDown={clickGoals}
-              >
-                <boxGeometry args={[0.85, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0} />
-              </mesh>
-              <Text3D
-                font="./fonts/Luckiest Guy_Regular.json"
-                castShadow={false}
-                size={0.25}
-                height={0.01}
-                receiveShadow
-              >
-                Goal
-                <meshStandardMaterial
-                  color={hoverGoalsText || showGoals ? "white" : "yellow"}
-                />
-              </Text3D>
-            </group>
-            <group position={[0, -1, 0]}>
-              <mesh
-                position={[0.95, 0.125, 0]}
-                onPointerEnter={dicePointerEnter}
-                onPointerOut={dicePointerOut}
-                onPointerDown={clickDice}
-              >
-                <boxGeometry args={[1.9, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0} />
-              </mesh>
-              <Text3D
-                position={[0, 0, 0]}
-                font="./fonts/Luckiest Guy_Regular.json"
-                castShadow={false}
-                size={0.25}
-                height={0.01}
-                receiveShadow
-              >
-                Dice (yuts)
-                <meshStandardMaterial
-                  color={hoverDiceText || showDice ? "white" : "yellow"}
-                />
-              </Text3D>
-            </group>
-            <group position={[0, -1.5, 0]}>
-              <mesh
-                position={[0.6, 0.125, 0]}
-                onPointerEnter={movesPointerEnter}
-                onPointerOut={movesPointerOut}
-                onPointerDown={clickMoves}
-              >
-                <boxGeometry args={[1.2, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0} />
-              </mesh>
-              <Text3D
-                position={[0, 0, 0]}
-                font="./fonts/Luckiest Guy_Regular.json"
-                castShadow={false}
-                size={0.25}
-                height={0.01}
-                receiveShadow
-              >
-                Moves
-                <meshStandardMaterial
-                  color={hoverMovesText || showMoves ? "white" : "yellow"}
-                />
-              </Text3D>
-            </group>
-            <group position={[0, -2, 0]}>
-              <mesh
-                position={[0.5, 0.125, 0]}
-                onPointerEnter={scorePointerEnter}
-                onPointerOut={scorePointerOut}
-                onPointerDown={clickScore}
-              >
-                <boxGeometry args={[1, 0.25, 0.1]} />
-                <meshStandardMaterial transparent opacity={0} />
-              </mesh>
-              <Text3D
-                position={[0, 0, 0]}
-                font="./fonts/Luckiest Guy_Regular.json"
-                castShadow={false}
-                size={0.25}
-                height={0.01}
-                receiveShadow
-              >
-                Score
-                <meshStandardMaterial
-                  color={hoverScoreText || showScore ? "white" : "yellow"}
-                />
-              </Text3D>
-            </group>
+            <TextButton
+              text="Goal"
+              position={layout[device].goalButton.position}
+              rotation={[0, 0, 0]}
+              handlePointerClick={clickGoals}
+              boxWidth={1}
+              boxHeight={0.3}
+            />
+            <TextButton
+              text="Dice (yuts)"
+              position={layout[device].diceButton.position}
+              rotation={[0, 0, 0]}
+              handlePointerClick={clickDice}
+              boxWidth={2.2}
+              boxHeight={0.3}
+            />
+            <TextButton
+              text="Moves"
+              position={layout[device].movesButton.position}
+              rotation={[0, 0, 0]}
+              handlePointerClick={clickMoves}
+              boxWidth={1.35}
+              boxHeight={0.3}
+            />
+            <TextButton
+              text="Score"
+              position={layout[device].scoreDetailsButton.position}
+              rotation={[0, 0, 0]}
+              handlePointerClick={clickScore}
+              boxWidth={1.2}
+              boxHeight={0.3}
+            />
           </>
         )}
       </group>
