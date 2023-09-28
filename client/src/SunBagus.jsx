@@ -1,5 +1,6 @@
 import React, { useRef, useMemo, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 const fragmentShaderSun = `
@@ -17,6 +18,7 @@ const fragmentShaderSun = `
   uniform vec4 LightPosition;
   uniform vec3 LightIntensity;
   uniform float Shininess;
+
   
   uniform float progress;
   uniform samplerCube uPerlin;
@@ -554,14 +556,13 @@ function Sun({ tile, ...props }) {
 
   function CalculateLOD(cameraPosition, sunPosition) {
     var distanceToCamera = cameraPosition.distanceTo(sunPosition);
-
-    if (distanceToCamera < 3) {
+    // console.log(distanceToCamera);
+    if (distanceToCamera < 4) {
       return 1;
     }
     if (distanceToCamera < 13) {
       return 2;
     }
-
     return 3;
   }
 
@@ -569,12 +570,11 @@ function Sun({ tile, ...props }) {
   const meshRef = useRef();
   const childMeshRef = useRef();
   var scene1 = new THREE.Scene();
-  const { gl, camera, scene, size } = useThree();
 
   //Use this to scale the sun
   var sphereGeometryScale;
 
-  var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(512, {
+  var cubeRenderTarget1 = new THREE.WebGLCubeRenderTarget(728, {
     format: THREE.RGBAFormat,
     generateMipmaps: true,
     minFilter: THREE.LinearMipmapLinearFilter,
@@ -624,8 +624,11 @@ function Sun({ tile, ...props }) {
 
   useFrame(({ gl, scene, camera }) => {
     scene.background = new THREE.Color(0x000d1c);
-    var lodLevel = CalculateLOD(camera.position, meshRef.current.position);
-    // console.log(lodLevel);
+    var cameraWorldPosition = new THREE.Vector3();
+    // console.log(camera);
+    cameraWorldPosition.copy(camera.position);
+    camera.localToWorld(cameraWorldPosition);
+    var lodLevel = CalculateLOD(cameraWorldPosition, meshRef.current.position);
     switch (lodLevel) {
       case 1:
         cubeCamera.renderTarget = cubeRenderTarget1;
@@ -712,6 +715,7 @@ function Sun({ tile, ...props }) {
           ></pointLight>
         </mesh>
       </mesh>
+      <OrbitControls />
       <SunWrap />
     </>
   );

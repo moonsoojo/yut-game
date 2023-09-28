@@ -1,5 +1,5 @@
 import React from "react";
-import Star from "./Star";
+import Star from "./StarBackup";
 import { useAtom } from "jotai";
 import { playAtom } from "./Experience";
 

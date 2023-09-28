@@ -4,7 +4,7 @@ import Yuts from "./Yuts";
 import YutsNew from "./YutsNew";
 // import YutsNew2 from "./YutsNew2";
 import YutsNew3 from "./YutsNew3";
-import Star from "./Star";
+import Star from "./StarBackup";
 import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
 import Rocket from "./Rocket";
