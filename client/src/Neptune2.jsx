@@ -1,132 +1,19 @@
 import { useGLTF } from "@react-three/drei";
-import { useRef, useState, useEffect, useMemo } from "react";
-import Rocket from "./Rocket";
-import Ufo from "./Ufo";
+import { useRef } from "react";
 import HelperArrow from "./HelperArrow";
-import { useSelector, useDispatch } from "react-redux";
-import { placePiece } from "./state/gameSlice.js";
 import React from "react";
 import NeptuneParticles from "./NeptuneParticles";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, tilesAtom, socket } from "./SocketManager";
-import { useAtom } from "jotai";
-import layout from "./layout";
+import Tile from "./components/Tile";
 
-export default function Neptune2({ position, tile, device = "mobile" }) {
+export default function Neptune2({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
-
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
-  const [selection] = useAtom(selectionAtom);
-  const [tiles] = useAtom(tilesAtom);
-  // const setPiece = useRocketStore((state) => state.setPiece);
-  // const tiles = useRocketStore((state) => state.tiles);
-
-  const wrapperMatRef = useRef();
-  const neptuneGroupRef = useRef();
+  const neptune = useRef();
 
   useFrame((state, delta) => {
-    neptuneGroupRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+    neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
-
-  function handlePointerEnter(event) {
-    event.stopPropagation();
-    document.body.style.cursor = "pointer";
-    // earth1Ref.current.material.color.r += 0.1;
-    // waterMatRef.current.color.r += 1;
-    wrapperMatRef.current.opacity += 0.5;
-  }
-
-  function handlePointerLeave(event) {
-    event.stopPropagation();
-    document.body.style.cursor = "default";
-    // earth1Ref.current.material.color.r -= 0.1;
-    // waterMatRef.current.color.r -= 1;
-    wrapperMatRef.current.opacity -= 0.5;
-  }
-
-  function handlePointerDown(event) {
-    event.stopPropagation();
-    if (selection == null) {
-      // setSelection({ type: "tile", tile });
-      socket.emit("select", { type: "tile", tile });
-    } else {
-      if (selection.tile != tile) {
-        // setPiece({ destination: tile });
-        socket.emit("placePiece", tile);
-      }
-      // setSelection(null);
-      socket.emit("select", null);
-    }
-  }
-
-  const rocketPositions = [
-    [0, 0.55, 0],
-    [0, 0.55, -0.4],
-    [-0.4, 0.55, 0],
-    [-0.4, 0.55, -0.4],
-  ];
-
-  const ufoPositions = [
-    [0, 0.3, 0.2],
-    [0, 0.3, -0.2],
-    [-0.3, 0.3, 0.2],
-    [-0.3, 0.3, -0.2],
-  ];
-
-  function Piece() {
-    if (tiles[tile][0].team == 1) {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Rocket
-              position={rocketPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={1}
-              id={value.id}
-              key={index}
-              scale={layout[device].mars.rocketScale}
-            />
-          ))}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {tiles[tile].map((value, index) => (
-            <Ufo
-              position={ufoPositions[index]}
-              keyName={`count${index}`}
-              tile={tile}
-              team={0}
-              id={value.id}
-              key={index}
-              scale={layout[device].mars.ufoScale}
-            />
-          ))}
-        </>
-      );
-    }
-  }
-
-  function NeptuneWrap() {
-    return (
-      <mesh
-        castShadow
-        visible={true}
-        onPointerDown={(event) => handlePointerDown(event)}
-        onPointerEnter={(event) => handlePointerEnter(event)}
-        onPointerLeave={(event) => handlePointerLeave(event)}
-      >
-        <sphereGeometry args={[3.5, 32, 16]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
-      </mesh>
-    );
-  }
 
   const {
     countNeptune1,
@@ -204,16 +91,8 @@ export default function Neptune2({ position, tile, device = "mobile" }) {
   });
 
   return (
-    <group
-      position={position}
-      scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? 1.3
-          : 1
-      }
-    >
-      {tiles[tile].length != 0 && <Piece />}
-      <group ref={neptuneGroupRef} scale={0.2}>
+    <group position={position}>
+      <group ref={neptune} scale={0.2}>
         <mesh
           castShadow
           receiveShadow
@@ -236,13 +115,13 @@ export default function Neptune2({ position, tile, device = "mobile" }) {
           countSparkles1={countSparkles1}
           countSparkles2={countSparkles2}
         />
-        <NeptuneWrap />
       </group>
       <HelperArrow
         position={[0.5, 0, -0.5]}
         rotation={[Math.PI / 2, 0, (5 * Math.PI) / 4]}
         scale={0.9}
       />
+      <Tile tileIndex={tile} wrapperRadius={0.4} />
     </group>
   );
 }

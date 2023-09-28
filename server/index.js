@@ -41,13 +41,11 @@ io.on("connection", (socket) => {
   io.emit("selection", selection);
 
   socket.on("select", (payload) => {
-    console.log("[server][select]", payload);
     selection = payload;
     io.emit("select", selection);
   });
 
   socket.on("placePiece", (destination) => {
-    console.log(destination);
     let starting =
       selection != null && selection.type === "piece" ? true : false;
     let piecesIncoming;

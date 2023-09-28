@@ -15,7 +15,7 @@ export default function Rocket({
   tile,
   team,
   id,
-  scale = 0.009,
+  scale = 1,
 }) {
   const { scene, materials, animations } = useGLTF(
     "/models/rockets/rocket-with-astronaut0.glb"
@@ -33,12 +33,13 @@ export default function Rocket({
   const rocketPart1Ref = useRef();
   const wrapperMatRef = useRef();
 
+  const adjustedPosition = [position[0], position[1] + 0.2, position[2] - 0.5];
   useFrame((state, delta) => {
     if (tile >= 0) {
       flameRef.current.scale.y =
         4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocketRef.current.position.y =
-        position[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
+        adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
     }
   });
 
@@ -74,7 +75,7 @@ export default function Rocket({
   }
 
   const wrapPosition = [0, -0.4, 0.4];
-  const adjustedPosition = [position[0], position[1] + 0.5, position[2] - 0.5];
+
   return (
     <group
       position={adjustedPosition}

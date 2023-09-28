@@ -1,10 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import Yuts from "./Yuts";
-import YutsNew from "./YutsNew";
-// import YutsNew2 from "./YutsNew2";
 import YutsNew3 from "./YutsNew3";
-import Star from "./StarBackup";
+import Star from "./Star";
 import Neptune2 from "./Neptune2";
 import Earth from "./Earth";
 import Rocket from "./Rocket";
@@ -18,8 +15,6 @@ import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
 import layout from "./layout";
 import React from "react";
-import ScoreButton from "./ScoreButton";
-import ResetButton from "./ResetButton";
 import { Leva, useControls } from "leva";
 import {
   Environment,
@@ -88,7 +83,13 @@ export default function Experience() {
       if (i == 0) {
         tiles.push(<Earth position={position} tile={i} key={i} />);
       } else if (i == 5) {
-        tiles.push(<Mars position={position} tile={i} key={i} />);
+        tiles.push(
+          <Mars
+            position={[position[0], position[1], position[2]]}
+            tile={i}
+            key={i}
+          />
+        );
       } else if (i == 10) {
         tiles.push(<Saturn position={position} tile={i} key={i} />);
       } else if (i == 15) {
@@ -544,11 +545,11 @@ export default function Experience() {
           position={[0, -0.5, 0]}
           friction={0.9}
         >
-          <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
-          {/* <mesh>
-            <boxGeometry args={[8, 1, 8]} />
-            <meshStandardMaterial transparent opacity={0.3} />
-          </mesh> */}
+          <CuboidCollider args={[8, 0.5, 8]} restitution={0.2} friction={1} />
+          <mesh>
+            <boxGeometry args={[16, 1, 16]} />
+            <meshStandardMaterial transparent opacity={0.1} />
+          </mesh>
         </RigidBody>
         {/* <YutsNew /> */}
         {/* <Yuts /> */}

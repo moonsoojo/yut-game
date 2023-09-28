@@ -32,20 +32,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [sleepCount, setSleepCount] = useState(0);
   // const [throwVisible, setThrowVisible] = useState(false);
   const [throwVisible] = useAtom(throwVisibleFlagAtom);
-  const [throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
-  const [hoverThrowText, setHoverThrowText] = useState(false);
-
-  function handleThrowClick() {
-    socket.emit("throwVisibleFlag", false);
-    socket.emit("throwYuts");
-  }
+  const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
+  const [_hoverThrowText, setHoverThrowText] = useState(false);
 
   useEffect(() => {
     subscribeKeys(
       (state) => state.throw,
       (value) => {
         if (value) {
-          console.log("throw");
           socket.emit("throwVisibleFlag", false);
           socket.emit("throwYuts");
         }
@@ -54,7 +48,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, []);
 
   useEffect(() => {
-    console.log("yut throw values use effect");
     for (let i = 0; i < 4; i++) {
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
@@ -92,16 +85,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count + 1);
   }
 
-  function throwButtonPointerEnter() {
-    setHoverThrowText(true);
-    document.body.style.cursor = "pointer";
-  }
-
-  function throwButtonPointerOut() {
-    setHoverThrowText(false);
-    document.body.style.cursor = "default";
-  }
-
   return (
     <group {...props} dispose={null}>
       {throwVisible && (
@@ -129,7 +112,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             name={`yut${index}`}
             linearDamping={0.3}
             angularDamping={0.1} // when this value is high, yuts spinned more
-            scale={0.1}
+            scale={0.15}
             gravityScale={1.5}
             key={index}
             onSleep={onSleepHandler}
