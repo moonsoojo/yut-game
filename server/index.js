@@ -135,33 +135,27 @@ io.on("connection", (socket) => {
   });
 
   let positionsInHand = [
-    { x: -2, y: 1, z: 0 },
-    { x: 0, y: 1, z: 2 },
-    { x: 2, y: 1, z: 0 },
-    { x: 0, y: 1, z: -2 },
+    { x: -4, y: 1, z: -0.5 },
+    { x: -4, y: 1, z: -0.2 },
+    { x: -4, y: 1, z: 0.1 },
+    { x: -4, y: 1, z: 0.4 },
   ];
   let rotations = [
-    { x: 1, y: 1, z: 1, w: 0 },
+    { x: 1, y: 1, z: 1, w: 0.1 },
     { x: 2, y: 2, z: 2, w: 0 },
-    { x: -1, y: -1, z: -1, w: 0 },
+    { x: -1, y: -1, z: -1, w: 0.1 },
     { x: -2, y: -2, z: -2, w: 0 },
   ];
   socket.on("throwYuts", () => {
     const yutForceVectors = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
-        // rotation: {
-        //   x: generateRandomNumberInRange(3.14, 3.14),
-        //   y: generateRandomNumberInRange(3.14, 3.14),
-        //   z: generateRandomNumberInRange(3.14, 3.14),
-        //   w: 0,
-        // },
         rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(0.05, 0.01),
+        yImpulse: generateRandomNumberInRange(0.5, 0.1),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.00001, 0.000005),
-          y: generateRandomNumberInRange(0.0015, 0.0005),
-          z: generateRandomNumberInRange(0.00004, 0.00001),
+          x: generateRandomNumberInRange(0.0001, 0.1),
+          y: generateRandomNumberInRange(0.015, 0.00005),
+          z: generateRandomNumberInRange(0.0004, 0.0005),
         },
         positionInHand: positionsInHand[i],
       });

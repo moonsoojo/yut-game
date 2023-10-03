@@ -30,10 +30,10 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-backdo.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  // const [throwVisible, setThrowVisible] = useState(false);
   const [throwVisible] = useAtom(throwVisibleFlagAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
+  
 
   useEffect(() => {
     subscribeKeys(
