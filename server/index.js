@@ -3,7 +3,11 @@ import initialState from "./initialState.js";
 
 const io = new Server({
   cors: {
-    origin: ["http://localhost:5173", "http://192.168.86.158:5173"],
+    origin: [
+      "http://localhost:5173", 
+      "http://192.168.86.158:5173", // home
+      "http://192.168.1.181:5173" // home 2
+    ],
   },
 });
 

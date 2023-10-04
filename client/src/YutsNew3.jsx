@@ -49,6 +49,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
+      console.log('yut throw values', i)
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
       yuts[i].current.applyImpulse({
@@ -105,7 +106,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         return (
           <RigidBody
             ref={ref}
-            position={positionsInitial[index]}
+            // position={positionsInitial[index]}
+            position={[0,0,0]}
             colliders="hull"
             restitution={0.3}
             friction={0.6}
