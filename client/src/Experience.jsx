@@ -538,7 +538,7 @@ export default function Experience() {
         device={device}
       />
 
-      <Physics maxVelocityIterations={10}>
+      <Physics maxVelocityIterations={10} debug>
         <RigidBody
           type="fixed"
           restitution={0.01}

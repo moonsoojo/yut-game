@@ -24,10 +24,10 @@ const positionsInitial = [
 
 export default function YutsNew3({ device = "mobile", ...props }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
-  const nodes = useGLTF("/models/yut-regular-new.glb").nodes;
-  const materials = useGLTF("/models/yut-regular-new.glb").materials;
-  const nodesRhino = useGLTF("/models/yut-rhino-new.glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-rhino-new.glb").materials;
+  const nodes = useGLTF("/models/yut-regular.glb").nodes;
+  const materials = useGLTF("/models/yut-regular.glb").materials;
+  const nodesRhino = useGLTF("/models/yut-rhino.glb").nodes;
+  const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [throwVisible] = useAtom(throwVisibleFlagAtom);
@@ -124,15 +124,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
                 receiveShadow
                 geometry={nodes.Cube001.geometry}
                 material={materials["Material.002"]}
-                position={[0, 0, -0.004]}
+                position={[0, 0, -4.19]}
               />
             ) : (
               <mesh
                 castShadow
                 receiveShadow
                 geometry={nodesRhino.Cube002.geometry}
-                material={materialsRhino["Material.003"]}
-                position={[0, 0, -0.115]}
+                material={materialsRhino["Material.001"]}
               />
             )}
           </RigidBody>
