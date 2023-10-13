@@ -2,7 +2,7 @@ export default {
   mobile: {
     camera: {
       zoom: 40,
-      position: [1, 5, 0],
+      position: [3, 5, 0],
     },
     star: {
       scale: 2,

@@ -16,6 +16,8 @@ io.listen(3000);
 let selection = null;
 let tiles = JSON.parse(JSON.stringify(initialState.tiles));
 let pieces = JSON.parse(JSON.stringify(initialState.pieces));
+let numClientsYutsResting = 0
+let throwVisible = false
 const characters = [];
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -139,10 +141,10 @@ io.on("connection", (socket) => {
   });
 
   let positionsInHand = [
+    { x: -4, y: 1, z: -1 },
     { x: -4, y: 1, z: -0.5 },
-    { x: -4, y: 1, z: -0.2 },
-    { x: -4, y: 1, z: 0.1 },
-    { x: -4, y: 1, z: 0.4 },
+    { x: -4, y: 1, z: 0.5 },
+    { x: -4, y: 1, z: 1 },
   ];
   let rotations = [
     { x: 1, y: 1, z: 1, w: 0.1 },
@@ -155,21 +157,29 @@ io.on("connection", (socket) => {
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
         rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(0.5, 0.1),
+        yImpulse: generateRandomNumberInRange(0.4, 0.01),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.0001, 0.1),
-          y: generateRandomNumberInRange(0.015, 0.00005),
-          z: generateRandomNumberInRange(0.0004, 0.0005),
+          x: generateRandomNumberInRange(0.00005, 0.0001),
+          y: generateRandomNumberInRange(0.0075, 0.05),
+          z: generateRandomNumberInRange(0.0002, 0.0025),
         },
         positionInHand: positionsInHand[i],
       });
     }
+    numClientsYutsResting = 0
+    throwVisible = false
+    io.emit("throwVisibleFlag", throwVisible);
     io.emit("throwYuts", yutForceVectors);
   });
 
-  socket.on("throwVisibleFlag", (value) => {
-    io.emit("throwVisibleFlag", value);
-  });
+  socket.on("clientYutsResting", () => {
+    numClientsYutsResting++;
+    if (numClientsYutsResting == characters.length) {
+      console.log("[clientYutsResting] all clients' yuts")
+      throwVisible = true
+      io.emit("throwVisibleFlag", throwVisible);
+    }
+  })
 
   socket.on("reset", () => {
     tiles = JSON.parse(JSON.stringify(initialState.tiles));

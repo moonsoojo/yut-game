@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 
-export const socket = io("http://192.168.86.158:3000");
+export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000
 export const throwVisibleFlagAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
@@ -15,8 +15,8 @@ export const yutThrowValuesAtom = atom([
     },
     positionInHand: {
       x: -6,
-      y: 3,
-      z: -1.5,
+      y: 1.9,
+      z: -1,
     },
   },
   {
@@ -29,8 +29,8 @@ export const yutThrowValuesAtom = atom([
     },
     positionInHand: {
       x: -6,
-      y: 3,
-      z: -0.5,
+      y: 2.5,
+      z: -0.3,
     },
   },
   {
@@ -43,8 +43,8 @@ export const yutThrowValuesAtom = atom([
     },
     positionInHand: {
       x: -6,
-      y: 3,
-      z: 0.5,
+      y: 2,
+      z: 0.4,
     },
   },
   {
@@ -57,8 +57,8 @@ export const yutThrowValuesAtom = atom([
     },
     positionInHand: {
       x: -6,
-      y: 3,
-      z: 1.5,
+      y: 4,
+      z: 1,
     },
   },
 ]);

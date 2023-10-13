@@ -24,10 +24,10 @@ const positionsInitial = [
 
 export default function YutsNew3({ device = "mobile", ...props }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
-  const nodes = useGLTF("/models/yut-regular-new.glb").nodes;
-  const materials = useGLTF("/models/yut-regular-new.glb").materials;
-  const nodesRhino = useGLTF("/models/yut-rhino-new.glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-rhino-new.glb").materials;
+  const nodes = useGLTF("/models/yut.glb").nodes;
+  const materials = useGLTF("/models/yut.glb").materials;
+  const nodesRhino = useGLTF("/models/yut-rhino.glb").nodes;
+  const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [throwVisible] = useAtom(throwVisibleFlagAtom);
@@ -65,8 +65,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
+    console.log("[useEffect] sleepCount", sleepCount)
     if (sleepCount % 4 == 0 && sleepCount > 0) {
-      socket.emit("throwVisibleFlag", true);
+      socket.emit("clientYutsResting");
     }
   }, [sleepCount]);
 
@@ -75,14 +76,15 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setHoverThrowText(false);
   }, [throwVisible]);
 
-  const yut = useRef();
-  const yut2 = useRef();
-  const yut3 = useRef();
-  const yut4 = useRef();
-  const yuts = [yut, yut2, yut3, yut4];
+  const NUM_YUTS = 4
+  let yuts = []
+  for (let i = 0; i < NUM_YUTS; i++) {
+    yuts.push(useRef())
+  }
 
   function onSleepHandler() {
     setSleepCount((count) => count + 1);
+    console.log("[onSleepHandler]", sleepCount)
   }
 
   return (
@@ -105,7 +107,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         return (
           <RigidBody
             ref={ref}
-            // position={positionsInitial[index]}
             position={[0, 0, 0]}
             colliders="hull"
             restitution={0.3}
@@ -122,18 +123,29 @@ export default function YutsNew3({ device = "mobile", ...props }) {
               <mesh
                 castShadow
                 receiveShadow
-                geometry={nodes.Cube001.geometry}
-                material={materials["Material.002"]}
-                position={[0, 0, -0.004]}
+                geometry={nodes.Cylinder005.geometry}
+                material={materials["Texture wrap.003"]}
+                rotation={[0, 0, -Math.PI / 2]}
+                scale={[1, 6, 1]}
               />
             ) : (
-              <mesh
-                castShadow
-                receiveShadow
-                geometry={nodesRhino.Cube002.geometry}
-                material={materialsRhino["Material.003"]}
-                position={[0, 0, -0.115]}
-              />
+              <group
+                rotation={[0, 0, -Math.PI / 2]}
+                scale={[1, 6, 1]}
+              >
+                <mesh
+                  castShadow
+                  receiveShadow
+                  geometry={nodesRhino.Cylinder004_1.geometry}
+                  material={materialsRhino["Texture wrap.002"]}
+                />
+                <mesh
+                  castShadow
+                  receiveShadow
+                  geometry={nodesRhino.Cylinder004_2.geometry}
+                  material={materialsRhino["LOGO.001"]}
+                />
+              </group>
             )}
           </RigidBody>
         );
@@ -141,6 +153,3 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     </group>
   );
 }
-
-// useGLTF.preload("/models/yut-regular.glb");
-// useGLTF.preload("/models/yut-backdo.glb");
