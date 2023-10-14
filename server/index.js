@@ -14,11 +14,16 @@ const io = new Server({
 io.listen(3000);
 
 let selection = null;
-let tiles = JSON.parse(JSON.stringify(initialState.tiles));
+let tiles = initialState.tiles;
 let pieces = JSON.parse(JSON.stringify(initialState.pieces));
-let numClientsYutsResting = 0
+let teams = JSON.parse(JSON.stringify(initialState.teams));
+let turn = JSON.parse(JSON.stringify(initialState.turn));
+let numClientsYutsResting = initialState.numClientsYutsResting
 let throwVisible = false
+let hostId = null;
 const characters = [];
+// mock for multiplayer
+let mockTeam = 0
 
 const generateRandomNumberInRange = (num, plusMinus) => {
   return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
@@ -32,6 +37,27 @@ const generateRandomHexColor = () => {
   return "#" + Math.floor(Math.random() * 16777215).toString(16);
 };
 
+function makeId(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+function mockAssignTeams(mockTeam) {
+  if (mockTeam == 0) {
+    mockTeam = 1
+  } else {
+    mockTeam = 0
+  }
+  return mockTeam
+}
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -41,10 +67,44 @@ io.on("connection", (socket) => {
     color: generateRandomHexColor(),
   });
 
+  if (hostId == null) {
+    hostId = socket.id
+  }
+
+  // represent new player
+  // team is chosen by player from UI
+  // name is chosen by player from UI
+  let newPlayer = JSON.parse(JSON.stringify(initialState.player));
+  newPlayer.team = mockTeam // it starts at 1
+  //mockTeam = mockAssignTeams(mockTeam) // this changes the value in the object
+  // mock assigning a name 
+  newPlayer.displayName = makeId(5)
+  newPlayer.id = socket.id
+  newPlayer.index = teams[mockTeam].players.length
+  teams[mockTeam].players.push(newPlayer)
+  // mock assigning teams
+  mockTeam = mockAssignTeams(mockTeam)
+
+  // mock assign "host" to display 'start game' button
+  let numPlayers = 0
+  for (let i = 0; i < 2; i++) {
+    console.log("numPlayers", numPlayers)
+    numPlayers += teams[i].players.length
+  }
+  if (numPlayers >= 2) {
+    console.log("ready to start")
+    io.to(hostId).emit("readyToStart");
+  }
+
   io.emit("characters", characters);
   io.emit("pieces", pieces);
   io.emit("tiles", tiles);
   io.emit("selection", selection);
+  io.emit("teams", teams);
+
+  socket.on("startGame", () => {
+    io.emit("turn", turn)
+  })
 
   socket.on("select", (payload) => {
     selection = payload;

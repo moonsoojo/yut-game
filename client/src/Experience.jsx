@@ -35,7 +35,7 @@ import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
-import { piecesAtom, selectionAtom, socket } from "./SocketManager";
+import { piecesAtom, selectionAtom, readyToStartAtom, socket } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
 
@@ -60,6 +60,7 @@ export default function Experience() {
 
   const [pieces] = useAtom(piecesAtom);
   const [selection] = useAtom(selectionAtom);
+  const [readyToStart] = useAtom(readyToStartAtom);
 
   const numTiles = 29;
 
@@ -168,17 +169,6 @@ export default function Experience() {
         tile={22}
       />
     );
-    // tiles.push(
-    //   <SunTemp position={[0, 0, 0]} scale={0.8} key={100} tile={22} />
-    // );
-
-    // <SunBagus
-    //   position={[0, 0, 0]}
-    //   intensity={3}
-    //   scale={0.4}
-    //   key={100}
-    //   tile={22}
-    // />
     return tiles;
   }
 
@@ -187,7 +177,6 @@ export default function Experience() {
     let positionStartY = layout[device].piecesTeam0.positionStartY;
     let positionStartZ = layout[device].piecesTeam0.positionStartZ;
     let space = layout[device].piecesTeam0.space;
-
     return (
       <>
         {pieces[0].map((value, index) =>
@@ -544,14 +533,12 @@ export default function Experience() {
           position={[0, -0.5, 0]}
           friction={0.9}
         >
-          <CuboidCollider args={[8, 0.5, 8]} restitution={0.2} friction={1} />
+          <CuboidCollider args={[30, 0.5, 30]} restitution={0.2} friction={1} />
           <mesh>
-            <boxGeometry args={[16, 1, 16]} />
-            <meshStandardMaterial transparent opacity={0.1} />
+            <boxGeometry args={[60, 1, 60]} />
+            <meshStandardMaterial transparent opacity={0} />
           </mesh>
         </RigidBody>
-        {/* <YutsNew /> */}
-        {/* <Yuts /> */}
         <YutsNew3 device={device} />
         <Tiles />
 
@@ -594,6 +581,16 @@ export default function Experience() {
           boxWidth={1.2}
           boxHeight={0.3}
         />
+        {/* START GAME text */}
+        { readyToStart &&
+          <TextButton
+            text="Start Game"
+            position={layout[device].startGameBanner.position}
+            rotation={layout[device].startGameBanner.rotation}
+            boxWidth={1.2}
+            boxHeight={0.3}
+            // handlePointerClick={}
+          /> }
       </Physics>
       <Moon />
     </>

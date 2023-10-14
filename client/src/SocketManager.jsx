@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
+import initialState from "../../server/initialState";
 
 export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000
 export const throwVisibleFlagAtom = atom(false);
@@ -62,18 +63,23 @@ export const yutThrowValuesAtom = atom([
     },
   },
 ]);
-
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
-export const piecesAtom = atom([]);
-export const tilesAtom = atom([]);
+export const piecesAtom = atom(JSON.parse(JSON.stringify(initialState.pieces)));
+export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
+export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
+export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
+export const readyToStartAtom = atom(false);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
   const [_pieces, setPieces] = useAtom(piecesAtom);
+  const [_teams, setTeams] = useAtom(teamsAtom);
+  const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
+  const [_turn, setTurn] = useAtom(turnAtom);
   const [_throwVisibleFlag, setThrowVisibleFlag] =
     useAtom(throwVisibleFlagAtom);
 
@@ -99,6 +105,10 @@ export const SocketManager = () => {
     function onTiles(value) {
       setTiles(value);
     }
+    function onTeams(value) {
+      console.log("[SocketManager][onTeams]", value)
+      setTeams(value);
+    }
     function onPlacePiece({ tiles, pieces }) {
       setTiles(tiles);
       setPieces(pieces);
@@ -118,6 +128,10 @@ export const SocketManager = () => {
       setPieces(pieces);
       setSelection(selection);
     }
+    function onReadyToStart() {
+      console.log("[SocketManager][onReadyToStart]")
+      setReadyToStart(true)
+    }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
@@ -126,11 +140,13 @@ export const SocketManager = () => {
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
     socket.on("pieces", onPieces);
+    socket.on("teams", onTeams);
     socket.on("placePiece", onPlacePiece);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
     socket.on("throwVisibleFlag", onThrowVisibleFlag);
     socket.on("reset", onReset);
+    socket.on("readyToStart", onReadyToStart);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -139,10 +155,12 @@ export const SocketManager = () => {
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
       socket.off("pieces", onPieces);
+      socket.off("teams", onTeams);
       socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
       socket.off("yutThrow", onYutThrow);
       socket.off("reset", onReset);
+      socket.off("readyToStart", onReadyToStart);
     };
   }, []);
 };

@@ -43,6 +43,10 @@ export default {
       position: [3, 0, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    startGameBanner: {
+      position: [-6, 0, -2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
     scoreButton: {
       position: [3, -2, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
@@ -119,6 +123,10 @@ export default {
     startBanner: {
       position: [2.7, -1.2, -2.5],
       rotation: [0, Math.PI / 2, 0],
+    },
+    startGameBanner: {
+      position: [-6, 0, -2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     scoreButton: {
       position: [-3, -3.5, -5],
