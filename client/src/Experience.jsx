@@ -35,7 +35,7 @@ import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
-import { piecesAtom, selectionAtom, readyToStartAtom, socket } from "./SocketManager";
+import { piecesAtom, selectionAtom, readyToStartAtom, teamsAtom, socket } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
 
@@ -61,6 +61,7 @@ export default function Experience() {
   const [pieces] = useAtom(piecesAtom);
   const [selection] = useAtom(selectionAtom);
   const [readyToStart] = useAtom(readyToStartAtom);
+  const [teams] = useAtom(teamsAtom);
 
   const numTiles = 29;
 
@@ -591,6 +592,53 @@ export default function Experience() {
             boxHeight={0.3}
             // handlePointerClick={}
           /> }
+        <group             
+          position={layout[device].team0Banner.position}
+          rotation={layout[device].team0Banner.rotation}
+        >
+          <TextButton
+            text="Team 0"
+            boxWidth={1.2}
+            boxHeight={0.3}
+            color="turquoise"
+          />
+          { teams[0].players.map((value, index) => 
+            <TextButton 
+              text={value.displayName}
+              position={[0, -0.5 * (1 + index), 0]}
+            />)}
+          {/* <TextButton
+            text="Join"
+            position={layout[device].joinTeam0Banner.position}
+            rotation={layout[device].joinTeam0Banner.rotation}
+            boxWidth={1.2}
+            boxHeight={0.3}
+          /> */}
+        </group>
+        <group
+          position={layout[device].team1Banner.position}
+          rotation={layout[device].team1Banner.rotation}
+        >
+          <TextButton
+            text="Team 1"
+
+            boxWidth={1.2}
+            boxHeight={0.3}
+            color="red"
+          />
+          { teams[1].players.map((value, index) => 
+            <TextButton 
+              text={value.displayName}
+              position={[0, -0.5 * (1 + index), 0]}
+            />)}
+          {/* <TextButton
+            text="Join"
+            position={layout[device].joinTeam1Banner.position}
+            rotation={layout[device].joinTeam1Banner.rotation}
+            boxWidth={1.2}
+            boxHeight={0.3}
+          /> */}
+        </group>
       </Physics>
       <Moon />
     </>

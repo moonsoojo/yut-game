@@ -79,6 +79,22 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
+    team0Banner: {
+      position: [5, 0, 4],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    team1Banner: {
+      position: [5, 0, 2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    joinTeam0Banner:  {
+      position: [5.5, 0, 4],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    joinTeam1Banner:  {
+      position: [5.5, 0, 2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
   },
   desktop: {
     camera: {
@@ -159,6 +175,22 @@ export default {
     },
     scoreDetailsButton: {
       position: [0, -2, 0],
+    },
+    team0Banner: {
+      position: [5, 0, 4],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    team1Banner: {
+      position: [5, 0, 2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    joinTeam0Banner:  {
+      position: [5.5, 0, 4],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    joinTeam1Banner:  {
+      position: [5.5, 0, 2],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
   },
 };

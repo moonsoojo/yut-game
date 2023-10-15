@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Text3D } from "@react-three/drei";
 
 export default function TextButton({
-  position,
-  rotation,
+  position=[0,0,0],
+  rotation=[0,0,0],
   handlePointerClick,
   text,
   boxWidth,
   boxHeight,
+  color="yellow"
 }) {
   const [hover, setHover] = useState(false);
 
@@ -39,7 +40,7 @@ export default function TextButton({
         </mesh>
       )}
       <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
-        {text} <meshStandardMaterial color={hover ? "white" : "yellow"} />
+        {text} <meshStandardMaterial color={hover ? "white" : color} />
       </Text3D>
     </group>
   );

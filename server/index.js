@@ -58,6 +58,27 @@ function mockAssignTeams(mockTeam) {
   return mockTeam
 }
 
+function removePlayerFromGame(teams, socketId) {
+  for (let i = 0; i < teams.length; i++) {
+    for (let j = 0; j < teams[i].players.length; j++) {
+      if (teams[i].players[j].socketId === socketId) {
+        teams[i].players.splice(j, 1)
+      }
+    }
+  }
+  return teams
+}
+
+function countPlayers(teams) {
+  let count = 0
+  for (let i = 0; i < teams.length; i++) {
+    for (let j = 0; j < teams[i].players.length; j++) {
+      count++
+    }
+  }
+  return count
+}
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -79,7 +100,7 @@ io.on("connection", (socket) => {
   //mockTeam = mockAssignTeams(mockTeam) // this changes the value in the object
   // mock assigning a name 
   newPlayer.displayName = makeId(5)
-  newPlayer.id = socket.id
+  newPlayer.socketId = socket.id
   newPlayer.index = teams[mockTeam].players.length
   teams[mockTeam].players.push(newPlayer)
   // mock assigning teams
@@ -92,7 +113,6 @@ io.on("connection", (socket) => {
     numPlayers += teams[i].players.length
   }
   if (numPlayers >= 2) {
-    console.log("ready to start")
     io.to(hostId).emit("readyToStart");
   }
 
@@ -258,6 +278,15 @@ io.on("connection", (socket) => {
       characters.findIndex((characters) => characters.id === socket.id),
       1
     );
+
+
+
+    teams = removePlayerFromGame(teams, socket.id)
     io.emit("characters", characters);
+    io.emit("teams", teams)
+
+    if (countPlayers(teams) == 0) {
+      hostId = null;
+    }
   });
 });
