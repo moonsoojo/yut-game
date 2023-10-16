@@ -90,9 +90,6 @@ export const SocketManager = () => {
     function onDisconnect() {
       console.log("disconnected");
     }
-    function onHello() {
-      console.log("hello");
-    }
     function onSelect(value) {
       setSelection(value);
     }
@@ -106,7 +103,6 @@ export const SocketManager = () => {
       setTiles(value);
     }
     function onTeams(value) {
-      console.log("[SocketManager][onTeams]", value)
       setTeams(value);
     }
     function onPlacePiece({ tiles, pieces }) {
@@ -128,14 +124,19 @@ export const SocketManager = () => {
       setPieces(pieces);
       setSelection(selection);
     }
-    function onReadyToStart() {
+    function onReadyToStart(flag) {
       console.log("[SocketManager][onReadyToStart]")
-      setReadyToStart(true)
+      setReadyToStart(flag)
+    }
+    function onTurn(turn) {
+      setTurn(turn)
+    }
+    function onTakeTurn() {
+      setThrowVisibleFlag(true)
     }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("hello", onHello);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
@@ -147,10 +148,11 @@ export const SocketManager = () => {
     socket.on("throwVisibleFlag", onThrowVisibleFlag);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
+    socket.on("turn", onTurn)
+    socket.on("takeTurn", onTakeTurn)
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("hello", onHello);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
@@ -161,6 +163,8 @@ export const SocketManager = () => {
       socket.off("yutThrow", onYutThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
+      socket.off("turn", onTurn)
+      socket.off("takeTurn", onTakeTurn)
     };
   }, []);
 };

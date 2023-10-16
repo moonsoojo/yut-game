@@ -79,6 +79,28 @@ function countPlayers(teams) {
   return count
 }
 
+function passTurn(turn, teams) {
+  if (turn.team == -1) {
+    turn.team = 0
+  } else {
+    if (turn.team == teams.length - 1) {
+      turn.team = 0
+    } else {
+      turn.team++
+    }
+  }
+  if (turn.players[turn.team] == -1) {
+    turn.players[turn.team] = 0
+  } else {
+    if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
+      turn.players[turn.team] = 0
+    } else {
+      turn.players[turn.team]++
+    }
+  }
+  return turn
+}
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -103,17 +125,13 @@ io.on("connection", (socket) => {
   newPlayer.socketId = socket.id
   newPlayer.index = teams[mockTeam].players.length
   teams[mockTeam].players.push(newPlayer)
+
   // mock assigning teams
   mockTeam = mockAssignTeams(mockTeam)
 
   // mock assign "host" to display 'start game' button
-  let numPlayers = 0
-  for (let i = 0; i < 2; i++) {
-    console.log("numPlayers", numPlayers)
-    numPlayers += teams[i].players.length
-  }
-  if (numPlayers >= 2) {
-    io.to(hostId).emit("readyToStart");
+  if (countPlayers(teams) >= 2) {
+    io.to(hostId).emit("readyToStart", true);
   }
 
   io.emit("characters", characters);
@@ -123,7 +141,19 @@ io.on("connection", (socket) => {
   io.emit("teams", teams);
 
   socket.on("startGame", () => {
+    turn = passTurn(turn, teams)
+    console.log("[server][startGame] turn", turn)
     io.emit("turn", turn)
+    io.to(hostId).emit("readyToStart", false);
+    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("takeTurn")
+  })
+
+  socket.on("endTurn", () => {
+    console.log("[server] endTurn")
+    // switch turn to next player
+    turn = passTurn(turn, teams)
+    io.emit("turn", turn)
+    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("takeTurn")
   })
 
   socket.on("select", (payload) => {

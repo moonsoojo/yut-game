@@ -57,7 +57,7 @@ export default {
   },
   turn: {
     team: -1,
-    player: -1
+    players: [-1, -1] // list of ints
   },
   tiles: [
     [],

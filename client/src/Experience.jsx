@@ -583,14 +583,14 @@ export default function Experience() {
           boxHeight={0.3}
         />
         {/* START GAME text */}
-        { readyToStart &&
+        { readyToStart && // should be set to 'false' after click
           <TextButton
             text="Start Game"
             position={layout[device].startGameBanner.position}
             rotation={layout[device].startGameBanner.rotation}
             boxWidth={1.2}
             boxHeight={0.3}
-            // handlePointerClick={}
+            handlePointerClick={ () => socket.emit("startGame")}
           /> }
         <group             
           position={layout[device].team0Banner.position}
