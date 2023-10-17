@@ -35,7 +35,7 @@ import * as THREE from "three";
 // import { useRocketStore } from "./state/zstore2";
 // import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
-import { piecesAtom, selectionAtom, readyToStartAtom, teamsAtom, socket } from "./SocketManager";
+import { piecesAtom, selectionAtom, readyToStartAtom, teamsAtom, turnAtom, socket } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
 
@@ -62,6 +62,7 @@ export default function Experience() {
   const [selection] = useAtom(selectionAtom);
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
+  const [turn] = useAtom(turnAtom)
 
   const numTiles = 29;
 
@@ -606,7 +607,12 @@ export default function Experience() {
             <TextButton 
               text={value.displayName}
               position={[0, -0.5 * (1 + index), 0]}
+              color={turn.team == 0 && turn.players[turn.team] == index? "white" : "yellow"}
             />)}
+          { turn.team == 0 && <TextButton               
+              text={`Throw: ${teams[turn.team].players[turn.players[turn.team]].throws}`}
+              position={[0, -0.5 * (1 + teams[0].players.length), 0]}
+            />}
           {/* <TextButton
             text="Join"
             position={layout[device].joinTeam0Banner.position}
@@ -621,7 +627,6 @@ export default function Experience() {
         >
           <TextButton
             text="Team 1"
-
             boxWidth={1.2}
             boxHeight={0.3}
             color="red"
@@ -630,7 +635,12 @@ export default function Experience() {
             <TextButton 
               text={value.displayName}
               position={[0, -0.5 * (1 + index), 0]}
+              color={turn.team == 1 && turn.players[turn.team] == index? "white" : "yellow"}
             />)}
+          { turn.team == 1 && <TextButton               
+              text={`Throw: ${teams[turn.team].players[turn.players[turn.team]].throws}`}
+              position={[0, -0.5 * (1 + teams[1].players.length), 0]}
+            />}
           {/* <TextButton
             text="Join"
             position={layout[device].joinTeam1Banner.position}

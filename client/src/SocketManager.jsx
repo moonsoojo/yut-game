@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
 export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000
-export const throwVisibleFlagAtom = atom(false);
+export const throwVisibleAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
     rotation: { x: 0, y: 0, z: 0, w: 0 },
@@ -80,8 +80,8 @@ export const SocketManager = () => {
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
-  const [_throwVisibleFlag, setThrowVisibleFlag] =
-    useAtom(throwVisibleFlagAtom);
+  const [_throwVisible, setThrowVisible] =
+    useAtom(throwVisibleAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -116,23 +116,22 @@ export const SocketManager = () => {
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
-    function onThrowVisibleFlag(flag) {
-      setThrowVisibleFlag(flag);
-    }
     function onReset({ tiles, pieces, selection }) {
       setTiles(tiles);
       setPieces(pieces);
       setSelection(selection);
     }
     function onReadyToStart(flag) {
-      console.log("[SocketManager][onReadyToStart]")
       setReadyToStart(flag)
     }
     function onTurn(turn) {
       setTurn(turn)
     }
     function onTakeTurn() {
-      setThrowVisibleFlag(true)
+      setThrowVisible(true)
+    }
+    function onThrowVisible(flag) {
+      setThrowVisible(flag);
     }
 
     socket.on("connect", onConnect);
@@ -145,7 +144,7 @@ export const SocketManager = () => {
     socket.on("placePiece", onPlacePiece);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
-    socket.on("throwVisibleFlag", onThrowVisibleFlag);
+    socket.on("throwVisible", onThrowVisible);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn)
@@ -160,7 +159,8 @@ export const SocketManager = () => {
       socket.off("teams", onTeams);
       socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
-      socket.off("yutThrow", onYutThrow);
+      socket.off("throwYuts", onYutThrow);
+      socket.off("throwVisible", onThrowVisible);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn)

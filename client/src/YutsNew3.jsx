@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React from "react";
 import {
   yutThrowValuesAtom,
-  throwVisibleFlagAtom,
+  throwVisibleAtom,
   socket,
 } from "./SocketManager";
 import { useAtom } from "jotai";
@@ -30,7 +30,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [throwVisible] = useAtom(throwVisibleFlagAtom);
+  const [throwVisible] = useAtom(throwVisibleAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
 
@@ -39,7 +39,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       (state) => state.throw,
       (value) => {
         if (value) {
-          socket.emit("throwVisibleFlag", false);
+          socket.emit("throwVisible", false);
           socket.emit("throwYuts");
         }
       }
@@ -72,7 +72,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [sleepCount]);
 
   useEffect(() => {
-    setThrowVisibleLocal(throwVisible);
+    setThrowVisibleLocal(throwVisible); // subscribing to change
     setHoverThrowText(false);
   }, [throwVisible]);
 
@@ -95,7 +95,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
           handlePointerClick={() => {
-            socket.emit("throwVisibleFlag", false);
+            socket.emit("throwVisible", false);
             socket.emit("throwYuts");
           }}
           boxWidth={1.4}

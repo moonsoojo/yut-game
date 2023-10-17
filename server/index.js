@@ -130,6 +130,8 @@ io.on("connection", (socket) => {
   mockTeam = mockAssignTeams(mockTeam)
 
   // mock assign "host" to display 'start game' button
+  // by default, it's hidden for everyone
+  io.emit("readyToStart", false);
   if (countPlayers(teams) >= 2) {
     io.to(hostId).emit("readyToStart", true);
   }
@@ -139,21 +141,34 @@ io.on("connection", (socket) => {
   io.emit("tiles", tiles);
   io.emit("selection", selection);
   io.emit("teams", teams);
+  io.emit("turn", turn)
+  io.emit("throwVisible", throwVisible)
+
+  socket.on("throwVisible", (flag) => {
+    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    io.to(currentPlayer.socketId).emit("throwVisible", flag)
+  })
 
   socket.on("startGame", () => {
     turn = passTurn(turn, teams)
-    console.log("[server][startGame] turn", turn)
     io.emit("turn", turn)
     io.to(hostId).emit("readyToStart", false);
-    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("takeTurn")
+    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    currentPlayer.throws++; // updates variable in 'teams'
+    io.emit("teams", teams)
+    io.to(currentPlayer.socketId).emit("throwVisible", true)
   })
 
+  // pass turn to next player
   socket.on("endTurn", () => {
-    console.log("[server] endTurn")
-    // switch turn to next player
     turn = passTurn(turn, teams)
     io.emit("turn", turn)
-    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("takeTurn")
+    // update throws for the team
+    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    currentPlayer.throws++;
+    console.log("[server][endTurn] teams", teams)
+    io.emit("teams", teams)
+    io.to(currentPlayer.socketId).emit("throwVisible", true)
   })
 
   socket.on("select", (payload) => {
@@ -280,14 +295,19 @@ io.on("connection", (socket) => {
     throwVisible = false
     io.emit("throwVisibleFlag", throwVisible);
     io.emit("throwYuts", yutForceVectors);
+    teams[turn.team].players[turn.players[turn.team]].throws--;
+    io.emit("teams", teams)
   });
 
   socket.on("clientYutsResting", () => {
     numClientsYutsResting++;
     if (numClientsYutsResting == characters.length) {
-      console.log("[clientYutsResting] all clients' yuts")
-      throwVisible = true
-      io.emit("throwVisibleFlag", throwVisible);
+      console.log("[clientYutsResting] all resting")
+      // record result
+      // if it's a 4 or a 5
+      // add to the throws
+      // if current player has more than 0 throws
+      // send message to him to display throw button again
     }
   })
 
@@ -308,8 +328,6 @@ io.on("connection", (socket) => {
       characters.findIndex((characters) => characters.id === socket.id),
       1
     );
-
-
 
     teams = removePlayerFromGame(teams, socket.id)
     io.emit("characters", characters);
