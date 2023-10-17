@@ -125,28 +125,24 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       receiveShadow
       geometry={nodes.Cylinder007.geometry}
       material={materials["Texture wrap.005"]}
-      position={[0, 0, -3.584]}
       rotation={[0, 0, -Math.PI / 2]}
       scale={[1, 6.161, 1]}
     />
             ) : (
-              <group
-                rotation={[0, 0, -Math.PI / 2]}
-                scale={[1, 6.161, 1]}
-              >
-                <mesh
-                  castShadow
-                  receiveShadow
-                  geometry={nodesRhino.Cylinder004_1.geometry}
-                  material={materialsRhino["Texture wrap.002"]}
-                />
-                <mesh
-                  castShadow
-                  receiveShadow
-                  geometry={nodesRhino.Cylinder004_2.geometry}
-                  material={materialsRhino["LOGO.001"]}
-                />
-              </group>
+              <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodesRhino.Cylinder002_1.geometry}
+                material={materialsRhino["Texture wrap.005"]}
+              />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodesRhino.Cylinder002_2.geometry}
+                material={materialsRhino.Rihno}
+              />
+            </group>
             )}
           </RigidBody>
         );
