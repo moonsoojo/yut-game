@@ -120,14 +120,15 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             onSleep={onSleepHandler}
           >
             {index != 0 ? (
-              <mesh
-                castShadow
-                receiveShadow
-                geometry={nodes.Cylinder005.geometry}
-                material={materials["Texture wrap.003"]}
-                rotation={[0, 0, -Math.PI / 2]}
-                scale={[1, 6.161, 1]}
-              />
+      <mesh
+      castShadow
+      receiveShadow
+      geometry={nodes.Cylinder007.geometry}
+      material={materials["Texture wrap.005"]}
+      position={[0, 0, -3.584]}
+      rotation={[0, 0, -Math.PI / 2]}
+      scale={[1, 6.161, 1]}
+    />
             ) : (
               <group
                 rotation={[0, 0, -Math.PI / 2]}
