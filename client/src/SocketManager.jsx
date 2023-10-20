@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
-export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000
+export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000
 export const throwVisibleAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
@@ -80,8 +80,7 @@ export const SocketManager = () => {
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
-  const [_throwVisible, setThrowVisible] =
-    useAtom(throwVisibleAtom);
+  const [_throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -122,13 +121,13 @@ export const SocketManager = () => {
       setSelection(selection);
     }
     function onReadyToStart(flag) {
-      setReadyToStart(flag)
+      setReadyToStart(flag);
     }
     function onTurn(turn) {
-      setTurn(turn)
+      setTurn(turn);
     }
     function onTakeTurn() {
-      setThrowVisible(true)
+      setThrowVisible(true);
     }
     function onThrowVisible(flag) {
       setThrowVisible(flag);
@@ -147,8 +146,8 @@ export const SocketManager = () => {
     socket.on("throwVisible", onThrowVisible);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
-    socket.on("turn", onTurn)
-    socket.on("takeTurn", onTakeTurn)
+    socket.on("turn", onTurn);
+    socket.on("takeTurn", onTakeTurn);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -163,8 +162,8 @@ export const SocketManager = () => {
       socket.off("throwVisible", onThrowVisible);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
-      socket.off("turn", onTurn)
-      socket.off("takeTurn", onTakeTurn)
+      socket.off("turn", onTurn);
+      socket.off("takeTurn", onTakeTurn);
     };
   }, []);
 };

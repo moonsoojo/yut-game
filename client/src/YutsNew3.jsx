@@ -4,11 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import {
-  yutThrowValuesAtom,
-  throwVisibleAtom,
-  socket,
-} from "./SocketManager";
+import { yutThrowValuesAtom, throwVisibleAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -65,7 +61,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    console.log("[useEffect] sleepCount", sleepCount)
+    console.log("[useEffect] sleepCount", sleepCount);
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("clientYutsResting");
     }
@@ -76,15 +72,15 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setHoverThrowText(false);
   }, [throwVisible]);
 
-  const NUM_YUTS = 4
-  let yuts = []
+  const NUM_YUTS = 4;
+  let yuts = [];
   for (let i = 0; i < NUM_YUTS; i++) {
-    yuts.push(useRef())
+    yuts.push(useRef());
   }
 
   function onSleepHandler() {
     setSleepCount((count) => count + 1);
-    console.log("[onSleepHandler]", sleepCount)
+    console.log("[onSleepHandler]", sleepCount);
   }
 
   return (
@@ -120,29 +116,29 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             onSleep={onSleepHandler}
           >
             {index != 0 ? (
-      <mesh
-      castShadow
-      receiveShadow
-      geometry={nodes.Cylinder007.geometry}
-      material={materials["Texture wrap.005"]}
-      rotation={[0, 0, -Math.PI / 2]}
-      scale={[1, 6.161, 1]}
-    />
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Cylinder007.geometry}
+                material={materials["Texture wrap.005"]}
+                rotation={[0, 0, -Math.PI / 2]}
+                scale={[1, 3, 1]}
+              />
             ) : (
               <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
-              <mesh
-                castShadow
-                receiveShadow
-                geometry={nodesRhino.Cylinder002_1.geometry}
-                material={materialsRhino["Texture wrap.005"]}
-              />
-              <mesh
-                castShadow
-                receiveShadow
-                geometry={nodesRhino.Cylinder002_2.geometry}
-                material={materialsRhino.Rihno}
-              />
-            </group>
+                <mesh
+                  castShadow
+                  receiveShadow
+                  geometry={nodesRhino.Cylinder002_1.geometry}
+                  material={materialsRhino["Texture wrap.005"]}
+                />
+                <mesh
+                  castShadow
+                  receiveShadow
+                  geometry={nodesRhino.Cylinder002_2.geometry}
+                  material={materialsRhino.Rihno}
+                />
+              </group>
             )}
           </RigidBody>
         );
