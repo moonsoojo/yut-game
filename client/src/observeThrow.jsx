@@ -2,7 +2,7 @@
 // a set of 2 angles per result each
 // you should know the result beforehand
 
-function observeThrow(yuts) {
+export default function observeThrow(yuts) {
     result = 0
     countUps = 0
     backdoUp = false
@@ -12,6 +12,7 @@ function observeThrow(yuts) {
             // countUps++
             // if yut.type == backdo
                 // backdoUp = true
+        console.log("[observeThrow] yut rotation", yut.current.rotation)
     }
     // if countUps == 0:
         // result = 5
@@ -22,7 +23,6 @@ function observeThrow(yuts) {
         // result = countUps
     return result
 }
-module.exports = observeThrow;
 
 // another test
 // set yuts at specified locations

@@ -64,6 +64,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     console.log("[useEffect] sleepCount", sleepCount);
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("clientYutsResting");
+      observeThrow(yuts)
     }
   }, [sleepCount]);
 
@@ -77,6 +78,34 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   for (let i = 0; i < NUM_YUTS; i++) {
     yuts.push(useRef());
   }
+
+  function observeThrow(yuts) {
+    let result = 0
+    let countUps = 0
+    let backdoUp = false
+    let z = 0
+    yuts.forEach(yut => {
+              // raycast from yut
+        // if it doesn't touch floor
+            // countUps++
+            // if yut.type == backdo
+                // backdoUp = true
+      console.log("[YutsNew3][observeThrow] yut rotation", yut.current.rotation())
+      yut.current.setRotation({x: 0, y: 1, z:0, w: 1})
+      yut.current.setTranslation({x: 0, y: 1, z: z})
+      z += 0.5
+      // [x,y,z] = v
+      // w = angle between a and b
+    });
+    // if countUps == 0:
+        // result = 5
+    // else if countUps == 1:
+        // if backdoUp == true:
+            // result = -1
+    // else:
+        // result = countUps
+    // return result
+}
 
   function onSleepHandler() {
     setSleepCount((count) => count + 1);

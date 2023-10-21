@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
-export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000
+export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 export const throwVisibleAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
