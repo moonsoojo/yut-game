@@ -11,13 +11,6 @@ import TextButton from "./components/TextButton";
 
 THREE.ColorManagement.legacyMode = false;
 
-const positionsInitial = [
-  [2, 1, 0],
-  [2, 2, 0],
-  [2, 3, 0],
-  [2, 4, 0],
-];
-
 export default function YutsNew3({ device = "mobile", ...props }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut.glb").nodes;
@@ -61,10 +54,10 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    console.log("[useEffect] sleepCount", sleepCount);
+    observeThrow(yuts)
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("clientYutsResting");
-      observeThrow(yuts)
+      // observeThrow(yuts)
     }
   }, [sleepCount]);
 
@@ -79,32 +72,37 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     yuts.push(useRef());
   }
 
+  let a = 0
   function observeThrow(yuts) {
     let result = 0
     let countUps = 0
     let backdoUp = false
-    let z = 0
+  
+    console.log("[observeThrow]")
     yuts.forEach(yut => {
-              // raycast from yut
-        // if it doesn't touch floor
-            // countUps++
-            // if yut.type == backdo
-                // backdoUp = true
-      console.log("[YutsNew3][observeThrow] yut rotation", yut.current.rotation())
-      yut.current.setRotation({x: 0, y: 1, z:0, w: 1})
-      yut.current.setTranslation({x: 0, y: 1, z: z})
-      z += 0.5
-      // [x,y,z] = v
-      // w = angle between a and b
+      var vector = new THREE.Vector3( 0, 1, 0 );
+      console.log("[YutsNew3] object.quaternion", yut.current.rotation())
+      vector.applyQuaternion( yut.current.rotation() );
+      console.log("[YutsNew3] vector", vector)
+      
+      if (vector.y < 0) {
+        countUps++
+        if (yut.current.userData.type === "backdo") {
+          backdoUp = true;
+        }
+      }
     });
-    // if countUps == 0:
-        // result = 5
-    // else if countUps == 1:
-        // if backdoUp == true:
-            // result = -1
-    // else:
-        // result = countUps
-    // return result
+    if (countUps == 0) {
+      result = 5
+    } else if (countUps == 1) {
+      if (backdoUp == true) {
+        result = -1
+      }
+    } else {
+      result = countUps
+    }
+    console.log("[observeThrow] result", result)
+    return result
 }
 
   function onSleepHandler() {
@@ -143,6 +141,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             gravityScale={1.5}
             key={index}
             onSleep={onSleepHandler}
+            userData={{type: index != 0 ? "regular" : "backdo"}}
           >
             {index != 0 ? (
               <mesh
