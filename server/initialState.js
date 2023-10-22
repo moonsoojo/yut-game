@@ -47,12 +47,12 @@ export default {
     team: -1,
     throws: 0,
     moves: {
-      "1-step": 0,
-      "2-steps": 0,
-      "3-steps": 0,
-      "4-steps": 0,
-      "5-steps": 0,
-      "back-1-step": 0
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "-1": 0
     }
   },
   turn: {

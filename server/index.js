@@ -19,6 +19,7 @@ let pieces = JSON.parse(JSON.stringify(initialState.pieces));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
 let numClientsYutsResting = initialState.numClientsYutsResting
+let gameStarted = false;
 let throwVisible = false
 let hostId = null;
 const characters = [];
@@ -157,6 +158,8 @@ io.on("connection", (socket) => {
     currentPlayer.throws++; // updates variable in 'teams'
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
+    gameStarted = true;
+    io.emit("gameStarted")
   })
 
   // pass turn to next player
@@ -303,11 +306,6 @@ io.on("connection", (socket) => {
     numClientsYutsResting++;
     if (numClientsYutsResting == characters.length) {
       console.log("[clientYutsResting] all resting")
-      // record result
-      // if it's a 4 or a 5
-      // add to the throws
-      // if current player has more than 0 throws
-      // send message to him to display throw button again
     }
   })
 
@@ -320,6 +318,17 @@ io.on("connection", (socket) => {
       selection: null,
     });
   });
+
+  socket.on("bonusThrow", () => {
+    teams[turn.team].players[turn.players[turn.team]].throws++;
+    io.emit("teams", teams)
+    // check this updates
+  })
+
+  socket.on("recordThrow", (result) => {
+    teams[turn.team].players[turn.players[turn.team]].moves[result.toString()]++
+    // display results
+  })
 
   socket.on("disconnect", () => {
     console.log("user disconnected");

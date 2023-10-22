@@ -70,6 +70,7 @@ export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const readyToStartAtom = atom(false);
+export const gameStartedAtom = atom(false);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -81,6 +82,7 @@ export const SocketManager = () => {
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
+  const [_gameStarted, setGameStarted] = useAtom(gameStartedAtom)
 
   useEffect(() => {
     function onConnect() {
@@ -132,6 +134,9 @@ export const SocketManager = () => {
     function onThrowVisible(flag) {
       setThrowVisible(flag);
     }
+    function onGameStarted() {
+      setGameStarted(true)
+    }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
@@ -148,6 +153,7 @@ export const SocketManager = () => {
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
     socket.on("takeTurn", onTakeTurn);
+    socket.on("gameStarted", onGameStarted);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -164,6 +170,7 @@ export const SocketManager = () => {
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
       socket.off("takeTurn", onTakeTurn);
+      socket.off("gameStarted", onGameStarted);
     };
   }, []);
 };

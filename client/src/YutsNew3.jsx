@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, throwVisibleAtom, socket } from "./SocketManager";
+import { yutThrowValuesAtom, throwVisibleAtom, gameStartedAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -26,6 +26,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [yut2Asleep, setYut2Asleep] = useState(false);
   const [yut3Asleep, setYut3Asleep] = useState(false);
   const [yut4Asleep, setYut4Asleep] = useState(false);
+  const [gameStarted] = useAtom(gameStartedAtom)
 
   useEffect(() => {
     subscribeKeys(
@@ -83,11 +84,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     let countUps = 0
     let backdoUp = false
     yuts.forEach(yut => {
-      var vector = new THREE.Vector3( 0, 1, 0 );
+      let vector = new THREE.Vector3( 0, 1, 0 );
       vector.applyQuaternion( yut.current.rotation() );
-      console.log("[YutsNew3] yut rotation", yut.current.rotation())
-      console.log("[YutsNew3] vector", vector)
-      
       if (vector.y < 0) {
         countUps++
         if (yut.current.userData.type === "backdo") {
@@ -107,19 +105,26 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       result = countUps
     }
     console.log("[observeThrow] result", result)
-    return result
+
+    if (gameStarted) {
+      socket.emit("recordThrow", result)
+      if (result == 4 || result == 5) {
+        socket.emit("bonusThrow");
+      }
+    }
+
+    // return result
 }
 
   function onSleepHandler(index) {
-    // setSleepCount((count) => count + 1);
     console.log("[onSleepHandler] index", index, "asleep");
     if (index == 0) {
       setYut1Asleep(true)
     } else if (index == 1) {
       setYut2Asleep(true)
-    } else    if (index == 2) {
+    } else if (index == 2) {
       setYut3Asleep(true)
-    }   else  if (index == 3) {
+    } else if (index == 3) {
       setYut4Asleep(true)
     }
   }
