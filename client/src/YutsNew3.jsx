@@ -22,6 +22,10 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [throwVisible] = useAtom(throwVisibleAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
+  const [yut1Asleep, setYut1Asleep] = useState(false);
+  const [yut2Asleep, setYut2Asleep] = useState(false);
+  const [yut3Asleep, setYut3Asleep] = useState(false);
+  const [yut4Asleep, setYut4Asleep] = useState(false);
 
   useEffect(() => {
     subscribeKeys(
@@ -36,8 +40,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, []);
 
   useEffect(() => {
+    setYut1Asleep(false);
+    setYut2Asleep(false);
+    setYut3Asleep(false);
+    setYut4Asleep(false);
     for (let i = 0; i < 4; i++) {
-      console.log("yut throw values", i);
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
       yuts[i].current.applyImpulse({
@@ -54,12 +61,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    observeThrow(yuts)
-    if (sleepCount % 4 == 0 && sleepCount > 0) {
+    if (yut1Asleep && yut2Asleep && yut3Asleep && yut4Asleep) {
       socket.emit("clientYutsResting");
-      // observeThrow(yuts)
+      observeThrow(yuts)
     }
-  }, [sleepCount]);
+  }, [yut1Asleep, yut2Asleep, yut3Asleep, yut4Asleep]);
 
   useEffect(() => {
     setThrowVisibleLocal(throwVisible); // subscribing to change
@@ -72,17 +78,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     yuts.push(useRef());
   }
 
-  let a = 0
   function observeThrow(yuts) {
     let result = 0
     let countUps = 0
     let backdoUp = false
-  
-    console.log("[observeThrow]")
     yuts.forEach(yut => {
       var vector = new THREE.Vector3( 0, 1, 0 );
-      console.log("[YutsNew3] object.quaternion", yut.current.rotation())
       vector.applyQuaternion( yut.current.rotation() );
+      console.log("[YutsNew3] yut rotation", yut.current.rotation())
       console.log("[YutsNew3] vector", vector)
       
       if (vector.y < 0) {
@@ -97,6 +100,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     } else if (countUps == 1) {
       if (backdoUp == true) {
         result = -1
+      } else {
+        result = countUps
       }
     } else {
       result = countUps
@@ -105,9 +110,22 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     return result
 }
 
-  function onSleepHandler() {
-    setSleepCount((count) => count + 1);
-    console.log("[onSleepHandler]", sleepCount);
+  function onSleepHandler(index) {
+    // setSleepCount((count) => count + 1);
+    console.log("[onSleepHandler] index", index, "asleep");
+    if (index == 0) {
+      setYut1Asleep(true)
+    } else if (index == 1) {
+      setYut2Asleep(true)
+    } else    if (index == 2) {
+      setYut3Asleep(true)
+    }   else  if (index == 3) {
+      setYut4Asleep(true)
+    }
+  }
+
+  function onWakeHandler(index) {
+    console.log("[onWakeHandler] index", index, "awake");
   }
 
   return (
@@ -130,17 +148,18 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         return (
           <RigidBody
             ref={ref}
-            position={[0, 0, 0]}
+            position={[0, 1, index]}
             colliders="hull"
             restitution={0.3}
             friction={0.6}
             name={`yut${index}`}
             linearDamping={0.3}
-            angularDamping={0.1} // when this value is high, yuts spinned more
+            angularDamping={0.1} // when this value is high, yuts spin more
             scale={0.15}
             gravityScale={1.5}
             key={index}
-            onSleep={onSleepHandler}
+            onSleep={() => onSleepHandler(index)} // add parentheses for event to stop multiple calls
+            onWake={() => onWakeHandler(index)}
             userData={{type: index != 0 ? "regular" : "backdo"}}
           >
             {index != 0 ? (
@@ -150,7 +169,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
                 geometry={nodes.Cylinder007.geometry}
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
-                scale={[1, 3, 1]}
+                scale={[1, 6.161, 1]}
               />
             ) : (
               <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
