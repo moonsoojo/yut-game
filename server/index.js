@@ -359,6 +359,9 @@ io.on("connection", (socket) => {
   socket.on("canEndTurn", () => {
     canEndTurn = true;
     io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", canEndTurn);
+    // all clients' yuts should be resting
+    // display status text based on 'teams' in client
+    
     if (gamePhase === "pregame") {
       // go through every team
       // if every team has a score
