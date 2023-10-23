@@ -654,7 +654,7 @@ export default function Experience() {
               }
             />
           ))}
-          {(turn.team == 0) && (
+          {(turn.team == 0 && gamePhase === "pregame" || gamePhase === "game") && (
             <>            
               <TextButton
                 text={`Throw: ${
@@ -703,7 +703,7 @@ export default function Experience() {
               }
             />
           ))}
-          {(turn.team == 1) && (
+          {(turn.team == 1 && gamePhase === "pregame" || gamePhase === "game") && (
             <>                          
               <TextButton
                 text={`Throw: ${
