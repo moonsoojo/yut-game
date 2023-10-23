@@ -18,8 +18,11 @@ let tiles = initialState.tiles;
 let pieces = JSON.parse(JSON.stringify(initialState.pieces));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
+let canEndTurn = false;
 let numClientsYutsResting = initialState.numClientsYutsResting
-let gameStarted = false;
+let clientYutResults = [];
+let gamePhase = "banter" // possible values: "banter", "pregame", "game"
+// let gameStarted = false;
 let throwVisible = false
 let hostId = null;
 const characters = [];
@@ -78,6 +81,12 @@ function countPlayers(teams) {
     }
   }
   return count
+}
+
+function setTurn(turn, team, players) {
+  turn.team = team;
+  turn.players = players;
+  return turn
 }
 
 function passTurn(turn, teams) {
@@ -153,13 +162,16 @@ io.on("connection", (socket) => {
   socket.on("startGame", () => {
     turn = passTurn(turn, teams)
     io.emit("turn", turn)
+    console.log("[server] turn", turn)
     io.to(hostId).emit("readyToStart", false);
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++; // updates variable in 'teams'
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
-    gameStarted = true;
-    io.emit("gameStarted")
+    // gameStarted = true;
+    gamePhase = "pregame"
+    // io.emit("gameStarted")
+    io.emit("gamePhase", gamePhase);
   })
 
   // pass turn to next player
@@ -172,6 +184,8 @@ io.on("connection", (socket) => {
     console.log("[server][endTurn] teams", teams)
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
+    canEndTurn = false;
+    io.emit("canEndTurn", canEndTurn);
   })
 
   socket.on("select", (payload) => {
@@ -282,6 +296,8 @@ io.on("connection", (socket) => {
   ];
   socket.on("throwYuts", () => {
     const yutForceVectors = [];
+    numClientsYutsResting = 0
+    clientYutResults = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
         rotation: rotations[i],
@@ -294,7 +310,7 @@ io.on("connection", (socket) => {
         positionInHand: positionsInHand[i],
       });
     }
-    numClientsYutsResting = 0
+    
     throwVisible = false
     io.emit("throwVisibleFlag", throwVisible);
     io.emit("throwYuts", yutForceVectors);
@@ -319,15 +335,89 @@ io.on("connection", (socket) => {
     });
   });
 
+  function checkThrowResultsMatch(results) {
+    let resultsMatch = "true";
+    let resultToMatch = results[0]
+    for (let i = 1; i < results.length; i++) {
+      if (resultToMatch !== results[i]) {
+        resultsMatch = "false";
+        break;
+      }
+    }
+    return resultsMatch
+  }
+
   socket.on("bonusThrow", () => {
-    teams[turn.team].players[turn.players[turn.team]].throws++;
-    io.emit("teams", teams)
-    // check this updates
+    console.log("[server] bonusThrow")
+    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
+      console.log("[server] bonusThrow, client yut results all in and throw results match")
+      teams[turn.team].players[turn.players[turn.team]].throws++;
+      io.emit("teams", teams)
+    }
+  })
+
+  socket.on("canEndTurn", () => {
+    canEndTurn = true;
+    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", canEndTurn);
+    if (gamePhase === "pregame") {
+      // go through every team
+      // if every team has a score
+      // get team with top score
+      // switch turn to them
+      let allTeamsHaveMove = true;
+      for (let i = 0; i < teams.length; i++) {
+        let hasMove = false;
+        for (let move in teams[i].moves) {
+          if (teams[i].moves[move] > 0) {
+            hasMove = true;
+            break;
+          }
+        }
+        if (!hasMove) {
+          allTeamsHaveMove = false;
+          break;
+        }
+      }
+      console.log("[server][canEndTurn] allTeamsHaveMove", allTeamsHaveMove)
+      if (allTeamsHaveMove) {
+        let topThrow = 0;
+        let topThrowTeam = -1;
+        let tie = false;
+        for (let i = 0; i < teams.length; i++) {
+          for (let move in teams[i].moves) {
+            if (teams[i].moves[move] > 0) {
+              if (teams[i].moves[move] > topThrow) {
+                topThrow = teams[i].moves[move]
+                topThrowTeam = i
+              } else if (teams[i].moves[move] == topThrow) {
+                tie = true;
+              }
+              break;
+            }
+          }
+          if (tie) {
+            // go again
+          } else {
+            console.log("first team to throw", topThrowTeam)
+            // turn = setTurn(turn, topThrow, [0, 0])
+            // io.emit("turn", turn)
+          }
+        }
+      }
+    }
   })
 
   socket.on("recordThrow", (result) => {
-    teams[turn.team].players[turn.players[turn.team]].moves[result.toString()]++
-    // display results
+    console.log("[server] recordThrow")
+    clientYutResults.push(result);
+    console.log("[server] recordThrow", clientYutResults.length, checkThrowResultsMatch(clientYutResults))
+      if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
+        console.log("[server] recordThrow, client yut results all in and throw results match")
+        teams[turn.team].moves[result.toString()]++
+        io.emit("teams", teams)
+      } else {
+        // throw again
+      }
   })
 
   socket.on("disconnect", () => {

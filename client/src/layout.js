@@ -59,6 +59,10 @@ export default {
       position: [3, -6, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    endTurnButton: {
+      position: [3, -8, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
     controlsButton: {
       position: [-3, 0, -5],
       rotation: [0, Math.PI / 2, 0],
@@ -148,13 +152,17 @@ export default {
       position: [-3, -3.5, -5],
       rotation: [0, Math.PI / 2, 0],
     },
+    resetButton: {
+      position: [2.7, -1.7, -2.5],
+      rotation: [0, Math.PI / 2, 0],
+    },
     throwButton: {
       position: [-3, -3, -5],
       rotation: [0, Math.PI / 2, 0],
     },
-    resetButton: {
-      position: [2.7, -1.7, -2.5],
-      rotation: [0, Math.PI / 2, 0],
+    endTurnButton: {
+      position: [3, -8, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     controlsButton: {
       position: [-3, 0, -5],

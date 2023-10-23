@@ -41,6 +41,8 @@ import {
   readyToStartAtom,
   teamsAtom,
   turnAtom,
+  gamePhaseAtom,
+  canEndTurnAtom,
   socket,
 } from "./SocketManager";
 import SunTemp from "./SunTemp";
@@ -70,6 +72,8 @@ export default function Experience() {
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [canEndTurn] = useAtom(canEndTurnAtom);
 
   const numTiles = 29;
 
@@ -473,6 +477,20 @@ export default function Experience() {
     gl.toneMappingExposure = exposure;
   }, [gl, scene, exposure]);
 
+  function prettifyMoves(moves) {
+    let prettifiedMoves = ""
+    for (let move in moves) {
+      for (let i = 0; i < moves[move]; i++) {
+        if (prettifiedMoves === "") {
+          prettifiedMoves = move
+        } else {
+          prettifiedMoves += `, ${move}`
+        }
+      }
+    }
+    return prettifiedMoves
+  }
+
   return (
     <>
       <OrthographicCamera
@@ -581,6 +599,20 @@ export default function Experience() {
           boxWidth={1.2}
           boxHeight={0.3}
         />
+        {/* end turn button */}
+        { canEndTurn &&
+            <TextButton
+              text="End Turn"
+              position={layout[device].endTurnButton.position}
+              rotation={layout[device].endTurnButton.rotation}
+              handlePointerClick={() => {
+                socket.emit("endTurn");
+              }}
+              boxWidth={1.2}
+              boxHeight={0.3}
+            />
+          }
+
         <Decorations />
         {/* START text */}
         <TextButton
@@ -622,14 +654,26 @@ export default function Experience() {
               }
             />
           ))}
-          {turn.team == 0 && (
-            <TextButton
-              text={`Throw: ${
-                teams[turn.team].players[turn.players[turn.team]].throws
-              }`}
-              position={[0, -0.5 * (1 + teams[0].players.length), 0]}
-            />
+          {(turn.team == 0) && (
+            <>            
+              <TextButton
+                text={`Throw: ${
+                  teams[turn.team].players[turn.players[turn.team]].throws
+                }`}
+                position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
+              />
+
+            </>
+
           )}
+          {(turn.team == 0 || gamePhase === "pregame") && 
+            <TextButton
+              text={`Moves: ${
+                prettifyMoves(teams[0].moves)
+              }`}
+              position={[0, -0.5 * (2 + teams[0].players.length), 0]}
+            />
+          }
           {/* <TextButton
             text="Join"
             position={layout[device].joinTeam0Banner.position}
@@ -659,14 +703,23 @@ export default function Experience() {
               }
             />
           ))}
-          {turn.team == 1 && (
-            <TextButton
-              text={`Throw: ${
-                teams[turn.team].players[turn.players[turn.team]].throws
-              }`}
-              position={[0, -0.5 * (1 + teams[1].players.length), 0]}
-            />
-          )}
+          {(turn.team == 1) && (
+            <>                          
+              <TextButton
+                text={`Throw: ${
+                  teams[turn.team].players[turn.players[turn.team]].throws
+                }`}
+                position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
+              />
+              </>
+              )}
+              {(turn.team == 1 || gamePhase==="pregame") && (
+              <TextButton
+                text={`Moves: ${
+                  prettifyMoves(teams[1].moves)
+                }`}
+                position={[0, -0.5 * (2 + teams[1].players.length), 0]}
+              />)}
           {/* <TextButton
             text="Join"
             position={layout[device].joinTeam1Banner.position}

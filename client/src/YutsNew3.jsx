@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, throwVisibleAtom, gameStartedAtom, socket } from "./SocketManager";
+import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -22,7 +22,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [throwVisible] = useAtom(throwVisibleAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
-  const [gameStarted] = useAtom(gameStartedAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom)
 
   useEffect(() => {
     subscribeKeys(
@@ -99,10 +99,13 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       result = countUps
     }
 
-    if (gameStarted) {
+    if (gamePhase === "pregame" || gamePhase === "game") {
       socket.emit("recordThrow", result)
-      if (result == 4 || result == 5) {
+      if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
+      }
+      if (gamePhase === "pregame") {
+        socket.emit("canEndTurn");
       }
     }
   }

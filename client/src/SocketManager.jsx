@@ -69,8 +69,9 @@ export const piecesAtom = atom(JSON.parse(JSON.stringify(initialState.pieces)));
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
+export const canEndTurnAtom = atom(false);
 export const readyToStartAtom = atom(false);
-export const gameStartedAtom = atom(false);
+export const gamePhaseAtom = atom("banter");
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -82,7 +83,8 @@ export const SocketManager = () => {
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
-  const [_gameStarted, setGameStarted] = useAtom(gameStartedAtom)
+  const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [_canEndTurn, setCanEndTurn] = useAtom(canEndTurnAtom)
 
   useEffect(() => {
     function onConnect() {
@@ -134,8 +136,11 @@ export const SocketManager = () => {
     function onThrowVisible(flag) {
       setThrowVisible(flag);
     }
-    function onGameStarted() {
-      setGameStarted(true)
+    function onGamePhase(gamePhase) {
+      setGamePhase(gamePhase)
+    }
+    function onCanEndTurn(flag) {
+      setCanEndTurn(flag);
     }
 
     socket.on("connect", onConnect);
@@ -153,7 +158,8 @@ export const SocketManager = () => {
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
     socket.on("takeTurn", onTakeTurn);
-    socket.on("gameStarted", onGameStarted);
+    socket.on("gamePhase", onGamePhase);
+    socket.on("canEndTurn", onCanEndTurn);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -170,7 +176,8 @@ export const SocketManager = () => {
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
       socket.off("takeTurn", onTakeTurn);
-      socket.off("gameStarted", onGameStarted);
+      socket.off("gamePhase", onGamePhase);
+      socket.off("canEndTurn", onCanEndTurn);
     };
   }, []);
 };

@@ -27,6 +27,14 @@ export default {
         { tile: -1, team: 0, id: 2 },
         { tile: -1, team: 0, id: 3 },
       ],
+      moves: {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "-1": 0
+      }
     },
     { 
       index: 1,
@@ -38,6 +46,14 @@ export default {
         { tile: -1, team: 1, id: 2 },
         { tile: -1, team: 1, id: 3 },
       ],
+      moves: {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "-1": 0
+      }
     }
   ],
   player: {
@@ -46,18 +62,11 @@ export default {
     displayName: "",
     team: -1,
     throws: 0,
-    moves: {
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "-1": 0
-    }
+
   },
   turn: {
-    team: -1,
-    players: [-1, -1] // list of ints
+    team: 0,
+    players: [0, 0] // list of ints
   },
   tiles: [
     [],
