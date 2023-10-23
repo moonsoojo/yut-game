@@ -22,10 +22,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [throwVisible] = useAtom(throwVisibleAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
-  const [yut1Asleep, setYut1Asleep] = useState(false);
-  const [yut2Asleep, setYut2Asleep] = useState(false);
-  const [yut3Asleep, setYut3Asleep] = useState(false);
-  const [yut4Asleep, setYut4Asleep] = useState(false);
   const [gameStarted] = useAtom(gameStartedAtom)
 
   useEffect(() => {
@@ -41,10 +37,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, []);
 
   useEffect(() => {
-    setYut1Asleep(false);
-    setYut2Asleep(false);
-    setYut3Asleep(false);
-    setYut4Asleep(false);
     for (let i = 0; i < 4; i++) {
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
@@ -62,11 +54,12 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    if (yut1Asleep && yut2Asleep && yut3Asleep && yut4Asleep) {
+    console.log("[YutsNew3] sleepCount", sleepCount)
+    if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("clientYutsResting");
       observeThrow(yuts)
     }
-  }, [yut1Asleep, yut2Asleep, yut3Asleep, yut4Asleep]);
+  }, [sleepCount])
 
   useEffect(() => {
     setThrowVisibleLocal(throwVisible); // subscribing to change
@@ -88,11 +81,12 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       vector.applyQuaternion( yut.current.rotation() );
       if (vector.y < 0) {
         countUps++
-        if (yut.current.userData.type === "backdo") {
+        if (yut.current.userData === "backdo") {
           backdoUp = true;
         }
       }
     });
+
     if (countUps == 0) {
       result = 5
     } else if (countUps == 1) {
@@ -104,7 +98,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     } else {
       result = countUps
     }
-    console.log("[observeThrow] result", result)
 
     if (gameStarted) {
       socket.emit("recordThrow", result)
@@ -112,25 +105,10 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         socket.emit("bonusThrow");
       }
     }
-
-    // return result
-}
-
-  function onSleepHandler(index) {
-    console.log("[onSleepHandler] index", index, "asleep");
-    if (index == 0) {
-      setYut1Asleep(true)
-    } else if (index == 1) {
-      setYut2Asleep(true)
-    } else if (index == 2) {
-      setYut3Asleep(true)
-    } else if (index == 3) {
-      setYut4Asleep(true)
-    }
   }
 
-  function onWakeHandler(index) {
-    console.log("[onWakeHandler] index", index, "awake");
+  function onSleepHandler() {
+    setSleepCount((count) => count+1);
   }
 
   return (
@@ -163,9 +141,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             scale={0.15}
             gravityScale={1.5}
             key={index}
-            onSleep={() => onSleepHandler(index)} // add parentheses for event to stop multiple calls
-            onWake={() => onWakeHandler(index)}
-            userData={{type: index != 0 ? "regular" : "backdo"}}
+            onSleep={onSleepHandler}
+            userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (
               <mesh
