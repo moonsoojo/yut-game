@@ -173,12 +173,19 @@ io.on("connection", (socket) => {
   })
 
   // pass turn to next player
-  socket.on("endTurn", () => {
+  socket.on("endTurn", (tie) => {
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.to(currentPlayer.socketId).emit("throwVisible", false)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
     turn = passTurn(turn, teams)
     io.emit("turn", turn)
+
+    if (tie) {
+      // clear moves in teams
+      for (let i = 0; i < teams.length; i++) {
+        teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
+      }
+    }
     // update throws for the team
     currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++;
@@ -359,53 +366,6 @@ io.on("connection", (socket) => {
     io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", true);
     // all clients' yuts should be resting
     // display status text based on 'teams' in client
-    
-    if (gamePhase === "pregame") {
-      // go through every team
-      // if every team has a score
-      // get team with top score
-      // switch turn to them
-      let allTeamsHaveMove = true;
-      for (let i = 0; i < teams.length; i++) {
-        let hasMove = false;
-        for (let move in teams[i].moves) {
-          if (teams[i].moves[move] > 0) {
-            hasMove = true;
-            break;
-          }
-        }
-        if (!hasMove) {
-          allTeamsHaveMove = false;
-          break;
-        }
-      }
-      console.log("[server][canEndTurn] allTeamsHaveMove", allTeamsHaveMove)
-      if (allTeamsHaveMove) {
-        let topThrow = 0;
-        let topThrowTeam = -1;
-        let tie = false;
-        for (let i = 0; i < teams.length; i++) {
-          for (let move in teams[i].moves) {
-            if (teams[i].moves[move] > 0) {
-              if (teams[i].moves[move] > topThrow) {
-                topThrow = teams[i].moves[move]
-                topThrowTeam = i
-              } else if (teams[i].moves[move] == topThrow) {
-                tie = true;
-              }
-              break;
-            }
-          }
-          if (tie) {
-            // go again
-          } else {
-            console.log("first team to throw", topThrowTeam)
-            // turn = setTurn(turn, topThrow, [0, 0])
-            // io.emit("turn", turn)
-          }
-        }
-      }
-    }
   })
 
   socket.on("recordThrow", (result) => {

@@ -98,6 +98,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     } else {
       result = countUps
     }
+    // test: set all result to the same value
+    // result = 1
 
     if (gamePhase === "pregame" || gamePhase === "game") {
       socket.emit("recordThrow", result)
@@ -118,9 +120,22 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     <group {...props} dispose={null}>
       {throwVisible && (
         <TextButton
-          text="Throw"
+          text={`Throw`}
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
+          handlePointerClick={() => {
+            socket.emit("throwVisible", false);
+            socket.emit("throwYuts");
+          }}
+          boxWidth={1.4}
+          boxHeight={0.3}
+        />
+      )}
+      {throwVisible && gamePhase === "pregame" && (
+        <TextButton
+          text={"for order"}
+          rotation={layout[device].throwButtonOrder.rotation}
+          position={layout[device].throwButtonOrder.position}
           handlePointerClick={() => {
             socket.emit("throwVisible", false);
             socket.emit("throwYuts");

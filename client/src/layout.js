@@ -59,8 +59,16 @@ export default {
       position: [3, -6, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    throwButtonOrder: {
+      position: [3, -7, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
     endTurnButton: {
       position: [3, -8, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    endTurnButtonTie: {
+      position: [3, -9, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     controlsButton: {
@@ -160,8 +168,16 @@ export default {
       position: [-3, -3, -5],
       rotation: [0, Math.PI / 2, 0],
     },
+    throwButtonOrder: {
+      position: [3, -7, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
     endTurnButton: {
       position: [3, -8, -3.5],
+      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+    },
+    endTurnButtonTie: {
+      position: [3, -9, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     controlsButton: {

@@ -289,6 +289,53 @@ export default function Experience() {
     );
   }
 
+  function allTeamsHaveMove(teams) {
+    // go through every team
+    // if every team has a score
+    // get team with top score
+    // switch turn to them
+    let allTeamsHaveMove = true;
+    for (let i = 0; i < teams.length; i++) {
+      let hasMove = false;
+      for (let move in teams[i].moves) {
+        if (teams[i].moves[move] > 0) {
+          hasMove = true;
+          break;
+        }
+      }
+      if (!hasMove) {
+        allTeamsHaveMove = false;
+        break;
+      }
+    }
+    return allTeamsHaveMove
+  }
+
+  function firstTeamToThrow(teams) {
+    let topThrow = 0;
+    let topThrowTeam = -1;
+    let tie = false;
+    for (let i = 0; i < teams.length; i++) {
+      for (let move in teams[i].moves) {
+        if (teams[i].moves[move] > 0) {
+          if (parseInt(move) > topThrow) {
+            topThrow = parseInt(move)
+            topThrowTeam = i
+          } else if (parseInt(move) == topThrow) {
+            tie = true;
+          }
+          break;
+        }
+      }
+    }
+    console.log("[firstTeamToThrow] topThrow", topThrow, "tie", tie)
+    if (tie) {
+      return -1
+    } else {
+      return topThrowTeam
+    }
+  }
+
   const {
     count,
     size,
@@ -601,17 +648,37 @@ export default function Experience() {
         />
         {/* end turn button */}
         { canEndTurn &&
-            <TextButton
-              text="End Turn"
-              position={layout[device].endTurnButton.position}
-              rotation={layout[device].endTurnButton.rotation}
-              handlePointerClick={() => {
-                socket.emit("endTurn");
-              }}
-              boxWidth={1.2}
-              boxHeight={0.3}
-            />
-          }
+          <TextButton
+            text="End Turn"
+            position={layout[device].endTurnButton.position}
+            rotation={layout[device].endTurnButton.rotation}
+            handlePointerClick={() => {
+              if (allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1) {
+                socket.emit("endTurn", true);
+              } else {
+                socket.emit("endTurn", false);
+              }
+            }}
+            boxWidth={1.2}
+            boxHeight={0.3}
+          />
+        }
+        { canEndTurn && allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1 &&
+          <TextButton
+            text="(tie)"
+            position={layout[device].endTurnButtonTie.position}
+            rotation={layout[device].endTurnButtonTie.rotation}
+            handlePointerClick={() => {
+              if (allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1) {
+                socket.emit("endTurn", true);
+              } else {
+                socket.emit("endTurn", false);
+              }
+            }}
+            boxWidth={1.2}
+            boxHeight={0.3}
+          />
+        }
 
         <Decorations />
         {/* START text */}
@@ -658,7 +725,7 @@ export default function Experience() {
           {(turn.team == 0 && gamePhase === "pregame" || gamePhase === "game") && (
             <>            
               <TextButton
-                text={`Throw: ${
+                text={`Throws: ${
                   teams[turn.team].players[turn.players[turn.team]].throws
                 }`}
                 position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
@@ -708,7 +775,7 @@ export default function Experience() {
           {(turn.team == 1 && gamePhase === "pregame" || gamePhase === "game") && (
             <>                          
               <TextButton
-                text={`Throw: ${
+                text={`Throws: ${
                   teams[turn.team].players[turn.players[turn.team]].throws
                 }`}
                 position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
