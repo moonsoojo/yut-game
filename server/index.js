@@ -146,13 +146,18 @@ io.on("connection", (socket) => {
     io.to(hostId).emit("readyToStart", true);
   }
 
-  io.emit("characters", characters);
-  io.emit("pieces", pieces);
+  io.emit("characters", characters); // this should be refactored
+  io.emit("pieces", pieces); // this should be refactored
   io.emit("tiles", tiles);
   io.emit("selection", selection);
   io.emit("teams", teams);
   io.emit("turn", turn)
-  io.emit("throwVisible", throwVisible)
+  io.emit("throwVisible", throwVisible) // this should be refactored
+  // how:
+  // on client, make a new state variable called 'yourTurn'
+  // on 'endTurn', emit a message to whoever's turn it is
+  // set 'yourTurn' to true
+  // get throw count and set 'throwVisible' only within that client
 
   socket.on("throwVisible", (flag) => {
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
