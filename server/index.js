@@ -152,12 +152,8 @@ io.on("connection", (socket) => {
   io.emit("selection", selection);
   io.emit("teams", teams);
   io.emit("turn", turn)
-  io.emit("throwVisible", throwVisible) // this should be refactored
-  // how:
-  // on client, make a new state variable called 'yourTurn'
-  // on 'endTurn', emit a message to whoever's turn it is
-  // set 'yourTurn' to true
-  // get throw count and set 'throwVisible' only within that client
+  io.emit("throwVisible", throwVisible)
+  // throwVisible and canEndTurn is emitted directly to the client who has the turn
 
   socket.on("throwVisible", (flag) => {
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
