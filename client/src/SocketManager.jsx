@@ -71,7 +71,7 @@ export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const canEndTurnAtom = atom(false);
 export const readyToStartAtom = atom(false);
-export const gamePhaseAtom = atom("banter");
+export const gamePhaseAtom = atom("lobby");
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);

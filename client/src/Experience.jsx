@@ -652,6 +652,7 @@ export default function Experience() {
                   ? "white"
                   : "yellow"
               }
+              key={index}
             />
           ))}
           {(turn.team == 0 && gamePhase === "pregame" || gamePhase === "game") && (
@@ -701,6 +702,7 @@ export default function Experience() {
                   ? "white"
                   : "yellow"
               }
+              key={index}
             />
           ))}
           {(turn.team == 1 && gamePhase === "pregame" || gamePhase === "game") && (

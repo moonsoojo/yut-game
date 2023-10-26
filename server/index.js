@@ -18,12 +18,9 @@ let tiles = initialState.tiles;
 let pieces = JSON.parse(JSON.stringify(initialState.pieces));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
-let canEndTurn = false;
 let numClientsYutsResting = initialState.numClientsYutsResting
 let clientYutResults = [];
-let gamePhase = "banter" // possible values: "banter", "pregame", "game"
-// let gameStarted = false;
-let throwVisible = false
+let gamePhase = "lobby" // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
 // mock for multiplayer
@@ -152,7 +149,9 @@ io.on("connection", (socket) => {
   io.emit("selection", selection);
   io.emit("teams", teams);
   io.emit("turn", turn)
-  io.emit("throwVisible", throwVisible)
+  io.emit("throwVisible", false)
+  io.emit("canEndTurn", false)
+  io.emit("gamePhase", gamePhase);
   // throwVisible and canEndTurn is emitted directly to the client who has the turn
 
   socket.on("throwVisible", (flag) => {
@@ -169,24 +168,24 @@ io.on("connection", (socket) => {
     currentPlayer.throws++; // updates variable in 'teams'
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
-    // gameStarted = true;
     gamePhase = "pregame"
-    // io.emit("gameStarted")
     io.emit("gamePhase", gamePhase);
   })
 
   // pass turn to next player
   socket.on("endTurn", () => {
+    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    io.to(currentPlayer.socketId).emit("throwVisible", false)
+    io.to(currentPlayer.socketId).emit("canEndTurn", false)
     turn = passTurn(turn, teams)
     io.emit("turn", turn)
     // update throws for the team
-    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++;
     console.log("[server][endTurn] teams", teams)
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
-    canEndTurn = false;
-    io.emit("canEndTurn", canEndTurn);
+    io.to(currentPlayer.socketId).emit("canEndTurn", false)
   })
 
   socket.on("select", (payload) => {
@@ -312,8 +311,7 @@ io.on("connection", (socket) => {
       });
     }
     
-    throwVisible = false
-    io.emit("throwVisibleFlag", throwVisible);
+    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.emit("throwYuts", yutForceVectors);
     teams[turn.team].players[turn.players[turn.team]].throws--;
     io.emit("teams", teams)
@@ -358,8 +356,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("canEndTurn", () => {
-    canEndTurn = true;
-    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", canEndTurn);
+    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", true);
     // all clients' yuts should be resting
     // display status text based on 'teams' in client
     
