@@ -224,7 +224,7 @@ io.on("connection", (socket) => {
   })
 
   // pass turn to next player
-  socket.on("endTurn", (tie) => {
+  socket.on("endTurn", () => {
     // clear old player's turn
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.to(currentPlayer.socketId).emit("throwVisible", false)
@@ -253,14 +253,16 @@ io.on("connection", (socket) => {
     }
 
     console.log("[server] next turn", turn)
-    console.log("[server] current team's moves", JSON.stringify(teams[turn.team].moves))
+    console.log("[server][endTurn] teams", JSON.stringify(teams))
 
     // next player
     currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++;
-    
+    console.log("[server][endTurn] currentPlayer", JSON.stringify(currentPlayer))
+
     io.emit("turn", turn)
     io.emit("teams", teams)
+    io.emit("gamePhase", gamePhase)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
   })

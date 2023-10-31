@@ -652,11 +652,7 @@ export default function Experience() {
             position={layout[device].endTurnButton.position}
             rotation={layout[device].endTurnButton.rotation}
             handlePointerClick={() => {
-              if (allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1) {
-                socket.emit("endTurn", true);
-              } else {
-                socket.emit("endTurn", false);
-              }
+              socket.emit("endTurn", true);
             }}
             boxWidth={1.2}
             boxHeight={0.3}
@@ -668,11 +664,7 @@ export default function Experience() {
             position={layout[device].endTurnButtonTie.position}
             rotation={layout[device].endTurnButtonTie.rotation}
             handlePointerClick={() => {
-              if (allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1) {
-                socket.emit("endTurn", true);
-              } else {
-                socket.emit("endTurn", false);
-              }
+              socket.emit("endTurn", true);
             }}
             boxWidth={1.2}
             boxHeight={0.3}
@@ -721,7 +713,7 @@ export default function Experience() {
               key={index}
             />
           ))}
-          {(turn.team == 0 && gamePhase === "pregame" || gamePhase === "game") && (
+          {(turn.team == 0 && (gamePhase === "pregame" || gamePhase === "game")) && (
             <>            
               <TextButton
                 text={`Throws: ${
@@ -771,7 +763,7 @@ export default function Experience() {
               key={index}
             />
           ))}
-          {(turn.team == 1 && gamePhase === "pregame" || gamePhase === "game") && (
+          {(turn.team == 1 && (gamePhase === "pregame" || gamePhase === "game")) && (
             <>                          
               <TextButton
                 text={`Throws: ${
