@@ -108,6 +108,57 @@ function passTurn(turn, teams) {
   return turn
 }
 
+function allTeamsHaveMove(teams) {
+  // go through every team
+  // if every team has a score
+  // get team with top score
+  // switch turn to them
+  let allTeamsHaveMove = true;
+  for (let i = 0; i < teams.length; i++) {
+    let hasMove = false;
+    for (let move in teams[i].moves) {
+      if (teams[i].moves[move] > 0) {
+        hasMove = true;
+        break;
+      }
+    }
+    if (!hasMove) {
+      allTeamsHaveMove = false;
+      break;
+    }
+  }
+  return allTeamsHaveMove
+}
+
+function calcFirstTeamToThrow(teams) {
+  let topThrow = -2;
+  let topThrowTeam = -1;
+  let tie = false;
+  for (let i = 0; i < teams.length; i++) {
+    console.log("[server] team", i)
+    for (let move in teams[i].moves) {
+      console.log("[server] move", move)
+      console.log("[server] moves[move]", teams[i].moves[move])
+      if (teams[i].moves[move] > 0) {
+        console.log("[server] move int", parseInt(move))
+        if (parseInt(move) > topThrow) {
+          topThrow = parseInt(move)
+          topThrowTeam = i
+        } else if (parseInt(move) == topThrow) {
+          tie = true;
+        }
+        break;
+      }
+    }
+  }
+  console.log("[server] topThrow", topThrow, "topThrowTeam", topThrowTeam)
+  if (tie) {
+    return -1
+  } else {
+    return topThrowTeam
+  }
+}
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -174,22 +225,41 @@ io.on("connection", (socket) => {
 
   // pass turn to next player
   socket.on("endTurn", (tie) => {
+    // clear old player's turn
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.to(currentPlayer.socketId).emit("throwVisible", false)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
-    turn = passTurn(turn, teams)
-    io.emit("turn", turn)
 
-    if (tie) {
-      // clear moves in teams
-      for (let i = 0; i < teams.length; i++) {
-        teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
+    if (gamePhase === "pregame") {
+      if (allTeamsHaveMove(teams)) {
+        let firstTeamToThrow = calcFirstTeamToThrow(teams)
+        console.log("[server] first team to throw", firstTeamToThrow)
+        if (firstTeamToThrow == -1) {
+          turn = passTurn(turn, teams)
+        } else {
+          // turn has been decided
+          turn = setTurn(turn, firstTeamToThrow, [0, 0])
+          gamePhase = "game"
+        }
+        // clear moves in teams
+        for (let i = 0; i < teams.length; i++) {
+          teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
+        }
+      } else {
+        turn = passTurn(turn, teams)
       }
+    } else if (gamePhase === "game") {
+      turn = passTurn(turn, teams)
     }
-    // update throws for the team
+
+    console.log("[server] next turn", turn)
+    console.log("[server] current team's moves", JSON.stringify(teams[turn.team].moves))
+
+    // next player
     currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++;
-    console.log("[server][endTurn] teams", teams)
+    
+    io.emit("turn", turn)
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
@@ -372,13 +442,14 @@ io.on("connection", (socket) => {
     console.log("[server] recordThrow")
     clientYutResults.push(result);
     console.log("[server] recordThrow", clientYutResults.length, checkThrowResultsMatch(clientYutResults))
-      if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
-        console.log("[server] recordThrow, client yut results all in and throw results match")
-        teams[turn.team].moves[result.toString()]++
-        io.emit("teams", teams)
-      } else {
-        // throw again
-      }
+    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
+      console.log("[server] recordThrow, client yut results all in and throw results match")
+      teams[turn.team].moves[result.toString()]++
+      console.log("[server] throwing team's moves", teams[turn.team].moves[result.toString()])
+      io.emit("teams", teams)
+    } else {
+      // throw again
+    }
   })
 
   socket.on("disconnect", () => {

@@ -328,7 +328,6 @@ export default function Experience() {
         }
       }
     }
-    console.log("[firstTeamToThrow] topThrow", topThrow, "tie", tie)
     if (tie) {
       return -1
     } else {
