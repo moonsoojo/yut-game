@@ -721,9 +721,7 @@ export default function Experience() {
                 }`}
                 position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
               />
-
             </>
-
           )}
           {(turn.team == 0 || gamePhase === "pregame") && 
             <TextButton

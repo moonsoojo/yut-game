@@ -76,7 +76,7 @@ export default {
     players: [0, 0] // list of ints
   },
   tiles: [
-    [],
+    [], // { pieces: [], destination: { team: 0 // -1, 0 or 1}}
     [],
     [],
     [],
