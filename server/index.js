@@ -215,7 +215,7 @@ io.on("connection", (socket) => {
     // io.emit("turn", turn)
     io.to(hostId).emit("readyToStart", false);
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    currentPlayer.throws++; // updates variable in 'teams'
+    teams[turn.team].throws++;
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
@@ -257,9 +257,9 @@ io.on("connection", (socket) => {
 
     // next player
     currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    currentPlayer.throws++;
-    console.log("[server][endTurn] currentPlayer", JSON.stringify(currentPlayer))
-
+    // currentPlayer.throws++;
+    
+    teams[turn.team].throws++;
     io.emit("turn", turn)
     io.emit("teams", teams)
     io.emit("gamePhase", gamePhase)
@@ -390,9 +390,10 @@ io.on("connection", (socket) => {
       });
     }
     
-    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+    // let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.emit("throwYuts", yutForceVectors);
-    teams[turn.team].players[turn.players[turn.team]].throws--;
+    // teams[turn.team].players[turn.players[turn.team]].throws--;
+    teams[turn.team].throws--;
     io.emit("teams", teams)
   });
 
@@ -428,8 +429,9 @@ io.on("connection", (socket) => {
   socket.on("bonusThrow", () => {
     console.log("[server] bonusThrow")
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
-      console.log("[server] bonusThrow, client yut results all in and throw results match")
-      teams[turn.team].players[turn.players[turn.team]].throws++;
+      // console.log("[server] bonusThrow, client yut results all in and throw results match")
+      // teams[turn.team].players[turn.players[turn.team]].throws++;
+      teams[turn.team].throws++;
       io.emit("teams", teams)
     }
   })
@@ -445,12 +447,9 @@ io.on("connection", (socket) => {
     clientYutResults.push(result);
     console.log("[server] recordThrow", clientYutResults.length, checkThrowResultsMatch(clientYutResults))
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
-      console.log("[server] recordThrow, client yut results all in and throw results match")
+
       teams[turn.team].moves[result.toString()]++
-      console.log("[server] throwing team's moves", teams[turn.team].moves[result.toString()])
       io.emit("teams", teams)
-    } else {
-      // throw again
     }
   })
 

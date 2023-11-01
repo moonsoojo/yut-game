@@ -34,7 +34,8 @@ export default {
         "4": 0,
         "5": 0,
         "-1": 0
-      }
+      },
+      throws: 0
     },
     { 
       index: 1,
@@ -53,7 +54,8 @@ export default {
         "4": 0,
         "5": 0,
         "-1": 0
-      }
+      },
+      throws: 0
     }
   ],
   player: {

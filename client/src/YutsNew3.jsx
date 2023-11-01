@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, socket } from "./SocketManager";
+import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -20,9 +20,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [throwVisible] = useAtom(throwVisibleAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [teams] = useAtom(teamsAtom)
+  const [turn] = useAtom(turnAtom);
   const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
   const [_hoverThrowText, setHoverThrowText] = useState(false);
-  const [gamePhase] = useAtom(gamePhaseAtom)
 
   useEffect(() => {
     subscribeKeys(
@@ -54,7 +56,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
-    console.log("[YutsNew3] sleepCount", sleepCount)
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       socket.emit("clientYutsResting");
       observeThrow(yuts)
@@ -99,12 +100,16 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       result = countUps
     }
     // test: set all result to the same value
-    // result = 1
+    if (gamePhase === "game") {
+      result = 4
+    }
+    
 
     if (gamePhase === "pregame" || gamePhase === "game") {
       socket.emit("recordThrow", result)
       if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
+        socket.emit("throwVisible", true);
       }
       if (gamePhase === "pregame") {
         socket.emit("canEndTurn");

@@ -650,6 +650,7 @@ export default function Experience() {
           boxWidth={1.2}
           boxHeight={0.3}
         />
+        
         {/* end turn button */}
         { canEndTurn &&
           <TextButton
@@ -722,7 +723,7 @@ export default function Experience() {
             <>            
               <TextButton
                 text={`Throws: ${
-                  teams[turn.team].players[turn.players[turn.team]].throws
+                  teams[0].throws
                 }`}
                 position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
               />
@@ -770,7 +771,7 @@ export default function Experience() {
             <>                          
               <TextButton
                 text={`Throws: ${
-                  teams[turn.team].players[turn.players[turn.team]].throws
+                  teams[1].throws
                 }`}
                 position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
               />
