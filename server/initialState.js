@@ -1,6 +1,7 @@
 export default {
   selection: undefined,
   numClientsYutResting: 0,
+  gamePhase: "lobby",
   // when piece is moved to the board, it is set to null
   pieces: [
     [
@@ -63,7 +64,7 @@ export default {
     index: -1, // in the 'players' list in the team
     displayName: "",
     team: -1,
-    throws: 0,
+    // throws: 0,
   },
   moves: {
     "1": 0,

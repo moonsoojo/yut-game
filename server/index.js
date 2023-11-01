@@ -20,7 +20,7 @@ let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
 let numClientsYutsResting = initialState.numClientsYutsResting
 let clientYutResults = [];
-let gamePhase = "lobby" // possible values: "lobby", "pregame", "game"=
+let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
 // mock for multiplayer
@@ -233,7 +233,6 @@ io.on("connection", (socket) => {
     if (gamePhase === "pregame") {
       if (allTeamsHaveMove(teams)) {
         let firstTeamToThrow = calcFirstTeamToThrow(teams)
-        console.log("[server] first team to throw", firstTeamToThrow)
         if (firstTeamToThrow == -1) {
           turn = passTurn(turn, teams)
         } else {
@@ -252,12 +251,8 @@ io.on("connection", (socket) => {
       turn = passTurn(turn, teams)
     }
 
-    console.log("[server] next turn", turn)
-    console.log("[server][endTurn] teams", JSON.stringify(teams))
-
     // next player
     currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    // currentPlayer.throws++;
     
     teams[turn.team].throws++;
     io.emit("turn", turn)

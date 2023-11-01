@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
 
@@ -35,6 +35,7 @@ export default function Rocket({
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
 
   const rocketRef = useRef();
   const flameRef = useRef();
@@ -54,7 +55,7 @@ export default function Rocket({
       flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocketRef.current.position.y = adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
     }
-    if (turn.team == 0 && hasMove(teams[0])) {
+    if (gamePhase === "game" && turn.team == 0 && hasMove(teams[0])) {
       rocketRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
       rocketRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
       rocketRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
@@ -80,7 +81,7 @@ export default function Rocket({
   }
 
   function handlePointerDown(event) {
-    if (tile == -1) {
+    if (tile == -1 && gamePhase === "game" && hasMove(teams[0])) {
       event.stopPropagation();
       if (selection == null) {
         // setSelection({ type: "piece", tile, team, id });

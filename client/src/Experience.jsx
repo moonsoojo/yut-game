@@ -729,7 +729,7 @@ export default function Experience() {
               />
             </>
           )}
-          {(turn.team == 0 || gamePhase === "pregame") && 
+          {(gamePhase === "pregame" || (turn.team == 0 && gamePhase !== "lobby")) && 
             <TextButton
               text={`Moves: ${
                 prettifyMoves(teams[0].moves)
@@ -777,7 +777,7 @@ export default function Experience() {
               />
               </>
               )}
-              {(turn.team == 1 || gamePhase==="pregame") && (
+              {(gamePhase === "pregame" || (turn.team == 1 && gamePhase !== "lobby")) && (
               <TextButton
                 text={`Moves: ${
                   prettifyMoves(teams[1].moves)
