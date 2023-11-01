@@ -100,9 +100,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       result = countUps
     }
     // test: set all result to the same value
-    if (gamePhase === "game") {
-      result = 4
-    }
+    // if (gamePhase === "game") {
+    //   result = 4
+    // }
     
 
     if (gamePhase === "pregame" || gamePhase === "game") {
