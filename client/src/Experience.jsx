@@ -289,6 +289,17 @@ export default function Experience() {
     );
   }
 
+  function hasMove(team) {
+    let flag = false;
+    for (let move in team.moves) {
+      if (team.moves[move] > 0) {
+        flag = true;
+        break;
+      }
+    }
+    return flag
+  }
+
   function allTeamsHaveMove(teams) {
     // go through every team
     // if every team has a score
@@ -296,14 +307,8 @@ export default function Experience() {
     // switch turn to them
     let allTeamsHaveMove = true;
     for (let i = 0; i < teams.length; i++) {
-      let hasMove = false;
-      for (let move in teams[i].moves) {
-        if (teams[i].moves[move] > 0) {
-          hasMove = true;
-          break;
-        }
-      }
-      if (!hasMove) {
+      let flag = hasMove(teams[i]);
+      if (!flag) {
         allTeamsHaveMove = false;
         break;
       }
@@ -699,7 +704,7 @@ export default function Experience() {
             text="Team 0"
             boxWidth={1.2}
             boxHeight={0.3}
-            color="turquoise"
+            color="red"
           />
           {teams[0].players.map((value, index) => (
             <TextButton
@@ -747,7 +752,7 @@ export default function Experience() {
             text="Team 1"
             boxWidth={1.2}
             boxHeight={0.3}
-            color="red"
+            color="turquoise"
           />
           {teams[1].players.map((value, index) => (
             <TextButton

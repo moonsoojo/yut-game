@@ -3,12 +3,21 @@ import { useRef, useMemo, useEffect } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
-// import { useRocketStore } from "./state/zstore";
-// import { useRocketStore } from "./state/zstore2";
-import React from "react";
-import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
+import React from "react";
+
+function hasMove(team) {
+  let flag = false;
+  for (let move in team.moves) {
+    if (team.moves[move] > 0) {
+      flag = true;
+      break;
+    }
+  }
+  return flag
+}
 
 export default function Ufo({
   position,
@@ -22,16 +31,22 @@ export default function Ufo({
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
-
   const [selection] = useAtom(selectionAtom);
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
+  const [teams] = useAtom(teamsAtom);
+  const [turn] = useAtom(turnAtom);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
   const ballsRef = useRef();
   const alienRef = useRef();
   const wrapperMatRef = useRef();
+
+  scale =         selection != null &&
+  selection.type === "piece" &&
+  selection.team == 0 &&
+  selection.id == id
+    ? scale * 1.5
+    : scale 
 
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.2;
@@ -42,6 +57,11 @@ export default function Ufo({
       ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
       ufoRef.current.position.y +=
         Math.sin(state.clock.elapsedTime * 3) * 0.001;
+    }
+    if (turn.team == 1 && hasMove(teams[1])) {
+      ufoRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
+      ufoRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
+      ufoRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
     }
   });
 
@@ -84,12 +104,7 @@ export default function Ufo({
       ref={ufoRef}
       dispose={null}
       scale={
-        selection != null &&
-        selection.type === "piece" &&
-        selection.team == 0 &&
-        selection.id == id
-          ? scale * 1.5
-          : scale
+scale
       }
       rotation={rotation}
     >

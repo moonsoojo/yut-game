@@ -211,14 +211,14 @@ io.on("connection", (socket) => {
   })
 
   socket.on("startGame", () => {
-    turn = passTurn(turn, teams)
-    io.emit("turn", turn)
-    console.log("[server] turn", turn)
+    // turn = passTurn(turn, teams)
+    // io.emit("turn", turn)
     io.to(hostId).emit("readyToStart", false);
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     currentPlayer.throws++; // updates variable in 'teams'
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("throwVisible", true)
+    io.to(currentPlayer.socketId).emit("canEndTurn", false)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
   })

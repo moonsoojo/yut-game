@@ -14,7 +14,7 @@ export default function Star({ position, tile }) {
   const { nodes } = useGraph(clone);
 
   return (
-    <group position={position}>
+    <group position={position} scale={1.7}>
       <mesh
         castShadow
         receiveShadow

@@ -43,10 +43,10 @@ export default function Tile({ tileIndex, wrapperRadius }) {
   }
 
   const rocketPositions = [
-    [-0.1, 0.1 + wrapperRadius, 0.4],
-    [-0.1, 0.1 + wrapperRadius, 0.1],
-    [-0.3, 0.1 + wrapperRadius, 0.4],
-    [-0.3, 0.1 + wrapperRadius, 0.1],
+    [-0.1, 0 + wrapperRadius, 0.4],
+    [-0.1, 0 + wrapperRadius, 0.1],
+    [-0.3, 0 + wrapperRadius, 0.4],
+    [-0.3, 0 + wrapperRadius, 0.1],
   ];
 
   const ufoPositions = [

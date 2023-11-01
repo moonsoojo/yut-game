@@ -3,11 +3,20 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-// import { useRocketStore } from "./state/zstore";
-// import { useRocketStore } from "./state/zstore2";
-import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
+
+function hasMove(team) {
+  let flag = false;
+  for (let move in team.moves) {
+    if (team.moves[move] > 0) {
+      flag = true;
+      break;
+    }
+  }
+  return flag
+}
 
 export default function Rocket({
   position,
@@ -24,22 +33,31 @@ export default function Rocket({
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
   const [selection] = useAtom(selectionAtom);
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
+  const [teams] = useAtom(teamsAtom);
+  const [turn] = useAtom(turnAtom);
 
-  // const [active, setActive] = useState(false); // doesn't reset animation
   const rocketRef = useRef();
   const flameRef = useRef();
   const rocketPart1Ref = useRef();
   const wrapperMatRef = useRef();
 
+  scale = selection != null &&
+  selection.type === "piece" &&
+  selection.team == 1 &&
+  selection.id == id
+    ? scale * 1.5
+    : scale
+
   const adjustedPosition = [position[0], position[1] + 0.2, position[2] - 0.5];
   useFrame((state, delta) => {
     if (tile >= 0) {
-      flameRef.current.scale.y =
-        4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
-      rocketRef.current.position.y =
-        adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
+      flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
+      rocketRef.current.position.y = adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
+    }
+    if (turn.team == 0 && hasMove(teams[0])) {
+      rocketRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
+      rocketRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
+      rocketRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
     }
   });
 
@@ -81,14 +99,7 @@ export default function Rocket({
       position={adjustedPosition}
       ref={rocketRef}
       dispose={null}
-      scale={
-        selection != null &&
-        selection.type === "piece" &&
-        selection.team == 1 &&
-        selection.id == id
-          ? scale * 1.5
-          : scale * 1
-      }
+      scale={scale}
       rotation={rotation}
     >
       <mesh
@@ -105,7 +116,6 @@ export default function Rocket({
           transparent
           opacity={0}
           ref={wrapperMatRef}
-          color="white"
         />
       </mesh>
       <group scale={0.02} rotation={[(Math.PI * 3) / 4, 0, -Math.PI]}>
