@@ -46,7 +46,6 @@ export default function Rocket({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
-  console.log("[Rocket] isMyTurn", isMyTurn(turn, teams, socketId))
 
   const rocketRef = useRef();
   const flameRef = useRef();
