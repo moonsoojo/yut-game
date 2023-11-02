@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
-export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 export const throwVisibleAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
@@ -72,6 +72,11 @@ export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const canEndTurnAtom = atom(false);
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
+//info about player
+export const clientTeamAtom = atom(-1);
+export const socketIdAtom = atom("");
+//UI events
+export const highlightPiecesAtom = atom(false);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -85,10 +90,20 @@ export const SocketManager = () => {
   const [_throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_canEndTurn, setCanEndTurn] = useAtom(canEndTurnAtom)
+  //info about player
+  const [_clientTeam, setClientTeam] = useAtom(clientTeamAtom)
+  const [_socketId, setSocketId] = useAtom(socketIdAtom);
+  //UI events
+  const [_highlightPieces, setHighlightPieces] = useAtom(highlightPiecesAtom);
 
   useEffect(() => {
     function onConnect() {
       console.log("connected");
+    }
+    function onSetUpPlayer({socketId, team}) {
+      setClientTeam(team);
+      setSocketId(socketId);
+      console.log("[SocketManager] socketId", socketId, "team", team)
     }
     function onDisconnect() {
       console.log("disconnected");
@@ -142,8 +157,13 @@ export const SocketManager = () => {
     function onCanEndTurn(flag) {
       setCanEndTurn(flag);
     }
+    //UI events
+    function onHighlightPieces(flag) {
+      setHighlightPieces(flag);
+    }
 
     socket.on("connect", onConnect);
+    socket.on("setUpPlayer", onSetUpPlayer)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
@@ -160,8 +180,10 @@ export const SocketManager = () => {
     socket.on("takeTurn", onTakeTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("canEndTurn", onCanEndTurn);
+    socket.on("highlightPieces", onHighlightPieces);
     return () => {
       socket.off("connect", onConnect);
+      socket.off("setUpPlayer", onSetUpPlayer)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
@@ -178,6 +200,7 @@ export const SocketManager = () => {
       socket.off("takeTurn", onTakeTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("canEndTurn", onCanEndTurn);
+      socket.off("highlightPieces", onHighlightPieces);
     };
   }, []);
 };

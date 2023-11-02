@@ -183,6 +183,7 @@ io.on("connection", (socket) => {
   newPlayer.socketId = socket.id
   newPlayer.index = teams[mockTeam].players.length
   teams[mockTeam].players.push(newPlayer)
+  io.to(socket.id).emit("setUpPlayer", {socketId: socket.id, team: mockTeam})
 
   // mock assigning teams
   mockTeam = mockAssignTeams(mockTeam)
@@ -203,6 +204,7 @@ io.on("connection", (socket) => {
   io.emit("throwVisible", false)
   io.emit("canEndTurn", false)
   io.emit("gamePhase", gamePhase);
+  
   // throwVisible and canEndTurn is emitted directly to the client who has the turn
 
   socket.on("throwVisible", (flag) => {

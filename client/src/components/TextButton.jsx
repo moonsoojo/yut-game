@@ -8,7 +8,8 @@ export default function TextButton({
   text,
   boxWidth,
   boxHeight,
-  color="yellow"
+  color="yellow",
+  size=0.3
 }) {
   const [hover, setHover] = useState(false);
 
@@ -39,7 +40,7 @@ export default function TextButton({
           <meshStandardMaterial transparent opacity={0.5} />
         </mesh>
       )}
-      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
+      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={size} height={0.01}>
         {text} <meshStandardMaterial color={hover ? "white" : color} />
       </Text3D>
     </group>

@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
 
@@ -16,6 +16,14 @@ function hasMove(team) {
     }
   }
   return flag
+}
+
+function isMyTurn(turn, teams, socketId) {
+  if (teams[turn.team].players[turn.players[turn.team]].socketId === socketId) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export default function Rocket({
@@ -36,6 +44,9 @@ export default function Rocket({
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
+  const [clientTeam] = useAtom(clientTeamAtom)
+  const [socketId] = useAtom(socketIdAtom);
+  console.log("[Rocket] isMyTurn", isMyTurn(turn, teams, socketId))
 
   const rocketRef = useRef();
   const flameRef = useRef();
@@ -55,10 +66,12 @@ export default function Rocket({
       flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocketRef.current.position.y = adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
     }
-    if (gamePhase === "game" && turn.team == 0 && hasMove(teams[0])) {
+    if (gamePhase === "game" && clientTeam == 0 && isMyTurn(turn, teams, socketId) && hasMove(teams[0])) {
       rocketRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
       rocketRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
       rocketRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
+      wrapperMatRef.current.color.g = (Math.cos(state.clock.elapsedTime * 2.5) - 1)
+      wrapperMatRef.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.2
     }
   });
 

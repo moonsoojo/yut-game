@@ -3,7 +3,7 @@ import { useRef, useMemo, useEffect } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, gamePhaseAtom, socket } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, gamePhaseAtom, clientTeamAtom, socketIdAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 import React from "react";
@@ -17,6 +17,14 @@ function hasMove(team) {
     }
   }
   return flag
+}
+
+function isMyTurn(turn, teams, socketId) {
+  if (teams[turn.team].players[turn.players[turn.team]].socketId === socketId) {
+    return true
+  } else {
+    return false
+  }
 }
 
 export default function Ufo({
@@ -35,6 +43,8 @@ export default function Ufo({
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
+  const [clientTeam] = useAtom(clientTeamAtom)
+  const [socketId] = useAtom(socketIdAtom);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
@@ -59,7 +69,7 @@ export default function Ufo({
       ufoRef.current.position.y +=
         Math.sin(state.clock.elapsedTime * 3) * 0.001;
     }
-    if (gamePhase === "game" && turn.team == 1 && hasMove(teams[1])) {
+    if (gamePhase === "game" && clientTeam == 1 && isMyTurn(turn, teams, socketId) && hasMove(teams[1])) {
       ufoRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
       ufoRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
       ufoRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)

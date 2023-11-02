@@ -44,6 +44,7 @@ import {
   gamePhaseAtom,
   canEndTurnAtom,
   socket,
+  socketIdAtom,
 } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
@@ -74,6 +75,7 @@ export default function Experience() {
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [canEndTurn] = useAtom(canEndTurnAtom);
+  const [socketId] = useAtom(socketIdAtom);
 
   const numTiles = 29;
 
@@ -717,6 +719,7 @@ export default function Experience() {
                   : "yellow"
               }
               key={index}
+              size={value.socketId === socketId ? 0.4: 0.3}
             />
           ))}
           {(turn.team == 0 && (gamePhase === "pregame" || gamePhase === "game")) && (
@@ -765,6 +768,7 @@ export default function Experience() {
                   : "yellow"
               }
               key={index}
+              size={value.socketId === socketId ? 0.4: 0.3}
             />
           ))}
           {(turn.team == 1 && (gamePhase === "pregame" || gamePhase === "game")) && (
