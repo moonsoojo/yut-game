@@ -67,13 +67,14 @@ export default function Ufo({
   useFrame((state, delta) => {
     if (tile >= 0) {
       ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
-      ufoRef.current.position.y +=
-        Math.sin(state.clock.elapsedTime * 3) * 0.001;
+      // ufoRef.current.position.y += Math.sin(state.clock.elapsedTime * 3) * 0.001;
     }
     if (gamePhase === "game" && clientTeam == 1 && isMyTurn(turn, teams, socketId) && hasMove(teams[1])) {
       ufoRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
       ufoRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
       ufoRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
+      wrapperMatRef.current.color.r = (Math.cos(state.clock.elapsedTime * 2.5) - 1)
+      wrapperMatRef.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.2
     }
   });
 
