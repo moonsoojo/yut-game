@@ -109,4 +109,12 @@ export default {
     [],
     [],
   ],
+  legalTiles: {}
+  // schema
+  // legalTiles: {
+  //    tile (int): [
+  //      { move: int, path: [int] }
+  //    ],
+  //    tile2: [...]
+  // }
 };

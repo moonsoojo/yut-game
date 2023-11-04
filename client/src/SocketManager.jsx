@@ -4,6 +4,7 @@ import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
 export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+// doesn't work when another app is running on the same port
 export const throwVisibleAtom = atom(false);
 export const yutThrowValuesAtom = atom([
   {
@@ -77,6 +78,7 @@ export const clientTeamAtom = atom(-1);
 export const socketIdAtom = atom("");
 //UI events
 export const highlightPiecesAtom = atom(false);
+export const legalTilesAtom = atom(JSON.parse(JSON.stringify(initialState.legalTiles)));
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -95,6 +97,7 @@ export const SocketManager = () => {
   const [_socketId, setSocketId] = useAtom(socketIdAtom);
   //UI events
   const [_highlightPieces, setHighlightPieces] = useAtom(highlightPiecesAtom);
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
 
   useEffect(() => {
     function onConnect() {

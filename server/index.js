@@ -25,6 +25,7 @@ let hostId = null;
 const characters = [];
 // mock for multiplayer
 let mockTeam = 0
+let legalTiles = JSON.parse(JSON.stringify(initialState.legalTiles));
 
 const generateRandomNumberInRange = (num, plusMinus) => {
   return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);

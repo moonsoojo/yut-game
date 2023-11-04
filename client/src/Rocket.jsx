@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
 
@@ -46,6 +46,17 @@ export default function Rocket({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  // use selection.tile and teams[turn.team].moves to calculate where piece can go
+  // track legalTiles in Tile to see if it should be highlighted
+
+  // on tile, both tile and piece should be clickable
+  // add calculateLegalTiles logic to both tile and piece
+
+  // on rocket click, if there is selection, move to it
+  // if there isn't, use its tile to set legal tiles
+  // on move, select all content in the tiles array at tile index
+  
 
   const rocketRef = useRef();
   const flameRef = useRef();
