@@ -20,6 +20,7 @@ function hasMove(team) {
 }
 
 function isMyTurn(turn, teams, socketId) {
+  console.log("turn", turn, "teams", teams, "socketId", socketId)
   if (teams[turn.team].players[turn.players[turn.team]].socketId === socketId) {
     return true
   } else {

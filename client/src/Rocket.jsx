@@ -74,7 +74,7 @@ export default function Rocket({
   useFrame((state, delta) => {
     if (tile >= 0) {
       flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
-      rocketRef.current.position.y = adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
+      // rocketRef.current.position.y = adjustedPosition[1] + Math.sin(state.clock.elapsedTime * 3) * 0.07;
     }
     if (gamePhase === "game" && clientTeam == 0 && isMyTurn(turn, teams, socketId) && hasMove(teams[0])) {
       rocketRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.08 + (0.08 / 2)
