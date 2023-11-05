@@ -1,5 +1,9 @@
 import edgeList from "./edgeList.js";
 
+/* todo */
+// path history by piece // append it on 'move'
+// make backdo use path history // implement once 'move' is implemented
+
 // schema
 // legalTiles: {
 //   "1": { destination: 1, move: 1, path: [1, 2, 3]},
@@ -8,17 +12,28 @@ import edgeList from "./edgeList.js";
 //     { destination: 29, "move": 2, "path": [28, 29]}
 //   ]
 // }
-export function getLegalTiles(tile, moves) {
+export function getLegalTiles(tile, moves, pieces) { // parameters are optional
   let legalTiles = {} // add key '29' with empty list
 
   for (let move in moves) {
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
-      let forks = getNextTiles(tile, forward)
-      for (let i = 0; i < forks.length; i++) {
-        let path = [forks[i]]
-        let destination = getDestination(forks[i], parseInt(move)-1, forward, path)
-        legalTiles[destination.tile] = { tile: destination.tile, move: move, path: destination.path }
+      if (checkBackdoRule(moves, pieces)) {
+        legalTiles[1] = { tile: 1, move: "-1", path: [-1, 1] }
+      } else {
+        let forks = getNextTiles(tile, forward)
+        for (let i = 0; i < forks.length; i++) {
+          let path = [tile]
+          let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
+          if (destination.tile == 29) {
+            if (!(29 in legalTiles)) {
+              legalTiles[29] = []
+            }
+            legalTiles[29].push({ tile: destination.tile, move: move, path: destination.path })
+          } else {
+            legalTiles[destination.tile] = { tile: destination.tile, move: move, path: destination.path }
+          }
+        }
       }
     }
   }
@@ -31,8 +46,8 @@ export function getLegalTiles(tile, moves) {
 // else, go straight
 function getNextTiles(tile, forward) {
   let nextTiles = [];
-  if (tile == -1 && forward) {
-    return [0]
+  if (tile == -1 && (forward)) {
+    return [1]
   }
 
   // on board
@@ -56,7 +71,8 @@ function getStartAndEndVertices(forward) {
 
 // to simplify, going backward works like going forward. no using path history
 function getDestination(tile, steps, forward, path) {
-  if (steps == 0) {
+  path.push(tile)
+  if (steps == 0 || tile == 29) {
     return { tile, path }
   }
   
@@ -72,8 +88,8 @@ function getDestination(tile, steps, forward, path) {
       } else {
         nextTile = edge[end]
       }
-      path.push(nextTile)
-      return getDestination(nextTile, steps--, forward, path)
+      steps--; // updates value after reading
+      return getDestination(nextTile, steps, forward, path)
     }
   }
 }
@@ -108,10 +124,12 @@ function checkBackdoRule(moves, pieces) {
 
   // should have no pieces on the board
   for (let piece of pieces) {
-    if (piece.tile != -1) {
+    if (piece.tile != -1 && piece.tile != "finished") {
       return false;
     }
   }
+  
+  return true;
 }
 
 /* extra code */
