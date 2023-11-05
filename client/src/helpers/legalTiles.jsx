@@ -2,25 +2,23 @@ import edgeList from "./edgeList.js";
 
 // schema
 // legalTiles: {
-//   "1": [
-//     { "move": 1, "path": [1, 2, 3]},
-//     { "move": 2, "path": [1,2,3,4]}
-//   ],
-//   "2": [
-//     { "move": 1, "path": [1, 2, 3]},
-//     { "move": 2, "path": [1,2,3,4]}
+//   "1": { destination: 1, move: 1, path: [1, 2, 3]},
+//   "29": [
+//     { destination: 29, "move": 1, "path": [28, 29]},
+//     { destination: 29, "move": 2, "path": [28, 29]}
 //   ]
 // }
-export function getLegalTiles(tile, moves, pieces) {
-  let legalTiles = {29: []}
+export function getLegalTiles(tile, moves) {
+  let legalTiles = {} // add key '29' with empty list
 
   for (let move in moves) {
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
-      let forks = getFirstTiles(tile, forward)
+      let forks = getNextTiles(tile, forward)
       for (let i = 0; i < forks.length; i++) {
-        let destination = getDestination(forks[i], parseInt(move)-1, forward)
-        legalTiles[destination.tile] = destination
+        let path = [forks[i]]
+        let destination = getDestination(forks[i], parseInt(move)-1, forward, path)
+        legalTiles[destination.tile] = { tile: destination.tile, move: move, path: destination.path }
       }
     }
   }
@@ -31,8 +29,8 @@ export function getLegalTiles(tile, moves, pieces) {
 // recursion
 // if first step, keep forks
 // else, go straight
-function getFirstTiles(tile, forward) {
-  let firstTiles = [];
+function getNextTiles(tile, forward) {
+  let nextTiles = [];
   if (tile == -1 && forward) {
     return [0]
   }
@@ -41,10 +39,11 @@ function getFirstTiles(tile, forward) {
   let [start, end] = getStartAndEndVertices(forward);
   for (const edge of edgeList) {
     if (edge[start] == tile) {
-      firstTiles.push(edge[end]);
+      nextTiles.push(edge[end]);
     }
   }
-  return firstTiles
+
+  return nextTiles
 }
 
 function getStartAndEndVertices(forward) {
@@ -56,11 +55,41 @@ function getStartAndEndVertices(forward) {
 }
 
 // to simplify, going backward works like going forward. no using path history
-function getDestination(tile, steps, forward) {
-
+function getDestination(tile, steps, forward, path) {
+  if (steps == 0) {
+    return { tile, path }
+  }
+  
+  let [start, end] = getStartAndEndVertices(forward);
+  for (const edge of edgeList) {
+    if (edge[start] == tile) {
+      let nextTile;
+      let forks = getNextTiles(tile, forward);
+      if (forks.length > 1) {
+        // choose next tile
+        // recursively call getDestination with
+        nextTile = chooseTileFromFork(path, forks)
+      } else {
+        nextTile = edge[end]
+      }
+      path.push(nextTile)
+      return getDestination(nextTile, steps--, forward, path)
+    }
+  }
 }
 
-
+function chooseTileFromFork(path, forks) {
+  let closestIndexDistance = 1000;
+  let closestIndex = -2;
+  for (const fork of forks) {
+    let indexDistance = Math.abs(path[path.length-2] - fork)
+    if (indexDistance < closestIndexDistance) {
+      closestIndexDistance = indexDistance
+      closestIndex = fork
+    }
+  }
+  return closestIndex
+}
 
 function checkBackdoRule(moves, pieces) {
   // should only have backdo
