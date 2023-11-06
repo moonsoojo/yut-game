@@ -6,6 +6,7 @@ import { useGraph } from "@react-three/fiber";
 import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
+import { getLegalTiles } from "./helpers/legalTiles";
 
 function hasMove(team) {
   let flag = false;
@@ -47,6 +48,7 @@ export default function Rocket({
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  
   // use selection.tile and teams[turn.team].moves to calculate where piece can go
   // track legalTiles in Tile to see if it should be highlighted
 
@@ -65,7 +67,7 @@ export default function Rocket({
 
   scale = selection != null &&
   selection.type === "piece" &&
-  selection.team == 1 &&
+  selection.team == 0 &&
   selection.id == id
     ? scale * 1.5
     : scale
@@ -106,9 +108,11 @@ export default function Rocket({
   function handlePointerDown(event) {
     if (tile == -1 && gamePhase === "game" && hasMove(teams[0])) {
       event.stopPropagation();
+      console.log("[Rocket] in game, tile", tile, "hasMove", hasMove(teams[0]), "selection", selection)
       if (selection == null) {
         // setSelection({ type: "piece", tile, team, id });
         socket.emit("select", { type: "piece", tile, team, id });
+        setLegalTiles(getLegalTiles(tile, teams[0].moves, teams[0].pieces))
       } else {
         // setSelection(null);
         socket.emit("select", null);

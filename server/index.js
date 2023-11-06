@@ -51,13 +51,16 @@ function makeId(length) {
   return result;
 }
 
-function mockAssignTeams(mockTeam) {
-  if (mockTeam == 0) {
-    mockTeam = 1
+function mockAssignTeams(teams) {
+  if (countPlayers(teams) == 0) {
+    return getRandomInt(2);
   } else {
-    mockTeam = 0
+    for (let i = 0; i < teams.length; i++) {
+      if (teams[i].players.length == 0) {
+        return i
+      }
+    }
   }
-  return mockTeam
 }
 
 function removePlayerFromGame(teams, socketId) {
@@ -97,15 +100,12 @@ function passTurn(turn, teams) {
       turn.team++
     }
   }
-  if (turn.players[turn.team] == -1) {
+  if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
     turn.players[turn.team] = 0
   } else {
-    if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
-      turn.players[turn.team] = 0
-    } else {
-      turn.players[turn.team]++
-    }
+    turn.players[turn.team]++
   }
+  console.log("[passTurn] turn", turn)
   return turn
 }
 
@@ -136,12 +136,8 @@ function calcFirstTeamToThrow(teams) {
   let topThrowTeam = -1;
   let tie = false;
   for (let i = 0; i < teams.length; i++) {
-    console.log("[server] team", i)
     for (let move in teams[i].moves) {
-      console.log("[server] move", move)
-      console.log("[server] moves[move]", teams[i].moves[move])
       if (teams[i].moves[move] > 0) {
-        console.log("[server] move int", parseInt(move))
         if (parseInt(move) > topThrow) {
           topThrow = parseInt(move)
           topThrowTeam = i
@@ -152,11 +148,28 @@ function calcFirstTeamToThrow(teams) {
       }
     }
   }
-  console.log("[server] topThrow", topThrow, "topThrowTeam", topThrowTeam)
   if (tie) {
     return -1
   } else {
     return topThrowTeam
+  }
+}
+
+// 0, inclusive to max, exclusive
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function findRandomPlayer(teams) {
+  while (true) {
+    let randomTeam = getRandomInt(2)
+    let teamToChooseFrom = teams[randomTeam]
+    if (teamToChooseFrom.players.length > 0) {
+      let randomPlayer = getRandomInt(teamToChooseFrom.players.length)
+      return teamToChooseFrom.players[randomPlayer]
+    } else {
+      continue;
+    }
   }
 }
 
@@ -177,17 +190,15 @@ io.on("connection", (socket) => {
   // team is chosen by player from UI
   // name is chosen by player from UI
   let newPlayer = JSON.parse(JSON.stringify(initialState.player));
-  newPlayer.team = mockTeam // it starts at 1
+  let newTeam = mockAssignTeams(teams)
+  newPlayer.team =  // it starts at 1
   //mockTeam = mockAssignTeams(mockTeam) // this changes the value in the object
   // mock assigning a name 
   newPlayer.displayName = makeId(5)
   newPlayer.socketId = socket.id
-  newPlayer.index = teams[mockTeam].players.length
-  teams[mockTeam].players.push(newPlayer)
-  io.to(socket.id).emit("setUpPlayer", {socketId: socket.id, team: mockTeam})
-
-  // mock assigning teams
-  mockTeam = mockAssignTeams(mockTeam)
+  newPlayer.index = teams[newTeam].players.length
+  teams[newTeam].players.push(newPlayer)
+  io.to(socket.id).emit("setUpPlayer", {socketId: socket.id, team: newTeam})
 
   // mock assign "host" to display 'start game' button
   // by default, it's hidden for everyone
@@ -398,7 +409,6 @@ io.on("connection", (socket) => {
   socket.on("clientYutsResting", () => {
     numClientsYutsResting++;
     if (numClientsYutsResting == characters.length) {
-      console.log("[clientYutsResting] all resting")
     }
   })
 
@@ -425,10 +435,7 @@ io.on("connection", (socket) => {
   }
 
   socket.on("bonusThrow", () => {
-    console.log("[server] bonusThrow")
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
-      // console.log("[server] bonusThrow, client yut results all in and throw results match")
-      // teams[turn.team].players[turn.players[turn.team]].throws++;
       teams[turn.team].throws++;
       io.emit("teams", teams)
     }
@@ -441,9 +448,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("recordThrow", (result) => {
-    console.log("[server] recordThrow")
     clientYutResults.push(result);
-    console.log("[server] recordThrow", clientYutResults.length, checkThrowResultsMatch(clientYutResults))
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
 
       teams[turn.team].moves[result.toString()]++
@@ -463,7 +468,9 @@ io.on("connection", (socket) => {
     io.emit("characters", characters);
     io.emit("teams", teams)
 
-    if (countPlayers(teams) == 0) {
+    if (countPlayers(teams) > 0) {
+      hostId = findRandomPlayer(teams).socketId
+    } else {
       hostId = null;
     }
   });

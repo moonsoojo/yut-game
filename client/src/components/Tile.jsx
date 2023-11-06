@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { selectionAtom, tilesAtom, socket } from "../SocketManager";
+import { selectionAtom, tilesAtom, socket, legalTilesAtom } from "../SocketManager";
 import Rocket from "../Rocket";
 import Ufo from "../Ufo";
+import Pointer from "../meshes/Pointer"
 import React from "react";
 
 export default function Tile({ tileIndex, wrapperRadius }) {
@@ -13,6 +14,8 @@ export default function Tile({ tileIndex, wrapperRadius }) {
     selection.type === "tile" &&
     selection.tile == tileIndex;
   const [tiles] = useAtom(tilesAtom);
+  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
+
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -58,7 +61,7 @@ export default function Tile({ tileIndex, wrapperRadius }) {
 
   function Piece() {
     if (tiles[tileIndex].length > 0) {
-      if (tiles[tileIndex][0].team == 1) {
+      if (tiles[tileIndex][0].team == 0) {
         return (
           <>
             {tiles[tileIndex].map((value, index) => (
@@ -66,7 +69,7 @@ export default function Tile({ tileIndex, wrapperRadius }) {
                 position={rocketPositions[index]}
                 keyName={`count${index}`}
                 tile={tileIndex}
-                team={1}
+                team={0}
                 id={value.id}
                 key={index}
                 scale={0.4}
@@ -82,7 +85,7 @@ export default function Tile({ tileIndex, wrapperRadius }) {
                 position={ufoPositions[index]}
                 keyName={`count${index}`}
                 tile={tileIndex}
-                team={0}
+                team={1}
                 id={value.id}
                 key={index}
               />
@@ -109,6 +112,7 @@ export default function Tile({ tileIndex, wrapperRadius }) {
         />
       </mesh>
       <Piece />
+      { selection != null && tileIndex in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

@@ -3,10 +3,11 @@ import { useRef, useMemo, useEffect } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, gamePhaseAtom, clientTeamAtom, socketIdAtom, socket } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 import React from "react";
+import { getLegalTiles } from "./helpers/legalTiles";
 
 function hasMove(team) {
   let flag = false;
@@ -20,7 +21,6 @@ function hasMove(team) {
 }
 
 function isMyTurn(turn, teams, socketId) {
-  console.log("turn", turn, "teams", teams, "socketId", socketId)
   if (teams[turn.team].players[turn.players[turn.team]].socketId === socketId) {
     return true
   } else {
@@ -46,6 +46,7 @@ export default function Ufo({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
 
   const ufoGlassRef = useRef();
   const ufoRef = useRef();
@@ -55,7 +56,7 @@ export default function Ufo({
 
   scale =         selection != null &&
   selection.type === "piece" &&
-  selection.team == 0 &&
+  selection.team == 1 &&
   selection.id == id
     ? scale * 1.5
     : scale 
@@ -104,6 +105,7 @@ export default function Ufo({
       if (selection == null) {
         // setSelection({ type: "piece", tile, team, id });
         socket.emit("select", { type: "piece", tile, team, id });
+        setLegalTiles(getLegalTiles(tile, teams[1].moves, teams[1].pieces))
       } else {
         // setSelection(null);
         socket.emit("select", null);

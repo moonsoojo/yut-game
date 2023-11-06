@@ -38,6 +38,7 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
     }
   }
 
+  console.log("legalTiles", legalTiles)
   return legalTiles
 }
 

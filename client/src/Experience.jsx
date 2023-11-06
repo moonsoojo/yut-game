@@ -31,9 +31,6 @@ import {
 import Universe from "./Universe";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-// import { useRocketStore } from "./state/zstore";
-// import { useRocketStore } from "./state/zstore2";
-// import { charactersAtom } from "./SocketManager";
 import { useAtom, atom } from "jotai";
 import {
   piecesAtom,
@@ -45,6 +42,7 @@ import {
   canEndTurnAtom,
   socket,
   socketIdAtom,
+  legalTilesAtom
 } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
@@ -64,9 +62,7 @@ export default function Experience() {
     }
   });
 
-  // const pieces = useRocketStore((state) => state.pieces);
   const [banner] = useAtom(bannerAtom);
-  // const [characters] = useAtom(charactersAtom);
 
   const [pieces] = useAtom(piecesAtom);
   const [selection] = useAtom(selectionAtom);
@@ -188,57 +184,6 @@ export default function Experience() {
   }
 
   function PiecesTeam0() {
-    let positionStartX = layout[device].piecesTeam0.positionStartX;
-    let positionStartY = layout[device].piecesTeam0.positionStartY;
-    let positionStartZ = layout[device].piecesTeam0.positionStartZ;
-    let space = layout[device].piecesTeam0.space;
-    return (
-      <>
-        {pieces[0].map((value, index) =>
-          value == null ? (
-            <mesh
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.1]} />
-            </mesh>
-          ) : value === "scored" ? (
-            <mesh
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={"green"} />
-            </mesh>
-          ) : (
-            <Ufo
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              rotation={layout[device].piecesTeam0.rotation}
-              keyName={`count${index}`}
-              tile={-1}
-              team={0}
-              id={value.id}
-              key={index}
-              scale={0.4}
-            />
-          )
-        )}
-      </>
-    );
-  }
-  function PiecesTeam1() {
     let positionStartX = layout[device].piecesTeam1.positionStartX;
     let positionStartY = layout[device].piecesTeam1.positionStartY;
     let positionStartZ = layout[device].piecesTeam1.positionStartZ;
@@ -246,7 +191,7 @@ export default function Experience() {
 
     return (
       <>
-        {pieces[1].map((value, index) =>
+        {pieces[0].map((value, index) =>
           value == null ? (
             <mesh
               position={[
@@ -280,7 +225,7 @@ export default function Experience() {
               rotation={layout[device].piecesTeam1.rotation}
               keyName={`count${index}`}
               tile={-1}
-              team={1}
+              team={0}
               id={value.id}
               key={index}
               scale={1}
@@ -290,6 +235,59 @@ export default function Experience() {
       </>
     );
   }
+
+  function PiecesTeam1() {
+    let positionStartX = layout[device].piecesTeam0.positionStartX;
+    let positionStartY = layout[device].piecesTeam0.positionStartY;
+    let positionStartZ = layout[device].piecesTeam0.positionStartZ;
+    let space = layout[device].piecesTeam0.space;
+    return (
+      <>
+        {pieces[1].map((value, index) =>
+          value == null ? (
+            <mesh
+              position={[
+                positionStartX,
+                positionStartY,
+                positionStartZ + index * space,
+              ]}
+              key={index}
+            >
+              <sphereGeometry args={[0.1]} />
+            </mesh>
+          ) : value === "scored" ? (
+            <mesh
+              position={[
+                positionStartX,
+                positionStartY,
+                positionStartZ + index * space,
+              ]}
+              key={index}
+            >
+              <sphereGeometry args={[0.1]} />
+              <meshStandardMaterial color={"green"} />
+            </mesh>
+          ) : (
+            <Ufo
+              position={[
+                positionStartX,
+                positionStartY,
+                positionStartZ + index * space,
+              ]}
+              rotation={layout[device].piecesTeam0.rotation}
+              keyName={`count${index}`}
+              tile={-1}
+              team={1}
+              id={value.id}
+              key={index}
+              scale={0.4}
+            />
+          )
+        )}
+      </>
+    );
+  }
+  
 
   function hasMove(team) {
     let flag = false;
@@ -714,7 +712,7 @@ export default function Experience() {
               text={value.displayName}
               position={[0, -0.5 * (1 + index), 0]}
               color={
-                turn.team == 0 && turn.players[turn.team] == index
+                turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
                   ? "white"
                   : "yellow"
               }
@@ -763,7 +761,7 @@ export default function Experience() {
               text={value.displayName}
               position={[0, -0.5 * (1 + index), 0]}
               color={
-                turn.team == 1 && turn.players[turn.team] == index
+                turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
                   ? "white"
                   : "yellow"
               }
