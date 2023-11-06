@@ -1,4 +1,4 @@
-import Tile from "./components/Tile";
+import Tile from "../components/Tile";
 import { useGLTF } from "@react-three/drei";
 import { useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
@@ -23,7 +23,7 @@ export default function Star({ position, tile }) {
       >
         <meshStandardMaterial color={"yellow"} />
       </mesh>
-      <Tile tileIndex={tile} wrapperRadius={0.4} />
+      <Tile tile={tile} wrapperRadius={0.4} />
     </group>
   );
 }

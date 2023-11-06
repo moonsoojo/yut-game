@@ -110,8 +110,8 @@ export default {
   },
   desktop: {
     camera: {
-      zoom: 175,
-      position: [4, 3, 0],
+      zoom: 100,
+      position: [4, 6, 0],
     },
     star: {
       scale: 1,
@@ -173,11 +173,11 @@ export default {
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     endTurnButton: {
-      position: [3, -8, -3.5],
+      position: [3, -5, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     endTurnButtonTie: {
-      position: [3, -9, -3.5],
+      position: [3, -6, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     controlsButton: {

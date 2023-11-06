@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import Tile from "./components/Tile";
+import Tile from "../components/Tile";
 import * as THREE from "three";
 
 const fragmentShaderSun = `
@@ -715,7 +715,7 @@ function Sun({ tile, ...props }) {
           ></pointLight>
         </mesh>
       </mesh>
-      <Tile tileIndex={tile} wrapperRadius={0.6} />
+      <Tile tile={tile} wrapperRadius={0.6} />
     </>
   );
 }

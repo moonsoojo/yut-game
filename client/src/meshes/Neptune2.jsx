@@ -1,11 +1,11 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
-import HelperArrow from "./HelperArrow";
+import HelperArrow from "../HelperArrow";
 import React from "react";
-import NeptuneParticles from "./NeptuneParticles";
+import NeptuneParticles from "../NeptuneParticles";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
-import Tile from "./components/Tile";
+import Tile from "../components/Tile";
 
 export default function Neptune2({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
@@ -121,7 +121,7 @@ export default function Neptune2({ position, tile }) {
         rotation={[Math.PI / 2, 0, (5 * Math.PI) / 4]}
         scale={0.9}
       />
-      <Tile tileIndex={tile} wrapperRadius={0.4} />
+      <Tile tile={tile} wrapperRadius={0.4} />
     </group>
   );
 }

@@ -191,7 +191,8 @@ io.on("connection", (socket) => {
   // name is chosen by player from UI
   let newPlayer = JSON.parse(JSON.stringify(initialState.player));
   let newTeam = mockAssignTeams(teams)
-  newPlayer.team =  // it starts at 1
+  console.log("newTeam", newTeam)
+  newPlayer.team = newTeam
   //mockTeam = mockAssignTeams(mockTeam) // this changes the value in the object
   // mock assigning a name 
   newPlayer.displayName = makeId(5)

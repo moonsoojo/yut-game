@@ -1,16 +1,15 @@
 import { useRef, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import YutsNew3 from "./YutsNew3";
-import Star from "./Star";
-import Neptune2 from "./Neptune2";
-import Earth from "./Earth";
+import Star from "./meshes/Star.jsx";
+import Neptune2 from "./meshes/Neptune2.jsx";
+import Earth from "./meshes/Earth.jsx";
+import Mars from "./meshes/Mars.jsx";
+import Saturn from "./meshes/Saturn.jsx";
+import SunBagus from "./meshes/SunBagus.jsx";
 import Rocket from "./Rocket";
 import Ufo from "./Ufo";
-import Mars from "./Mars";
-import Saturn from "./Saturn";
-import SunBagus from "./SunBagus.jsx";
 import Moon from "./Moon";
-// import Starfighter from "./Starfighter";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
 import layout from "./layout";
@@ -46,6 +45,7 @@ import {
 } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
+import ScoreButton from "./ScoreButton.jsx";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -213,7 +213,7 @@ export default function Experience() {
               key={index}
             >
               <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={"green"} />
+              <meshStandardMaterial color={"red"} />
             </mesh>
           ) : (
             <Rocket
@@ -265,7 +265,7 @@ export default function Experience() {
               key={index}
             >
               <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={"green"} />
+              <meshStandardMaterial color={"turquoise"} />
             </mesh>
           ) : (
             <Ufo
@@ -624,7 +624,7 @@ export default function Experience() {
         <PiecesTeam1 />
 
         {/* score button */}
-        <TextButton
+        {/* <TextButton
           text="Score"
           position={layout[device].scoreButton.position}
           rotation={layout[device].scoreButton.rotation}
@@ -638,6 +638,10 @@ export default function Experience() {
           }}
           boxWidth={1.2}
           boxHeight={0.3}
+        /> */}
+        <ScoreButton           
+          position={layout[device].scoreButton.position}
+          rotation={layout[device].scoreButton.rotation}
         />
         {/* reset button */}
         <TextButton

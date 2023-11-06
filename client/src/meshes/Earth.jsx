@@ -1,9 +1,9 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
-import HelperArrow from "./HelperArrow";
+import HelperArrow from "../HelperArrow";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import Tile from "./components/Tile";
+import Tile from "../components/Tile";
 
 export default function Earth({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
@@ -56,7 +56,7 @@ export default function Earth({ position, tile }) {
           />
         </mesh>
       </group>
-      <Tile tileIndex={tile} wrapperRadius={0.5} />
+      <Tile tile={tile} wrapperRadius={0.5} />
       <HelperArrow
         position={[-0.5, 0, -0.5]}
         rotation={[Math.PI / 2, 0, (Math.PI * 5) / 8]}

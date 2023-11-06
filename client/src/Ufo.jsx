@@ -54,7 +54,7 @@ export default function Ufo({
   const alienRef = useRef();
   const wrapperMatRef = useRef();
 
-  scale =         selection != null &&
+  scale = selection != null &&
   selection.type === "piece" &&
   selection.team == 1 &&
   selection.id == id
@@ -80,27 +80,27 @@ export default function Ufo({
   });
 
   function handlePointerEnter(event) {
-    if (tile == -1) {
+    // if (tile == -1) {
       // alienRef.current.material.color.r += 2;
       // alienRef.current.material.color.g -= 4;
       event.stopPropagation();
       wrapperMatRef.current.opacity += 0.5;
       document.body.style.cursor = "pointer";
-    }
+    // }
   }
 
   function handlePointerLeave(event) {
-    if (tile == -1) {
+    // if (tile == -1) {
       // alienRef.current.material.color.r -= 2;
       // alienRef.current.material.color.g += 4;
       event.stopPropagation();
       wrapperMatRef.current.opacity -= 0.5;
       document.body.style.cursor = "default";
-    }
+    // }
   }
 
   function handlePointerDown(event) {
-    if (tile == -1 && gamePhase === "game" && hasMove(teams[1])) {
+    if (gamePhase === "game" && hasMove(teams[1])) {
       event.stopPropagation();
       if (selection == null) {
         // setSelection({ type: "piece", tile, team, id });

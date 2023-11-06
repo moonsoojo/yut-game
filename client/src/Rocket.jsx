@@ -88,25 +88,25 @@ export default function Rocket({
   });
 
   function handlePointerEnter(event) {
-    if (tile == -1) {
+    // if (tile == -1) {
       // rocketPart1Ref.current.material.color.r += 2;
       event.stopPropagation();
       wrapperMatRef.current.opacity += 0.4;
       document.body.style.cursor = "pointer";
-    }
+    // }
   }
 
   function handlePointerLeave(event) {
-    if (tile == -1) {
+    // if (tile == -1) {
       // rocketPart1Ref.current.material.color.r -= 2;
       event.stopPropagation();
       wrapperMatRef.current.opacity -= 0.4;
       document.body.style.cursor = "default";
-    }
+    // }
   }
 
   function handlePointerDown(event) {
-    if (tile == -1 && gamePhase === "game" && hasMove(teams[0])) {
+    if (gamePhase === "game" && hasMove(teams[0])) {
       event.stopPropagation();
       console.log("[Rocket] in game, tile", tile, "hasMove", hasMove(teams[0]), "selection", selection)
       if (selection == null) {

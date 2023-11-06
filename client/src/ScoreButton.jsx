@@ -2,17 +2,15 @@ import React, { useRef, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 // import { useRocketStore } from "./state/zstore2";
 import { Text3D } from "@react-three/drei";
-import { selectionAtom, socket } from "./SocketManager";
+import { selectionAtom, legalTilesAtom, socket } from "./SocketManager";
 import { useAtom } from "jotai";
+import Pointer from "./meshes/Pointer";
 
+const SCORE_TILE = 29
 export default function ScoreButton({ position, rotation }) {
-  // const finishPiece = useRocketStore((state) => state.finishPiece);
-  // const setSelection = useRocketStore((state) => state.setSelection);
-  // const selection = useRocketStore((state) => state.selection);
   const [selection] = useAtom(selectionAtom);
-  const [hover, setHover] = useState(false);
-  const matRef = useRef();
   const [hoverScoreText, setHoverScoreText] = useState(false);
+  const [legalTiles] = useAtom(legalTilesAtom)
 
   function scorePointerEnter() {
     setHoverScoreText(true);
@@ -50,6 +48,7 @@ export default function ScoreButton({ position, rotation }) {
         Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D>
+      { selection != null && SCORE_TILE in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

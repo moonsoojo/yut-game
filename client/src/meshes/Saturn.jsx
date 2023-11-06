@@ -4,8 +4,8 @@ import { useRef } from "react";
 import React from "react";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
-import HelperArrow from "./HelperArrow";
-import Tile from "./components/Tile";
+import HelperArrow from "../HelperArrow";
+import Tile from "../components/Tile";
 
 export default function Saturn({ position, tile }) {
   const { nodes, materials } = useGLTF("/models/Saturn 3.glb");
@@ -155,7 +155,7 @@ export default function Saturn({ position, tile }) {
           </group>
         </mesh>
       </group>
-      <Tile tileIndex={tile} wrapperRadius={0.5} />
+      <Tile tile={tile} wrapperRadius={0.5} />
       <HelperArrow
         position={[0.5, 0, 0.5]}
         rotation={[Math.PI / 2, 0, -Math.PI / 4]}
