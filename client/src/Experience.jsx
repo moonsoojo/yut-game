@@ -63,8 +63,6 @@ export default function Experience() {
   });
 
   const [banner] = useAtom(bannerAtom);
-
-  const [pieces] = useAtom(piecesAtom);
   const [selection] = useAtom(selectionAtom);
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
@@ -191,7 +189,7 @@ export default function Experience() {
 
     return (
       <>
-        {pieces[0].map((value, index) =>
+        {teams[0].pieces.map((value, index) =>
           value.tile != -1 ? (
             <mesh
               position={[
@@ -243,7 +241,7 @@ export default function Experience() {
     let space = layout[device].piecesTeam0.space;
     return (
       <>
-        {pieces[1].map((value, index) =>
+        {teams[1].pieces.map((value, index) =>
           value.tile != -1 ? (
             <mesh
               position={[

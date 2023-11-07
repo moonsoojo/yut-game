@@ -48,29 +48,23 @@ export default function Rocket({
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
-  
-  // use selection.tile and teams[turn.team].moves to calculate where piece can go
-  // track legalTiles in Tile to see if it should be highlighted
-
-  // on tile, both tile and piece should be clickable
-  // add calculateLegalTiles logic to both tile and piece
-
-  // on rocket click, if there is selection, move to it
-  // if there isn't, use its tile to set legal tiles
-  // on move, select all content in the tiles array at tile index
-  
 
   const rocketRef = useRef();
   const flameRef = useRef();
   const rocketPart1Ref = useRef();
   const wrapperMatRef = useRef();
 
-  scale = selection != null &&
-  selection.type === "piece" &&
-  selection.team == 0 &&
-  selection.id == id
-    ? scale * 1.5
-    : scale
+  if (selection != null) {
+    if (selection.tile == -1) {
+      if (selection.id == id) {
+        scale *= 1.5
+      }
+    } else {
+      if (selection.tile == tile) {
+        scale *= 1.5
+      }
+    }
+  }
 
   const adjustedPosition = [position[0], position[1] + 0.2, position[2] - 0.5];
   useFrame((state, delta) => {
@@ -106,15 +100,21 @@ export default function Rocket({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[0])) {
+    if (gamePhase === "game" && hasMove(teams[team])) {
       event.stopPropagation();
-      console.log("[Rocket] in game, tile", tile, "hasMove", hasMove(teams[0]), "selection", selection)
       if (selection == null) {
-        // setSelection({ type: "piece", tile, team, id });
-        socket.emit("select", { type: "piece", tile, team, id });
-        setLegalTiles(getLegalTiles(tile, teams[0].moves, teams[0].pieces))
+        let starting = tile == -1 ? true : false;
+        let pieces;
+        if (starting) {
+          pieces = [{tile, team, id}]
+        } else {
+          pieces = tiles[tile];
+        }
+        socket.emit("select", { tile, pieces })
+        setLegalTiles(getLegalTiles(tile, teams[team].moves, teams[team].pieces))
       } else {
         // stacking
+        // kicking
         socket.emit("select", null);
       }
     }

@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import initialState from "./initialState.js";
+import move from "./helpers/move.js";
 
 const io = new Server({
   cors: {
@@ -15,7 +16,6 @@ io.listen(3000);
 
 let selection = null;
 let tiles = initialState.tiles;
-let pieces = JSON.parse(JSON.stringify(initialState.pieces));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
 let numClientsYutsResting = initialState.numClientsYutsResting
@@ -26,6 +26,11 @@ const characters = [];
 // mock for multiplayer
 let mockTeam = 0
 let legalTiles = JSON.parse(JSON.stringify(initialState.legalTiles));
+
+let test = true;
+if (test) {
+  gamePhase = "game"
+}
 
 const generateRandomNumberInRange = (num, plusMinus) => {
   return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
@@ -208,11 +213,11 @@ io.on("connection", (socket) => {
   }
 
   io.emit("characters", characters); // this should be refactored
-  io.emit("pieces", pieces); // this should be refactored
+  // io.emit("pieces", pieces); // this should be refactored
   io.emit("tiles", tiles);
   io.emit("selection", selection);
   io.emit("teams", teams);
-  io.emit("turn", turn)
+  io.emit("turn", turn);
   io.emit("throwVisible", false)
   io.emit("canEndTurn", false)
   io.emit("gamePhase", gamePhase);
@@ -281,109 +286,45 @@ io.on("connection", (socket) => {
     io.emit("select", selection);
   });
 
-  socket.on("move", ({from, to, move, pieceId}) => {
-    let starting = from == -1 ? true : false;
-    let movingTeam = tiles[from][0].team;
-
-    // if it's occupied
-      // if it's an enemy
-        // move enemy pieces
-      // append incoming pieces -- if piece is starting, how?
-    // else
-      // append to them
-    // update tile in team's pieces
-    // score logic should have its own function
-
-    if (tiles[to].length > 0) {
-      let occupyingTeam = tiles[to][0].team
-      if (occupyingTeam != movingTeam) {
-        for (const piece of tiles[to]) {
-          teams[occupyingTeam].pieces[piece.id].tile = -1
-        }
-      }
-    }
-
-    if (selection != null && selection.type === "tile") {
-      piecesIncoming = JSON.parse(JSON.stringify(tiles[selection.tile]));
-      if (piecesIncoming.length == 0) {
-        incomingTeam = -1;
-      } else {
-        incomingTeam = piecesIncoming[0].team;
-      }
-    } else if (selection != null && selection.type === "piece") {
-      piecesIncoming = [
-        {
-          tile: selection.tile,
-          team: selection.team,
-          id: selection.id,
-        },
-      ];
-      incomingTeam = selection.team;
-    }
-
-    if (
-      tiles[destination].length != 0 &&
-      tiles[destination][0].team != incomingTeam
-    ) {
-      for (const piece of tiles[destination]) {
-        pieces[piece.team][piece.id] = {
-          tile: -1,
-          team: piece.team,
-          id: piece.id,
-        };
-      }
-      tiles[destination] = [];
-    }
-
-    if (starting) {
-      const team = selection.team;
-      const pieceId = selection.id;
-      tiles[destination].push(piecesIncoming[0]);
-      pieces[team][pieceId] = null;
-    } else {
-      let fromTile = selection.tile;
-      for (const piece of piecesIncoming) {
-        let newPiece = { tile: destination, team: piece.team, id: piece.id };
-        tiles[destination].push(newPiece);
-      }
-      tiles[fromTile] = [];
-    }
-
-    io.emit("placePiece", { tiles, pieces });
+  socket.on("move", ({from, to, move, path, pieces}) => {
+    let { newTiles, newTeams } = move(tiles, teams, from, to, move, path, pieces)
+    // doesn't recognize "move"
+    io.emit("tiles", newTiles);
+    io.emit("teams", newTeams);
   });
 
   socket.on("finishPiece", () => {
-    let piecesIncoming;
-    let scoringTeam;
-    let fromTile;
-    if (selection != null && selection.type === "tile") {
-      fromTile = selection.tile;
-      piecesIncoming = JSON.parse(JSON.stringify(tiles[fromTile]));
-      if (piecesIncoming.length == 0) {
-        scoringTeam = -1;
-      } else {
-        scoringTeam = piecesIncoming[0].team;
-      }
-    } else if (selection != null && selection.type === "piece") {
-      piecesIncoming = [
-        {
-          tile: selection.tile,
-          team: selection.team,
-          id: selection.id,
-        },
-      ];
-      scoringTeam = selection.team;
-    }
+    // let piecesIncoming;
+    // let scoringTeam;
+    // let fromTile;
+    // if (selection != null && selection.type === "tile") {
+    //   fromTile = selection.tile;
+    //   piecesIncoming = JSON.parse(JSON.stringify(tiles[fromTile]));
+    //   if (piecesIncoming.length == 0) {
+    //     scoringTeam = -1;
+    //   } else {
+    //     scoringTeam = piecesIncoming[0].team;
+    //   }
+    // } else if (selection != null && selection.type === "piece") {
+    //   piecesIncoming = [
+    //     {
+    //       tile: selection.tile,
+    //       team: selection.team,
+    //       id: selection.id,
+    //     },
+    //   ];
+    //   scoringTeam = selection.team;
+    // }
 
-    if (scoringTeam != -1) {
-      for (const piece of piecesIncoming) {
-        pieces[scoringTeam][piece.id] = "scored";
-      }
-    }
+    // if (scoringTeam != -1) {
+    //   for (const piece of piecesIncoming) {
+    //     pieces[scoringTeam][piece.id] = "scored";
+    //   }
+    // }
 
-    tiles[fromTile] = [];
+    // tiles[fromTile] = [];
 
-    io.emit("finishPiece", { tiles, pieces });
+    // io.emit("finishPiece", { tiles, pieces });
   });
 
   let positionsInHand = [

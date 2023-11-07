@@ -40,7 +40,7 @@ export default function Tile({ tile, wrapperRadius }) {
     if (selection != null) {
       event.stopPropagation();
       if (selection.tile != tile) {
-        socket.emit("move", { from: selection.tile, to: tile, move: legalTiles[tile] }); // path history
+        socket.emit("move", { from: selection.tile, to: tile, move: legalTiles[tile].move, path: legalTiles[tile].path, piece: selection.pieces });
       }
       socket.emit("select", null);
     }

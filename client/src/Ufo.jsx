@@ -54,12 +54,17 @@ export default function Ufo({
   const alienRef = useRef();
   const wrapperMatRef = useRef();
 
-  scale = selection != null &&
-  selection.type === "piece" &&
-  selection.team == 1 &&
-  selection.id == id
-    ? scale * 1.5
-    : scale 
+  if (selection != null) {
+    if (selection.tile == -1) {
+      if (selection.id == id) {
+        scale *= 1.5
+      }
+    } else {
+      if (selection.tile == tile) {
+        scale *= 1.5
+      }
+    }
+  }
 
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.2;
@@ -100,14 +105,21 @@ export default function Ufo({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[1])) {
+    if (gamePhase === "game" && hasMove(teams[team])) {
       event.stopPropagation();
       if (selection == null) {
-        // setSelection({ type: "piece", tile, team, id });
-        socket.emit("select", { type: "piece", tile, team, id });
-        setLegalTiles(getLegalTiles(tile, teams[1].moves, teams[1].pieces))
+        let starting = tile == -1 ? true : false;
+        let pieces;
+        if (starting) {
+          pieces = [{tile, team, id}]
+        } else {
+          pieces = tiles[tile];
+        }
+        socket.emit("select", { tile, pieces })
+        setLegalTiles(getLegalTiles(tile, teams[team].moves, teams[team].pieces))
       } else {
-        // setSelection(null);
+        // stacking
+        // kicking
         socket.emit("select", null);
       }
     }
