@@ -114,7 +114,7 @@ export default function Rocket({
         socket.emit("select", { type: "piece", tile, team, id });
         setLegalTiles(getLegalTiles(tile, teams[0].moves, teams[0].pieces))
       } else {
-        // setSelection(null);
+        // stacking
         socket.emit("select", null);
       }
     }

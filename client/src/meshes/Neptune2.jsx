@@ -2,7 +2,7 @@ import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 import HelperArrow from "../HelperArrow";
 import React from "react";
-import NeptuneParticles from "../NeptuneParticles";
+import NeptuneParticles from "./NeptuneParticles";
 import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";

@@ -37,17 +37,12 @@ export default function Tile({ tile, wrapperRadius }) {
   }
 
   function handlePointerDown(event) {
-    if (!hasPiece(tiles, tile)) {
+    if (selection != null) {
       event.stopPropagation();
-      if (selection == null) {
-        // if (hasPiece)
-        // socket.emit("select", { type: "tile", tile: tile });
-      } else {
-        if (selection.tile != tile) {
-          socket.emit("placePiece", tile);
-        }
-        socket.emit("select", null);
+      if (selection.tile != tile) {
+        socket.emit("move", { from: selection.tile, to: tile, move: legalTiles[tile] }); // path history
       }
+      socket.emit("select", null);
     }
   }
 
@@ -122,7 +117,7 @@ export default function Tile({ tile, wrapperRadius }) {
         />
       </mesh>
       <Piece />
-      {/* { selection != null && tile in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>} */}
+      { selection != null && tile in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

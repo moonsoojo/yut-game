@@ -5,7 +5,7 @@ export default {
   // when piece is moved to the board, it is set to null
   pieces: [
     [
-      { tile: -1, team: 0, id: 0 },
+      { tile: -1, team: 0, id: 0 }, // tile's possible values: -1 for home, 0 to 28, "finished"
       { tile: -1, team: 0, id: 1 },
       { tile: -1, team: 0, id: 2 },
       { tile: -1, team: 0, id: 3 },
@@ -23,7 +23,7 @@ export default {
       displayName: "",
       players: [], // list of objects
       pieces: [
-        { tile: -1, team: 0, id: 0 },
+        { tile: -1, team: 0, id: 0 }, // tile's possible values: -1 for home, 0 to 28, "finished"
         { tile: -1, team: 0, id: 1 },
         { tile: -1, team: 0, id: 2 },
         { tile: -1, team: 0, id: 3 },

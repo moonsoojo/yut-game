@@ -193,7 +193,6 @@ io.on("connection", (socket) => {
   let newTeam = mockAssignTeams(teams)
   console.log("newTeam", newTeam)
   newPlayer.team = newTeam
-  //mockTeam = mockAssignTeams(mockTeam) // this changes the value in the object
   // mock assigning a name 
   newPlayer.displayName = makeId(5)
   newPlayer.socketId = socket.id
@@ -282,11 +281,27 @@ io.on("connection", (socket) => {
     io.emit("select", selection);
   });
 
-  socket.on("placePiece", (destination) => {
-    let starting =
-      selection != null && selection.type === "piece" ? true : false;
-    let piecesIncoming;
-    let incomingTeam;
+  socket.on("move", ({from, to, move, pieceId}) => {
+    let starting = from == -1 ? true : false;
+    let movingTeam = tiles[from][0].team;
+
+    // if it's occupied
+      // if it's an enemy
+        // move enemy pieces
+      // append incoming pieces -- if piece is starting, how?
+    // else
+      // append to them
+    // update tile in team's pieces
+    // score logic should have its own function
+
+    if (tiles[to].length > 0) {
+      let occupyingTeam = tiles[to][0].team
+      if (occupyingTeam != movingTeam) {
+        for (const piece of tiles[to]) {
+          teams[occupyingTeam].pieces[piece.id].tile = -1
+        }
+      }
+    }
 
     if (selection != null && selection.type === "tile") {
       piecesIncoming = JSON.parse(JSON.stringify(tiles[selection.tile]));
