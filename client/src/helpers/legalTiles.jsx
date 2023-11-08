@@ -126,7 +126,7 @@ function checkBackdoRule(moves, pieces) {
 
   // should have no pieces on the board
   for (let piece of pieces) {
-    if (piece.tile != -1 && piece.tile != "finished") {
+    if (piece == null) {
       return false;
     }
   }

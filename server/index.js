@@ -26,14 +26,14 @@ let hostId = null;
 const characters = [];
 let throwInProgress = false;
 
-let test = false;
+let test = true;
 if (test) {
   gamePhase = "game"
   turn = {
     team: 0,
     players: [0,0]
   }
-  teams[0].moves["-1"] = 1
+  // teams[0].moves["-1"] = 1
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -209,7 +209,6 @@ io.on("connection", (socket) => {
   // name is chosen by player from UI
   let newPlayer = JSON.parse(JSON.stringify(initialState.player));
   let newTeam = mockAssignTeams(teams)
-  console.log("newTeam", newTeam)
   newPlayer.team = newTeam
   // mock assigning a name 
   newPlayer.displayName = makeId(5)
@@ -436,7 +435,6 @@ io.on("connection", (socket) => {
     );
 
     teams = removePlayerFromGame(teams, socket.id)
-    console.log("[disconnect] teams", JSON.stringify(teams))
     io.emit("characters", characters);
     io.emit("teams", teams)
 

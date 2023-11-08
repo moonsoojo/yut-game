@@ -17,23 +17,27 @@ export default function Tile({ tile, wrapperRadius }) {
   const [legalTiles] = useAtom(legalTilesAtom)
 
   function handlePointerEnter(event) {
-    if (!hasPiece(tiles, tile)) {
+    // if (!hasPiece(tiles, tile)) {
+    if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
       if (!selected) {
         wrapper.current.opacity += 0.2;
       }
     }
+    // }
   }
 
   function handlePointerLeave(event) {
-    if (!hasPiece(tiles, tile)) {
+    // if (!hasPiece(tiles, tile)) {
+    if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "default";
       if (!selected) {
         wrapper.current.opacity -= 0.2;
       }
     }
+    // }
   }
 
   function handlePointerDown(event) {

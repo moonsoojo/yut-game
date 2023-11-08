@@ -7,6 +7,7 @@ import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAt
 import { useAtom } from "jotai";
 import React from "react";
 import { getLegalTiles } from "../helpers/legalTiles";
+import { getCurrentPlayerSocketId } from "../../../server/src/helpers.js";
 
 function hasMove(team) {
   let flag = false;
@@ -20,7 +21,7 @@ function hasMove(team) {
 }
 
 function isMyTurn(turn, teams, socketId) {
-  if (teams[turn.team].players[turn.players[turn.team]].socketId === socketId) {
+  if (getCurrentPlayerSocketId(turn, teams) === socketId) {
     return true
   } else {
     return false
@@ -48,7 +49,7 @@ export default function Rocket({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
-  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
 
   const rocketRef = useRef();
   const flameRef = useRef();
@@ -84,7 +85,6 @@ export default function Rocket({
 
   function handlePointerEnter(event) {
     // if (tile == -1) {
-      // rocketPart1Ref.current.material.color.r += 2;
       event.stopPropagation();
       wrapperMatRef.current.opacity += 0.4;
       document.body.style.cursor = "pointer";
@@ -93,7 +93,6 @@ export default function Rocket({
 
   function handlePointerLeave(event) {
     // if (tile == -1) {
-      // rocketPart1Ref.current.material.color.r -= 2;
       event.stopPropagation();
       wrapperMatRef.current.opacity -= 0.4;
       document.body.style.cursor = "default";
@@ -111,10 +110,15 @@ export default function Rocket({
         } else {
           pieces = tiles[tile];
         }
-        socket.emit("select", { tile, pieces })
-        setLegalTiles(getLegalTiles(tile, teams[team].moves, teams[team].pieces))
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces)
+        if (!(Object.keys(legalTiles).length == 0)) {
+          setLegalTiles(legalTiles)
+          socket.emit("select", { tile, pieces })
+        }
       } else {
-        socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
+        if (selection.tile != tile) {
+          socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
+        }
         socket.emit("select", null);
       }
     }
