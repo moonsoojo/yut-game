@@ -10,6 +10,7 @@ export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
         teams[occupyingTeam].pieces[piece.id] = piece
       }
       tiles[to] = []
+      teams[movingTeam].throws++;
     }
   }
 
