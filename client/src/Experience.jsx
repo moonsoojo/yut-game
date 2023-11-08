@@ -190,7 +190,7 @@ export default function Experience() {
     return (
       <>
         {teams[0].pieces.map((value, index) =>
-          value.tile != -1 ? (
+          value == null ? (
             <mesh
               position={[
                 positionStartX,
@@ -201,7 +201,7 @@ export default function Experience() {
             >
               <sphereGeometry args={[0.1]} />
             </mesh>
-          ) : value.tile === "finished" ? (
+          ) : value === "finished" ? (
             <mesh
               position={[
                 positionStartX,
@@ -242,7 +242,7 @@ export default function Experience() {
     return (
       <>
         {teams[1].pieces.map((value, index) =>
-          value.tile != -1 ? (
+          value == null ? (
             <mesh
               position={[
                 positionStartX,
@@ -253,7 +253,7 @@ export default function Experience() {
             >
               <sphereGeometry args={[0.1]} />
             </mesh>
-          ) : value.tile === "finished" ? (
+          ) : value === "finished" ? (
             <mesh
               position={[
                 positionStartX,

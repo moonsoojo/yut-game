@@ -40,7 +40,8 @@ export default function Tile({ tile, wrapperRadius }) {
     if (selection != null) {
       event.stopPropagation();
       if (selection.tile != tile) {
-        socket.emit("move", { from: selection.tile, to: tile, move: legalTiles[tile].move, path: legalTiles[tile].path, piece: selection.pieces });
+        console.log("[Rocket][handlePointerDown] selection", selection)
+        socket.emit("move", { from: selection.tile, to: tile, moveUsed: legalTiles[tile].move, path: legalTiles[tile].path, pieces: selection.pieces });
       }
       socket.emit("select", null);
     }
@@ -112,12 +113,12 @@ export default function Tile({ tile, wrapperRadius }) {
         <meshStandardMaterial
           transparent
           opacity={selection != null && tile in legalTiles ? 0.5 : 0}
-          color={selection != null && tile in legalTiles ? (selection.team == 0 ? "red" : "turquoise") : ""}
+          color={selection != null && tile in legalTiles ? (selection.pieces[0].team == 0 ? "pink" : "turquoise") : ""}
           ref={wrapper}
         />
       </mesh>
       <Piece />
-      { selection != null && tile in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>}
+      { selection != null && tile in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

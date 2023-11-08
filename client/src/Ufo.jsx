@@ -3,7 +3,7 @@ import { useRef, useMemo, useEffect } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom, tilesAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 import React from "react";
@@ -42,6 +42,7 @@ export default function Ufo({
   const { nodes } = useGraph(clone);
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
+  const [tiles] = useAtom(tilesAtom)
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)

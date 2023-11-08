@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom, tilesAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
 import { getLegalTiles } from "./helpers/legalTiles";
@@ -43,6 +43,7 @@ export default function Rocket({
   const { nodes } = useGraph(clone);
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
+  const [tiles] = useAtom(tilesAtom)
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
@@ -111,6 +112,7 @@ export default function Rocket({
           pieces = tiles[tile];
         }
         socket.emit("select", { tile, pieces })
+        
         setLegalTiles(getLegalTiles(tile, teams[team].moves, teams[team].pieces))
       } else {
         // stacking

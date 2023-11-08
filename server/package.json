@@ -1,9 +1,11 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "react-scripts test"
   },
   "dependencies": {
+    "react-scripts": "^5.0.1",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {

@@ -126,10 +126,6 @@ export const SocketManager = () => {
     function onTeams(value) {
       setTeams(value);
     }
-    function onPlacePiece({ tiles, pieces }) {
-      setTiles(tiles);
-      setPieces(pieces);
-    }
     function onFinishPiece({ tiles, pieces }) {
       setTiles(tiles);
       setPieces(pieces);
@@ -173,7 +169,6 @@ export const SocketManager = () => {
     socket.on("tiles", onTiles);
     socket.on("pieces", onPieces);
     socket.on("teams", onTeams);
-    socket.on("placePiece", onPlacePiece);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
     socket.on("throwVisible", onThrowVisible);
@@ -193,7 +188,6 @@ export const SocketManager = () => {
       socket.off("tiles", onTiles);
       socket.off("pieces", onPieces);
       socket.off("teams", onTeams);
-      socket.off("placePiece", onPlacePiece);
       socket.off("finishPiece", onFinishPiece);
       socket.off("throwYuts", onYutThrow);
       socket.off("throwVisible", onThrowVisible);

@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import initialState from "./initialState.js";
-import move from "./helpers/move.js";
+import { move } from "./src/move.js";
 
 const io = new Server({
   cors: {
@@ -23,13 +23,16 @@ let clientYutResults = [];
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
-// mock for multiplayer
-let mockTeam = 0
 let legalTiles = JSON.parse(JSON.stringify(initialState.legalTiles));
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
+  turn = {
+    team: 0,
+    players: [0,0]
+  }
+  teams[0].moves["1"] = 1
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -286,11 +289,15 @@ io.on("connection", (socket) => {
     io.emit("select", selection);
   });
 
-  socket.on("move", ({from, to, move, path, pieces}) => {
-    let { newTiles, newTeams } = move(tiles, teams, from, to, move, path, pieces)
-    // doesn't recognize "move"
-    io.emit("tiles", newTiles);
-    io.emit("teams", newTeams);
+  socket.on("move", ({from, to, moveUsed, path, pieces}) => {
+    let result = move(tiles, teams, from, to, moveUsed, path, pieces)
+    tiles = result.tiles
+    teams = result.teams
+    console.log("[move] team", pieces[0].team, "moves", JSON.stringify(teams[pieces[0].team].moves))
+    io.emit("tiles", tiles);
+    io.emit("teams", teams);
+    // if you have no throws and no moves
+    // turn on "endTurn"
   });
 
   socket.on("finishPiece", () => {
