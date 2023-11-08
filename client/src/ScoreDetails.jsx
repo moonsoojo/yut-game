@@ -1,5 +1,5 @@
 import React from "react";
-import Ufo from "./Ufo";
+import Ufo from "./meshes/Ufo";
 import { animated, useSpring } from "@react-spring/three";
 import { Text3D } from "@react-three/drei";
 

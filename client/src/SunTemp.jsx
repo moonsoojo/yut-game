@@ -1,8 +1,8 @@
 import { selectionAtom, tilesAtom, socket } from "./SocketManager";
 import { useTexture } from "@react-three/drei";
 import React from "react";
-import Rocket from "./Rocket";
-import Ufo from "./Ufo";
+import Rocket from "./meshes/Rocket";
+import Ufo from "./meshes/Ufo";
 import { useRef } from "react";
 import { useAtom } from "jotai";
 

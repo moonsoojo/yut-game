@@ -5,7 +5,7 @@ import initialState from "../../server/initialState";
 
 export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
-export const throwVisibleAtom = atom(false);
+
 export const yutThrowValuesAtom = atom([
   {
     rotation: { x: 0, y: 0, z: 0, w: 0 },
@@ -64,12 +64,15 @@ export const yutThrowValuesAtom = atom([
     },
   },
 ]);
+
+
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
 export const piecesAtom = atom(JSON.parse(JSON.stringify(initialState.pieces)));
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
+export const throwVisibleAtom = atom(false);
 export const canEndTurnAtom = atom(false);
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
@@ -144,11 +147,8 @@ export const SocketManager = () => {
     function onTurn(turn) {
       setTurn(turn);
     }
-    function onTakeTurn() {
+    function onShowThrow() {
       setThrowVisible(true);
-    }
-    function onThrowVisible(flag) {
-      setThrowVisible(flag);
     }
     function onGamePhase(gamePhase) {
       setGamePhase(gamePhase)
@@ -171,11 +171,10 @@ export const SocketManager = () => {
     socket.on("teams", onTeams);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
-    socket.on("throwVisible", onThrowVisible);
+    socket.on("showThrow", onShowThrow);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
-    socket.on("takeTurn", onTakeTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("canEndTurn", onCanEndTurn);
     socket.on("highlightPieces", onHighlightPieces);
@@ -190,11 +189,10 @@ export const SocketManager = () => {
       socket.off("teams", onTeams);
       socket.off("finishPiece", onFinishPiece);
       socket.off("throwYuts", onYutThrow);
-      socket.off("throwVisible", onThrowVisible);
+      socket.off("showThrow", onShowThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
-      socket.off("takeTurn", onTakeTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("canEndTurn", onCanEndTurn);
       socket.off("highlightPieces", onHighlightPieces);

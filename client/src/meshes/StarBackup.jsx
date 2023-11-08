@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
-import Rocket from "../Rocket";
-import Ufo from "../Ufo";
+import Rocket from "./Rocket";
+import Ufo from "./Ufo";
 import React from "react";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";

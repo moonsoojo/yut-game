@@ -3,10 +3,10 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom, tilesAtom } from "./SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React from "react";
-import { getLegalTiles } from "./helpers/legalTiles";
+import { getLegalTiles } from "../helpers/legalTiles";
 
 function hasMove(team) {
   let flag = false;

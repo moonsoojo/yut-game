@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
 import { selectionAtom, tilesAtom, socket, legalTilesAtom } from "../SocketManager";
-import Rocket from "../Rocket";
-import Ufo from "../Ufo";
+import Rocket from "../meshes/Rocket";
+import Ufo from "../meshes/Ufo";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 
@@ -39,7 +39,7 @@ export default function Tile({ tile, wrapperRadius }) {
   function handlePointerDown(event) {
     if (selection != null) {
       event.stopPropagation();
-      if (selection.tile != tile) {
+      if (selection.tile != tile && tile in legalTiles) {
         console.log("[Rocket][handlePointerDown] selection", selection)
         socket.emit("move", { from: selection.tile, to: tile, moveUsed: legalTiles[tile].move, path: legalTiles[tile].path, pieces: selection.pieces });
       }

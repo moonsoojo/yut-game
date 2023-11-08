@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager";
+import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -19,11 +19,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [throwVisible] = useAtom(throwVisibleAtom);
+  const [throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
-  const [_throwVisibleLocal, setThrowVisibleLocal] = useState(false); // debug
+  const [socketId] = useAtom(socketIdAtom);
   const [_hoverThrowText, setHoverThrowText] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       (state) => state.throw,
       (value) => {
         if (value) {
-          socket.emit("throwVisible", false);
+          // socket.emit("throwVisible", false);
+          setThrowVisible(false)
           socket.emit("throwYuts");
         }
       }
@@ -63,7 +64,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [sleepCount])
 
   useEffect(() => {
-    setThrowVisibleLocal(throwVisible); // subscribing to change
+    setThrowVisible(throwVisible); // subscribing to change
     setHoverThrowText(false);
   }, [throwVisible]);
 
@@ -109,7 +110,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       socket.emit("recordThrow", result)
       if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
-        socket.emit("throwVisible", true);
+        // socket.emit("throwVisible", true);
+        setThrowVisible(true);
       }
       if (gamePhase === "pregame") {
         socket.emit("canEndTurn");
@@ -121,28 +123,37 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
+  let currentPlayerSocketId
+  if (teams[turn.team].players[turn.players[turn.team]] != undefined) {
+    currentPlayerSocketId = teams[turn.team].players[turn.players[turn.team]].socketId
+  }
+
   return (
     <group {...props} dispose={null}>
-      {throwVisible && (
+      {socketId == currentPlayerSocketId && teams[turn.team].throws > 0 && ( 
+        // we need the throw visible flag so that we can hide it while yut is being thrown
         <TextButton
           text={`Throw`}
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
           handlePointerClick={() => {
-            socket.emit("throwVisible", false);
+            // socket.emit("throwVisible", false);
+            setThrowVisible(false);
             socket.emit("throwYuts");
           }}
           boxWidth={1.4}
           boxHeight={0.3}
         />
       )}
-      {throwVisible && gamePhase === "pregame" && (
+      {socketId == currentPlayerSocketId && teams[turn.team].throws > 0 && 
+        gamePhase === "pregame" && (
         <TextButton
           text={"for order"}
           rotation={layout[device].throwButtonOrder.rotation}
           position={layout[device].throwButtonOrder.position}
           handlePointerClick={() => {
-            socket.emit("throwVisible", false);
+            // socket.emit("throwVisible", false);
+            setThrowVisible(false)
             socket.emit("throwYuts");
           }}
           boxWidth={1.4}

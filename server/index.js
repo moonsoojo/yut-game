@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
+import { getCurrentPlayerSocketId } from "./src/helpers.js";
 
 const io = new Server({
   cors: {
@@ -23,16 +24,15 @@ let clientYutResults = [];
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
-let legalTiles = JSON.parse(JSON.stringify(initialState.legalTiles));
 
-let test = false;
+let test = true;
 if (test) {
   gamePhase = "game"
   turn = {
     team: 0,
     players: [0,0]
   }
-  teams[0].moves["1"] = 1
+  teams[0].moves["-1"] = 1
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -99,15 +99,12 @@ function setTurn(turn, team, players) {
 }
 
 function passTurn(turn, teams) {
-  if (turn.team == -1) {
+  if (turn.team == teams.length - 1) {
     turn.team = 0
   } else {
-    if (turn.team == teams.length - 1) {
-      turn.team = 0
-    } else {
-      turn.team++
-    }
+    turn.team++
   }
+  
   if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
     turn.players[turn.team] = 0
   } else {
@@ -206,7 +203,7 @@ io.on("connection", (socket) => {
   newPlayer.socketId = socket.id
   newPlayer.index = teams[newTeam].players.length
   teams[newTeam].players.push(newPlayer)
-  io.to(socket.id).emit("setUpPlayer", {socketId: socket.id, team: newTeam})
+  io.to(socket.id).emit("setUpPlayer", {socketId: newPlayer.socketId, team: newTeam})
 
   // mock assign "host" to display 'start game' button
   // by default, it's hidden for everyone
@@ -216,21 +213,17 @@ io.on("connection", (socket) => {
   }
 
   io.emit("characters", characters); // this should be refactored
-  // io.emit("pieces", pieces); // this should be refactored
   io.emit("tiles", tiles);
   io.emit("selection", selection);
   io.emit("teams", teams);
   io.emit("turn", turn);
-  io.emit("throwVisible", false)
-  io.emit("canEndTurn", false)
+  // io.emit("throwVisible", false)
+  io.emit("canEndTurn", false) 
   io.emit("gamePhase", gamePhase);
-  
-  // throwVisible and canEndTurn is emitted directly to the client who has the turn
 
-  socket.on("throwVisible", (flag) => {
-    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    io.to(currentPlayer.socketId).emit("throwVisible", flag)
-  })
+  // socket.on("throwVisible", (flag) => {
+  //   io.to(getCurrentPlayerSocketId(turn, teams)).emit("throwVisible", flag)
+  // })
 
   socket.on("startGame", () => {
     // turn = passTurn(turn, teams)
@@ -239,7 +232,7 @@ io.on("connection", (socket) => {
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     teams[turn.team].throws++;
     io.emit("teams", teams)
-    io.to(currentPlayer.socketId).emit("throwVisible", true)
+    io.to(currentPlayer.socketId).emit("showThrow")
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
@@ -249,7 +242,6 @@ io.on("connection", (socket) => {
   socket.on("endTurn", () => {
     // clear old player's turn
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    io.to(currentPlayer.socketId).emit("throwVisible", false)
     io.to(currentPlayer.socketId).emit("canEndTurn", false)
 
     if (gamePhase === "pregame") {
@@ -280,8 +272,13 @@ io.on("connection", (socket) => {
     io.emit("turn", turn)
     io.emit("teams", teams)
     io.emit("gamePhase", gamePhase)
-    io.to(currentPlayer.socketId).emit("throwVisible", true)
-    io.to(currentPlayer.socketId).emit("canEndTurn", false)
+    io.to(currentPlayer.socketId).emit("showThrow")
+    io.to(currentPlayer.socketId).emit("canEndTurn", false) 
+    // can end turn: refactor
+    // throw in progress state
+    // when yut is thrown, set flag to true
+    // when they land in all clients, set it to false
+    // emit only to client that has turn
   })
 
   socket.on("select", (payload) => {
@@ -436,6 +433,10 @@ io.on("connection", (socket) => {
       hostId = findRandomPlayer(teams).socketId
     } else {
       hostId = null;
+    }
+
+    if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
+      passTurn(turn, teams)
     }
   });
 });

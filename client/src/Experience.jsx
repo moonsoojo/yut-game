@@ -7,8 +7,8 @@ import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
-import Rocket from "./Rocket";
-import Ufo from "./Ufo";
+import Rocket from "./meshes/Rocket";
+import Ufo from "./meshes/Ufo";
 import Moon from "./Moon";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
@@ -46,6 +46,7 @@ import {
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
+import { getCurrentPlayerSocketId, movesIsEmpty } from "../../server/src/helpers.js";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -654,7 +655,9 @@ export default function Experience() {
         />
         
         {/* end turn button */}
-        { canEndTurn &&
+        { socketId == getCurrentPlayerSocketId(turn, teams) && 
+        ((gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
+          gamePhase === "pregame" && teams[turn.team].throws == 0) &&
           <TextButton
             text="End Turn"
             position={layout[device].endTurnButton.position}

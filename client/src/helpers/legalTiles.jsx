@@ -19,7 +19,7 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
       if (checkBackdoRule(moves, pieces)) {
-        legalTiles[1] = { tile: 1, move: "-1", path: [-1, 1] }
+        legalTiles[0] = { tile: 0, move: "-1", path: [-1, 0] }
       } else {
         let forks = getNextTiles(tile, forward)
         for (let i = 0; i < forks.length; i++) {
@@ -109,6 +109,7 @@ function chooseTileFromFork(path, forks) {
 }
 
 function checkBackdoRule(moves, pieces) {
+  console.log("[checkBackdoRule] moves", moves, "pieces", pieces)
   // should only have backdo
   let hasBackdo = false;
   let hasAnotherMove = false;
