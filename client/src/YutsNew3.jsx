@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, throwVisibleAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom } from "./SocketManager";
+import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom, throwInProgressAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import layout from "./layout";
 import TextButton from "./components/TextButton";
@@ -19,7 +19,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
+    // const [throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
+  const [throwInProgress] = useAtom(throwInProgressAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
@@ -32,7 +33,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       (value) => {
         if (value) {
           // socket.emit("throwVisible", false);
-          setThrowVisible(false)
+          // setThrowVisible(false)
+          socket.emit("throwInProgress", true);
           socket.emit("throwYuts");
         }
       }
@@ -64,9 +66,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [sleepCount])
 
   useEffect(() => {
-    setThrowVisible(throwVisible); // subscribing to change
+    // setThrowVisible(throwVisible); // subscribing to change
     setHoverThrowText(false);
-  }, [throwVisible]);
+  }, [throwInProgress]);
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -111,10 +113,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
         // socket.emit("throwVisible", true);
-        setThrowVisible(true);
+        // setThrowVisible(true);
+        // setThrowInProgress(false);
       }
       if (gamePhase === "pregame") {
-        socket.emit("canEndTurn");
+        // socket.emit("canEndTurn");
       }
     }
   }
@@ -138,7 +141,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           position={layout[device].throwButton.position}
           handlePointerClick={() => {
             // socket.emit("throwVisible", false);
-            setThrowVisible(false);
+            // setThrowVisible(false);
+            socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
           }}
           boxWidth={1.4}
@@ -153,7 +157,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           position={layout[device].throwButtonOrder.position}
           handlePointerClick={() => {
             // socket.emit("throwVisible", false);
-            setThrowVisible(false)
+            // setThrowVisible(false)
+            socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
           }}
           boxWidth={1.4}

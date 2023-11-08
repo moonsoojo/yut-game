@@ -131,9 +131,7 @@ export default function Ufo({
       position={position}
       ref={ufoRef}
       dispose={null}
-      scale={
-scale
-      }
+      scale={scale}
       rotation={rotation}
     >
       <mesh

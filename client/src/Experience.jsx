@@ -38,10 +38,11 @@ import {
   teamsAtom,
   turnAtom,
   gamePhaseAtom,
-  canEndTurnAtom,
+  // canEndTurnAtom,
   socket,
   socketIdAtom,
-  legalTilesAtom
+  legalTilesAtom,
+  throwInProgressAtom
 } from "./SocketManager";
 import SunTemp from "./SunTemp";
 import TextButton from "./components/TextButton";
@@ -69,8 +70,9 @@ export default function Experience() {
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [canEndTurn] = useAtom(canEndTurnAtom);
+  // const [canEndTurn] = useAtom(canEndTurnAtom);
   const [socketId] = useAtom(socketIdAtom);
+  const [throwInProgress] = useAtom(throwInProgressAtom)
 
   const numTiles = 29;
 
@@ -658,6 +660,7 @@ export default function Experience() {
         { socketId == getCurrentPlayerSocketId(turn, teams) && 
         ((gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
           gamePhase === "pregame" && teams[turn.team].throws == 0) &&
+          !throwInProgress && 
           <TextButton
             text="End Turn"
             position={layout[device].endTurnButton.position}
@@ -669,7 +672,7 @@ export default function Experience() {
             boxHeight={0.3}
           />
         }
-        { canEndTurn && allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1 &&
+        { gamePhase === "pregame" && allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1 &&
           <TextButton
             text="(tie)"
             position={layout[device].endTurnButtonTie.position}

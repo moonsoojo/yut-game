@@ -24,8 +24,9 @@ let clientYutResults = [];
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
+let throwInProgress = false;
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -178,6 +179,18 @@ function findRandomPlayer(teams) {
   }
 }
 
+function checkThrowResultsMatch(results) {
+  let resultsMatch = "true";
+  let resultToMatch = results[0]
+  for (let i = 1; i < results.length; i++) {
+    if (resultToMatch !== results[i]) {
+      resultsMatch = "false";
+      break;
+    }
+  }
+  return resultsMatch
+}
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -218,7 +231,7 @@ io.on("connection", (socket) => {
   io.emit("teams", teams);
   io.emit("turn", turn);
   // io.emit("throwVisible", false)
-  io.emit("canEndTurn", false) 
+  // io.emit("canEndTurn", false) 
   io.emit("gamePhase", gamePhase);
 
   // socket.on("throwVisible", (flag) => {
@@ -233,7 +246,7 @@ io.on("connection", (socket) => {
     teams[turn.team].throws++;
     io.emit("teams", teams)
     io.to(currentPlayer.socketId).emit("showThrow")
-    io.to(currentPlayer.socketId).emit("canEndTurn", false)
+    // io.to(currentPlayer.socketId).emit("canEndTurn", false)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
   })
@@ -242,7 +255,7 @@ io.on("connection", (socket) => {
   socket.on("endTurn", () => {
     // clear old player's turn
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    io.to(currentPlayer.socketId).emit("canEndTurn", false)
+    // io.to(currentPlayer.socketId).emit("canEndTurn", false)
 
     if (gamePhase === "pregame") {
       if (allTeamsHaveMove(teams)) {
@@ -273,7 +286,8 @@ io.on("connection", (socket) => {
     io.emit("teams", teams)
     io.emit("gamePhase", gamePhase)
     io.to(currentPlayer.socketId).emit("showThrow")
-    io.to(currentPlayer.socketId).emit("canEndTurn", false) 
+    io.to(currentPlayer.socketId).emit("throwInProgress", false)
+    // io.to(currentPlayer.socketId).emit("canEndTurn", false) 
     // can end turn: refactor
     // throw in progress state
     // when yut is thrown, set flag to true
@@ -286,11 +300,15 @@ io.on("connection", (socket) => {
     io.emit("select", selection);
   });
 
-  socket.on("move", ({from, to, moveUsed, path, pieces}) => {
+  socket.on("move", ({selection, tile, moveInfo}) => {
+    let from = selection.tile
+    let to = tile
+    let moveUsed = moveInfo.move
+    let path = moveInfo.path
+    let pieces = selection.pieces
     let result = move(tiles, teams, from, to, moveUsed, path, pieces)
     tiles = result.tiles
     teams = result.teams
-    console.log("[move] team", pieces[0].team, "moves", JSON.stringify(teams[pieces[0].team].moves))
     io.emit("tiles", tiles);
     io.emit("teams", teams);
     // if you have no throws and no moves
@@ -360,17 +378,13 @@ io.on("connection", (socket) => {
       });
     }
     
-    // let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     io.emit("throwYuts", yutForceVectors);
-    // teams[turn.team].players[turn.players[turn.team]].throws--;
     teams[turn.team].throws--;
     io.emit("teams", teams)
   });
 
   socket.on("clientYutsResting", () => {
     numClientsYutsResting++;
-    if (numClientsYutsResting == characters.length) {
-    }
   })
 
   socket.on("reset", () => {
@@ -383,17 +397,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  function checkThrowResultsMatch(results) {
-    let resultsMatch = "true";
-    let resultToMatch = results[0]
-    for (let i = 1; i < results.length; i++) {
-      if (resultToMatch !== results[i]) {
-        resultsMatch = "false";
-        break;
-      }
-    }
-    return resultsMatch
-  }
+
 
   socket.on("bonusThrow", () => {
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
@@ -402,19 +406,25 @@ io.on("connection", (socket) => {
     }
   })
 
-  socket.on("canEndTurn", () => {
-    io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", true);
-    // all clients' yuts should be resting
-    // display status text based on 'teams' in client
-  })
+  // socket.on("canEndTurn", () => {
+  //   io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", true);
+  //   // all clients' yuts should be resting
+  //   // display status text based on 'teams' in client
+  // })
 
   socket.on("recordThrow", (result) => {
     clientYutResults.push(result);
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
-
       teams[turn.team].moves[result.toString()]++
       io.emit("teams", teams)
+      throwInProgress = false;
+      io.emit("throwInProgress", throwInProgress);
     }
+  })
+
+  socket.on("throwInProgress", (flag) => {
+    throwInProgress = flag;
+    io.emit("throwInProgress", flag)
   })
 
   socket.on("disconnect", () => {
@@ -426,6 +436,7 @@ io.on("connection", (socket) => {
     );
 
     teams = removePlayerFromGame(teams, socket.id)
+    console.log("[disconnect] teams", JSON.stringify(teams))
     io.emit("characters", characters);
     io.emit("teams", teams)
 

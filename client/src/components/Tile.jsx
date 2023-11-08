@@ -40,8 +40,7 @@ export default function Tile({ tile, wrapperRadius }) {
     if (selection != null) {
       event.stopPropagation();
       if (selection.tile != tile && tile in legalTiles) {
-        console.log("[Rocket][handlePointerDown] selection", selection)
-        socket.emit("move", { from: selection.tile, to: tile, moveUsed: legalTiles[tile].move, path: legalTiles[tile].path, pieces: selection.pieces });
+        socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
       }
       socket.emit("select", null);
     }

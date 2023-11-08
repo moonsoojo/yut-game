@@ -112,11 +112,9 @@ export default function Rocket({
           pieces = tiles[tile];
         }
         socket.emit("select", { tile, pieces })
-        
         setLegalTiles(getLegalTiles(tile, teams[team].moves, teams[team].pieces))
       } else {
-        // stacking
-        // kicking
+        socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
         socket.emit("select", null);
       }
     }
