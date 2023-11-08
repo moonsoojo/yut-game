@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
+import { score } from "./src/score.js";
 import { getCurrentPlayerSocketId } from "./src/helpers.js";
 
 const io = new Server({
@@ -33,7 +34,8 @@ if (test) {
     team: 0,
     players: [0,0]
   }
-  // teams[0].moves["-1"] = 1
+  teams[0].moves["2"] = 1
+  tiles[19] = [{tile: 19, team: 0, id: 0}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -310,42 +312,19 @@ io.on("connection", (socket) => {
     teams = result.teams
     io.emit("tiles", tiles);
     io.emit("teams", teams);
-    // if you have no throws and no moves
-    // turn on "endTurn"
   });
 
-  socket.on("finishPiece", () => {
-    // let piecesIncoming;
-    // let scoringTeam;
-    // let fromTile;
-    // if (selection != null && selection.type === "tile") {
-    //   fromTile = selection.tile;
-    //   piecesIncoming = JSON.parse(JSON.stringify(tiles[fromTile]));
-    //   if (piecesIncoming.length == 0) {
-    //     scoringTeam = -1;
-    //   } else {
-    //     scoringTeam = piecesIncoming[0].team;
-    //   }
-    // } else if (selection != null && selection.type === "piece") {
-    //   piecesIncoming = [
-    //     {
-    //       tile: selection.tile,
-    //       team: selection.team,
-    //       id: selection.id,
-    //     },
-    //   ];
-    //   scoringTeam = selection.team;
-    // }
-
-    // if (scoringTeam != -1) {
-    //   for (const piece of piecesIncoming) {
-    //     pieces[scoringTeam][piece.id] = "scored";
-    //   }
-    // }
-
-    // tiles[fromTile] = [];
-
-    // io.emit("finishPiece", { tiles, pieces });
+  socket.on("score", ({selection, moveInfo}) => {
+    let from = selection.tile
+    console.log("[score] moveUsed", moveInfo.move)
+    let moveUsed = moveInfo.move
+    let path = moveInfo.path
+    let pieces = selection.pieces
+    let result = score(tiles, teams, from, moveUsed, path, pieces)
+    tiles = result.tiles
+    teams = result.teams
+    io.emit("tiles", tiles);
+    io.emit("teams", teams);
   });
 
   let positionsInHand = [

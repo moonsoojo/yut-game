@@ -204,7 +204,7 @@ export default function Experience() {
             >
               <sphereGeometry args={[0.1]} />
             </mesh>
-          ) : value === "finished" ? (
+          ) : value === "scored" ? (
             <mesh
               position={[
                 positionStartX,
@@ -256,7 +256,7 @@ export default function Experience() {
             >
               <sphereGeometry args={[0.1]} />
             </mesh>
-          ) : value === "finished" ? (
+          ) : value === "scored" ? (
             <mesh
               position={[
                 positionStartX,

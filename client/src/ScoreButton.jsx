@@ -10,7 +10,7 @@ const SCORE_TILE = 29
 export default function ScoreButton({ position, rotation }) {
   const [selection] = useAtom(selectionAtom);
   const [hoverScoreText, setHoverScoreText] = useState(false);
-  const [legalTiles] = useAtom(legalTilesAtom)
+  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
 
   function scorePointerEnter() {
     setHoverScoreText(true);
@@ -23,12 +23,17 @@ export default function ScoreButton({ position, rotation }) {
   }
 
   function clickScore(event) {
-    //if no piece is selected, display a warning
     event.stopPropagation();
     if (selection != null) {
-      // finishPiece();
-      // setSelection(null);
-      socket.emit("finishPiece");
+      // precondition: legalTiles is already populated
+      if (29 in legalTiles) {
+        console.log("[clickScore] legalTiles", legalTiles[29])
+        if (legalTiles[29].length == 1) {
+          socket.emit("score", { selection, moveInfo: legalTiles[29][0] })
+        } else {
+
+        }
+      }
     }
     socket.emit("select", null);
   }
@@ -48,7 +53,7 @@ export default function ScoreButton({ position, rotation }) {
         Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D>
-      { selection != null && SCORE_TILE in legalTiles && <Pointer color={selection.team == 0 ? "red" : "turquoise"}/>}
+      { selection != null && 29 in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

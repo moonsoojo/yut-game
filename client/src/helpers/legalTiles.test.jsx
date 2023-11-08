@@ -31,7 +31,7 @@ describe("starting", () => {
       }
   
       let destinations = getLegalTiles(-1, mockMoves, mockPieces) 
-      expect(destinations).toEqual({"1" : {"tile": 1, move: "-1", path: [-1, 1]}})
+      expect(destinations).toEqual({"0" : {"tile": 0, move: "-1", path: [-1, 0]}})
     })
     it("have '-1' and another move", () => {
       let mockMoves = {
@@ -48,7 +48,7 @@ describe("starting", () => {
     })
     it("have a piece on the board", () => {
       let mockPieces = [
-        { tile: 3, team: 1, id: 0 },
+        null,
         { tile: -1, team: 1, id: 1 },
         { tile: -1, team: 1, id: 2 },
         { tile: -1, team: 1, id: 3 },
@@ -155,7 +155,7 @@ describe("on board", () => {
         "5": 0
       }
       mockPieces = [
-        { tile: 3, team: 1, id: 0 },
+        null,
         { tile: -1, team: 1, id: 1 },
         { tile: -1, team: 1, id: 2 },
         { tile: -1, team: 1, id: 3 },
