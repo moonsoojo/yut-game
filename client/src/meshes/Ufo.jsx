@@ -103,7 +103,7 @@ export default function Ufo({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team])) {
+    if (gamePhase === "game" && hasMove(teams[team]) && clientTeam == 1) {
       event.stopPropagation();
       console.log("[Ufo] pointer down, selection", selection)
       if (selection == null) {

@@ -100,7 +100,7 @@ export default function Rocket({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team])) {
+    if (gamePhase === "game" && hasMove(teams[team]) && clientTeam == 0) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;
@@ -116,7 +116,7 @@ export default function Rocket({
           socket.emit("select", { tile, pieces })
         }
       } else {
-        if (selection.tile != tile) {
+        if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
         }
         socket.emit("select", null);
