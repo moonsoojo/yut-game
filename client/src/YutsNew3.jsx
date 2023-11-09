@@ -19,7 +19,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-    // const [throwVisible, setThrowVisible] = useAtom(throwVisibleAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
@@ -32,8 +31,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       (state) => state.throw,
       (value) => {
         if (value) {
-          // socket.emit("throwVisible", false);
-          // setThrowVisible(false)
           socket.emit("throwInProgress", true);
           socket.emit("throwYuts");
         }
@@ -65,10 +62,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     }
   }, [sleepCount])
 
-  useEffect(() => {
-    // setThrowVisible(throwVisible); // subscribing to change
-    setHoverThrowText(false);
-  }, [throwInProgress]);
+  // useEffect(() => {
+  //   setHoverThrowText(false);
+  // }, [throwInProgress]);
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -112,9 +108,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       socket.emit("recordThrow", result)
       if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
-        // socket.emit("throwVisible", true);
-        // setThrowVisible(true);
-        // setThrowInProgress(false);
       }
       if (gamePhase === "pregame") {
         // socket.emit("canEndTurn");
@@ -140,8 +133,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           rotation={layout[device].throwButton.rotation}
           position={layout[device].throwButton.position}
           handlePointerClick={() => {
-            // socket.emit("throwVisible", false);
-            // setThrowVisible(false);
             socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
           }}
@@ -156,8 +147,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           rotation={layout[device].throwButtonOrder.rotation}
           position={layout[device].throwButtonOrder.position}
           handlePointerClick={() => {
-            // socket.emit("throwVisible", false);
-            // setThrowVisible(false)
             socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
           }}

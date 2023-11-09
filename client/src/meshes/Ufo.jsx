@@ -105,6 +105,7 @@ export default function Ufo({
   function handlePointerDown(event) {
     if (gamePhase === "game" && hasMove(teams[team])) {
       event.stopPropagation();
+      console.log("[Ufo] pointer down, selection", selection)
       if (selection == null) {
         let starting = tile == -1 ? true : false;
         let pieces;

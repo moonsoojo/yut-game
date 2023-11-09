@@ -50,9 +50,9 @@ export default function Tile({ tile, wrapperRadius }) {
     }
   }
 
-  function hasPiece(tiles, tile) {
-    return tiles[tile].length > 0
-  }
+  // function hasPiece(tiles, tile) {
+  //   return tiles[tile].length > 0
+  // }
 
   const rocketPositions = [
     [-0.1, -0.2 + wrapperRadius, 0.4],

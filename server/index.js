@@ -27,15 +27,16 @@ let hostId = null;
 const characters = [];
 let throwInProgress = false;
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
-    team: 0,
+    team: 1,
     players: [0,0]
   }
-  teams[0].moves["2"] = 1
-  tiles[19] = [{tile: 19, team: 0, id: 0}]
+  teams[1].moves["2"] = 1
+  teams[1].moves["3"] = 1
+  tiles[19] = [{tile: 19, team: 1, id: 0}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -231,13 +232,8 @@ io.on("connection", (socket) => {
   io.emit("selection", selection);
   io.emit("teams", teams);
   io.emit("turn", turn);
-  // io.emit("throwVisible", false)
-  // io.emit("canEndTurn", false) 
   io.emit("gamePhase", gamePhase);
 
-  // socket.on("throwVisible", (flag) => {
-  //   io.to(getCurrentPlayerSocketId(turn, teams)).emit("throwVisible", flag)
-  // })
 
   socket.on("startGame", () => {
     // turn = passTurn(turn, teams)
@@ -288,12 +284,6 @@ io.on("connection", (socket) => {
     io.emit("gamePhase", gamePhase)
     io.to(currentPlayer.socketId).emit("showThrow")
     io.to(currentPlayer.socketId).emit("throwInProgress", false)
-    // io.to(currentPlayer.socketId).emit("canEndTurn", false) 
-    // can end turn: refactor
-    // throw in progress state
-    // when yut is thrown, set flag to true
-    // when they land in all clients, set it to false
-    // emit only to client that has turn
   })
 
   socket.on("select", (payload) => {

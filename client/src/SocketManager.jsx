@@ -72,15 +72,15 @@ export const piecesAtom = atom(JSON.parse(JSON.stringify(initialState.pieces)));
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
-export const throwVisibleAtom = atom(false);
-// export const canEndTurnAtom = atom(false);
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
 export const legalTilesAtom = atom({});
-export const throwInProgressAtom = atom(false)
 // info about player
 export const clientTeamAtom = atom(-1);
 export const socketIdAtom = atom("");
+// client UI display
+export const displayScoreOptionsAtom = atom(false);
+export const throwInProgressAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -142,19 +142,10 @@ export const SocketManager = () => {
     function onTurn(turn) {
       setTurn(turn);
     }
-    // function onShowThrow() {
-    //   setThrowVisible(true);
-    // }
     function onGamePhase(gamePhase) {
       setGamePhase(gamePhase)
     }
-    // function onCanEndTurn(flag) {
-    //   setCanEndTurn(flag);
-    // }
     //UI events
-    function onHighlightPieces(flag) {
-      setHighlightPieces(flag);
-    }
     function onThrowInProgress(flag) {
       setThrowInProgress(flag)
     }
@@ -169,13 +160,10 @@ export const SocketManager = () => {
     socket.on("teams", onTeams);
     socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
-    // socket.on("showThrow", onShowThrow);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
-    // socket.on("canEndTurn", onCanEndTurn);
-    socket.on("highlightPieces", onHighlightPieces);
     socket.on("throwInProgress", onThrowInProgress);
     return () => {
       socket.off("connect", onConnect);
@@ -188,13 +176,10 @@ export const SocketManager = () => {
       socket.off("teams", onTeams);
       socket.off("finishPiece", onFinishPiece);
       socket.off("throwYuts", onYutThrow);
-      // socket.off("showThrow", onShowThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
-      // socket.off("canEndTurn", onCanEndTurn);
-      socket.off("highlightPieces", onHighlightPieces);
       socket.off("throwInProgress", onThrowInProgress);
     };
   }, []);
