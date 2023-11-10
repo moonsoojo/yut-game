@@ -43,9 +43,7 @@ export default function Saturn({ position, tile }) {
   useFrame((state, delta) => {
     satellitesRef.current.rotation.x = state.clock.elapsedTime * 0.5;
   });
-
-  //3.5
-
+  
   return (
     <group position={position}>
       <group scale={0.22}>

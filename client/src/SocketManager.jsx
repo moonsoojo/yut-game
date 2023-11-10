@@ -68,7 +68,6 @@ export const yutThrowValuesAtom = atom([
 
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
-export const piecesAtom = atom(JSON.parse(JSON.stringify(initialState.pieces)));
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
@@ -86,13 +85,11 @@ export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
-  const [_pieces, setPieces] = useAtom(piecesAtom);
   const [_teams, setTeams] = useAtom(teamsAtom);
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  // const [_canEndTurn, setCanEndTurn] = useAtom(canEndTurnAtom)
   const [_throwInProgress, setThrowInProgress] = useAtom(throwInProgressAtom)
   // info about player
   const [_clientTeam, setClientTeam] = useAtom(clientTeamAtom)
@@ -131,9 +128,8 @@ export const SocketManager = () => {
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
-    function onReset({ tiles, pieces, selection }) {
+    function onReset({ tiles, selection }) {
       setTiles(tiles);
-      setPieces(pieces);
       setSelection(selection);
     }
     function onReadyToStart(flag) {

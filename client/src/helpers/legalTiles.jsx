@@ -46,9 +46,12 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
 // if first step, keep forks
 // else, go straight
 function getNextTiles(tile, forward) {
+  console.log("[getNextTiles] tile", tile, "forward", forward)
   let nextTiles = [];
   if (tile == -1 && (forward)) {
     return [1]
+  } else if (tile == 0 && (forward)) {
+    return [29]
   }
 
   // on board
@@ -70,8 +73,8 @@ function getStartAndEndVertices(forward) {
   }
 }
 
-// to simplify, going backward works like going forward. no using path history
 function getDestination(tile, steps, forward, path) {
+  console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
   path.push(tile)
   if (steps == 0 || tile == 29) {
     return { tile, path }
@@ -82,6 +85,7 @@ function getDestination(tile, steps, forward, path) {
     if (edge[start] == tile) {
       let nextTile;
       let forks = getNextTiles(tile, forward);
+      console.log("[getDestination] forks", forks)
       if (forks.length > 1) {
         // choose next tile
         // recursively call getDestination with
@@ -96,6 +100,10 @@ function getDestination(tile, steps, forward, path) {
 }
 
 function chooseTileFromFork(path, forks) {
+  console.log("[chooseTileFromFork] path", path, "forks", forks)
+  // if (path[path.length-1] == 0) {
+  //   return 29
+  // }
   let closestIndexDistance = 1000;
   let closestIndex = -2;
   for (const fork of forks) {
@@ -109,7 +117,6 @@ function chooseTileFromFork(path, forks) {
 }
 
 function checkBackdoRule(moves, pieces) {
-  console.log("[checkBackdoRule] moves", moves, "pieces", pieces)
   // should only have backdo
   let hasBackdo = false;
   let hasAnotherMove = false;
@@ -133,20 +140,3 @@ function checkBackdoRule(moves, pieces) {
   
   return true;
 }
-
-/* extra code */
-///////////////////////////////////////////
-///////////  checkBackdoRule  /////////////
-///////////////////////////////////////////
-// if (direction === "forward") {
-//   let result = getNextTiles(tile, [], direction)
-//   legalTiles[result.destination] = [{move: result.move, path: result.path}]
-// } else {
-//   if (checkBackdoRule(moves, pieces)) {
-//     legalTiles[0] = [{move: "-1", path: [29]}]
-//   } else {
-//     // player has a move besides backdo: a tile will be highlighted
-//     // player has a piece on board: no tile will be highlighted; alert player they must move the one on the board
-//     let result = getNextTiles()
-//   }
-// }

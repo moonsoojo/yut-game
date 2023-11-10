@@ -9,7 +9,6 @@ import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Rocket from "./meshes/Rocket";
 import Ufo from "./meshes/Ufo";
-import Moon from "./Moon";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
 import layout from "./layout";
@@ -32,22 +31,20 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useAtom, atom } from "jotai";
 import {
-  piecesAtom,
   selectionAtom,
   readyToStartAtom,
   teamsAtom,
   turnAtom,
   gamePhaseAtom,
-  // canEndTurnAtom,
   socket,
   socketIdAtom,
-  legalTilesAtom,
   throwInProgressAtom
 } from "./SocketManager";
-import SunTemp from "./SunTemp";
+import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { getCurrentPlayerSocketId, movesIsEmpty } from "../../server/src/helpers.js";
+import { Perf } from 'r3f-perf'
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -173,10 +170,10 @@ export default function Experience() {
 
     // center piece
     tiles.push(
-      <SunBagus
+      <Moon
         position={[0, 0, 0]}
         intensity={3}
-        scale={0.4}
+        // scale={0.4}
         key={100}
         tile={22}
       />
@@ -545,6 +542,7 @@ export default function Experience() {
 
   return (
     <>
+      <Perf/>
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -803,7 +801,6 @@ export default function Experience() {
           /> */}
         </group>
       </Physics>
-      <Moon />
     </>
   );
 }

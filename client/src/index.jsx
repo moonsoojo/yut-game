@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { SocketManager } from "./SocketManager";
 
+
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
 root.render(

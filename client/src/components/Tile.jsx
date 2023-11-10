@@ -83,7 +83,7 @@ export default function Tile({ tile, wrapperRadius }) {
                 team={0}
                 id={value.id}
                 key={index}
-                scale={0.6}
+                scale={0.8}
               />
             ))}
           </>
@@ -99,6 +99,7 @@ export default function Tile({ tile, wrapperRadius }) {
                 team={1}
                 id={value.id}
                 key={index}
+                scale={0.4}
               />
             ))}
           </>

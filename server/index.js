@@ -34,9 +34,9 @@ if (test) {
     team: 0,
     players: [0,0]
   }
-  teams[1].moves["1"] = 1
-  tiles[0] = [{tile: 1, team: 1, id: 0}, {tile: 1, team: 1, id: 0}, {tile: 1, team: 1, id: 0}, {tile: 1, team: 1, id: 0}]
-  teams[1].pieces[0] = null
+  teams[0].moves["2"] = 1
+  tiles[0] = [{tile: 0, team: 0, id: 0}]
+  teams[0].pieces[0] = null
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -66,12 +66,14 @@ function makeId(length) {
 function mockAssignTeams(teams) {
   if (countPlayers(teams) == 0) {
     return getRandomInt(2);
-  } else {
+  } else if (countPlayers(teams) == 1) {
     for (let i = 0; i < teams.length; i++) {
       if (teams[i].players.length == 0) {
         return i
       }
     }
+  } else {
+    return getRandomInt(2);
   }
 }
 
@@ -212,6 +214,7 @@ io.on("connection", (socket) => {
   // name is chosen by player from UI
   let newPlayer = JSON.parse(JSON.stringify(initialState.player));
   let newTeam = mockAssignTeams(teams)
+  console.log("newTeam", newTeam)
   newPlayer.team = newTeam
   // mock assigning a name 
   newPlayer.displayName = makeId(5)
@@ -357,10 +360,8 @@ io.on("connection", (socket) => {
 
   socket.on("reset", () => {
     tiles = JSON.parse(JSON.stringify(initialState.tiles));
-    pieces = JSON.parse(JSON.stringify(initialState.pieces));
     io.emit("reset", {
       tiles: tiles,
-      pieces: pieces,
       selection: null,
     });
   });

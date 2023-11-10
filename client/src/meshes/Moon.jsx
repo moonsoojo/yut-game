@@ -1,12 +1,13 @@
-import { selectionAtom, tilesAtom, socket } from "./SocketManager";
+import { selectionAtom, tilesAtom, socket } from "../SocketManager";
 import { useTexture } from "@react-three/drei";
 import React from "react";
-import Rocket from "./meshes/Rocket";
-import Ufo from "./meshes/Ufo";
+import Rocket from "./Rocket";
+import Ufo from "./Ufo";
+import Tile from '../components/Tile';
 import { useRef } from "react";
 import { useAtom } from "jotai";
 
-export default function SunTemp({ position, tile, scale = 1 }) {
+export default function Moon({ position, tile, scale = 1 }) {
   const props = useTexture({
     map: "textures/moon/moon-color.jpg",
   });
@@ -121,6 +122,7 @@ export default function SunTemp({ position, tile, scale = 1 }) {
         <meshStandardMaterial map={props.map} />
       </mesh>
       {tile && tiles[tile].length != 0 && <Piece />}
+      <Tile tile={tile} wrapperRadius={0.6} />
     </group>
   );
 }
