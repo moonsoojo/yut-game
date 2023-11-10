@@ -49,7 +49,7 @@ export default function Rocket({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [clientTeam] = useAtom(clientTeamAtom)
   const [socketId] = useAtom(socketIdAtom);
-  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  const [legalTiles] = useAtom(legalTilesAtom);
 
   const rocketRef = useRef();
   const flameRef = useRef();
@@ -112,13 +112,14 @@ export default function Rocket({
         }
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces)
         if (!(Object.keys(legalTiles).length == 0)) {
-          setLegalTiles(legalTiles)
+          socket.emit("legalTiles", {legalTiles})
           socket.emit("select", { tile, pieces })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
         }
+        socket.emit("legalTiles", {legalTiles: {}})
         socket.emit("select", null);
       }
     }

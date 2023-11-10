@@ -73,13 +73,13 @@ export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
-export const legalTilesAtom = atom({});
 // info about player
 export const clientTeamAtom = atom(-1);
 export const socketIdAtom = atom("");
 // client UI display
 export const displayScoreOptionsAtom = atom(false);
 export const throwInProgressAtom = atom(false)
+export const legalTilesAtom = atom({});
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -94,6 +94,8 @@ export const SocketManager = () => {
   // info about player
   const [_clientTeam, setClientTeam] = useAtom(clientTeamAtom)
   const [_socketId, setSocketId] = useAtom(socketIdAtom);
+  // UI updates
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -145,6 +147,9 @@ export const SocketManager = () => {
     function onThrowInProgress(flag) {
       setThrowInProgress(flag)
     }
+    function onLegalTiles({ legalTiles }) {
+      setLegalTiles(legalTiles)
+    }
 
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
@@ -161,6 +166,7 @@ export const SocketManager = () => {
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("throwInProgress", onThrowInProgress);
+    socket.on("legalTiles", onLegalTiles);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
@@ -177,6 +183,7 @@ export const SocketManager = () => {
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("throwInProgress", onThrowInProgress);
+      socket.off("legalTiles", onLegalTiles);
     };
   }, []);
 };

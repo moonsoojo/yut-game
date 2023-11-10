@@ -2,6 +2,7 @@ import edgeList from "./edgeList.js";
 
 /* todo */
 // path history by piece // append it on 'move'
+// [original tile, ... destination tile]
 // make backdo use path history // implement once 'move' is implemented
 
 // schema
@@ -22,6 +23,7 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
         legalTiles[0] = { tile: 0, move: "-1", path: [-1, 0] }
       } else {
         let forks = getNextTiles(tile, forward)
+        forks = checkFinishRule(forks)
         for (let i = 0; i < forks.length; i++) {
           let path = [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
@@ -40,6 +42,16 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
 
   console.log("legalTiles", legalTiles)
   return legalTiles
+}
+
+function checkFinishRule(forks) {
+  console.log("[checkFinishRule] forks", forks)
+  for (let i = 0; i < forks.length; i++) {
+    if (forks[i] == 29) {
+      return [29]
+    }
+  }
+  return forks
 }
 
 // recursion

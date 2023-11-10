@@ -366,7 +366,9 @@ io.on("connection", (socket) => {
     });
   });
 
-
+  socket.on("legalTiles", ({ legalTiles }) => {
+    io.emit("legalTiles", { legalTiles })
+  })
 
   socket.on("bonusThrow", () => {
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {

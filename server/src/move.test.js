@@ -14,6 +14,7 @@ describe("move", () => {
     let mockTeams;
     let mockPieces;
     let enemyTeam;
+    let mockPath;
 
     beforeEach(() => {
       from = -1
@@ -23,15 +24,16 @@ describe("move", () => {
       enemyTeam = 1
       mockTiles = initialState.tiles;
       mockTeams = initialState.teams;
-      mockPieces = [{tile: from, team: movingTeam, id: 0}]
+      mockPieces = [{tile: from, team: movingTeam, id: 0, path: [-1]}]
       mockTeams[movingTeam].moves[moveUsed] = 1
+      mockPath = [-1, 1]
     })
 
-    it("to an empty tile", () => {
-      let result = move(mockTiles, mockTeams, from, to, moveUsed, [], mockPieces)
+    fit("to an empty tile", () => {
+      let result = move(mockTiles, mockTeams, from, to, moveUsed, mockPath, mockPieces)
       let tiles = result.tiles
       let teams = result.teams
-      expect(tiles[to]).toEqual([{tile: to, team: movingTeam, id: 0}])
+      expect(tiles[to]).toEqual([{tile: to, team: movingTeam, id: 0, path: [-1, 1]}])
       expect(teams[0].moves[moveUsed]).toEqual(0)
       expect(teams[0].pieces[0]).toEqual(null)
     })

@@ -9,10 +9,10 @@ import React from "react";
 export default function Tile({ tile, wrapperRadius }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
-  const selected =
-    selection != null &&
-    selection.type === "tile" &&
-    selection.tile == tile;
+  // const selected =
+  //   selection != null &&
+  //   selection.type === "tile" &&
+  //   selection.tile == tile;
   const [tiles] = useAtom(tilesAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
 
@@ -21,9 +21,9 @@ export default function Tile({ tile, wrapperRadius }) {
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
-      if (!selected) {
+      // if (!selected) {
         wrapper.current.opacity += 0.2;
-      }
+      // }
     }
     // }
   }
@@ -33,9 +33,9 @@ export default function Tile({ tile, wrapperRadius }) {
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "default";
-      if (!selected) {
+      // if (!selected) {
         wrapper.current.opacity -= 0.2;
-      }
+      // }
     }
     // }
   }
@@ -46,6 +46,7 @@ export default function Tile({ tile, wrapperRadius }) {
       if (selection.tile != tile && tile in legalTiles) {
         socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
       }
+      socket.emit("legalTiles", {legalTiles: {}})
       socket.emit("select", null);
     }
   }
