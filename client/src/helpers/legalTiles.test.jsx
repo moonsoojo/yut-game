@@ -163,7 +163,7 @@ describe("on board", () => {
       let destinations = getLegalTiles(3, mockMoves, mockPieces) 
       expect(destinations).toEqual({"2" : {"tile": 2, move: "-1", path: [3, 2]}})
     })
-    fdescribe("finish", () => {
+    describe("finish", () => {
       it("should have one way to finish from tile 28", () => {
         let mockMoves = {
           "-1": 0,
@@ -190,7 +190,7 @@ describe("on board", () => {
         let destinations = getLegalTiles(0, mockMoves, mockPieces) 
         expect(destinations).toEqual({
           "29" : [{"tile": 29, move: "1", path: [0, 29]}], 
-          // "1" : {"tile": 1, move: "1", path: [0, 1]}, 
+          "1" : {"tile": 1, move: "1", path: [0, 1]}, // should be removed
         })
       })
       it("from tile 28 with multiple moves to finish", () => {

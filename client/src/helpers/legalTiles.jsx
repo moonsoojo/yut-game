@@ -50,9 +50,11 @@ function getNextTiles(tile, forward) {
   let nextTiles = [];
   if (tile == -1 && (forward)) {
     return [1]
-  } else if (tile == 0 && (forward)) {
-    return [29]
   }
+  // } else if (tile == 0 && (forward)) {
+  //   return [29]
+  // }
+  // doesn't fix all tests
 
   // on board
   let [start, end] = getStartAndEndVertices(forward);
