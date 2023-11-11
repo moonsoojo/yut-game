@@ -5,6 +5,7 @@ import Rocket from "../meshes/Rocket";
 import Ufo from "../meshes/Ufo";
 import Pointer from "../meshes/Pointer"
 import React from "react";
+import Piece from "./Piece";
 
 export default function Tile({ tile, wrapperRadius }) {
   const wrapper = useRef();
@@ -71,43 +72,64 @@ export default function Tile({ tile, wrapperRadius }) {
     [-0.2, 0.1 + wrapperRadius, -0.2],
   ];
 
-  function Piece() {
+  // function Piece() {
+  //   if (tiles[tile].length > 0) {
+  //     if (tiles[tile][0].team == 0) {
+  //       return (
+  //         <>
+  //           {tiles[tile].map((value, index) => (
+  //             <Rocket
+  //               position={rocketPositions[index]}
+  //               keyName={`count${index}`}
+  //               tile={tile}
+  //               team={0}
+  //               id={value.id}
+  //               key={index}
+  //               scale={0.8}
+  //             />
+  //           ))}
+  //         </>
+  //       );
+  //     } else {
+  //       return (
+  //         <>
+  //           {tiles[tile].map((value, index) => (
+  //             <Ufo
+  //               position={ufoPositions[index]}
+  //               keyName={`count${index}`}
+  //               tile={tile}
+  //               team={1}
+  //               id={value.id}
+  //               key={index}
+  //               scale={0.4}
+  //             />
+  //           ))}
+  //         </>
+  //       );
+  //     }
+  //   }
+  // }
+
+  function Piece() { // app crashes when you click on a legalTile
     if (tiles[tile].length > 0) {
-      if (tiles[tile][0].team == 0) {
-        return (
-          <>
-            {tiles[tile].map((value, index) => (
-              <Rocket
-                position={rocketPositions[index]}
-                keyName={`count${index}`}
-                tile={tile}
-                team={0}
-                id={value.id}
-                key={index}
-                scale={0.8}
-              />
-            ))}
-          </>
-        );
-      } else {
-        return (
-          <>
-            {tiles[tile].map((value, index) => (
-              <Ufo
-                position={ufoPositions[index]}
-                keyName={`count${index}`}
-                tile={tile}
-                team={1}
-                id={value.id}
-                key={index}
-                scale={0.4}
-              />
-            ))}
-          </>
-        );
-      }
+      return (
+        <>
+          {tiles[tile].map((value, index) => (
+            <Piece
+              position={tiles[tile][0].team == 0 ? rocketPositions[index] : ufoPositions[index]}
+              keyName={`count${index}`}
+              tile={tile}
+              team={tiles[tile][0].team}
+              id={value.id}
+              key={index}
+              scale={0.8}
+            />
+          ))}
+        </>
+      );
     }
   }
+
 
   return (
     <group>

@@ -110,9 +110,9 @@ export default function Moon({ position, tile, scale = 1 }) {
       }
     >
       <mesh
-        onPointerDown={(e) => handlePointerDown(e)}
-        onPointerEnter={(e) => handlePointerEnter(e)}
-        onPointerLeave={(e) => handlePointerLeave(e)}
+        // onPointerDown={(e) => handlePointerDown(e)}
+        // onPointerEnter={(e) => handlePointerEnter(e)}
+        // onPointerLeave={(e) => handlePointerLeave(e)}
       >
         <sphereGeometry args={[1]} />
         <meshStandardMaterial transparent opacity={0} ref={wrap} />
@@ -121,7 +121,7 @@ export default function Moon({ position, tile, scale = 1 }) {
         <sphereGeometry args={[0.6, 32, 32]} />
         <meshStandardMaterial map={props.map} />
       </mesh>
-      {tile && tiles[tile].length != 0 && <Piece />}
+      {/* {tile && tiles[tile].length != 0 && <Piece />} */}
       <Tile tile={tile} wrapperRadius={0.6} />
     </group>
   );

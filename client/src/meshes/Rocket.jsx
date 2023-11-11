@@ -36,7 +36,7 @@ export default function Rocket({
   id,
   scale = 1,
 }) {
-  const { scene, materials, animations } = useGLTF(
+  const { scene, materials } = useGLTF(
     "/models/rockets/rocket-with-astronaut0.glb"
   );
 
@@ -58,7 +58,7 @@ export default function Rocket({
 
   if (selection != null) {
     if (selection.tile == -1) {
-      if (selection.id == id) {
+      if (selection.pieces[0].id == id && selection.pieces[0].team == 0) {
         scale *= 1.5
       }
     } else {
@@ -100,17 +100,18 @@ export default function Rocket({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team]) && clientTeam == 0) {
+    if (gamePhase === "game" && hasMove(teams[team]) && isMyTurn(turn, teams, socketId)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;
         let pieces;
         if (starting) {
-          pieces = [{tile, team, id}]
+          pieces = [{tile, team, id, history: []}]
         } else {
           pieces = tiles[tile];
         }
-        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, tiles[tile][0].history)
+        let history = tile == -1 ? [] : tiles[tile][0].history
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
           socket.emit("legalTiles", {legalTiles})
           socket.emit("select", { tile, pieces })

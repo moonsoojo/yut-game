@@ -27,15 +27,21 @@ let hostId = null;
 const characters = [];
 let throwInProgress = false;
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
     team: 0,
     players: [0,0]
   }
-  teams[0].moves["2"] = 1
-  tiles[0] = [{tile: 0, team: 0, id: 0}]
+  teams[0].moves["1"] = 1
+  teams[0].pieces[3] = null
+  teams[0].pieces[2] = null
+  teams[1].pieces[3] = null
+  teams[1].pieces[2] = null
+  tiles[1] = [{tile: 1, team: 0, id: 0, history: [5, 20, 21]}]
+  tiles[22] = [{tile: 22, team: 0, id: 3, history: [5, 20, 21]}, {tile: 22, team: 0, id: 2, history: [5, 20, 21]}]
+  tiles[15] = [{tile: 15, team: 1, id: 3, history: [20, 21, 22, 23, 24]}, {tile: 15, team: 1, id: 2, history: [20, 21, 22, 23, 24]}]
   teams[0].pieces[0] = null
 }
 
@@ -295,12 +301,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", ({selection, tile, moveInfo}) => {
+    console.log("[move] moveInfo", moveInfo)
     let from = selection.tile
     let to = tile
     let moveUsed = moveInfo.move
-    let path = moveInfo.path
+    let history = moveInfo.history
     let pieces = selection.pieces
-    let result = move(tiles, teams, from, to, moveUsed, path, pieces)
+    let result = move(tiles, teams, from, to, moveUsed, history, pieces)
     tiles = result.tiles
     teams = result.teams
     io.emit("tiles", tiles);

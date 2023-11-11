@@ -65,7 +65,6 @@ export const yutThrowValuesAtom = atom([
   },
 ]);
 
-
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));

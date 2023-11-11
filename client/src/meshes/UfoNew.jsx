@@ -3,11 +3,8 @@ import { useRef, useMemo, useEffect } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, clientTeamAtom, socketIdAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
-import { useAtom } from "jotai";
 import { animated } from "@react-spring/three";
 import React from "react";
-import { getLegalTiles } from "../helpers/legalTiles";
 import { getCurrentPlayerSocketId } from "../../../server/src/helpers.js";
 
 function hasMove(team) {
@@ -29,44 +26,16 @@ function isMyTurn(turn, teams, socketId) {
   }
 }
 
-export default function Ufo({
-  position,
-  rotation,
+export default function UfoNew({
   tile,
-  team,
-  id,
-  scale = 0.22,
 }) {
-  const { scene, materials, animations } = useGLTF("/models/ufos/ufo0.glb");
+  const { scene, materials } = useGLTF("/models/ufos/ufo0.glb");
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
-  const [selection] = useAtom(selectionAtom);
-  const [teams] = useAtom(teamsAtom);
-  const [tiles] = useAtom(tilesAtom)
-  const [turn] = useAtom(turnAtom);
-  const [gamePhase] = useAtom(gamePhaseAtom)
-  const [clientTeam] = useAtom(clientTeamAtom)
-  const [socketId] = useAtom(socketIdAtom);
-  const [legalTiles] = useAtom(legalTilesAtom);
 
   const ufoGlassRef = useRef();
-  const ufoRef = useRef();
   const ballsRef = useRef();
-  const alienRef = useRef();
-  const wrapperMatRef = useRef();
-
-  if (selection != null) {
-    if (selection.tile == -1) {
-      if (selection.pieces[0].id == id && selection.pieces[0].team == 1) {
-        scale *= 1.5
-      }
-    } else {
-      if (selection.tile == tile) {
-        scale *= 1.5
-      }
-    }
-  }
 
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.2;
@@ -75,78 +44,14 @@ export default function Ufo({
   useFrame((state, delta) => {
     if (tile >= 0) {
       ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
-      // ufoRef.current.position.y += Math.sin(state.clock.elapsedTime * 3) * 0.001;
-    }
-    if (gamePhase === "game" && clientTeam == 1 && isMyTurn(turn, teams, socketId) && hasMove(teams[1])) {
-      ufoRef.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
-      ufoRef.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
-      ufoRef.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.05 + (0.05 / 2)
-      wrapperMatRef.current.color.r = (Math.cos(state.clock.elapsedTime * 2.5) - 1)
-      wrapperMatRef.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.2
     }
   });
 
-  function handlePointerEnter(event) {
-    // if (tile == -1) {
-      event.stopPropagation();
-      wrapperMatRef.current.opacity += 0.5;
-      document.body.style.cursor = "pointer";
-    // }
-  }
-
-  function handlePointerLeave(event) {
-    // if (tile == -1) {
-      event.stopPropagation();
-      wrapperMatRef.current.opacity -= 0.5;
-      document.body.style.cursor = "default";
-    // }
-  }
-
-  function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team]) && isMyTurn(turn, teams, socketId)) {
-      event.stopPropagation();
-      if (selection == null) {
-        let starting = tile == -1 ? true : false;
-        let pieces;
-        if (starting) {
-          pieces = [{tile, team, id, history: []}]
-        } else {
-          pieces = tiles[tile];
-        }
-        let history = tile == -1 ? [] : tiles[tile][0].history
-        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
-        if (Object.keys(legalTiles).length > 0) {
-          socket.emit("legalTiles", { legalTiles })
-          socket.emit("select", { tile, pieces })
-        }
-      } else {
-        if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
-        }
-        socket.emit("legalTiles", {legalTiles: {}})
-        socket.emit("select", null);
-      }
-    }
-  }
-
   return (
     <animated.group
-      position={position}
-      ref={ufoRef}
       dispose={null}
-      scale={scale}
-      rotation={rotation}
+      scale={0.4}
     >
-      <mesh
-        castShadow
-        visible={true}
-        onPointerDown={(event) => handlePointerDown(event)}
-        onPointerOver={(event) => handlePointerEnter(event)}
-        onPointerLeave={(event) => handlePointerLeave(event)}
-      >
-        <sphereGeometry args={[1.2]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrapperMatRef} />
-      </mesh>
       <group rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
         <mesh
           castShadow
@@ -276,7 +181,6 @@ export default function Ufo({
             scale={0.128}
           />
         </group>
-
         <mesh
           castShadow
           receiveShadow
@@ -284,7 +188,6 @@ export default function Ufo({
           material={materials["Blue Alien"]}
           position={[0, 0.492, 0.138]}
           scale={0.299}
-          ref={alienRef}
         />
         <mesh
           castShadow

@@ -8,6 +8,7 @@ import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Rocket from "./meshes/Rocket";
+import RocketNew from "./meshes/RocketNew.jsx"
 import Ufo from "./meshes/Ufo";
 import Controls3d from "./Controls3d";
 import Decorations from "./Decorations";
@@ -45,6 +46,7 @@ import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { getCurrentPlayerSocketId, movesIsEmpty } from "../../server/src/helpers.js";
 import { Perf } from 'r3f-perf'
+import Piece from "./components/Piece.jsx";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -61,13 +63,10 @@ export default function Experience() {
     }
   });
 
-  const [banner] = useAtom(bannerAtom);
-  const [selection] = useAtom(selectionAtom);
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  // const [canEndTurn] = useAtom(canEndTurnAtom);
   const [socketId] = useAtom(socketIdAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom)
 
@@ -214,19 +213,19 @@ export default function Experience() {
               <meshStandardMaterial color={"red"} />
             </mesh>
           ) : (
-            <Rocket
-              position={[
+            // <Rocket
+              <Piece
+                position={[
                 positionStartX,
                 positionStartY,
                 positionStartZ + index * space,
               ]}
-              rotation={layout[device].piecesTeam1.rotation}
+              rotation={layout[device].piecesTeam0.rotation}
               keyName={`count${index}`}
               tile={-1}
               team={0}
               id={value.id}
               key={index}
-              scale={1}
             />
           )
         )}
@@ -266,19 +265,18 @@ export default function Experience() {
               <meshStandardMaterial color={"turquoise"} />
             </mesh>
           ) : (
-            <Ufo
+            <Piece
               position={[
                 positionStartX,
                 positionStartY,
                 positionStartZ + index * space,
               ]}
-              rotation={layout[device].piecesTeam0.rotation}
+              rotation={layout[device].piecesTeam1.rotation}
               keyName={`count${index}`}
               tile={-1}
               team={1}
               id={value.id}
               key={index}
-              scale={0.4}
             />
           )
         )}
@@ -542,7 +540,7 @@ export default function Experience() {
 
   return (
     <>
-      <Perf/>
+      {/* <Perf/> */}
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -693,7 +691,7 @@ export default function Experience() {
           boxHeight={0.3}
         />
         {/* START GAME text */}
-        {readyToStart && ( // should be set to 'false' after click
+        {readyToStart && gamePhase === "lobby" && ( // should be set to 'false' after click
           <TextButton
             text="Start Game"
             position={layout[device].startGameBanner.position}
