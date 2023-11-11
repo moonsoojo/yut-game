@@ -312,6 +312,10 @@ io.on("connection", (socket) => {
     teams = result.teams
     io.emit("tiles", tiles);
     io.emit("teams", teams);
+    // "endTurn" state
+    // io.emit it
+    // in Experience, listen for state change
+    // if it's true, pass turn to next player
   });
 
   socket.on("score", ({selection, moveInfo}) => {
