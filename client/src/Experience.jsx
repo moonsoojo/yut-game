@@ -1,17 +1,14 @@
 import { useRef, useEffect } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import YutsNew3 from "./YutsNew3";
+import YutsNew3 from "./Yuts.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune2 from "./meshes/Neptune2.jsx";
 import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
-import Rocket from "./meshes/Rocket";
-import RocketNew from "./meshes/RocketNew.jsx"
-import Ufo from "./meshes/Ufo";
 import Controls3d from "./Controls3d";
-import Decorations from "./Decorations";
+// import Decorations from "./Decorations";
 import layout from "./layout";
 import React from "react";
 import { Leva, useControls } from "leva";
@@ -27,12 +24,10 @@ import {
   Text3D,
   OrthographicCamera,
 } from "@react-three/drei";
-import Universe from "./Universe";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useAtom, atom } from "jotai";
 import {
-  selectionAtom,
   readyToStartAtom,
   teamsAtom,
   turnAtom,
@@ -180,15 +175,15 @@ export default function Experience() {
     return tiles;
   }
 
-  function PiecesTeam0() {
-    let positionStartX = layout[device].piecesTeam1.positionStartX;
-    let positionStartY = layout[device].piecesTeam1.positionStartY;
-    let positionStartZ = layout[device].piecesTeam1.positionStartZ;
-    let space = layout[device].piecesTeam1.space;
+  function HomePieces({team}) {
+    let positionStartX = layout[device].homePieces[team].positionStartX;
+    let positionStartY = layout[device].homePieces[team].positionStartY;
+    let positionStartZ = layout[device].homePieces[team].positionStartZ;
+    let space = layout[device].homePieces[team].space;
 
     return (
       <>
-        {teams[0].pieces.map((value, index) =>
+        {teams[team].pieces.map((value, index) =>
           value == null ? (
             <mesh
               position={[
@@ -210,79 +205,88 @@ export default function Experience() {
               key={index}
             >
               <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={"red"} />
+              <meshStandardMaterial color={team == 0 ? "red" : "turquoise"} />
             </mesh>
           ) : (
-            // <Rocket
               <Piece
                 position={[
                 positionStartX,
                 positionStartY,
                 positionStartZ + index * space,
               ]}
-              rotation={layout[device].piecesTeam0.rotation}
+              rotation={layout[device].homePieces[team].rotation}
               keyName={`count${index}`}
               tile={-1}
-              team={0}
+              team={team}
               id={value.id}
               key={index}
+              scale={1}
             />
           )
         )}
       </>
     );
   }
+  // function PiecesTeam0() {
+  //   let positionStartX = layout[device].piecesTeam1.positionStartX;
+  //   let positionStartY = layout[device].piecesTeam1.positionStartY;
+  //   let positionStartZ = layout[device].piecesTeam1.positionStartZ;
+  //   let space = layout[device].piecesTeam1.space;
 
-  function PiecesTeam1() {
-    let positionStartX = layout[device].piecesTeam0.positionStartX;
-    let positionStartY = layout[device].piecesTeam0.positionStartY;
-    let positionStartZ = layout[device].piecesTeam0.positionStartZ;
-    let space = layout[device].piecesTeam0.space;
-    return (
-      <>
-        {teams[1].pieces.map((value, index) =>
-          value == null ? (
-            <mesh
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.1]} />
-            </mesh>
-          ) : value === "scored" ? (
-            <mesh
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={"turquoise"} />
-            </mesh>
-          ) : (
-            <Piece
-              position={[
-                positionStartX,
-                positionStartY,
-                positionStartZ + index * space,
-              ]}
-              rotation={layout[device].piecesTeam1.rotation}
-              keyName={`count${index}`}
-              tile={-1}
-              team={1}
-              id={value.id}
-              key={index}
-            />
-          )
-        )}
-      </>
-    );
-  }
+
+  // }
+
+  // function PiecesTeam1() {
+  //   let positionStartX = layout[device].piecesTeam0.positionStartX;
+  //   let positionStartY = layout[device].piecesTeam0.positionStartY;
+  //   let positionStartZ = layout[device].piecesTeam0.positionStartZ;
+  //   let space = layout[device].piecesTeam0.space;
+  //   return (
+  //     <>
+  //       {teams[1].pieces.map((value, index) =>
+  //         value == null ? (
+  //           <mesh
+  //             position={[
+  //               positionStartX,
+  //               positionStartY,
+  //               positionStartZ + index * space,
+  //             ]}
+  //             key={index}
+  //           >
+  //             <sphereGeometry args={[0.1]} />
+  //           </mesh>
+  //         ) : value === "scored" ? (
+  //           <mesh
+  //             position={[
+  //               positionStartX,
+  //               positionStartY,
+  //               positionStartZ + index * space,
+  //             ]}
+  //             key={index}
+  //           >
+  //             <sphereGeometry args={[0.1]} />
+  //             <meshStandardMaterial color={"turquoise"} />
+  //           </mesh>
+  //         ) : (
+  //           <Piece
+  //             position={[
+  //               positionStartX,
+  //               positionStartY,
+  //               positionStartZ + index * space,
+  //             ]}
+  //             rotation={layout[device].piecesTeam1.rotation}
+  //             keyName={`count${index}`}
+  //             tile={-1}
+  //             team={1}
+  //             id={value.id}
+  //             key={index}
+  //             scale={1}
+  //           />
+  //         )
+  //       )}
+  //     </>
+  //   );
+  // }
   
 
   function hasMove(team) {
@@ -596,11 +600,11 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
-      <Controls3d
+      {/* <Controls3d
         tileRadius={TILE_RADIUS}
         numStars={NUM_STARS}
         device={device}
-      />
+      /> */}
       <Physics debug maxVelocityIterations={10}>
         <RigidBody
           type="fixed"
@@ -617,8 +621,10 @@ export default function Experience() {
         <YutsNew3 device={device} />
         <Tiles />
 
-        <PiecesTeam0 />
-        <PiecesTeam1 />
+        {/* <PiecesTeam0 />
+        <PiecesTeam1 /> */}
+        <HomePieces team={0}/>
+        <HomePieces team={1}/>
 
         {/* score button */}
         {/* <TextButton
@@ -681,7 +687,7 @@ export default function Experience() {
           />
         }
 
-        <Decorations />
+        {/* <Decorations /> */}
         {/* START text */}
         <TextButton
           text="Start"

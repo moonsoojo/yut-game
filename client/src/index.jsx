@@ -4,7 +4,6 @@ import { Canvas } from "@react-three/fiber";
 // import Experience from "./ExperienceBackup";
 import Experience from "./Experience";
 import MouseGame from "./minigames/MouseGame";
-import Sandbox from "./Sandbox";
 import * as THREE from "three";
 import {
   CameraControls,
@@ -35,7 +34,6 @@ root.render(
       <OrbitControls />
 
       <Experience />
-      {/* <Sandbox /> */}
       {/* <MouseGame /> */}
 
       {/* <Perf /> */}

@@ -1,5 +1,5 @@
 import React from "react";
-import Sun from "./Sun/SunBagus";
+import Sun from "./SunBagus";
 export default function Sandbox() {
   return (
     <>

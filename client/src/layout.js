@@ -25,19 +25,21 @@ export default {
       rocketScale: 0.4,
       ufoScale: 0.2,
     },
-    piecesTeam0: {
-      positionStartX: 5,
-      positionStartY: 0,
-      positionStartZ: -3,
-      space: 0.8,
-      rotation: [0, 0, Math.PI / 4],
-    },
-    piecesTeam1: {
-      positionStartX: 6,
-      positionStartY: 0,
-      positionStartZ: -3,
-      space: 0.8,
-      rotation: [0, 0, 0],
+    homePieces: {
+      0: {
+        positionStartX: 5,
+        positionStartY: 0,
+        positionStartZ: -3,
+        space: 0.8,
+        rotation: [0, 0, Math.PI / 4],
+      },
+      1: {
+        positionStartX: 6.5,
+        positionStartY: 0,
+        positionStartZ: -3,
+        space: 0.8,
+        rotation: [0, 0, 0],
+      }
     },
     startBanner: {
       position: [3, 0, -3.5],
@@ -134,19 +136,21 @@ export default {
       rocketScale: 0.4,
       ufoScale: 0.2,
     },
-    piecesTeam0: {
-      positionStartX: 3,
-      positionStartY: 0,
-      positionStartZ: -6,
-      space: 0.8,
-      rotation: [0, 0, Math.PI / 4],
-    },
-    piecesTeam1: {
-      positionStartX: 4.5,
-      positionStartY: 0,
-      positionStartZ: -6,
-      space: 0.8,
-      rotation: [0, 0, 0],
+    homePieces: {
+      0: {
+        positionStartX: 3,
+        positionStartY: 0,
+        positionStartZ: -6,
+        space: 0.8,
+        rotation: [0, 0, Math.PI / 4],
+      },
+      1: {
+        positionStartX: 4.5,
+        positionStartY: 0,
+        positionStartZ: -6,
+        space: 0.8,
+        rotation: [0, 0, 0],
+      },
     },
     startBanner: {
       position: [2.7, -1.2, -2.5],

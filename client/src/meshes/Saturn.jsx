@@ -4,7 +4,7 @@ import { useRef } from "react";
 import React from "react";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
-import HelperArrow from "../HelperArrow";
+import HelperArrow from "./HelperArrow";
 import Tile from "../components/Tile";
 
 export default function Saturn({ position, tile }) {

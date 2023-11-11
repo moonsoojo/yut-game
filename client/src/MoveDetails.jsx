@@ -1,5 +1,5 @@
 import React from "react";
-import Ufo from "./meshes/Ufo";
+import Piece from "./components/Piece";
 import { animated, useSpring } from "@react-spring/three";
 import { Text3D } from "@react-three/drei";
 
@@ -244,8 +244,9 @@ export default function MoveDetails() {
           <meshStandardMaterial color="yellow" />
         </Text3D>
         <animated.group>
-          <Ufo
+          <Piece
             tile={-1}
+            team={1}
             position={direction1Position}
             scale={0.5}
             rotation={[0, 0, -Math.PI / 4]}

@@ -1,5 +1,5 @@
 import React from "react";
-import HelperArrow from "./HelperArrow";
+import HelperArrow from "./meshes/HelperArrow";
 import { Text3D } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 

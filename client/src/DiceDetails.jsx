@@ -1,6 +1,6 @@
 import React from "react";
 import { Text3D } from "@react-three/drei";
-import Yut from "./Yut";
+import Yut from "./meshes/Yut";
 
 export default function DiceDetails() {
   return (

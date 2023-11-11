@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { RigidBody, Physics, vec3, useRapier } from "@react-three/rapier";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF, useKeyboardControls, Text3D } from "@react-three/drei";
+import { RigidBody } from "@react-three/rapier";
+import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom, throwInProgressAtom } from "./SocketManager";
+import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import layout from "./layout";
-import TextButton from "./components/TextButton";
+import layout from "./layout.js";
+import TextButton from "./components/TextButton.jsx";
+import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -19,11 +19,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
   const [yutThrowValues] = useAtom(yutThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [throwInProgress] = useAtom(throwInProgressAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
   const [socketId] = useAtom(socketIdAtom);
+  const [throwInProgress] = useAtom(throwInProgressAtom);
   const [_hoverThrowText, setHoverThrowText] = useState(false);
 
   useEffect(() => {
@@ -62,9 +62,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     }
   }, [sleepCount])
 
-  // useEffect(() => {
-  //   setHoverThrowText(false);
-  // }, [throwInProgress]);
+  useEffect(() => {
+    setHoverThrowText(false);
+  }, [throwInProgress]);
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -109,9 +109,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       if (gamePhase === "game" && (result == 4 || result == 5) ) {
         socket.emit("bonusThrow");
       }
-      if (gamePhase === "pregame") {
-        // socket.emit("canEndTurn");
-      }
     }
   }
 
@@ -119,15 +116,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
-  let currentPlayerSocketId
-  if (teams[turn.team].players[turn.players[turn.team]] != undefined) {
-    currentPlayerSocketId = teams[turn.team].players[turn.players[turn.team]].socketId
-  }
+  
 
   return (
     <group {...props} dispose={null}>
-      {socketId == currentPlayerSocketId && teams[turn.team].throws > 0 && ( 
-        // we need the throw visible flag so that we can hide it while yut is being thrown
+      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && ( 
         <TextButton
           text={`Throw`}
           rotation={layout[device].throwButton.rotation}
@@ -140,7 +133,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           boxHeight={0.3}
         />
       )}
-      {socketId == currentPlayerSocketId && teams[turn.team].throws > 0 && 
+      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
         gamePhase === "pregame" && (
         <TextButton
           text={"for order"}

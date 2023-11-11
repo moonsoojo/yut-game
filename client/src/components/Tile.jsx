@@ -1,8 +1,6 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
 import { selectionAtom, tilesAtom, socket, legalTilesAtom } from "../SocketManager";
-import Rocket from "../meshes/Rocket";
-import Ufo from "../meshes/Ufo";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
@@ -10,35 +8,23 @@ import Piece from "./Piece";
 export default function Tile({ tile, wrapperRadius }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
-  // const selected =
-  //   selection != null &&
-  //   selection.type === "tile" &&
-  //   selection.tile == tile;
   const [tiles] = useAtom(tilesAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
 
   function handlePointerEnter(event) {
-    // if (!hasPiece(tiles, tile)) {
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
-      // if (!selected) {
-        wrapper.current.opacity += 0.2;
-      // }
+      wrapper.current.opacity += 0.2;
     }
-    // }
   }
 
   function handlePointerLeave(event) {
-    // if (!hasPiece(tiles, tile)) {
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "default";
-      // if (!selected) {
-        wrapper.current.opacity -= 0.2;
-      // }
+      wrapper.current.opacity -= 0.2;
     }
-    // }
   }
 
   function handlePointerDown(event) {
@@ -51,10 +37,6 @@ export default function Tile({ tile, wrapperRadius }) {
       socket.emit("select", null);
     }
   }
-
-  // function hasPiece(tiles, tile) {
-  //   return tiles[tile].length > 0
-  // }
 
   let rocketAdjustY = (tile == 0 || tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
 
@@ -72,45 +54,7 @@ export default function Tile({ tile, wrapperRadius }) {
     [-0.2, 0.1 + wrapperRadius, -0.2],
   ];
 
-  // function Piece() {
-  //   if (tiles[tile].length > 0) {
-  //     if (tiles[tile][0].team == 0) {
-  //       return (
-  //         <>
-  //           {tiles[tile].map((value, index) => (
-  //             <Rocket
-  //               position={rocketPositions[index]}
-  //               keyName={`count${index}`}
-  //               tile={tile}
-  //               team={0}
-  //               id={value.id}
-  //               key={index}
-  //               scale={0.8}
-  //             />
-  //           ))}
-  //         </>
-  //       );
-  //     } else {
-  //       return (
-  //         <>
-  //           {tiles[tile].map((value, index) => (
-  //             <Ufo
-  //               position={ufoPositions[index]}
-  //               keyName={`count${index}`}
-  //               tile={tile}
-  //               team={1}
-  //               id={value.id}
-  //               key={index}
-  //               scale={0.4}
-  //             />
-  //           ))}
-  //         </>
-  //       );
-  //     }
-  //   }
-  // }
-
-  function Piece() { // app crashes when you click on a legalTile
+  function Pieces() { // app crashes when you click on a legalTile
     if (tiles[tile].length > 0) {
       return (
         <>
@@ -122,14 +66,14 @@ export default function Tile({ tile, wrapperRadius }) {
               team={tiles[tile][0].team}
               id={value.id}
               key={index}
-              scale={0.8}
+              scale={0.7}
             />
           ))}
         </>
       );
     }
+    return <></>
   }
-
 
   return (
     <group>
@@ -146,7 +90,7 @@ export default function Tile({ tile, wrapperRadius }) {
           ref={wrapper}
         />
       </mesh>
-      <Piece />
+      <Pieces />
       { selection != null && tile in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
     </group>
   );

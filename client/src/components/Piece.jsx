@@ -1,31 +1,12 @@
 
 import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, socketIdAtom, legalTilesAtom, tilesAtom, clientTeamAtom } from "../SocketManager";
 import { useAtom } from "jotai";
-import React, { forwardRef, useRef } from "react";
+import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
-import RocketNew from "../meshes/RocketNew";
-import UfoNew from "../meshes/UfoNew";
-import { getCurrentPlayerSocketId } from "../../../server/src/helpers.js";
-
-function hasMove(team) {
-  let flag = false;
-  for (let move in team.moves) {
-    if (team.moves[move] > 0) {
-      flag = true;
-      break;
-    }
-  }
-  return flag
-}
-
-function isMyTurn(turn, teams, socketId) {
-  if (getCurrentPlayerSocketId(turn, teams) === socketId) {
-    return true
-  } else {
-    return false
-  }
-}
+import Rocket from "../meshes/Rocket.jsx";
+import Ufo from "../meshes/Ufo.jsx";
+import { hasMove, isMyTurn } from "../../../server/src/helpers.js";
 
 export default function Piece ({
   position,
@@ -33,6 +14,7 @@ export default function Piece ({
   tile,
   team,
   id,
+  scale
 }) {
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
@@ -48,12 +30,6 @@ export default function Piece ({
 
   // if tile == -1, scale = 1
   // else, scale = 0.5
-  let scale;
-  if (tile == -1) {
-    scale = 1
-  } else {
-    scale = 0.5
-  }
   if (selection != null) {
     if (selection.tile == -1) {
       if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
@@ -148,7 +124,7 @@ export default function Piece ({
           ref={wrapperMat}
         />
       </mesh>
-      { team == 0 ? <RocketNew/> : <UfoNew/>}
+      { team == 0 ? <Rocket/> : <Ufo/>}
     </group>
   )      
 };

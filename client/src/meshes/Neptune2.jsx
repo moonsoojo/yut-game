@@ -1,6 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
-import HelperArrow from "../HelperArrow";
+import HelperArrow from "./HelperArrow";
 import React from "react";
 import NeptuneParticles from "./NeptuneParticles";
 import { useControls } from "leva";
