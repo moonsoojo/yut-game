@@ -15,12 +15,13 @@ import edgeList from "./edgeList.js";
 // }
 export function getLegalTiles(tile, moves, pieces, history) { // parameters are optional
   let legalTiles = {} // add key '29' with empty list
+  let starting = tile == -1 ? true : false;
 
   for (let move in moves) {
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
       if (checkBackdoRule(moves, pieces)) {
-        legalTiles[0] = { tile: 0, move: "-1", path: [] }
+        legalTiles[0] = { tile: 0, move: "-1", history: [] }
       } else {
         let forks = getNextTiles(tile, forward)
         if (forward) {
@@ -28,17 +29,19 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
         } else {
           forks = checkBackdoFork(forks, history)
         }
+        console.log("[getLegalTiles] forks", forks)
         for (let i = 0; i < forks.length; i++) {
-          let path = [tile]
+          let path = starting ? [] : [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-          // returns empty array
+          console.log("[getLegalTiles] i", i, "destination", destination)
+          let fullHistory = getFullHistory(history, destination.path, forward)
           if (destination.tile == 29) {
             if (!(29 in legalTiles)) {
               legalTiles[29] = []
             }
-            legalTiles[29].push({ tile: destination.tile, move: move, path: destination.path })
+            legalTiles[29].push({ tile: destination.tile, move, history: fullHistory })
           } else {
-            legalTiles[destination.tile] = { tile: destination.tile, move: move, path: destination.path }
+            legalTiles[destination.tile] = { tile: destination.tile, move, history: fullHistory }
           }
         }
       }
@@ -47,6 +50,18 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
 
   // console.log("legalTiles", legalTiles)
   return legalTiles
+}
+
+function getFullHistory(history, path, forward) {
+  if (forward) {
+    return history.concat(path)
+  } else {
+    if (path.length == 0) {
+      return []
+    } else {
+      return history.slice(0, history.length-1)
+    }
+  }
 }
 
 function checkFinishRule(forks) {
@@ -59,12 +74,12 @@ function checkFinishRule(forks) {
   return forks
 }
 
-// precondition: pathHistory is an array
+// precondition: history is an array
 function checkBackdoFork(forks, history) {
   if (history.length == 0) {
     return forks
   } else {
-    return history[history.length-1]
+    return [history[history.length-1]]
   }
 }
 
@@ -102,12 +117,9 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
-  // console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
+  console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
   // path.push(tile)
   if (steps == 0 || tile == 29) {
-    if (forward == false) {
-      path = []
-    }
     return { tile, path }
   }
   

@@ -2,7 +2,7 @@
 // path should be appended to pieces on the board
 // when it's home, clear it
 // when piece moves backward, it should pop off items from the list
-export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
+export const move = function (tiles, teams, from, to, moveUsed, history, pieces) {
   let starting = from == -1 ? true : false;
   let movingTeam = pieces[0].team;
 
@@ -11,7 +11,7 @@ export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
     if (occupyingTeam != movingTeam) {
       for (let piece of tiles[to]) {
         piece.tile = -1
-        piece.path = []
+        piece.history = []
         teams[occupyingTeam].pieces[piece.id] = piece
       }
       tiles[to] = []
@@ -20,7 +20,7 @@ export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
   }
 
   for (const piece of pieces) {
-    tiles[to].push({tile: to, team: piece.team, id: piece.id, path: piece.path.concat(path.slice(1))})
+    tiles[to].push({tile: to, team: piece.team, id: piece.id, history})
   }
 
   // take from 1st index (not 0th) and go until the end
