@@ -33,7 +33,6 @@ export default function ScoreButton({ position, rotation }) {
           socket.emit("score", { selection, moveInfo: legalTiles[29][0] })
           socket.emit("select", null);
         } else {
-          console.log("[clickScore] multiple moves to finish with")
           // display move options
           // set 'displayMoveOptions' in socketManager
           // create "Move" component

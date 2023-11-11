@@ -23,10 +23,10 @@ export default {
       displayName: "",
       players: [], // list of objects
       pieces: [
-        { tile: -1, team: 0, id: 0 }, // tile's possible values: -1 for home, 0 to 28, "finished"
-        { tile: -1, team: 0, id: 1 },
-        { tile: -1, team: 0, id: 2 },
-        { tile: -1, team: 0, id: 3 },
+        { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
+        { tile: -1, team: 0, id: 1, path: [] },
+        { tile: -1, team: 0, id: 2, path: [] },
+        { tile: -1, team: 0, id: 3, path: [] },
       ],
       moves: {
         "1": 0,
@@ -43,10 +43,10 @@ export default {
       displayName: "",
       players: [], // list of objects
       pieces: [
-        { tile: -1, team: 1, id: 0 },
-        { tile: -1, team: 1, id: 1 },
-        { tile: -1, team: 1, id: 2 },
-        { tile: -1, team: 1, id: 3 },
+        { tile: -1, team: 1, id: 0, history: [] },
+        { tile: -1, team: 1, id: 1, history: [] },
+        { tile: -1, team: 1, id: 2, history: [] },
+        { tile: -1, team: 1, id: 3, history: [] },
       ],
       moves: {
         "1": 0,

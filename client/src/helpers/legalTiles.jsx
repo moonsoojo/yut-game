@@ -13,20 +13,25 @@ import edgeList from "./edgeList.js";
 //     { destination: 29, "move": 2, "path": [28, 29]}
 //   ]
 // }
-export function getLegalTiles(tile, moves, pieces) { // parameters are optional
+export function getLegalTiles(tile, moves, pieces, history) { // parameters are optional
   let legalTiles = {} // add key '29' with empty list
 
   for (let move in moves) {
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
       if (checkBackdoRule(moves, pieces)) {
-        legalTiles[0] = { tile: 0, move: "-1", path: [-1, 0] }
+        legalTiles[0] = { tile: 0, move: "-1", path: [] }
       } else {
         let forks = getNextTiles(tile, forward)
-        forks = checkFinishRule(forks)
+        if (forward) {
+          forks = checkFinishRule(forks)
+        } else {
+          forks = checkBackdoFork(forks, history)
+        }
         for (let i = 0; i < forks.length; i++) {
           let path = [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
+          // returns empty array
           if (destination.tile == 29) {
             if (!(29 in legalTiles)) {
               legalTiles[29] = []
@@ -40,12 +45,12 @@ export function getLegalTiles(tile, moves, pieces) { // parameters are optional
     }
   }
 
-  console.log("legalTiles", legalTiles)
+  // console.log("legalTiles", legalTiles)
   return legalTiles
 }
 
 function checkFinishRule(forks) {
-  console.log("[checkFinishRule] forks", forks)
+  // console.log("[checkFinishRule] forks", forks)
   for (let i = 0; i < forks.length; i++) {
     if (forks[i] == 29) {
       return [29]
@@ -54,11 +59,20 @@ function checkFinishRule(forks) {
   return forks
 }
 
+// precondition: pathHistory is an array
+function checkBackdoFork(forks, history) {
+  if (history.length == 0) {
+    return forks
+  } else {
+    return history[history.length-1]
+  }
+}
+
 // recursion
 // if first step, keep forks
 // else, go straight
 function getNextTiles(tile, forward) {
-  console.log("[getNextTiles] tile", tile, "forward", forward)
+  // console.log("[getNextTiles] tile", tile, "forward", forward)
   let nextTiles = [];
   if (tile == -1 && (forward)) {
     return [1]
@@ -88,18 +102,22 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
-  console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
-  path.push(tile)
+  // console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
+  // path.push(tile)
   if (steps == 0 || tile == 29) {
+    if (forward == false) {
+      path = []
+    }
     return { tile, path }
   }
   
+  path.push(tile)
   let [start, end] = getStartAndEndVertices(forward);
   for (const edge of edgeList) {
     if (edge[start] == tile) {
       let nextTile;
       let forks = getNextTiles(tile, forward);
-      console.log("[getDestination] forks", forks)
+      // console.log("[getDestination] forks", forks)
       if (forks.length > 1) {
         // choose next tile
         // recursively call getDestination with
@@ -114,7 +132,7 @@ function getDestination(tile, steps, forward, path) {
 }
 
 function chooseTileFromFork(path, forks) {
-  console.log("[chooseTileFromFork] path", path, "forks", forks)
+  // console.log("[chooseTileFromFork] path", path, "forks", forks)
   // if (path[path.length-1] == 0) {
   //   return 29
   // }

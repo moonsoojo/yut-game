@@ -11,6 +11,7 @@ export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
     if (occupyingTeam != movingTeam) {
       for (let piece of tiles[to]) {
         piece.tile = -1
+        piece.path = []
         teams[occupyingTeam].pieces[piece.id] = piece
       }
       tiles[to] = []
@@ -19,7 +20,6 @@ export const move = function (tiles, teams, from, to, moveUsed, path, pieces) {
   }
 
   for (const piece of pieces) {
-    
     tiles[to].push({tile: to, team: piece.team, id: piece.id, path: piece.path.concat(path.slice(1))})
   }
 

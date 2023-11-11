@@ -110,7 +110,7 @@ export default function Rocket({
         } else {
           pieces = tiles[tile];
         }
-        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces)
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, tiles[tile][0].history)
         if (!(Object.keys(legalTiles).length == 0)) {
           socket.emit("legalTiles", {legalTiles})
           socket.emit("select", { tile, pieces })

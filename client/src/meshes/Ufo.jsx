@@ -105,7 +105,6 @@ export default function Ufo({
   function handlePointerDown(event) {
     if (gamePhase === "game" && hasMove(teams[team]) && clientTeam == 1) {
       event.stopPropagation();
-      console.log("[Ufo] pointer down, selection", selection)
       if (selection == null) {
         let starting = tile == -1 ? true : false;
         let pieces;
@@ -114,7 +113,7 @@ export default function Ufo({
         } else {
           pieces = tiles[tile];
         }
-        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces)
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, tiles[tile][0].history)
         if (Object.keys(legalTiles).length > 0) {
           socket.emit("legalTiles", { legalTiles })
           socket.emit("select", { tile, pieces })

@@ -5,7 +5,6 @@ import { useThree } from "@react-three/fiber";
 
 export default function GoalDetails({ tileRadius, numStars }) {
   let camera = useThree((state) => state.camera);
-  console.log(camera.position);
 
   function Arrows() {
     let arrows = [];

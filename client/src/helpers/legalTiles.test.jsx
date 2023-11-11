@@ -145,24 +145,7 @@ describe("on board", () => {
       })
     })
 
-    it("going backward", () => {
-      let mockMoves = {
-        "-1": 1,
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0
-      }
-      mockPieces = [
-        null,
-        { tile: -1, team: 1, id: 1 },
-        { tile: -1, team: 1, id: 2 },
-        { tile: -1, team: 1, id: 3 },
-      ]
-      let destinations = getLegalTiles(3, mockMoves, mockPieces) 
-      expect(destinations).toEqual({"2" : {"tile": 2, move: "-1", path: [3, 2]}})
-    })
+
     describe("finish", () => {
       it("should have one way to finish from tile 28", () => {
         let mockMoves = {
@@ -276,7 +259,28 @@ describe("on board", () => {
         "9": {"tile": 9, move: "4", path: [5, 6, 7, 8, 9]}
       })
     })
-    it("going backward", () => {
+  })
+  fdescribe("backdo", () => {
+    it("from regular tile with history", () => {
+      let mockMoves = {
+        "-1": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+      let mockPieces = [
+        null,
+        { tile: -1, team: 0, id: 1, path: [] },
+        { tile: -1, team: 0, id: 2, path: [] },
+        { tile: -1, team: 0, id: 3, path: [] },
+      ]
+      let mockHistory = [1, 2]
+      let destinations = getLegalTiles(3, mockMoves, mockPieces, mockHistory) 
+      expect(destinations).toEqual({"2" : {"tile": 2, move: "-1", path: []}})
+    })
+    it("from 0 with path history", () => {
       let mockMoves = {
         "-1": 1,
         "1": 0,
@@ -287,9 +291,25 @@ describe("on board", () => {
       }
       let destinations = getLegalTiles(22, mockMoves, mockPieces) 
       expect(destinations).toEqual({
-        "21" : {"tile": 21, move: "-1", path: [22, 21]}, 
-        "26" : {"tile": 26, move: "-1", path: [22, 26]}
+        "21" : {"tile": 21, move: "-1", path: []}, 
+        "26" : {"tile": 26, move: "-1", path: []}
       })
     })
+    it("from 0 without path history", () => {
+      let mockMoves = {
+        "-1": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+      let destinations = getLegalTiles(22, mockMoves, mockPieces) 
+      expect(destinations).toEqual({
+        "21" : {"tile": 21, move: "-1", path: []}, 
+        "26" : {"tile": 26, move: "-1", path: []}
+      })
+    })
+    // when 'expansion' is implemented, try with -4 moves
   })
 })
