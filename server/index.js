@@ -26,7 +26,7 @@ let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible 
 let hostId = null;
 const characters = [];
 let throwInProgress = false;
-let canEndTurn = false;
+// let canEndTurn = false;
 
 let test = false;
 if (test) {
@@ -123,7 +123,8 @@ function passTurn(turn, teams) {
   } else {
     turn.players[turn.team]++
   }
-  console.log("[passTurn] turn", turn)
+
+  
   return turn
 }
 
@@ -252,11 +253,40 @@ io.on("connection", (socket) => {
     let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     teams[turn.team].throws++;
     io.emit("teams", teams)
-    io.to(currentPlayer.socketId).emit("showThrow")
+    // io.to(currentPlayer.socketId).emit("showThrow")
     // io.to(currentPlayer.socketId).emit("canEndTurn", false)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
   })
+
+  function passTurnPregame(turn, teams, gamePhase) {
+    if (allTeamsHaveMove(teams)) {
+      let firstTeamToThrow = calcFirstTeamToThrow(teams)
+      if (firstTeamToThrow == -1) {
+        turn = passTurn(turn, teams)
+      } else {
+        // turn has been decided
+        turn = setTurn(turn, firstTeamToThrow, [0, 0])
+        gamePhase = "game"
+      }
+      // clear moves in teams
+      for (let i = 0; i < teams.length; i++) {
+        teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
+      }
+    } else {
+      turn = passTurn(turn, teams)
+    }
+
+    // next player
+    currentPlayer = teams[turn.team].players[turn.players[turn.team]]
+
+    teams[turn.team].throws++;
+    io.emit("turn", turn)
+    io.emit("teams", teams)
+    io.emit("gamePhase", gamePhase)
+    // io.to(currentPlayer.socketId).emit("showThrow")
+    io.to(currentPlayer.socketId).emit("throwInProgress", false)
+  }
 
   // pass turn to next player
   socket.on("endTurn", () => {
@@ -265,22 +295,7 @@ io.on("connection", (socket) => {
     // io.to(currentPlayer.socketId).emit("canEndTurn", false)
 
     if (gamePhase === "pregame") {
-      if (allTeamsHaveMove(teams)) {
-        let firstTeamToThrow = calcFirstTeamToThrow(teams)
-        if (firstTeamToThrow == -1) {
-          turn = passTurn(turn, teams)
-        } else {
-          // turn has been decided
-          turn = setTurn(turn, firstTeamToThrow, [0, 0])
-          gamePhase = "game"
-        }
-        // clear moves in teams
-        for (let i = 0; i < teams.length; i++) {
-          teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
-        }
-      } else {
-        turn = passTurn(turn, teams)
-      }
+      // logic moved outside
     } else if (gamePhase === "game") {
       turn = passTurn(turn, teams)
     }
@@ -292,7 +307,7 @@ io.on("connection", (socket) => {
     io.emit("turn", turn)
     io.emit("teams", teams)
     io.emit("gamePhase", gamePhase)
-    io.to(currentPlayer.socketId).emit("showThrow")
+    // io.to(currentPlayer.socketId).emit("showThrow")
     io.to(currentPlayer.socketId).emit("throwInProgress", false)
   })
 

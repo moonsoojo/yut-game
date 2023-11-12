@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import YutsNew3 from "./Yuts.jsx";
 import Star from "./meshes/Star.jsx";
@@ -64,6 +64,11 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [socketId] = useAtom(socketIdAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom)
+  const [endTurn, setEndTurn] = useState(false);
+
+  useEffect(() => {
+    console.log("endTurn state change")
+  }, [endTurn])
 
   const numTiles = 29;
 
@@ -477,19 +482,6 @@ export default function Experience() {
     return prettifiedMoves
   }
 
-  function canEndTurn() {
-    if (isMyTurn(turn, teams, socketId) && 
-      !throwInProgress &&
-      (gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
-      (gamePhase === "pregame" && teams[turn.team].throws == 0))
-      return true;
-    return false;
-  }
-
-  if (canEndTurn()) {
-    socket.emit("endTurn");
-  }
-
   return (
     <>
       {/* <Perf/> */}
@@ -590,34 +582,8 @@ export default function Experience() {
         />
         
         {/* end turn button */}
-        {/* { socketId == getCurrentPlayerSocketId(turn, teams) && 
-        ((gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
-          gamePhase === "pregame" && teams[turn.team].throws == 0) &&
-          !throwInProgress && 
-          <TextButton
-            text="End Turn"
-            position={layout[device].endTurnButton.position}
-            rotation={layout[device].endTurnButton.rotation}
-            handlePointerClick={() => {
-              socket.emit("endTurn", true);
-            }}
-            boxWidth={1.2}
-            boxHeight={0.3}
-          />
-        }
-        { gamePhase === "pregame" && allTeamsHaveMove(teams) && firstTeamToThrow(teams) == -1 &&
-          <TextButton
-            text="(tie)"
-            position={layout[device].endTurnButtonTie.position}
-            rotation={layout[device].endTurnButtonTie.rotation}
-            handlePointerClick={() => {
-              socket.emit("endTurn", true);
-            }}
-            boxWidth={1.2}
-            boxHeight={0.3}
-          />
-        } */}
-
+        {/* socket.emit("endTurn", true); */}
+        
         {/* <Decorations /> */}
         {/* START text */}
         <TextButton
