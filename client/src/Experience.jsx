@@ -39,7 +39,7 @@ import {
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
-import { getCurrentPlayerSocketId, movesIsEmpty } from "../../server/src/helpers.js";
+import { getCurrentPlayerSocketId, movesIsEmpty, isMyTurn } from "../../server/src/helpers.js";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
 
@@ -227,68 +227,7 @@ export default function Experience() {
       </>
     );
   }
-  // function PiecesTeam0() {
-  //   let positionStartX = layout[device].piecesTeam1.positionStartX;
-  //   let positionStartY = layout[device].piecesTeam1.positionStartY;
-  //   let positionStartZ = layout[device].piecesTeam1.positionStartZ;
-  //   let space = layout[device].piecesTeam1.space;
-
-
-  // }
-
-  // function PiecesTeam1() {
-  //   let positionStartX = layout[device].piecesTeam0.positionStartX;
-  //   let positionStartY = layout[device].piecesTeam0.positionStartY;
-  //   let positionStartZ = layout[device].piecesTeam0.positionStartZ;
-  //   let space = layout[device].piecesTeam0.space;
-  //   return (
-  //     <>
-  //       {teams[1].pieces.map((value, index) =>
-  //         value == null ? (
-  //           <mesh
-  //             position={[
-  //               positionStartX,
-  //               positionStartY,
-  //               positionStartZ + index * space,
-  //             ]}
-  //             key={index}
-  //           >
-  //             <sphereGeometry args={[0.1]} />
-  //           </mesh>
-  //         ) : value === "scored" ? (
-  //           <mesh
-  //             position={[
-  //               positionStartX,
-  //               positionStartY,
-  //               positionStartZ + index * space,
-  //             ]}
-  //             key={index}
-  //           >
-  //             <sphereGeometry args={[0.1]} />
-  //             <meshStandardMaterial color={"turquoise"} />
-  //           </mesh>
-  //         ) : (
-  //           <Piece
-  //             position={[
-  //               positionStartX,
-  //               positionStartY,
-  //               positionStartZ + index * space,
-  //             ]}
-  //             rotation={layout[device].piecesTeam1.rotation}
-  //             keyName={`count${index}`}
-  //             tile={-1}
-  //             team={1}
-  //             id={value.id}
-  //             key={index}
-  //             scale={1}
-  //           />
-  //         )
-  //       )}
-  //     </>
-  //   );
-  // }
   
-
   function hasMove(team) {
     let flag = false;
     for (let move in team.moves) {
@@ -301,10 +240,6 @@ export default function Experience() {
   }
 
   function allTeamsHaveMove(teams) {
-    // go through every team
-    // if every team has a score
-    // get team with top score
-    // switch turn to them
     let allTeamsHaveMove = true;
     for (let i = 0; i < teams.length; i++) {
       let flag = hasMove(teams[i]);
@@ -542,6 +477,19 @@ export default function Experience() {
     return prettifiedMoves
   }
 
+  function canEndTurn() {
+    if (isMyTurn(turn, teams, socketId) && 
+      !throwInProgress &&
+      (gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
+      (gamePhase === "pregame" && teams[turn.team].throws == 0))
+      return true;
+    return false;
+  }
+
+  if (canEndTurn()) {
+    socket.emit("endTurn");
+  }
+
   return (
     <>
       {/* <Perf/> */}
@@ -621,27 +569,10 @@ export default function Experience() {
         <YutsNew3 device={device} />
         <Tiles />
 
-        {/* <PiecesTeam0 />
-        <PiecesTeam1 /> */}
         <HomePieces team={0}/>
         <HomePieces team={1}/>
 
         {/* score button */}
-        {/* <TextButton
-          text="Score"
-          position={layout[device].scoreButton.position}
-          rotation={layout[device].scoreButton.rotation}
-          handlePointerClick={() => {
-            if (selection != null) {
-              // finishPiece();
-              // setSelection(null);
-              socket.emit("finishPiece");
-            }
-            socket.emit("select", null);
-          }}
-          boxWidth={1.2}
-          boxHeight={0.3}
-        /> */}
         <ScoreButton           
           position={layout[device].scoreButton.position}
           rotation={layout[device].scoreButton.rotation}
@@ -659,7 +590,7 @@ export default function Experience() {
         />
         
         {/* end turn button */}
-        { socketId == getCurrentPlayerSocketId(turn, teams) && 
+        {/* { socketId == getCurrentPlayerSocketId(turn, teams) && 
         ((gamePhase === "game" && teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) || 
           gamePhase === "pregame" && teams[turn.team].throws == 0) &&
           !throwInProgress && 
@@ -685,7 +616,7 @@ export default function Experience() {
             boxWidth={1.2}
             boxHeight={0.3}
           />
-        }
+        } */}
 
         {/* <Decorations /> */}
         {/* START text */}

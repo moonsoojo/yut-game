@@ -26,6 +26,7 @@ let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible 
 let hostId = null;
 const characters = [];
 let throwInProgress = false;
+let canEndTurn = false;
 
 let test = false;
 if (test) {
@@ -301,7 +302,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", ({selection, tile, moveInfo}) => {
-    console.log("[move] moveInfo", moveInfo)
     let from = selection.tile
     let to = tile
     let moveUsed = moveInfo.move
