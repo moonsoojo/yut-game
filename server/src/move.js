@@ -37,5 +37,5 @@ export const move = function (tiles, teams, from, to, moveUsed, history, pieces)
   // remove move
   teams[movingTeam].moves[moveUsed]--;
 
-  return { tiles, teams } 
+  return [tiles, teams]
 }

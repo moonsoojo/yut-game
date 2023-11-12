@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
 import { score } from "./src/score.js";
-import { getCurrentPlayerSocketId } from "./src/helpers.js";
+import { getCurrentPlayerSocketId, movesIsEmpty } from "./src/helpers.js";
 
 const io = new Server({
   cors: {
@@ -28,22 +28,15 @@ const characters = [];
 let throwInProgress = false;
 // let canEndTurn = false;
 
-let test = false;
+let test = true;
 if (test) {
   gamePhase = "game"
   turn = {
     team: 0,
     players: [0,0]
   }
-  teams[0].moves["1"] = 1
-  teams[0].pieces[3] = null
-  teams[0].pieces[2] = null
-  teams[1].pieces[3] = null
-  teams[1].pieces[2] = null
-  tiles[1] = [{tile: 1, team: 0, id: 0, history: [5, 20, 21]}]
-  tiles[22] = [{tile: 22, team: 0, id: 3, history: [5, 20, 21]}, {tile: 22, team: 0, id: 2, history: [5, 20, 21]}]
-  tiles[15] = [{tile: 15, team: 1, id: 3, history: [20, 21, 22, 23, 24]}, {tile: 15, team: 1, id: 2, history: [20, 21, 22, 23, 24]}]
-  teams[0].pieces[0] = null
+  teams[0].moves["2"] = 1
+  teams[0].moves["4"] = 1
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -117,22 +110,17 @@ function passTurn(turn, teams) {
   } else {
     turn.team++
   }
-  
+
   if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
     turn.players[turn.team] = 0
   } else {
     turn.players[turn.team]++
   }
 
-  
   return turn
 }
 
 function allTeamsHaveMove(teams) {
-  // go through every team
-  // if every team has a score
-  // get team with top score
-  // switch turn to them
   let allTeamsHaveMove = true;
   for (let i = 0; i < teams.length; i++) {
     let hasMove = false;
@@ -247,14 +235,9 @@ io.on("connection", (socket) => {
 
 
   socket.on("startGame", () => {
-    // turn = passTurn(turn, teams)
-    // io.emit("turn", turn)
     io.to(hostId).emit("readyToStart", false);
-    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     teams[turn.team].throws++;
     io.emit("teams", teams)
-    // io.to(currentPlayer.socketId).emit("showThrow")
-    // io.to(currentPlayer.socketId).emit("canEndTurn", false)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
   })
@@ -276,40 +259,9 @@ io.on("connection", (socket) => {
     } else {
       turn = passTurn(turn, teams)
     }
-
-    // next player
-    currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-
-    teams[turn.team].throws++;
-    io.emit("turn", turn)
-    io.emit("teams", teams)
-    io.emit("gamePhase", gamePhase)
-    // io.to(currentPlayer.socketId).emit("showThrow")
-    io.to(currentPlayer.socketId).emit("throwInProgress", false)
-  }
-
-  // pass turn to next player
-  socket.on("endTurn", () => {
-    // clear old player's turn
-    let currentPlayer = teams[turn.team].players[turn.players[turn.team]]
-    // io.to(currentPlayer.socketId).emit("canEndTurn", false)
-
-    if (gamePhase === "pregame") {
-      // logic moved outside
-    } else if (gamePhase === "game") {
-      turn = passTurn(turn, teams)
-    }
-
-    // next player
-    currentPlayer = teams[turn.team].players[turn.players[turn.team]]
     
-    teams[turn.team].throws++;
-    io.emit("turn", turn)
-    io.emit("teams", teams)
-    io.emit("gamePhase", gamePhase)
-    // io.to(currentPlayer.socketId).emit("showThrow")
-    io.to(currentPlayer.socketId).emit("throwInProgress", false)
-  })
+    return [turn, teams, gamePhase]
+  }
 
   socket.on("select", (payload) => {
     selection = payload;
@@ -317,20 +269,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", ({selection, tile, moveInfo}) => {
-    let from = selection.tile
-    let to = tile
-    let moveUsed = moveInfo.move
-    let history = moveInfo.history
-    let pieces = selection.pieces
-    let result = move(tiles, teams, from, to, moveUsed, history, pieces)
-    tiles = result.tiles
-    teams = result.teams
+    [tiles, teams] = move(tiles, teams, selection.tile, tile, moveInfo.move, moveInfo.history, selection.pieces)
+
+    if (!throwInProgress && (teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves))) {
+      turn = passTurn(turn, teams)
+      teams[turn.team].throws++;
+      throwInProgress = false
+      io.emit("throwInProgress", throwInProgress)
+    }
+
     io.emit("tiles", tiles);
     io.emit("teams", teams);
-    // "endTurn" state
-    // io.emit it
-    // in Experience, listen for state change
-    // if it's true, pass turn to next player
+    io.emit("turn", turn);
   });
 
   socket.on("score", ({selection, moveInfo}) => {
@@ -403,19 +353,21 @@ io.on("connection", (socket) => {
     }
   })
 
-  // socket.on("canEndTurn", () => {
-  //   io.to(teams[turn.team].players[turn.players[turn.team]].socketId).emit("canEndTurn", true);
-  //   // all clients' yuts should be resting
-  //   // display status text based on 'teams' in client
-  // })
-
   socket.on("recordThrow", (result) => {
     clientYutResults.push(result);
     if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
       teams[turn.team].moves[result.toString()]++
-      io.emit("teams", teams)
+      if (gamePhase === "pregame") {
+        [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
+        teams[turn.team].throws++;
+        io.emit("turn", turn)
+        io.emit("teams", teams)
+        io.emit("gamePhase", gamePhase)
+      } else {
+        io.emit("teams", teams)
+      }
       throwInProgress = false;
-      io.emit("throwInProgress", throwInProgress);
+      io.emit("throwInProgress", false);
     }
   })
 

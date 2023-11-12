@@ -34,7 +34,6 @@ import {
   gamePhaseAtom,
   socket,
   socketIdAtom,
-  throwInProgressAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -63,12 +62,6 @@ export default function Experience() {
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [socketId] = useAtom(socketIdAtom);
-  const [throwInProgress] = useAtom(throwInProgressAtom)
-  const [endTurn, setEndTurn] = useState(false);
-
-  useEffect(() => {
-    console.log("endTurn state change")
-  }, [endTurn])
 
   const numTiles = 29;
 
