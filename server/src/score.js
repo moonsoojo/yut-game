@@ -8,5 +8,5 @@ export const score = function (tiles, teams, from, moveUsed, path, pieces) {
   tiles[from] = []
   teams[movingTeam].moves[moveUsed]--;
 
-  return { tiles, teams } 
+  return [tiles, teams]
 }

@@ -33,14 +33,6 @@ export default function ScoreButton({ position, rotation }) {
           socket.emit("score", { selection, moveInfo: legalTiles[29][0] })
           socket.emit("select", null);
         } else {
-          // display move options
-          // set 'displayMoveOptions' in socketManager
-          // create "Move" component
-          // render them side by side under 'score'
-          // click a move
-          // socket.emit("move", {...})
-          // hide move options
-          // set selection null
           setDisplayScoreOptions(true);
         }
       }
@@ -51,7 +43,6 @@ export default function ScoreButton({ position, rotation }) {
     return <TextButton
       text={moveInfo.move}
       position={position}
-      // rotation={}
       handlePointerClick={() => {
         socket.emit("score", {selection, moveInfo});
         socket.emit("select", null)

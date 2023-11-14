@@ -36,7 +36,8 @@ if (test) {
     players: [0,0]
   }
   teams[0].moves["2"] = 1
-  teams[0].moves["4"] = 1
+  teams[0].pieces[0] = null;
+  tiles[19] = [{tile: 19, team: 0, id: 0, history: [17, 18]}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -284,16 +285,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("score", ({selection, moveInfo}) => {
-    let from = selection.tile
-    console.log("[score] moveUsed", moveInfo.move)
-    let moveUsed = moveInfo.move
-    let path = moveInfo.path
-    let pieces = selection.pieces
-    let result = score(tiles, teams, from, moveUsed, path, pieces)
-    tiles = result.tiles
-    teams = result.teams
+    [tiles, teams] = score(tiles, teams, selection.tile, moveInfo.move, moveInfo.path, selection.pieces)
+    if (!throwInProgress && (teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves))) {
+      turn = passTurn(turn, teams)
+      teams[turn.team].throws++;
+      throwInProgress = false
+      io.emit("throwInProgress", throwInProgress)
+    }
     io.emit("tiles", tiles);
     io.emit("teams", teams);
+    io.emit("turn", turn);
   });
 
   let positionsInHand = [
