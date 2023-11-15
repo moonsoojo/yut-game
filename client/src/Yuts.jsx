@@ -102,7 +102,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     // if (gamePhase === "game") {
     //   result = 4
     // }
-    
 
     if (gamePhase === "pregame" || gamePhase === "game") {
       socket.emit("recordThrow", result)
@@ -115,8 +114,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   function onSleepHandler() {
     setSleepCount((count) => count+1);
   }
-
-  
 
   return (
     <group {...props} dispose={null}>
@@ -159,8 +156,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             name={`yut${index}`}
             linearDamping={0.3}
             angularDamping={0.1} // when this value is high, yuts spin more
-            scale={0.15}
-            gravityScale={1.5}
+            scale={0.25}
+            gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep

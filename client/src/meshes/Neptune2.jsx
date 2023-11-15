@@ -92,7 +92,7 @@ export default function Neptune2({ position, tile }) {
 
   return (
     <group position={position}>
-      <group ref={neptune} scale={0.2}>
+      <group ref={neptune} scale={0.3}>
         <mesh
           castShadow
           receiveShadow
@@ -117,8 +117,8 @@ export default function Neptune2({ position, tile }) {
         />
       </group>
       <HelperArrow
-        position={[0.5, 0, -0.5]}
-        rotation={[Math.PI / 2, 0, (5 * Math.PI) / 4]}
+        position={[0, 0, 0.8]}
+        rotation={[Math.PI/2,0,0]}
         scale={0.9}
       />
       <Tile tile={tile} wrapperRadius={0.4} />

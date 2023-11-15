@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import YutsNew3 from "./Yuts.jsx";
+import Yuts from "./Yuts.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune2 from "./meshes/Neptune2.jsx";
 import Earth from "./meshes/Earth.jsx";
@@ -70,7 +70,7 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
 
-  const TILE_RADIUS = 4;
+  const TILE_RADIUS = 5;
   const NUM_STARS = 20;
   function Tiles() {
     let tiles = [];
@@ -78,9 +78,9 @@ export default function Experience() {
     //circle
     for (let i = 0; i < NUM_STARS; i++) {
       let position = [
-        -Math.cos(((i - 7.5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
         0,
-        Math.sin(((i - 7.5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
       if (i == 0) {
         tiles.push(<Earth position={position} tile={i} key={i} />);
@@ -110,32 +110,32 @@ export default function Experience() {
     }
 
     //shortcuts
-    const radiusShortcut1 = 2.7;
-    const radiusShortcut2 = 1.4;
+    const radiusShortcut1 = 3.5;
+    const radiusShortcut2 = 1.7;
     for (let i = 0; i < NUM_STARS; i++) {
       let indexShortcut1;
       let indexShortcut2;
       if (i == 0) {
-        indexShortcut1 = 28;
-        indexShortcut2 = 27;
-      } else if (i == 5) {
-        indexShortcut1 = 20;
-        indexShortcut2 = 21;
-      } else if (i == 10) {
-        indexShortcut1 = 25;
-        indexShortcut2 = 26;
-      } else if (i == 15) {
         indexShortcut1 = 24;
         indexShortcut2 = 23;
+      } else if (i == 5) {
+        indexShortcut1 = 28;
+        indexShortcut2 = 27;
+      } else if (i == 10) {
+        indexShortcut1 = 20;
+        indexShortcut2 = 21;
+      } else if (i == 15) {
+        indexShortcut1 = 25;
+        indexShortcut2 = 26;
       }
       if (i == 0 || i == 5 || i == 10 || i == 15) {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+              Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut1,
               0,
-              Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+              Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut1,
             ]}
             tile={indexShortcut1}
@@ -146,10 +146,10 @@ export default function Experience() {
         tiles.push(
           <Star
             position={[
-              Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+              Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut2,
               0,
-              Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) *
+              Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
                 radiusShortcut2,
             ]}
             tile={indexShortcut2}
@@ -185,9 +185,9 @@ export default function Experience() {
           value == null ? (
             <mesh
               position={[
-                positionStartX,
+                positionStartX + index * space,
                 positionStartY,
-                positionStartZ + index * space,
+                positionStartZ,
               ]}
               key={index}
             >
@@ -196,9 +196,9 @@ export default function Experience() {
           ) : value === "scored" ? (
             <mesh
               position={[
-                positionStartX,
+                positionStartX + index * space,
                 positionStartY,
-                positionStartZ + index * space,
+                positionStartZ,
               ]}
               key={index}
             >
@@ -208,9 +208,9 @@ export default function Experience() {
           ) : (
               <Piece
                 position={[
-                positionStartX,
+                positionStartX + index * space,
                 positionStartY,
-                positionStartZ + index * space,
+                positionStartZ,
               ]}
               rotation={layout[device].homePieces[team].rotation}
               keyName={`count${index}`}
@@ -538,7 +538,7 @@ export default function Experience() {
         numStars={NUM_STARS}
         device={device}
       /> */}
-      <Physics debug maxVelocityIterations={10}>
+      <Physics maxVelocityIterations={10}>
         <RigidBody
           type="fixed"
           restitution={0.01}
@@ -551,11 +551,11 @@ export default function Experience() {
             <meshStandardMaterial transparent opacity={0} />
           </mesh>
         </RigidBody>
-        <YutsNew3 device={device} />
+        <Yuts device={device} />
         <Tiles />
 
-        <HomePieces team={0}/>
-        <HomePieces team={1}/>
+        <HomePieces team={0} />
+        <HomePieces team={1} />
 
         {/* score button */}
         <ScoreButton           
@@ -579,13 +579,13 @@ export default function Experience() {
         
         {/* <Decorations /> */}
         {/* START text */}
-        <TextButton
+        {/* <TextButton
           text="Start"
           position={layout[device].startBanner.position}
           rotation={layout[device].startBanner.rotation}
           boxWidth={1.2}
           boxHeight={0.3}
-        />
+        /> */}
         {/* START GAME text */}
         {readyToStart && gamePhase === "lobby" && ( // should be set to 'false' after click
           <TextButton

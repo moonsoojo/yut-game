@@ -8,7 +8,7 @@ export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:
 
 export const yutThrowValuesAtom = atom([
   {
-    rotation: { x: 0, y: 0, z: 0, w: 0 },
+    rotation: { x: 0, y: 1, z: 0, w: 1 },
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -16,13 +16,13 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: -6,
+      x: 8,
       y: 1.9,
-      z: -1,
+      z: 0,
     },
   },
   {
-    rotation: { x: 0, y: 0, z: 0, w: 0 },
+    rotation: { x: 0, y: 1, z: 0, w: 1 },
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -30,13 +30,13 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: -6,
+      x: 8.5,
       y: 2.5,
-      z: -0.3,
+      z: 0,
     },
   },
   {
-    rotation: { x: 0, y: 0, z: 0, w: 0 },
+    rotation: { x: 0, y: 1, z: 0, w: 1 },
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -44,13 +44,13 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: -6,
+      x: 9,
       y: 2,
-      z: 0.4,
+      z: 0,
     },
   },
   {
-    rotation: { x: 0, y: 0, z: 0, w: 0 },
+    rotation: { x: 0, y: 1, z: 0, w: 1 },
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -58,9 +58,9 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: -6,
+      x: 9.5,
       y: 4,
-      z: 1,
+      z: 0,
     },
   },
 ]);

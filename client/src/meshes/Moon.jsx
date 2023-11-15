@@ -2,6 +2,7 @@ import { selectionAtom, tilesAtom, socket } from "../SocketManager";
 import { useTexture } from "@react-three/drei";
 import React from "react";
 import Tile from '../components/Tile';
+import HelperArrow from "./HelperArrow";
 import { useRef } from "react";
 import { useAtom } from "jotai";
 
@@ -51,11 +52,7 @@ export default function Moon({ position, tile, scale = 1 }) {
     <group
       ref={moon}
       position={position}
-      scale={
-        selection != null && selection.type === "tile" && selection.tile == tile
-          ? scale * 1.3
-          : scale * 1
-      }
+      scale={1}
     >
       <mesh
       >
@@ -66,8 +63,17 @@ export default function Moon({ position, tile, scale = 1 }) {
         <sphereGeometry args={[0.6, 32, 32]} />
         <meshStandardMaterial map={props.map} />
       </mesh>
-      {/* {tile && tiles[tile].length != 0 && <Piece />} */}
       <Tile tile={tile} wrapperRadius={0.6} />
+      <HelperArrow
+        position={[0, 0, 1]}
+        rotation={[Math.PI/2, 0, 0]}
+        scale={0.9}
+      />
+      <HelperArrow
+        position={[-1, 0, 0]}
+        rotation={[0, 0, Math.PI/2]}
+        scale={0.9}
+      />
     </group>
   );
 }

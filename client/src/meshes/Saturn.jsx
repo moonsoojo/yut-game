@@ -41,12 +41,12 @@ export default function Saturn({ position, tile }) {
   const satellitesRef = useRef();
 
   useFrame((state, delta) => {
-    satellitesRef.current.rotation.x = state.clock.elapsedTime * 0.5;
+    satellitesRef.current.rotation.z = state.clock.elapsedTime * 0.5;
   });
   
   return (
     <group position={position}>
-      <group scale={0.22}>
+      <group scale={0.3}>
         <mesh
           castShadow
           receiveShadow
@@ -86,15 +86,15 @@ export default function Saturn({ position, tile }) {
             />
           </group>
           <group ref={satellitesRef} scale={5}>
-            <mesh position={[0, 0.5, 0]}>
+            <mesh position={[ 0.5, 0, 0 ]}>
               <sphereGeometry args={[0.05, 32, 32]} />
               <meshStandardMaterial color={"#A59272"} map={satelliteTexture1} />
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos(Math.PI / 4) * 0.5,
                 Math.sin(Math.PI / 4) * 0.5,
+                0,
               ]}
             >
               <sphereGeometry args={[0.04, 32, 32]} />
@@ -102,9 +102,10 @@ export default function Saturn({ position, tile }) {
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos((7 * Math.PI) / 16) * 0.5,
                 Math.sin((7 * Math.PI) / 16) * 0.5,
+                0,
+
               ]}
             >
               <sphereGeometry args={[0.03, 32, 32]} />
@@ -112,9 +113,11 @@ export default function Saturn({ position, tile }) {
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos((16 * Math.PI) / 16) * 0.5,
                 Math.sin((16 * Math.PI) / 16) * 0.5,
+                0,
+                
+                
               ]}
             >
               <sphereGeometry args={[0.03, 32, 32]} />
@@ -122,9 +125,11 @@ export default function Saturn({ position, tile }) {
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos((19 * Math.PI) / 16) * 0.5,
                 Math.sin((19 * Math.PI) / 16) * 0.5,
+                0,
+                
+                
               ]}
             >
               <sphereGeometry args={[0.025, 32, 32]} />
@@ -132,9 +137,10 @@ export default function Saturn({ position, tile }) {
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos((22 * Math.PI) / 16) * 0.5,
                 Math.sin((22 * Math.PI) / 16) * 0.5,
+                0,
+
               ]}
             >
               <sphereGeometry args={[0.02, 32, 32]} />
@@ -142,9 +148,10 @@ export default function Saturn({ position, tile }) {
             </mesh>
             <mesh
               position={[
-                0,
                 Math.cos((24 * Math.PI) / 16) * 0.5,
                 Math.sin((24 * Math.PI) / 16) * 0.5,
+                0,
+
               ]}
             >
               <sphereGeometry args={[0.015, 32, 32]} />
@@ -155,13 +162,13 @@ export default function Saturn({ position, tile }) {
       </group>
       <Tile tile={tile} wrapperRadius={0.5} />
       <HelperArrow
-        position={[0.5, 0, 0.5]}
-        rotation={[Math.PI / 2, 0, -Math.PI / 4]}
+        position={[0, 0, 0.9]}
+        rotation={[Math.PI/2, 0, 0]}
         scale={0.9}
       />
       <HelperArrow
-        position={[0.5, 0, -0.5]}
-        rotation={[Math.PI / 2, 0, (-Math.PI * 3) / 4]}
+        position={[-1, 0, 0]}
+        rotation={[0, 0, Math.PI/2]}
         scale={0.9}
       />
     </group>

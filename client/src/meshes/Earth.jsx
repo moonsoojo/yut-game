@@ -16,7 +16,7 @@ export default function Earth({ position, tile }) {
 
   return (
     <group position={position}>
-      <group ref={earth} scale={0.25} rotation={[Math.PI / 16, Math.PI / 4, 0]}>
+      <group ref={earth} scale={0.4} rotation={[Math.PI / 16, Math.PI / 4, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -58,8 +58,8 @@ export default function Earth({ position, tile }) {
       </group>
       <Tile tile={tile} wrapperRadius={0.5} />
       <HelperArrow
-        position={[-0.5, 0, -0.5]}
-        rotation={[Math.PI / 2, 0, (Math.PI * 5) / 8]}
+        position={[1, 0, 0]}
+        rotation={[0,0,0]}
         scale={0.9}
       />
     </group>

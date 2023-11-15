@@ -28,7 +28,7 @@ const characters = [];
 let throwInProgress = false;
 // let canEndTurn = false;
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -297,11 +297,23 @@ io.on("connection", (socket) => {
     io.emit("turn", turn);
   });
 
-  let positionsInHand = [
-    { x: -4, y: 1, z: -1 },
-    { x: -4, y: 1, z: -0.5 },
-    { x: -4, y: 1, z: 0.5 },
-    { x: -4, y: 1, z: 1 },
+  let positionsInHand = [{
+      x: 8,
+      y: 1.9,
+      z: 0,
+    }, {
+      x: 8.5,
+      y: 2.5,
+      z: 0,
+    }, {
+      x: 9,
+      y: 2,
+      z: 0,
+    }, {
+      x: 9.5,
+      y: 4,
+      z: 0,
+    },
   ];
   let rotations = [
     { x: 1, y: 1, z: 1, w: 0.1 },
@@ -316,11 +328,11 @@ io.on("connection", (socket) => {
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
         rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(0.4, 0.01),
+        yImpulse: generateRandomNumberInRange(2, 0.05),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.00005, 0.0001),
-          y: generateRandomNumberInRange(0.0075, 0.05),
-          z: generateRandomNumberInRange(0.0002, 0.0025),
+          x: generateRandomNumberInRange(0.0002, 0.0005),
+          y: generateRandomNumberInRange(0.03, 0.2),
+          z: generateRandomNumberInRange(0.001, 0.01),
         },
         positionInHand: positionsInHand[i],
       });

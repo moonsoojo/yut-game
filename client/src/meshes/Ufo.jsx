@@ -32,7 +32,7 @@ export default function Ufo({
       dispose={null}
       scale={0.5}
     >
-      <group rotation={[-Math.PI / 4, Math.PI / 2, 0, "YZX"]}>
+      <group rotation={[-Math.PI/4,0,0]}>
         <mesh
           castShadow
           receiveShadow

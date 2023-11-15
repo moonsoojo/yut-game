@@ -2,7 +2,7 @@ export default {
   mobile: {
     camera: {
       zoom: 40,
-      position: [3, 5, 0],
+      position: [0, 7, 5],
     },
     star: {
       scale: 2,
@@ -65,14 +65,6 @@ export default {
       position: [3, -7, -3.5],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    endTurnButton: {
-      position: [3, -8, -3.5],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    endTurnButtonTie: {
-      position: [3, -9, -3.5],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
     controlsButton: {
       position: [-3, 0, -5],
       rotation: [0, Math.PI / 2, 0],
@@ -113,7 +105,7 @@ export default {
   desktop: {
     camera: {
       zoom: 100,
-      position: [4, 6, 0],
+      position: [0, 7, 5],
     },
     star: {
       scale: 1,
@@ -138,18 +130,20 @@ export default {
     },
     homePieces: {
       0: {
-        positionStartX: 3,
+        positionStartX: -11.5,
         positionStartY: 0,
-        positionStartZ: -6,
+        positionStartZ: 6,
         space: 0.8,
-        rotation: [0, 0, Math.PI / 4],
+        // rotation: [0, -Math.PI/2, Math.PI/4, "YZX"],
+        rotation: [0, 0, 0,],
       },
       1: {
-        positionStartX: 4.5,
+        positionStartX: -8,
         positionStartY: 0,
-        positionStartZ: -6,
+        positionStartZ: 6,
         space: 0.8,
-        rotation: [0, 0, 0],
+        // rotation: [0, -Math.PI/2, 0, "ZYX"],
+        rotation: [0, 0, 0,],
       },
     },
     startBanner: {
@@ -157,32 +151,24 @@ export default {
       rotation: [0, Math.PI / 2, 0],
     },
     startGameBanner: {
-      position: [-6, 0, -2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+      position: [6, 0, 3],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     scoreButton: {
-      position: [-3, -3.5, -5],
-      rotation: [0, Math.PI / 2, 0],
+      position: [6, 0, 3.5],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     resetButton: {
-      position: [2.7, -1.7, -2.5],
-      rotation: [0, Math.PI / 2, 0],
+      position: [6, 0, 4],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
-      position: [-3, -3, -5],
-      rotation: [0, Math.PI / 2, 0],
+      position: [6, 0, 4.5],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButtonOrder: {
-      position: [3, -7, -3.5],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    endTurnButton: {
-      position: [3, -5, -3.5],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    endTurnButtonTie: {
-      position: [3, -6, -3.5],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+      position: [6, 0, 5],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     controlsButton: {
       position: [-3, 0, -5],
@@ -205,12 +191,12 @@ export default {
       position: [0, -2, 0],
     },
     team0Banner: {
-      position: [5, 0, 4],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+      position: [-11, 0, 3],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     team1Banner: {
-      position: [5, 0, 2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+      position: [-8, 0, 3],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     joinTeam0Banner:  {
       position: [5.5, 0, 4],

@@ -21,18 +21,18 @@ export default function Mars({ position, tile }) {
         receiveShadow
         geometry={nodes.Mars.geometry}
         material={materials.Mars}
-        scale={0.32}
+        scale={0.5}
         ref={mars}
       />
       <Tile tile={tile} wrapperRadius={0.6} />
       <HelperArrow
-        position={[0.5, 0, 0.5]}
-        rotation={[Math.PI / 2, 0, -Math.PI / 4]}
+        position={[-0.1, 0, -1]}
+        rotation={[-Math.PI/2, 0, Math.PI/16, "XYZ"]}
         scale={0.9}
       />
       <HelperArrow
-        position={[-0.5, 0, 0.5]}
-        rotation={[Math.PI / 2, 0, Math.PI / 4]}
+        position={[-0.7, 0, 0]}
+        rotation={[0, 0, Math.PI/2]}
         scale={0.9}
       />
     </group>

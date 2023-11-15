@@ -22,9 +22,11 @@ export default function Rocket({
       flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
     }
   });
-  
+
+  //[(Math.PI * 3) / 4, 0, -Math.PI]
+
   return (
-    <group scale={0.02} rotation={[(Math.PI * 3) / 4, 0, -Math.PI]}>
+    <group scale={0.02} position={[0.5, 0, 0]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/4, "YZX"]}>
       <mesh
         castShadow
         receiveShadow

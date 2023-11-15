@@ -12,6 +12,7 @@ export default function Tile({ tile, wrapperRadius }) {
   const [legalTiles] = useAtom(legalTilesAtom)
 
   function handlePointerEnter(event) {
+    console.log("tile", tile)
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
@@ -41,8 +42,8 @@ export default function Tile({ tile, wrapperRadius }) {
   let rocketAdjustY = (tile == 0 || tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
 
   const rocketPositions = [
-    [-0.1, rocketAdjustY + wrapperRadius, 0.4],
-    [-0.1, rocketAdjustY + wrapperRadius, 0.1],
+    [0.1, rocketAdjustY + wrapperRadius, 0.4],
+    [0.1, rocketAdjustY + wrapperRadius, 0.1],
     [-0.3, rocketAdjustY + wrapperRadius, 0.4],
     [-0.3, rocketAdjustY + wrapperRadius, 0.1],
   ];
