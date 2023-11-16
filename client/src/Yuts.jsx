@@ -5,7 +5,7 @@ import * as THREE from "three";
 import React from "react";
 import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import layout from "./layout.js";
+import layout from "../../layout.js";
 import TextButton from "./components/TextButton.jsx";
 import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
 
@@ -40,7 +40,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
-      yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
+      let translationShifted = {
+        x: yutThrowValues[i].positionInHand.x + layout[device].positionInHandShift[i].x,
+        y: yutThrowValues[i].positionInHand.y + layout[device].positionInHandShift[i].y,
+        z: yutThrowValues[i].positionInHand.z + layout[device].positionInHandShift[i].z
+      }
+      console.log("translation Shifted", translationShifted)
+      // yuts[i].current.setTranslation(translationShifted);
+      yuts[i].current.setTranslation(translationShifted);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
       yuts[i].current.applyImpulse({
         x: 0,

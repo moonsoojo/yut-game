@@ -9,7 +9,7 @@ import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Controls3d from "./Controls3d";
 // import Decorations from "./Decorations";
-import layout from "./layout";
+import layout from "../../layout.js";
 import React from "react";
 import { Leva, useControls } from "leva";
 import {
@@ -70,7 +70,7 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
 
-  const TILE_RADIUS = 5;
+  const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
   function Tiles() {
     let tiles = [];
@@ -110,8 +110,8 @@ export default function Experience() {
     }
 
     //shortcuts
-    const radiusShortcut1 = 3.5;
-    const radiusShortcut2 = 1.7;
+    const radiusShortcut1 = layout[device].tileRadius.shortcut1;
+    const radiusShortcut2 = layout[device].tileRadius.shortcut2;
     for (let i = 0; i < NUM_STARS; i++) {
       let indexShortcut1;
       let indexShortcut2;

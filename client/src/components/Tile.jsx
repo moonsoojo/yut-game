@@ -12,7 +12,6 @@ export default function Tile({ tile, wrapperRadius }) {
   const [legalTiles] = useAtom(legalTilesAtom)
 
   function handlePointerEnter(event) {
-    console.log("tile", tile)
     if (selection != null) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";

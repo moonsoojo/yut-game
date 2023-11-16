@@ -16,7 +16,7 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: 8,
+      x: -1,
       y: 1.9,
       z: 0,
     },
@@ -30,8 +30,8 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: 8.5,
-      y: 2.5,
+      x: -0.4,
+      y: 1.9,
       z: 0,
     },
   },
@@ -44,8 +44,8 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: 9,
-      y: 2,
+      x: 0.2,
+      y: 1.9,
       z: 0,
     },
   },
@@ -58,8 +58,8 @@ export const yutThrowValuesAtom = atom([
       z: 0,
     },
     positionInHand: {
-      x: 9.5,
-      y: 4,
+      x: 0.8,
+      y: 1.9,
       z: 0,
     },
   },

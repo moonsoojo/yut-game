@@ -26,7 +26,6 @@ let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible 
 let hostId = null;
 const characters = [];
 let throwInProgress = false;
-// let canEndTurn = false;
 
 let test = false;
 if (test) {
@@ -297,21 +296,41 @@ io.on("connection", (socket) => {
     io.emit("turn", turn);
   });
 
-  let positionsInHand = [{
-      x: 8,
+  // let positionsInHand = [
+  //   {
+  //     x: 8,
+  //     y: 1.9,
+  //     z: 0,
+  //   }, {
+  //     x: 8.5,
+  //     y: 2.5,
+  //     z: 0,
+  //   }, {
+  //     x: 9,
+  //     y: 2,
+  //     z: 0,
+  //   }, {
+  //     x: 9.5,
+  //     y: 4,
+  //     z: 0,
+  //   },
+  // ];
+  let positionsInHand = [
+    {
+      x: -1,
       y: 1.9,
       z: 0,
     }, {
-      x: 8.5,
-      y: 2.5,
+      x: -0.4,
+      y: 1.9,
       z: 0,
     }, {
-      x: 9,
-      y: 2,
+      x: 0.2,
+      y: 1.9,
       z: 0,
     }, {
-      x: 9.5,
-      y: 4,
+      x: 0.8,
+      y: 1.9,
       z: 0,
     },
   ];

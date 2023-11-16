@@ -1,6 +1,6 @@
 reposition assets in mobile
-- can you reposition the yuts without affecting the outcome?
-- only display "throw" and "score" if the game hasn't started yet
+- you can't reposition yuts.
+- only display "throw" and "score" if the game has started
 reset button
 reposition pieces on Earth
 implement local storage
