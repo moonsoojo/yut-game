@@ -35,11 +35,11 @@ import {
   gamePhaseAtom,
   socket,
   socketIdAtom,
+  showResetAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
-import { getCurrentPlayerSocketId, movesIsEmpty, isMyTurn } from "../../server/src/helpers.js";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
 
@@ -63,6 +63,7 @@ export default function Experience() {
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [socketId] = useAtom(socketIdAtom);
+  const [showReset] = useAtom(showResetAtom);
 
   const numTiles = 29;
 
@@ -75,8 +76,8 @@ export default function Experience() {
   const orbitControls = useRef();
 
   useEffect(() => {
-    console.log(center.current.position)
-    console.log(camera.current.lookAt)
+    // console.log(center.current.position)
+    // console.log(camera.current.lookAt)
     camera.current.lookAt(layout[device].camera.lookAt[0], layout[device].camera.lookAt[1], layout[device].camera.lookAt[2])
     // orbit controls override camera's lookAt
     // console.log(orbitControls.current.target)
@@ -613,7 +614,7 @@ export default function Experience() {
               position={layout[device].scoreButton.position}
               rotation={layout[device].scoreButton.rotation}
             />}
-          { (gamePhase === "pregame" || gamePhase === "game") && 
+          { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
             <TextButton
               text="Reset"
               position={layout[device].resetButton.position}

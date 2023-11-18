@@ -20,12 +20,14 @@ let selection = null;
 let tiles = JSON.parse(JSON.stringify(initialState.tiles));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
-let numClientsYutsResting = initialState.numClientsYutsResting
+let numClientsYutsResting = initialState.numClientsYutsResting;
 let clientYutResults = [];
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
 const characters = [];
 let throwInProgress = false;
+let readyToStart = false;
+let showReset = false;
 
 let test = false;
 if (test) {
@@ -221,11 +223,11 @@ io.on("connection", (socket) => {
 
   // mock assign "host" to display 'start game' button
   // by default, it's hidden for everyone
-  io.emit("readyToStart", false);
   if (countPlayers(teams) >= 2) {
+    readyToStart = true;
     io.to(hostId).emit("readyToStart", true);
   }
-
+  
   io.emit("characters", characters); // this should be refactored
   io.emit("tiles", tiles);
   io.emit("selection", selection);
@@ -235,7 +237,10 @@ io.on("connection", (socket) => {
 
 
   socket.on("startGame", () => {
-    io.to(hostId).emit("readyToStart", false);
+    readyToStart = false;
+    io.to(hostId).emit("readyToStart", readyToStart);
+    showReset = true;
+    io.to(hostId).emit("showReset", showReset);
     teams[turn.team].throws++;
     io.emit("teams", teams)
     gamePhase = "pregame"
@@ -296,25 +301,6 @@ io.on("connection", (socket) => {
     io.emit("turn", turn);
   });
 
-  // let positionsInHand = [
-  //   {
-  //     x: 8,
-  //     y: 1.9,
-  //     z: 0,
-  //   }, {
-  //     x: 8.5,
-  //     y: 2.5,
-  //     z: 0,
-  //   }, {
-  //     x: 9,
-  //     y: 2,
-  //     z: 0,
-  //   }, {
-  //     x: 9.5,
-  //     y: 4,
-  //     z: 0,
-  //   },
-  // ];
   let positionsInHand = [
     {
       x: -1,
@@ -364,18 +350,52 @@ io.on("connection", (socket) => {
 
   socket.on("clientYutsResting", () => {
     numClientsYutsResting++;
+    // if num matches numPlayers
+    // send message to host: "all yuts resting"
+    // in Experience, only display "start game" if "all yuts resting"
+    // if gamePhase === "lobby" and "all yuts resting" is false, 
+      // display "resetting..."
   })
 
   socket.on("reset", () => {
     tiles = JSON.parse(JSON.stringify(initialState.tiles))
-    teams = JSON.parse(JSON.stringify(initialState.teams))
+    teams[0].pieces = JSON.parse(JSON.stringify(initialState.teams))[0].pieces
+    teams[0].moves = JSON.parse(JSON.stringify(initialState.teams))[0].moves
+    teams[0].throws = 0
+    teams[1].pieces = JSON.parse(JSON.stringify(initialState.teams))[1].pieces
+    teams[1].moves = JSON.parse(JSON.stringify(initialState.teams))[1].moves
+    teams[1].throws = 0
     gamePhase = "lobby"
-    console.log(JSON.stringify(initialState.tiles))
     io.emit("reset", {
       tiles: tiles,
       selection: null,
-      gamePhase
+      gamePhase,
+      teams
     });
+    if (countPlayers(teams) >= 2) {
+      readyToStart = true;
+    } else {
+      readyToStart = false;
+    }
+    io.to(hostId).emit("readyToStart", readyToStart);
+    showReset = false;
+    io.emit("showReset", showReset);
+
+    // reset yuts
+    const yutForceVectors = [];
+    for (let i = 0; i < 4; i++) {
+      yutForceVectors.push({
+        rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[i])),
+        yImpulse: 0,
+        torqueImpulse: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[i])),
+      });
+    }
+    io.emit("throwYuts", yutForceVectors);
   });
 
   socket.on("legalTiles", ({ legalTiles }) => {
@@ -391,7 +411,7 @@ io.on("connection", (socket) => {
 
   socket.on("recordThrow", (result) => {
     clientYutResults.push(result);
-    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
+    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults) && gamePhase !== "lobby") {
       teams[turn.team].moves[result.toString()]++
       if (gamePhase === "pregame") {
         [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
@@ -428,6 +448,11 @@ io.on("connection", (socket) => {
       hostId = findRandomPlayer(teams).socketId
     } else {
       hostId = null;
+    }
+
+    if (countPlayers(teams) < 2) {
+      readyToStart = false;
+      io.to(hostId).emit("readyToStart", readyToStart);
     }
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {

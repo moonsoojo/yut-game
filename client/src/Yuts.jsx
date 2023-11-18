@@ -130,7 +130,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   return (
     <group {...props} dispose={null}>
-      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && ( 
+      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
+        (gamePhase === "pregame" || gamePhase === "game") && ( 
         <TextButton
           text={`Throw`}
           position={positionThrowButtonShifted}

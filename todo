@@ -1,7 +1,7 @@
 reset
-- state in server
-- "start game" should display
-- yuts should be placed in their original position on every client
+- display "resetting..." until yuts are resting
+
+alert client when it's player's turn
 fit 5 people's name under each team max
 - mobile: 3x2 grid
 - desktop/landscape: 1 column or 3x2 grid
@@ -35,3 +35,13 @@ reposition assets in mobile
 bug: when it was the client's turn, and the browser refreshed, the throw button disappeared
 - maybe the client had a move.
 - the other clients had to be active for the yuts to be thrown
+reset
+- on client connect
+- check numPlayers >= 2
+- on client disconnect
+- check numPlayers >= 2
+- on reset
+- check numPlayers >= 2
+- "showReset" should be false on all clients
+- on yut throw, positionsInHand and rotations should be random
+- yuts should be placed in their original position on every client

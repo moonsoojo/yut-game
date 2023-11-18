@@ -8,60 +8,44 @@ export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:
 
 export const yutThrowValuesAtom = atom([
   {
-    rotation: { x: 0, y: 1, z: 0, w: 1 },
+    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[0])),
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: {
-      x: -1,
-      y: 1,
-      z: 0,
-    },
+    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[0]))
   },
   {
-    rotation: { x: 0, y: 1, z: 0, w: 1 },
+    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[1])),
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: {
-      x: -0.4,
-      y: 1,
-      z: 0,
-    },
+    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[1]))
   },
   {
-    rotation: { x: 0, y: 1, z: 0, w: 1 },
+    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[2])),
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: {
-      x: 0.2,
-      y: 1,
-      z: 0,
-    },
+    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[2]))
   },
   {
-    rotation: { x: 0, y: 1, z: 0, w: 1 },
+    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[3])),
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: {
-      x: 0.8,
-      y: 1,
-      z: 0,
-    },
+    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[3]))
   },
 ]);
 
@@ -79,6 +63,7 @@ export const socketIdAtom = atom("");
 export const displayScoreOptionsAtom = atom(false);
 export const throwInProgressAtom = atom(false)
 export const legalTilesAtom = atom({});
+export const showResetAtom = atom(false);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -95,6 +80,7 @@ export const SocketManager = () => {
   const [_socketId, setSocketId] = useAtom(socketIdAtom);
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  const [_showReset, setShowReset] = useAtom(showResetAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -122,11 +108,11 @@ export const SocketManager = () => {
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
-    function onReset({ tiles, selection, gamePhase }) {
+    function onReset({ tiles, selection, gamePhase, teams }) {
       setTiles(tiles);
       setSelection(selection);
-      setReadyToStart(false);
-      setGamePhase(gamePhase)
+      setGamePhase(gamePhase);
+      setTeams(teams);
     }
     function onReadyToStart(flag) {
       setReadyToStart(flag);
@@ -144,6 +130,9 @@ export const SocketManager = () => {
     function onLegalTiles({ legalTiles }) {
       setLegalTiles(legalTiles)
     }
+    function onShowReset(flag) {
+      setShowReset(flag);
+    }
 
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
@@ -159,6 +148,7 @@ export const SocketManager = () => {
     socket.on("gamePhase", onGamePhase);
     socket.on("throwInProgress", onThrowInProgress);
     socket.on("legalTiles", onLegalTiles);
+    socket.on("showReset", onShowReset);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
@@ -174,6 +164,7 @@ export const SocketManager = () => {
       socket.off("gamePhase", onGamePhase);
       socket.off("throwInProgress", onThrowInProgress);
       socket.off("legalTiles", onLegalTiles);
+      socket.off("showReset", onShowReset);
     };
   }, []);
 };
