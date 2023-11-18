@@ -17,7 +17,7 @@ const io = new Server({
 io.listen(3000);
 
 let selection = null;
-let tiles = initialState.tiles;
+let tiles = JSON.parse(JSON.stringify(initialState.tiles));
 let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
 let numClientsYutsResting = initialState.numClientsYutsResting
@@ -367,10 +367,14 @@ io.on("connection", (socket) => {
   })
 
   socket.on("reset", () => {
-    tiles = JSON.parse(JSON.stringify(initialState.tiles));
+    tiles = JSON.parse(JSON.stringify(initialState.tiles))
+    teams = JSON.parse(JSON.stringify(initialState.teams))
+    gamePhase = "lobby"
+    console.log(JSON.stringify(initialState.tiles))
     io.emit("reset", {
       tiles: tiles,
       selection: null,
+      gamePhase
     });
   });
 

@@ -613,12 +613,13 @@ export default function Experience() {
               position={layout[device].scoreButton.position}
               rotation={layout[device].scoreButton.rotation}
             />}
-          { gamePhase === "pregame" || gamePhase === "game" && 
+          { (gamePhase === "pregame" || gamePhase === "game") && 
             <TextButton
               text="Reset"
               position={layout[device].resetButton.position}
               rotation={layout[device].resetButton.rotation}
               handlePointerClick={() => {
+                console.log("reset clicked")
                 socket.emit("reset");
               }}
               boxWidth={1.2}

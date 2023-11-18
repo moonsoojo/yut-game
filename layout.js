@@ -59,16 +59,16 @@ export default {
       position: [-4, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    throwButtonOrder: {
+      position: [-4, 0, 11.5],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
     scoreButton: {
       position: [-2, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     resetButton: {
       position: [3, 0, 11],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    throwButtonOrder: {
-      position: [-2, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     controlsButton: {

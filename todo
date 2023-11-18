@@ -1,9 +1,10 @@
-fit 5 people's name under each team max
-- mobile: 3x2 grid
-- desktop/landscape: 1 column or 3x2 grid
 reset
 - state in server
 - "start game" should display
+- yuts should be placed in their original position on every client
+fit 5 people's name under each team max
+- mobile: 3x2 grid
+- desktop/landscape: 1 column or 3x2 grid
 indicate player's id
 sound effects
 make a commit and push - save for next playtest

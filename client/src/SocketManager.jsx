@@ -113,25 +113,20 @@ export const SocketManager = () => {
     function onCharacters(value) {
       setCharacters(value);
     }
-    function onPieces(value) {
-      setPieces(value);
-    }
     function onTiles(value) {
       setTiles(value);
     }
     function onTeams(value) {
       setTeams(value);
     }
-    function onFinishPiece({ tiles, pieces }) {
-      setTiles(tiles);
-      setPieces(pieces);
-    }
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
-    function onReset({ tiles, selection }) {
+    function onReset({ tiles, selection, gamePhase }) {
       setTiles(tiles);
       setSelection(selection);
+      setReadyToStart(false);
+      setGamePhase(gamePhase)
     }
     function onReadyToStart(flag) {
       setReadyToStart(flag);
@@ -156,9 +151,7 @@ export const SocketManager = () => {
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
-    socket.on("pieces", onPieces);
     socket.on("teams", onTeams);
-    socket.on("finishPiece", onFinishPiece);
     socket.on("throwYuts", onYutThrow);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
@@ -173,9 +166,7 @@ export const SocketManager = () => {
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
-      socket.off("pieces", onPieces);
       socket.off("teams", onTeams);
-      socket.off("finishPiece", onFinishPiece);
       socket.off("throwYuts", onYutThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
