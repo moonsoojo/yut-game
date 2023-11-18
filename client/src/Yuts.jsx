@@ -40,14 +40,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
-      let translationShifted = {
-        x: yutThrowValues[i].positionInHand.x + layout[device].positionInHandShift[i].x,
-        y: yutThrowValues[i].positionInHand.y + layout[device].positionInHandShift[i].y,
-        z: yutThrowValues[i].positionInHand.z + layout[device].positionInHandShift[i].z
-      }
-      console.log("translation Shifted", translationShifted)
-      // yuts[i].current.setTranslation(translationShifted);
-      yuts[i].current.setTranslation(translationShifted);
+      yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
       yuts[i].current.applyImpulse({
         x: 0,
@@ -122,13 +115,26 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
+  let positionThrowButton = layout[device].throwButton.position
+  let positionThrowButtonShifted = [
+    positionThrowButton[0] + layout[device].actionButtonShift[0],
+    positionThrowButton[1] + layout[device].actionButtonShift[1],
+    positionThrowButton[2] + layout[device].actionButtonShift[2],
+  ]
+  let positionThrowButtonOrder = layout[device].throwButtonOrder.position
+  let positionThrowButtonOrderShifted = [
+    positionThrowButtonOrder[0] + layout[device].actionButtonShift[0],
+    positionThrowButtonOrder[1] + layout[device].actionButtonShift[1],
+    positionThrowButtonOrder[2] + layout[device].actionButtonShift[2],
+  ]
+
   return (
     <group {...props} dispose={null}>
       {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && ( 
         <TextButton
           text={`Throw`}
+          position={positionThrowButtonShifted}
           rotation={layout[device].throwButton.rotation}
-          position={layout[device].throwButton.position}
           handlePointerClick={() => {
             socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
@@ -141,8 +147,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         gamePhase === "pregame" && (
         <TextButton
           text={"for order"}
+          position={positionThrowButtonOrderShifted}
           rotation={layout[device].throwButtonOrder.rotation}
-          position={layout[device].throwButtonOrder.position}
           handlePointerClick={() => {
             socket.emit("throwInProgress", true);
             socket.emit("throwYuts");
@@ -163,7 +169,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             name={`yut${index}`}
             linearDamping={0.3}
             angularDamping={0.1} // when this value is high, yuts spin more
-            scale={0.25}
+            scale={0.15}
             gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}

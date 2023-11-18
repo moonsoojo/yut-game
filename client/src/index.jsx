@@ -31,10 +31,9 @@ root.render(
       // pan: move about a plane
     >
       {/* <CameraControls /> */}
-      <OrbitControls />
+      {/* <OrbitControls /> */}
 
       <Experience />
-      {/* <MouseGame /> */}
 
       {/* <Perf /> */}
     </Canvas>

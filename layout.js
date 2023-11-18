@@ -2,7 +2,8 @@ export default {
   mobile: {
     camera: {
       zoom: 40,
-      position: [0, 7, 5],
+      position: [0, 16, 20],
+      lookAt: [0, 0, 8]
     },
     tileRadius: {
       ring: 4,
@@ -51,23 +52,23 @@ export default {
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     startGameBanner: {
-      position: [-6, 0, -2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    scoreButton: {
-      position: [0, 0, 11],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    resetButton: {
-      position: [-4, 0, 11],
+      position: [0,0,11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
+      position: [-4, 0, 11],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    scoreButton: {
       position: [-2, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    resetButton: {
+      position: [3, 0, 11],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
     throwButtonOrder: {
-      position: [-2, 0, 11.5],
+      position: [-2, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     controlsButton: {
@@ -106,30 +107,15 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    positionInHandShift: [
-      {
-        x: 0,
-        y: 0,
-        z: -7,
-      }, {
-        x: 0,
-        y: 0,
-        z: -7,
-      }, {
-        x: 0,
-        y: 0,
-        z: -7,
-      }, {
-        x: 0,
-        y: 0,
-        z: -7,
-      },
-    ]
+    tileShift: [0, 0, 6.5],
+    teamBannerShift: [0, 0, 6.5],
+    actionButtonShift: [0, 0, 6]
   },
   desktop: {
     camera: {
       zoom: 100,
-      position: [0, 7, 5],
+      position: [-8, 7, 5],
+      lookAt: [-8, 0, 0]
     },
     tileRadius: {
       ring: 5,
@@ -236,24 +222,8 @@ export default {
     // mobile: above
     // desktop: right side
     // center them in index.js
-    positionInHandShift: [
-      {
-        x: 7,
-        y: 0,
-        z: 0,
-      }, {
-        x: 7,
-        y: 0,
-        z: 0,
-      }, {
-        x: 7,
-        y: 0,
-        z: 0,
-      }, {
-        x: 7,
-        y: 0,
-        z: 0,
-      },
-    ]
+    tileShift: [-8, 0, 0],
+    teamBannerShift: [-8, 0, 0],
+    actionButtonShift: [-8, 0, 0]
   },
 };

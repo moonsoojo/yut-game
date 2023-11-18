@@ -23,6 +23,7 @@ import {
   Html,
   Text3D,
   OrthographicCamera,
+  OrbitControls
 } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -69,9 +70,22 @@ export default function Experience() {
   for (let i = 0; i < numTiles; i++) {
     tileRefs[i] = useRef();
   }
+  const camera = useRef();
+  const center = useRef();
+  const orbitControls = useRef();
+
+  useEffect(() => {
+    console.log(center.current.position)
+    console.log(camera.current.lookAt)
+    camera.current.lookAt(layout[device].camera.lookAt[0], layout[device].camera.lookAt[1], layout[device].camera.lookAt[2])
+    // orbit controls override camera's lookAt
+    // console.log(orbitControls.current.target)
+    // orbitControls.current.target = center.current.position
+  }, [])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
+
   function Tiles() {
     let tiles = [];
 
@@ -82,24 +96,29 @@ export default function Experience() {
         0,
         Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
+      let positionShifted = [
+        position[0] + layout[device].tileShift[0],
+        position[1] + layout[device].tileShift[1],
+        position[2] + layout[device].tileShift[2],
+      ]
       if (i == 0) {
-        tiles.push(<Earth position={position} tile={i} key={i} />);
+        tiles.push(<Earth position={positionShifted} tile={i} key={i} />);
       } else if (i == 5) {
         tiles.push(
           <Mars
-            position={[position[0], position[1], position[2]]}
+            position={positionShifted}
             tile={i}
             key={i}
           />
         );
       } else if (i == 10) {
-        tiles.push(<Saturn position={position} tile={i} key={i} />);
+        tiles.push(<Saturn position={positionShifted} tile={i} key={i} />);
       } else if (i == 15) {
-        tiles.push(<Neptune2 position={position} tile={i} key={i} />);
+        tiles.push(<Neptune2 position={positionShifted} tile={i} key={i} />);
       } else {
         tiles.push(
           <Star
-            position={position}
+            position={positionShifted}
             tile={i}
             key={i}
             scale={layout[device].star.scale}
@@ -129,29 +148,41 @@ export default function Experience() {
         indexShortcut2 = 26;
       }
       if (i == 0 || i == 5 || i == 10 || i == 15) {
+        let position1 = [
+          Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+            radiusShortcut1,
+          0,
+          Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+            radiusShortcut1,
+        ]
+        let position1Shifted = [
+          position1[0] + layout[device].tileShift[0],
+          position1[1] + layout[device].tileShift[1],
+          position1[2] + layout[device].tileShift[2],
+        ]
         tiles.push(
           <Star
-            position={[
-              Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-                radiusShortcut1,
-              0,
-              Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-                radiusShortcut1,
-            ]}
+            position={position1Shifted}
             tile={indexShortcut1}
             key={i + 30}
             scale={layout[device].star.scale}
           />
         );
+        let position2 = [
+          Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+            radiusShortcut2,
+          0,
+          Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+            radiusShortcut2,
+        ]
+        let position2Shifted = [
+          position2[0] + layout[device].tileShift[0],
+          position2[1] + layout[device].tileShift[1],
+          position2[2] + layout[device].tileShift[2],
+        ]
         tiles.push(
           <Star
-            position={[
-              Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-                radiusShortcut2,
-              0,
-              Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-                radiusShortcut2,
-            ]}
+            position={position2Shifted}
             tile={indexShortcut2}
             key={i + 41}
             scale={layout[device].star.scale}
@@ -160,10 +191,16 @@ export default function Experience() {
       }
     }
 
+    let positionMoon = [0, 0, 0]
+    let positionMoonShifted = [
+      positionMoon[0] + layout[device].tileShift[0],
+      positionMoon[1] + layout[device].tileShift[1],
+      positionMoon[2] + layout[device].tileShift[2],
+    ]
     // center piece
     tiles.push(
       <Moon
-        position={[0, 0, 0]}
+        position={positionMoonShifted}
         intensity={3}
         // scale={0.4}
         key={100}
@@ -174,9 +211,9 @@ export default function Experience() {
   }
 
   function HomePieces({team}) {
-    let positionStartX = layout[device].homePieces[team].positionStartX;
-    let positionStartY = layout[device].homePieces[team].positionStartY;
-    let positionStartZ = layout[device].homePieces[team].positionStartZ;
+    let positionStartX = layout[device].homePieces[team].positionStartX + layout[device].teamBannerShift[0]
+    let positionStartY = layout[device].homePieces[team].positionStartY + layout[device].teamBannerShift[1];
+    let positionStartZ = layout[device].homePieces[team].positionStartZ + layout[device].teamBannerShift[2];
     let space = layout[device].homePieces[team].space;
 
     return (
@@ -475,9 +512,22 @@ export default function Experience() {
     return prettifiedMoves
   }
 
+  // shifts
+  let team0BannerPosition = [
+    layout[device].team0Banner.position[0] + layout[device].teamBannerShift[0],
+    layout[device].team0Banner.position[1] + layout[device].teamBannerShift[1],
+    layout[device].team0Banner.position[2] + layout[device].teamBannerShift[2],
+  ]
+  let team1BannerPosition = [
+    layout[device].team1Banner.position[0] + layout[device].teamBannerShift[0],
+    layout[device].team1Banner.position[1] + layout[device].teamBannerShift[1],
+    layout[device].team1Banner.position[2] + layout[device].teamBannerShift[2],
+  ]
   return (
     <>
+      <mesh ref={center} position={[-8, 0, 0]}/>
       {/* <Perf/> */}
+      {/* <OrbitControls ref={orbitControls}/> */}
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -488,6 +538,8 @@ export default function Experience() {
         near={0.1}
         far={2000}
         position={layout[device].camera.position}
+        ref={camera}
+        // lookAt={center.current.position}
       />
       {/* <color args={["#000001"]} attach="background" /> */}
       {/* <Environment
@@ -514,19 +566,6 @@ export default function Experience() {
         fade
         speed={1}
       />
-      {/* <Galaxy
-        count={count}
-        size={size}
-        radius={radius}
-        branches={branches}
-        spin={spin}
-        randomness={randomness}
-        randomnessPower={randomnessPower}
-        insideColor={insideColor}
-        outsideColor={outsideColor}
-        position={[-1, 0.5, 0.5]}
-      /> */}
-
       <directionalLight
         position={lightPosition}
         intensity={lightIntensity}
@@ -538,7 +577,7 @@ export default function Experience() {
         numStars={NUM_STARS}
         device={device}
       /> */}
-      <Physics maxVelocityIterations={10}>
+      <Physics debug maxVelocityIterations={10}>
         <RigidBody
           type="fixed"
           restitution={0.01}
@@ -557,27 +596,38 @@ export default function Experience() {
         <HomePieces team={0} />
         <HomePieces team={1} />
 
-        {/* score button */}
-        <ScoreButton           
-          position={layout[device].scoreButton.position}
-          rotation={layout[device].scoreButton.rotation}
-        />
-        {/* reset button */}
-        <TextButton
-          text="Reset"
-          position={layout[device].resetButton.position}
-          rotation={layout[device].resetButton.rotation}
-          handlePointerClick={() => {
-            socket.emit("reset");
-          }}
-          boxWidth={1.2}
-          boxHeight={0.3}
-        />
-        
-        {/* end turn button */}
-        {/* socket.emit("endTurn", true); */}
-        
-        {/* <Decorations /> */}
+        <group position={layout[device].actionButtonShift}>
+          {/* START GAME text */}
+          {readyToStart && gamePhase === "lobby" && (
+            <TextButton
+              text="Start Game"
+              position={layout[device].startGameBanner.position}
+              rotation={layout[device].startGameBanner.rotation}
+              boxWidth={1.2}
+              boxHeight={0.3}
+              handlePointerClick={() => socket.emit("startGame")}
+            />
+          )}
+          { gamePhase === "game" && 
+            <ScoreButton           
+              position={layout[device].scoreButton.position}
+              rotation={layout[device].scoreButton.rotation}
+            />}
+          { gamePhase === "pregame" || gamePhase === "game" && 
+            <TextButton
+              text="Reset"
+              position={layout[device].resetButton.position}
+              rotation={layout[device].resetButton.rotation}
+              handlePointerClick={() => {
+                socket.emit("reset");
+              }}
+              boxWidth={1.2}
+              boxHeight={0.3}
+            />
+          }
+
+        </group>
+
         {/* START text */}
         {/* <TextButton
           text="Start"
@@ -586,19 +636,9 @@ export default function Experience() {
           boxWidth={1.2}
           boxHeight={0.3}
         /> */}
-        {/* START GAME text */}
-        {readyToStart && gamePhase === "lobby" && ( // should be set to 'false' after click
-          <TextButton
-            text="Start Game"
-            position={layout[device].startGameBanner.position}
-            rotation={layout[device].startGameBanner.rotation}
-            boxWidth={1.2}
-            boxHeight={0.3}
-            handlePointerClick={() => socket.emit("startGame")}
-          />
-        )}
+
         <group
-          position={layout[device].team0Banner.position}
+          position={team0BannerPosition}
           rotation={layout[device].team0Banner.rotation}
         >
           <TextButton
@@ -647,7 +687,7 @@ export default function Experience() {
           /> */}
         </group>
         <group
-          position={layout[device].team1Banner.position}
+          position={team1BannerPosition}
           rotation={layout[device].team1Banner.rotation}
         >
           <TextButton

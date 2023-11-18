@@ -38,20 +38,25 @@ export default function Tile({ tile, wrapperRadius }) {
     }
   }
 
-  let rocketAdjustY = (tile == 0 || tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
+  let rocketAdjustY = (tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
+  rocketAdjustY = tile == 0 ? 1 : rocketAdjustY;
+  let rocketAdjustZ = tile == 0 ? 1 : rocketAdjustY;
+  let ufoAdjustY = tile == 0 ? 0.5 : 0;
+  let ufoAdjustZ = tile == 0 ? 0.5 : 0;
+
 
   const rocketPositions = [
-    [0.1, rocketAdjustY + wrapperRadius, 0.4],
-    [0.1, rocketAdjustY + wrapperRadius, 0.1],
-    [-0.3, rocketAdjustY + wrapperRadius, 0.4],
-    [-0.3, rocketAdjustY + wrapperRadius, 0.1],
+    [0.1, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.4],
+    [0.1, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.1],
+    [-0.3, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.4],
+    [-0.3, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.1],
   ];
 
   const ufoPositions = [
-    [0.1, 0.1 + wrapperRadius, 0.1],
-    [0.1, 0.1 + wrapperRadius, -0.2],
-    [-0.2, 0.1 + wrapperRadius, 0.1],
-    [-0.2, 0.1 + wrapperRadius, -0.2],
+    [0.1, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + 0.1],
+    [0.1, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + -0.2],
+    [-0.2, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + 0.1],
+    [-0.2, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + -0.2],
   ];
 
   function Pieces() { // app crashes when you click on a legalTile

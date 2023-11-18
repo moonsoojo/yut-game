@@ -1,10 +1,36 @@
-reposition assets in mobile
-- you can't reposition yuts.
-- only display "throw" and "score" if the game has started
-reset button
-reposition pieces on Earth
-implement local storage
-- name, team
-- don't pass turn on refresh
+fit 5 people's name under each team max
+- mobile: 3x2 grid
+- desktop/landscape: 1 column or 3x2 grid
+reset
+- state in server
+- "start game" should display
+indicate player's id
+sound effects
+make a commit and push - save for next playtest
 
-upload to multiplayer hosting service
+interactive throw
+- power bar
+  - ui
+  - logic
+- link to existing throw handler
+switch layout in mobile
+- yuts on the bottom
+- bigger yuts
+- actions on the bottom
+- teams and pieces on top
+mobile landscape orientation
+save state in local storage
+
+done:
+reposition assets in mobile
+- reposition assets to below the yuts
+- move camera
+  - tiles
+  - teams
+  - pieces
+  - action texts
+  - camera
+- make more room for yuts
+bug: when it was the client's turn, and the browser refreshed, the throw button disappeared
+- maybe the client had a move.
+- the other clients had to be active for the yuts to be thrown

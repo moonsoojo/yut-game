@@ -36,7 +36,7 @@ if (test) {
   }
   teams[0].moves["2"] = 1
   teams[0].pieces[0] = null;
-  tiles[19] = [{tile: 19, team: 0, id: 0, history: [17, 18]}]
+  tiles[15] = [{tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -318,19 +318,19 @@ io.on("connection", (socket) => {
   let positionsInHand = [
     {
       x: -1,
-      y: 1.9,
+      y: 1,
       z: 0,
     }, {
       x: -0.4,
-      y: 1.9,
+      y: 1,
       z: 0,
     }, {
       x: 0.2,
-      y: 1.9,
+      y: 1,
       z: 0,
     }, {
       x: 0.8,
-      y: 1.9,
+      y: 1,
       z: 0,
     },
   ];
@@ -347,11 +347,11 @@ io.on("connection", (socket) => {
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
         rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(2, 0.05),
+        yImpulse: generateRandomNumberInRange(0.3, 0.02),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.0002, 0.0005),
-          y: generateRandomNumberInRange(0.03, 0.2),
-          z: generateRandomNumberInRange(0.001, 0.01),
+          x: generateRandomNumberInRange(0.0001, 0.0001),
+          y: generateRandomNumberInRange(0.01, 0.01),
+          z: generateRandomNumberInRange(0.0005, 0.005),
         },
         positionInHand: positionsInHand[i],
       });
