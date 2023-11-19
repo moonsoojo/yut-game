@@ -29,7 +29,7 @@ let throwInProgress = false;
 let readyToStart = false;
 let showReset = false;
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -308,12 +308,7 @@ io.on("connection", (socket) => {
     io.emit("turn", turn);
   });
 
-  let positionsInHand = [    
-    { x: -1, y: 1, z: 16, },
-    { x: -0.4, y: 1, z: 16, },
-    { x: 0.2, y: 1, z: 16, },
-    { x: 0.8, y: 1, z: 16, },
-  ];
+  let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
   let rotations = [
     { x: 1, y: 1, z: 1, w: 0.1 },
     { x: 2, y: 2, z: 2, w: 0 },
@@ -386,7 +381,7 @@ io.on("connection", (socket) => {
           y: 0,
           z: 0,
         },
-        positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[i])),
+        positionInHand: positionsInHand[i],
       });
     }
     io.emit("throwYuts", yutForceVectors);

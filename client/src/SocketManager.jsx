@@ -5,47 +5,49 @@ import initialState from "../../server/initialState";
 
 export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
+const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+const initialYutPositions = JSON.parse(JSON.stringify(initialState.initialYutPositions))
 
 export const yutThrowValuesAtom = atom([
   {
-    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[0])),
+    rotation: initialYutRotations[0],
+    positionInHand: initialYutPositions[0],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[0]))
   },
   {
-    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[1])),
+    rotation: initialYutRotations[1],
+    positionInHand: initialYutPositions[1],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[1]))
   },
   {
-    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[2])),
+    rotation: initialYutRotations[2],
+    positionInHand: initialYutPositions[2],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[2]))
   },
   {
-    rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[3])),
+    rotation: initialYutRotations[3],
+    positionInHand: initialYutPositions[3],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
       y: 0,
       z: 0,
     },
-    positionInHand: JSON.parse(JSON.stringify(initialState.initialYutPositions[3]))
   },
 ]);
 

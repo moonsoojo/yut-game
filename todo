@@ -11,7 +11,11 @@ rearrange assets for desktop
 sound effects
 create menu
 - add reset button
+don't let client throw if throwInProgress
+- after refreshing the browser
+- after clicking 'reset'
 make a commit and push - save for next playtest
+
 
 interactive throw
 - power bar
@@ -24,7 +28,6 @@ switch layout in mobile
 - actions on the bottom
 - teams and pieces on top
 mobile landscape orientation
-save state in local storage
 
 done:
 reposition assets in mobile

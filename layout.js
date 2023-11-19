@@ -1,9 +1,21 @@
 export default {
   mobile: {
+    center: [0, 0, -7],
     camera: {
       zoom: 40,
-      position: [0, 16, 20],
-      lookAt: [0, 0, 8]
+      position: [0, 25, 10],
+    },
+    team0: {
+      position: [-4, 0, -16],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    team1: {
+      position: [0, 0, -16],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    actionButtons: {
+      position: [1.5, 0, 0],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     tileRadius: {
       ring: 4,
@@ -91,14 +103,6 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
-    team0: {
-      position: [-4, 0, -1],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    team1: {
-      position: [0, 0, -1],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
     joinTeam0Banner:  {
       position: [5.5, 0, 4],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
@@ -107,14 +111,9 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    tileShift: [0, 0, 9],
-    actionButtons: {
-      position: [1.5, 0, 16],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    textRotation:[-Math.PI / 2, 0, 0, "XZY"],
   },
   desktop: {
+    center: [-5, 0, 0],
     camera: {
       zoom: 100,
       position: [-8, 7, 5],
@@ -214,6 +213,10 @@ export default {
       position: [-8, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    actionButtons: {
+      position: [1.5, 0, 16],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
     joinTeam0Banner:  {
       position: [5.5, 0, 4],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
@@ -222,12 +225,8 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    // mobile: above
-    // desktop: right side
-    // center them in index.js
-    tileShift: [-8, 0, 0],
-    teamBannerShift: [-8, 0, 0],
-    actionButtonShift: [-8, 0, 0],
-    textRotation:[-Math.PI / 2, 0, 0, "XZY"],
+    tiles: {
+      position: [-8, 0, 0],
+    },
   },
 };

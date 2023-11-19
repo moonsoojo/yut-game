@@ -8,7 +8,6 @@ import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Controls3d from "./Controls3d";
-// import Decorations from "./Decorations";
 import layout from "../../layout.js";
 import React from "react";
 import { Leva, useControls } from "leva";
@@ -75,13 +74,12 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
   const camera = useRef();
-  const center = useRef();
   const orbitControls = useRef();
 
   useEffect(() => {
     // console.log(center.current.position)
     // console.log(camera.current.lookAt)
-    camera.current.lookAt(layout[device].camera.lookAt[0], layout[device].camera.lookAt[1], layout[device].camera.lookAt[2])
+    camera.current.lookAt(layout[device].center[0], layout[device].center[1], layout[device].center[2])
     // orbit controls override camera's lookAt
     // console.log(orbitControls.current.target)
     // orbitControls.current.target = center.current.position
@@ -100,29 +98,24 @@ export default function Experience() {
         0,
         Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
-      let positionShifted = [
-        position[0] + layout[device].tileShift[0],
-        position[1] + layout[device].tileShift[1],
-        position[2] + layout[device].tileShift[2],
-      ]
       if (i == 0) {
-        tiles.push(<Earth position={positionShifted} tile={i} key={i} />);
+        tiles.push(<Earth position={position} tile={i} key={i} />);
       } else if (i == 5) {
         tiles.push(
           <Mars
-            position={positionShifted}
+            position={position}
             tile={i}
             key={i}
           />
         );
       } else if (i == 10) {
-        tiles.push(<Saturn position={positionShifted} tile={i} key={i} />);
+        tiles.push(<Saturn position={position} tile={i} key={i} />);
       } else if (i == 15) {
-        tiles.push(<Neptune2 position={positionShifted} tile={i} key={i} />);
+        tiles.push(<Neptune2 position={position} tile={i} key={i} />);
       } else {
         tiles.push(
           <Star
-            position={positionShifted}
+            position={position}
             tile={i}
             key={i}
             scale={layout[device].star.scale}
@@ -159,14 +152,9 @@ export default function Experience() {
           Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
             radiusShortcut1,
         ]
-        let position1Shifted = [
-          position1[0] + layout[device].tileShift[0],
-          position1[1] + layout[device].tileShift[1],
-          position1[2] + layout[device].tileShift[2],
-        ]
         tiles.push(
           <Star
-            position={position1Shifted}
+            position={position1}
             tile={indexShortcut1}
             key={i + 30}
             scale={layout[device].star.scale}
@@ -179,14 +167,9 @@ export default function Experience() {
           Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
             radiusShortcut2,
         ]
-        let position2Shifted = [
-          position2[0] + layout[device].tileShift[0],
-          position2[1] + layout[device].tileShift[1],
-          position2[2] + layout[device].tileShift[2],
-        ]
         tiles.push(
           <Star
-            position={position2Shifted}
+            position={position2}
             tile={indexShortcut2}
             key={i + 41}
             scale={layout[device].star.scale}
@@ -194,17 +177,10 @@ export default function Experience() {
         );
       }
     }
-
-    let positionMoon = [0, 0, 0]
-    let positionMoonShifted = [
-      positionMoon[0] + layout[device].tileShift[0],
-      positionMoon[1] + layout[device].tileShift[1],
-      positionMoon[2] + layout[device].tileShift[2],
-    ]
     // center piece
     tiles.push(
       <Moon
-        position={positionMoonShifted}
+        position={[0,0,0]}
         intensity={3}
         // scale={0.4}
         key={100}
@@ -483,7 +459,6 @@ export default function Experience() {
 
   return (
     <>
-      <mesh ref={center} position={[-8, 0, 0]}/>
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
       <OrthographicCamera
@@ -535,7 +510,9 @@ export default function Experience() {
           </mesh>
         </RigidBody>
         <Yuts device={device} />
-        <Tiles />
+        <group position={layout[device].center}>
+          <Tiles />
+        </group>
         <group position={layout[device].actionButtons.position}>
           {/* START GAME text */}
           {readyToStart && gamePhase === "lobby" && (

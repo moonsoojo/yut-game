@@ -114,19 +114,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
-  // let positionThrowButton = layout[device].throwButton.position
-  // let positionThrowButtonShifted = [
-  //   positionThrowButton[0] + layout[device].actionButtonShift[0],
-  //   positionThrowButton[1] + layout[device].actionButtonShift[1],
-  //   positionThrowButton[2] + layout[device].actionButtonShift[2],
-  // ]
-  // let positionThrowButtonOrder = layout[device].throwButtonOrder.position
-  // let positionThrowButtonOrderShifted = [
-  //   positionThrowButtonOrder[0] + layout[device].actionButtonShift[0],
-  //   positionThrowButtonOrder[1] + layout[device].actionButtonShift[1],
-  //   positionThrowButtonOrder[2] + layout[device].actionButtonShift[2],
-  // ]
-
   return (
     <group {...props} dispose={null}>
 
