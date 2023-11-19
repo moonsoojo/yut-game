@@ -1,12 +1,16 @@
-reset
-- display "resetting..." until yuts are resting
-
-alert client when it's player's turn
-fit 5 people's name under each team max
-- mobile: 3x2 grid
-- desktop/landscape: 1 column or 3x2 grid
-indicate player's id
+let player add his id
+- (num) characters max
+- landing page with logo
+- "create name"
+- localStorage.setItem('displayName', name)
+make Team# text bigger
+make 'start game' button bigger
+reposition yuts after they drop
+rearrange assets for desktop
+- scale by screen width / height
 sound effects
+create menu
+- add reset button
 make a commit and push - save for next playtest
 
 interactive throw
@@ -45,3 +49,8 @@ reset
 - "showReset" should be false on all clients
 - on yut throw, positionsInHand and rotations should be random
 - yuts should be placed in their original position on every client
+rearrange assets for mobile
+- fit everything to my iphone
+assign players equally to both teams
+add rotation to TextButton by default
+6 players per team by default

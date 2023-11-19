@@ -7,7 +7,6 @@ import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketI
 import { useAtom } from "jotai";
 import layout from "../../layout.js";
 import TextButton from "./components/TextButton.jsx";
-import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -115,49 +114,22 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
-  let positionThrowButton = layout[device].throwButton.position
-  let positionThrowButtonShifted = [
-    positionThrowButton[0] + layout[device].actionButtonShift[0],
-    positionThrowButton[1] + layout[device].actionButtonShift[1],
-    positionThrowButton[2] + layout[device].actionButtonShift[2],
-  ]
-  let positionThrowButtonOrder = layout[device].throwButtonOrder.position
-  let positionThrowButtonOrderShifted = [
-    positionThrowButtonOrder[0] + layout[device].actionButtonShift[0],
-    positionThrowButtonOrder[1] + layout[device].actionButtonShift[1],
-    positionThrowButtonOrder[2] + layout[device].actionButtonShift[2],
-  ]
+  // let positionThrowButton = layout[device].throwButton.position
+  // let positionThrowButtonShifted = [
+  //   positionThrowButton[0] + layout[device].actionButtonShift[0],
+  //   positionThrowButton[1] + layout[device].actionButtonShift[1],
+  //   positionThrowButton[2] + layout[device].actionButtonShift[2],
+  // ]
+  // let positionThrowButtonOrder = layout[device].throwButtonOrder.position
+  // let positionThrowButtonOrderShifted = [
+  //   positionThrowButtonOrder[0] + layout[device].actionButtonShift[0],
+  //   positionThrowButtonOrder[1] + layout[device].actionButtonShift[1],
+  //   positionThrowButtonOrder[2] + layout[device].actionButtonShift[2],
+  // ]
 
   return (
     <group {...props} dispose={null}>
-      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
-        (gamePhase === "pregame" || gamePhase === "game") && ( 
-        <TextButton
-          text={`Throw`}
-          position={positionThrowButtonShifted}
-          rotation={layout[device].throwButton.rotation}
-          handlePointerClick={() => {
-            socket.emit("throwInProgress", true);
-            socket.emit("throwYuts");
-          }}
-          boxWidth={1.4}
-          boxHeight={0.3}
-        />
-      )}
-      {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
-        gamePhase === "pregame" && (
-        <TextButton
-          text={"for order"}
-          position={positionThrowButtonOrderShifted}
-          rotation={layout[device].throwButtonOrder.rotation}
-          handlePointerClick={() => {
-            socket.emit("throwInProgress", true);
-            socket.emit("throwYuts");
-          }}
-          boxWidth={1.4}
-          boxHeight={0.3}
-        />
-      )}
+
 
       {yuts.map((ref, index) => {
         return (

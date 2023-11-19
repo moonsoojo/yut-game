@@ -29,7 +29,7 @@ let throwInProgress = false;
 let readyToStart = false;
 let showReset = false;
 
-let test = false;
+let test = true;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -37,8 +37,9 @@ if (test) {
     players: [0,0]
   }
   teams[0].moves["2"] = 1
+  teams[0].moves["4"] = 1
   teams[0].pieces[0] = null;
-  tiles[15] = [{tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}, {tile: 0, team: 1, id: 0, history: [17, 18]}]
+  tiles[19] = [{tile: 19, team: 0, id: 0, history: [17, 18]}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -75,7 +76,13 @@ function mockAssignTeams(teams) {
       }
     }
   } else {
-    return getRandomInt(2);
+    if (teams[0].players.length > teams[1].players.length) {
+      return 1
+    } else if (teams[0].players.length < teams[1].players.length) {
+      return 0
+    } else {
+      return getRandomInt(2);
+    }
   }
 }
 
@@ -301,24 +308,11 @@ io.on("connection", (socket) => {
     io.emit("turn", turn);
   });
 
-  let positionsInHand = [
-    {
-      x: -1,
-      y: 1,
-      z: 0,
-    }, {
-      x: -0.4,
-      y: 1,
-      z: 0,
-    }, {
-      x: 0.2,
-      y: 1,
-      z: 0,
-    }, {
-      x: 0.8,
-      y: 1,
-      z: 0,
-    },
+  let positionsInHand = [    
+    { x: -1, y: 1, z: 16, },
+    { x: -0.4, y: 1, z: 16, },
+    { x: 0.2, y: 1, z: 16, },
+    { x: 0.8, y: 1, z: 16, },
   ];
   let rotations = [
     { x: 1, y: 1, z: 1, w: 0.1 },

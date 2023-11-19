@@ -52,7 +52,7 @@ export default {
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     startGameBanner: {
-      position: [0,0,11],
+      position: [2,0,10],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
@@ -91,12 +91,12 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
-    team0Banner: {
-      position: [-4, 0, 6],
+    team0: {
+      position: [-4, 0, -1],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
-    team1Banner: {
-      position: [0, 0, 6],
+    team1: {
+      position: [0, 0, -1],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     joinTeam0Banner:  {
@@ -107,9 +107,12 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    tileShift: [0, 0, 6.5],
-    teamBannerShift: [0, 0, 6.5],
-    actionButtonShift: [0, 0, 6]
+    tileShift: [0, 0, 9],
+    actionButtons: {
+      position: [1.5, 0, 16],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    textRotation:[-Math.PI / 2, 0, 0, "XZY"],
   },
   desktop: {
     camera: {
@@ -204,7 +207,7 @@ export default {
       position: [0, -2, 0],
     },
     team0Banner: {
-      position: [-11, 0, 3],
+      position: [-12, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     team1Banner: {
@@ -224,6 +227,7 @@ export default {
     // center them in index.js
     tileShift: [-8, 0, 0],
     teamBannerShift: [-8, 0, 0],
-    actionButtonShift: [-8, 0, 0]
+    actionButtonShift: [-8, 0, 0],
+    textRotation:[-Math.PI / 2, 0, 0, "XZY"],
   },
 };

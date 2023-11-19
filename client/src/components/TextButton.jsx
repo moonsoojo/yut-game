@@ -3,7 +3,7 @@ import { Text3D } from "@react-three/drei";
 
 export default function TextButton({
   position=[0,0,0],
-  rotation=[0,0,0],
+  rotation=[-Math.PI / 2, 0, 0, "XZY"],
   handlePointerClick,
   text,
   boxWidth,

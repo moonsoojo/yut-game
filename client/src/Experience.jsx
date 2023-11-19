@@ -35,13 +35,15 @@ import {
   gamePhaseAtom,
   socket,
   socketIdAtom,
-  showResetAtom
+  showResetAtom,
+  legalTilesAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
+import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -64,6 +66,7 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [socketId] = useAtom(socketIdAtom);
   const [showReset] = useAtom(showResetAtom);
+  const [legalTiles] = useAtom(legalTilesAtom)
 
   const numTiles = 29;
 
@@ -211,11 +214,16 @@ export default function Experience() {
     return tiles;
   }
 
+  // team group
+  // pieces
+  // moves
+  // throws
+  // names
   function HomePieces({team}) {
-    let positionStartX = layout[device].homePieces[team].positionStartX + layout[device].teamBannerShift[0]
-    let positionStartY = layout[device].homePieces[team].positionStartY + layout[device].teamBannerShift[1];
-    let positionStartZ = layout[device].homePieces[team].positionStartZ + layout[device].teamBannerShift[2];
     let space = layout[device].homePieces[team].space;
+    let positionStartX = 0
+    let positionStartY = 0
+    let positionStartZ = 0.5
 
     return (
       <>
@@ -374,46 +382,6 @@ export default function Experience() {
     envMapIntensity: { value: 1, min: 0, max: 12, step: 1 },
   });
 
-  // const {
-  //   countStars,
-  //   sizeStars,
-  //   distanceMin,
-  //   distanceMax,
-  //   firstColorStars,
-  //   secondColorStars,
-  // } = useControls("stars", {
-  //   countStars: {
-  //     value: 100000,
-  //     min: 0,
-  //     max: 100000,
-  //     step: 1000,
-  //   },
-  //   sizeStars: {
-  //     value: 0.02,
-  //     min: 0.01,
-  //     max: 0.2,
-  //     step: 0.01,
-  //   },
-  //   distanceMin: {
-  //     value: 10,
-  //     min: 0.01,
-  //     max: 1000,
-  //     step: 1,
-  //   },
-  //   distanceMax: {
-  //     value: 10,
-  //     min: 0.01,
-  //     max: 1000,
-  //     step: 1,
-  //   },
-  //   firstColorStars: {
-  //     value: "#794c40",
-  //   },
-  //   secondColorStars: {
-  //     value: "#1b3984",
-  //   },
-  //   envMapIntensity: { value: 1, min: 0, max: 12, step: 1 },
-  // });
 
   const {
     turbidity,
@@ -513,22 +481,11 @@ export default function Experience() {
     return prettifiedMoves
   }
 
-  // shifts
-  let team0BannerPosition = [
-    layout[device].team0Banner.position[0] + layout[device].teamBannerShift[0],
-    layout[device].team0Banner.position[1] + layout[device].teamBannerShift[1],
-    layout[device].team0Banner.position[2] + layout[device].teamBannerShift[2],
-  ]
-  let team1BannerPosition = [
-    layout[device].team1Banner.position[0] + layout[device].teamBannerShift[0],
-    layout[device].team1Banner.position[1] + layout[device].teamBannerShift[1],
-    layout[device].team1Banner.position[2] + layout[device].teamBannerShift[2],
-  ]
   return (
     <>
       <mesh ref={center} position={[-8, 0, 0]}/>
       {/* <Perf/> */}
-      {/* <OrbitControls ref={orbitControls}/> */}
+      {/* <OrbitControls/> */}
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -542,11 +499,6 @@ export default function Experience() {
         ref={camera}
         // lookAt={center.current.position}
       />
-      {/* <color args={["#000001"]} attach="background" /> */}
-      {/* <Environment
-        background
-        files={"./environmentMaps/empty-galaxy-small.hdr"}
-      /> */}
       <Leva hidden />
       <Sky
         turbidity={turbidity}
@@ -557,15 +509,6 @@ export default function Experience() {
         azimuth={azimuth}
         distance={distance}
         sunPosition={sunPosition}
-      />
-      <Stars
-        radius={100}
-        depth={50}
-        count={5000}
-        factor={4}
-        saturation={0}
-        fade
-        speed={1}
       />
       <directionalLight
         position={lightPosition}
@@ -593,28 +536,35 @@ export default function Experience() {
         </RigidBody>
         <Yuts device={device} />
         <Tiles />
-
-        <HomePieces team={0} />
-        <HomePieces team={1} />
-
-        <group position={layout[device].actionButtonShift}>
+        <group position={layout[device].actionButtons.position}>
           {/* START GAME text */}
           {readyToStart && gamePhase === "lobby" && (
             <TextButton
               text="Start Game"
-              position={layout[device].startGameBanner.position}
-              rotation={layout[device].startGameBanner.rotation}
+              position={[0,0,0]}
               boxWidth={1.2}
               boxHeight={0.3}
               handlePointerClick={() => socket.emit("startGame")}
             />
           )}
-          { gamePhase === "game" && 
-            <ScoreButton           
-              position={layout[device].scoreButton.position}
-              rotation={layout[device].scoreButton.rotation}
+          {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
+            (gamePhase === "pregame" || gamePhase === "game") && ( 
+            <TextButton
+              text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
+              position={[0,0,0]}
+              handlePointerClick={() => {
+                socket.emit("throwInProgress", true);
+                socket.emit("throwYuts");
+              }}
+              boxWidth={1.4}
+              boxHeight={0.3}
+            />
+          )}
+          { gamePhase === "game" && 29 in legalTiles && 
+            <ScoreButton
+              position={[0,0,0.5]}
             />}
-          { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
+          {/* { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
             <TextButton
               text="Reset"
               position={layout[device].resetButton.position}
@@ -626,33 +576,48 @@ export default function Experience() {
               boxWidth={1.2}
               boxHeight={0.3}
             />
-          }
-
+          } */}
         </group>
-
-        {/* START text */}
-        {/* <TextButton
-          text="Start"
-          position={layout[device].startBanner.position}
-          rotation={layout[device].startBanner.rotation}
-          boxWidth={1.2}
-          boxHeight={0.3}
-        /> */}
-
+        {/* team 0 */}
         <group
-          position={team0BannerPosition}
-          rotation={layout[device].team0Banner.rotation}
+          position={layout[device].team0.position}
         >
+          {/* team name */}
           <TextButton
             text="Team 0"
             boxWidth={1.2}
             boxHeight={0.3}
             color="red"
           />
+          {/* pieces */}
+          <group position={[0.5, 0, 0.5]}>
+            <HomePieces team={0} />
+          </group>
+          {/* moves */}
+          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+            <TextButton
+              text={`Moves: ${
+                prettifyMoves(teams[0].moves)
+              }`}
+              position={[0, 0, 2]}
+            />
+          }
+          {/* throws */}
+          {(gamePhase === "pregame" || gamePhase === "game") && (
+            <>            
+              <TextButton
+                text={`Throws: ${
+                  teams[0].throws
+                }`}
+                position={[0, 0, 2.5]}
+              />
+            </>
+          )}
+          {/* player ids */}
           {teams[0].players.map((value, index) => (
             <TextButton
               text={value.displayName}
-              position={[0, -0.5 * (1 + index), 0]}
+              position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]} // using Y to offset because containing group is rotated
               color={
                 turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
                   ? "white"
@@ -662,46 +627,47 @@ export default function Experience() {
               size={value.socketId === socketId ? 0.4: 0.3}
             />
           ))}
-          {(turn.team == 0 && (gamePhase === "pregame" || gamePhase === "game")) && (
-            <>            
-              <TextButton
-                text={`Throws: ${
-                  teams[0].throws
-                }`}
-                position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
-              />
-            </>
-          )}
-          {(gamePhase === "pregame" || (turn.team == 0 && gamePhase !== "lobby")) && 
-            <TextButton
-              text={`Moves: ${
-                prettifyMoves(teams[0].moves)
-              }`}
-              position={[0, -0.5 * (2 + teams[0].players.length), 0]}
-            />
-          }
-          {/* <TextButton
-            text="Join"
-            position={layout[device].joinTeam0Banner.position}
-            rotation={layout[device].joinTeam0Banner.rotation}
-            boxWidth={1.2}
-            boxHeight={0.3}
-          /> */}
         </group>
+        {/* team 1 */}
         <group
-          position={team1BannerPosition}
-          rotation={layout[device].team1Banner.rotation}
+          position={layout[device].team1.position}
         >
+          {/* team name */}
           <TextButton
             text="Team 1"
             boxWidth={1.2}
             boxHeight={0.3}
             color="turquoise"
+
           />
+          {/* pieces */}
+          <group position={[0.5, 0, 0.5]}>
+            <HomePieces team={1} />
+          </group>
+          {/* moves */}
+          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+            <TextButton
+              text={`Moves: ${
+                prettifyMoves(teams[1].moves)
+              }`}
+              position={[0, 0, 2]}
+            />
+          }
+          {/* throws */}
+          {(gamePhase === "pregame" || gamePhase === "game") && (
+            <>            
+              <TextButton
+                text={`Throws: ${
+                  teams[1].throws
+                }`}
+                position={[0, 0, 2.5]}
+              />
+            </>
+          )}
           {teams[1].players.map((value, index) => (
             <TextButton
               text={value.displayName}
-              position={[0, -0.5 * (1 + index), 0]}
+              position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]} // using Y to offset because containing group is rotated
               color={
                 turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
                   ? "white"
@@ -711,30 +677,6 @@ export default function Experience() {
               size={value.socketId === socketId ? 0.4: 0.3}
             />
           ))}
-          {(turn.team == 1 && (gamePhase === "pregame" || gamePhase === "game")) && (
-            <>                          
-              <TextButton
-                text={`Throws: ${
-                  teams[1].throws
-                }`}
-                position={[0, -0.5 * (1 + teams[turn.team].players.length), 0]}
-              />
-              </>
-              )}
-              {(gamePhase === "pregame" || (turn.team == 1 && gamePhase !== "lobby")) && (
-              <TextButton
-                text={`Moves: ${
-                  prettifyMoves(teams[1].moves)
-                }`}
-                position={[0, -0.5 * (2 + teams[1].players.length), 0]}
-              />)}
-          {/* <TextButton
-            text="Join"
-            position={layout[device].joinTeam1Banner.position}
-            rotation={layout[device].joinTeam1Banner.rotation}
-            boxWidth={1.2}
-            boxHeight={0.3}
-          /> */}
         </group>
       </Physics>
     </>

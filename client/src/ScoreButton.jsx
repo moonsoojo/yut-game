@@ -32,6 +32,7 @@ export default function ScoreButton({ position, rotation }) {
         if (legalTiles[29].length == 1) {
           socket.emit("score", { selection, moveInfo: legalTiles[29][0] })
           socket.emit("select", null);
+          socket.emit("legalTiles", { legalTiles: {} })
         } else {
           setDisplayScoreOptions(true);
         }
@@ -46,7 +47,7 @@ export default function ScoreButton({ position, rotation }) {
       handlePointerClick={() => {
         socket.emit("score", {selection, moveInfo});
         socket.emit("select", null)
-        setLegalTiles({});
+        socket.emit("legalTiles", { legalTiles: {} });
         setDisplayScoreOptions(false);
       }}
       boxWidth={0.2}
