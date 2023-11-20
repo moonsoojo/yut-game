@@ -33,9 +33,9 @@ import {
   turnAtom,
   gamePhaseAtom,
   socket,
-  socketIdAtom,
   showResetAtom,
-  legalTilesAtom
+  legalTilesAtom,
+  clientPlayerAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -43,6 +43,7 @@ import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
 import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
+import LandingPage from "./pages/landingPage.jsx";
 
 export const bannerAtom = atom("throw the yuts!");
 export const playAtom = atom(false);
@@ -63,9 +64,9 @@ export default function Experience() {
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [socketId] = useAtom(socketIdAtom);
   const [showReset] = useAtom(showResetAtom);
-  const [legalTiles] = useAtom(legalTilesAtom)
+  const [legalTiles] = useAtom(legalTilesAtom);
+  const [clientPlayer] = useAtom(clientPlayerAtom)
 
   const numTiles = 29;
 
@@ -74,12 +75,16 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
   const camera = useRef();
-  const orbitControls = useRef();
+  // const orbitControls = useRef();
 
   useEffect(() => {
     // console.log(center.current.position)
     // console.log(camera.current.lookAt)
-    camera.current.lookAt(layout[device].center[0], layout[device].center[1], layout[device].center[2])
+    camera.current.lookAt(
+      layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
+      layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
+      layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
+    )
     // orbit controls override camera's lookAt
     // console.log(orbitControls.current.target)
     // orbitControls.current.target = center.current.position
@@ -491,171 +496,169 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
-      {/* <Controls3d
-        tileRadius={TILE_RADIUS}
-        numStars={NUM_STARS}
-        device={device}
-      /> */}
-      <Physics debug maxVelocityIterations={10}>
-        <RigidBody
-          type="fixed"
-          restitution={0.01}
-          position={[0, -0.5, 0]}
-          friction={0.9}
-        >
-          <CuboidCollider args={[30, 0.5, 30]} restitution={0.2} friction={1} />
-          <mesh>
-            <boxGeometry args={[60, 1, 60]} />
-            <meshStandardMaterial transparent opacity={0} />
-          </mesh>
-        </RigidBody>
-        <Yuts device={device} />
-        <group position={layout[device].center}>
-          <Tiles />
-        </group>
-        <group position={layout[device].actionButtons.position}>
-          {/* START GAME text */}
-          {readyToStart && gamePhase === "lobby" && (
-            <TextButton
-              text="Start Game"
-              position={[0,0,0]}
-              boxWidth={1.2}
-              boxHeight={0.3}
-              handlePointerClick={() => socket.emit("startGame")}
-            />
-          )}
-          {socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
-            (gamePhase === "pregame" || gamePhase === "game") && ( 
-            <TextButton
-              text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
-              position={[0,0,0]}
-              handlePointerClick={() => {
-                socket.emit("throwInProgress", true);
-                socket.emit("throwYuts");
-              }}
-              boxWidth={1.4}
-              boxHeight={0.3}
-            />
-          )}
-          { gamePhase === "game" && 29 in legalTiles && 
-            <ScoreButton
-              position={[0,0,0.5]}
-            />}
-          {/* { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
-            <TextButton
-              text="Reset"
-              position={layout[device].resetButton.position}
-              rotation={layout[device].resetButton.rotation}
-              handlePointerClick={() => {
-                console.log("reset clicked")
-                socket.emit("reset");
-              }}
-              boxWidth={1.2}
-              boxHeight={0.3}
-            />
-          } */}
-        </group>
-        {/* team 0 */}
-        <group
-          position={layout[device].team0.position}
-        >
-          {/* team name */}
-          <TextButton
-            text="Team 0"
-            boxWidth={1.2}
-            boxHeight={0.3}
-            color="red"
-          />
-          {/* pieces */}
-          <group position={[0.5, 0, 0.5]}>
-            <HomePieces team={0} />
+      {/* displayName is initialized to an object and doesn't change */}
+      { clientPlayer.displayName === '' ? <LandingPage device={device}/>
+      :
+        <Physics debug maxVelocityIterations={10}>
+          <RigidBody
+            type="fixed"
+            restitution={0.01}
+            position={[0, -0.5, 0]}
+            friction={0.9}
+          >
+            <CuboidCollider args={[30, 0.5, 30]} restitution={0.2} friction={1} />
+            <mesh>
+              <boxGeometry args={[60, 1, 60]} />
+              <meshStandardMaterial transparent opacity={0} />
+            </mesh>
+          </RigidBody>
+          <Yuts device={device} />
+          <group position={layout[device].center}>
+            <Tiles />
           </group>
-          {/* moves */}
-          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-            <TextButton
-              text={`Moves: ${
-                prettifyMoves(teams[0].moves)
-              }`}
-              position={[0, 0, 2]}
-            />
-          }
-          {/* throws */}
-          {(gamePhase === "pregame" || gamePhase === "game") && (
-            <>            
+          <group position={layout[device].actionButtons.position}>
+            {/* START GAME text */}
+            {readyToStart && gamePhase === "lobby" && (
               <TextButton
-                text={`Throws: ${
-                  teams[0].throws
-                }`}
-                position={[0, 0, 2.5]}
+                text="Start Game"
+                position={[0,0,0]}
+                boxWidth={1.2}
+                boxHeight={0.3}
+                handlePointerClick={() => socket.emit("startGame")}
               />
-            </>
-          )}
-          {/* player ids */}
-          {teams[0].players.map((value, index) => (
+            )}
+            {clientPlayer.socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
+              (gamePhase === "pregame" || gamePhase === "game") && ( 
+              <TextButton
+                text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
+                position={[0,0,0]}
+                handlePointerClick={() => {
+                  socket.emit("throwInProgress", true);
+                  socket.emit("throwYuts");
+                }}
+                boxWidth={1.4}
+                boxHeight={0.3}
+              />
+            )}
+            { gamePhase === "game" && 29 in legalTiles && 
+              <ScoreButton
+                position={[0,0,0.5]}
+              />}
+            {/* { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
+              <TextButton
+                text="Reset"
+                position={layout[device].resetButton.position}
+                rotation={layout[device].resetButton.rotation}
+                handlePointerClick={() => {
+                  console.log("reset clicked")
+                  socket.emit("reset");
+                }}
+                boxWidth={1.2}
+                boxHeight={0.3}
+              />
+            } */}
+          </group>
+          {/* team 0 */}
+          <group
+            position={layout[device].team0.position}
+          >
+            {/* team name */}
             <TextButton
-              text={value.displayName}
-              position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]} // using Y to offset because containing group is rotated
-              color={
-                turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
-                  ? "white"
-                  : "yellow"
-              }
-              key={index}
-              size={value.socketId === socketId ? 0.4: 0.3}
+              text="Team 0"
+              boxWidth={1.2}
+              boxHeight={0.3}
+              color="red"
             />
-          ))}
-        </group>
-        {/* team 1 */}
-        <group
-          position={layout[device].team1.position}
-        >
-          {/* team name */}
-          <TextButton
-            text="Team 1"
-            boxWidth={1.2}
-            boxHeight={0.3}
-            color="turquoise"
+            {/* pieces */}
+            <group position={[0.5, 0, 0.5]}>
+              <HomePieces team={0} />
+            </group>
+            {/* moves */}
+            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+              <TextButton
+                text={`Moves: ${
+                  prettifyMoves(teams[0].moves)
+                }`}
+                position={[0, 0, 2]}
+              />
+            }
+            {/* throws */}
+            {(gamePhase === "pregame" || gamePhase === "game") && (
+              <>            
+                <TextButton
+                  text={`Throws: ${
+                    teams[0].throws
+                  }`}
+                  position={[0, 0, 2.5]}
+                />
+              </>
+            )}
+            {/* player ids */}
+            {teams[0].players.map((value, index) => (
+              <TextButton
+                text={value.displayName}
+                // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
+                position={[0, 0, 3 + 0.5 * (index)]}
+                color={
+                  turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
+                    ? "white"
+                    : "yellow"
+                }
+                key={index}
+              />
+            ))}
+          </group>
+          {/* team 1 */}
+          <group
+            position={layout[device].team1.position}
+          >
+            {/* team name */}
+            <TextButton
+              text="Team 1"
+              boxWidth={1.2}
+              boxHeight={0.3}
+              color="turquoise"
 
-          />
-          {/* pieces */}
-          <group position={[0.5, 0, 0.5]}>
-            <HomePieces team={1} />
-          </group>
-          {/* moves */}
-          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-            <TextButton
-              text={`Moves: ${
-                prettifyMoves(teams[1].moves)
-              }`}
-              position={[0, 0, 2]}
             />
-          }
-          {/* throws */}
-          {(gamePhase === "pregame" || gamePhase === "game") && (
-            <>            
+            {/* pieces */}
+            <group position={[0.5, 0, 0.5]}>
+              <HomePieces team={1} />
+            </group>
+            {/* moves */}
+            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
               <TextButton
-                text={`Throws: ${
-                  teams[1].throws
+                text={`Moves: ${
+                  prettifyMoves(teams[1].moves)
                 }`}
-                position={[0, 0, 2.5]}
+                position={[0, 0, 2]}
               />
-            </>
-          )}
-          {teams[1].players.map((value, index) => (
-            <TextButton
-              text={value.displayName}
-              position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]} // using Y to offset because containing group is rotated
-              color={
-                turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
-                  ? "white"
-                  : "yellow"
-              }
-              key={index}
-              size={value.socketId === socketId ? 0.4: 0.3}
-            />
-          ))}
-        </group>
-      </Physics>
+            }
+            {/* throws */}
+            {(gamePhase === "pregame" || gamePhase === "game") && (
+              <>            
+                <TextButton
+                  text={`Throws: ${
+                    teams[1].throws
+                  }`}
+                  position={[0, 0, 2.5]}
+                />
+              </>
+            )}
+            {teams[1].players.map((value, index) => (
+              <TextButton
+                text={value.displayName}
+                // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
+                position={[0, 0, 3 + 0.5 * (index)]}
+                color={
+                  turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
+                    ? "white"
+                    : "yellow"
+                }
+                key={index}
+              />
+            ))}
+          </group>
+        </Physics> }
     </>
   );
 }

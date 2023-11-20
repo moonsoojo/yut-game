@@ -14,7 +14,6 @@ import {
 } from "@react-three/drei";
 import React from "react";
 import { SocketManager } from "./SocketManager";
-import LandingPage from "./pages/landingPage";
 
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
@@ -34,8 +33,7 @@ root.render(
       {/* <CameraControls /> */}
       {/* <OrbitControls /> */}
 
-      {/* <Experience /> */}
-      <LandingPage/>
+      <Experience />
 
       {/* <Perf /> */}
     </Canvas>

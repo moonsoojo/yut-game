@@ -66,7 +66,7 @@ function makeId(length) {
   return result;
 }
 
-function mockAssignTeams(teams) {
+function assignTeam(teams) {
   if (countPlayers(teams) == 0) {
     return getRandomInt(2);
   } else if (countPlayers(teams) == 1) {
@@ -213,35 +213,30 @@ io.on("connection", (socket) => {
   if (hostId == null) {
     hostId = socket.id
   }
-
-  // represent new player
-  // team is chosen by player from UI
-  // name is chosen by player from UI
-  let newPlayer = JSON.parse(JSON.stringify(initialState.player));
-  let newTeam = mockAssignTeams(teams)
-  console.log("newTeam", newTeam)
-  newPlayer.team = newTeam
-  // mock assigning a name 
-  newPlayer.displayName = makeId(5)
-  newPlayer.socketId = socket.id
-  newPlayer.index = teams[newTeam].players.length
-  teams[newTeam].players.push(newPlayer)
-  io.to(socket.id).emit("setUpPlayer", {socketId: newPlayer.socketId, team: newTeam})
-
-  // mock assign "host" to display 'start game' button
-  // by default, it's hidden for everyone
-  if (countPlayers(teams) >= 2) {
-    readyToStart = true;
-    io.to(hostId).emit("readyToStart", true);
-  }
   
+  // when the client loads, load server state
   io.emit("characters", characters); // this should be refactored
   io.emit("tiles", tiles);
-  io.emit("selection", selection);
+  io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
   io.emit("teams", teams);
   io.emit("turn", turn);
   io.emit("gamePhase", gamePhase);
+  io.emit("setUpPlayer", {player: JSON.parse(JSON.stringify(initialState.player))})
 
+  socket.on("submitName", ({ displayName }) => {
+    let newPlayer = JSON.parse(JSON.stringify(initialState.player));
+    let newTeam = assignTeam(teams)
+    newPlayer.team = newTeam
+    newPlayer.displayName = displayName
+    newPlayer.socketId = socket.id
+    teams[newTeam].players.push(newPlayer)
+    io.emit("setUpPlayer", {player: newPlayer})
+    io.emit("teams", teams);
+    if (countPlayers(teams) >= 2) {
+      readyToStart = true;
+      io.to(hostId).emit("readyToStart", true);
+    }
+  })
 
   socket.on("startGame", () => {
     readyToStart = false;

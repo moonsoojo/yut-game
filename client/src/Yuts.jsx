@@ -3,7 +3,7 @@ import { RigidBody } from "@react-three/rapier";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, socketIdAtom, throwInProgressAtom } from "./SocketManager.jsx";
+import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import layout from "../../layout.js";
 import TextButton from "./components/TextButton.jsx";
@@ -21,7 +21,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
-  const [socketId] = useAtom(socketIdAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom);
   const [_hoverThrowText, setHoverThrowText] = useState(false);
 

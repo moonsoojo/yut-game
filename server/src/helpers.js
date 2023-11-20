@@ -33,3 +33,13 @@ export function isMyTurn (turn, teams, socketId) {
     return false
   }
 }
+
+export function getClientPlayer (teams, socketId) {
+  for (let i = 0; i < teams.length; i++) {
+    for (let j = 0; j < teams[i].players.length; j++) {
+      if (teams[i].players[j].socketId === socketId) {
+        return teams[i].players[j]
+      }
+    }
+  }
+}

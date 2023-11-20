@@ -59,8 +59,7 @@ export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
 // info about player
-export const clientTeamAtom = atom(-1);
-export const socketIdAtom = atom("");
+export const clientPlayerAtom = atom(JSON.parse(JSON.stringify(initialState.player)));
 // client UI display
 export const displayScoreOptionsAtom = atom(false);
 export const throwInProgressAtom = atom(false)
@@ -78,8 +77,7 @@ export const SocketManager = () => {
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_throwInProgress, setThrowInProgress] = useAtom(throwInProgressAtom)
   // info about player
-  const [_clientTeam, setClientTeam] = useAtom(clientTeamAtom)
-  const [_socketId, setSocketId] = useAtom(socketIdAtom);
+  const [_clientPlayer, setClientPlayer] = useAtom(clientPlayerAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_showReset, setShowReset] = useAtom(showResetAtom);
@@ -88,9 +86,9 @@ export const SocketManager = () => {
     function onConnect() {
       console.log("connected");
     }
-    function onSetUpPlayer({socketId, team}) {
-      setClientTeam(team);
-      setSocketId(socketId);
+    function onSetUpPlayer({player}) {
+      setClientPlayer(player);
+      localStorage.setItem('player', player);
     }
     function onDisconnect() {
       console.log("disconnected");

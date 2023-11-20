@@ -1,9 +1,10 @@
 export default {
   mobile: {
-    center: [0, 0, -7],
+    center: [0, 0, -6],
     camera: {
       zoom: 40,
-      position: [0, 25, 10],
+      position: [0, 25, 6],
+      lookAtOffset: [0, 0, -1.5]
     },
     team0: {
       position: [-4, 0, -16],
@@ -111,6 +112,7 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   desktop: {
     center: [-5, 0, 0],
@@ -207,15 +209,12 @@ export default {
     },
     team0Banner: {
       position: [-12, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     team1Banner: {
       position: [-8, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     actionButtons: {
       position: [1.5, 0, 16],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     joinTeam0Banner:  {
       position: [5.5, 0, 4],
@@ -228,5 +227,6 @@ export default {
     tiles: {
       position: [-8, 0, 0],
     },
+    textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
 };

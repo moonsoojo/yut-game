@@ -1,8 +1,13 @@
-let player add his id
-- (num) characters max
-- landing page with logo
-- "create name"
-- localStorage.setItem('displayName', name)
+restore player info on browser refresh
+- player joins game
+- save player info in local storage
+- player leaves browser and opens another app
+- client disconnects from server
+- player comes back to browser
+- if info is saved in local storage
+  - restore that
+- else
+  - enter name again
 make Team# text bigger
 make 'start game' button bigger
 reposition yuts after they drop
@@ -14,19 +19,19 @@ create menu
 don't let client throw if throwInProgress
 - after refreshing the browser
 - after clicking 'reset'
-make a commit and push - save for next playtest
-
+add "GO" for start
+alert player when it's his turn
+make clickables bigger
+plan what can happen during game on server
+- players leaving at various gamePhases
+- localStorage.setItem('displayName', name)
+reposition landing page elements to center on camera
 
 interactive throw
 - power bar
   - ui
   - logic
 - link to existing throw handler
-switch layout in mobile
-- yuts on the bottom
-- bigger yuts
-- actions on the bottom
-- teams and pieces on top
 mobile landscape orientation
 
 done:
@@ -57,3 +62,11 @@ rearrange assets for mobile
 assign players equally to both teams
 add rotation to TextButton by default
 6 players per team by default
+let player add his id
+- landing page with logo
+- "create name"
+- on submit
+- move 'on connect' logic to 'on submit (name)'
+  - assign host if it hasn't been assigned yet
+  - assign team
+- input validation: 15 chars max
