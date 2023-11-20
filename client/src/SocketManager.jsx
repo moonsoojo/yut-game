@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
-export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+export const socket = io("http://192.168.86.158:3000", { query: { 'player': localStorage.getItem('player') ?? "null" } }); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
 const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 const initialYutPositions = JSON.parse(JSON.stringify(initialState.initialYutPositions))
@@ -59,7 +59,8 @@ export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
 // info about player
-export const clientPlayerAtom = atom(JSON.parse(JSON.stringify(initialState.player)));
+export const clientPlayerAtom = atom(localStorage.getItem('clientPlayer') ?? null);
+// export const displayNameAtom = atom(localStorage.getItem('displayName') ?? null);
 // client UI display
 export const displayScoreOptionsAtom = atom(false);
 export const throwInProgressAtom = atom(false)
@@ -70,7 +71,7 @@ export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
-  const [_teams, setTeams] = useAtom(teamsAtom);
+  const [teams, setTeams] = useAtom(teamsAtom);
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
@@ -78,6 +79,7 @@ export const SocketManager = () => {
   const [_throwInProgress, setThrowInProgress] = useAtom(throwInProgressAtom)
   // info about player
   const [_clientPlayer, setClientPlayer] = useAtom(clientPlayerAtom)
+  // const [_displayName, setDisplayName] = useAtom(displayNameAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_showReset, setShowReset] = useAtom(showResetAtom);
@@ -86,10 +88,30 @@ export const SocketManager = () => {
     function onConnect() {
       console.log("connected");
     }
+
     function onSetUpPlayer({player}) {
-      setClientPlayer(player);
-      localStorage.setItem('player', player);
+      console.log(localStorage.getItem('player'))
+      let playerLocalStorage;
+      if (localStorage.getItem('player') === "null" || localStorage.getItem('player') === null) {
+        playerLocalStorage = null
+      } else {
+        playerLocalStorage = localStorage.getItem('player')
+      }
+      
+      if (playerLocalStorage === null) {
+        setClientPlayer(player);
+        localStorage.setItem('player', JSON.stringify(player));
+      } else {
+        player = JSON.parse(playerLocalStorage)
+        setClientPlayer(player);
+        // let newTeams = JSON.parse(JSON.stringify(teams))
+        // console.log("[client] player", player)
+        // console.log("[client] player.team", player.team)
+        // newTeams[player.team].players.push(player)
+        // socket.emit("teams", newTeams)
+      }
     }
+
     function onDisconnect() {
       console.log("disconnected");
     }
@@ -136,6 +158,7 @@ export const SocketManager = () => {
 
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
+    // socket.on("displayName", onDisplayName)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
@@ -152,6 +175,7 @@ export const SocketManager = () => {
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
+      // socket.off("displayName", onDisplayName)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);

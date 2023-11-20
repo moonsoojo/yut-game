@@ -35,7 +35,8 @@ import {
   socket,
   showResetAtom,
   legalTilesAtom,
-  clientPlayerAtom
+  clientPlayerAtom,
+  // displayNameAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -67,6 +68,7 @@ export default function Experience() {
   const [showReset] = useAtom(showResetAtom);
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
+  // const [displayName] = useAtom(displayNameAtom);
 
   const numTiles = 29;
 
@@ -497,7 +499,7 @@ export default function Experience() {
       />
       <ambientLight intensity={0.5} />
       {/* displayName is initialized to an object and doesn't change */}
-      { clientPlayer.displayName === '' ? <LandingPage device={device}/>
+      { clientPlayer === null ? <LandingPage device={device}/>
       :
         <Physics debug maxVelocityIterations={10}>
           <RigidBody

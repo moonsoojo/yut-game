@@ -201,9 +201,8 @@ function checkThrowResultsMatch(results) {
   return resultsMatch
 }
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
+io.on("connection", (socket) => { // socket.handshake.query is data obj
+  console.log("a user connected"); 
   characters.push({
     id: socket.id,
     position: generateRandomPosition(),
@@ -221,7 +220,17 @@ io.on("connection", (socket) => {
   io.emit("teams", teams);
   io.emit("turn", turn);
   io.emit("gamePhase", gamePhase);
-  io.emit("setUpPlayer", {player: JSON.parse(JSON.stringify(initialState.player))})
+  if (socket.handshake.query.player === 'null') {
+    // nothing
+  } else {
+    let player = JSON.parse(socket.handshake.query.player)    
+    io.emit("setUpPlayer", {player})
+    teams[player['team']].players.push(player)
+  }
+
+  socket.on("readyToStart", (flag) => {
+    io.to(hostId).emit("readyToStart", flag)
+  })
 
   socket.on("submitName", ({ displayName }) => {
     let newPlayer = JSON.parse(JSON.stringify(initialState.player));
@@ -414,6 +423,12 @@ io.on("connection", (socket) => {
   socket.on("throwInProgress", (flag) => {
     throwInProgress = flag;
     io.emit("throwInProgress", flag)
+  })
+
+  socket.on("teams", (newTeams) => {
+    console.log("newTeams", JSON.stringify(newTeams))
+    teams = newTeams
+    io.emit("teams", teams)
   })
 
   socket.on("disconnect", () => {

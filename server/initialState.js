@@ -5,7 +5,7 @@ export default {
   teams: [
     {
       index: 0,
-      displayName: "",
+      // displayName: "",
       players: [], // list of objects
       pieces: [
         { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
@@ -25,7 +25,7 @@ export default {
     },
     { 
       index: 1,
-      displayName: "",
+      // displayName: "",
       players: [], // list of objects
       pieces: [
         { tile: -1, team: 1, id: 0, history: [] },
