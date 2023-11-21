@@ -1,13 +1,3 @@
-restore player info on browser refresh
-- player joins game
-- save player info in local storage
-- player leaves browser and opens another app
-- client disconnects from server
-- player comes back to browser
-- if info is saved in local storage
-  - restore that
-- else
-  - enter name again
 make Team# text bigger
 make 'start game' button bigger
 reposition yuts after they drop
@@ -70,3 +60,4 @@ let player add his id
   - assign host if it hasn't been assigned yet
   - assign team
 - input validation: 15 chars max
+- input validation: cannot be anything previously written

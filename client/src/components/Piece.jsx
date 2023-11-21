@@ -71,7 +71,7 @@ export default function Piece ({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team]) && isMyTurn(turn, teams, socketId)) {
+    if (gamePhase === "game" && hasMove(teams[team]) && isMyTurn(turn, teams, clientPlayer.socketId)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;

@@ -220,13 +220,21 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   io.emit("teams", teams);
   io.emit("turn", turn);
   io.emit("gamePhase", gamePhase);
-  if (socket.handshake.query.player === 'null') {
-    // nothing
-  } else {
-    let player = JSON.parse(socket.handshake.query.player)    
-    io.emit("setUpPlayer", {player})
-    teams[player['team']].players.push(player)
-  }
+  // io.to(socket.id).emit("socketId", socket.id);
+  // console.log("[connect] socket.handshake.query", socket.handshake.query)
+  // if (socket.handshake.query.player === 'null') {
+  //   // nothing
+  // } else {
+  //   let player = JSON.parse(socket.handshake.query.player)    
+  //   player.socketId = socket.id
+  //   io.emit("setUpPlayer", {player})
+  //   teams[player['team']].players.push(player)
+  //   io.emit("teams", teams);
+  //   if (gamePhase === "lobby" && countPlayers(teams) >= 2) {
+  //     readyToStart = true;
+  //     io.to(hostId).emit("readyToStart", true);
+  //   }
+  // }
 
   socket.on("readyToStart", (flag) => {
     io.to(hostId).emit("readyToStart", flag)
@@ -239,7 +247,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     newPlayer.displayName = displayName
     newPlayer.socketId = socket.id
     teams[newTeam].players.push(newPlayer)
-    io.emit("setUpPlayer", {player: newPlayer})
+    io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
     io.emit("teams", teams);
     if (countPlayers(teams) >= 2) {
       readyToStart = true;
@@ -440,6 +448,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     );
 
     teams = removePlayerFromGame(teams, socket.id)
+    console.log('[disconnect] teams', teams)
     io.emit("characters", characters);
     io.emit("teams", teams)
 

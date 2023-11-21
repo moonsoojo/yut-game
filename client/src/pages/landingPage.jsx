@@ -5,12 +5,13 @@ import { Text3D, Html } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useAtom } from "jotai";
-import { socket } from "../SocketManager";
+import { socket, teamsAtom } from "../SocketManager";
 
 export default function LandingPage({ device="mobile" }) {
 
   const [displayName, setDisplayName] = useState('')
   const [alert, setAlert] = useState('');
+  const [teams] = useAtom(teamsAtom);
 
   let position=[
     layout[device].center[0]-3,
@@ -23,10 +24,23 @@ export default function LandingPage({ device="mobile" }) {
       setAlert('Enter something')
     } else if (displayName.length > 15) {
       setAlert('Must be shorter than 16 characters.')
+    } else if (!validateName(displayName)) {
+      setAlert('Name is already taken.')
     } else {
       setAlert("let's go!")
       socket.emit("submitName", {displayName})
     }
+  }
+
+  function validateName(name) {
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams[i].players.length; j++) {
+        if (teams[i].players[j].displayName === name) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   return <>

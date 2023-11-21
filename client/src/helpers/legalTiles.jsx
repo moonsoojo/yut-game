@@ -29,11 +29,9 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
         } else {
           forks = checkBackdoFork(forks, history)
         }
-        console.log("[getLegalTiles] forks", forks)
         for (let i = 0; i < forks.length; i++) {
           let path = starting ? [] : [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-          console.log("[getLegalTiles] i", i, "destination", destination)
           let fullHistory = getFullHistory(history, destination.path, forward)
           if (destination.tile == 29) {
             if (!(29 in legalTiles)) {
