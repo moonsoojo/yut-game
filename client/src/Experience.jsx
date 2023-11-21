@@ -464,6 +464,11 @@ export default function Experience() {
     return prettifiedMoves
   }
 
+  function handleYutThrow() {
+    // socket.emit("yutsAsleep", {flag: false, playerSocketId: clientPlayer.socketId})
+    socket.emit("throwYuts");
+  }
+
   return (
     <>
       {/* <Perf/> */}
@@ -534,10 +539,7 @@ export default function Experience() {
               <TextButton
                 text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
                 position={[0,0,0]}
-                handlePointerClick={() => {
-                  socket.emit("throwInProgress", true);
-                  socket.emit("throwYuts");
-                }}
+                handlePointerClick={handleYutThrow}
                 boxWidth={1.4}
                 boxHeight={0.3}
               />

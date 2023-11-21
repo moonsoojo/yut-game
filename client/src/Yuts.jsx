@@ -3,10 +3,9 @@ import { RigidBody } from "@react-three/rapier";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import React from "react";
-import { yutThrowValuesAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
+import { yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import layout from "../../layout.js";
-import TextButton from "./components/TextButton.jsx";
+import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -22,7 +21,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom);
+  const [clientPlayer] = useAtom(clientPlayerAtom)
   const [_hoverThrowText, setHoverThrowText] = useState(false);
+
 
   useEffect(() => {
     subscribeKeys(
@@ -34,6 +35,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         }
       }
     );
+    socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
   }, []);
 
   useEffect(() => {
@@ -55,8 +57,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
-      socket.emit("clientYutsResting");
-      observeThrow(yuts)
+      socket.emit("yutsAsleep", {flag: true, playerSocketId: clientPlayer.socketId});
     }
   }, [sleepCount])
 
@@ -113,6 +114,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setSleepCount((count) => count+1);
   }
 
+  function onWakeHandler() {
+    console.log("onWakeHandler")
+    socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
+  }
+
   return (
     <group {...props} dispose={null}>
 
@@ -132,6 +138,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}
+            onWake={onWakeHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (

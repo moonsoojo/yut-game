@@ -24,7 +24,6 @@ let numClientsYutsResting = initialState.numClientsYutsResting;
 let clientYutResults = [];
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
-const characters = [];
 let throwInProgress = false;
 let readyToStart = false;
 let showReset = false;
@@ -203,23 +202,20 @@ function checkThrowResultsMatch(results) {
 
 io.on("connection", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected"); 
-  characters.push({
-    id: socket.id,
-    position: generateRandomPosition(),
-    color: generateRandomHexColor(),
-  });
 
   if (hostId == null) {
     hostId = socket.id
   }
-  
-  // when the client loads, load server state
-  io.emit("characters", characters); // this should be refactored
+
   io.emit("tiles", tiles);
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
   io.emit("teams", teams);
   io.emit("turn", turn);
   io.emit("gamePhase", gamePhase);
+
+  ////////////////////////////////////////////////
+  ////// uncomment when code goes to server //////
+  ////////////////////////////////////////////////
   // io.to(socket.id).emit("socketId", socket.id);
   // console.log("[connect] socket.handshake.query", socket.handshake.query)
   // if (socket.handshake.query.player === 'null') {
@@ -236,11 +232,18 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   //   }
   // }
 
-  socket.on("readyToStart", (flag) => {
-    io.to(hostId).emit("readyToStart", flag)
-  })
+  // socket.on("readyToStart", (flag) => {
+  //   io.to(hostId).emit("readyToStart", flag)
+  // })
 
-  socket.on("submitName", ({ displayName }) => {
+  socket.on("submitName", ({ displayName }) => {  
+    // sync client to server
+    io.emit("tiles", tiles);
+    io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
+    // io.emit("teams", teams);
+    io.emit("turn", turn);
+    io.emit("gamePhase", gamePhase);
+
     let newPlayer = JSON.parse(JSON.stringify(initialState.player));
     let newTeam = assignTeam(teams)
     newPlayer.team = newTeam
@@ -249,10 +252,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     teams[newTeam].players.push(newPlayer)
     io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
     io.emit("teams", teams);
-    if (countPlayers(teams) >= 2) {
-      readyToStart = true;
-      io.to(hostId).emit("readyToStart", true);
-    }
+    // if (countPlayers(teams) >= 2) {
+    //   readyToStart = true;
+    //   io.to(hostId).emit("readyToStart", true);
+    // }
   })
 
   socket.on("startGame", () => {
@@ -264,6 +267,48 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("teams", teams)
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
+  })
+
+  socket.on('yutsAsleep', ({ flag, playerSocketId }) => {
+    console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
+    // set flag on player
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams[i].players.length; j++) {
+        if (teams[i].players[j].socketId === playerSocketId)
+          teams[i].players[j].yutsAsleep = flag
+      }
+    }
+
+    // check all players' flags
+    let allPlayersYutsAsleep = true;
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams[i].players.length; j++) {
+        if (teams[i].players[j].yutsAsleep === false)
+          allPlayersYutsAsleep = false
+      }
+    }
+    // set sync
+    if (allPlayersYutsAsleep) {
+      throwInProgress = false
+      for (let i = 0; i < teams.length; i++) {
+        for (let j = 0; j < teams[i].players.length; j++) {
+          teams[i].players[j].sync = true;
+        }
+      }
+    } else {
+      throwInProgress = true
+    }
+    // ready to start
+    if (gamePhase === "lobby" && countPlayers(teams) >= 2 && !throwInProgress) {
+      readyToStart = true;
+    } else {
+      readyToStart = false;
+    }
+
+    console.log("[yutsAsleep] throwInProgress", throwInProgress, "teams", teams, "playerSocketId", playerSocketId)
+    io.emit("throwInProgress", throwInProgress)
+    io.to(hostId).emit("readyToStart", readyToStart)
+    io.emit("teams", teams)
   })
 
   function passTurnPregame(turn, teams, gamePhase) {
@@ -329,8 +374,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   ];
   socket.on("throwYuts", () => {
     const yutForceVectors = [];
-    numClientsYutsResting = 0
-    clientYutResults = [];
+    // numClientsYutsResting = 0
+    // clientYutResults = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
         rotation: rotations[i],
@@ -373,12 +418,12 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       gamePhase,
       teams
     });
-    if (countPlayers(teams) >= 2) {
-      readyToStart = true;
-    } else {
-      readyToStart = false;
-    }
-    io.to(hostId).emit("readyToStart", readyToStart);
+    // if (countPlayers(teams) >= 2) {
+    //   readyToStart = true;
+    // } else {
+    //   readyToStart = false;
+    // }
+    // io.to(hostId).emit("readyToStart", readyToStart);
     showReset = false;
     io.emit("showReset", showReset);
 
@@ -404,15 +449,32 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("bonusThrow", () => {
-    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults)) {
+    if (clientYutResults.length == countPlayers(teams) && checkThrowResultsMatch(clientYutResults)) {
       teams[turn.team].throws++;
       io.emit("teams", teams)
     }
   })
 
+  // socket.on("recordThrow", (result) => {
+  //   clientYutResults.push(result);
+  //   if (clientYutResults.length == countPlayers(teams) && checkThrowResultsMatch(clientYutResults) && gamePhase !== "lobby") {
+  //     teams[turn.team].moves[result.toString()]++
+  //     if (gamePhase === "pregame") {
+  //       [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
+  //       teams[turn.team].throws++;
+  //       io.emit("turn", turn)
+  //       io.emit("teams", teams)
+  //       io.emit("gamePhase", gamePhase)
+  //     } else {
+  //       io.emit("teams", teams)
+  //     }
+  //     throwInProgress = false;
+  //     io.emit("throwInProgress", false);
+  //   }
+  // })
+
   socket.on("recordThrow", (result) => {
-    clientYutResults.push(result);
-    if (clientYutResults.length == characters.length && checkThrowResultsMatch(clientYutResults) && gamePhase !== "lobby") {
+    if (clientYutResults.length == countPlayers(teams) && checkThrowResultsMatch(clientYutResults) && gamePhase !== "lobby") {
       teams[turn.team].moves[result.toString()]++
       if (gamePhase === "pregame") {
         [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
@@ -433,23 +495,11 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("throwInProgress", flag)
   })
 
-  socket.on("teams", (newTeams) => {
-    console.log("newTeams", JSON.stringify(newTeams))
-    teams = newTeams
-    io.emit("teams", teams)
-  })
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
 
-    characters.splice(
-      characters.findIndex((characters) => characters.id === socket.id),
-      1
-    );
 
     teams = removePlayerFromGame(teams, socket.id)
-    console.log('[disconnect] teams', teams)
-    io.emit("characters", characters);
     io.emit("teams", teams)
 
     if (countPlayers(teams) > 0) {
@@ -458,10 +508,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       hostId = null;
     }
 
-    if (countPlayers(teams) < 2) {
-      readyToStart = false;
-      io.to(hostId).emit("readyToStart", readyToStart);
-    }
+    // if (countPlayers(teams) < 2) {
+    //   readyToStart = false;
+    //   io.to(hostId).emit("readyToStart", readyToStart);
+    // }
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       passTurn(turn, teams)

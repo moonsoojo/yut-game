@@ -57,6 +57,8 @@ export default {
     // index: -1, // in the 'players' list in the team
     // find player by looking through all players and comparing their socket id
     displayName: "",
+    yutsAsleep: false,
+    sync: false,
     team: -1,
   },
   turn: {

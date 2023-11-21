@@ -1,28 +1,31 @@
-make Team# text bigger
-make 'start game' button bigger
-reposition yuts after they drop
-rearrange assets for desktop
-- scale by screen width / height
-sound effects
+sync yut throw
+- before start game
+- onYutsAsleep in client
+- yutsAsleep and recordResult in server
+- sync and yutsAsleep state in player
+refactor players
+- object with keys as socket id
 create menu
 - add reset button
-don't let client throw if throwInProgress
-- after refreshing the browser
-- after clicking 'reset'
-add "GO" for start
-alert player when it's his turn
 make clickables bigger
-plan what can happen during game on server
-- players leaving at various gamePhases
-- localStorage.setItem('displayName', name)
-reposition landing page elements to center on camera
+- start game
+- throw
+- score
+mobile landscape orientation
+sound effects
+
+rearrange assets for desktop
+- scale by screen width / height
 
 interactive throw
 - power bar
   - ui
   - logic
 - link to existing throw handler
-mobile landscape orientation
+- toggle in menu
+move pieces closer to your thumb 
+zoom after entering name on mobile - issue for users
+
 
 done:
 reposition assets in mobile

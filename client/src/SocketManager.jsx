@@ -101,6 +101,7 @@ export const SocketManager = () => {
       console.log("disconnected", clientPlayer);
       // localStorage.removeItem('player');
     }
+    
     function onSelect(value) {
       setSelection(value);
     }

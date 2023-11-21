@@ -7,11 +7,11 @@ export default {
       lookAtOffset: [0, 0, -1.5]
     },
     team0: {
-      position: [-4, 0, -16],
+      position: [-4, 0, -15.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     team1: {
-      position: [0, 0, -16],
+      position: [0, 0, -15.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     actionButtons: {
