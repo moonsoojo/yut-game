@@ -57,7 +57,8 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
-      socket.emit("yutsAsleep", {flag: true, playerSocketId: clientPlayer.socketId});
+      let throwResult = observeThrow(yuts);
+      socket.emit("yutsAsleep", {flag: true, playerSocketId: clientPlayer.socketId, throwResult});
     }
   }, [sleepCount])
 
@@ -102,12 +103,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     //   result = 4
     // }
 
-    if (gamePhase === "pregame" || gamePhase === "game") {
-      socket.emit("recordThrow", result)
-      if (gamePhase === "game" && (result == 4 || result == 5) ) {
-        socket.emit("bonusThrow");
-      }
-    }
+    // if (gamePhase === "pregame" || gamePhase === "game") {
+    //   socket.emit("recordThrow", result)
+    //   if (gamePhase === "game" && (result == 4 || result == 5) ) {
+    //     socket.emit("bonusThrow");
+    //   }
+    // }
+    
+    return result
   }
 
   function onSleepHandler() {
@@ -121,8 +124,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   return (
     <group {...props} dispose={null}>
-
-
       {yuts.map((ref, index) => {
         return (
           <RigidBody

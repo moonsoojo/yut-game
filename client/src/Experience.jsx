@@ -36,6 +36,7 @@ import {
   showResetAtom,
   legalTilesAtom,
   clientPlayerAtom,
+  throwInProgressAtom,
   // displayNameAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
@@ -69,6 +70,7 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
   // const [displayName] = useAtom(displayNameAtom);
+  const [throwInProgress] = useAtom(throwInProgressAtom)
 
   const numTiles = 29;
 
@@ -534,7 +536,7 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
-            {clientPlayer.socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && 
+            {clientPlayer.socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && !throwInProgress &&
               (gamePhase === "pregame" || gamePhase === "game") && ( 
               <TextButton
                 text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
