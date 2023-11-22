@@ -1,21 +1,11 @@
-sync yut throw
-- before start game
-- onYutsAsleep in client
-- yutsAsleep and recordResult in server
-- sync and yutsAsleep state in player
-refactor players
-- object with keys as socket id
-create menu
-- add reset button
-make clickables bigger
-- start game
-- throw
-- score
+UI v3
+current turn
+- logo
+- display next to player's name
 mobile landscape orientation
+rearrange assets for desktop
 sound effects
 
-rearrange assets for desktop
-- scale by screen width / height
 
 interactive throw
 - power bar
@@ -64,3 +54,8 @@ let player add his id
   - assign team
 - input validation: 15 chars max
 - input validation: cannot be anything previously written
+sync yut throw
+- before start game
+- onYutsAsleep in client
+- yutsAsleep and recordResult in server
+- sync and yutsAsleep state in player
