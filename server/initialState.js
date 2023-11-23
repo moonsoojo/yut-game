@@ -106,10 +106,10 @@ export default {
   //    ] 
   // }
   initialYutPositions: [
-    { x: -0.6, y: 1, z: 0, },
-    { x: -0.2, y: 1, z: 0, },
-    { x: 0.2, y: 1, z: 0, },
-    { x: 0.6, y: 1, z: 0, },
+    { x: -0.6, y: 0.5, z: 0, },
+    { x: -0.2, y: 0.5, z: 0, },
+    { x: 0.2, y: 0.5, z: 0, },
+    { x: 0.6, y: 0.5, z: 0, },
   ],
   initialYutRotations: [
     { x: 0, y: 1, z: 0, w: 1 },

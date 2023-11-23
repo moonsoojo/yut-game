@@ -115,7 +115,6 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
-  console.log("[getDestination] tile", tile, "steps", steps, "forward", forward, "path", path)
   // path.push(tile)
   if (steps == 0 || tile == 29) {
     return { tile, path }

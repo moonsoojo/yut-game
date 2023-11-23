@@ -6,9 +6,10 @@ import { selectionAtom, legalTilesAtom, displayScoreOptionsAtom, socket } from "
 import { useAtom } from "jotai";
 import Pointer from "./meshes/Pointer";
 import TextButton from "./components/TextButton";
+import layout from "../../layout";
 
 const SCORE_TILE = 29
-export default function ScoreButton({ position, rotation }) {
+export default function ScoreButton({ position, device='mobile' }) {
   const [selection] = useAtom(selectionAtom);
   const [hoverScoreText, setHoverScoreText] = useState(false);
   const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
@@ -25,8 +26,8 @@ export default function ScoreButton({ position, rotation }) {
   }
 
   function clickScore(event) {
-    event.stopPropagation();
-    if (selection != null) {
+    // event.stopPropagation();
+    if (selection != null && !displayScoreOptions) {
       // precondition: legalTiles is already populated
       if (29 in legalTiles) {
         if (legalTiles[29].length == 1) {
@@ -50,30 +51,39 @@ export default function ScoreButton({ position, rotation }) {
         socket.emit("legalTiles", { legalTiles: {} });
         setDisplayScoreOptions(false);
       }}
+      size={0.4}
       boxWidth={0.2}
       boxHeight={0.3}
     />
   }
 
   return (
-    <group position={position} rotation={rotation}>
-      { selection != null && 29 in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
+    // <group position={position}>
+    <group position={[0, 0, 0]}>
+      {/* { selection != null && 29 in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>} */}
       <mesh
-        position={[0.5, 0.125, 0]}
+        position={[1, 0, 1.5]} // because box geometry scales outward
         onPointerEnter={scorePointerEnter}
         onPointerOut={scorePointerOut}
         onPointerDown={(e) => clickScore(e)}
       >
-        <boxGeometry args={[1, 0.25, 0.1]} />
+        <boxGeometry args={[3, 0.25, 5]} />
         <meshStandardMaterial transparent opacity={0} />
       </mesh>
-      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01}>
+      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.5} height={0.01} rotation={layout[device].textRotation}>
         Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D>
-      { displayScoreOptions && legalTiles[29].map( (value, index) => ( // must use parentheses instead of brackets
-        <Move moveInfo={value} position={[index * 0.5,-0.5,0]} key={index}/>
-      ))}
+      { displayScoreOptions && <group position={[0, 0, 0.5]}>
+        <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01} rotation={layout[device].textRotation}>
+          Finish with
+          <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
+        </Text3D>
+        {legalTiles[29].map( (value, index) => ( // must use parentheses instead of brackets
+          <Move moveInfo={value} position={[index * 0.7, 0, 0.5]} key={index}/>
+        ))}</group>
+      }
+      
     </group>
   );
 }

@@ -35,10 +35,12 @@ if (test) {
     team: 0,
     players: [0,0]
   }
-  teams[0].moves["2"] = 1
-  teams[0].moves["4"] = 1
-  teams[0].pieces[0] = null;
-  tiles[19] = [{tile: 19, team: 0, id: 0, history: [17, 18]}]
+  teams[0].throws = 1
+  teams[1].pieces[0] = null;
+  teams[1].pieces[1] = null;
+  teams[1].pieces[2] = null;
+  tiles[2] = [{tile: 2, team: 1, id: 0, history: [1]}]
+  tiles[7] = [{tile: 7, team: 1, id: 1, history: [1,2,3,4,5,6]}, {tile: 7, team: 1, id: 2, history: [1,2,3,4,5,6]}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -269,6 +271,16 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("gamePhase", gamePhase);
   })
 
+  socket.on("yutsAwake", ({ flag, playerSocketId}) => {
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams[i].players.length; j++) {
+        if (teams[i].players[j].socketId === playerSocketId)
+          teams[i].players[j].yutsAsleep = flag
+      }
+    }
+    io.emit("teams", teams)
+  })
+
   socket.on('yutsAsleep', ({ flag, playerSocketId, throwResult }) => {
     // console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
     // set flag on player
@@ -333,7 +345,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
 
 
-    console.log("[yutsAsleep] throwInProgress", throwInProgress, "teams", teams, "playerSocketId", playerSocketId)
+    // console.log("[yutsAsleep] throwInProgress", throwInProgress, "teams", teams, "playerSocketId", playerSocketId)
     io.emit("throwInProgress", throwInProgress)
     io.to(hostId).emit("readyToStart", readyToStart)
     io.emit("teams", teams)

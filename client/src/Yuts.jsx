@@ -59,6 +59,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
+    socket.emit("yutsAwake", { flag: false, playerSocketId: clientPlayer.socketId })
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -75,12 +76,14 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   useFrame((state, delta) => {
     if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
       for (let i = 0; i < yutMeshes.length; i++) {
-        yutMeshes[i].current.material.emissive = new THREE.Color( 'yellow' );
+        yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = null;
+        yutMeshes[i].current.material.emissiveIntensity = 0
+
       }
     }
   })
@@ -140,7 +143,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
 
   function onWakeHandler() {
     console.log("onWakeHandler")
-    socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
+    // socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
   }
 
   return (

@@ -467,17 +467,17 @@ export default function Experience() {
 
   function handleYutThrow() {
     // socket.emit("yutsAsleep", {flag: false, playerSocketId: clientPlayer.socketId})
-    socket.emit("throwYuts");
+    if (!throwInProgress && isMyTurn(turn, teams, clientPlayer.socketId) && gamePhase !== "lobby" && teams[turn.team].throws > 0) {
+      socket.emit("throwYuts");
+    }
   }
 
   const newHomePiecePositions = [
-    [0, 0, 0],
-    [1, 0, 0],
-    [0, 0, 1],
-    [1, 0, 1]
+    [0.5, 0, 0],
+    [1.5, 0, 0],
+    [0.5, 0, 1],
+    [1.5, 0, 1]
   ]
-
-
 
   return (
     <>
@@ -516,7 +516,8 @@ export default function Experience() {
       {/* displayName is initialized to an object and doesn't change */}
       { clientPlayer === null ? <LandingPage device={device}/>
       :
-        <Physics maxVelocityIterations={10}>
+      // browser switching sync
+        <Physics debug>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -613,25 +614,30 @@ export default function Experience() {
                 />
               </>
             )}
-            <RigidBody
-              type="fixed"
-              restitution={0.01}
-              position={layout[device].yutFloor}
-              friction={0.9}
-            >
-              <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
-              <mesh onPointerDown={handleYutThrow}>
-                <boxGeometry args={[5, 1, 5]} />
-                <meshStandardMaterial 
-                  transparent 
-                  opacity={0}
-                />
-              </mesh>
-            </RigidBody>
+              <RigidBody
+                type="fixed"
+                restitution={0.01}
+                position={layout[device].yutFloor}
+                friction={0.9}
+              >
+                <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
+                <mesh onPointerDown={handleYutThrow}>
+                  <boxGeometry args={[5, 1, 5]} />
+                  <meshStandardMaterial 
+                    transparent 
+                    opacity={0}
+                  />
+                </mesh>
+              </RigidBody>
           </group>
           {/* pieces section */}
-          <group position={[-3.5, 0, -1]}>
-            {teams[clientPlayer.team].pieces.map((value, index) =>
+          <group position={[-4, 0, -1]}>
+          { (gamePhase === "game" && 29 in legalTiles) ?
+            <ScoreButton
+              position={[0,0,0]}
+              device={device}
+            /> :
+            teams[clientPlayer.team].pieces.map((value, index) =>
               value == null ? (
                 <mesh
                   position={newHomePiecePositions[index]}
@@ -645,7 +651,7 @@ export default function Experience() {
                   key={index}
                 >
                   <sphereGeometry args={[0.1]} />
-                  <meshStandardMaterial color={team == 0 ? "red" : "turquoise"} />
+                  <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "turquoise"} />
                 </mesh>
               ) : (
                 <Piece
@@ -659,20 +665,21 @@ export default function Experience() {
                   scale={1}
                 />
               )
-            )}
-            {/* moves */}
-            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-              <>
-                <TextButton
-                  text={`Moves`}
-                  position={[-0.5, 0, 2]}
-                />
-                <TextButton
-                  text={`${prettifyMoves(teams[clientPlayer.team].moves)}`}
-                  position={[-0.5, 0, 2.5]}
-                />
-              </>
-            }
+            )
+          }
+          {/* moves */}
+          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+            <>
+              <TextButton
+                text={`Moves`}
+                position={[0, 0, 2]}
+              />
+              <TextButton
+                text={`${prettifyMoves(teams[clientPlayer.team].moves)}`}
+                position={[0, 0, 2.5]}
+              />
+            </>
+          }
           </group>
           {/* chat section */}
           <group position={layout[device].chat}>
@@ -689,10 +696,6 @@ export default function Experience() {
               </div>
             </Html>
           </group>
-          { gamePhase === "game" && 29 in legalTiles && 
-            <ScoreButton
-              position={[0,0,0.5]}
-            />}
         </Physics> }
     </>
   );
