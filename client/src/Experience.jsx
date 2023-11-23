@@ -44,7 +44,7 @@ import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
-import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
+import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 
 export const bannerAtom = atom("throw the yuts!");
@@ -69,7 +69,6 @@ export default function Experience() {
   const [showReset] = useAtom(showResetAtom);
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
-  // const [displayName] = useAtom(displayNameAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom)
 
   const numTiles = 29;
@@ -204,14 +203,14 @@ export default function Experience() {
   // moves
   // throws
   // names
-  function HomePieces({team}) {
+  function HomePieces({team, scale=1}) {
     let space = layout[device].homePieces[team].space;
     let positionStartX = 0
     let positionStartY = 0
     let positionStartZ = 0.5
 
     return (
-      <>
+      <group scale={scale}>
         {teams[team].pieces.map((value, index) =>
           value == null ? (
             <mesh
@@ -253,7 +252,7 @@ export default function Experience() {
             />
           )
         )}
-      </>
+      </group>
     );
   }
   
@@ -471,6 +470,15 @@ export default function Experience() {
     socket.emit("throwYuts");
   }
 
+  const newHomePiecePositions = [
+    [0, 0, 0],
+    [1, 0, 0],
+    [0, 0, 1],
+    [1, 0, 1]
+  ]
+
+
+
   return (
     <>
       {/* <Perf/> */}
@@ -508,103 +516,28 @@ export default function Experience() {
       {/* displayName is initialized to an object and doesn't change */}
       { clientPlayer === null ? <LandingPage device={device}/>
       :
-        <Physics debug maxVelocityIterations={10}>
-          <RigidBody
-            type="fixed"
-            restitution={0.01}
-            position={[0, -0.5, 0]}
-            friction={0.9}
-          >
-            <CuboidCollider args={[30, 0.5, 30]} restitution={0.2} friction={1} />
-            <mesh>
-              <boxGeometry args={[60, 1, 60]} />
-              <meshStandardMaterial transparent opacity={0} />
-            </mesh>
-          </RigidBody>
-          <Yuts device={device} />
-          <group position={layout[device].center}>
-            <Tiles />
-          </group>
-          <group position={layout[device].actionButtons.position}>
-            {/* START GAME text */}
-            {readyToStart && gamePhase === "lobby" && (
-              <TextButton
-                text="Start Game"
-                position={[0,0,0]}
-                boxWidth={1.2}
-                boxHeight={0.3}
-                handlePointerClick={() => socket.emit("startGame")}
-              />
-            )}
-            {clientPlayer.socketId == getCurrentPlayerSocketId(turn, teams) && teams[turn.team].throws > 0 && !throwInProgress &&
-              (gamePhase === "pregame" || gamePhase === "game") && ( 
-              <TextButton
-                text={`Throw ${gamePhase === "pregame" ? '(order)' : ''}`}
-                position={[0,0,0]}
-                handlePointerClick={handleYutThrow}
-                boxWidth={1.4}
-                boxHeight={0.3}
-              />
-            )}
-            { gamePhase === "game" && 29 in legalTiles && 
-              <ScoreButton
-                position={[0,0,0.5]}
-              />}
-            {/* { (gamePhase === "pregame" || gamePhase === "game") && showReset &&
-              <TextButton
-                text="Reset"
-                position={layout[device].resetButton.position}
-                rotation={layout[device].resetButton.rotation}
-                handlePointerClick={() => {
-                  console.log("reset clicked")
-                  socket.emit("reset");
-                }}
-                boxWidth={1.2}
-                boxHeight={0.3}
-              />
-            } */}
-          </group>
+        <Physics maxVelocityIterations={10}>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
           >
             {/* team name */}
             <TextButton
-              text="Team 0"
+              text="Rockets"
               boxWidth={1.2}
               boxHeight={0.3}
               color="red"
             />
             {/* pieces */}
-            <group position={[0.5, 0, 0.5]}>
-              <HomePieces team={0} />
+            <group position={[2, 0, -0.5]}>
+              <HomePieces team={0} scale={0.5}/>
             </group>
-            {/* moves */}
-            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-              <TextButton
-                text={`Moves: ${
-                  prettifyMoves(teams[0].moves)
-                }`}
-                position={[0, 0, 2]}
-              />
-            }
-            {/* throws */}
-            {(gamePhase === "pregame" || gamePhase === "game") && (
-              <>            
-                <TextButton
-                  text={`Throws: ${
-                    teams[0].throws
-                  }`}
-                  position={[0, 0, 2.5]}
-                />
-              </>
-            )}
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
                 // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
-                position={[0, 0, 3 + 0.5 * (index)]}
+                position={[0, 0, 0.5+0.5 * (index)]}
                 color={
                   turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
                     ? "white"
@@ -620,41 +553,29 @@ export default function Experience() {
           >
             {/* team name */}
             <TextButton
-              text="Team 1"
+              text="UFOs"
               boxWidth={1.2}
               boxHeight={0.3}
               color="turquoise"
-
             />
             {/* pieces */}
-            <group position={[0.5, 0, 0.5]}>
-              <HomePieces team={1} />
+            <group position={[2, 0, -0.5]}>
+              <HomePieces team={1} scale={0.5}/>
             </group>
             {/* moves */}
-            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+            {/* {(gamePhase === "pregame" || gamePhase !== "lobby") && 
               <TextButton
                 text={`Moves: ${
                   prettifyMoves(teams[1].moves)
                 }`}
                 position={[0, 0, 2]}
               />
-            }
-            {/* throws */}
-            {(gamePhase === "pregame" || gamePhase === "game") && (
-              <>            
-                <TextButton
-                  text={`Throws: ${
-                    teams[1].throws
-                  }`}
-                  position={[0, 0, 2.5]}
-                />
-              </>
-            )}
+            } */}
             {teams[1].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
                 // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
-                position={[0, 0, 3 + 0.5 * (index)]}
+                position={[0, 0, 0.5+0.5 * (index)]}
                 color={
                   turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
                     ? "white"
@@ -664,6 +585,114 @@ export default function Experience() {
               />
             ))}
           </group>
+          
+          <group position={layout[device].center}>
+            <Tiles />
+          </group>
+          {/* yut section */}
+          <group>
+            {/* START GAME text */}
+            {readyToStart && gamePhase === "lobby" && (
+              <TextButton
+                text="Start"
+                position={layout[device].throwCount}
+                boxWidth={1.2}
+                boxHeight={0.3}
+                handlePointerClick={() => socket.emit("startGame")}
+              />
+            )}
+            <Yuts device={device} />
+            {/* throw count */}
+            {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (
+              <>            
+                <TextButton
+                  text={`Throws: ${
+                    teams[turn.team].throws
+                  }`}
+                  position={layout[device].throwCount}
+                />
+              </>
+            )}
+            <RigidBody
+              type="fixed"
+              restitution={0.01}
+              position={layout[device].yutFloor}
+              friction={0.9}
+            >
+              <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
+              <mesh onPointerDown={handleYutThrow}>
+                <boxGeometry args={[5, 1, 5]} />
+                <meshStandardMaterial 
+                  transparent 
+                  opacity={0}
+                />
+              </mesh>
+            </RigidBody>
+          </group>
+          {/* pieces section */}
+          <group position={[-3.5, 0, -1]}>
+            {teams[clientPlayer.team].pieces.map((value, index) =>
+              value == null ? (
+                <mesh
+                  position={newHomePiecePositions[index]}
+                  key={index}
+                >
+                  <sphereGeometry args={[0.1]} />
+                </mesh>
+              ) : value === "scored" ? (
+                <mesh
+                  position={newHomePiecePositions[index]}
+                  key={index}
+                >
+                  <sphereGeometry args={[0.1]} />
+                  <meshStandardMaterial color={team == 0 ? "red" : "turquoise"} />
+                </mesh>
+              ) : (
+                <Piece
+                  position={newHomePiecePositions[index]}
+                  rotation={layout[device].homePieces[clientPlayer.team].rotation}
+                  keyName={`count${index}`}
+                  tile={-1}
+                  team={clientPlayer.team}
+                  id={value.id}
+                  key={index}
+                  scale={1}
+                />
+              )
+            )}
+            {/* moves */}
+            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+              <>
+                <TextButton
+                  text={`Moves`}
+                  position={[-0.5, 0, 2]}
+                />
+                <TextButton
+                  text={`${prettifyMoves(teams[clientPlayer.team].moves)}`}
+                  position={[-0.5, 0, 2.5]}
+                />
+              </>
+            }
+          </group>
+          {/* chat section */}
+          <group position={layout[device].chat}>
+            <Html>
+              <div style={{
+                // 'border': '1px solid white',
+                'borderRadius': '5px',
+                'height': '105px',
+                'width': '105px',
+                'padding': '10px'
+              }}>
+                <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
+                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>black:</span> how do i play this game</p>
+              </div>
+            </Html>
+          </group>
+          { gamePhase === "game" && 29 in legalTiles && 
+            <ScoreButton
+              position={[0,0,0.5]}
+            />}
         </Physics> }
     </>
   );

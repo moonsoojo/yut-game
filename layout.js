@@ -1,19 +1,22 @@
 export default {
   mobile: {
-    center: [0, 0, -6],
+    center: [-3, 0, -7],
     camera: {
       zoom: 40,
-      position: [0, 25, 6],
-      lookAtOffset: [0, 0, -1.5]
+      position: [-3, 25, 6],
+      lookAtOffset: [0, 0, 0]
     },
     team0: {
-      position: [-4, 0, -15.5],
+      position: [-7, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     team1: {
-      position: [0, 0, -15.5],
+      position: [-3, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    throwCount: [-1,0,-2.5],
+    yutFloor: [1,-0.5,0.5],
+    chat: [-7.5,-0.5,-2],
     actionButtons: {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],

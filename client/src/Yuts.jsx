@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { RigidBody } from "@react-three/rapier";
 import { useGLTF, useKeyboardControls } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import React from "react";
+import React, {ref} from "react";
 import { yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { getCurrentPlayerSocketId } from "../../server/src/helpers.js";
+import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -36,6 +37,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       }
     );
     socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
+    // console.log('yut rhino material', yutRhino?.current.material)
+    for (let i = 0; i < yutMeshes.length; i++) {
+      yutMeshes[i].current.material.roughness = 0
+      yutMeshes[i].current.material.metalness = 0
+    }
   }, []);
 
   useEffect(() => {
@@ -66,10 +72,25 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     setHoverThrowText(false);
   }, [throwInProgress]);
 
+  useFrame((state, delta) => {
+    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
+      for (let i = 0; i < yutMeshes.length; i++) {
+        yutMeshes[i].current.material.emissive = new THREE.Color( 'yellow' );
+        yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
+      }
+    } else {
+      for (let i = 0; i < yutMeshes.length; i++) {
+        yutMeshes[i].current.material.emissive = null;
+      }
+    }
+  })
+
   const NUM_YUTS = 4;
   let yuts = [];
+  let yutMeshes = [];
   for (let i = 0; i < NUM_YUTS; i++) {
     yuts.push(useRef());
+    yutMeshes.push(useRef());
   }
 
   function observeThrow(yuts) {
@@ -150,7 +171,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
                 scale={[1, 6.161, 1]}
-              />
+                ref={yutMeshes[index]}
+              >
+              </mesh>
             ) : (
               <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
                 <mesh
@@ -158,6 +181,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
                   receiveShadow
                   geometry={nodesRhino.Cylinder002_1.geometry}
                   material={materialsRhino["Texture wrap.005"]}
+                  ref={yutMeshes[index]}
                 />
                 <mesh
                   castShadow

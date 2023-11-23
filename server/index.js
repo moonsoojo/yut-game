@@ -270,7 +270,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on('yutsAsleep', ({ flag, playerSocketId, throwResult }) => {
-    console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
+    // console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
     // set flag on player
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams[i].players.length; j++) {
