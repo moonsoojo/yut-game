@@ -15,6 +15,7 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwCount: [-1,0,-2.5],
+    currentPlayerName: [-1,0,-3.5],
     yutFloor: [1,-0.5,0.5],
     chat: [-7.5,-0.5,-2],
     actionButtons: {
@@ -124,6 +125,7 @@ export default {
       position: [-8, 7, 5],
       lookAt: [-8, 0, 0]
     },
+    currentPlayerName: [-1,0,-3.5],
     tileRadius: {
       ring: 5,
       shortcut1: 3.5,

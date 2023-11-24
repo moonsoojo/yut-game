@@ -37,6 +37,7 @@ import {
   legalTilesAtom,
   clientPlayerAtom,
   throwInProgressAtom,
+  playersAtom,
   // displayNameAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
@@ -70,6 +71,7 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [throwInProgress] = useAtom(throwInProgressAtom)
+  const [players] = useAtom(playersAtom);
 
   const numTiles = 29;
 
@@ -614,21 +616,25 @@ export default function Experience() {
                 />
               </>
             )}
-              <RigidBody
-                type="fixed"
-                restitution={0.01}
-                position={layout[device].yutFloor}
-                friction={0.9}
-              >
-                <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
-                <mesh onPointerDown={handleYutThrow}>
-                  <boxGeometry args={[5, 1, 5]} />
-                  <meshStandardMaterial 
-                    transparent 
-                    opacity={!throwInProgress ? 0.1 : 0}
-                  />
-                </mesh>
-              </RigidBody>
+            {/* { (gamePhase === "pregame" || gamePhase === "game") &&  <TextButton
+              text={`${players[teams[turn.team].players[turn.players[turn.team]].socketId].displayName}`}
+              position={layout[device].currentPlayerName}
+            /> } */}
+            <RigidBody
+              type="fixed"
+              restitution={0.01}
+              position={layout[device].yutFloor}
+              friction={0.9}
+            >
+              <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
+              <mesh onPointerDown={handleYutThrow}>
+                <boxGeometry args={[5, 1, 5]} />
+                <meshStandardMaterial 
+                  transparent 
+                  opacity={!throwInProgress ? 0.1 : 0}
+                />
+              </mesh>
+            </RigidBody>
           </group>
           {/* pieces section */}
           <group position={[-4, 0, -1]}>
@@ -692,7 +698,7 @@ export default function Experience() {
                 'padding': '10px'
               }}>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
-                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>black:</span> how do i play this game</p>
+                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> banana</p>
               </div>
             </Html>
           </group>

@@ -44,6 +44,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, []);
 
   useEffect(() => {
+    socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < 4; i++) {
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
@@ -58,13 +59,12 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
-    socket.emit("yutsAwake", { flag: false, playerSocketId: clientPlayer.socketId })
   }, [yutThrowValues]);
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       let throwResult = observeThrow(yuts);
-      socket.emit("yutsAsleep", {flag: true, playerSocketId: clientPlayer.socketId, throwResult});
+      socket.emit("yutsAsleep", {playerSocketId: clientPlayer.socketId, throwResult});
     }
   }, [sleepCount])
 
@@ -141,7 +141,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }
 
   function onWakeHandler() {
-    console.log("onWakeHandler")
+    // console.log("onWakeHandler")
     // socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
   }
 
@@ -162,7 +162,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}
-            onWake={onWakeHandler}
+            // onWake={onWakeHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (

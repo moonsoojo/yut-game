@@ -68,6 +68,7 @@ export const displayScoreOptionsAtom = atom(false);
 export const throwInProgressAtom = atom(false)
 export const legalTilesAtom = atom({});
 export const showResetAtom = atom(false);
+export const playersAtom = atom({});
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -85,6 +86,7 @@ export const SocketManager = () => {
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_showReset, setShowReset] = useAtom(showResetAtom);
+  const [_players, setPlayers] = useAtom(playersAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -142,6 +144,9 @@ export const SocketManager = () => {
     function onShowReset(flag) {
       setShowReset(flag);
     }
+    function onPlayers({ players }) {
+      setPlayers(players)
+    }
 
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
@@ -159,6 +164,7 @@ export const SocketManager = () => {
     socket.on("throwInProgress", onThrowInProgress);
     socket.on("legalTiles", onLegalTiles);
     socket.on("showReset", onShowReset);
+    socket.on("players", onPlayers);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
@@ -176,6 +182,7 @@ export const SocketManager = () => {
       socket.off("throwInProgress", onThrowInProgress);
       socket.off("legalTiles", onLegalTiles);
       socket.off("showReset", onShowReset);
+      socket.off("players", onPlayers);
     };
   }, []);
 };
