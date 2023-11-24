@@ -4,7 +4,7 @@ import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
+import { yutTransformsAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 
@@ -23,8 +23,16 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [turn] = useAtom(turnAtom);
   const [throwInProgress] = useAtom(throwInProgressAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
+  const [yutTransforms] = useAtom(yutTransformsAtom)
   const [_hoverThrowText, setHoverThrowText] = useState(false);
 
+  const NUM_YUTS = 4;
+  let yuts = [];
+  let yutMeshes = [];
+  for (let i = 0; i < NUM_YUTS; i++) {
+    yuts.push(useRef());
+    yutMeshes.push(useRef());
+  }
 
   useEffect(() => {
     subscribeKeys(
@@ -38,7 +46,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     );
     socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < yutMeshes.length; i++) {
-      yutMeshes[i].current.material.roughness = 0
+      yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
     }
   }, []);
@@ -62,9 +70,22 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }, [yutThrowValues]);
 
   useEffect(() => {
+    console.log("[Yuts] yutTransforms", yutTransforms)
+    // set yuts to this shape if not in sync
+  }, [yutTransforms])
+
+  useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       let throwResult = observeThrow(yuts);
-      socket.emit("yutsAsleep", {playerSocketId: clientPlayer.socketId, throwResult});
+      let newYutTransforms = []
+      // console.log("[Yuts] yuts", yuts)
+      for (const yut of yuts) {
+        newYutTransforms.push({ 
+          translation: yut.current.translation(),
+          rotation: yut.current.rotation()
+        })
+      }
+      socket.emit("yutsAsleep", { playerSocketId: clientPlayer.socketId, throwResult, newYutTransforms });
     }
   }, [sleepCount])
 
@@ -87,13 +108,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     }
   })
 
-  const NUM_YUTS = 4;
-  let yuts = [];
-  let yutMeshes = [];
-  for (let i = 0; i < NUM_YUTS; i++) {
-    yuts.push(useRef());
-    yutMeshes.push(useRef());
-  }
 
   function observeThrow(yuts) {
     let result = 0

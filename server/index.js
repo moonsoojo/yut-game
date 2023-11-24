@@ -270,7 +270,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("teams", teams);
 
     players[socket.id] = newPlayer
-    io.emit("players", {players})
+    io.emit("players", players)
     // if (countPlayers(teams) >= 2) {
     //   readyToStart = true;
     //   io.to(hostId).emit("readyToStart", true);
@@ -299,8 +299,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  socket.on('yutsAsleep', ({ playerSocketId, throwResult }) => {
-    // console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
+  socket.on('yutsAsleep', ({ playerSocketId, throwResult, newYutTransforms }) => {
+    console.log("[yutsAsleep] playerSocketId", playerSocketId, 
+    "throwResult", throwResult,
+    "newYutTransforms", newYutTransforms)
 
     // set flag on player
     players[playerSocketId].yuts.asleep = true
@@ -316,7 +318,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         throwInProgress = false;
         io.emit("throwInProgress", throwInProgress)
         for (const socketId in players) {
-          players[socketId].sync = true
+          players[socketId].yuts.sync = true
         }
         if (countPlayers2(players) >= 2) {
           readyToStart = true;
@@ -324,6 +326,26 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         }
       }
       io.emit("players", players)
+    } else if (gamePhase === "pregame") {
+      let allYutsAsleep = true;
+      for (const socketId in players) {
+        if (players[socketId].yuts.sync && !players[socketId].yuts.asleep) {
+            allYutsAsleep = false;
+        }
+      }
+      if (allYutsAsleep) {
+        teams[turn.team].moves[throwResult.toString()]++
+        yutTransforms = newYutTransforms
+        io.emit("yutTransforms", yutTransforms)
+        let passTurnResult = passTurnPregame(turn, teams, gamePhase)
+        turn = passTurnResult.turn
+        teams = passTurnResult.teams
+        gamePhase = passTurnResult.gamePhase
+        teams[turn.team].throws++;
+        io.emit("turn", turn)
+        io.emit("teams", teams)
+        io.emit("gamePhase", gamePhase)
+      }
     }
 
     // record result
@@ -404,7 +426,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       turn = passTurn(turn, teams)
     }
     
-    return [turn, teams, gamePhase]
+    return {turn, teams, gamePhase}
   }
 
   socket.on("select", (payload) => {
@@ -582,14 +604,16 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     console.log("user disconnected");
 
     teams = removePlayerFromGame(teams, socket.id)
+    io.emit("teams", teams)
+
     delete players[socket.id];
-    console.log(JSON.stringify(players))
+    io.emit("players", players)
+
     if (Object.keys(players).length < 2) {
       readyToStart = false;
       io.emit("readyToStart", readyToStart)
     }
-    io.emit("teams", teams)
-
+    
     if (countPlayers(teams) > 0) {
       hostId = findRandomPlayer(teams).socketId
     } else {
@@ -602,7 +626,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     // }
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
-      passTurn(turn, teams)
+      turn = passTurn(turn, teams)
+      io.emit("turn", turn)
     }
   });
 });

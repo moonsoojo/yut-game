@@ -8,6 +8,7 @@ current turn
 mobile landscape orientation
 rearrange assets for desktop
 sound effects
+remove "bracket" from legalTiles in server and socketManager
 
 
 interactive throw

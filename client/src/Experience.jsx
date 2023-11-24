@@ -604,7 +604,17 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
-            <Yuts device={device} />
+            { gamePhase !== "lobby" && !players[clientPlayer.socketId].yuts.sync ? 
+              <Text3D 
+                font="./fonts/Luckiest Guy_Regular.json" 
+                size={0.3} 
+                height={0.01}
+                rotation={layout[device].textRotation}
+                position={[-1, 0, 0]}
+              >
+                syncing...
+                <meshStandardMaterial color='yellow' />
+              </Text3D> : <Yuts device={device}/>}
             {/* throw count */}
             {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (
               <>            

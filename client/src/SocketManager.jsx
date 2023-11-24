@@ -69,6 +69,7 @@ export const throwInProgressAtom = atom(false)
 export const legalTilesAtom = atom({});
 export const showResetAtom = atom(false);
 export const playersAtom = atom({});
+export const yutTransformsAtom = atom([]);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -87,6 +88,7 @@ export const SocketManager = () => {
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_showReset, setShowReset] = useAtom(showResetAtom);
   const [_players, setPlayers] = useAtom(playersAtom);
+  const [_yutTransforms, setYutTransforms] = useAtom(yutTransformsAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -144,8 +146,11 @@ export const SocketManager = () => {
     function onShowReset(flag) {
       setShowReset(flag);
     }
-    function onPlayers({ players }) {
+    function onPlayers(players) {
       setPlayers(players)
+    }
+    function onYutTransforms(values) {
+      setYutTransforms(values)
     }
 
     socket.on("connect", onConnect);
@@ -165,6 +170,7 @@ export const SocketManager = () => {
     socket.on("legalTiles", onLegalTiles);
     socket.on("showReset", onShowReset);
     socket.on("players", onPlayers);
+    socket.on("yutTransforms", onYutTransforms);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
@@ -183,6 +189,7 @@ export const SocketManager = () => {
       socket.off("legalTiles", onLegalTiles);
       socket.off("showReset", onShowReset);
       socket.off("players", onPlayers);
+      socket.off("yutTransforms", onYutTransforms);
     };
   }, []);
 };
