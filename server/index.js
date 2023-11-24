@@ -271,52 +271,30 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("gamePhase", gamePhase);
   })
 
-  socket.on("yutsAwake", ({ flag, playerSocketId}) => {
+  socket.on("yutsAwake", ({ playerSocketId }) => {
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams[i].players.length; j++) {
         if (teams[i].players[j].socketId === playerSocketId)
-          teams[i].players[j].yutsAsleep = flag
+          teams[i].players[j].yutsAsleep = false
       }
     }
+    throwInProgress = true;
+    io.emit("throwInProgress", throwInProgress)
     io.emit("teams", teams)
   })
 
-  socket.on('yutsAsleep', ({ flag, playerSocketId, throwResult }) => {
+  socket.on('yutsAsleep', ({ playerSocketId, throwResult }) => {
     // console.log("[yutsAsleep] flag", flag, "playerSocketId", playerSocketId)
+    // why are the throw results different?
+    
     // set flag on player
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams[i].players.length; j++) {
         if (teams[i].players[j].socketId === playerSocketId)
-          teams[i].players[j].yutsAsleep = flag
+          teams[i].players[j].yutsAsleep = true
       }
     }
 
-    // record result
-    if (getPlayerBySocketId(teams, playerSocketId).sync == true) {
-      let recordResult = true;
-      for (let i = 0; i < teams.length; i++) {
-        for (let j = 0; j < teams[i].players.length; j++) {
-          if (teams[i].players[j].sync && teams[i].players[j].yutsAsleep == false) {
-            recordResult = false;
-          }
-        }
-      }
-      if (recordResult == true) {
-        if (gamePhase !== "lobby") {
-          teams[turn.team].moves[throwResult.toString()]++
-          if (gamePhase === "pregame") {
-            [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
-            teams[turn.team].throws++;
-            io.emit("turn", turn)
-            io.emit("gamePhase", gamePhase)
-          } else if (gamePhase === "game" && (throwResult.toString() == '4' || throwResult.toString() == '5')) {
-            teams[turn.team].throws++;
-          }
-        }
-      }
-    }
-
-    // check all players' flags
     let allPlayersYutsAsleep = true;
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams[i].players.length; j++) {
@@ -324,30 +302,76 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
           allPlayersYutsAsleep = false
       }
     }
-    // set sync
     if (allPlayersYutsAsleep) {
-      throwInProgress = false
-      for (let i = 0; i < teams.length; i++) {
-        for (let j = 0; j < teams[i].players.length; j++) {
-          teams[i].players[j].sync = true;
-        }
-      }
-    } else {
-      throwInProgress = true
+      throwInProgress = false;
+      io.emit("throwInProgress", throwInProgress)
+      turn = passTurn(turn, teams)
+      teams[turn.team].throws++
+      io.emit("turn", turn)
     }
-    // ready to start
-    if (gamePhase === "lobby" && countPlayers(teams) >= 2 && !throwInProgress) {
+
+    if (gamePhase === "lobby") {
       readyToStart = true;
-    } else {
-      readyToStart = false;
+      io.to(hostId).emit("readyToStart", readyToStart)
     }
 
+    // record result
+    // if (getPlayerBySocketId(teams, playerSocketId).sync == true) {
+    //   let recordResult = true;
+    //   for (let i = 0; i < teams.length; i++) {
+    //     for (let j = 0; j < teams[i].players.length; j++) {
+    //       if (teams[i].players[j].sync && teams[i].players[j].yutsAsleep == false) {
+    //         recordResult = false;
+    //       }
+    //     }
+    //   }
+    //   if (recordResult == true) {
+    //     if (gamePhase !== "lobby") {
+    //       teams[turn.team].moves[throwResult.toString()]++
+    //       if (gamePhase === "pregame") {
+    //         [turn, teams, gamePhase] = passTurnPregame(turn, teams, gamePhase)
+    //         teams[turn.team].throws++;
+    //         io.emit("turn", turn)
+    //         io.emit("gamePhase", gamePhase)
+    //       } else if (gamePhase === "game" && (throwResult.toString() == '4' || throwResult.toString() == '5')) {
+    //         teams[turn.team].throws++;
+    //       }
+    //     }
+    //   }
+    // }
+
+    // // check all players' flags
+    // let allPlayersYutsAsleep = true;
+    // for (let i = 0; i < teams.length; i++) {
+    //   for (let j = 0; j < teams[i].players.length; j++) {
+    //     if (teams[i].players[j].yutsAsleep === false)
+    //       allPlayersYutsAsleep = false
+    //   }
+    // }
+    // // set sync
+    // if (allPlayersYutsAsleep) {
+    //   throwInProgress = false
+    //   for (let i = 0; i < teams.length; i++) {
+    //     for (let j = 0; j < teams[i].players.length; j++) {
+    //       teams[i].players[j].sync = true;
+    //     }
+    //   }
+    // } else {
+    //   throwInProgress = true
+    // }
+    // // ready to start
+    // if (gamePhase === "lobby" && countPlayers(teams) >= 2 && !throwInProgress) {
+    //   readyToStart = true;
+    // } else {
+    //   readyToStart = false;
+    // }
 
 
 
-    // console.log("[yutsAsleep] throwInProgress", throwInProgress, "teams", teams, "playerSocketId", playerSocketId)
-    io.emit("throwInProgress", throwInProgress)
-    io.to(hostId).emit("readyToStart", readyToStart)
+
+    // // console.log("[yutsAsleep] throwInProgress", throwInProgress, "teams", teams, "playerSocketId", playerSocketId)
+    // io.emit("throwInProgress", throwInProgress)
+    // io.to(hostId).emit("readyToStart", readyToStart)
     io.emit("teams", teams)
   })
 
@@ -431,6 +455,12 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     
     io.emit("throwYuts", yutForceVectors);
     teams[turn.team].throws--;
+    // sync all clients
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = 0; j < teams[i].players.length; j++) {
+        teams[i].players[j].sync = true
+      }
+    }
     io.emit("teams", teams)
   });
 

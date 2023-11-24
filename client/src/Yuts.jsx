@@ -36,8 +36,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
         }
       }
     );
-    socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
-    // console.log('yut rhino material', yutRhino?.current.material)
+    socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < yutMeshes.length; i++) {
       yutMeshes[i].current.material.roughness = 0
       yutMeshes[i].current.material.metalness = 0

@@ -625,7 +625,7 @@ export default function Experience() {
                   <boxGeometry args={[5, 1, 5]} />
                   <meshStandardMaterial 
                     transparent 
-                    opacity={0}
+                    opacity={!throwInProgress ? 0.1 : 0}
                   />
                 </mesh>
               </RigidBody>
