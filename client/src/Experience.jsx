@@ -38,6 +38,7 @@ import {
   clientPlayerAtom,
   throwInProgressAtom,
   playersAtom,
+  yutTransformsAtom
   // displayNameAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
@@ -72,6 +73,7 @@ export default function Experience() {
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [throwInProgress] = useAtom(throwInProgressAtom)
   const [players] = useAtom(playersAtom);
+  const [yutTransforms] = useAtom(yutTransformsAtom);
 
   const numTiles = 29;
 
@@ -97,6 +99,10 @@ export default function Experience() {
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
+
+  useEffect(() => {
+    console.log("[Experience] clientPlayer", clientPlayer)
+  }, [clientPlayer])
 
   function Tiles() {
     let tiles = [];
@@ -604,7 +610,7 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
-            { gamePhase !== "lobby" && !players[clientPlayer.socketId].yuts.sync ? 
+            { !players[clientPlayer.socketId].yuts.sync ? 
               <Text3D 
                 font="./fonts/Luckiest Guy_Regular.json" 
                 size={0.3} 

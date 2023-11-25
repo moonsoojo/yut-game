@@ -69,7 +69,7 @@ export const throwInProgressAtom = atom(false)
 export const legalTilesAtom = atom({});
 export const showResetAtom = atom(false);
 export const playersAtom = atom({});
-export const yutTransformsAtom = atom([]);
+export const yutTransformsAtom = atom(null);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);

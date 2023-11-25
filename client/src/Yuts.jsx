@@ -35,19 +35,19 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }
 
   useEffect(() => {
-    subscribeKeys(
-      (state) => state.throw,
-      (value) => {
-        if (value) {
-          socket.emit("throwInProgress", true);
-          socket.emit("throwYuts");
-        }
-      }
-    );
-    socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
+    // socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < yutMeshes.length; i++) {
       yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
+    }
+    console.log("[yuts] yutTransforms", yutTransforms)
+    if (yutTransforms != null) {
+      for (let i = 0; i < yutTransforms.length; i++) {
+        yuts[i].current.type = 'kinematicPosition';
+        yuts[i].current.setNextKinematicTranslation(yutTransforms[i].translation)
+        yuts[i].current.setNextKinematicRotation(yutTransforms[i].rotation)
+        yuts[i].current.type = 'dynamic';
+      }
     }
   }, []);
 
@@ -69,10 +69,9 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     }
   }, [yutThrowValues]);
 
-  useEffect(() => {
-    console.log("[Yuts] yutTransforms", yutTransforms)
-    // set yuts to this shape if not in sync
-  }, [yutTransforms])
+  // useEffect(() => {
+
+  // }, [yutTransforms])
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
