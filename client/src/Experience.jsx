@@ -74,6 +74,14 @@ export default function Experience() {
   const [throwInProgress] = useAtom(throwInProgressAtom)
   const [players] = useAtom(playersAtom);
   const [yutTransforms] = useAtom(yutTransformsAtom);
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    console.log("[yuts] clientPlayer", clientPlayer)
+    if (clientPlayer != null) {
+      setLoaded(true);
+    }
+  }, [clientPlayer])
 
   const numTiles = 29;
 
@@ -98,6 +106,10 @@ export default function Experience() {
     // if (yutTransforms != null) {
     //   socket.emit("syncYuts", {socketId: clientPlayer.socketId})
     // }
+    console.log("[yuts, first render] clientPlayer", clientPlayer)
+    if (clientPlayer != null) {
+      setLoaded(true);
+    }
   }, [])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -493,8 +505,10 @@ export default function Experience() {
 
   return (
     <>
+      
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
+      
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -528,6 +542,7 @@ export default function Experience() {
       {/* displayName is initialized to an object and doesn't change */}
       {/* { clientPlayer === null ? <LandingPage device={device}/>
       : */}
+      { 
         <Physics debug>
           {/* team 0 */}
           <group
@@ -709,7 +724,7 @@ export default function Experience() {
             </Html>
           </group>
         </Physics> 
-        {/* } */}
+        }
     </>
   );
 }

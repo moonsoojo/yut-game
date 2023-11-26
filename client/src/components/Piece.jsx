@@ -43,7 +43,7 @@ export default function Piece ({
   }
 
   useFrame((state, delta) => {
-    if (gamePhase === "game" && clientPlayer.team == team && isMyTurn(turn, teams, clientPlayer.socketId) && hasMove(teams[team]) && selection == null && !throwInProgress) {
+    if (gamePhase === "game" && clientPlayer.team == team && isMyTurn(turn, teams, clientPlayer.socketId) && hasMove(teams[team]) && selection == null) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)

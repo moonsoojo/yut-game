@@ -45,6 +45,7 @@ export default function YutsNew3({ device = "mobile" }) {
   }, []);
 
   useEffect(() => {
+    // client lags when it emits
     // socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     if (players[clientPlayer.socketId].firstLoad == false) {
       for (let i = 0; i < 4; i++) {
@@ -67,6 +68,7 @@ export default function YutsNew3({ device = "mobile" }) {
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
+      console.log("[yuts] players[clientPlayer.socketId]", players[clientPlayer.socketId])
       if (players[clientPlayer.socketId].firstLoad == false) {
         observeThrow(yuts);
       } else {
@@ -82,7 +84,7 @@ export default function YutsNew3({ device = "mobile" }) {
   }, [throwInProgress]);
 
   useFrame((state, delta) => {
-    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
+    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && !players[clientPlayer.socketId].firstLoad) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
@@ -126,12 +128,9 @@ export default function YutsNew3({ device = "mobile" }) {
     //   result = 4
     // }
     
-    // if (gamePhase === "pregame" || gamePhase === "game") {
-    //   socket.emit("recordThrow", result)
-    //   if (gamePhase === "game" && (result == 4 || result == 5) ) {
-    //     socket.emit("bonusThrow");
-    //   }
-    // }
+    if (gamePhase === "pregame" || gamePhase === "game") {
+      socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
+    }
     
     return result
   }
@@ -147,7 +146,11 @@ export default function YutsNew3({ device = "mobile" }) {
   }
 
   function handleYutThrow() {
-    socket.emit("throwYuts")
+    if (isMyTurn(turn, teams, clientPlayer.socketId) && 
+    players[clientPlayer.socketId].firstLoad == false &&
+    teams[turn.team].throws > 0) {
+      socket.emit("throwYuts")
+    }
   }
 
   return (
@@ -170,9 +173,9 @@ export default function YutsNew3({ device = "mobile" }) {
       {yuts.map((ref, index) => {
         return (
           <RigidBody
-            ref={ref}
-            // type={players[clientPlayer.socketId].yuts.sync ? "dynamic" : "kinematicPosition"}
-            position={[0, 1, -1 + index]} // if not set by socketManager
+            ref={ref}            
+            position={[-1 + 0.5*index, 1, 0]} // if not set by socketManager
+            rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}
             friction={0.6}
