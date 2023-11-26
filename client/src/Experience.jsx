@@ -479,9 +479,9 @@ export default function Experience() {
   function handleYutThrow() {
     // socket.emit("yutsAsleep", {flag: false, playerSocketId: clientPlayer.socketId})
     // if (!throwInProgress && isMyTurn(turn, teams, clientPlayer.socketId) && gamePhase !== "lobby" && teams[turn.team].throws > 0) {
-    if (!throwInProgress) {
+    // if (!throwInProgress) {
       socket.emit("throwYuts");
-    }
+    // }
   }
 
   const newHomePiecePositions = [
@@ -641,21 +641,6 @@ export default function Experience() {
               text={`${players[teams[turn.team].players[turn.players[turn.team]].socketId].displayName}`}
               position={layout[device].currentPlayerName}
             /> } */}
-            <RigidBody
-              type="fixed"
-              restitution={0.01}
-              position={layout[device].yutFloor}
-              friction={0.9}
-            >
-              <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
-              <mesh onPointerDown={handleYutThrow}>
-                <boxGeometry args={[5, 1, 5]} />
-                <meshStandardMaterial 
-                  transparent 
-                  opacity={throwInProgress ? 0.1 : 0}
-                />
-              </mesh>
-            </RigidBody>
           </group>
           {/* pieces section */}
           <group position={[-4, 0, -1]}>

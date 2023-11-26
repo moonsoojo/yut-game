@@ -1,7 +1,20 @@
 yuts out of sync
 - updating throws via socket.emit("teams"...) messes up throws
 - set kinematic translation messes up throws
-
+  - even when all logic is moved to Yuts component
+- moved throw button to within Yuts - synced with different transforms
+// on throw
+// count how many clients to count
+  // if flag is on
+  // don't count
+// if they disconnect
+// decrement
+// flag for when client loads for the first time
+// if flag is true
+// don't record result
+// don't listen to 'yutThrowValues'
+// when yuts are sleep
+// turn flag off
 
 UI v3
 - record all section positions into layout
