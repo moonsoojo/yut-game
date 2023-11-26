@@ -119,13 +119,28 @@ export default {
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   desktop: {
-    center: [-5, 0, 0],
+    center: [-3, 0, -7],
     camera: {
-      zoom: 100,
-      position: [-8, 7, 5],
-      lookAt: [-8, 0, 0]
+      zoom: 40,
+      position: [-3, 25, 6],
+      lookAtOffset: [0, 0, 0]
     },
+    team0: {
+      position: [-7, 0, -14],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    team1: {
+      position: [-3, 0, -14],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    throwCount: [-1,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
+    yutFloor: [1,-0.5,0.5],
+    chat: [-7.5,-0.5,-2],
+    actionButtons: {
+      position: [1.5, 0, 0],
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
     tileRadius: {
       ring: 5,
       shortcut1: 3.5,

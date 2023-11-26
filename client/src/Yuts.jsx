@@ -4,13 +4,13 @@ import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yutTransformsAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
+import { yutTransformsAtom, playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 
 THREE.ColorManagement.legacyMode = false;
 
-export default function YutsNew3({ device = "mobile", ...props }) {
+export default function YutsNew3({ device = "mobile" }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut.glb").nodes;
   const materials = useGLTF("/models/yut.glb").materials;
@@ -25,6 +25,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [yutTransforms] = useAtom(yutTransformsAtom)
   const [_hoverThrowText, setHoverThrowText] = useState(false);
+  const [players] = useAtom(playersAtom);
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -40,19 +41,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
     }
-    console.log("[yuts] yutTransforms", yutTransforms)
-    if (yutTransforms != null) {
-      for (let i = 0; i < yutTransforms.length; i++) {
-        yuts[i].current.type = 'kinematicPosition';
-        yuts[i].current.setNextKinematicTranslation(yutTransforms[i].translation)
-        yuts[i].current.setNextKinematicRotation(yutTransforms[i].rotation)
-        yuts[i].current.type = 'dynamic';
-      }
-    }
   }, []);
 
+
   useEffect(() => {
-    socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
+    // socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < 4; i++) {
       yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
       yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
@@ -69,10 +62,6 @@ export default function YutsNew3({ device = "mobile", ...props }) {
     }
   }, [yutThrowValues]);
 
-  // useEffect(() => {
-
-  // }, [yutTransforms])
-
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       let throwResult = observeThrow(yuts);
@@ -84,7 +73,11 @@ export default function YutsNew3({ device = "mobile", ...props }) {
           rotation: yut.current.rotation()
         })
       }
-      socket.emit("yutsAsleep", { playerSocketId: clientPlayer.socketId, throwResult, newYutTransforms });
+      socket.emit("yutsAsleep", { 
+        playerSocketId: clientPlayer.socketId, 
+        throwResult, 
+        newYutTransforms 
+      });
     }
   }, [sleepCount])
 
@@ -102,11 +95,16 @@ export default function YutsNew3({ device = "mobile", ...props }) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = null;
         yutMeshes[i].current.material.emissiveIntensity = 0
-
       }
     }
+    // if (players[clientPlayer.socketId].yuts.sync == false) {
+    //   for (let i = 0; i < yutTransforms.length; i++) {
+    //     yuts[i].current.setNextKinematicTranslation(yutTransforms[i].translation)
+    //     yuts[i].current.setNextKinematicRotation(yutTransforms[i].rotation)
+    //   }
+    //   socket.emit("sync", {socketId: clientPlayer.socketId})
+    // }
   })
-
 
   function observeThrow(yuts) {
     let result = 0
@@ -150,20 +148,22 @@ export default function YutsNew3({ device = "mobile", ...props }) {
   }
 
   function onSleepHandler() {
+    console.log("onSleepHandler")
     setSleepCount((count) => count+1);
   }
 
   function onWakeHandler() {
-    // console.log("onWakeHandler")
+    console.log("onWakeHandler")
     // socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
   }
 
   return (
-    <group {...props} dispose={null}>
+    <group dispose={null}>
       {yuts.map((ref, index) => {
         return (
           <RigidBody
             ref={ref}
+            // type={players[clientPlayer.socketId].yuts.sync ? "dynamic" : "kinematicPosition"}
             position={[0, 1, index]}
             colliders="hull"
             restitution={0.3}
@@ -175,7 +175,7 @@ export default function YutsNew3({ device = "mobile", ...props }) {
             gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}
-            // onWake={onWakeHandler}
+            onWake={onWakeHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (

@@ -1,7 +1,11 @@
+yuts out of sync
+- updating throws via socket.emit("teams"...) messes up throws
+- set kinematic translation messes up throws
+
+
 UI v3
 - record all section positions into layout
 - indicate "throw for order"
-- yuts out of sync
 fix 'yut' to 'yoot'
 current turn
 - logo

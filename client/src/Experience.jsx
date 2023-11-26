@@ -95,6 +95,9 @@ export default function Experience() {
     // orbit controls override camera's lookAt
     // console.log(orbitControls.current.target)
     // orbitControls.current.target = center.current.position
+    // if (yutTransforms != null) {
+    //   socket.emit("syncYuts", {socketId: clientPlayer.socketId})
+    // }
   }, [])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -475,7 +478,8 @@ export default function Experience() {
 
   function handleYutThrow() {
     // socket.emit("yutsAsleep", {flag: false, playerSocketId: clientPlayer.socketId})
-    if (!throwInProgress && isMyTurn(turn, teams, clientPlayer.socketId) && gamePhase !== "lobby" && teams[turn.team].throws > 0) {
+    // if (!throwInProgress && isMyTurn(turn, teams, clientPlayer.socketId) && gamePhase !== "lobby" && teams[turn.team].throws > 0) {
+    if (!throwInProgress) {
       socket.emit("throwYuts");
     }
   }
@@ -522,9 +526,8 @@ export default function Experience() {
       />
       <ambientLight intensity={0.5} />
       {/* displayName is initialized to an object and doesn't change */}
-      { clientPlayer === null ? <LandingPage device={device}/>
-      :
-      // browser switching sync
+      {/* { clientPlayer === null ? <LandingPage device={device}/>
+      : */}
         <Physics debug>
           {/* team 0 */}
           <group
@@ -610,17 +613,19 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
-            { !players[clientPlayer.socketId].yuts.sync ? 
-              <Text3D 
-                font="./fonts/Luckiest Guy_Regular.json" 
-                size={0.3} 
-                height={0.01}
-                rotation={layout[device].textRotation}
-                position={[-1, 0, 0]}
-              >
-                syncing...
-                <meshStandardMaterial color='yellow' />
-              </Text3D> : <Yuts device={device}/>}
+            { /*players[clientPlayer.socketId].yuts.show ? 
+            <Yuts device={device}/> : 
+            <Text3D 
+              font="./fonts/Luckiest Guy_Regular.json" 
+              size={0.3} 
+              height={0.01}
+              rotation={layout[device].textRotation}
+              position={[-1, 0, 0]}
+            >
+              syncing...
+              <meshStandardMaterial color='yellow' />
+            </Text3D> */}
+            <Yuts device={device}/>
             {/* throw count */}
             {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (
               <>            
@@ -647,7 +652,7 @@ export default function Experience() {
                 <boxGeometry args={[5, 1, 5]} />
                 <meshStandardMaterial 
                   transparent 
-                  opacity={!throwInProgress ? 0.1 : 0}
+                  opacity={throwInProgress ? 0.1 : 0}
                 />
               </mesh>
             </RigidBody>
@@ -718,7 +723,8 @@ export default function Experience() {
               </div>
             </Html>
           </group>
-        </Physics> }
+        </Physics> 
+        {/* } */}
     </>
   );
 }
