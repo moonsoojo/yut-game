@@ -12,6 +12,7 @@ const io = new Server({
       "http://192.168.1.181:5173" // home 2
     ],
   },
+  pingTimeout: 60000
 });
 
 io.listen(3000);
@@ -31,6 +32,7 @@ let players = {}
 let yutTransforms = null
 let clientsToCount = 0;
 let waitingToPass = false;
+let visibility = {}
 
 let test = false;
 if (test) {
@@ -221,7 +223,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   io.emit("gamePhase", gamePhase);
   io.emit("readyToStart", readyToStart);
 
-  // io.emit("yutTransforms", yutTransforms)
+  
 
   let newPlayer = JSON.parse(JSON.stringify(initialState.player));
   let newTeam = assignTeam(teams)
@@ -231,7 +233,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   newPlayer.firstLoad = true
   newPlayer.yutsAsleep = false
   teams[newTeam].players.push(newPlayer)
+  newPlayer.visibility = true
   
+  // io.emit("visibility", visibility);
   io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
   players[socket.id] = newPlayer
   io.emit("players", players)
@@ -245,6 +249,12 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   io.emit("teams", teams);
   io.emit("turn", turn);
+
+  socket.on("visibilityChange", ({flag, socketId}) => {
+    players[socketId].visibility = flag
+    console.log("[visibilityChange] players", JSON.stringify(players))
+    // io.emit("visibility", visibility);
+  })
 
   socket.on("firstLoad", ({socketId}) => {
     console.log("[firstLoad] socketId", socketId)
@@ -580,6 +590,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("teams", teams)
 
     delete players[socket.id];
+    delete visibility[socket.id]
     io.emit("players", players)
 
     if (Object.keys(players).length < 2) {

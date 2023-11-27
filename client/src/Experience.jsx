@@ -38,8 +38,8 @@ import {
   clientPlayerAtom,
   throwInProgressAtom,
   playersAtom,
-  yutTransformsAtom
-  // displayNameAtom
+  yutTransformsAtom,
+  visibilityAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -64,17 +64,27 @@ export default function Experience() {
     }
   });
 
+  const [clientPlayer] = useAtom(clientPlayerAtom)
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      socket.emit("visibilityChange", {flag: false, socketId: clientPlayer.socketId})
+    } else {
+      socket.emit("visibilityChange", {flag: true, socketId: clientPlayer.socketId})
+    }
+  });
+  
+
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [showReset] = useAtom(showResetAtom);
   const [legalTiles] = useAtom(legalTilesAtom);
-  const [clientPlayer] = useAtom(clientPlayerAtom)
   const [throwInProgress] = useAtom(throwInProgressAtom)
   const [players] = useAtom(playersAtom);
   const [yutTransforms] = useAtom(yutTransformsAtom);
   const [loaded, setLoaded] = useState(false)
+  
 
   useEffect(() => {
     console.log("[yuts] clientPlayer", clientPlayer)
@@ -728,3 +738,4 @@ export default function Experience() {
     </>
   );
 }
+

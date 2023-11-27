@@ -70,6 +70,7 @@ export const legalTilesAtom = atom({});
 export const showResetAtom = atom(false);
 export const playersAtom = atom({});
 export const yutTransformsAtom = atom(null);
+export const visibilityAtom = atom({})
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -89,10 +90,15 @@ export const SocketManager = () => {
   const [_showReset, setShowReset] = useAtom(showResetAtom);
   const [_players, setPlayers] = useAtom(playersAtom);
   const [_yutTransforms, setYutTransforms] = useAtom(yutTransformsAtom);
+  const [visibility, setVisibility] = useAtom(visibilityAtom);
 
   useEffect(() => {
     function onConnect() {
       console.log("connected");
+    }
+
+    function onVisibility(value) {
+      setVisibility(value);
     }
 
     function onSetUpPlayer({player}) {
