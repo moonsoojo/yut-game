@@ -29,13 +29,8 @@ root.render(
       // camera={{ fov: 45, near: 0.1, far: 500, position: [6, 6, 6] }}
       // pan: move about a plane
     >
-      {/* <CameraControls /> */}
-      {/* <OrbitControls /> */}
 
       <Experience />
-
-      {/* <Perf /> */}
     </Canvas>
-    {/* <Controls /> */}
   </KeyboardControls>
 );

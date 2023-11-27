@@ -1,8 +1,5 @@
 visibility change
-- if visibility is false
-- don't throw
-- don't record throw
-- q: if you throw and you go out of visibility, will it call server?
-- a: no. 
-- edge case: no screen is visible
-
+first load
+yuts asleep
+visibility
+browser can be connected and not visible, connected and visible, or disconnected

@@ -1,5 +1,5 @@
 
-import { selectionAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, throwInProgressAtom } from "../SocketManager";
+import { selectionAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -22,7 +22,6 @@ export default function Piece ({
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
-  const [throwInProgress] = useAtom(throwInProgressAtom)
   const [clientPlayer] = useAtom(clientPlayerAtom);
 
   const group = useRef();

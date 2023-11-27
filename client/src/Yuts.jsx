@@ -4,7 +4,7 @@ import { useGLTF, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yutTransformsAtom, playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, throwInProgressAtom } from "./SocketManager.jsx";
+import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
@@ -22,10 +22,8 @@ export default function YutsNew3({ device = "mobile" }) {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
-  const [throwInProgress] = useAtom(throwInProgressAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
-  const [yutTransforms] = useAtom(yutTransformsAtom)
-  const [_hoverThrowText, setHoverThrowText] = useState(false);
+  // const [_hoverThrowText, setHoverThrowText] = useState(false);
   const [players] = useAtom(playersAtom);
 
   const NUM_YUTS = 4;
@@ -37,7 +35,6 @@ export default function YutsNew3({ device = "mobile" }) {
   }
 
   useEffect(() => {
-    // socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
     for (let i = 0; i < yutMeshes.length; i++) {
       yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
@@ -45,9 +42,8 @@ export default function YutsNew3({ device = "mobile" }) {
   }, []);
 
   useEffect(() => {
-    // client lags when it emits
-    // socket.emit("yutsAwake", { playerSocketId: clientPlayer.socketId })
-    if (players[clientPlayer.socketId].firstLoad == false) {
+    // client lags if you emit here
+    if (players[clientPlayer.socketId].firstLoad == false && players[clientPlayer.socketId].visibility) {
       for (let i = 0; i < 4; i++) {
         yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
         // console.log("setrotation", yuts[i].current.setRotation)
@@ -68,20 +64,21 @@ export default function YutsNew3({ device = "mobile" }) {
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
-      console.log("[yuts] players[clientPlayer.socketId]", players[clientPlayer.socketId])
-      if (players[clientPlayer.socketId].firstLoad == false) {
+      if (players[clientPlayer.socketId].firstLoad == false && 
+        players[clientPlayer.socketId].visibility &&
+        players[clientPlayer.socketId].participating) {
         observeThrow(yuts);
       } else {
-        socket.emit("firstLoad", {socketId: clientPlayer.socketId})
+        if (players[clientPlayer.socketId].firstLoad == true) {
+          socket.emit("firstLoad", {socketId: clientPlayer.socketId})
+        }
       }
-      // observeThrow(yuts);
-      console.log("[observeThrow] finished")
     }
   }, [sleepCount])
 
-  useEffect(() => {
-    setHoverThrowText(false);
-  }, [throwInProgress]);
+  // useEffect(() => {
+  //   setHoverThrowText(false);
+  // }, [throwInProgress]);
 
   useFrame((state, delta) => {
     if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && !players[clientPlayer.socketId].firstLoad) {
@@ -142,14 +139,47 @@ export default function YutsNew3({ device = "mobile" }) {
 
   function onWakeHandler() {
     console.log("onWakeHandler")
-    // socket.emit("yutsAsleep", { flag: false, playerSocketId: clientPlayer.socketId })
+  }
+
+  function meetsThrowConditions() {
+    //for all players
+    //if their client is visible
+    //yutsAsleep should be true
+    let allYutsAsleep = true;
+    let noClientVisible = true;
+    console.log("[yuts] [meets throw conditions] players", players)
+    for (const socketId of Object.keys(players)) {
+      if (players[socketId].visibility == true) {
+        noClientVisible = false;
+        if (!players[socketId].yutsAsleep) { // false on firstLoad
+          allYutsAsleep = false;
+        }
+      }
+    }
+    if (noClientVisible) {
+      console.log("[yuts][meetsThrowConditions] no client visible")
+    }
+
+    console.log("[yuts] [meets throw conditions] socketId", clientPlayer.socketId, 
+    "allYutsAsleep", allYutsAsleep, "first load", players[clientPlayer.socketId].firstLoad,
+    "team", turn.team, "throws", teams[turn.team].throws)
+
+    if (players[clientPlayer.socketId].firstLoad == false &&
+      teams[turn.team].throws > 0 &&
+      allYutsAsleep
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   function handleYutThrow() {
     if (isMyTurn(turn, teams, clientPlayer.socketId) && 
-    players[clientPlayer.socketId].firstLoad == false &&
-    teams[turn.team].throws > 0) {
-      socket.emit("throwYuts")
+    meetsThrowConditions()) {
+      socket.emit("throwYuts") // on rapid click, it gets clicked twice
+      // disable button after one throw
+      // can it handle two???
     }
   }
 
@@ -166,7 +196,8 @@ export default function YutsNew3({ device = "mobile" }) {
           <boxGeometry args={[5, 1, 5]} />
           <meshStandardMaterial 
             transparent 
-            opacity={throwInProgress ? 0.1 : 0}
+            // opacity={throwInProgress ? 0.1 : 0}
+            opacity={0}
           />
         </mesh>
       </RigidBody>

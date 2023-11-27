@@ -33,13 +33,9 @@ import {
   turnAtom,
   gamePhaseAtom,
   socket,
-  showResetAtom,
   legalTilesAtom,
   clientPlayerAtom,
-  throwInProgressAtom,
   playersAtom,
-  yutTransformsAtom,
-  visibilityAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -48,9 +44,6 @@ import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
 import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
-
-export const bannerAtom = atom("throw the yuts!");
-export const playAtom = atom(false);
 
 let device = window.innerWidth > 1000 ? "desktop" : "mobile";
 
@@ -78,20 +71,16 @@ export default function Experience() {
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [showReset] = useAtom(showResetAtom);
   const [legalTiles] = useAtom(legalTilesAtom);
-  const [throwInProgress] = useAtom(throwInProgressAtom)
   const [players] = useAtom(playersAtom);
-  const [yutTransforms] = useAtom(yutTransformsAtom);
-  const [loaded, setLoaded] = useState(false)
   
 
-  useEffect(() => {
-    console.log("[yuts] clientPlayer", clientPlayer)
-    if (clientPlayer != null) {
-      setLoaded(true);
-    }
-  }, [clientPlayer])
+  // useEffect(() => {
+  //   console.log("[yuts] clientPlayer", clientPlayer)
+  //   if (clientPlayer != null) {
+  //     setLoaded(true);
+  //   }
+  // }, [clientPlayer])
 
   const numTiles = 29;
 
@@ -113,13 +102,10 @@ export default function Experience() {
     // orbit controls override camera's lookAt
     // console.log(orbitControls.current.target)
     // orbitControls.current.target = center.current.position
-    // if (yutTransforms != null) {
-    //   socket.emit("syncYuts", {socketId: clientPlayer.socketId})
+    // console.log("[yuts, first render] clientPlayer", clientPlayer)
+    // if (clientPlayer != null) {
+    //   setLoaded(true);
     // }
-    console.log("[yuts, first render] clientPlayer", clientPlayer)
-    if (clientPlayer != null) {
-      setLoaded(true);
-    }
   }, [])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -300,42 +286,6 @@ export default function Experience() {
     return flag
   }
 
-  function allTeamsHaveMove(teams) {
-    let allTeamsHaveMove = true;
-    for (let i = 0; i < teams.length; i++) {
-      let flag = hasMove(teams[i]);
-      if (!flag) {
-        allTeamsHaveMove = false;
-        break;
-      }
-    }
-    return allTeamsHaveMove
-  }
-
-  function firstTeamToThrow(teams) {
-    let topThrow = 0;
-    let topThrowTeam = -1;
-    let tie = false;
-    for (let i = 0; i < teams.length; i++) {
-      for (let move in teams[i].moves) {
-        if (teams[i].moves[move] > 0) {
-          if (parseInt(move) > topThrow) {
-            topThrow = parseInt(move)
-            topThrowTeam = i
-          } else if (parseInt(move) == topThrow) {
-            tie = true;
-          }
-          break;
-        }
-      }
-    }
-    if (tie) {
-      return -1
-    } else {
-      return topThrowTeam
-    }
-  }
-
   const {
     count,
     size,
@@ -498,14 +448,6 @@ export default function Experience() {
     return prettifiedMoves
   }
 
-  function handleYutThrow() {
-    // socket.emit("yutsAsleep", {flag: false, playerSocketId: clientPlayer.socketId})
-    // if (!throwInProgress && isMyTurn(turn, teams, clientPlayer.socketId) && gamePhase !== "lobby" && teams[turn.team].throws > 0) {
-    // if (!throwInProgress) {
-      socket.emit("throwYuts");
-    // }
-  }
-
   const newHomePiecePositions = [
     [0.5, 0, 0],
     [1.5, 0, 0],
@@ -515,7 +457,6 @@ export default function Experience() {
 
   return (
     <>
-      
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
       
@@ -549,7 +490,6 @@ export default function Experience() {
         castShadow
       />
       <ambientLight intensity={0.5} />
-      {/* displayName is initialized to an object and doesn't change */}
       {/* { clientPlayer === null ? <LandingPage device={device}/>
       : */}
       { 
@@ -573,7 +513,6 @@ export default function Experience() {
             {teams[0].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
-                // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
                 position={[0, 0, 0.5+0.5 * (index)]}
                 color={
                   turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
@@ -599,19 +538,9 @@ export default function Experience() {
             <group position={[2, 0, -0.5]}>
               <HomePieces team={1} scale={0.5}/>
             </group>
-            {/* moves */}
-            {/* {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-              <TextButton
-                text={`Moves: ${
-                  prettifyMoves(teams[1].moves)
-                }`}
-                position={[0, 0, 2]}
-              />
-            } */}
             {teams[1].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
-                // position={[(index <= 2 ? 0 : 2), 0, (index <= 2 ? 0 : -1.5 ) + 3 + 0.5 * (index)]}
                 position={[0, 0, 0.5+0.5 * (index)]}
                 color={
                   turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
@@ -638,18 +567,6 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
-            { /*players[clientPlayer.socketId].yuts.show ? 
-            <Yuts device={device}/> : 
-            <Text3D 
-              font="./fonts/Luckiest Guy_Regular.json" 
-              size={0.3} 
-              height={0.01}
-              rotation={layout[device].textRotation}
-              position={[-1, 0, 0]}
-            >
-              syncing...
-              <meshStandardMaterial color='yellow' />
-            </Text3D> */}
             <Yuts device={device}/>
             {/* throw count */}
             {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (
@@ -662,10 +579,6 @@ export default function Experience() {
                 />
               </>
             )}
-            {/* { (gamePhase === "pregame" || gamePhase === "game") &&  <TextButton
-              text={`${players[teams[turn.team].players[turn.players[turn.team]].socketId].displayName}`}
-              position={layout[device].currentPlayerName}
-            /> } */}
           </group>
           {/* pieces section */}
           <group position={[-4, 0, -1]}>
@@ -722,7 +635,6 @@ export default function Experience() {
           <group position={layout[device].chat}>
             <Html>
               <div style={{
-                // 'border': '1px solid white',
                 'borderRadius': '5px',
                 'height': '105px',
                 'width': '105px',

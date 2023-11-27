@@ -61,44 +61,28 @@ export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
 // info about player
 export const clientPlayerAtom = atom(null);
-// export const clientPlayerAtom = atom(localStorage.getItem('clientPlayer') ?? null);
-// export const displayNameAtom = atom(localStorage.getItem('displayName') ?? null);
-// client UI display
 export const displayScoreOptionsAtom = atom(false);
-export const throwInProgressAtom = atom(false)
 export const legalTilesAtom = atom({});
-export const showResetAtom = atom(false);
 export const playersAtom = atom({});
-export const yutTransformsAtom = atom(null);
-export const visibilityAtom = atom({})
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
-  const [teams, setTeams] = useAtom(teamsAtom);
+  const [_teams, setTeams] = useAtom(teamsAtom);
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  const [_throwInProgress, setThrowInProgress] = useAtom(throwInProgressAtom)
   // info about player
   const [clientPlayer, setClientPlayer] = useAtom(clientPlayerAtom)
-  // const [_displayName, setDisplayName] = useAtom(displayNameAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
-  const [_showReset, setShowReset] = useAtom(showResetAtom);
   const [_players, setPlayers] = useAtom(playersAtom);
-  const [_yutTransforms, setYutTransforms] = useAtom(yutTransformsAtom);
-  const [visibility, setVisibility] = useAtom(visibilityAtom);
 
   useEffect(() => {
     function onConnect() {
       console.log("connected");
-    }
-
-    function onVisibility(value) {
-      setVisibility(value);
     }
 
     function onSetUpPlayer({player}) {
@@ -143,25 +127,14 @@ export const SocketManager = () => {
       setGamePhase(gamePhase)
     }
     //UI events
-    function onThrowInProgress(flag) {
-      setThrowInProgress(flag)
-    }
     function onLegalTiles({ legalTiles }) {
       setLegalTiles(legalTiles)
-    }
-    function onShowReset(flag) {
-      setShowReset(flag);
     }
     function onPlayers(players) {
       setPlayers(players)
     }
-    function onYutTransforms(values) {
-      setYutTransforms(values)
-    }
-
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
-    // socket.on("displayName", onDisplayName)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
@@ -172,15 +145,11 @@ export const SocketManager = () => {
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
-    socket.on("throwInProgress", onThrowInProgress);
     socket.on("legalTiles", onLegalTiles);
-    socket.on("showReset", onShowReset);
     socket.on("players", onPlayers);
-    socket.on("yutTransforms", onYutTransforms);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
-      // socket.off("displayName", onDisplayName)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
@@ -191,11 +160,8 @@ export const SocketManager = () => {
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
-      socket.off("throwInProgress", onThrowInProgress);
       socket.off("legalTiles", onLegalTiles);
-      socket.off("showReset", onShowReset);
       socket.off("players", onPlayers);
-      socket.off("yutTransforms", onYutTransforms);
     };
   }, []);
 };
