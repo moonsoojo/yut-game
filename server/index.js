@@ -217,42 +217,55 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
   }
 
-  if (countPlayers2(players) >= 2) {
-    readyToStart = true;
-    io.to(hostId).emit("readyToStart", readyToStart)
-  }
+  // if (countPlayers2(players) >= 2) {
+  //   readyToStart = true;
+  //   io.to(hostId).emit("readyToStart", readyToStart)
+  // }
 
   io.emit("teams", teams);
   io.emit("turn", turn);
 
+  socket.on("readyToStart", (value) => {
+    readyToStart = value;
+    io.to(hostId).emit("readyToStart", readyToStart)
+  })
+
   socket.on("visibilityChange", ({flag, socketId}) => {
     if (players[socketId] != undefined) {
       players[socketId].visibility = flag
-      if (flag == false) {
-        players[socketId].participating = false
-      }
+      // if (flag == false) {
+      //   players[socketId].participating = false
+      // }
       io.emit("players", players);
-      // console.log("[visibilityChange] players", JSON.stringify(players))
+      console.log("[visibilityChange] players", JSON.stringify(players))
     }
+  })
 
+  socket.on("yutsAsleep", ({flag, socketId}, callback) => {
+    if (players[socketId] != undefined) {
+      players[socketId].yutsAsleep = flag
+    }
+    callback({
+      status: "ok"
+    })
+    io.emit("players", players)
   })
 
   socket.on("firstLoad", ({socketId}) => {
     console.log("[firstLoad] socketId", socketId)
     if (players[socketId].firstLoad) {
       players[socketId].firstLoad = false
-      players[socketId].yutsAsleep = true
     }
-    let allLoaded = true;
-    for (const key of Object.keys(players)) {
-      if (players[key].firstLoad == true) {
-        allLoaded = false;
-      }
-    }
-    if (allLoaded && gamePhase === "lobby") {
-      readyToStart = true;
-      io.to(hostId).emit("readyToStart", readyToStart)
-    }
+    // let allLoaded = true;
+    // for (const key of Object.keys(players)) {
+    //   if (players[key].firstLoad == true) {
+    //     allLoaded = false;
+    //   }
+    // }
+    // if (allLoaded && gamePhase === "lobby") {
+    //   readyToStart = true;
+    //   io.to(hostId).emit("readyToStart", readyToStart)
+    // }
     io.emit("players", players)
   })
 
@@ -324,6 +337,30 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
   let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
+  socket.on("checkThrowEligible", (callback) => {
+    console.log("[checkThrowEligible] players", players);
+    let eligible = true;
+    for (const socketId of Object.keys(players)) {
+      let player = players[socketId]
+      if (player.visibility == true) {
+        if (player.yutsAsleep == true) {
+          // pass
+        } else {
+          eligible = false;
+        }
+      } // in the use effect in Yuts, ask server if client is visible
+    }
+    if (eligible) {
+      callback({
+        status: "ok"
+      })
+    } else {
+      callback({
+        status: "nope"
+      })
+    }
+  })
+
   socket.on("throwYuts", () => {
     teams[turn.team].throws--;
     io.emit("teams", teams)
@@ -337,6 +374,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         // when it comes back, don't count the result
       }
     }
+    io.emit("players", players)
     const yutForceVectors = [];
     // numClientsYutsResting = 0
     // clientYutResults = [];

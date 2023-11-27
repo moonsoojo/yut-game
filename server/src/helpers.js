@@ -6,6 +6,18 @@ export function getCurrentPlayerSocketId (turn, teams) {
   }
 }
 
+export function bothTeamsHavePlayers(teams) {
+  if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+    return true
+  } else {
+    return false;
+  }
+}
+
+export function countPlayers2(players) {
+  return Object.keys(players).length
+}
+
 export function movesIsEmpty (moves) {
   for (const move in moves) {
     if (moves[move] > 0) {
