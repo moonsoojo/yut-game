@@ -43,22 +43,20 @@ export default function YutsNew3({ device = "mobile" }) {
 
   useEffect(() => {
     // client lags if you emit here
-    
-      for (let i = 0; i < 4; i++) {
-        yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
-        // console.log("setrotation", yuts[i].current.setRotation)
-        yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
-        yuts[i].current.applyImpulse({
-          x: 0,
-          y: yutThrowValues[i].yImpulse,
-          z: 0,
-        });
-        yuts[i].current.applyTorqueImpulse({
-          x: yutThrowValues[i].torqueImpulse.x,
-          y: yutThrowValues[i].torqueImpulse.y,
-          z: yutThrowValues[i].torqueImpulse.z,
-        });
-      }
+    for (let i = 0; i < 4; i++) {
+      yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
+      yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
+      yuts[i].current.applyImpulse({
+        x: 0,
+        y: yutThrowValues[i].yImpulse,
+        z: 0,
+      });
+      yuts[i].current.applyTorqueImpulse({
+        x: yutThrowValues[i].torqueImpulse.x,
+        y: yutThrowValues[i].torqueImpulse.y,
+        z: yutThrowValues[i].torqueImpulse.z,
+      });
+    }
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -67,23 +65,13 @@ export default function YutsNew3({ device = "mobile" }) {
         if (response.status === "ok") {
           if (gamePhase === "lobby" && bothTeamsHavePlayers(teams)) {
             socket.emit("readyToStart", true)
+          } else if ((gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId)) {
+            observeThrow();
           }
         }
       })
-      // update state to server
-      // when you throw
-      // make a request to server
-      // if everyone is synced
-      // return a response "ok"
-      // emit another event: "throw"
-      // else
-      // return a response "not ok" and don't do anything
     }
   }, [sleepCount])
-
-  // useEffect(() => {
-  //   setHoverThrowText(false);
-  // }, [throwInProgress]);
 
   useFrame((state, delta) => {
     if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && !players[clientPlayer.socketId].firstLoad) {
@@ -99,7 +87,7 @@ export default function YutsNew3({ device = "mobile" }) {
     }
   })
 
-  function observeThrow(yuts) {
+  function observeThrow() {
     let result = 0
     let countUps = 0
     let backdoUp = false
@@ -146,47 +134,15 @@ export default function YutsNew3({ device = "mobile" }) {
     console.log("onWakeHandler")
   }
 
-  // function meetsThrowConditions() {
-  //   //for all players
-  //   //if their client is visible
-  //   //yutsAsleep should be true
-  //   let allYutsAsleep = true;
-  //   console.log("[yuts] [meets throw conditions] players", players)
-  //   for (const socketId of Object.keys(players)) {
-  //     if (players[socketId].visibility == true) {
-  //       if (!players[socketId].yutsAsleep) { // false on firstLoad
-  //         allYutsAsleep = false;
-  //       }
-  //     }
-  //   }
-
-  //   console.log("[yuts] [meets throw conditions] socketId", clientPlayer.socketId, 
-  //   "allYutsAsleep", allYutsAsleep, 
-  //   "first load", players[clientPlayer.socketId].firstLoad,
-  //   "team", turn.team, 
-  //   "throws", teams[turn.team].throws)
-
-  //   if (teams[turn.team].throws > 0 && allYutsAsleep) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   function handleYutThrow() {
-    // if (isMyTurn(turn, teams, clientPlayer.socketId) && 
-    // meetsThrowConditions()) {
-      // socket.emit("throwYuts") // on rapid click, it gets clicked twice
-      // disable button after one throw
-      // can it handle two???
-    // }
-    socket.emit("checkThrowEligible", (response) => {
-      if (response.status === "ok") {
+      // socket.emit("checkThrowEligible", ({socketId: clientPlayer.socketId}), (response) => {
+      //   if (response.status === "ok") {
+      //     socket.emit("throwYuts");
+      //   }
+      // })
+      if (players[clientPlayer.socketId].yutsAsleep) {
         socket.emit("throwYuts");
-        // works
-        // record throw
       }
-    })
   }
 
   return (

@@ -337,19 +337,20 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
   let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
-  socket.on("checkThrowEligible", (callback) => {
+  socket.on("checkThrowEligible", ({socketId}, callback) => {
     console.log("[checkThrowEligible] players", players);
-    let eligible = true;
-    for (const socketId of Object.keys(players)) {
-      let player = players[socketId]
-      if (player.visibility == true) {
-        if (player.yutsAsleep == true) {
-          // pass
-        } else {
-          eligible = false;
-        }
-      } // in the use effect in Yuts, ask server if client is visible
-    }
+    let eligible = players[socketId].yutsAsleep ? true: false;
+    // if one player can throw, go for it
+    // for (const socketId of Object.keys(players)) {
+    //   let player = players[socketId]
+    //   if (player.visibility == true) {
+    //     if (player.yutsAsleep == true) {
+    //       // pass
+    //     } else {
+    //       eligible = false;
+    //     }
+    //   } // in the use effect in Yuts, ask server if client is visible
+    // }
     if (eligible) {
       callback({
         status: "ok"
@@ -363,35 +364,26 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("throwYuts", () => {
     teams[turn.team].throws--;
-    io.emit("teams", teams)
-    
+    io.emit("teams", teams);
+
+    const yutForceVectors = [];
     for (const socketId of Object.keys(players)) {
       if (players[socketId].visibility) {
-        players[socketId].yutsAsleep = false;
-        players[socketId].participating = true; 
-        // use this flag to not count a throw that's already started
-        // scenario: throw initiated by someone else, and client switched tabs
-        // when it comes back, don't count the result
+        for (let i = 0; i < 4; i++) {
+          yutForceVectors.push({
+            rotation: rotations[i],
+            yImpulse: generateRandomNumberInRange(0.3, 0.02),
+            torqueImpulse: {
+              x: generateRandomNumberInRange(0.0001, 0.0001),
+              y: generateRandomNumberInRange(0.01, 0.01),
+              z: generateRandomNumberInRange(0.0005, 0.005),
+            },
+            positionInHand: positionsInHand[i],
+          });
+        }
+        io.to(socketId).emit("throwYuts", yutForceVectors);
       }
     }
-    io.emit("players", players)
-    const yutForceVectors = [];
-    // numClientsYutsResting = 0
-    // clientYutResults = [];
-    for (let i = 0; i < 4; i++) {
-      yutForceVectors.push({
-        rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(0.3, 0.02),
-        torqueImpulse: {
-          x: generateRandomNumberInRange(0.0001, 0.0001),
-          y: generateRandomNumberInRange(0.01, 0.01),
-          z: generateRandomNumberInRange(0.0005, 0.005),
-        },
-        positionInHand: positionsInHand[i],
-      });
-    }
-    
-    io.emit("throwYuts", yutForceVectors);
   });
 
   socket.on("reset", () => {
@@ -433,38 +425,33 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("recordThrow", ({result, socketId}) => {
     console.log("[recordThrow] result", result, "socketId", socket.id)
+    // what if client switches tabs after throwing?
 
-    players[socketId].yutsAsleep = true;
-    let allYutsAsleep = true;
-    for (const socketId of Object.keys(players)) {
-      if (players[socketId].firstLoad == false && 
-        players[socketId].visibility == true &&
-        players[socketId].participating == true &&
-        players[socketId].yutsAsleep == false) {
-        allYutsAsleep = false;
-      }
-    }
-    console.log("[recordThrow] allYutsAsleep", allYutsAsleep)
-    io.emit("players", players)
-    if (allYutsAsleep) {
-      teams[turn.team].moves[result.toString()]++
-      if (gamePhase === "pregame") {
-        result = passTurnPregame(turn, teams, gamePhase)
-        turn = result.turn
-        teams = result.teams
-        gamePhase = result.gamePhase
+    // let allYutsAsleep = true;
+    // for (const socketId of Object.keys(players)) {
+    //   if (players[socketId].visibility == true &&
+    //     players[socketId].participating == true &&
+    //     players[socketId].yutsAsleep == false) {
+    //     allYutsAsleep = false;
+    //   }
+    // }
+    // console.log("[recordThrow] allYutsAsleep", allYutsAsleep)
+    // io.emit("players", players)
+    teams[turn.team].moves[result.toString()]++
+    if (gamePhase === "pregame") {
+      result = passTurnPregame(turn, teams, gamePhase)
+      turn = result.turn
+      teams = result.teams
+      gamePhase = result.gamePhase
+      teams[turn.team].throws++;
+      io.emit("turn", turn)
+      io.emit("teams", teams)
+      io.emit("gamePhase", gamePhase)
+    } else if (gamePhase === "game") {
+      if (result == 4 || result == 5) {
         teams[turn.team].throws++;
-        io.emit("turn", turn)
-        io.emit("teams", teams)
-        io.emit("gamePhase", gamePhase)
-      } else if (gamePhase === "game") {
-        if (result == 4 || result == 5) {
-          teams[turn.team].throws++;
-        }
-        io.emit("teams", teams)
       }
-      // throwInProgress = false;
-      // io.emit("throwInProgress", false);
+      io.emit("teams", teams)
     }
   })
 

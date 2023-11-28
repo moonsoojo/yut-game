@@ -6,3 +6,6 @@ participating
 
 send all events
 ask server for eligibility
+
+prevent multiple throws
+assumption: client who threw stays connected until yuts rest
