@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { getCurrentPlayerSocketId, bothTeamsHavePlayers, isMyTurn } from "../../server/src/helpers.js";
+import { bothTeamsHavePlayers, isMyTurn } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
 
 THREE.ColorManagement.legacyMode = false;
@@ -61,15 +61,18 @@ export default function YutsNew3({ device = "mobile" }) {
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
-      socket.emit("yutsAsleep", {flag: true, socketId: clientPlayer.socketId}, (response) => {
-        if (response.status === "ok") {
-          if (gamePhase === "lobby" && bothTeamsHavePlayers(teams)) {
-            socket.emit("readyToStart", true)
-          } else if ((gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId)) {
-            observeThrow();
+      // doesn't fire if client is not visible
+      if (players[clientPlayer.socketId].participating) {
+        socket.emit("yutsAsleep", {flag: true, socketId: clientPlayer.socketId}, (response) => {
+          if (response.status === "ok") {
+            if (gamePhase === "lobby" && bothTeamsHavePlayers(teams)) {
+              socket.emit("readyToStart", true)
+            } else if ((gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId)) {
+              observeThrow();
+            }
           }
-        }
-      })
+        })
+      }
     }
   }, [sleepCount])
 
@@ -140,7 +143,9 @@ export default function YutsNew3({ device = "mobile" }) {
       //     socket.emit("throwYuts");
       //   }
       // })
-      if (players[clientPlayer.socketId].yutsAsleep) {
+      if (players[clientPlayer.socketId].yutsAsleep && 
+        teams[turn.team].throws > 0 && 
+        isMyTurn(turn, teams, clientPlayer.socketId)) {
         socket.emit("throwYuts");
       }
   }

@@ -14,6 +14,15 @@ export function bothTeamsHavePlayers(teams) {
   }
 }
 
+export function allPlayersReady(players) {
+  for (const socketId of Object.keys(players)) {
+    if (players[socketId].ready == false) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function countPlayers2(players) {
   return Object.keys(players).length
 }

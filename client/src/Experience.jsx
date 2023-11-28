@@ -42,7 +42,7 @@ import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
-import { getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
+import { isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 
 let device = window.innerWidth > 1000 ? "desktop" : "mobile";
@@ -567,6 +567,16 @@ export default function Experience() {
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
+            {/* {gamePhase === "lobby" && (
+              <TextButton
+                text="ready"
+                position={layout[device].ready}
+                boxWidth={1.2}
+                boxHeight={0.3}
+                color={players[clientPlayer.socketId].ready ? "green" : "white"}
+                handlePointerClick={() => socket.emit("ready", {socketId: clientPlayer.socketId, flag: !players[clientPlayer.socketId].ready})}
+              />
+            )} */}
             <Yuts device={device}/>
             {/* throw count */}
             {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (

@@ -204,7 +204,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   newPlayer.firstLoad = true
   newPlayer.yutsAsleep = false
   newPlayer.visibility = true
-  newPlayer.participating = false
+  newPlayer.participating = true
+  newPlayer.ready = false
   teams[newTeam].players.push(newPlayer)
   io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
   players[socket.id] = newPlayer
@@ -217,31 +218,46 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
   }
 
-  // if (countPlayers2(players) >= 2) {
-  //   readyToStart = true;
-  //   io.to(hostId).emit("readyToStart", readyToStart)
-  // }
+  if (countPlayers2(players) >= 2) {
+    readyToStart = true;
+    io.to(hostId).emit("readyToStart", readyToStart)
+  }
 
   io.emit("teams", teams);
   io.emit("turn", turn);
 
-  socket.on("readyToStart", (value) => {
-    readyToStart = value;
-    io.to(hostId).emit("readyToStart", readyToStart)
-  })
+  // socket.on("ready", ({socketId, flag}) => {
+  //   players[socketId].ready = flag
+  //   let allPlayersReady = true;
+  //   for (const socketId of Object.keys(players)) {
+  //     if (players[socketId].ready == false) {
+  //       allPlayersReady = false;
+  //     }
+  //   }
+  //   if (allPlayersReady) {
+  //     readyToStart = true;
+  //     io.to(hostId).emit("readyToStart", readyToStart)
+  //     for (const socketId of Object.keys(players)) {
+  //       players[socketId].participating = true;
+  //     }
+  //   }
+  //   // do emits after all states have changed
+  //   io.emit("players", players)
+  // })
 
   socket.on("visibilityChange", ({flag, socketId}) => {
     if (players[socketId] != undefined) {
       players[socketId].visibility = flag
-      // if (flag == false) {
-      //   players[socketId].participating = false
-      // }
+      if (flag == false) {
+        players[socketId].participating = false
+      }
       io.emit("players", players);
       console.log("[visibilityChange] players", JSON.stringify(players))
     }
   })
 
   socket.on("yutsAsleep", ({flag, socketId}, callback) => {
+    console.log("[yutsAsleep] flag", flag, "socketId", socketId)
     if (players[socketId] != undefined) {
       players[socketId].yutsAsleep = flag
     }
@@ -369,6 +385,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     const yutForceVectors = [];
     for (const socketId of Object.keys(players)) {
       if (players[socketId].visibility) {
+        players[socketId].participating = true;
         for (let i = 0; i < 4; i++) {
           yutForceVectors.push({
             rotation: rotations[i],
@@ -384,6 +401,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         io.to(socketId).emit("throwYuts", yutForceVectors);
       }
     }
+    io.emit("players", players);
   });
 
   socket.on("reset", () => {
