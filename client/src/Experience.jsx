@@ -498,6 +498,7 @@ export default function Experience() {
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
+            scale={layout[device].team0.scale}
           >
             {/* team name */}
             <TextButton
@@ -507,14 +508,17 @@ export default function Experience() {
               color="red"
             />
             {/* pieces */}
-            <group position={[2, 0, -0.5]}>
+            <group position={layout[device].team0.pieces.position}>
               <HomePieces team={0} scale={0.5}/>
             </group>
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
-                position={[0, 0, 0.5+0.5 * (index)]}
+                position={[
+                  layout[device].team0.names.position[0],
+                  layout[device].team0.names.position[1], 
+                  layout[device].team0.names.position[2] + 0.5 * (index)]}
                 color={
                   turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
                     ? "white"
@@ -527,6 +531,7 @@ export default function Experience() {
           {/* team 1 */}
           <group
             position={layout[device].team1.position}
+            scale={layout[device].team1.scale}
           >
             {/* team name */}
             <TextButton
@@ -536,13 +541,16 @@ export default function Experience() {
               color="turquoise"
             />
             {/* pieces */}
-            <group position={[2, 0, -0.5]}>
+            <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
                 text={value.displayName}
-                position={[0, 0, 0.5+0.5 * (index)]}
+                position={[
+                  layout[device].team1.names.position[0],
+                  layout[device].team1.names.position[1], 
+                  layout[device].team1.names.position[2] + 0.5 * (index)]}
                 color={
                   turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
                     ? "white"
@@ -553,7 +561,7 @@ export default function Experience() {
             ))}
           </group>
           
-          <group position={layout[device].center}>
+          <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
           </group>
           {/* yut section */}
@@ -592,7 +600,7 @@ export default function Experience() {
             )}
           </group>
           {/* pieces section */}
-          <group position={[-4, 0, -1]}>
+          <group position={layout[device].piecesSection}>
           { (gamePhase === "game" && 29 in legalTiles) ?
             <ScoreButton
               position={[0,0,0]}
@@ -643,19 +651,26 @@ export default function Experience() {
           }
           </group>
           {/* chat section */}
-          <group position={layout[device].chat}>
+          <group position={layout[device].chat.position}>
             <Html>
               <div style={{
                 'borderRadius': '5px',
-                'height': '105px',
-                'width': '105px',
-                'padding': '10px'
+                'height': `${(layout[device].chat.boxScale * layout[device].chat.height).toString()}px`,
+                'width': `${(layout[device].chat.boxScale * layout[device].chat.width).toString()}px`,
+                'padding': `${(layout[device].chat.padding).toString()}px`,
+                'fontSize': `${(layout[device].chat.fontScale * layout[device].chat.fontSize).toString()}px`,
+                'backgroundColor': 'grey'
               }}>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
-                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> banana</p>
+                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> you should make a tutorial</p>
               </div>
             </Html>
           </group>
+          {/* menu */}
+          <TextButton
+            text={`Menu`}
+            position={[0, 0, -6]}
+          />
         </Physics> 
         }
     </>

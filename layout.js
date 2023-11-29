@@ -7,18 +7,41 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     team0: {
+      scale: 1,
       position: [-7, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      pieces: {
+        position: [2, 0, -0.5]
+      },
+      names: {
+        position: [0, 0, 0.5]
+      }
     },
     team1: {
+      scale: 1,
       position: [-3, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      pieces: {
+        position: [1.5, 0, -0.5]
+      },
+      names: {
+        position: [0, 0, 0.5]
+      }
     },
     throwCount: [-0.5,0,-3],
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     yutFloor: [1,-0.5,0.5],
-    chat: [-7.5,-0.5,-2],
+    chat: {
+      position: [-7.5,-0.5,-2],
+      boxScale: 1, // decide by ratio of my monitor's width to another one
+      fontScale: 1, // decide by ratio of my monitor's width to another one
+      fontSize: 20,
+      height: 105,
+      width: 105,
+      padding: 10,
+    },
+    piecesSection: [-4, 0, -1],
     actionButtons: {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -117,30 +140,62 @@ export default {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    tiles: {
+      position: [-8, 0, 0],
+      scale: 1
+    },
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   desktop: {
-    center: [-3, 0, -7],
+    center: [-6, 0, -3],
     camera: {
-      zoom: 80,
-      position: [-3, 25, 6],
+      zoom: 140,
+      position: [-6, 25, 2],
       lookAtOffset: [0, 0, 0]
     },
     team0: {
-      position: [-7, 0, -14],
+      scale: 0.7,
+      position: [-13.5, 0, -6],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      pieces: {
+        position: [0.2, 0, 0.2]
+      },
+      names: {
+        position: [0, 0, 1]
+      }
     },
     team1: {
-      position: [-3, 0, -14],
+      scale: 0.7,
+      position: [-13.5, 0, -3.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      pieces: {
+        position: [0.2, 0, 0.1]
+      },
+      names: {
+        position: [0, 0, 1]
+      }
     },
-    throwCount: [-1,0,-2.5],
+    throwCount: [-0.5,0,-3],
+    ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
-    yutFloor: [1,-0.5,0.5],
-    chat: [-7.5,-0.5,-2],
+    yutFloor: [0.1,-0.5,-0.2],
+    chat: {
+      position: [-13.5,-0.5,-1],
+      boxScale: 2, // decide by ratio of my monitor's width to another one
+      fontScale: 2, // decide by ratio of my monitor's width to another one
+      fontSize: 20,
+      height: 150,
+      width: 250,
+      padding: 10,
+    },
+    piecesSection: [-1, 0, -4],
     actionButtons: {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    tiles: {
+      position: [-8, 0, 0],
+      scale: 0.6
     },
     tileRadius: {
       ring: 5,
@@ -244,9 +299,6 @@ export default {
     joinTeam1Banner:  {
       position: [5.5, 0, 2],
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    tiles: {
-      position: [-8, 0, 0],
     },
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },

@@ -1,18 +1,1 @@
-
-
-yuts asleep
-visibility
-participating
-- before start, false
-- users click 'ready' button
-- when everyone is ready, display 'start'
-- on start, set 'participating' to true for all players
-thrown
-// ready
-
-store state in server
-client checks state in server if it's okay to act
-prevent multiple throws
-assumption: client who threw stays connected until yuts rest
-
-if client throws, even if he switches tabs, throw will resume
+organize layout in desktop

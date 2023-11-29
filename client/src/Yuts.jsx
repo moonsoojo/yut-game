@@ -152,9 +152,9 @@ export default function YutsNew3({ device = "mobile" }) {
         position={layout[device].yutFloor}
         friction={0.9}
       >
-        <CuboidCollider args={[2.5, 0.5, 2.5]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[2, 0.5, 2]} restitution={0.2} friction={1} />
         <mesh onPointerDown={handleYutThrow}>
-          <boxGeometry args={[5, 1, 5]} />
+          <boxGeometry args={[4, 1, 4]} />
           <meshStandardMaterial 
             transparent 
             // opacity={throwInProgress ? 0.1 : 0}
