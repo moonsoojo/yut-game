@@ -57,22 +57,21 @@ export default function YutsNew3({ device = "mobile" }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
+    // socket.emit("yutsAsleep", {flag: false, socketId: clientPlayer.socketId}, (response) => {
+    //   // handle response
+    // })
   }, [yutThrowValues]);
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
-      if (players[clientPlayer.socketId].participating) {
-        socket.emit("yutsAsleep", {flag: true, socketId: clientPlayer.socketId}, (response) => {
-          if (response.status === "ok") {
-            if (gamePhase === "lobby" && bothTeamsHavePlayers(teams)) {
-              socket.emit("readyToStart", true)
-            } else if ((gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId)) {
-              observeThrow();
-            }
-          }
-        })
-      }
+      socket.emit("yutsAsleep", {flag: true, socketId: clientPlayer.socketId}, (response) => {
+        if (response.status === "readyToStart") {
+          socket.emit("readyToStart", true)
+        } else if (response.status === "record") {
+          observeThrow();
+        }
+      })
     }
   }, [sleepCount])
 
@@ -121,9 +120,7 @@ export default function YutsNew3({ device = "mobile" }) {
     //   result = 4
     // }
     
-    if (gamePhase === "pregame" || gamePhase === "game") {
-      socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
-    }
+    socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
     
     return result
   }
@@ -138,16 +135,13 @@ export default function YutsNew3({ device = "mobile" }) {
   }
 
   function handleYutThrow() {
-      // socket.emit("checkThrowEligible", ({socketId: clientPlayer.socketId}), (response) => {
-      //   if (response.status === "ok") {
-      //     socket.emit("throwYuts");
-      //   }
-      // })
-      if (players[clientPlayer.socketId].yutsAsleep && 
-        teams[turn.team].throws > 0 && 
-        isMyTurn(turn, teams, clientPlayer.socketId)) {
-        socket.emit("throwYuts");
+    socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId}, (response) => {
+      if (response.status === "ok") {
+        // don't set alert
+      } else {
+        // set an alert: unable to throw
       }
+    });
   }
 
   return (

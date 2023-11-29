@@ -122,7 +122,7 @@ export default {
   desktop: {
     center: [-3, 0, -7],
     camera: {
-      zoom: 40,
+      zoom: 80,
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
     },

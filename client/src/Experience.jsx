@@ -50,6 +50,7 @@ let device = window.innerWidth > 1000 ? "desktop" : "mobile";
 export default function Experience() {
   // window resize
   window.addEventListener("resize", () => {
+    // socket.emit("window dimensions", {width: window.innerWidth, height: window.innerHeight})
     if (window.innerWidth > 1000) {
       device = "desktop";
     } else {
