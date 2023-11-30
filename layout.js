@@ -46,6 +46,10 @@ export default {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    moves: {
+      text: [0,0,2],
+      list: [0,0,2.5]
+    },
     tileRadius: {
       ring: 4,
       shortcut1: 2.7,
@@ -147,15 +151,15 @@ export default {
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   desktop: {
-    center: [-6, 0, -3],
+    center: [-5.3, 0, -2.5],
     camera: {
-      zoom: 140,
-      position: [-6, 25, 2],
+      zoom: 150,
+      position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
     },
     team0: {
       scale: 0.7,
-      position: [-13.5, 0, -6],
+      position: [-13, 0, -5.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.2]
@@ -166,7 +170,7 @@ export default {
     },
     team1: {
       scale: 0.7,
-      position: [-13.5, 0, -3.5],
+      position: [-13, 0, -3.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.1]
@@ -175,23 +179,38 @@ export default {
         position: [0, 0, 1]
       }
     },
-    throwCount: [-0.5,0,-3],
+    throwCount: {
+      position: [-2.7, 0, 0.8],
+      size: 0.21
+    },
+    turn: {
+      position: [-0.8, 0, -1.5],
+      size: 0.24
+    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     yutFloor: [0.1,-0.5,-0.2],
     chat: {
-      position: [-13.5,-0.5,-1],
+      position: [-13,-0.5,-1],
       boxScale: 2, // decide by ratio of my monitor's width to another one
       fontScale: 2, // decide by ratio of my monitor's width to another one
       fontSize: 20,
-      height: 150,
+      height: 125,
       width: 250,
       padding: 10,
     },
-    piecesSection: [-1, 0, -4],
+    piecesSection: {
+      position: [-0.8, 0, -4],
+      scale: 0.8
+    },
     actionButtons: {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    moves: {
+      text: [0,0,2],
+      list: [1.5,0,2],
+      // size: 0.3
     },
     tiles: {
       position: [-8, 0, 0],

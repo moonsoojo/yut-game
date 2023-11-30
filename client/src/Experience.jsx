@@ -288,70 +288,6 @@ export default function Experience() {
   }
 
   const {
-    count,
-    size,
-    radius,
-    branches,
-    spin,
-    randomness,
-    randomnessPower,
-    insideColor,
-    outsideColor,
-    envMapIntensity,
-  } = useControls("galaxy", {
-    count: {
-      value: 100000,
-      min: 0,
-      max: 100000,
-      step: 1000,
-    },
-    size: {
-      value: 0.02,
-      min: 0.01,
-      max: 0.2,
-      step: 0.01,
-    },
-    radius: {
-      value: 1.4,
-      min: 1,
-      max: 50,
-      step: 0.1,
-    },
-    branches: {
-      value: 19,
-      min: 1,
-      max: 20,
-      step: 1,
-    },
-    spin: {
-      value: 4.09,
-      min: -10,
-      max: 10,
-      step: 0.001,
-    },
-    randomness: {
-      value: 0.34,
-      min: 0,
-      max: 2,
-      step: 0.001,
-    },
-    randomnessPower: {
-      value: 4.01,
-      min: 1,
-      max: 10,
-      step: 0.001,
-    },
-    insideColor: {
-      value: "#794c40",
-    },
-    outsideColor: {
-      value: "#1b3984",
-    },
-    envMapIntensity: { value: 1, min: 0, max: 12, step: 1 },
-  });
-
-
-  const {
     turbidity,
     rayleigh,
     mieCoefficient,
@@ -460,7 +396,8 @@ export default function Experience() {
     <>
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
-      
+      <color args={ ['#030202']} attach="background" />
+
       <OrthographicCamera
         makeDefault
         zoom={layout[device].camera.zoom}
@@ -475,26 +412,16 @@ export default function Experience() {
         // lookAt={center.current.position}
       />
       <Leva hidden />
-      <Sky
-        turbidity={turbidity}
-        rayleigh={rayleigh}
-        mieCoefficient={mieCoefficient}
-        mieDirectionalG={mieDirectionalG}
-        elevation={inclination}
-        azimuth={azimuth}
-        distance={distance}
-        sunPosition={sunPosition}
-      />
       <directionalLight
         position={lightPosition}
         intensity={lightIntensity}
         castShadow
       />
-      <ambientLight intensity={0.5} />
+      <group scale={layout[device].scale}>
       {/* { clientPlayer === null ? <LandingPage device={device}/>
       : */}
       { 
-        <Physics debug>
+        <Physics>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -588,67 +515,82 @@ export default function Experience() {
             )} */}
             <Yuts device={device}/>
             {/* throw count */}
-            {(gamePhase === "pregame" || gamePhase === "game") && isMyTurn(turn, teams, clientPlayer.socketId) && (
+            {(gamePhase === "pregame" || gamePhase === "game") && (
               <>            
                 <TextButton
                   text={`Throws: ${
                     teams[turn.team].throws
                   }`}
-                  position={layout[device].throwCount}
+                  position={layout[device].throwCount.position}
+                  size={layout[device].throwCount.size}
+                />
+              </>
+            )}
+            {/* turn */}
+            {(gamePhase === "pregame" || gamePhase === "game") && (
+              <>            
+                <TextButton
+                  text={`TURN: ${
+                    teams[turn.team].players[turn.players[turn.team]]?.displayName
+                  }`}
+                  position={layout[device].turn.position}
+                  size={layout[device].throwCount.size}
                 />
               </>
             )}
           </group>
           {/* pieces section */}
-          <group position={layout[device].piecesSection}>
-          { (gamePhase === "game" && 29 in legalTiles) ?
-            <ScoreButton
-              position={[0,0,0]}
-              device={device}
-            /> :
-            teams[clientPlayer.team].pieces.map((value, index) =>
-              value == null ? (
-                <mesh
-                  position={newHomePiecePositions[index]}
-                  key={index}
-                >
-                  <sphereGeometry args={[0.1]} />
-                </mesh>
-              ) : value === "scored" ? (
-                <mesh
-                  position={newHomePiecePositions[index]}
-                  key={index}
-                >
-                  <sphereGeometry args={[0.1]} />
-                  <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "turquoise"} />
-                </mesh>
-              ) : (
-                <Piece
-                  position={newHomePiecePositions[index]}
-                  rotation={layout[device].homePieces[clientPlayer.team].rotation}
-                  keyName={`count${index}`}
-                  tile={-1}
-                  team={clientPlayer.team}
-                  id={value.id}
-                  key={index}
-                  scale={1}
-                />
+          <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+            { (gamePhase === "game" && 29 in legalTiles) ?
+              <ScoreButton
+                position={[0,0,0]}
+                device={device}
+              /> :
+              teams[clientPlayer.team].pieces.map((value, index) =>
+                value == null ? (
+                  <mesh
+                    position={newHomePiecePositions[index]}
+                    key={index}
+                  >
+                    <sphereGeometry args={[0.1]} />
+                  </mesh>
+                ) : value === "scored" ? (
+                  <mesh
+                    position={newHomePiecePositions[index]}
+                    key={index}
+                  >
+                    <sphereGeometry args={[0.1]} />
+                    <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "turquoise"} />
+                  </mesh>
+                ) : (
+                  <Piece
+                    position={newHomePiecePositions[index]}
+                    rotation={layout[device].homePieces[clientPlayer.team].rotation}
+                    keyName={`count${index}`}
+                    tile={-1}
+                    team={clientPlayer.team}
+                    id={value.id}
+                    key={index}
+                    scale={1}
+                  />
+                )
               )
-            )
-          }
-          {/* moves */}
-          {(gamePhase === "pregame" || gamePhase !== "lobby") && 
-            <>
-              <TextButton
-                text={`Moves`}
-                position={[0, 0, 2]}
-              />
-              <TextButton
-                text={`${prettifyMoves(teams[clientPlayer.team].moves)}`}
-                position={[0, 0, 2.5]}
-              />
-            </>
-          }
+            }
+            {/* moves */}
+            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+              <>
+                <TextButton
+                  text={`Moves:`}
+                  position={layout[device].moves.text}
+                  // size={layout[device].moves.size}
+                />
+                <TextButton
+                  text={`${prettifyMoves(teams[clientPlayer.team].moves)}`}
+                  position={layout[device].moves.list}
+                  // size={layout[device].moves.size}
+                />
+              </>
+            }
           </group>
           {/* chat section */}
           <group position={layout[device].chat.position}>
@@ -659,7 +601,7 @@ export default function Experience() {
                 'width': `${(layout[device].chat.boxScale * layout[device].chat.width).toString()}px`,
                 'padding': `${(layout[device].chat.padding).toString()}px`,
                 'fontSize': `${(layout[device].chat.fontScale * layout[device].chat.fontSize).toString()}px`,
-                'backgroundColor': 'grey'
+                'background': 'rgba(128, 128, 128, 0.1)'
               }}>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> you should make a tutorial</p>
@@ -673,6 +615,7 @@ export default function Experience() {
           />
         </Physics> 
         }
+      </group>
     </>
   );
 }
