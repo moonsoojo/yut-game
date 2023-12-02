@@ -34,8 +34,6 @@ export default function YutsNew3({ device = "mobile" }) {
   }
 
   useEffect(() => {
-    
-    console.log(yutMeshes[0].current.material)
     for (let i = 0; i < yutMeshes.length; i++) {
       yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
@@ -74,8 +72,6 @@ export default function YutsNew3({ device = "mobile" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    
-    console.log(yutMeshes[0].current.material)
     if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
