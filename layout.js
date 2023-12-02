@@ -28,10 +28,21 @@ export default {
         position: [0, 0, 0.5]
       }
     },
-    throwCount: [-0.5,0,-3],
+    throwCount: {
+      position: [-1.2,0,-2.3],
+      size: 0.24
+    },
+    turn: {
+      position: [-1.2, 0, -1.5],
+      size: 0.24
+    },
+    gamePhase: {
+      position: [-1.2, 0, -1.9],
+      size: 0.24
+    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
-    yutFloor: [1,-0.5,0.5],
+    yutFloor: [0.1,-0.5,-0.2],
     chat: {
       position: [-7.5,-0.5,-2],
       boxScale: 1, // decide by ratio of my monitor's width to another one
@@ -41,10 +52,16 @@ export default {
       width: 105,
       padding: 10,
     },
-    piecesSection: [-4, 0, -1],
+    piecesSection: {
+      position: [-4, 0, -1],
+      scale: 1
+    },
     actionButtons: {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+    },
+    menu: {
+      position: [-7.3,-0.5,-2.3],
     },
     moves: {
       text: [0,0,2],
@@ -55,6 +72,7 @@ export default {
       shortcut1: 2.7,
       shortcut2: 1.4
     },
+    tilePieceScale: 1,
     star: {
       scale: 2,
       rocketScale: 0.4,
@@ -211,6 +229,9 @@ export default {
       position: [1.5, 0, 0],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    menu: {
+      position: [0, 0, -6]
+    },
     moves: {
       text: [0,0,2],
       list: [1.5,0,2],
@@ -225,6 +246,7 @@ export default {
       shortcut1: 3.5,
       shortcut2: 1.7
     },
+    tilePieceScale: 1.5,
     star: {
       scale: 1,
       rocketScale: 0.6,

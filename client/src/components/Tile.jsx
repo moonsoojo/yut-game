@@ -5,8 +5,9 @@ import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
 import { isMyTurn } from "../../../server/src/helpers";
+import layout from "../../../layout";
 
-export default function Tile({ tile, wrapperRadius }) {
+export default function Tile({ tile, wrapperRadius, device }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
   const [tiles] = useAtom(tilesAtom);
@@ -101,7 +102,9 @@ export default function Tile({ tile, wrapperRadius }) {
           ref={wrapper}
         />
       </mesh>
-      <Pieces />
+      <group scale={layout[device].tilePieceScale}>
+        <Pieces />
+      </group>
       { selection != null && tile in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
     </group>
   );

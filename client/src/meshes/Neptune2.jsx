@@ -7,7 +7,7 @@ import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";
 
-export default function Neptune2({ position, tile }) {
+export default function Neptune2({ position, tile, device }) {
   const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
   const neptune = useRef();
 
@@ -121,7 +121,7 @@ export default function Neptune2({ position, tile }) {
         rotation={[Math.PI/2,0,0]}
         scale={0.9}
       />
-      <Tile tile={tile} wrapperRadius={0.4} />
+      <Tile tile={tile} wrapperRadius={0.4} device={device}/>
     </group>
   );
 }

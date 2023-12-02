@@ -14,7 +14,7 @@ export default function Piece ({
   tile,
   team,
   id,
-  scale
+  scale,
 }) {
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
@@ -39,6 +39,7 @@ export default function Piece ({
         scale *= 1.5
       }
     }
+
   }
 
   useFrame((state, delta) => {

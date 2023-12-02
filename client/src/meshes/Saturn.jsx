@@ -7,7 +7,7 @@ import { useLoader } from "@react-three/fiber";
 import HelperArrow from "./HelperArrow";
 import Tile from "../components/Tile";
 
-export default function Saturn({ position, tile }) {
+export default function Saturn({ position, tile, device }) {
   const { nodes, materials } = useGLTF("/models/Saturn 3.glb");
   const satelliteTexture1 = useLoader(
     TextureLoader,
@@ -160,7 +160,7 @@ export default function Saturn({ position, tile }) {
           </group>
         </mesh>
       </group>
-      <Tile tile={tile} wrapperRadius={0.5} />
+      <Tile tile={tile} wrapperRadius={0.5} device={device}/>
       <HelperArrow
         position={[0, 0, 0.9]}
         rotation={[Math.PI/2, 0, 0]}

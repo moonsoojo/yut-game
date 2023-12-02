@@ -5,7 +5,7 @@ import React from "react";
 import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";
 
-export default function Earth({ position, tile }) {
+export default function Earth({ position, tile, device }) {
   const { nodes, materials } = useGLTF("/models/earth-round.glb");
 
   const earth = useRef();
@@ -56,7 +56,7 @@ export default function Earth({ position, tile }) {
           />
         </mesh>
       </group>
-      <Tile tile={tile} wrapperRadius={0.5} />
+      <Tile tile={tile} wrapperRadius={0.5} device={device}/>
       <HelperArrow
         position={[1, 0, 0]}
         rotation={[0,0,0]}

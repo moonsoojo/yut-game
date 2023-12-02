@@ -127,19 +127,20 @@ export default function Experience() {
         Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
       if (i == 0) {
-        tiles.push(<Earth position={position} tile={i} key={i} />);
+        tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
       } else if (i == 5) {
         tiles.push(
           <Mars
             position={position}
             tile={i}
             key={i}
+            device={device}
           />
         );
       } else if (i == 10) {
-        tiles.push(<Saturn position={position} tile={i} key={i} />);
+        tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
       } else if (i == 15) {
-        tiles.push(<Neptune2 position={position} tile={i} key={i} />);
+        tiles.push(<Neptune2 position={position} tile={i} key={i} device={device}/>);
       } else {
         tiles.push(
           <Star
@@ -186,6 +187,7 @@ export default function Experience() {
             tile={indexShortcut1}
             key={i + 30}
             scale={layout[device].star.scale}
+            device={device}
           />
         );
         let position2 = [
@@ -201,6 +203,7 @@ export default function Experience() {
             tile={indexShortcut2}
             key={i + 41}
             scale={layout[device].star.scale}
+            device={device}
           />
         );
       }
@@ -213,6 +216,7 @@ export default function Experience() {
         // scale={0.4}
         key={100}
         tile={22}
+        device={device}
       />
     );
     return tiles;
@@ -421,7 +425,7 @@ export default function Experience() {
       {/* { clientPlayer === null ? <LandingPage device={device}/>
       : */}
       { 
-        <Physics>
+        <Physics debug>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -441,10 +445,10 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, 
-                visible: ${players[value.socketId].visibility}, 
-                yutsAsleep: ${players[value.socketId].yutsAsleep},
-                thrown: ${players[value.socketId].thrown}`}
+                text={`${value.displayName}, ${device === "desktop" ? 
+                  `visible: ${players[value.socketId].visibility}, 
+                  yutsAsleep: ${players[value.socketId].yutsAsleep},
+                  thrown: ${players[value.socketId].thrown}`: ''}`}
                 position={[
                   layout[device].team0.names.position[0],
                   layout[device].team0.names.position[1], 
@@ -476,10 +480,10 @@ export default function Experience() {
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, 
-                  visible: ${players[value.socketId].visibility}, 
+                text={`${value.displayName}, ${device === "desktop" ? 
+                  `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
-                  thrown: ${players[value.socketId].thrown}`}
+                  thrown: ${players[value.socketId].thrown}`: ''}`}
                 position={[
                   layout[device].team1.names.position[0],
                   layout[device].team1.names.position[1], 
@@ -510,7 +514,7 @@ export default function Experience() {
               />
             )}
             <TextButton
-              text={`Game Phase: ${gamePhase}`}
+              text={`Phase: ${gamePhase}`}
               position={layout[device].gamePhase.position}
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
@@ -624,7 +628,7 @@ export default function Experience() {
           {/* menu */}
           <TextButton
             text={`Menu`}
-            position={[0, 0, -6]}
+            position={layout[device].menu.position}
           />
         </Physics> 
         }

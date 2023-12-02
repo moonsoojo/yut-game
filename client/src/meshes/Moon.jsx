@@ -6,7 +6,7 @@ import HelperArrow from "./HelperArrow";
 import { useRef } from "react";
 import { useAtom } from "jotai";
 
-export default function Moon({ position, tile, scale = 1 }) {
+export default function Moon({ position, tile, scale = 1, device }) {
   const props = useTexture({
     map: "textures/moon/moon-color.jpg",
   });
@@ -63,7 +63,7 @@ export default function Moon({ position, tile, scale = 1 }) {
         <sphereGeometry args={[0.6, 32, 32]} />
         <meshStandardMaterial map={props.map} />
       </mesh>
-      <Tile tile={tile} wrapperRadius={0.6} />
+      <Tile tile={tile} wrapperRadius={0.6} device={device}/>
       <HelperArrow
         position={[0, 0, 1]}
         rotation={[Math.PI/2, 0, 0]}
