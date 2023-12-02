@@ -201,11 +201,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   newPlayer.team = newTeam
   newPlayer.displayName = makeId(5)
   newPlayer.socketId = socket.id
-  newPlayer.firstLoad = true
   newPlayer.yutsAsleep = false
   newPlayer.visibility = true
-  newPlayer.participating = true
-  newPlayer.ready = false
+  // newPlayer.participating = true
+  // newPlayer.ready = false
   newPlayer.thrown = false
   teams[newTeam].players.push(newPlayer)
   io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
@@ -255,15 +254,12 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         players[socketId].participating = false
       }
       io.emit("players", players);
-      console.log("[visibilityChange] flag", flag, "socketId", socketId)
     }
   })
 
   socket.on("yutsAsleep", ({flag, socketId}, callback) => {
     console.log("[yutsAsleep] flag", flag, "socketId", socketId)
-    if (players[socketId] != undefined) {
-      players[socketId].yutsAsleep = flag
-    }
+    players[socketId].yutsAsleep = flag
     if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0)) {
       callback({
         status: "readyToStart"
@@ -284,23 +280,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("window dimensions", ({width, height}) => {
     console.log("width", width, "height", height)
-  })
-  socket.on("firstLoad", ({socketId}) => {
-    console.log("[firstLoad] socketId", socketId)
-    if (players[socketId].firstLoad) {
-      players[socketId].firstLoad = false
-    }
-    // let allLoaded = true;
-    // for (const key of Object.keys(players)) {
-    //   if (players[key].firstLoad == true) {
-    //     allLoaded = false;
-    //   }
-    // }
-    // if (allLoaded && gamePhase === "lobby") {
-    //   readyToStart = true;
-    //   io.to(hostId).emit("readyToStart", readyToStart)
-    // }
-    io.emit("players", players)
   })
 
   socket.on("startGame", () => {
@@ -399,6 +378,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("throwYuts", ({socketIdThrower}) => {
+    console.log("throwYuts")
     if (players[socketIdThrower].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socketIdThrower) {
@@ -469,6 +449,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("recordThrow", ({result, socketId}) => {
     console.log("[recordThrow] result", result, "socketId", socket.id)
+    players[socketId].thrown = false;
     
     if (gamePhase === "pregame") {
       teams[turn.team].moves[result.toString()]++
@@ -476,7 +457,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       turn = result.turn
       teams = result.teams
       gamePhase = result.gamePhase
-      players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
       teams[turn.team].throws++;
       io.emit("turn", turn)
       io.emit("teams", teams)

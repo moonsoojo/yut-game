@@ -59,14 +59,18 @@ export default function Piece ({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity += 0.4;
-    document.body.style.cursor = "pointer";
+    if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+      wrapperMat.current.opacity += 0.4;
+      document.body.style.cursor = "pointer";
+    }
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity -= 0.4;
-    document.body.style.cursor = "default";
+    if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+      wrapperMat.current.opacity -= 0.4;
+      document.body.style.cursor = "default";
+    }
   }
 
   function handlePointerDown(event) {

@@ -187,6 +187,10 @@ export default {
       position: [-0.8, 0, -1.5],
       size: 0.24
     },
+    gamePhase: {
+      position: [-0.8, 0, -1.9],
+      size: 0.24
+    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     yutFloor: [0.1,-0.5,-0.2],

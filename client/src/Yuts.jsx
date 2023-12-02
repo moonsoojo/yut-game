@@ -23,7 +23,6 @@ export default function YutsNew3({ device = "mobile" }) {
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
-  // const [_hoverThrowText, setHoverThrowText] = useState(false);
   const [players] = useAtom(playersAtom);
 
   const NUM_YUTS = 4;
@@ -35,6 +34,8 @@ export default function YutsNew3({ device = "mobile" }) {
   }
 
   useEffect(() => {
+    
+    console.log(yutMeshes[0].current.material)
     for (let i = 0; i < yutMeshes.length; i++) {
       yutMeshes[i].current.material.roughness = 0.5
       yutMeshes[i].current.material.metalness = 0
@@ -57,9 +58,6 @@ export default function YutsNew3({ device = "mobile" }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
-    // socket.emit("yutsAsleep", {flag: false, socketId: clientPlayer.socketId}, (response) => {
-    //   // handle response
-    // })
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -76,14 +74,15 @@ export default function YutsNew3({ device = "mobile" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && !players[clientPlayer.socketId].firstLoad) {
+    
+    console.log(yutMeshes[0].current.material)
+    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {
-        yutMeshes[i].current.material.emissive = null;
         yutMeshes[i].current.material.emissiveIntensity = 0
       }
     }

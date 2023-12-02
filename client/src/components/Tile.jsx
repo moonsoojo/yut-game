@@ -1,18 +1,22 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { selectionAtom, tilesAtom, socket, legalTilesAtom } from "../SocketManager";
+import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientPlayerAtom } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
+import { isMyTurn } from "../../../server/src/helpers";
 
 export default function Tile({ tile, wrapperRadius }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
   const [tiles] = useAtom(tilesAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
+  const [turn] = useAtom(turnAtom)
+  const [teams] = useAtom(teamsAtom)
+  const [clientPlayer] = useAtom(clientPlayerAtom)
 
   function handlePointerEnter(event) {
-    if (selection != null) {
+    if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
       wrapper.current.opacity += 0.2;
@@ -20,7 +24,7 @@ export default function Tile({ tile, wrapperRadius }) {
   }
 
   function handlePointerLeave(event) {
-    if (selection != null) {
+    if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
       event.stopPropagation();
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
@@ -30,11 +34,13 @@ export default function Tile({ tile, wrapperRadius }) {
   function handlePointerDown(event) {
     if (selection != null) {
       event.stopPropagation();
-      if (selection.tile != tile && tile in legalTiles) {
-        socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
+      if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+        if (selection.tile != tile && tile in legalTiles) {
+          socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
+        }
+        socket.emit("legalTiles", {legalTiles: {}})
+        socket.emit("select", null);
       }
-      socket.emit("legalTiles", {legalTiles: {}})
-      socket.emit("select", null);
     }
   }
 

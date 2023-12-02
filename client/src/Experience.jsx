@@ -441,7 +441,10 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={value.displayName}
+                text={`${value.displayName}, 
+                visible: ${players[value.socketId].visibility}, 
+                yutsAsleep: ${players[value.socketId].yutsAsleep},
+                thrown: ${players[value.socketId].thrown}`}
                 position={[
                   layout[device].team0.names.position[0],
                   layout[device].team0.names.position[1], 
@@ -473,7 +476,10 @@ export default function Experience() {
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
-                text={value.displayName}
+                text={`${value.displayName}, 
+                  visible: ${players[value.socketId].visibility}, 
+                  yutsAsleep: ${players[value.socketId].yutsAsleep},
+                  thrown: ${players[value.socketId].thrown}`}
                 position={[
                   layout[device].team1.names.position[0],
                   layout[device].team1.names.position[1], 
@@ -497,12 +503,18 @@ export default function Experience() {
             {readyToStart && gamePhase === "lobby" && (
               <TextButton
                 text="Start"
-                position={layout[device].throwCount}
+                position={layout[device].turn.position}
                 boxWidth={1.2}
                 boxHeight={0.3}
                 handlePointerClick={() => socket.emit("startGame")}
               />
             )}
+            <TextButton
+              text={`Game Phase: ${gamePhase}`}
+              position={layout[device].gamePhase.position}
+              handlePointerClick={() => socket.emit("startGame")}
+              size={layout[device].gamePhase.size}
+            />
             {/* {gamePhase === "lobby" && (
               <TextButton
                 text="ready"
@@ -535,6 +547,7 @@ export default function Experience() {
                   }`}
                   position={layout[device].turn.position}
                   size={layout[device].throwCount.size}
+                  color={turn.team == 0 ? "red" : "turquoise"}
                 />
               </>
             )}
@@ -604,7 +617,7 @@ export default function Experience() {
                 'background': 'rgba(128, 128, 128, 0.1)'
               }}>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
-                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> you should make a tutorial</p>
+                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> banana</p>
               </div>
             </Html>
           </group>
