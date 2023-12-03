@@ -9,7 +9,7 @@ import TextButton from "./components/TextButton";
 import layout from "../../layout";
 
 const SCORE_TILE = 29
-export default function ScoreButton({ position, device='mobile' }) {
+export default function ScoreButton({ position, device='portrait' }) {
   const [selection] = useAtom(selectionAtom);
   const [hoverScoreText, setHoverScoreText] = useState(false);
   const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)

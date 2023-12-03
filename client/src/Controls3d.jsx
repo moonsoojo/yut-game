@@ -18,7 +18,7 @@ import { useAtom } from "jotai";
 export default function Controls3d({
   tileRadius,
   numStars,
-  device = "mobile",
+  device = "portrait",
 }) {
   const [showControls, setShowControls] = useState(false);
   const [hoverControls, setHoverControls] = useState(false);

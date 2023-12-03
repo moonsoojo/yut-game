@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { useAtom } from "jotai";
 import { socket, teamsAtom } from "../SocketManager";
 
-export default function LandingPage({ device="mobile" }) {
+export default function LandingPage({ device="portrait" }) {
 
   const [displayName, setDisplayName] = useState('')
   const [alert, setAlert] = useState('');

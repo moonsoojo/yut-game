@@ -11,7 +11,7 @@ import layout from "../../layout.js";
 
 THREE.ColorManagement.legacyMode = false;
 
-export default function YutsNew3({ device = "mobile" }) {
+export default function YutsNew3({ device = "portrait" }) {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut.glb").nodes;
   const materials = useGLTF("/models/yut.glb").materials;

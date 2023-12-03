@@ -1,8 +1,10 @@
 export default {
-  mobile: {
+  portrait: {
     center: [-3, 0, -7],
     camera: {
-      zoom: 40,
+      // zoom: 40,
+      zoomMin: 40,
+      zoomMax: 50,
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
     },
@@ -48,9 +50,13 @@ export default {
       boxScale: 1, // decide by ratio of my monitor's width to another one
       fontScale: 1, // decide by ratio of my monitor's width to another one
       fontSize: 20,
+      fontSizeMin: 20,
+      fontSizeMax: 25,
       height: 105,
       width: 105,
       padding: 10,
+      paddingMin: 5,
+      paddingMax: 10,
     },
     piecesSection: {
       position: [-4, 0, -1],
@@ -168,10 +174,12 @@ export default {
     },
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
-  desktop: {
+  landscape: {
     center: [-5.3, 0, -2.5],
     camera: {
-      zoom: 150,
+      // zoom: 150,
+      zoomMin: 35,
+      zoomMax: 150,
       position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
     },
@@ -217,9 +225,17 @@ export default {
       boxScale: 2, // decide by ratio of my monitor's width to another one
       fontScale: 2, // decide by ratio of my monitor's width to another one
       fontSize: 20,
+      fontSizeMin: 12,
+      fontSizeMax: 40,
       height: 125,
+      heightMin: 70,
+      heightMax: 250,
       width: 250,
+      widthMin: 140,
+      widthMax: 250,
       padding: 10,
+      paddingMin: 5,
+      paddingMax: 10,
     },
     piecesSection: {
       position: [-0.8, 0, -4],

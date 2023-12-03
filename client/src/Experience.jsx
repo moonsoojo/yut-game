@@ -45,18 +45,107 @@ import Piece from "./components/Piece.jsx";
 import { isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 
-let device = window.innerWidth > 1000 ? "desktop" : "mobile";
+
+let mediaMax = 2560;
+let mediaCutoff = 650;
+// zoom is set to 150 on 2560 W
+// 35 on 650 W
+// zoomMin + (zoomMax - zoomMin) * (width - mediaMin) / (mediaMax - mediaMin)
+// scale text
+let device = window.innerWidth >= mediaCutoff ? "landscape" : "portrait";
 
 export default function Experience() {
   // window resize
   window.addEventListener("resize", () => {
-    // socket.emit("window dimensions", {width: window.innerWidth, height: window.innerHeight})
-    if (window.innerWidth > 1000) {
-      device = "desktop";
+    socket.emit("window dimensions", {width: window.innerWidth, height: window.innerHeight})
+    if (window.innerWidth >= mediaCutoff) {
+      device = "landscape";
     } else {
-      device = "mobile";
+      device = "portrait";
     }
   });
+
+  let zoom;
+  let chatFontSize;
+  let chatboxPadding;
+  let chatboxHeight;
+  let chatboxWidth;
+  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
+    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
+  }
+  if (device === "landscape") {
+    zoom = calcScale(
+      layout[device].camera.zoomMin,
+      layout[device].camera.zoomMax,
+      mediaCutoff,
+      mediaMax,
+      window.innerWidth
+    )
+    chatFontSize = calcScale(
+      layout[device].chat.fontSizeMin,
+      layout[device].chat.fontSizeMax,
+      mediaCutoff,
+      mediaMax,
+      window.innerWidth
+    )
+    chatboxPadding = calcScale(
+      layout[device].chat.paddingMin,
+      layout[device].chat.paddingMax,
+      mediaCutoff,
+      mediaMax,
+      window.innerWidth
+    )
+    chatboxHeight = calcScale(
+      layout[device].chat.heightMin,
+      layout[device].chat.heightMax,
+      mediaCutoff,
+      mediaMax,
+      window.innerWidth
+    )
+    chatboxWidth = calcScale(
+      layout[device].chat.widthMin,
+      layout[device].chat.widthMax,
+      mediaCutoff,
+      mediaMax,
+      window.innerWidth
+    )
+  } else {
+    zoom = calcScale(
+      layout[device].camera.zoomMin,
+      layout[device].camera.zoomMax,
+      0,
+      mediaCutoff,
+      window.innerWidth
+    )
+    chatFontSize = calcScale(
+      layout[device].chat.fontSizeMin,
+      layout[device].chat.fontSizeMax,
+      0,
+      mediaCutoff,
+      window.innerWidth
+    )
+    chatboxPadding = calcScale(
+      layout[device].chat.paddingMin,
+      layout[device].chat.paddingMax,
+      0,
+      mediaCutoff,
+      window.innerWidth
+    )
+    chatboxHeight = calcScale(
+      layout[device].chat.heightMin,
+      layout[device].chat.heightMax,
+      0,
+      mediaCutoff,
+      window.innerWidth
+    )
+    chatboxWidth = calcScale(
+      layout[device].chat.widthMin,
+      layout[device].chat.widthMax,
+      0,
+      mediaCutoff,
+      window.innerWidth
+    )
+  }
 
   const [clientPlayer] = useAtom(clientPlayerAtom)
   document.addEventListener("visibilitychange", () => {
@@ -404,7 +493,7 @@ export default function Experience() {
 
       <OrthographicCamera
         makeDefault
-        zoom={layout[device].camera.zoom}
+        zoom={zoom}
         top={200}
         bottom={-200}
         left={200}
@@ -445,7 +534,7 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, ${device === "desktop" ? 
+                text={`${value.displayName}, ${device === "landscape" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
@@ -480,7 +569,7 @@ export default function Experience() {
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, ${device === "desktop" ? 
+                text={`${value.displayName}, ${device === "landscape" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
@@ -614,11 +703,11 @@ export default function Experience() {
             <Html>
               <div style={{
                 'borderRadius': '5px',
-                'height': `${(layout[device].chat.boxScale * layout[device].chat.height).toString()}px`,
-                'width': `${(layout[device].chat.boxScale * layout[device].chat.width).toString()}px`,
-                'padding': `${(layout[device].chat.padding).toString()}px`,
-                'fontSize': `${(layout[device].chat.fontScale * layout[device].chat.fontSize).toString()}px`,
-                'background': 'rgba(128, 128, 128, 0.1)'
+                'height': `${chatboxHeight.toString()}px`,
+                'width': `${chatboxWidth.toString()}px`,
+                'padding': `${chatboxPadding.toString()}px`,
+                'fontSize': `${chatFontSize.toString()}px`,
+                'background': 'rgba(128, 128, 128, 0.3)'
               }}>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
                 <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> banana</p>

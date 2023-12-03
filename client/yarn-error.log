@@ -2,7 +2,7 @@ Arguments:
   C:\Program Files\nodejs\node.exe C:\moonsoo_jo\job\rhoman_aerospace\my-app\%Moonsoo Jo%\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add --dev r3f-perf
 
 PATH: 
-  C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310;C:\Users\Moonsoo Jo\AppData\Local\Git\cmd;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\nodejs\;C:\Users\Moonsoo Jo\.cargo\bin;C:\Users\Moonsoo Jo\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Moonsoo Jo\AppData\Local\GitHubDesktop\bin;C:\moonsoo_jo\job\rhoman_aerospace\my-app\%Moonsoo Jo%\AppData\Roaming\npm;C:\Program Files\Git\cmd;C:\Users\Moonsoo Jo\AppData\Roaming\npm
+  C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310;C:\Users\Moonsoo Jo\AppData\Local\Git\cmd;C:\Users\Moonsoo Jo\AppData\Local\Programs\Python\Python310\Scripts;C:\Program Files\nodejs\;C:\Users\Moonsoo Jo\.cargo\bin;C:\Users\Moonsoo Jo\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Moonsoo Jo\AppData\Local\GitHublandscape\bin;C:\moonsoo_jo\job\rhoman_aerospace\my-app\%Moonsoo Jo%\AppData\Roaming\npm;C:\Program Files\Git\cmd;C:\Users\Moonsoo Jo\AppData\Roaming\npm
 
 Yarn version: 
   1.22.19
