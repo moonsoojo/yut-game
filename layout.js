@@ -3,7 +3,7 @@ export default {
     center: [-3, 0, -7],
     camera: {
       // zoom: 40,
-      zoomMin: 40,
+      zoomMin: 25,
       zoomMax: 50,
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
@@ -47,16 +47,14 @@ export default {
     yutFloor: [0.1,-0.5,-0.2],
     chat: {
       position: [-7.5,-0.5,-2],
-      boxScale: 1, // decide by ratio of my monitor's width to another one
-      fontScale: 1, // decide by ratio of my monitor's width to another one
-      fontSize: 20,
-      fontSizeMin: 20,
-      fontSizeMax: 25,
-      height: 105,
-      width: 105,
-      padding: 10,
-      paddingMin: 5,
-      paddingMax: 10,
+      fontSizeMin: 12,
+      fontSizeMax: 16,
+      heightMin: 70,
+      heightMax: 100,
+      widthMin: 80,
+      widthMax: 120,
+      paddingMin: 2.5,
+      paddingMax: 8,
     },
     piecesSection: {
       position: [-4, 0, -1],
@@ -222,18 +220,12 @@ export default {
     yutFloor: [0.1,-0.5,-0.2],
     chat: {
       position: [-13,-0.5,-1],
-      boxScale: 2, // decide by ratio of my monitor's width to another one
-      fontScale: 2, // decide by ratio of my monitor's width to another one
-      fontSize: 20,
       fontSizeMin: 12,
       fontSizeMax: 40,
-      height: 125,
       heightMin: 70,
       heightMax: 250,
-      width: 250,
       widthMin: 140,
       widthMax: 250,
-      padding: 10,
       paddingMin: 5,
       paddingMax: 10,
     },
