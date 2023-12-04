@@ -48,22 +48,22 @@ import LandingPage from "./pages/landingPage.jsx";
 
 let mediaMax = 2560;
 let mediaCutoff = 650;
-// zoom is set to 150 on 2560 W
-// 35 on 650 W
-// zoomMin + (zoomMax - zoomMin) * (width - mediaMin) / (mediaMax - mediaMin)
-// scale text
-let device = window.innerWidth >= mediaCutoff ? "landscape" : "portrait";
 
 export default function Experience() {
-  // window resize
-  window.addEventListener("resize", () => {
-    socket.emit("window dimensions", {width: window.innerWidth, height: window.innerHeight})
+
+  let [device, setDevice] = useState(window.innerWidth >= mediaCutoff ? "landscape" : "portrait")
+
+  const handleResize = () => {
     if (window.innerWidth >= mediaCutoff) {
-      device = "landscape";
+      setDevice("landscape");
     } else {
-      device = "portrait";
+      setDevice("portrait");
     }
-  });
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+  }, []);
 
   let zoom;
   let chatFontSize;
@@ -196,7 +196,7 @@ export default function Experience() {
     // if (clientPlayer != null) {
     //   setLoaded(true);
     // }
-  }, [])
+  }, [device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
