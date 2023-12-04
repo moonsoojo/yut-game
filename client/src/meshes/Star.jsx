@@ -5,7 +5,7 @@ import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import React from "react";
 
-export default function Star({ position, tile, device }) {
+export default function Star({ position, tile, device, scale }) {
   const { scene, materials, animations } = useGLTF(
     "/models/stars/star-yellow copy 1.glb"
   );
@@ -19,7 +19,7 @@ export default function Star({ position, tile, device }) {
         castShadow
         receiveShadow
         geometry={nodes.star.geometry}
-        scale={0.255}
+        scale={0.255 * scale}
       >
         <meshStandardMaterial color={"yellow"} />
       </mesh>

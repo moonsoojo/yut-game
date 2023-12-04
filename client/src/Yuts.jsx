@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, isMyTurn } from "../../server/src/helpers.js";
+import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
 
 THREE.ColorManagement.legacyMode = false;
@@ -77,6 +77,16 @@ export default function YutsNew3({ device = "portrait" }) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
+    } else if (isMyTurn(turn, teams, clientPlayer.socketId) && players[getCurrentPlayerSocketId(turn, teams)].thrown) {
+      let nak = false;
+      for (let i = 0; i < yutMeshes.length; i++) {
+        if (yuts[i].current.translation().y < 0) {
+          nak = true;
+        }
+      }
+      if (nak) {
+        socket.emit("nak");
+      }
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissiveIntensity = 0
@@ -144,12 +154,12 @@ export default function YutsNew3({ device = "portrait" }) {
       <RigidBody
         type="fixed"
         restitution={0.01}
-        position={layout[device].yutFloor}
+        position={layout.yut.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[1.5, 0.2, 1.5]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[2, 0.2, 2]} restitution={0.2} friction={1} />
         <mesh onPointerDown={handleYutThrow}>
-          <boxGeometry args={[3, 0.4, 3]} />
+          <boxGeometry args={[4, 0.4, 4]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}

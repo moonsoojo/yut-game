@@ -17,24 +17,27 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [clientPlayer] = useAtom(clientPlayerAtom)
 
   function handlePointerEnter(event) {
+    event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
-      event.stopPropagation();
+      
       document.body.style.cursor = "pointer";
       wrapper.current.opacity += 0.2;
     }
   }
 
   function handlePointerLeave(event) {
+    event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
-      event.stopPropagation();
+      
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
     }
   }
 
   function handlePointerDown(event) {
+    event.stopPropagation();
     if (selection != null) {
-      event.stopPropagation();
+      
       if (isMyTurn(turn, teams, clientPlayer.socketId)) {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });

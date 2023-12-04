@@ -278,10 +278,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("players", players)
   })
 
-  socket.on("window dimensions", ({width, height}) => {
-    console.log("width", width, "height", height)
-  })
-
   socket.on("startGame", () => {
     readyToStart = false;
     io.to(hostId).emit("readyToStart", readyToStart);
@@ -323,7 +319,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     if ((teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves))) {
       if (teams[0].players.length > 0 && teams[1].players.length > 0) {
         turn = passTurn(turn, teams)
-        players[getCurrentPlayerSocketId(turn, teams)].thrown = false
+        // players[getCurrentPlayerSocketId(turn, teams)].thrown = false
         teams[turn.team].throws++;
       } else {
         waitingToPass = true
@@ -340,7 +336,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     [tiles, teams] = score(tiles, teams, selection.tile, moveInfo.move, moveInfo.path, selection.pieces)
     if (teams[turn.team].throws == 0 && movesIsEmpty(teams[turn.team].moves)) {
       turn = passTurn(turn, teams)
-      players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
+      // players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
       teams[turn.team].throws++;
     }
     io.emit("tiles", tiles);
@@ -378,7 +374,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("throwYuts", ({socketIdThrower}) => {
-    console.log("throwYuts")
     if (players[socketIdThrower].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socketIdThrower) {
@@ -394,11 +389,11 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
           for (let i = 0; i < 4; i++) {
             yutForceVectors.push({
               rotation: rotations[i],
-              yImpulse: generateRandomNumberInRange(0.3, 0.02),
+              yImpulse: generateRandomNumberInRange(0.5, 0.1),
               torqueImpulse: {
-                x: generateRandomNumberInRange(0.0001, 0.0001),
-                y: generateRandomNumberInRange(0.01, 0.01),
-                z: generateRandomNumberInRange(0.0005, 0.005),
+                x: generateRandomNumberInRange(0.00005, 0.00003),
+                y: generateRandomNumberInRange(0.03, 0.02),
+                z: generateRandomNumberInRange(0.005, 0.003),
               },
               positionInHand: positionsInHand[i],
             });
@@ -468,7 +463,12 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         teams[turn.team].throws++;
       }
       io.emit("teams", teams)
+      io.emit("players", players)
     }
+  })
+
+  socket.on("nak", () => {
+    console.log("nak");
   })
 
   socket.on("throwInProgress", (flag) => {
@@ -498,7 +498,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)
-      players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
+      // players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
       io.emit("turn", turn)
       io.emit("players", players)
     }

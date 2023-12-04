@@ -47,17 +47,34 @@ import LandingPage from "./pages/landingPage.jsx";
 
 
 let mediaMax = 2560;
-let mediaCutoff = 650;
+let landscapeMobileCutoff = 550;
+let landscapeDesktopCutoff = 1000;
 
 export default function Experience() {
 
-  let [device, setDevice] = useState(window.innerWidth >= mediaCutoff ? "landscape" : "portrait")
+  function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
+    console.log("initializeDevice")
+    if (windowWidth < landscapeMobileCutoff) {
+      console.log("portrait")
+      return "portrait"
+    } else if (windowWidth < landscapeDesktopCutoff) {
+      console.log("landscapeMobile")
+      return "landscapeMobile"
+    } else {
+      console.log("landscapeDesktop")
+      return "landscapeDesktop"
+    }
+  }
+
+  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
 
   const handleResize = () => {
-    if (window.innerWidth >= mediaCutoff) {
-      setDevice("landscape");
+    if (window.innerWidth < landscapeMobileCutoff) {
+      setDevice("portrait")
+    } else if (window.innerWidth < landscapeDesktopCutoff) {
+      setDevice("landscapeMobile")
     } else {
-      setDevice("portrait");
+      setDevice("landscapeDesktop")
     }
   }
 
@@ -73,39 +90,39 @@ export default function Experience() {
   function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
     return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
   }
-  if (device === "landscape") {
+  if (device !== "portrait") {
     zoom = calcScale(
       layout[device].camera.zoomMin,
       layout[device].camera.zoomMax,
-      mediaCutoff,
+      landscapeMobileCutoff,
       mediaMax,
       window.innerWidth
     )
     chatFontSize = calcScale(
       layout[device].chat.fontSizeMin,
       layout[device].chat.fontSizeMax,
-      mediaCutoff,
+      landscapeMobileCutoff,
       mediaMax,
       window.innerWidth
     )
     chatboxPadding = calcScale(
       layout[device].chat.paddingMin,
       layout[device].chat.paddingMax,
-      mediaCutoff,
+      landscapeMobileCutoff,
       mediaMax,
       window.innerWidth
     )
     chatboxHeight = calcScale(
       layout[device].chat.heightMin,
       layout[device].chat.heightMax,
-      mediaCutoff,
+      landscapeMobileCutoff,
       mediaMax,
       window.innerWidth
     )
     chatboxWidth = calcScale(
       layout[device].chat.widthMin,
       layout[device].chat.widthMax,
-      mediaCutoff,
+      landscapeMobileCutoff,
       mediaMax,
       window.innerWidth
     )
@@ -114,35 +131,35 @@ export default function Experience() {
       layout[device].camera.zoomMin,
       layout[device].camera.zoomMax,
       0,
-      mediaCutoff,
+      landscapeMobileCutoff,
       window.innerWidth
     )
     chatFontSize = calcScale(
       layout[device].chat.fontSizeMin,
       layout[device].chat.fontSizeMax,
       0,
-      mediaCutoff,
+      landscapeMobileCutoff,
       window.innerWidth
     )
     chatboxPadding = calcScale(
       layout[device].chat.paddingMin,
       layout[device].chat.paddingMax,
       0,
-      mediaCutoff,
+      landscapeMobileCutoff,
       window.innerWidth
     )
     chatboxHeight = calcScale(
       layout[device].chat.heightMin,
       layout[device].chat.heightMax,
       0,
-      mediaCutoff,
+      landscapeMobileCutoff,
       window.innerWidth
     )
     chatboxWidth = calcScale(
       layout[device].chat.widthMin,
       layout[device].chat.widthMax,
       0,
-      mediaCutoff,
+      landscapeMobileCutoff,
       window.innerWidth
     )
   }
@@ -534,7 +551,7 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, ${device === "landscape" ? 
+                text={`${value.displayName}, ${device === "landscapeMobile" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
@@ -569,7 +586,7 @@ export default function Experience() {
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, ${device === "landscape" ? 
+                text={`${value.displayName}, ${device === "landscapeDesktop" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
@@ -596,10 +613,10 @@ export default function Experience() {
             {readyToStart && gamePhase === "lobby" && (
               <TextButton
                 text="Start"
-                position={layout[device].turn.position}
+                position={layout[device].throwCount.position}
                 boxWidth={1.2}
                 boxHeight={0.3}
-                handlePointerClick={() => socket.emit("startGame")}
+                handlePointerClick={() => {socket.emit("startGame")}}
               />
             )}
             <TextButton
