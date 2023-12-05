@@ -85,7 +85,7 @@ export default function YutsNew3({ device = "portrait" }) {
         }
       }
       if (nak) {
-        socket.emit("nak");
+        socket.emit("recordThrow", {result: 0, socketId: clientPlayer.socketId});
       }
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {

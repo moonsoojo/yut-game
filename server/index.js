@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
 import { score } from "./src/score.js";
-import { getCurrentPlayerSocketId, movesIsEmpty, getPlayerBySocketId } from "./src/helpers.js";
+import { getCurrentPlayerSocketId, movesIsEmpty, getPlayerBySocketId, hasMove } from "./src/helpers.js";
 
 const io = new Server({
   cors: {
@@ -26,6 +26,7 @@ let hostId = null;
 let readyToStart = false;
 let players = {}
 let waitingToPass = false;
+let firstThrow = true;
 
 let test = false;
 if (test) {
@@ -374,6 +375,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("throwYuts", ({socketIdThrower}) => {
+    let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
+    let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+
     if (players[socketIdThrower].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socketIdThrower) {
@@ -383,29 +387,93 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
       players[socketIdThrower].thrown = true;
 
+      // let firstThrowValues = {
+      //   rotation: rotations[i],
+      //   yImpulse: generateRandomNumberInRange(1, 0.1),
+      //   torqueImpulse: {
+      //     x: generateRandomNumberInRange(0.0005, 0.0003),
+      //     y: generateRandomNumberInRange(0.3, 0.2),
+      //     z: generateRandomNumberInRange(0.005, 0.003),
+      //   },
+      //   positionInHand: positionsInHand[i],
+      // }
+
+      // let secondThrowValues = {
+      //   rotation: rotations[i],
+      //   yImpulse: generateRandomNumberInRange(0.5, 0.1),
+      //   torqueImpulse: {
+      //     x: generateRandomNumberInRange(0.00005, 0.00003),
+      //     y: generateRandomNumberInRange(0.03, 0.02),
+      //     z: generateRandomNumberInRange(0.005, 0.003),
+      //   },
+      //   positionInHand: positionsInHand[i],
+      // }
+
       const yutForceVectors = [];
       for (const socketId of Object.keys(players)) {
         if (players[socketId].visibility && players[socketId].yutsAsleep) {
           for (let i = 0; i < 4; i++) {
-            yutForceVectors.push({
+            yutForceVectors.push(firstThrow ? {
               rotation: rotations[i],
-              yImpulse: generateRandomNumberInRange(0.5, 0.1),
+              yImpulse: generateRandomNumberInRange(1, 0.1),
               torqueImpulse: {
-                x: generateRandomNumberInRange(0.00005, 0.00003),
-                y: generateRandomNumberInRange(0.03, 0.02),
+                x: generateRandomNumberInRange(0.0005, 0.0003),
+                y: generateRandomNumberInRange(0.3, 0.2),
                 z: generateRandomNumberInRange(0.005, 0.003),
               },
               positionInHand: positionsInHand[i],
-            });
+            }
+       : {
+        rotation: rotations[i],
+        yImpulse: generateRandomNumberInRange(0.5, 0.1),
+        torqueImpulse: {
+          x: generateRandomNumberInRange(0.00005, 0.00003),
+          y: generateRandomNumberInRange(0.03, 0.02),
+          z: generateRandomNumberInRange(0.005, 0.003),
+        },
+        positionInHand: positionsInHand[i],
+      });
           }
           io.to(socketId).emit("throwYuts", yutForceVectors);
         }
       }
+      firstThrow = false;
       io.emit("players", players);
     }
   });
 
+  function resetYuts(socketIdThrower) {
+    let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
+    let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+
+    players[socketIdThrower].thrown = false;
+    players[socketIdThrower].yutsAsleep = true; // for the loop
+
+    const yutForceVectors = [];
+    for (const socketId of Object.keys(players)) {
+      if (players[socketId].visibility && players[socketId].yutsAsleep) {
+        for (let i = 0; i < 4; i++) {
+          yutForceVectors.push({
+            positionInHand: positionsInHand[i],
+            rotation: rotations[i],
+            yImpulse: 0,
+            torqueImpulse: {
+              x: 0,
+              y: 0,
+              z: 0,
+            },
+          });
+        }
+        io.to(socketId).emit("throwYuts", yutForceVectors);
+      }
+    }
+    io.emit("players", players);
+  }
+
   socket.on("reset", () => {
+    let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
+    let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+
     tiles = JSON.parse(JSON.stringify(initialState.tiles))
     teams[0].pieces = JSON.parse(JSON.stringify(initialState.teams))[0].pieces
     teams[0].moves = JSON.parse(JSON.stringify(initialState.teams))[0].moves
@@ -425,14 +493,15 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     const yutForceVectors = [];
     for (let i = 0; i < 4; i++) {
       yutForceVectors.push({
-        rotation: JSON.parse(JSON.stringify(initialState.initialYutRotations[i])),
+        positionInHand: positionsInHand[i],
+        rotation: rotations[i],
         yImpulse: 0,
         torqueImpulse: {
           x: 0,
           y: 0,
           z: 0,
         },
-        positionInHand: positionsInHand[i],
+        
       });
     }
     io.emit("throwYuts", yutForceVectors);
@@ -443,11 +512,14 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("recordThrow", ({result, socketId}) => {
-    console.log("[recordThrow] result", result, "socketId", socket.id)
+    console.log("[recordThrow] result", result, "socketId", socketId)
     players[socketId].thrown = false;
     
     if (gamePhase === "pregame") {
       teams[turn.team].moves[result.toString()]++
+      if (result == 0) {
+        resetYuts(socketId);
+      }
       result = passTurnPregame(turn, teams, gamePhase)
       turn = result.turn
       teams = result.teams
@@ -458,12 +530,20 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       io.emit("gamePhase", gamePhase)
       io.emit("players", players)
     } else if (gamePhase === "game") {
-      teams[turn.team].moves[result.toString()]++
-      if (result == 4 || result == 5) {
-        teams[turn.team].throws++;
+      if (result == 0) {
+        resetYuts(socketId);
+        // if (!hasMove(teams[turn.team])) {
+        //   turn = passTurn(turn, teams)
+        //   io.emit("turn", turn)
+        // }
+      } else {
+        teams[turn.team].moves[result.toString()]++
+        if (result == 4 || result == 5) {
+          teams[turn.team].throws++;
+        }
+        io.emit("teams", teams)
+        io.emit("players", players)
       }
-      io.emit("teams", teams)
-      io.emit("players", players)
     }
   })
 

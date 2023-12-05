@@ -53,15 +53,11 @@ let landscapeDesktopCutoff = 1000;
 export default function Experience() {
 
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
-    console.log("initializeDevice")
     if (windowWidth < landscapeMobileCutoff) {
-      console.log("portrait")
       return "portrait"
     } else if (windowWidth < landscapeDesktopCutoff) {
-      console.log("landscapeMobile")
       return "landscapeMobile"
     } else {
-      console.log("landscapeDesktop")
       return "landscapeDesktop"
     }
   }
@@ -217,11 +213,7 @@ export default function Experience() {
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
-
-  useEffect(() => {
-    console.log("[Experience] clientPlayer", clientPlayer)
-  }, [clientPlayer])
-
+  
   function Tiles() {
     let tiles = [];
 
