@@ -204,6 +204,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   newPlayer.socketId = socket.id
   newPlayer.yutsAsleep = false
   newPlayer.visibility = true
+  // newPlayer.yutsReset = false
   // newPlayer.participating = true
   // newPlayer.ready = false
   newPlayer.thrown = false
@@ -266,11 +267,20 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         status: "readyToStart"
       })
     } else if (gamePhase !== "lobby") {
-      if (players[socketId].thrown == true && getCurrentPlayerSocketId(turn, teams) === socketId) {
+      if (players[socketId].thrown == true && 
+        getCurrentPlayerSocketId(turn, teams) === socketId) {
+          console.log("[yutsAsleep] current player threw")
+        // getCurrentPlayerSocketId(turn, teams) === socketId &&
+        // players[socketId].reset == false) {
         callback({
           status: "record"
         })
       } else {
+        // if (players[socketId].reset == true) {
+        //   players[socketId].reset = false;
+        //   // turn = passTurn(turn, teams)
+        //   // io.emit("turn", turn)
+        // }
         callback({
           status: "noRecord"
         })
@@ -289,6 +299,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   function passTurnPregame(turn, teams, gamePhase) {
+    console.log("[passTurnPregame] moves in team 0", teams[0].moves)
+    console.log("[passTurnPregame] moves in team 1", teams[1].moves)
     if (allTeamsHaveMove(teams)) {
       let firstTeamToThrow = calcFirstTeamToThrow(teams)
       if (firstTeamToThrow == -1) {
@@ -346,34 +358,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("players", players)
   });
 
-  let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
-  let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
-
-  socket.on("checkThrowEligible", ({socketId}, callback) => {
-    console.log("[checkThrowEligible] players", players);
-    let eligible = players[socketId].yutsAsleep ? true: false;
-    // if one player can throw, go for it
-    // for (const socketId of Object.keys(players)) {
-    //   let player = players[socketId]
-    //   if (player.visibility == true) {
-    //     if (player.yutsAsleep == true) {
-    //       // pass
-    //     } else {
-    //       eligible = false;
-    //     }
-    //   } // in the use effect in Yuts, ask server if client is visible
-    // }
-    if (eligible) {
-      callback({
-        status: "ok"
-      })
-    } else {
-      callback({
-        status: "nope"
-      })
-    }
-  })
-
   socket.on("throwYuts", ({socketIdThrower}) => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
@@ -423,18 +407,19 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
               },
               positionInHand: positionsInHand[i],
             }
-       : {
-        rotation: rotations[i],
-        yImpulse: generateRandomNumberInRange(0.5, 0.1),
-        torqueImpulse: {
-          x: generateRandomNumberInRange(0.00005, 0.00003),
-          y: generateRandomNumberInRange(0.03, 0.02),
-          z: generateRandomNumberInRange(0.005, 0.003),
-        },
-        positionInHand: positionsInHand[i],
-      });
+            : {
+              rotation: rotations[i],
+              yImpulse: generateRandomNumberInRange(0.5, 0.1),
+              torqueImpulse: {
+                x: generateRandomNumberInRange(0.00005, 0.00003),
+                y: generateRandomNumberInRange(0.03, 0.02),
+                z: generateRandomNumberInRange(0.005, 0.003),
+              },
+              positionInHand: positionsInHand[i],
+            });
           }
           io.to(socketId).emit("throwYuts", yutForceVectors);
+          players[socketId].yutsAsleep = false;
         }
       }
       firstThrow = false;
@@ -446,12 +431,11 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
-    players[socketIdThrower].thrown = false;
-    players[socketIdThrower].yutsAsleep = true; // for the loop
+    players[socketIdThrower].reset = true;
 
     const yutForceVectors = [];
     for (const socketId of Object.keys(players)) {
-      if (players[socketId].visibility && players[socketId].yutsAsleep) {
+      if (players[socketId].visibility && !players[socketId].yutsAsleep) {
         for (let i = 0; i < 4; i++) {
           yutForceVectors.push({
             positionInHand: positionsInHand[i],
@@ -517,9 +501,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     
     if (gamePhase === "pregame") {
       teams[turn.team].moves[result.toString()]++
-      if (result == 0) {
-        resetYuts(socketId);
-      }
+      // if (result == 0) {
+      //   resetYuts(socketId);
+      // }
       result = passTurnPregame(turn, teams, gamePhase)
       turn = result.turn
       teams = result.teams
@@ -530,20 +514,20 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       io.emit("gamePhase", gamePhase)
       io.emit("players", players)
     } else if (gamePhase === "game") {
-      if (result == 0) {
-        resetYuts(socketId);
-        // if (!hasMove(teams[turn.team])) {
-        //   turn = passTurn(turn, teams)
-        //   io.emit("turn", turn)
-        // }
-      } else {
+      // if (result == 0) {
+      //   resetYuts(socketId);
+      //   // if (!hasMove(teams[turn.team])) {
+      //   //   turn = passTurn(turn, teams)
+      //   //   io.emit("turn", turn)
+      //   // }
+      // } else {
         teams[turn.team].moves[result.toString()]++
         if (result == 4 || result == 5) {
           teams[turn.team].throws++;
         }
         io.emit("teams", teams)
         io.emit("players", players)
-      }
+      // }
     }
   })
 

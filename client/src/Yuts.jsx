@@ -78,15 +78,15 @@ export default function YutsNew3({ device = "portrait" }) {
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
     } else if (isMyTurn(turn, teams, clientPlayer.socketId) && players[getCurrentPlayerSocketId(turn, teams)].thrown) {
-      let nak = false;
-      for (let i = 0; i < yutMeshes.length; i++) {
-        if (yuts[i].current.translation().y < 0) {
-          nak = true;
-        }
-      }
-      if (nak) {
-        socket.emit("recordThrow", {result: 0, socketId: clientPlayer.socketId});
-      }
+      // let nak = false;
+      // for (let i = 0; i < yutMeshes.length; i++) {
+      //   if (yuts[i].current.translation().y < 0) {
+      //     nak = true;
+      //   }
+      // }
+      // if (nak) {
+      //   socket.emit("recordThrow", {result: 0, socketId: clientPlayer.socketId});
+      // }
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissiveIntensity = 0
@@ -96,37 +96,47 @@ export default function YutsNew3({ device = "portrait" }) {
 
   function observeThrow() {
     let result = 0
-    let countUps = 0
-    let backdoUp = false
-    yuts.forEach(yut => {
-      let vector = new THREE.Vector3( 0, 1, 0 );
-      vector.applyQuaternion( yut.current.rotation() );
-      if (vector.y < 0) {
-        countUps++
-        if (yut.current.userData === "backdo") {
-          backdoUp = true;
-        }
-      }
-    });
 
-    if (countUps == 0) {
-      result = 5
-    } else if (countUps == 1) {
-      if (backdoUp == true) {
-        result = -1
+    // nak
+    let nak = false;
+    for (let i = 0; i < yutMeshes.length; i++) {
+      if (yuts[i].current.translation().y < 0) {
+        nak = true;
+      }
+    }
+    if (!nak) {
+      let countUps = 0
+      let backdoUp = false
+
+      yuts.forEach(yut => {
+        let vector = new THREE.Vector3( 0, 1, 0 );
+        vector.applyQuaternion( yut.current.rotation() );
+        if (vector.y < 0) {
+          countUps++
+          if (yut.current.userData === "backdo") {
+            backdoUp = true;
+          }
+        }
+      });
+  
+      if (countUps == 0) {
+        result = 5
+      } else if (countUps == 1) {
+        if (backdoUp == true) {
+          result = -1
+        } else {
+          result = countUps
+        }
       } else {
         result = countUps
       }
-    } else {
-      result = countUps
+      // test: set all result to the same value
+      // if (gamePhase === "game") {
+      //   result = 4
+      // }
     }
-    // test: set all result to the same value
-    // if (gamePhase === "game") {
-    //   result = 4
-    // }
-    
+
     socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
-    
     return result
   }
 
@@ -160,6 +170,22 @@ export default function YutsNew3({ device = "portrait" }) {
         <CuboidCollider args={[2, 0.2, 2]} restitution={0.2} friction={1} />
         <mesh onPointerDown={handleYutThrow}>
           <boxGeometry args={[4, 0.4, 4]} />
+          <meshStandardMaterial 
+            transparent 
+            opacity={0}
+          />
+        </mesh>
+      </RigidBody>
+      {/* nak catcher */}
+      <RigidBody
+        type="fixed"
+        restitution={0.01}
+        position={[0, -10, 0]}
+        friction={0.9}
+      >
+        <CuboidCollider args={[30, 0.2, 30]} restitution={0.2} friction={1} />
+        <mesh onPointerDown={handleYutThrow}>
+          <boxGeometry args={[60, 0.4, 60]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}

@@ -213,7 +213,7 @@ export default function Experience() {
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
-  
+
   function Tiles() {
     let tiles = [];
 
@@ -543,7 +543,7 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={`${value.displayName}, ${device === "landscapeMobile" ? 
+                text={`${value.displayName}, ${device === "landscapeDesktop" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
