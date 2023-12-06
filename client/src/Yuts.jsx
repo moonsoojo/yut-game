@@ -8,6 +8,7 @@ import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnA
 import { useAtom } from "jotai";
 import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
+import TextButton from "./components/TextButton.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -24,6 +25,7 @@ export default function YutsNew3({ device = "portrait" }) {
   const [turn] = useAtom(turnAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [players] = useAtom(playersAtom);
+  const [outOfBounds, setOutOfBounds] = useState(false);
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -32,6 +34,7 @@ export default function YutsNew3({ device = "portrait" }) {
     yuts.push(useRef());
     yutMeshes.push(useRef());
   }
+  let yutFloorMaterial = useRef();
 
   useEffect(() => {
     for (let i = 0; i < yutMeshes.length; i++) {
@@ -77,20 +80,22 @@ export default function YutsNew3({ device = "portrait" }) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
-    } else if (isMyTurn(turn, teams, clientPlayer.socketId) && players[getCurrentPlayerSocketId(turn, teams)].thrown) {
-      // let nak = false;
-      // for (let i = 0; i < yutMeshes.length; i++) {
-      //   if (yuts[i].current.translation().y < 0) {
-      //     nak = true;
-      //   }
-      // }
-      // if (nak) {
-      //   socket.emit("recordThrow", {result: 0, socketId: clientPlayer.socketId});
-      // }
+      yutFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
     } else {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissiveIntensity = 0
       }
+      yutFloorMaterial.current.opacity = 0
+    }
+    let allYutsOnFloor = true;
+    for (let i = 0; i < yuts.length; i++) {
+      if (yuts[i].current.translation().y < 0) {
+        setOutOfBounds(true);
+        allYutsOnFloor = false
+      }
+    }
+    if (allYutsOnFloor) {
+      setOutOfBounds(false);
     }
   })
 
@@ -99,7 +104,7 @@ export default function YutsNew3({ device = "portrait" }) {
 
     // nak
     let nak = false;
-    for (let i = 0; i < yutMeshes.length; i++) {
+    for (let i = 0; i < yuts.length; i++) {
       if (yuts[i].current.translation().y < 0) {
         nak = true;
       }
@@ -152,6 +157,9 @@ export default function YutsNew3({ device = "portrait" }) {
   function handleYutThrow() {
     socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId}, (response) => {
       if (response.status === "ok") {
+        // if (outOfBounds) {
+        //   setOutOfBounds(false);
+        // }
         // don't set alert
       } else {
         // set an alert: unable to throw
@@ -172,7 +180,9 @@ export default function YutsNew3({ device = "portrait" }) {
           <boxGeometry args={[4, 0.4, 4]} />
           <meshStandardMaterial 
             transparent 
+            color='yellow'
             opacity={0}
+            ref={yutFloorMaterial}
           />
         </mesh>
       </RigidBody>
@@ -242,6 +252,13 @@ export default function YutsNew3({ device = "portrait" }) {
           </RigidBody>
         );
       })}
+      {/* out of bounds message */}
+      { outOfBounds && <>
+        <TextButton
+          text='out of bounds'
+          position={layout.yut.outOfBounds}
+        />
+      </>}
     </group>
   );
 }

@@ -1,6 +1,14 @@
+let floorPosition = [0.1,0,0]
+let outOfBoundsPosition = [
+  floorPosition[0]-1,
+  floorPosition[1],
+  floorPosition[2]
+]
+
 export default {
   yut: {
-    floor: [0.1,0,0]
+    floor: floorPosition, // change value on top
+    outOfBounds: outOfBoundsPosition
   },
   portrait: {
     center: [-3, 0, -7],
