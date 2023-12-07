@@ -36,6 +36,7 @@ import {
   legalTilesAtom,
   clientPlayerAtom,
   playersAtom,
+  messagesAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -161,6 +162,14 @@ export default function Experience() {
   }
 
   const [clientPlayer] = useAtom(clientPlayerAtom)
+  const [readyToStart] = useAtom(readyToStartAtom);
+  const [teams] = useAtom(teamsAtom);
+  const [turn] = useAtom(turnAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [legalTiles] = useAtom(legalTilesAtom);
+  const [players] = useAtom(playersAtom);
+  const [messages] = useAtom(messagesAtom);
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       socket.emit("visibilityChange", {flag: false, socketId: clientPlayer.socketId})
@@ -168,14 +177,14 @@ export default function Experience() {
       socket.emit("visibilityChange", {flag: true, socketId: clientPlayer.socketId})
     }
   });
-  
 
-  const [readyToStart] = useAtom(readyToStartAtom);
-  const [teams] = useAtom(teamsAtom);
-  const [turn] = useAtom(turnAtom);
-  const [gamePhase] = useAtom(gamePhaseAtom)
-  const [legalTiles] = useAtom(legalTilesAtom);
-  const [players] = useAtom(playersAtom);
+  const [message, setMessage] = useState('');
+  function onMessageSubmit (e) {
+    e.preventDefault();
+    console.log("[onMessageSubmit", e)
+    socket.emit("sendMessage", { message, team: clientPlayer.team, socketId: clientPlayer.socketId })
+    setMessage('')
+  }
   
 
   // useEffect(() => {
@@ -706,9 +715,28 @@ export default function Experience() {
                 'fontSize': `${chatFontSize.toString()}px`,
                 'background': 'rgba(128, 128, 128, 0.3)'
               }}>
-                <p style={{color: 'white', margin: 0}}><span style={{color: 'red'}}>jack:</span> hello</p>
-                <p style={{color: 'white', margin: 0}}><span style={{color: 'turquoise'}}>ada:</span> banana</p>
+                {messages.map((value, index) => 
+                  <p style={{color: 'white', margin: 0}} key={index}>
+                    <span style={{color: value.team == 0 ? 'red' : 'turquoise'}}>{value.name}: </span> 
+                    {value.message}
+                  </p>
+                )}
               </div>
+              <form onSubmit={(e) => onMessageSubmit(e)}>
+                <input 
+                  id='input-message'
+                  style={{ 
+                    height: '20px',
+                    borderRadius: '5px',
+                    'padding': `${chatboxPadding.toString()}px`,
+                    border: 0,
+                    width: `${chatboxWidth.toString()}px`,
+                  }} 
+                  onChange={e => setMessage(e.target.value)} 
+                  value={message}
+                  placeholder="type here..."
+                />
+              </form>
             </Html>
           </group>
           {/* menu */}

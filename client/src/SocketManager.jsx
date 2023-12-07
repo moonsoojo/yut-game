@@ -64,6 +64,7 @@ export const clientPlayerAtom = atom(null);
 export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const playersAtom = atom({});
+export const messagesAtom = atom([]);
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -79,6 +80,7 @@ export const SocketManager = () => {
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_players, setPlayers] = useAtom(playersAtom);
+  const [_messages, setMessages] = useAtom(messagesAtom);
 
   useEffect(() => {
     function onConnect() {
@@ -133,6 +135,9 @@ export const SocketManager = () => {
     function onPlayers(players) {
       setPlayers(players)
     }
+    function onMessages(messages) {
+      setMessages(messages)
+    }
     socket.on("connect", onConnect);
     socket.on("setUpPlayer", onSetUpPlayer)
     socket.on("disconnect", onDisconnect);
@@ -147,6 +152,7 @@ export const SocketManager = () => {
     socket.on("gamePhase", onGamePhase);
     socket.on("legalTiles", onLegalTiles);
     socket.on("players", onPlayers);
+    socket.on("messages", onMessages);
     return () => {
       socket.off("connect", onConnect);
       socket.off("setUpPlayer", onSetUpPlayer)
@@ -162,6 +168,8 @@ export const SocketManager = () => {
       socket.off("gamePhase", onGamePhase);
       socket.off("legalTiles", onLegalTiles);
       socket.off("players", onPlayers);
+      socket.off("messages", onMessages);
+
     };
   }, []);
 };

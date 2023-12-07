@@ -26,6 +26,15 @@ let hostId = null;
 let readyToStart = false;
 let players = {}
 let waitingToPass = false;
+/* schema
+[
+  { 
+    name: '',
+    message: ''
+  }
+]
+*/
+let messages = []
 
 let test = true;
 if (test) {
@@ -246,6 +255,17 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   //   io.emit("players", players)
   // })
 
+  socket.on("sendMessage", ({ message, team, socketId }) => {
+    messages.push({
+      "name": players[socketId].displayName,
+      team,
+      message
+    })
+    console.log("[sendMessage]", messages)
+    // display should start from the bottom, and get pushed up on new messages
+    io.emit("messages", messages)
+  })
+
   socket.on("visibilityChange", ({flag, socketId}) => {
     if (players[socketId] != undefined) {
       players[socketId].visibility = flag
@@ -384,26 +404,28 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       for (const socketId of Object.keys(players)) {
         if (players[socketId].visibility && players[socketId].yutsAsleep) {
           for (let i = 0; i < 4; i++) {
-            // yutForceVectors.push({
-            //   rotation: rotations[i],
-            //   yImpulse: generateRandomNumberInRange(0.7, 0.2),
-            //   torqueImpulse: {
-            //     x: generateRandomNumberInRange(0.0002, 0.0001),
-            //     y: generateRandomNumberInRange(0.03, 0.02),
-            //     z: generateRandomNumberInRange(0.006, 0.003),
-            //   },
-            //   positionInHand: positionsInHand[i],
-            // });
             yutForceVectors.push({
               rotation: rotations[i],
               yImpulse: generateRandomNumberInRange(0.7, 0.2),
               torqueImpulse: {
-                x: generateRandomNumberInRange(0.002, 0.001),
-                y: generateRandomNumberInRange(0.3, 0.2),
-                z: generateRandomNumberInRange(0.06, 0.03),
+                x: generateRandomNumberInRange(0.0002, 0.0001),
+                y: generateRandomNumberInRange(0.03, 0.02),
+                z: generateRandomNumberInRange(0.006, 0.003),
               },
               positionInHand: positionsInHand[i],
             });
+
+            // hard throw
+            // yutForceVectors.push({
+            //   rotation: rotations[i],
+            //   yImpulse: generateRandomNumberInRange(0.7, 0.2),
+            //   torqueImpulse: {
+            //     x: generateRandomNumberInRange(0.002, 0.001),
+            //     y: generateRandomNumberInRange(0.3, 0.2),
+            //     z: generateRandomNumberInRange(0.06, 0.03),
+            //   },
+            //   positionInHand: positionsInHand[i],
+            // });
           }
           io.to(socketId).emit("throwYuts", yutForceVectors);
           players[socketId].yutsAsleep = false;

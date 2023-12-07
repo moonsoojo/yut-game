@@ -1,5 +1,5 @@
-"nak"
-- when player only has "0", it should pass turn in pregame and game
-- pregame: "record throw"
-- game: "record throw" and "move"
-- piece should be clickable from tile after nak is thrown
+chatbox
+- message to be contained in div horizontally
+- yut throw on chatbox input click
+- message should be contained in div vertically
+- if there's more, box should become scrollable
