@@ -29,17 +29,24 @@ export function countPlayers2(players) {
 
 export function movesIsEmpty (moves) {
   for (const move in moves) {
-    if (moves[move] > 0) {
+    if (parseInt(move) != 0 && moves[move] > 0) {
       return false;
     }
   }
   return true;
 }
 
-export function hasMove (team) {
+export function clearMoves(moves) {
+  for (const move in moves) {
+    moves[move] = 0
+  }
+  return moves;
+}
+
+export function hasValidMove (moves) {
   let flag = false;
-  for (let move in team.moves) {
-    if (team.moves[move] > 0) {
+  for (let move in moves) {
+    if (parseInt(move) != 0 && moves[move] > 0) {
       flag = true;
       break;
     }

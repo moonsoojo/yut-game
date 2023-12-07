@@ -18,6 +18,9 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
   let starting = tile == -1 ? true : false;
 
   for (let move in moves) {
+    if (parseInt(move) == 0) {
+      continue;
+    }
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
       if (checkBackdoRule(moves, pieces)) {

@@ -1,12 +1,12 @@
 
-import { selectionAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
+import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { hasMove, isMyTurn } from "../../../server/src/helpers.js";
+import { hasValidMove, isMyTurn } from "../../../server/src/helpers.js";
 
 export default function Piece ({
   position,
@@ -23,6 +23,7 @@ export default function Piece ({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom);
+  const [players] = useAtom(playersAtom);
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -43,7 +44,11 @@ export default function Piece ({
   }
 
   useFrame((state, delta) => {
-    if (gamePhase === "game" && clientPlayer.team == team && isMyTurn(turn, teams, clientPlayer.socketId) && hasMove(teams[team]) && selection == null) {
+    if (gamePhase === "game" && 
+    clientPlayer.team == team && 
+    isMyTurn(turn, teams, clientPlayer.socketId) && 
+    hasValidMove(teams[team].moves) && selection == null &&
+    players[clientPlayer.socketId].yutsAsleep) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
@@ -75,7 +80,10 @@ export default function Piece ({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasMove(teams[team]) && isMyTurn(turn, teams, clientPlayer.socketId)) {
+    if (gamePhase === "game" && 
+    clientPlayer.team == team && 
+    hasValidMove(teams[team].moves) && 
+    isMyTurn(turn, teams, clientPlayer.socketId)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;

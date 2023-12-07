@@ -377,18 +377,6 @@ export default function Experience() {
       </group>
     );
   }
-  
-  function hasMove(team) {
-    let flag = false;
-    for (let move in team.moves) {
-      if (team.moves[move] > 0) {
-        flag = true;
-        break;
-      }
-    }
-    return flag
-  }
-
   const {
     turbidity,
     rayleigh,

@@ -109,6 +109,7 @@ export default function YutsNew3({ device = "portrait" }) {
         nak = true;
       }
     }
+    console.log("[observeThrow] nak", nak)
     if (!nak) {
       let countUps = 0
       let backdoUp = false
