@@ -45,6 +45,7 @@ import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
 import { isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
+import Chatbox from "./Chatbox.jsx";
 
 
 let mediaMax = 2560;
@@ -168,7 +169,6 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [players] = useAtom(playersAtom);
-  const [messages] = useAtom(messagesAtom);
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
@@ -177,22 +177,6 @@ export default function Experience() {
       socket.emit("visibilityChange", {flag: true, socketId: clientPlayer.socketId})
     }
   });
-
-  const [message, setMessage] = useState('');
-  function onMessageSubmit (e) {
-    e.preventDefault();
-    console.log("[onMessageSubmit", e)
-    socket.emit("sendMessage", { message, team: clientPlayer.team, socketId: clientPlayer.socketId })
-    setMessage('')
-  }
-  
-
-  // useEffect(() => {
-  //   console.log("[yuts] clientPlayer", clientPlayer)
-  //   if (clientPlayer != null) {
-  //     setLoaded(true);
-  //   }
-  // }, [clientPlayer])
 
   const numTiles = 29;
 
@@ -707,36 +691,12 @@ export default function Experience() {
           {/* chat section */}
           <group position={layout[device].chat.position}>
             <Html>
-              <div style={{
-                'borderRadius': '5px',
-                'height': `${chatboxHeight.toString()}px`,
-                'width': `${chatboxWidth.toString()}px`,
-                'padding': `${chatboxPadding.toString()}px`,
-                'fontSize': `${chatFontSize.toString()}px`,
-                'background': 'rgba(128, 128, 128, 0.3)'
-              }}>
-                {messages.map((value, index) => 
-                  <p style={{color: 'white', margin: 0}} key={index}>
-                    <span style={{color: value.team == 0 ? 'red' : 'turquoise'}}>{value.name}: </span> 
-                    {value.message}
-                  </p>
-                )}
-              </div>
-              <form onSubmit={(e) => onMessageSubmit(e)}>
-                <input 
-                  id='input-message'
-                  style={{ 
-                    height: '20px',
-                    borderRadius: '5px',
-                    'padding': `${chatboxPadding.toString()}px`,
-                    border: 0,
-                    width: `${chatboxWidth.toString()}px`,
-                  }} 
-                  onChange={e => setMessage(e.target.value)} 
-                  value={message}
-                  placeholder="type here..."
-                />
-              </form>
+              <Chatbox
+                height={`${chatboxHeight.toString()}px`}
+                width={`${chatboxWidth.toString()}px`}
+                padding={`${chatboxPadding.toString()}px`}
+                fontSize={`${chatFontSize.toString()}px`}
+              />
             </Html>
           </group>
           {/* menu */}

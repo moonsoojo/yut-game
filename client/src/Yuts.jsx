@@ -194,9 +194,9 @@ export default function YutsNew3({ device = "portrait" }) {
         position={[0, -10, 0]}
         friction={0.9}
       >
-        <CuboidCollider args={[30, 0.2, 30]} restitution={0.2} friction={1} />
-        <mesh onPointerDown={handleYutThrow}>
-          <boxGeometry args={[60, 0.4, 60]} />
+        <CuboidCollider args={[100, 0.2, 100]} restitution={0.2} friction={1} />
+        <mesh>
+          <boxGeometry args={[200, 0.4, 200]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}

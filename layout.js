@@ -234,7 +234,7 @@ export default {
       heightMin: 70,
       heightMax: 250,
       widthMin: 140,
-      widthMax: 250,
+      widthMax: 550,
       paddingMin: 5,
       paddingMax: 10,
     },

@@ -36,7 +36,7 @@ let waitingToPass = false;
 */
 let messages = []
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -202,7 +202,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   io.emit("tiles", tiles);
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
-  
+  io.emit("messages", messages)
+
   io.emit("gamePhase", gamePhase);
   io.emit("readyToStart", readyToStart);
 
@@ -391,6 +392,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
+    // should also check if screen is visible
+    // bro went to another screen
     if (players[socketIdThrower].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socketIdThrower) {
