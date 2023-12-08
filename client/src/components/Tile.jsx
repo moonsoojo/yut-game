@@ -50,7 +50,8 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   let rocketAdjustY = (tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
   rocketAdjustY = tile == 0 ? 1 : rocketAdjustY;
-  let rocketAdjustZ = tile == 0 ? 1 : rocketAdjustY;
+  // let rocketAdjustZ = tile == 0 ? 1 : rocketAdjustY;
+  let rocketAdjustZ = tile == 0 ? 0 : rocketAdjustY;
   let ufoAdjustY = tile == 0 ? 0.5 : 0;
   let ufoAdjustZ = tile == 0 ? 0.5 : 0;
 

@@ -43,12 +43,13 @@ if (test) {
     team: 0,
     players: [0,0]
   }
-  teams[0].throws = 1
-  teams[0].moves['3'] = 1
-  teams[0].moves['0'] = 1
   // teams[1].moves['4'] = 1
   teams[0].pieces[0] = null;
-  tiles[19] = [{tile: 4, team: 0, id: 0, history: [15,16,17,18]}]
+  teams[0].pieces[1] = null;
+  teams[0].pieces[2] = null;
+  teams[0].pieces[3] = null;
+  tiles[0] = [{tile: 0, team: 0, id: 0, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 3, history: [15,16,17,18, 19]}]
+  tiles[1] = [{tile: 1, team: 0, id: 1, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}]
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -413,8 +414,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
               rotation: rotations[i],
               yImpulse: generateRandomNumberInRange(0.7, 0.2),
               torqueImpulse: {
-                x: generateRandomNumberInRange(0.0002, 0.0001),
-                y: generateRandomNumberInRange(0.03, 0.02),
+                x: generateRandomNumberInRange(0.008, 0.004),
+                y: generateRandomNumberInRange(0.05, 0.04),
                 z: generateRandomNumberInRange(0.006, 0.003),
               },
               positionInHand: positionsInHand[i],
