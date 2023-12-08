@@ -22,6 +22,5 @@ root.render(
   <KeyboardControls map={[{ name: "throw", keys: ["Space"] }]}>
     <SocketManager />
     <App/>
-
   </KeyboardControls>
 );

@@ -8,23 +8,30 @@ import { auth } from './firebase'
 import { Text3D, Html } from "@react-three/drei";
 import { Canvas } from '@react-three/fiber';
 import * as THREE from "three";
+import { clientPlayerAtom, nameAtom } from './SocketManager';
+import { useAtom } from 'jotai';
 
 export default function App() {
-  const [user, loading, error] = useAuthState(auth)
-  if (loading) {
-    return 'loading'
-  } 
-  if (error) {
-    return 'There was an error'
-  }
-  if (!user) {
+  const [clientPlayer] = useAtom(clientPlayerAtom)
+  if (clientPlayer == null) {
     return <UserForm />
   }
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Home/>}/>
-        <Route path="/game/:id" element={    
+        <Route exact path="/" element= {          <Canvas
+            gl={{
+              antialias: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              outputEncoding: THREE.sRGBEncoding,
+            }}
+            // camera={{ fov: 45, near: 0.1, far: 500, position: [6, 6, 6] }}
+            // pan: move about a plane
+          >
+            <Experience/>
+          </Canvas>}/>
+        {/* <Route exact path="/" element={<Home/>}/> */}
+        {/* <Route path="/game/:id" element={    
           <Canvas
             gl={{
               antialias: true,
@@ -35,7 +42,7 @@ export default function App() {
             // pan: move about a plane
           >
             <Experience/>
-          </Canvas>}/>  
+          </Canvas>}/>   */}
       </Routes>
     </Router>
   )

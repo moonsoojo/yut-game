@@ -65,6 +65,7 @@ export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const playersAtom = atom({});
 export const messagesAtom = atom([]);
+export const nameAtom = atom('');
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);

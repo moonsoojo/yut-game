@@ -196,47 +196,6 @@ function findRandomPlayer(teams) {
 io.on("connection", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected"); 
 
-  if (hostId == null) {
-    hostId = socket.id
-  }
-
-  io.emit("tiles", tiles);
-  io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
-  io.emit("messages", messages)
-
-  io.emit("gamePhase", gamePhase);
-  io.emit("readyToStart", readyToStart);
-
-  let newPlayer = JSON.parse(JSON.stringify(initialState.player));
-  let newTeam = assignTeam(teams)
-  newPlayer.team = newTeam
-  newPlayer.displayName = makeId(5)
-  newPlayer.socketId = socket.id
-  newPlayer.yutsAsleep = false
-  newPlayer.visibility = true
-  newPlayer.thrown = false
-  teams[newTeam].players.push(newPlayer)
-  io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
-  players[socket.id] = newPlayer
-
-  if (waitingToPass) {
-    if (teams[0].players.length > 0 && teams[1].players.length > 0) {
-      turn = passTurn(turn, teams)
-      players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
-      teams[turn.team].throws++;
-    }
-  }
-  socket.emit("players", players)
-
-  if (countPlayers2(players) >= 2) {
-    readyToStart = true;
-    io.to(hostId).emit("readyToStart", readyToStart)
-  }
-
-  io.emit("teams", teams);
-  io.emit("turn", turn);
-  io.emit("players", players)
-
   // socket.on("ready", ({socketId, flag}) => {
   //   players[socketId].ready = flag
   //   let allPlayersReady = true;
@@ -255,6 +214,49 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   //   // do emits after all states have changed
   //   io.emit("players", players)
   // })
+
+  socket.on("submitName", ({ name }) => {
+    if (hostId == null) {
+      hostId = socket.id
+    }
+  
+    io.emit("tiles", tiles);
+    io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
+    io.emit("messages", messages)
+  
+    io.emit("gamePhase", gamePhase);
+    io.emit("readyToStart", readyToStart);
+  
+    let newPlayer = JSON.parse(JSON.stringify(initialState.player));
+    let newTeam = assignTeam(teams)
+    newPlayer.team = newTeam
+    // newPlayer.displayName = makeId(5)
+    newPlayer.displayName = name
+    newPlayer.socketId = socket.id
+    newPlayer.yutsAsleep = false
+    newPlayer.visibility = true
+    newPlayer.thrown = false
+    teams[newTeam].players.push(newPlayer)
+    io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
+    players[socket.id] = newPlayer
+  
+    if (waitingToPass) {
+      if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+        turn = passTurn(turn, teams)
+        players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
+        teams[turn.team].throws++;
+      }
+    }
+  
+    if (countPlayers2(players) >= 2) {
+      readyToStart = true;
+      io.to(hostId).emit("readyToStart", readyToStart)
+    }
+  
+    io.emit("teams", teams);
+    io.emit("turn", turn);
+    io.emit("players", players)
+  })
 
   socket.on("sendMessage", ({ message, team, socketId }) => {
     messages.push({

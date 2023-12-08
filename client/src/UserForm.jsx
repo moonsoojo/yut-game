@@ -4,11 +4,12 @@ import { signInAnonymously } from 'firebase/auth';
 import { Text3D, Html } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { teamsAtom } from './SocketManager';
+import { nameAtom, teamsAtom, socket } from './SocketManager';
 import { useAtom } from 'jotai';
+import layout from '../../layout';
 
 export default function UserForm() {
-  const [name, setName] = useState('')
+  const [name, setName] = useAtom(nameAtom)
   const [alert, setAlert] = useState('')
   const [teams] = useAtom(teamsAtom)
 
@@ -23,8 +24,8 @@ export default function UserForm() {
     } else {
       setAlert("let's go!")
       localStorage.setItem('userName', name)
-      await signInAnonymously(auth);
-      // socket.emit("submitName", {displayName})
+      // await signInAnonymously(auth);
+      socket.emit("submitName", { name })
     }
   }
 
@@ -40,43 +41,37 @@ export default function UserForm() {
   }
 
   return (
-    <Html position={[0,0,0]} style={{ color: 'white' }}>
       <form 
         className="user-form" 
-        onSubmit={handleSubmit} 
-        style={{
-          marginTop: '30px',
-          maxWidth: '800px',
-          margin: 'auto'
-        }}>
-        <h1>Enter your name to start</h1>
+        onSubmit={handleSubmit}>
+        <h1 style={{ fontFamily: 'Luckiest Guy', color: 'yellow', fontSize: '70px' }}>YOOT GAME</h1>
+        <h1 style={{ fontFamily: 'Luckiest Guy'}}>Enter your name</h1>
         <input 
           id='input-name'
           style={{ 
             height: '20px',
             borderRadius: '5px',
             padding: '5px',
-            border: 0
+            border: 0,
+            fontFamily: 'Luckiest Guy'
           }} 
           onChange={e => setName(e.target.value)} 
           placeholder="Enter your name..."
         />
         <button
           style={{ 
-            height: '20px',
-            width: '53px',
+            height: '50px',
+            width: '60px',
             backgroundColor: 'yellow',
             marginTop: '5px',
             borderRadius: '5px',
             color: 'black',
             padding: '5px',
-            fontFamily: 'Arial'
+            fontFamily: 'Luckiest Guy'
           }}
-          type="submit">
-          Submit
-        </button>
+          type="submit"
+        >Submit</button>
         <div style={{ marginTop: '5px', fontFamily: 'Arial' }}>{alert}</div>
       </form>  
-    </Html>
   )
 }
