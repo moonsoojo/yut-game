@@ -14,23 +14,14 @@ import {
 } from "@react-three/drei";
 import React from "react";
 import { SocketManager } from "./SocketManager";
+import App from './App'
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
 root.render(
   <KeyboardControls map={[{ name: "throw", keys: ["Space"] }]}>
     <SocketManager />
-    <Canvas
-      gl={{
-        antialias: true,
-        toneMapping: THREE.ACESFilmicToneMapping,
-        outputEncoding: THREE.sRGBEncoding,
-      }}
-      // camera={{ fov: 45, near: 0.1, far: 500, position: [6, 6, 6] }}
-      // pan: move about a plane
-    >
+    <App/>
 
-      <Experience />
-    </Canvas>
   </KeyboardControls>
 );

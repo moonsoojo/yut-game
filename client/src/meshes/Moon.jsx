@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 
 export default function Moon({ position, tile, scale = 1, device }) {
   const props = useTexture({
-    map: "textures/moon/moon-color.jpg",
+    map: "/textures/moon/moon-color.jpg", // must use absolute path - string starts with a slash
   });
 
   const wrap = useRef();

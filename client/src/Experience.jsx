@@ -36,7 +36,6 @@ import {
   legalTilesAtom,
   clientPlayerAtom,
   playersAtom,
-  messagesAtom
 } from "./SocketManager";
 import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
@@ -46,7 +45,6 @@ import Piece from "./components/Piece.jsx";
 import { isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 import Chatbox from "./Chatbox.jsx";
-
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;

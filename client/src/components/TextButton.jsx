@@ -40,7 +40,8 @@ export default function TextButton({
           <meshStandardMaterial transparent opacity={0.5} />
         </mesh>
       )}
-      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={size} height={0.01}>
+      {/* must use absolute path - string starts with a slash */}
+      <Text3D font="/fonts/Luckiest Guy_Regular.json" size={size} height={0.01}> 
         {text} <meshStandardMaterial color={hover ? "white" : color} />
       </Text3D>
     </group>
