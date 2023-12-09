@@ -76,6 +76,12 @@ export default function Experience() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
+    let player = localStorage.getItem('clientPlayer')
+    socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
+      if (response.status === "success") {
+        localStorage.setItem('clientPlayer', JSON.stringify(response.player))
+      }
+    })
   }, []);
 
   let zoom;

@@ -7,27 +7,27 @@ import * as THREE from "three";
 import { nameAtom, teamsAtom, socket } from './SocketManager';
 import { useAtom } from 'jotai';
 import layout from '../../layout';
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 export default function UserForm() {
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
   const [teams] = useAtom(teamsAtom)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  useEffect(() => {
-    let player = localStorage.getItem('clientPlayer')
-    console.log("player", player)
-    if (player != null) {
-      socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
-        if (response.status === "success") {
-          localStorage.setItem('clientPlayer', JSON.stringify(response.player))
-        }
-      })
-      // navigate(`/game/${game.gameId}`)
-      navigate(`/game`)
-    }
-  }, [])
+  // useEffect(() => {
+  //   let player = localStorage.getItem('clientPlayer')
+  //   console.log("player", player)
+  //   if (player != null) {
+  //     socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
+  //       if (response.status === "success") {
+  //         localStorage.setItem('clientPlayer', JSON.stringify(response.player))
+  //       }
+  //     })
+  //     // navigate(`/game/${game.gameId}`)
+  //     navigate(`/game`)
+  //   }
+  // }, [])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -44,7 +44,7 @@ export default function UserForm() {
           localStorage.setItem('clientPlayer', JSON.stringify(response.clientPlayer))
         }
       })
-      navigate(`/game`)
+      // navigate(`/game`)
     }
   }
 
