@@ -195,7 +195,7 @@ function findRandomPlayer(teams) {
 }
 
 io.on("connection", (socket) => { // socket.handshake.query is data obj
-  console.log("a user connected"); 
+  console.log("a user connected", socket.id); 
 
   // socket.on("ready", ({socketId, flag}) => {
   //   players[socketId].ready = flag
@@ -216,7 +216,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   //   io.emit("players", players)
   // })
 
-  socket.on("submitName", ({ name }) => {
+  socket.on("submitName", ({ name }, callback) => {
     if (hostId == null) {
       hostId = socket.id
     }
@@ -257,6 +257,55 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("teams", teams);
     io.emit("turn", turn);
     io.emit("players", players)
+
+    callback({
+      status: "success",
+      clientPlayer: newPlayer
+    })
+  })
+
+  socket.on("localStoragePlayer", ({ player }, callback) => {
+    if (hostId == null) {
+      hostId = socket.id
+    }
+  
+    io.emit("tiles", tiles);
+    io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
+    io.emit("messages", messages)
+  
+    io.emit("gamePhase", gamePhase);
+    io.emit("readyToStart", readyToStart);
+
+    // console.log("[localStoragePlayer] teams", teams)
+    
+    player.socketId = socket.id
+    console.log("[localStoragePlayer] player", player)
+  
+    teams[player.team].players.push(player)
+    io.to(socket.id).emit("setUpPlayer", {player})
+    players[socket.id] = player
+  
+    if (waitingToPass) {
+      if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+        turn = passTurn(turn, teams)
+        players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
+        teams[turn.team].throws++;
+      }
+    }
+  
+    if (countPlayers2(players) >= 2) {
+      readyToStart = true;
+      io.to(hostId).emit("readyToStart", readyToStart)
+    }
+  
+    io.emit("teams", teams);
+    io.emit("turn", turn);
+    io.emit("players", players)
+
+    callback({
+      status: "success",
+      player: player
+    })
   })
 
   socket.on("sendMessage", ({ message, team, socketId }) => {

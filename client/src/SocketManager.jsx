@@ -89,8 +89,8 @@ export const SocketManager = () => {
     }
 
     function onSetUpPlayer({player}) {
+      console.log("[onSetUpPlayer] player", player)
       setClientPlayer(player);
-      // localStorage.setItem('player', JSON.stringify(player));
     }
 
     function onDisconnect() {

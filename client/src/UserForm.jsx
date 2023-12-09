@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 import layout from '../../layout';
 
 export default function UserForm() {
-  const [name, setName] = useAtom(nameAtom)
+  const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
   const [teams] = useAtom(teamsAtom)
 
@@ -23,9 +23,11 @@ export default function UserForm() {
       setAlert('Name is already taken.')
     } else {
       setAlert("let's go!")
-      localStorage.setItem('userName', name)
-      // await signInAnonymously(auth);
-      socket.emit("submitName", { name })
+      socket.emit("submitName", { name }, (response) => {
+        if (response.status === "success") {
+          localStorage.setItem('clientPlayer', JSON.stringify(response.clientPlayer))
+        }
+      })
     }
   }
 
@@ -41,37 +43,37 @@ export default function UserForm() {
   }
 
   return (
-      <form 
-        className="user-form" 
-        onSubmit={handleSubmit}>
-        <h1 style={{ fontFamily: 'Luckiest Guy', color: 'yellow', fontSize: '70px' }}>YOOT GAME</h1>
-        <h1 style={{ fontFamily: 'Luckiest Guy'}}>Enter your name</h1>
-        <input 
-          id='input-name'
-          style={{ 
-            height: '20px',
-            borderRadius: '5px',
-            padding: '5px',
-            border: 0,
-            fontFamily: 'Luckiest Guy'
-          }} 
-          onChange={e => setName(e.target.value)} 
-          placeholder="Enter your name..."
-        />
-        <button
-          style={{ 
-            height: '50px',
-            width: '60px',
-            backgroundColor: 'yellow',
-            marginTop: '5px',
-            borderRadius: '5px',
-            color: 'black',
-            padding: '5px',
-            fontFamily: 'Luckiest Guy'
-          }}
-          type="submit"
-        >Submit</button>
-        <div style={{ marginTop: '5px', fontFamily: 'Arial' }}>{alert}</div>
-      </form>  
+    <form 
+      className="user-form" 
+      onSubmit={handleSubmit}>
+      <h1 style={{ fontFamily: 'Luckiest Guy', color: 'yellow', fontSize: '70px' }}>YOOT GAME</h1>
+      <h1 style={{ fontFamily: 'Luckiest Guy'}}>Enter your name</h1>
+      <input 
+        id='input-name'
+        style={{ 
+          height: '20px',
+          borderRadius: '5px',
+          padding: '5px',
+          border: 0,
+          fontFamily: 'Luckiest Guy'
+        }} 
+        onChange={e => setName(e.target.value)} 
+        placeholder="Enter your name..."
+      />
+      <button
+        style={{ 
+          height: '50px',
+          width: '60px',
+          backgroundColor: 'yellow',
+          marginTop: '5px',
+          borderRadius: '5px',
+          color: 'black',
+          padding: '5px',
+          fontFamily: 'Luckiest Guy'
+        }}
+        type="submit"
+      >Submit</button>
+      <div style={{ marginTop: '5px', fontFamily: 'Arial' }}>{alert}</div>
+    </form>  
   )
 }
