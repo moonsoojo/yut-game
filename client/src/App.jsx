@@ -17,25 +17,13 @@ export default function App() {
   // go to game
   // else
   // go to sign in page
-  const clientPlayer = localStorage.getItem('clientPlayer')
-  
-  useEffect(() => {
-    if (clientPlayer == null) {
-      return <UserForm />
-    } else {
-      socket.emit("localStoragePlayer", ({ player: JSON.parse(clientPlayer) }), (response) => {
-        if (response.status === "success") {
-          localStorage.setItem('clientPlayer', JSON.stringify(response.player))
-        }
-      })
-    }
-  }, [clientPlayer])
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Home/>}/>
-        <Route path="/game/:id" element={    
+        <Route exact path="/" element={<UserForm/>}/>
+        {/* <Route path="/game/:id" element={     */}
+        <Route path="/game" element={    
           <Canvas
             gl={{
               antialias: true,
