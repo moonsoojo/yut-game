@@ -63,7 +63,6 @@ export function isMyTurn (turn, teams, socketId) {
 }
 
 export function getPlayerBySocketId(teams, socketId) {
-  
   for (let i = 0; i < teams.length; i++) {
     for (let j = 0; j < teams[i].players.length; j++) {
       if (teams[i].players[j].socketId === socketId) {
@@ -72,4 +71,15 @@ export function getPlayerBySocketId(teams, socketId) {
     }
   }
   return {} // not found
+}
+
+export function allYutsAsleep(players) {
+  let flag = true;
+  for (const socketId of Object.keys(players)) {
+    if (players[socketId].visibility && !players[socketId].yutsAsleep) {
+      flag = false;
+    }
+  }
+  console.log("[allYutsAsleep]", flag)
+  return flag
 }

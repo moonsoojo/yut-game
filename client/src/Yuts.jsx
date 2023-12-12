@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "../../server/src/helpers.js";
+import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYutsAsleep } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
 import TextButton from "./components/TextButton.jsx";
 
@@ -75,7 +75,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0) {
+    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(players)) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3

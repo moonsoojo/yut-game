@@ -9,21 +9,11 @@ export default function Home() {
   const navigate = useNavigate()
 
   async function handlePlayOnline() {
-    // starting piece
-    const member = {
-      uid: currentUser.uid,
-      // piece
-      name: localStorage.getItem('userName'),
-      // creator: true // host
-    }
     const game = {
-      status: 'lobby',
-      members: [member],
       gameId: `${Math.random().toString(36).substring(2, 9)}_${Date.now()}`
     }
     
-    // db.collection('games').doc(game.gameId).set(game)
-    await setDoc(doc(db, 'games', game.gameId), game)
+    // send game state to server
     navigate(`/game/${game.gameId}`)
   }
 

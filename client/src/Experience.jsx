@@ -528,8 +528,8 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                // text={`${value.displayName}, ${device === "landscapeDesktop" ? 
-                text={`${value.displayName} ${device === "" ? 
+                text={`${value.displayName}, ${device === "landscapeDesktop" ? 
+                // text={`${value.displayName} ${device === "" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}
@@ -564,8 +564,8 @@ export default function Experience() {
             </group>
             {teams[1].players.map((value, index) => (
               <TextButton
-                // text={`${value.displayName}, ${device === "landscapeDesktop" ? 
-                text={`${value.displayName} ${device === "" ? 
+                text={`${value.displayName}, ${device === "landscapeDesktop" ? 
+                // text={`${value.displayName} ${device === "" ? 
                   `visible: ${players[value.socketId].visibility}, 
                   yutsAsleep: ${players[value.socketId].yutsAsleep},
                   thrown: ${players[value.socketId].thrown}`: ''}`}

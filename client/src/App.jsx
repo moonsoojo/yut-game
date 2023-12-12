@@ -13,23 +13,12 @@ import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom'
 
 export default function App() {
-  // on load
-  // if local storage has player info
-  // go to game
-  // else
-  // go to sign in page
-  let player = localStorage.getItem('clientPlayer')
-
-  if (!player) {
-    return <UserForm />
-  }
 
   return (
     <Router>
       <Routes>
-        {/* <Route exact path="/" element={<UserForm/>}/> */}
-        {/* <Route path="/game/:id" element={     */}
-        <Route path="/game" exact element={    
+        {/* <Route exact path="/" element={<Home/>}/>
+        <Route path="/game/:id" element={    
           <Canvas
             gl={{
               antialias: true,
@@ -40,7 +29,19 @@ export default function App() {
             // pan: move about a plane
           >
             <Experience/>
-          </Canvas>}/>  
+          </Canvas>}/>   */}
+          <Route path="/" exact element={    
+          <Canvas
+            gl={{
+              antialias: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              outputEncoding: THREE.sRGBEncoding,
+            }}
+            // camera={{ fov: 45, near: 0.1, far: 500, position: [6, 6, 6] }}
+            // pan: move about a plane
+          >
+            <Experience/>
+          </Canvas>}/> 
       </Routes>
     </Router>
   )
