@@ -215,6 +215,7 @@ function onConnect(socket) {
   newPlayer.yutsAsleep = false
   newPlayer.visibility = true
   newPlayer.thrown = false
+  newPlayer.reset = false
   teams[newTeam].players.push(newPlayer)
   io.to(socket.id).emit("setUpPlayer", {player: newPlayer})
   players[socket.id] = newPlayer
@@ -387,6 +388,14 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         callback({
           status: "record"
         })
+      } else if (!(players[socketId].reset == false)) {
+        players[socketId].reset = false
+        if (getCurrentPlayerSocketId(turn, teams) === socketId) {
+          callback({
+            status: "reset",
+            result: players[socketId].reset.result
+          })
+        }
       } else {
         callback({
           status: "noRecord"
@@ -432,23 +441,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     selection = payload;
     io.emit("select", selection);
   });
-
-  // function onlyHasNak(moves) {
-  //   let hasAnotherMove = false;
-  //   let hasNak = false;
-  //   for (const move of Object.keys(moves)) {
-  //     if (move === "0" && moves[move] > 0) {
-  //       hasNak = true;
-  //     } else if (move !== "0" && moves[move] > 0) {
-  //       hasAnotherMove = true;
-  //     }
-  //   }
-  //   if (hasNak && !hasAnotherMove) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   socket.on("move", ({selection, tile, moveInfo}) => {
     [tiles, teams] = move(tiles, teams, selection.tile, tile, moveInfo.move, moveInfo.history, selection.pieces)
@@ -553,6 +545,36 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
   });
 
+  socket.on("resetYuts", ({ result, socketId }) => {
+    players[socketId].reset = {
+      flag: true,
+      result: result
+    }
+    let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
+    let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+
+    // reset yuts
+    for (const socketId of Object.keys(players)) {
+      if (players[socketId].visibility) {
+        players[socketId].yutsAsleep = false;
+        const yutForceVectors = [];
+        for (let i = 0; i < 4; i++) {
+          yutForceVectors.push({
+            positionInHand: positionsInHand[i],
+            rotation: rotations[i],
+            yImpulse: 0,
+            torqueImpulse: {
+              x: 0,
+              y: 0,
+              z: 0,
+            },
+          });
+        }
+        io.to(socketId).emit("throwYuts", yutForceVectors);
+      }
+    }
+  })
+
   socket.on("reset", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
@@ -594,7 +616,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("legalTiles", { legalTiles })
   })
 
-  socket.on("recordThrow", ({result, socketId}) => {
+  function recordThrow({ result, socketId }) {
     console.log("[recordThrow] result", result, "socketId", socketId)
     players[socketId].thrown = false;
     
@@ -620,6 +642,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
     io.emit("teams", teams)
     io.emit("players", players)
+  }
+
+  socket.on("recordThrow", ({result, socketId}) => {
+    recordThrow({ result, socketId })
   })
 
   socket.on("throwInProgress", (flag) => {

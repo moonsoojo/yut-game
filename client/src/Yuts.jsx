@@ -59,6 +59,13 @@ export default function YutsNew3({ device = "portrait" }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
+    setTimeout(() => {
+      if (sleepCount % 4 != 0) {
+        result = observeThrow();
+        setSleepCount(0);
+        socket.emit("resetYuts", ({ result, socketId: clientPlayer.socketId }));
+      }
+    }, 10000)
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -68,7 +75,10 @@ export default function YutsNew3({ device = "portrait" }) {
         if (response.status === "readyToStart") {
           socket.emit("readyToStart", true)
         } else if (response.status === "record") {
-          observeThrow();
+          let result = observeThrow();
+          socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
+        } else if (response.status === "reset") {
+          socket.emit("recordThrow", { result: response.result, socketId: clientPlayer.socketId})
         }
       })
     }
@@ -109,7 +119,6 @@ export default function YutsNew3({ device = "portrait" }) {
         nak = true;
       }
     }
-    console.log("[observeThrow] nak", nak)
     if (!nak) {
       let countUps = 0
       let backdoUp = false
@@ -141,8 +150,7 @@ export default function YutsNew3({ device = "portrait" }) {
       //   result = 4
       // }
     }
-
-    socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
+      
     return result
   }
 
@@ -156,16 +164,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }
 
   function handleYutThrow() {
-    socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId}, (response) => {
-      if (response.status === "ok") {
-        // if (outOfBounds) {
-        //   setOutOfBounds(false);
-        // }
-        // don't set alert
-      } else {
-        // set an alert: unable to throw
-      }
-    });
+    socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId});
   }
 
   return (
