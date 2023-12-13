@@ -15,13 +15,13 @@ export default function Mars({ position, tile, device }) {
   });
 
   return (
-    <group position={position}>
+    <group position={position} scale={0.4}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Mars.geometry}
         material={materials.Mars}
-        scale={0.5}
+        scale={1.5}
         ref={mars}
       />
       <Tile tile={tile} wrapperRadius={0.6} device={device}/>

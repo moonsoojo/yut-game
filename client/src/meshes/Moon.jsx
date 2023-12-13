@@ -52,17 +52,18 @@ export default function Moon({ position, tile, scale = 1, device }) {
     <group
       ref={moon}
       position={position}
-      scale={1}
+      scale={0.4}
     >
-      <mesh
-      >
-        <sphereGeometry args={[1]} />
-        <meshStandardMaterial transparent opacity={0} ref={wrap} />
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[0.6, 32, 32]} />
-        <meshStandardMaterial map={props.map} />
-      </mesh>
+      <group scale={3.4}>
+        <mesh>
+          <sphereGeometry args={[1]} />
+          <meshStandardMaterial transparent opacity={0} ref={wrap} />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[0.6, 32, 32]} />
+          <meshStandardMaterial map={props.map} />
+        </mesh>
+      </group>
       <Tile tile={tile} wrapperRadius={0.6} device={device}/>
       <HelperArrow
         position={[0, 0, 1]}

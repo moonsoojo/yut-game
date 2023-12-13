@@ -86,9 +86,9 @@ export default {
       shortcut1: 2.7,
       shortcut2: 1.4
     },
-    tilePieceScale: 1,
+    tilePieceScale: 2.5,
     star: {
-      scale: 1.1,
+      scale: 0.35,
       rocketScale: 0.4,
       ufoScale: 0.2,
     },
@@ -263,9 +263,9 @@ export default {
       shortcut1: 3.5,
       shortcut2: 1.7
     },
-    tilePieceScale: 1.5,
+    tilePieceScale: 4,
     star: {
-      scale: 1.2,
+      scale: 0.4,
       rocketScale: 0.6,
       ufoScale: 0.3,
     },
@@ -410,15 +410,15 @@ export default {
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-13,-0.5,-1],
+      position: [-13,-0.5,-1.5],
       fontSizeMin: 12,
       fontSizeMax: 40,
       heightMin: 50,
-      heightMax: 200,
+      heightMax: 140,
       widthMin: 110,
       widthMax: 220,
       paddingMin: 5,
-      paddingMax: 10,
+      paddingMax: 7,
     },
     piecesSection: {
       position: [-0.8, 0, -4],
@@ -445,27 +445,17 @@ export default {
       shortcut1: 3.5,
       shortcut2: 1.7
     },
-    tilePieceScale: 1.5,
+    tilePieceScale: 4,
     star: {
-      scale: 1.5,
-      rocketScale: 0.6,
-      ufoScale: 0.3,
+      scale: 0.4,
     },
     mars: {
-      rocketScale: 0.6,
-      ufoScale: 0.3,
     },
     saturn: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
     },
     moon: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
     },
     earth: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
     },
     homePieces: {
       0: {

@@ -91,8 +91,8 @@ export default function Neptune2({ position, tile, device }) {
   });
 
   return (
-    <group position={position}>
-      <group ref={neptune} scale={0.3}>
+    <group position={position} scale={0.4}>
+      <group ref={neptune} scale={0.9}>
         <mesh
           castShadow
           receiveShadow
@@ -100,7 +100,7 @@ export default function Neptune2({ position, tile, device }) {
           material={materials["Blue Planet"]}
           scale={1.3}
           // ref={neptune1Ref}
-        ></mesh>
+        />
         {/* remove rings */}
         <NeptuneParticles
           countNeptune1={countNeptune1}

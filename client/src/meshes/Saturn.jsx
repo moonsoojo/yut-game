@@ -45,8 +45,8 @@ export default function Saturn({ position, tile, device }) {
   });
   
   return (
-    <group position={position}>
-      <group scale={0.3}>
+    <group position={position} scale={0.4}>
+      <group scale={0.9}>
         <mesh
           castShadow
           receiveShadow

@@ -14,12 +14,11 @@ export default function Star({ position, tile, device, scale }) {
   const { nodes } = useGraph(clone);
 
   return (
-    <group position={position}>
+    <group position={position} scale={scale}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.star.geometry}
-        scale={0.255 * scale}
       >
         <meshStandardMaterial color={"yellow"} />
       </mesh>

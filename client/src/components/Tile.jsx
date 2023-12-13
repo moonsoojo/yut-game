@@ -48,26 +48,18 @@ export default function Tile({ tile, wrapperRadius, device }) {
     }
   }
 
-  let rocketAdjustY = (tile == 5 || tile == 10 || tile == 15 || tile == 22) ? 0.1 : -0.1 
-  rocketAdjustY = tile == 0 ? 1 : rocketAdjustY;
-  // let rocketAdjustZ = tile == 0 ? 1 : rocketAdjustY;
-  let rocketAdjustZ = tile == 0 ? 0 : rocketAdjustY;
-  let ufoAdjustY = tile == 0 ? 0.5 : 0;
-  let ufoAdjustZ = tile == 0 ? 0.5 : 0;
-
-
   const rocketPositions = [
-    [0.1, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.4],
-    [0.1, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.1],
-    [-0.3, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.4],
-    [-0.3, rocketAdjustY + wrapperRadius, rocketAdjustZ + 0.1],
+    [-0.15, 1, 0.2],
+    [0.15, 1, 0.2],
+    [-0.15, 1, 0.5],
+    [0.15, 1, 0.5],
   ];
 
   const ufoPositions = [
-    [0.1, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + 0.1],
-    [0.1, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + -0.2],
-    [-0.2, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + 0.1],
-    [-0.2, ufoAdjustY + 0.1 + wrapperRadius, ufoAdjustZ + -0.2],
+    [-0.15, 1, 0.1],
+    [0.15, 1, 0.1],
+    [-0.15, 1, 0.4],
+    [0.15, 1, 0.4],
   ];
 
   function Pieces() { // app crashes when you click on a legalTile
@@ -98,6 +90,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
         onPointerLeave={(e) => handlePointerLeave(e)}
         onPointerDown={(e) => handlePointerDown(e)}
       >
+        {/* wrapper */}
         <sphereGeometry args={[wrapperRadius]} />
         <meshStandardMaterial
           transparent
@@ -106,10 +99,12 @@ export default function Tile({ tile, wrapperRadius, device }) {
           ref={wrapper}
         />
       </mesh>
+      {/* scale necessary because it's different from pieces at home or under team name */}
       <group scale={layout[device].tilePieceScale}>
-        <Pieces />
+        <Pieces/>
       </group>
-      { selection != null && tile in legalTiles && <Pointer color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
+      { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
+      {/* { <Pointer tile={tile} color={"turquoise" } device={device} />} */}
     </group>
   );
 }
