@@ -679,7 +679,30 @@ export default function Experience() {
               )
             }
             {/* moves */}
-            {(gamePhase === "pregame" || gamePhase !== "lobby") && 
+            {gamePhase === "pregame" && <>
+              <TextButton
+                text={`Moves:`}
+                position={layout[device].moves.text}
+                // size={layout[device].moves.size}
+              />
+              <TextButton
+                text={`${prettifyMoves(teams[0].moves)}`}
+                position={layout[device].moves.list}
+                color="red"
+                // size={layout[device].moves.size}
+              />
+              <TextButton
+                text={`${prettifyMoves(teams[1].moves)}`}
+                position={[
+                  layout[device].moves.list[0] + 0.5,
+                  layout[device].moves.list[1],
+                  layout[device].moves.list[2],
+                ]}
+                color="green"
+                // size={layout[device].moves.size}
+              />
+            </>}
+            {gamePhase !== "lobby" && 
               <>
                 <TextButton
                   text={`Moves:`}
