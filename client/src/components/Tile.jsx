@@ -89,6 +89,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
         onPointerDown={(e) => handlePointerDown(e)}
+        scale={4}
       >
         {/* wrapper */}
         <sphereGeometry args={[wrapperRadius]} />

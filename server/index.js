@@ -36,18 +36,18 @@ let waitingToPass = false;
 */
 let messages = []
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
     team: 0,
     players: [0,0]
   }
-  // teams[1].moves['4'] = 1
+  teams[0].moves['1'] = 1
   // teams[0].pieces[0] = null;
-  teams[0].pieces[1] = null;
-  teams[1].pieces[0] = "scored";
-  displayPiecesOnTiles(0);
+  teams[0].pieces[0] = null;
+  tiles[9] = [{ tile: 19, team: 0, id: 0, history: []}, { tile: 1, team: 0, id: 1,  history: []}, { tile: 1, team: 0, id: 2,  history: []}]
+  // displayPiecesOnTiles(0);
   // displayPiecesOnTiles(1);
 }
 
