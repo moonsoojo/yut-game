@@ -26,6 +26,7 @@ export default function YutsNew3({ device = "portrait" }) {
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [players] = useAtom(playersAtom);
   const [outOfBounds, setOutOfBounds] = useState(false);
+  const [showResetYoots, setShowResetYoots] = useState(false)
 
   const NUM_YUTS = 4;
   let yuts = [];
@@ -43,6 +44,7 @@ export default function YutsNew3({ device = "portrait" }) {
     }
   }, []);
 
+  let RESET_TIME = 5000
   useEffect(() => {
     // client lags if you emit here
     for (let i = 0; i < 4; i++) {
@@ -60,12 +62,11 @@ export default function YutsNew3({ device = "portrait" }) {
       });
     }
     setTimeout(() => {
-      if (sleepCount % 4 != 0) {
-        result = observeThrow();
-        setSleepCount(0);
-        socket.emit("resetYuts", ({ result, socketId: clientPlayer.socketId }));
-      }
-    }, 10000)
+      // if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === clientPlayer.socketId) {
+      //   setShowResetYoots(true);
+      // }
+      setShowResetYoots(true);
+    }, RESET_TIME)
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -78,7 +79,7 @@ export default function YutsNew3({ device = "portrait" }) {
           let result = observeThrow();
           socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
         } else if (response.status === "reset") {
-          socket.emit("recordThrow", { result: response.result, socketId: clientPlayer.socketId})
+          // don't record throw
         }
       })
     }
@@ -167,8 +168,20 @@ export default function YutsNew3({ device = "portrait" }) {
     socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId});
   }
 
+  function handleYootReset() {
+    setShowResetYoots(false);
+    socket.emit("resetYuts", { socketIdEmitter: clientPlayer.socketId })
+  }
+
   return (
     <group dispose={null}>
+      { showResetYoots && <TextButton
+        text='Reset yoots'
+        position={[-1,0,-5]}
+        boxWidth={1.2}
+        boxHeight={0.3}
+        handlePointerClick={handleYootReset}
+      /> }
       <RigidBody
         type="fixed"
         restitution={0.01}

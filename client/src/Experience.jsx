@@ -340,7 +340,7 @@ export default function Experience() {
               ]}
               key={index}
             >
-              <sphereGeometry args={[0.1]} />
+              <sphereGeometry args={[0.2]} />
             </mesh>
           ) : value === "scored" ? (
             <mesh
@@ -351,8 +351,8 @@ export default function Experience() {
               ]}
               key={index}
             >
-              <sphereGeometry args={[0.1]} />
-              <meshStandardMaterial color={team == 0 ? "red" : "turquoise"} />
+              <sphereGeometry args={[0.2]} />
+              <meshStandardMaterial color={team == 0 ? "red" : "green"} />
             </mesh>
           ) : (
               <Piece
@@ -654,15 +654,15 @@ export default function Experience() {
                     position={newHomePiecePositions[index]}
                     key={index}
                   >
-                    <sphereGeometry args={[0.1]} />
+                    <sphereGeometry args={[0.2]} />
                   </mesh>
                 ) : value === "scored" ? (
                   <mesh
                     position={newHomePiecePositions[index]}
                     key={index}
                   >
-                    <sphereGeometry args={[0.1]} />
-                    <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "turquoise"} />
+                    <sphereGeometry args={[0.2]} />
+                    <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "green"} />
                   </mesh>
                 ) : (
                   <Piece

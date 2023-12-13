@@ -44,12 +44,9 @@ if (test) {
     players: [0,0]
   }
   // teams[1].moves['4'] = 1
-  teams[0].pieces[0] = null;
+  // teams[0].pieces[0] = null;
   teams[0].pieces[1] = null;
-  teams[0].pieces[2] = null;
-  teams[0].pieces[3] = null;
-  tiles[0] = [{tile: 0, team: 0, id: 0, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 3, history: [15,16,17,18, 19]}]
-  tiles[1] = [{tile: 1, team: 0, id: 1, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}, {tile: 0, team: 0, id: 2, history: [15,16,17,18, 19]}]
+  teams[1].pieces[0] = "scored";
 }
 
 const generateRandomNumberInRange = (num, plusMinus) => {
@@ -383,19 +380,17 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         status: "readyToStart"
       })
     } else if (gamePhase !== "lobby") {
-      if (players[socketId].thrown == true && 
-        getCurrentPlayerSocketId(turn, teams) === socketId) {
-        callback({
-          status: "record"
-        })
-      } else if (!(players[socketId].reset == false)) {
-        players[socketId].reset = false
-        if (getCurrentPlayerSocketId(turn, teams) === socketId) {
+      if (socketId === getCurrentPlayerSocketId(turn, teams)) {
+        if (players[socketId].reset) {
+          players[socketId].reset = false
           callback({
-            status: "reset",
-            result: players[socketId].reset.result
+            status: "reset"
           })
-        }
+        } else if (players[socketId].thrown == true) {
+          callback({
+            status: "record"
+          })
+        } 
       } else {
         callback({
           status: "noRecord"
@@ -545,32 +540,44 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     }
   });
 
-  socket.on("resetYuts", ({ result, socketId }) => {
-    players[socketId].reset = {
-      flag: true,
-      result: result
-    }
-    let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
-    let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+  socket.on("resetYuts", ({ socketIdEmitter }) => {
+    console.log("[resetYuts]")
+    if (socketIdEmitter === getCurrentPlayerSocketId(turn, teams)) {
+      teams[turn.team].throws++
 
-    // reset yuts
-    for (const socketId of Object.keys(players)) {
-      if (players[socketId].visibility) {
-        players[socketId].yutsAsleep = false;
-        const yutForceVectors = [];
-        for (let i = 0; i < 4; i++) {
-          yutForceVectors.push({
-            positionInHand: positionsInHand[i],
-            rotation: rotations[i],
-            yImpulse: 0,
-            torqueImpulse: {
-              x: 0,
-              y: 0,
-              z: 0,
-            },
-          });
+      let positionsInHand = JSON.parse(JSON.stringify(initialState.resetYutPositions))
+      let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
+
+      for (const socketId of Object.keys(players)) {
+        if (players[socketId].visibility) {
+          players[socketId].yutsAsleep = false;
+          if (socketId === socketIdEmitter) {
+            players[socketId].reset = true;
+          }
         }
-        io.to(socketId).emit("throwYuts", yutForceVectors);
+      }
+
+      io.emit("players", players)
+      io.emit("teams", teams)
+  
+      // reset yuts
+      for (const socketId of Object.keys(players)) {
+        if (players[socketId].visibility) {
+          const yutForceVectors = [];
+          for (let i = 0; i < 4; i++) {
+            yutForceVectors.push({
+              positionInHand: positionsInHand[i],
+              rotation: rotations[i],
+              yImpulse: 0,
+              torqueImpulse: {
+                x: 0,
+                y: 0,
+                z: 0,
+              },
+            });
+          }
+          io.to(socketId).emit("throwYuts", yutForceVectors);
+        }
       }
     }
   })
