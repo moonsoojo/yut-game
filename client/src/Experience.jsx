@@ -6,6 +6,7 @@ import Neptune2 from "./meshes/Neptune2.jsx";
 import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
+import Moon from "./meshes/Moon.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Controls3d from "./Controls3d";
 import layout from "../../layout.js";
@@ -37,7 +38,6 @@ import {
   clientPlayerAtom,
   playersAtom,
 } from "./SocketManager";
-import Moon from "./meshes/Moon.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
@@ -505,10 +505,8 @@ export default function Experience() {
         castShadow
       />
       <group scale={layout[device].scale}>
-      {/* { clientPlayer === null ? <LandingPage device={device}/>
-      : */}
       { 
-        <Physics debug>
+        <Physics>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}

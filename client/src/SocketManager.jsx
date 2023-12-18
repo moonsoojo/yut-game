@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
 // export const socket = io("http://192.168.86.158:3000", { query: { 'player': localStorage.getItem('player') ?? "null" } }); // http://192.168.1.181:3000 //http://192.168.86.158:3000
-export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+export const socket = io("http://192.168.1.181:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
 const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 const initialYutPositions = JSON.parse(JSON.stringify(initialState.initialYutPositions))
