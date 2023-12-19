@@ -115,10 +115,10 @@ export default function Piece ({
   return (
     <group
       position={position}
+      rotation={rotation}
       ref={group}
       dispose={null}
       scale={scale}
-      rotation={rotation}
     >
       <mesh
         castShadow

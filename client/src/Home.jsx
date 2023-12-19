@@ -17,6 +17,8 @@ import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
 import Earth from "./meshes/Earth.jsx";
 import TextButton from './components/TextButton.jsx';
+import Rocket from './meshes/Rocket.jsx';
+import Ufo from './meshes/Ufo.jsx';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -238,12 +240,12 @@ export default function Home() {
         position={layout[device].camera.position}
         ref={camera}
       />
-      <group position={[-5.3, 0, -17]}>
+      <group position={layout[device].title.position}>
         <Html>
           <div
             style={{ 
               'fontFamily': 'Luckiest Guy',
-              'fontSize': '60px',
+              'fontSize': layout[device].title.fontSize,
               'color': 'yellow',
               "whiteSpace": "pre-line",
             }}
@@ -270,7 +272,7 @@ export default function Home() {
           material={materials["Texture wrap.005"]}
           position={layout[device].title.yuts.position1}
           rotation={[0, -Math.PI / 2, -Math.PI / 2]}
-          scale={[0.32, 2, 0.32]}
+          scale={layout[device].title.yuts.scale}
         />
         <mesh
           castShadow
@@ -279,7 +281,7 @@ export default function Home() {
           material={materials["Texture wrap.005"]}
           position={layout[device].title.yuts.position2}
           rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
-          scale={[0.32, 2, 0.32]}
+          scale={layout[device].title.yuts.scale}
         />
         <mesh
           castShadow
@@ -288,7 +290,7 @@ export default function Home() {
           material={materials["Texture wrap.005"]}
           position={layout[device].title.yuts.position3}
           rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
-          scale={[0.32, 2, 0.32]}
+          scale={layout[device].title.yuts.scale}
         />
         <mesh
           castShadow
@@ -297,14 +299,14 @@ export default function Home() {
           material={materials["Texture wrap.005"]}
           position={layout[device].title.yuts.position4}
           rotation={[0, - 9 * Math.PI / 16, -Math.PI / 2]}
-          scale={[0.32, 2, 0.32]}
+          scale={layout[device].title.yuts.scale}
         />
       </group>
       <Html position={layout[device].title.rulebook.position}>
         <div
           style={{ 
             'fontFamily': 'Luckiest Guy',
-            'fontSize': '50px',
+            'fontSize': layout[device].title.rulebook.fontSize,
             'color': 'yellow',
             "whiteSpace": "pre-line",
             'border': '3px solid yellow',
@@ -326,7 +328,7 @@ export default function Home() {
         <div
           style={{ 
             'fontFamily': 'Luckiest Guy',
-            'fontSize': '50px',
+            'fontSize': layout[device].title.letsPlay.fontSize,
             'color': 'yellow',
             "whiteSpace": "pre-line",
             'border': '3px solid yellow',
@@ -344,6 +346,33 @@ export default function Home() {
           </p>
         </div>
       </Html>
+      {/* PIECES */}
+      { device !== 'portrait' && <group>
+        <Rocket 
+          position={layout[device].title.rockets.position1}
+          scale={layout[device].title.rockets.scale}/>
+        <Rocket
+          position={layout[device].title.rockets.position2}
+          scale={layout[device].title.rockets.scale}/>
+        <Rocket 
+          position={layout[device].title.rockets.position3}
+          scale={layout[device].title.rockets.scale}/>
+        <Rocket 
+          position={layout[device].title.rockets.position4}
+          scale={layout[device].title.rockets.scale}/>
+        <Ufo 
+          position={layout[device].title.ufos.position1}
+          scale={layout[device].title.ufos.scale}/>
+        <Ufo
+          position={layout[device].title.ufos.position2}
+          scale={layout[device].title.ufos.scale}/>
+        <Ufo 
+          position={layout[device].title.ufos.position3}
+          scale={layout[device].title.ufos.scale}/>
+        <Ufo 
+          position={layout[device].title.ufos.position4}
+          scale={layout[device].title.ufos.scale}/>
+      </group>}
     </group>
   )
 }

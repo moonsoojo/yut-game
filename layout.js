@@ -20,18 +20,22 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position1: [-5.5, 0, -15],
+      position: [-5.3, 0, -17],
+      fontSize: '60px',
       yuts: {
         position1: [-1, 0, -4],
         position2: [-2, 0, -3.5],
         position3: [0, 0, -3],
         position4: [1, 0, -4.5],
+        scale: [0.32, 2, 0.32]
       },
       letsPlay: {
-        position: [-3, 0, -1.5]
+        position: [-3, 0, -1.5],
+        fontSize: '50px'
       },
       rulebook: {
-        position: [-7.75, 0, -1.5]
+        position: [-7.75, 0, -1.5],
+        fontSize: '50px'
       }
     },
     team0: {
@@ -392,7 +396,37 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-3, 0, -2]
+      position: [-13.5, 0, -6],
+      fontSize: '40px',
+      yuts: {
+        position1: [-3, 0, 0],
+        position2: [-3.5, 0, -1],
+        position3: [-4, 0, 0],
+        position4: [-2.5, 0, -0.5],
+        scale: [0.25, 1.5, 0.25]
+      },
+      rockets: {
+        position1: [0.3,0,-3],
+        position2: [0.3,0,-4],
+        position3: [2,0,-3],
+        position4: [2,0,-4],
+        scale: [1.1, 1.1, 1.1]
+      },
+      ufos: {
+        position1: [0.3,0,-5],
+        position2: [0.3,0,-6],
+        position3: [2,0,-5],
+        position4: [2,0,-6],
+        scale: [1.1, 1.1, 1.1]
+      },
+      letsPlay: {
+        position: [-0.9, 0, -2],
+        fontSize: '40px',
+      },
+      rulebook: {
+        position: [-13.5, 0, -2],
+        fontSize: '40px',
+      }
     },
     team0: {
       scale: 0.7,
