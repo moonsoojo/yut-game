@@ -5,7 +5,7 @@ import layout from '../../layout';
 
 // Three
 import { Leva, useControls } from "leva";
-import {OrthographicCamera} from "@react-three/drei";
+import { useGLTF, OrthographicCamera, Text3D, Html } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -16,6 +16,7 @@ import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
 import Earth from "./meshes/Earth.jsx";
+import TextButton from './components/TextButton.jsx';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -49,6 +50,10 @@ export default function Home() {
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
   }, []);
+
+  // yoot model
+  const nodes = useGLTF("/models/yut.glb").nodes;
+  const materials = useGLTF("/models/yut.glb").materials;
 
   const camera = useRef();
 
@@ -85,6 +90,12 @@ export default function Home() {
   }
 
   function handlePlayOnline() {
+    navigate(`/game/1`)
+  }
+
+  function handleRulebook() {
+    var win = window.open('https://www.youtube.com/watch?v=R-9XBzyW8Y8', '_blank');
+    win.focus();
   }
 
   let NUM_STARS = 20;
@@ -227,10 +238,112 @@ export default function Home() {
         position={layout[device].camera.position}
         ref={camera}
       />
+      <group position={[-5.3, 0, -17]}>
+        <Html>
+          <div
+            style={{ 
+              'fontFamily': 'Luckiest Guy',
+              'fontSize': '60px',
+              'color': 'yellow',
+              "whiteSpace": "pre-line",
+            }}
+          >
+            <p 
+              style={{
+                margin: '0px 10px'
+            }}>
+              YOOT
+              GAME
+            </p>
+          </div>
+        </Html>
+      </group>
       <group position={layout[device].center} scale={layout[device].tiles.scale}>
         <Tiles />
       </group>
+      {/* Yoots */}
+      <group>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder007.geometry}
+          material={materials["Texture wrap.005"]}
+          position={layout[device].title.yuts.position1}
+          rotation={[0, -Math.PI / 2, -Math.PI / 2]}
+          scale={[0.32, 2, 0.32]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder007.geometry}
+          material={materials["Texture wrap.005"]}
+          position={layout[device].title.yuts.position2}
+          rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+          scale={[0.32, 2, 0.32]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder007.geometry}
+          material={materials["Texture wrap.005"]}
+          position={layout[device].title.yuts.position3}
+          rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+          scale={[0.32, 2, 0.32]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder007.geometry}
+          material={materials["Texture wrap.005"]}
+          position={layout[device].title.yuts.position4}
+          rotation={[0, - 9 * Math.PI / 16, -Math.PI / 2]}
+          scale={[0.32, 2, 0.32]}
+        />
+      </group>
+      <Html position={layout[device].title.rulebook.position}>
+        <div
+          style={{ 
+            'fontFamily': 'Luckiest Guy',
+            'fontSize': '50px',
+            'color': 'yellow',
+            "whiteSpace": "pre-line",
+            'border': '3px solid yellow',
+            'borderRadius': '10px',
+            "margin": "10px"
+          }}
+          onClick={handleRulebook}
+        >
+          <p 
+            style={{
+              margin: '0px 10px'
+          }}>
+            RULE
+            BOOK
+          </p>
+        </div> 
+      </Html>
+      <Html position={layout[device].title.letsPlay.position}>
+        <div
+          style={{ 
+            'fontFamily': 'Luckiest Guy',
+            'fontSize': '50px',
+            'color': 'yellow',
+            "whiteSpace": "pre-line",
+            'border': '3px solid yellow',
+            'borderRadius': '10px',
+            "margin": "10px"
+          }}
+          onClick={handlePlayOnline}
+        >
+          <p 
+            style={{
+              margin: '0px 10px'
+          }}>
+            Let's 
+            Play!
+          </p>
+        </div>
+      </Html>
     </group>
-
   )
 }

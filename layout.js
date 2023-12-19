@@ -19,6 +19,21 @@ export default {
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
     },
+    title: {
+      position1: [-5.5, 0, -15],
+      yuts: {
+        position1: [-1, 0, -4],
+        position2: [-2, 0, -3.5],
+        position3: [0, 0, -3],
+        position4: [1, 0, -4.5],
+      },
+      letsPlay: {
+        position: [-3, 0, -1.5]
+      },
+      rulebook: {
+        position: [-7.75, 0, -1.5]
+      }
+    },
     team0: {
       scale: 1,
       position: [-7, 0, -14],
@@ -190,6 +205,9 @@ export default {
       zoomMax: 150,
       position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
+    },
+    title: {
+      position: [-3, 0, -2]
     },
     team0: {
       scale: 0.7,
@@ -372,6 +390,9 @@ export default {
       zoomMax: 40,
       position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
+    },
+    title: {
+      position: [-3, 0, -2]
     },
     team0: {
       scale: 0.7,
