@@ -1,6 +1,6 @@
 // React
 import React, { useState, useEffect, useRef } from 'react';
-// import { useNavigate } from 'react-router-dom'
+import { useLocation } from "wouter";
 import layout from '../../layout';
 
 // Three
@@ -24,7 +24,9 @@ let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Home() {
-  console.log("[Home]")
+
+  const [size, setSize] = useState([0,0])
+  
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
       return "portrait"
@@ -38,6 +40,7 @@ export default function Home() {
   let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
 
   const handleResize = () => {
+    setSize([window.innerWidth, window.innerHeight]); // trigger render so zoom changes
     if (window.innerWidth < landscapeMobileCutoff) {
       setDevice("portrait")
     } else if (window.innerWidth < landscapeDesktopCutoff) {
@@ -81,6 +84,7 @@ export default function Home() {
       mediaMax,
       window.innerWidth
     )
+    console.log('zoom', zoom)
   } else {
     zoom = calcScale(
       layout[device].camera.zoomMin,
@@ -92,6 +96,13 @@ export default function Home() {
   }
 
   console.log("[Home] zoom", zoom)
+
+  // const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
+
+  // useEffect(() => {
+  //   gl.toneMapping = THREE.ACESFilmicToneMapping;
+  //   gl.toneMappingExposure = 1;
+  // }, [gl, scene]);
 
   function handlePlayOnline() {
     // navigate(`/game/1`)
@@ -221,6 +232,31 @@ export default function Home() {
     step: 0.01,
   }
 
+  const [rulebookHover, setRulebookHover] = useState(false);
+
+  function handleRulebookEnter() {
+    setRulebookHover(true);
+  }
+  
+  function handleRulebookOut() {
+    setRulebookHover(false);
+  }
+
+  const [letsPlayHover, setLetsPlayHover] = useState(false);
+
+  function handleLetsPlayEnter() {
+    setLetsPlayHover(true);
+  }
+  
+  function handleLetsPlayOut() {
+    setLetsPlayHover(false);
+  }
+
+  const [location, setLocation] = useLocation();
+  function handleLetsPlay() {
+    setLocation("/game/1")
+  }
+
   return (
     <group>
       <color args={ ['#030202']} attach="background" />
@@ -243,26 +279,24 @@ export default function Home() {
         castShadow
       />
       <group>
-        <group position={layout[device].title.position}>
-          <Html>
-            <div
-              style={{ 
-                'fontFamily': 'Luckiest Guy',
-                'fontSize': layout[device].title.fontSize,
-                'color': 'yellow',
-                "whiteSpace": "pre-line",
-              }}
-            >
-              <p 
-                style={{
-                  margin: '0px 10px'
-              }}>
-                YOOT
-                GAME
-              </p>
-            </div>
-          </Html>
-        </group>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={1} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.position1}> 
+          YOOT
+          <meshStandardMaterial color='yellow' />
+        </Text3D>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={1} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.position2}> 
+          GAME
+          <meshStandardMaterial color='yellow' />
+        </Text3D>
         <group position={layout[device].center} scale={layout[device].tiles.scale}>
           <Tiles />
         </group>
@@ -305,29 +339,61 @@ export default function Home() {
             scale={layout[device].title.yuts.scale}
           />
         </group>
-        <Html position={layout[device].title.rulebook.position}>
-          <div
-            style={{ 
-              'fontFamily': 'Luckiest Guy',
-              'fontSize': layout[device].title.rulebook.fontSize,
-              'color': 'yellow',
-              "whiteSpace": "pre-line",
-              'border': '3px solid yellow',
-              'borderRadius': '10px',
-              "margin": "10px"
-            }}
-            onClick={handleRulebook}
-          >
-            <p 
-              style={{
-                margin: '0px 10px'
-            }}>
-              RULE
-              BOOK
-            </p>
-          </div> 
-        </Html>
-        <Html position={layout[device].title.letsPlay.position}>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.8} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.rulebook.position1}> 
+          RULE
+          <meshStandardMaterial color={rulebookHover ? "white" : 'yellow'} />
+        </Text3D>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.8} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.rulebook.position2}> 
+          BOOK
+          <meshStandardMaterial color={rulebookHover ? "white" : 'yellow'} />
+        </Text3D>
+        <mesh
+          position={layout[device].title.rulebook.positionBox}
+          onPointerEnter={handleRulebookEnter}
+          onPointerOut={handleRulebookOut}
+          onPointerDown={handleRulebook}
+        >
+          <boxGeometry args={layout[device].title.letsPlay.dimsBox} />
+          <meshStandardMaterial transparent opacity={0.5} />
+        </mesh>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.8} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.letsPlay.position1}> 
+          LET'S
+          <meshStandardMaterial color={letsPlayHover ? "white" : 'yellow'} />
+        </Text3D>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.8} 
+        height={0.01} 
+        rotation={[-Math.PI / 2, 0, 0, "XZY"]}
+        position={layout[device].title.letsPlay.position2}> 
+          PLAY!
+          <meshStandardMaterial color={letsPlayHover ? "white" : 'yellow'} />
+        </Text3D>
+        <mesh
+          position={layout[device].title.letsPlay.positionBox}
+          onPointerEnter={handleLetsPlayEnter}
+          onPointerOut={handleLetsPlayOut}
+          onPointerDown={handleLetsPlay}
+        >
+          <boxGeometry args={layout[device].title.letsPlay.dimsBox} />
+          <meshStandardMaterial transparent opacity={0.5} />
+        </mesh>
+        {/* <Html position={layout[device].title.letsPlay.position}>
           <div
             style={{ 
               'fontFamily': 'Luckiest Guy',
@@ -348,7 +414,7 @@ export default function Home() {
               Play!
             </p>
           </div>
-        </Html>
+        </Html> */}
         {/* PIECES */}
         { device !== 'portrait' && <group>
           <Rocket 

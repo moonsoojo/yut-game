@@ -20,8 +20,8 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-5.3, 0, -17],
-      fontSize: '60px',
+      position1: [-4.7, 0, -14.5],
+      position2: [-4.7, 0, -13],
       yuts: {
         position1: [-1, 0, -4],
         position2: [-2, 0, -3.5],
@@ -30,12 +30,16 @@ export default {
         scale: [0.32, 2, 0.32]
       },
       letsPlay: {
-        position: [-3, 0, -1.5],
-        fontSize: '50px'
+        position1: [-2, 0, -0.5],
+        position2: [-2, 0, 0.5],
+        positionBox: [-5.6, 0, -0.5],
+        dimsBox: [3, 4.2, 0.1]
       },
       rulebook: {
-        position: [-7.75, 0, -1.5],
-        fontSize: '50px'
+        position1: [-7, 0, -0.5],
+        position2: [-7, 0, 0.5],
+        positionBox: [-0.6, 0, -0.5],
+        dimsBox: [3, 4.2, 0.1]
       }
     },
     team0: {
@@ -211,7 +215,8 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-13.5, 0, -6],
+      position1: [-13.5, 0, -5.5],
+      position2: [-13.5, 0, -4],
       fontSize: '80px',
       yuts: {
         position1: [-3, 0, 0],
@@ -235,12 +240,16 @@ export default {
         scale: [1.1, 1.1, 1.1]
       },
       letsPlay: {
-        position: [-0.9, 0, -2],
-        fontSize: '80px',
+        position1: [0, 0, -1],
+        position2: [0, 0, 0.5],
+        positionBox: [1.4, 0, -0.65],
+        dimsBox: [3, 16, 0.1]
       },
       rulebook: {
-        position: [-13.5, 0, -2],
-        fontSize: '80px',
+        position1: [-13.5, 0, -1],
+        position2: [-13.5, 0, 0.5],
+        positionBox: [-12.1, 0, -0.65],
+        dimsBox: [3, 16, 0.1]
       }
     },
     team0: {
@@ -426,7 +435,8 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-13.5, 0, -6],
+      position1: [-13.5, 0, -5.5],
+      position2: [-13.5, 0, -4],
       fontSize: '40px',
       yuts: {
         position1: [-3, 0, 0],
@@ -450,12 +460,16 @@ export default {
         scale: [1.1, 1.1, 1.1]
       },
       letsPlay: {
-        position: [-0.9, 0, -2],
-        fontSize: '40px',
+        position1: [0, 0, -1],
+        position2: [0, 0, 0.5],
+        positionBox: [1.4, 0, -0.65],
+        dimsBox: [3, 16, 0.1]
       },
       rulebook: {
-        position: [-13.5, 0, -2],
-        fontSize: '40px',
+        position1: [-13.5, 0, -1],
+        position2: [-13.5, 0, 0.5],
+        positionBox: [-12.1, 0, -0.65],
+        dimsBox: [3, 16, 0.1]
       }
     },
     team0: {
