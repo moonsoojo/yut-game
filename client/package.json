@@ -38,6 +38,7 @@
     "three-stdlib": "^2.24.2",
     "vercel": "^30.2.3",
     "vite-plugin-glsl": "^1.1.2",
-    "zustand": "^4.4.0"
+    "zustand": "^4.4.0",
+    "wouter": "2.11.0"
   }
 }

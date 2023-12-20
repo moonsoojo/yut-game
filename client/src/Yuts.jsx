@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
-import { useGLTF, useKeyboardControls } from "@react-three/drei";
+import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
@@ -13,7 +13,7 @@ import TextButton from "./components/TextButton.jsx";
 THREE.ColorManagement.legacyMode = false;
 
 export default function YutsNew3({ device = "portrait" }) {
-  const [subscribeKeys, getKeys] = useKeyboardControls();
+  // const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yut.glb").nodes;
   const materials = useGLTF("/models/yut.glb").materials;
   const nodesRhino = useGLTF("/models/yut-rhino.glb").nodes;

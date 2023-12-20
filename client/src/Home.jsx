@@ -1,6 +1,6 @@
 // React
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import layout from '../../layout';
 
 // Three
@@ -24,8 +24,7 @@ let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Home() {
-  const navigate = useNavigate()
-
+  console.log("[Home]")
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
       return "portrait"
@@ -95,7 +94,7 @@ export default function Home() {
   console.log("[Home] zoom", zoom)
 
   function handlePlayOnline() {
-    navigate(`/game/1`)
+    // navigate(`/game/1`)
   }
 
   function handleRulebook() {

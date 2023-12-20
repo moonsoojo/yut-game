@@ -65,4 +65,3 @@ export default function Earth({ position, tile, device }) {
     </group>
   );
 }
-useGLTF.preload("./models/earth-round.glb");
