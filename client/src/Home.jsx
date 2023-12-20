@@ -16,7 +16,6 @@ import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
 import Earth from "./meshes/Earth.jsx";
-import TextButton from './components/TextButton.jsx';
 import Rocket from './meshes/Rocket.jsx';
 import Ufo from './meshes/Ufo.jsx';
 
@@ -51,6 +50,7 @@ export default function Home() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
+    console.log("[Home] useEffect")
   }, []);
 
   // yoot model
@@ -60,6 +60,7 @@ export default function Home() {
   const camera = useRef();
 
   useEffect(() => {
+    console.log("[Home] device", device)
     camera.current.lookAt(
       layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
       layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
@@ -68,6 +69,10 @@ export default function Home() {
   }, [device])
 
   let zoom;
+
+  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
+    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
+  }
 
   if (device !== "portrait") {
     zoom = calcScale(
@@ -87,9 +92,7 @@ export default function Home() {
     )
   }
 
-  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
-    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
-  }
+  console.log("[Home] zoom", zoom)
 
   function handlePlayOnline() {
     navigate(`/game/1`)
@@ -222,12 +225,6 @@ export default function Home() {
   return (
     <group>
       <color args={ ['#030202']} attach="background" />
-      <Leva hidden />
-      <directionalLight
-        position={lightPosition.value}
-        intensity={lightIntensity.value}
-        castShadow
-      />
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -240,139 +237,147 @@ export default function Home() {
         position={layout[device].camera.position}
         ref={camera}
       />
-      <group position={layout[device].title.position}>
-        <Html>
+      <Leva hidden />
+      <directionalLight
+        position={lightPosition.value}
+        intensity={lightIntensity.value}
+        castShadow
+      />
+      <group>
+        <group position={layout[device].title.position}>
+          <Html>
+            <div
+              style={{ 
+                'fontFamily': 'Luckiest Guy',
+                'fontSize': layout[device].title.fontSize,
+                'color': 'yellow',
+                "whiteSpace": "pre-line",
+              }}
+            >
+              <p 
+                style={{
+                  margin: '0px 10px'
+              }}>
+                YOOT
+                GAME
+              </p>
+            </div>
+          </Html>
+        </group>
+        <group position={layout[device].center} scale={layout[device].tiles.scale}>
+          <Tiles />
+        </group>
+        {/* Yoots */}
+        <group>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder007.geometry}
+            material={materials["Texture wrap.005"]}
+            position={layout[device].title.yuts.position1}
+            rotation={[0, -Math.PI / 2, -Math.PI / 2]}
+            scale={layout[device].title.yuts.scale}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder007.geometry}
+            material={materials["Texture wrap.005"]}
+            position={layout[device].title.yuts.position2}
+            rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+            scale={layout[device].title.yuts.scale}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder007.geometry}
+            material={materials["Texture wrap.005"]}
+            position={layout[device].title.yuts.position3}
+            rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+            scale={layout[device].title.yuts.scale}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder007.geometry}
+            material={materials["Texture wrap.005"]}
+            position={layout[device].title.yuts.position4}
+            rotation={[0, - 9 * Math.PI / 16, -Math.PI / 2]}
+            scale={layout[device].title.yuts.scale}
+          />
+        </group>
+        <Html position={layout[device].title.rulebook.position}>
           <div
             style={{ 
               'fontFamily': 'Luckiest Guy',
-              'fontSize': layout[device].title.fontSize,
+              'fontSize': layout[device].title.rulebook.fontSize,
               'color': 'yellow',
               "whiteSpace": "pre-line",
+              'border': '3px solid yellow',
+              'borderRadius': '10px',
+              "margin": "10px"
             }}
+            onClick={handleRulebook}
           >
             <p 
               style={{
                 margin: '0px 10px'
             }}>
-              YOOT
-              GAME
+              RULE
+              BOOK
+            </p>
+          </div> 
+        </Html>
+        <Html position={layout[device].title.letsPlay.position}>
+          <div
+            style={{ 
+              'fontFamily': 'Luckiest Guy',
+              'fontSize': layout[device].title.letsPlay.fontSize,
+              'color': 'yellow',
+              "whiteSpace": "pre-line",
+              'border': '3px solid yellow',
+              'borderRadius': '10px',
+              "margin": "10px"
+            }}
+            onClick={handlePlayOnline}
+          >
+            <p 
+              style={{
+                margin: '0px 10px'
+            }}>
+              Let's 
+              Play!
             </p>
           </div>
         </Html>
+        {/* PIECES */}
+        { device !== 'portrait' && <group>
+          <Rocket 
+            position={layout[device].title.rockets.position1}
+            scale={layout[device].title.rockets.scale}/>
+          <Rocket
+            position={layout[device].title.rockets.position2}
+            scale={layout[device].title.rockets.scale}/>
+          <Rocket 
+            position={layout[device].title.rockets.position3}
+            scale={layout[device].title.rockets.scale}/>
+          <Rocket 
+            position={layout[device].title.rockets.position4}
+            scale={layout[device].title.rockets.scale}/>
+          <Ufo 
+            position={layout[device].title.ufos.position1}
+            scale={layout[device].title.ufos.scale}/>
+          <Ufo
+            position={layout[device].title.ufos.position2}
+            scale={layout[device].title.ufos.scale}/>
+          <Ufo 
+            position={layout[device].title.ufos.position3}
+            scale={layout[device].title.ufos.scale}/>
+          <Ufo 
+            position={layout[device].title.ufos.position4}
+            scale={layout[device].title.ufos.scale}/>
+        </group>}
       </group>
-      <group position={layout[device].center} scale={layout[device].tiles.scale}>
-        <Tiles />
-      </group>
-      {/* Yoots */}
-      <group>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder007.geometry}
-          material={materials["Texture wrap.005"]}
-          position={layout[device].title.yuts.position1}
-          rotation={[0, -Math.PI / 2, -Math.PI / 2]}
-          scale={layout[device].title.yuts.scale}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder007.geometry}
-          material={materials["Texture wrap.005"]}
-          position={layout[device].title.yuts.position2}
-          rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
-          scale={layout[device].title.yuts.scale}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder007.geometry}
-          material={materials["Texture wrap.005"]}
-          position={layout[device].title.yuts.position3}
-          rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
-          scale={layout[device].title.yuts.scale}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder007.geometry}
-          material={materials["Texture wrap.005"]}
-          position={layout[device].title.yuts.position4}
-          rotation={[0, - 9 * Math.PI / 16, -Math.PI / 2]}
-          scale={layout[device].title.yuts.scale}
-        />
-      </group>
-      <Html position={layout[device].title.rulebook.position}>
-        <div
-          style={{ 
-            'fontFamily': 'Luckiest Guy',
-            'fontSize': layout[device].title.rulebook.fontSize,
-            'color': 'yellow',
-            "whiteSpace": "pre-line",
-            'border': '3px solid yellow',
-            'borderRadius': '10px',
-            "margin": "10px"
-          }}
-          onClick={handleRulebook}
-        >
-          <p 
-            style={{
-              margin: '0px 10px'
-          }}>
-            RULE
-            BOOK
-          </p>
-        </div> 
-      </Html>
-      <Html position={layout[device].title.letsPlay.position}>
-        <div
-          style={{ 
-            'fontFamily': 'Luckiest Guy',
-            'fontSize': layout[device].title.letsPlay.fontSize,
-            'color': 'yellow',
-            "whiteSpace": "pre-line",
-            'border': '3px solid yellow',
-            'borderRadius': '10px',
-            "margin": "10px"
-          }}
-          onClick={handlePlayOnline}
-        >
-          <p 
-            style={{
-              margin: '0px 10px'
-          }}>
-            Let's 
-            Play!
-          </p>
-        </div>
-      </Html>
-      {/* PIECES */}
-      { device !== 'portrait' && <group>
-        <Rocket 
-          position={layout[device].title.rockets.position1}
-          scale={layout[device].title.rockets.scale}/>
-        <Rocket
-          position={layout[device].title.rockets.position2}
-          scale={layout[device].title.rockets.scale}/>
-        <Rocket 
-          position={layout[device].title.rockets.position3}
-          scale={layout[device].title.rockets.scale}/>
-        <Rocket 
-          position={layout[device].title.rockets.position4}
-          scale={layout[device].title.rockets.scale}/>
-        <Ufo 
-          position={layout[device].title.ufos.position1}
-          scale={layout[device].title.ufos.scale}/>
-        <Ufo
-          position={layout[device].title.ufos.position2}
-          scale={layout[device].title.ufos.scale}/>
-        <Ufo 
-          position={layout[device].title.ufos.position3}
-          scale={layout[device].title.ufos.scale}/>
-        <Ufo 
-          position={layout[device].title.ufos.position4}
-          scale={layout[device].title.ufos.scale}/>
-      </group>}
     </group>
   )
 }

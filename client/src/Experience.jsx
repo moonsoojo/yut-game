@@ -166,6 +166,8 @@ export default function Experience() {
     )
   }
 
+  console.log('[Experience] zoom', zoom)
+
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);

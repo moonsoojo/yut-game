@@ -211,7 +211,37 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-3, 0, -2]
+      position: [-13.5, 0, -6],
+      fontSize: '80px',
+      yuts: {
+        position1: [-3, 0, 0],
+        position2: [-3.5, 0, -1],
+        position3: [-4, 0, 0],
+        position4: [-2.5, 0, -0.5],
+        scale: [0.25, 1.5, 0.25]
+      },
+      rockets: {
+        position1: [0.3,0,-3],
+        position2: [0.3,0,-4],
+        position3: [2,0,-3],
+        position4: [2,0,-4],
+        scale: [1.1, 1.1, 1.1]
+      },
+      ufos: {
+        position1: [0.3,0,-5],
+        position2: [0.3,0,-6],
+        position3: [2,0,-5],
+        position4: [2,0,-6],
+        scale: [1.1, 1.1, 1.1]
+      },
+      letsPlay: {
+        position: [-0.9, 0, -2],
+        fontSize: '80px',
+      },
+      rulebook: {
+        position: [-13.5, 0, -2],
+        fontSize: '80px',
+      }
     },
     team0: {
       scale: 0.7,
