@@ -70,12 +70,12 @@ export default function ScoreButton({ position, device='portrait' }) {
         <boxGeometry args={[3, 0.25, 5]} />
         <meshStandardMaterial transparent opacity={0} />
       </mesh>
-      <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.5} height={0.01} rotation={layout[device].textRotation}>
+      <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.5} height={0.01} rotation={layout[device].textRotation}>
         Score
         <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
       </Text3D>
       { displayScoreOptions && <group position={[0, 0, 0.5]}>
-        <Text3D font="./fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01} rotation={layout[device].textRotation}>
+        <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.3} height={0.01} rotation={layout[device].textRotation}>
           Finish with
           <meshStandardMaterial color={hoverScoreText ? "white" : "yellow"} />
         </Text3D>

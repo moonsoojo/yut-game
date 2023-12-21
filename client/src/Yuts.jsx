@@ -108,6 +108,12 @@ export default function YutsNew3({ device = "portrait" }) {
     if (allYutsOnFloor) {
       setOutOfBounds(false);
     }
+    // log yoot positions
+    let positions = []
+    for (let i = 0; i < yuts.length; i++) {
+      positions.push(yuts[i].current.translation())
+    }
+    console.log("[Yuts] yut positions", positions);
   })
 
   function observeThrow() {
