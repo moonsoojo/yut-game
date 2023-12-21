@@ -32,13 +32,13 @@ export default {
       letsPlay: {
         position1: [-2, 0, -0.5],
         position2: [-2, 0, 0.5],
-        positionBox: [-5.6, 0, -0.5],
+        positionBox: [-0.6, 0, -0.5],
         dimsBox: [3, 4.2, 0.1]
       },
       rulebook: {
         position1: [-7, 0, -0.5],
         position2: [-7, 0, 0.5],
-        positionBox: [-0.6, 0, -0.5],
+        positionBox: [-5.6, 0, -0.5],
         dimsBox: [3, 4.2, 0.1]
       }
     },

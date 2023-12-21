@@ -200,7 +200,7 @@ export default function YutsNew3({ device = "portrait" }) {
           <meshStandardMaterial 
             transparent 
             color='yellow'
-            opacity={0}
+            opacity={0.3}
             ref={yutFloorMaterial}
           />
         </mesh>

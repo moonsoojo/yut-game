@@ -545,11 +545,11 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
           for (let i = 0; i < 4; i++) {
             yutForceVectors.push({
               rotation: rotations[i],
-              yImpulse: generateRandomNumberInRange(0.7, 0.2),
+              yImpulse: generateRandomNumberInRange(0.4, 0.1),
               torqueImpulse: {
-                x: generateRandomNumberInRange(0.008, 0.004),
-                y: generateRandomNumberInRange(0.05, 0.04),
-                z: generateRandomNumberInRange(0.006, 0.003),
+                x: generateRandomNumberInRange(0.005, 0.003),
+                y: generateRandomNumberInRange(0.03, 0.02),
+                z: generateRandomNumberInRange(0.003, 0.001),
               },
               positionInHand: positionsInHand[i],
             });
