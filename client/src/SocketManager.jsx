@@ -66,6 +66,8 @@ export const legalTilesAtom = atom({});
 export const playersAtom = atom({});
 export const messagesAtom = atom([]);
 export const nameAtom = atom('');
+export const clientsAtom = atom({})
+export const clientAtom = atom({})
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -82,23 +84,26 @@ export const SocketManager = () => {
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_players, setPlayers] = useAtom(playersAtom);
   const [_messages, setMessages] = useAtom(messagesAtom);
+  const [_clients, setClients] = useAtom(clientsAtom);
+  const [_client, setClient] = useAtom(clientAtom);
 
   useEffect(() => {
     function onConnect() {
       console.log("connected");
     }
-
+    function onClients({clients}) {
+      setClients(clients)
+    }
+    function onSetUpClient({client}) {
+      setClient(client);
+    }
     function onSetUpPlayer({player}) {
       console.log("[onSetUpPlayer] player", player)
       setClientPlayer(player);
     }
-
     function onDisconnect() {
-      // console.log("disconnected", clientPlayer);
       console.log("disconnected", clientPlayer);
-      // localStorage.removeItem('player');
     }
-    
     function onSelect(value) {
       setSelection(value);
     }
@@ -140,6 +145,8 @@ export const SocketManager = () => {
       setMessages(messages)
     }
     socket.on("connect", onConnect);
+    socket.on("setUpClient", onSetUpClient)
+    socket.on("clients", onClients)
     socket.on("setUpPlayer", onSetUpPlayer)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
@@ -156,6 +163,8 @@ export const SocketManager = () => {
     socket.on("messages", onMessages);
     return () => {
       socket.off("connect", onConnect);
+      socket.off("setUpClient", onSetUpClient)
+      socket.off("clients", onClients)
       socket.off("setUpPlayer", onSetUpPlayer)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
@@ -170,7 +179,6 @@ export const SocketManager = () => {
       socket.off("legalTiles", onLegalTiles);
       socket.off("players", onPlayers);
       socket.off("messages", onMessages);
-
     };
   }, []);
 };

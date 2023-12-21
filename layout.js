@@ -47,10 +47,13 @@ export default {
       position: [-7, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
-        position: [2, 0, -0.5]
+        position: [0.2, 0, 0.2]
       },
       names: {
-        position: [0, 0, 0.5]
+        position: [0, 0, 1.1]
+      },
+      join: {
+        position: [2, 0, 0]
       }
     },
     team1: {
@@ -58,10 +61,13 @@ export default {
       position: [-3, 0, -14],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
-        position: [1.5, 0, -0.5]
+        position: [0.2, 0, 0.2]
       },
       names: {
-        position: [0, 0, 0.5]
+        position: [0, 0, 1.1]
+      },
+      join: {
+        position: [2, 0, 0]
       }
     },
     throwCount: {
@@ -261,6 +267,12 @@ export default {
       },
       names: {
         position: [0, 0, 1]
+      },
+      join: {
+        position: [2, 0, 0]
+      },
+      joinInput: {
+        position: [2, 0, -0.42]
       }
     },
     team1: {
@@ -272,6 +284,9 @@ export default {
       },
       names: {
         position: [0, 0, 1]
+      },
+      join: {
+        position: [2, 0, 0]
       }
     },
     throwCount: {
@@ -481,6 +496,9 @@ export default {
       },
       names: {
         position: [0, 0, 1]
+      },
+      join: {
+        position: [2, 0, 0]
       }
     },
     team1: {
@@ -492,6 +510,9 @@ export default {
       },
       names: {
         position: [0, 0, 1]
+      },
+      join: {
+        position: [2, 0, 0]
       }
     },
     throwCount: {

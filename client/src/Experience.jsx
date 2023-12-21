@@ -23,7 +23,8 @@ import {
   Html,
   Text3D,
   OrthographicCamera,
-  OrbitControls
+  OrbitControls,
+  Text
 } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -481,6 +482,31 @@ export default function Experience() {
     [1.5, 0, 1]
   ]
 
+  const [joinTeam0, setJoinTeam0] = useState(true)
+  const [joinTeam0SubmitHover, setJoinTeam0SubmitHover] = useState(false)
+  // submit button, cancel button
+  function handleJoinTeam0 () {
+    // socket.emit("join", { team: 0 })
+    setJoinTeam0(false);
+  }
+  // doesn't switch on enter
+  function handleJoinTeam0SubmitMouseEnter () {
+    console.log("mouse enter")
+    document.body.style.cursor = "pointer";
+    setJoinTeam0SubmitHover(true)
+  }
+  function handleJoinTeam0SubmitMouseLeave () {
+    console.log("mouse leave")
+    document.body.style.cursor = "default";
+    setJoinTeam0SubmitHover(false)
+  }
+  const [joinTeam1, setJoinTeam1] = useState(false)
+  function handleJoinTeam1 () {
+  }
+  function handleSubmitTeam0 (e) {
+    e.preventDefault();
+  }
+
   return (
     <>
       {/* <Perf/> */}
@@ -507,8 +533,7 @@ export default function Experience() {
         castShadow
       />
       <group scale={layout[device].scale}>
-      { 
-        <Physics>
+      { <Physics>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -521,6 +546,46 @@ export default function Experience() {
               boxHeight={0.3}
               color="red"
             />
+            {/* join button */}
+            { joinTeam0 && <TextButton
+              text="JOIN"
+              boxWidth={0.9}
+              boxHeight={0.3}
+              color="yellow"
+              position={layout[device].team0.join.position}
+              handlePointerClick={handleJoinTeam0}
+            /> }
+            { !joinTeam0 && <group position={layout[device].team0.joinInput.position}><Html>
+              <form onSubmit={e => handleSubmitTeam0(e)}>
+                <input
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontFamily: 'Luckiest Guy',
+                  fontSize: `${zoom * 0.3}px`,
+                  color: 'yellow',
+                  padding: '0px'
+                }}
+                placeholder="add your name..."/>
+                <button 
+                style={{
+                  fontFamily: 'Luckiest Guy',
+                  fontSize: `${zoom * 0.3}px`,
+                  background: 'none',
+                  border: 'none',
+                  color: `${joinTeam0SubmitHover ? 'white' : 'yellow'}`}}
+                onMouseOver={handleJoinTeam0SubmitMouseEnter}
+                onMouseOut={handleJoinTeam0SubmitMouseLeave}>O</button>
+                {/* highlight on hover */}
+                <button 
+                style={{
+                  fontFamily: 'Luckiest Guy',
+                  fontSize: `${zoom * 0.3}px`,
+                  background: 'none',
+                  border: 'none',
+                  color: 'yellow'}}>X</button>
+              </form>
+            </Html></group> }
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
               <HomePieces team={0} scale={0.5}/>
@@ -558,6 +623,15 @@ export default function Experience() {
               boxHeight={0.3}
               color="turquoise"
             />
+            {/* join button */}
+            <TextButton
+              text="JOIN"
+              boxWidth={0.9}
+              boxHeight={0.3}
+              color="yellow"
+              position={layout[device].team1.join.position}
+              handlePointerClick={handleJoinTeam1}
+            />
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
@@ -582,7 +656,6 @@ export default function Experience() {
               />
             ))}
           </group>
-          
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
           </group>
@@ -604,16 +677,6 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            {/* {gamePhase === "lobby" && (
-              <TextButton
-                text="ready"
-                position={layout[device].ready}
-                boxWidth={1.2}
-                boxHeight={0.3}
-                color={players[clientPlayer.socketId].ready ? "green" : "white"}
-                handlePointerClick={() => socket.emit("ready", {socketId: clientPlayer.socketId, flag: !players[clientPlayer.socketId].ready})}
-              />
-            )} */}
             <Yuts device={device}/>
             {/* throw count */}
             {(gamePhase === "pregame" || gamePhase === "game") && (
@@ -642,6 +705,7 @@ export default function Experience() {
             )}
           </group>
           {/* pieces section */}
+          { clientPlayer &&
           <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
             { (gamePhase === "game" && 29 in legalTiles) ?
               <ScoreButton
@@ -716,7 +780,7 @@ export default function Experience() {
                 />
               </>
             }
-          </group>
+          </group>}
           {/* chat section */}
           <group position={layout[device].chat.position}>
             <Html>
@@ -733,8 +797,7 @@ export default function Experience() {
             text={`Menu`}
             position={layout[device].menu.position}
           />
-        </Physics> 
-        }
+        </Physics>}
       </group>
     </>
   );

@@ -72,12 +72,12 @@ export default function YutsNew3({ device = "portrait" }) {
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
-      socket.emit("yutsAsleep", {flag: true, socketId: clientPlayer.socketId}, (response) => {
+      socket.emit("yutsAsleep", {flag: true}, (response) => {
         if (response.status === "readyToStart") {
           socket.emit("readyToStart", true)
         } else if (response.status === "record") {
           let result = observeThrow();
-          socket.emit("recordThrow", {result, socketId: clientPlayer.socketId})
+          socket.emit("recordThrow", {result})
         } else if (response.status === "reset") {
           // don't record throw
         }
@@ -86,7 +86,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(players)) {
+    if (clientPlayer && isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(players)) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
@@ -113,7 +113,7 @@ export default function YutsNew3({ device = "portrait" }) {
     for (let i = 0; i < yuts.length; i++) {
       positions.push(yuts[i].current.translation())
     }
-    console.log("[Yuts] yut positions", positions);
+    // console.log("[Yuts] yut positions", positions);
   })
 
   function observeThrow() {

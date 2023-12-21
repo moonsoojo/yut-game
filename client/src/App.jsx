@@ -10,7 +10,6 @@ import { useAtom } from 'jotai';
 import { Route, Link, useLocation, Router } from "wouter"
 
 export default function App () {
-  console.log("[App]")
   return (<>
     <SocketManager/>
     <Canvas>
