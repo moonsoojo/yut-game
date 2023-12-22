@@ -3,8 +3,9 @@ import { useTexture } from "@react-three/drei";
 import React from "react";
 import Tile from '../components/Tile';
 import HelperArrow from "./HelperArrow";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useAtom } from "jotai";
+import layout from "../../../layout";
 
 export default function Moon({ position, tile, scale = 1, device }) {
   const props = useTexture({
@@ -47,6 +48,10 @@ export default function Moon({ position, tile, scale = 1, device }) {
       socket.emit("select", null);
     }
   }
+
+  useEffect(() => {
+    socket.emit("moonLocDebug", layout['portrait'].center)
+  }, [])
 
   return (
     <group

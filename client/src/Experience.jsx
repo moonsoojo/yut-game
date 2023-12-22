@@ -79,12 +79,13 @@ export default function Experience() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-    let player = localStorage.getItem('clientPlayer')
-    socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
-      if (response.status === "success") {
-        localStorage.setItem('clientPlayer', JSON.stringify(response.player))
-      }
-    })
+    // let player = localStorage.getItem('clientPlayer')
+    // socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
+    //   if (response.status === "success") {
+    //     localStorage.setItem('clientPlayer', JSON.stringify(response.player))
+    //   }
+    // })
+    socket.emit("useEffect", device)
   }, []);
 
   let zoom;
@@ -183,9 +184,9 @@ export default function Experience() {
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      socket.emit("visibilityChange", {flag: false, socketId: clientPlayer.socketId})
+      socket.emit("visibilityChange", {flag: false})
     } else {
-      socket.emit("visibilityChange", {flag: true, socketId: clientPlayer.socketId})
+      socket.emit("visibilityChange", {flag: true})
     }
   });
 
@@ -516,6 +517,10 @@ export default function Experience() {
       }
     })
   }
+  function handleJoinTeam0Cancel () {
+    setJoinTeam0Name('')
+    setJoinTeam0(true);
+  }
 
   const [joinTeam1, setJoinTeam1] = useState(true)
   const [joinTeam1SubmitHover, setJoinTeam1SubmitHover] = useState(false)
@@ -547,7 +552,10 @@ export default function Experience() {
       }
     })
   }
-
+  function handleJoinTeam1Cancel () {
+    setJoinTeam1Name('')
+    setJoinTeam1(true);
+  }
 
   return (
     <>
@@ -606,7 +614,7 @@ export default function Experience() {
                 fontSize: `${zoom * 0.3}px`,
                 color: 'yellow',
                 padding: '0px',
-                width: '50px'
+                width: `${zoom * 1.1}px`
               }}
               onChange={e => setJoinTeam0Name(e.target.value)}
               placeholder="name..."/>
@@ -632,7 +640,8 @@ export default function Experience() {
                 border: 'none',
                 color: `${joinTeam0CancelHover ? 'white' : 'yellow'}`,}}
               onMouseOver={handleJoinTeam0CancelMouseEnter}
-              onMouseOut={handleJoinTeam0CancelMouseLeave}>&#10008;</button>
+              onMouseOut={handleJoinTeam0CancelMouseLeave}
+              onMouseDown={handleJoinTeam0Cancel}>&#10008;</button>
             </Html></group> }
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
@@ -687,10 +696,11 @@ export default function Experience() {
                 fontFamily: 'Luckiest Guy',
                 fontSize: `${zoom * 0.3}px`,
                 color: 'yellow',
-                padding: '0px'
+                padding: '0px',
+                width: `${zoom * 1.1}px`
               }}
               onChange={e => setJoinTeam1Name(e.target.value)}
-              placeholder="add your name..."/>
+              placeholder="name..."/>
               <button 
               id='join-team-1-submit-button'
               style={{
@@ -712,7 +722,8 @@ export default function Experience() {
                 border: 'none',
                 color: `${joinTeam1CancelHover ? 'white' : 'yellow'}`}}
               onMouseOver={handleJoinTeam1CancelMouseEnter}
-              onMouseOut={handleJoinTeam1CancelMouseLeave}>&#10008;</button>
+              onMouseOut={handleJoinTeam1CancelMouseLeave}
+              onMouseDown={handleJoinTeam1Cancel}>&#10008;</button>
             </Html></group> }
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>

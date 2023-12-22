@@ -1,5 +1,6 @@
+camera not centered when local storage is populated
 change 'players' to 'clients'
-input box to enter name on join
+
 
 on 'let's play!'
   local storage is empty

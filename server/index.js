@@ -278,6 +278,7 @@ function onConnect(socket, storageClient) {
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
   io.emit("messages", messages)
   io.emit("gamePhase", gamePhase);
+  io.emit("teams", teams);
 
   let client = {}
   client.socketId = socket.id
@@ -303,7 +304,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   // spectator
   // need parse & stringify to avoid keys as list of numbers
-  onConnect(socket, JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client))));
+  onConnect(
+    socket, 
+    JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client))));
 
   socket.on("join", ({ team, name }, callback) => {
     console.log("[join] socketId", socket.id)
@@ -443,12 +446,27 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("messages", messages)
   })
 
-  socket.on("visibilityChange", ({flag, socketId}) => {
-    if (players[socketId] != undefined) {
-      players[socketId].visibility = flag
+  socket.on("lookAtDebug", (value) => {
+    console.log("[lookAtDebug]", value)
+  })
+
+  socket.on("useEffect", (device) => {
+    console.log("[useEffect]", device)
+  })
+
+  socket.on("moonLocDebug", (value) => {
+    console.log("[moonLocDebug]", value)
+  })
+
+  socket.on("visibilityChange", ({flag}) => {
+    if (players[socket.id] != undefined) {
+      clients[socket.id].visibility = flag
+      players[socket.id].visibility = flag
       if (flag == false) {
-        players[socketId].participating = false
+        players[socket.id].participating = false
+        clients[socket.id].participating = false
       }
+      io.emit("clients", clients);
       io.emit("players", players);
     }
   })
