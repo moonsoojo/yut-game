@@ -226,7 +226,6 @@ function findRandomPlayer(teams) {
   }
 }
 
-
 /* function onConnect(socket) {
   if (hostId == null) {
     hostId = socket.id
@@ -271,7 +270,9 @@ function findRandomPlayer(teams) {
   io.emit("players", players)
 } */
 
-function onConnect(socket) {
+function onConnect(socket, storageClient) {
+  storageClient = JSON.parse(storageClient);
+  console.log("[onConnect] storageClient", storageClient)
   // game state
   io.emit("tiles", tiles);
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
@@ -279,25 +280,45 @@ function onConnect(socket) {
   io.emit("gamePhase", gamePhase);
 
   let client = {}
-  clients.socketId = socket.id
-  clients.yutsAsleep = false
-  clients.visibility = true
+  client.socketId = socket.id
+  client.yutsAsleep = false
+  client.visibility = true
   // clients.thrown = false
-  clients.reset = false
+  client.reset = false
+  
+  if (storageClient !== null) {
+    client.team = storageClient.team
+    client.name = storageClient.name
+    teams[storageClient.team].players.push(client)
+    io.emit("teams", teams);
+  }
+  io.to(socket.id).emit('setUpClient', client)
   clients[socket.id] = client
-  io.to(socket.id).emit('setUpClient', { client })
   io.emit("clients", clients)
 }
 
 io.on("connection", (socket) => { // socket.handshake.query is data obj
-  console.log("a user connected", socket.id); 
+  console.log("a user connected", socket.id)
+  console.log(JSON.parse(socket.handshake.query.client)); 
 
   // spectator
-  onConnect(socket);
+  // need parse & stringify to avoid keys as list of numbers
+  onConnect(socket, JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client))));
 
-  socket.on("join", ({ team }) => {
-    client[socket.id].team = assignTeam(teams)
-    client[socket.id].thrown = false
+  socket.on("join", ({ team, name }, callback) => {
+    console.log("[join] socketId", socket.id)
+    clients[socket.id].team = team
+    clients[socket.id].name = name
+    teams[team].players.push(clients[socket.id])
+    clients[socket.id].thrown = false
+    let updatedClient = JSON.parse(JSON.stringify(clients[socket.id]))
+    io.emit("setUpClient", updatedClient)
+    io.emit("clients", clients);
+    io.emit("teams", teams);
+    callback({
+      status: "success",
+      client: updatedClient
+    })
   })
 
   /* socket.on("ready", ({socketId, flag}) => {

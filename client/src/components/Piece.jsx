@@ -1,5 +1,5 @@
 
-import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom } from "../SocketManager";
+import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -24,6 +24,7 @@ export default function Piece ({
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom);
   const [players] = useAtom(playersAtom);
+  const [client] = useAtom(clientAtom)
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -65,7 +66,7 @@ export default function Piece ({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+    if (isMyTurn(turn, teams, client.socketId)) {
       wrapperMat.current.opacity += 0.4;
       document.body.style.cursor = "pointer";
     }
@@ -73,7 +74,7 @@ export default function Piece ({
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+    if (isMyTurn(turn, teams, client.socketId)) {
       wrapperMat.current.opacity -= 0.4;
       document.body.style.cursor = "default";
     }

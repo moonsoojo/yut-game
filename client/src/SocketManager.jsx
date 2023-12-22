@@ -3,8 +3,14 @@ import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
 import initialState from "../../server/initialState";
 
-// export const socket = io("http://192.168.86.158:3000", { query: { 'player': localStorage.getItem('player') ?? "null" } }); // http://192.168.1.181:3000 //http://192.168.86.158:3000
-export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+export const socket = io(
+  "http://192.168.86.158:3000", { 
+    query: {
+      client: JSON.stringify(localStorage.getItem('yootGame'))
+    }
+  }
+); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+// export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
 const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 const initialYutPositions = JSON.parse(JSON.stringify(initialState.initialYutPositions))
@@ -91,11 +97,11 @@ export const SocketManager = () => {
     function onConnect() {
       console.log("connected");
     }
-    function onClients({clients}) {
-      setClients(clients)
+    function onClients(value) {
+      setClients(value)
     }
-    function onSetUpClient({client}) {
-      setClient(client);
+    function onSetUpClient(value) {
+      setClient(value);
     }
     function onSetUpPlayer({player}) {
       console.log("[onSetUpPlayer] player", player)

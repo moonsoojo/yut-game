@@ -54,6 +54,9 @@ export default {
       },
       join: {
         position: [2, 0, 0]
+      },
+      joinInput: {
+        position: [2, 0, -0.42]
       }
     },
     team1: {
@@ -68,6 +71,9 @@ export default {
       },
       join: {
         position: [2, 0, 0]
+      },
+      joinInput: {
+        position: [2, 0, -0.42]
       }
     },
     throwCount: {
@@ -287,6 +293,9 @@ export default {
       },
       join: {
         position: [2, 0, 0]
+      },
+      joinInput: {
+        position: [2, 0, -0.42]
       }
     },
     throwCount: {

@@ -9,6 +9,7 @@ body,
   overflow: hidden;
   /* background: rgb(201, 234, 255); */
   background: 		#000000;
+  cursor: default;
 }
 
 .label > div
@@ -100,4 +101,12 @@ body,
   width: 300px;
   height: 300px;
   font-size: 30px;
+}
+
+#join-team-0-submit-button {
+  cursor: pointer;
+}
+
+#join-team-0-cancel-button {
+  cursor: pointer;
 }
