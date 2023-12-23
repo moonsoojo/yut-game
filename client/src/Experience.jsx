@@ -449,12 +449,13 @@ export default function Experience() {
     },
   });*/
 
-  // const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
+  const exposure = 0.25;
+  const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
 
-  // useEffect(() => {
-  //   gl.toneMapping = THREE.ACESFilmicToneMapping;
-  //   gl.toneMappingExposure = exposure;
-  // }, [gl, scene, exposure]);
+  useEffect(() => {
+    gl.toneMapping = THREE.ACESFilmicToneMapping;
+    gl.toneMappingExposure = exposure;
+  }, [gl, scene, exposure]);
 
   function prettifyMoves(moves) {
     let prettifiedMoves = ""
@@ -484,6 +485,8 @@ export default function Experience() {
   // submit button, cancel button
   function handleJoinTeam0 () {
     setJoinTeam0(false);
+    setJoinTeam1(true);
+    setJoinTeam1Name('');
   }
   function handleJoinTeam0SubmitMouseEnter () {
     setJoinTeam0SubmitHover(true)
@@ -497,7 +500,8 @@ export default function Experience() {
   function handleJoinTeam0CancelMouseLeave () {
     setJoinTeam0CancelHover(false)
   }
-  function handleJoinTeam0Submit () {
+  function handleJoinTeam0Submit (e) {
+    e.preventDefault()
     socket.emit("join", { team: 0, name: joinTeam0Name }, (response) => {
       if (response.status === "success") {
         localStorage.setItem('yootGame', JSON.stringify({
@@ -519,6 +523,8 @@ export default function Experience() {
   // submit button, cancel button
   function handleJoinTeam1 () {
     setJoinTeam1(false);
+    setJoinTeam0(true);
+    setJoinTeam0Name('');
   }
   function handleJoinTeam1SubmitMouseEnter () {
     setJoinTeam1SubmitHover(true)
@@ -532,7 +538,8 @@ export default function Experience() {
   function handleJoinTeam1CancelMouseLeave () {
     setJoinTeam1CancelHover(false)
   }
-  function handleJoinTeam1Submit () {
+  function handleJoinTeam1Submit (e) {
+    e.preventDefault();
     socket.emit("join", { team: 1, name: joinTeam1Name }, (response) => {
       if (response.status === "success") {
         localStorage.setItem('yootGame', JSON.stringify({
@@ -596,6 +603,8 @@ export default function Experience() {
               handlePointerClick={handleJoinTeam0}
             /> }
             { client.team == undefined && !joinTeam0 && <group position={layout[device].team0.joinInput.position}><Html>
+              <form
+              onSubmit={e => handleJoinTeam0Submit(e)}>
               <input
               style={{
                 background: 'none',
@@ -619,7 +628,7 @@ export default function Experience() {
                 padding: '0px'}}
               onMouseOver={handleJoinTeam0SubmitMouseEnter}
               onMouseOut={handleJoinTeam0SubmitMouseLeave}
-              onMouseDown={handleJoinTeam0Submit}>&#x2713;</button>
+              type="submit">&#x2713;</button>
               {/* highlight on hover */}
               <button 
               id='join-team-0-cancel-button'
@@ -632,7 +641,7 @@ export default function Experience() {
               onMouseOver={handleJoinTeam0CancelMouseEnter}
               onMouseOut={handleJoinTeam0CancelMouseLeave}
               onMouseDown={handleJoinTeam0Cancel}>&#10008;</button>
-            </Html></group> }
+            </form></Html></group> }
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
               <HomePieces team={0} scale={0.5}/>
@@ -679,6 +688,8 @@ export default function Experience() {
               handlePointerClick={handleJoinTeam1}
             />}
             { client.team == undefined && !joinTeam1 && <group position={layout[device].team1.joinInput.position}><Html>
+              <form
+              onSubmit={e => handleJoinTeam1Submit(e)}>
               <input
               style={{
                 background: 'none',
@@ -698,10 +709,11 @@ export default function Experience() {
                 fontSize: `${zoom * 0.3}px`,
                 background: 'none',
                 border: 'none',
-                color: `${joinTeam1SubmitHover ? 'white' : 'yellow'}`}}
+                color: `${joinTeam1SubmitHover ? 'white' : 'yellow'}`,
+                padding: '0px'}}
               onMouseOver={handleJoinTeam1SubmitMouseEnter}
               onMouseOut={handleJoinTeam1SubmitMouseLeave}
-              onMouseDown={handleJoinTeam1Submit}>&#x2714;</button>
+              type="submit">&#x2713;</button>
               {/* highlight on hover */}
               <button 
               id='join-team-1-cancel-button'
@@ -710,11 +722,11 @@ export default function Experience() {
                 fontSize: `${zoom * 0.3}px`,
                 background: 'none',
                 border: 'none',
-                color: `${joinTeam1CancelHover ? 'white' : 'yellow'}`}}
+                color: `${joinTeam1CancelHover ? 'white' : 'yellow'}`,}}
               onMouseOver={handleJoinTeam1CancelMouseEnter}
               onMouseOut={handleJoinTeam1CancelMouseLeave}
               onMouseDown={handleJoinTeam1Cancel}>&#10008;</button>
-            </Html></group> }
+            </form></Html></group> }
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
@@ -868,14 +880,10 @@ export default function Experience() {
           <group position={layout[device].chat.position}>
             <Html>
               <Chatbox
-                // height={`${chatboxHeight.toString()}px`}
-                // width={`${chatboxWidth.toString()}px`}
-                // padding={`${chatboxPadding.toString()}px`}
-                // fontSize={`${chatFontSize.toString()}px`}
-                height={`${layout[device].chat.heightMax.toString()}px`}
-                width={`${layout[device].chat.widthMax.toString()}px`}
-                padding={`${layout[device].chat.paddingMax.toString()}px`}
-                fontSize={`${layout[device].chat.fontSizeMax.toString()}px`}
+                height={`${chatboxHeight.toString()}px`}
+                width={`${chatboxWidth.toString()}px`}
+                padding={`${chatboxPadding.toString()}px`}
+                fontSize={`${chatFontSize.toString()}px`}
               />
             </Html>
           </group>

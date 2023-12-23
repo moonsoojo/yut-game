@@ -282,9 +282,10 @@ function onConnect(socket, storageClient) {
 
   let client = {}
   client.socketId = socket.id
+  client.name = makeId(5)
   client.yutsAsleep = false
   client.visibility = true
-  // clients.thrown = false
+  clients.thrown = false
   client.reset = false
   
   if (storageClient !== null) {
@@ -435,9 +436,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     })
   }) */
 
-  socket.on("sendMessage", ({ message, team, socketId }) => {
+  socket.on("sendMessage", ({ message, team }) => {
     messages.push({
-      "name": players[socketId].displayName,
+      "name": clients[socket.id].name,
       team,
       message
     })

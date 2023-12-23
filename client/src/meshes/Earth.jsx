@@ -11,7 +11,7 @@ export default function Earth({ position, tile, device }) {
   const earth = useRef();
 
   useFrame((state, delta) => {
-    // earth.current.rotation.y = state.clock.elapsedTime * 0.5;
+    earth.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   return (

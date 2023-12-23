@@ -41,7 +41,7 @@ export default function Saturn({ position, tile, device }) {
   const satellitesRef = useRef();
 
   useFrame((state, delta) => {
-    // satellitesRef.current.rotation.z = state.clock.elapsedTime * 0.5;
+    satellitesRef.current.rotation.z = state.clock.elapsedTime * 0.5;
   });
   
   return (

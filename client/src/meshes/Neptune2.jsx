@@ -12,7 +12,7 @@ export default function Neptune2({ position, tile, device }) {
   const neptune = useRef();
 
   useFrame((state, delta) => {
-    // neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
+    neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   /*const {

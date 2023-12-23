@@ -1,4 +1,4 @@
-import { socket, messagesAtom, clientPlayerAtom } from "./SocketManager";
+import { socket, messagesAtom, clientPlayerAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 
@@ -10,7 +10,7 @@ export default function Chatbox({ height, width, padding, fontSize }) {
 
   function onMessageSubmit (e) {
     e.preventDefault();
-    socket.emit("sendMessage", { message, team: clientPlayer.team, socketId: clientPlayer.socketId })
+    socket.emit("sendMessage", { message, team: client.team })
     setMessage('')
   }
   
@@ -29,6 +29,16 @@ export default function Chatbox({ height, width, padding, fontSize }) {
     // scrollToBottom();
   }, []); // must be a child component to scroll on load
 
+  function getColorByTeam(team) {
+    if (team == undefined) {
+      return 'grey'
+    } else if (team == 0) {
+      return 'red'
+    } else {
+      return 'turquoise'
+    }
+  }
+
   return <>
     <div style={{
       'borderRadius': '5px',
@@ -42,7 +52,7 @@ export default function Chatbox({ height, width, padding, fontSize }) {
     }}>
       {messages.map((value, index) => 
         <p style={{color: 'white', margin: 0}} key={index}>
-          <span style={{color: value.team == 0 ? 'red' : 'turquoise'}}>{value.name}: </span> 
+          <span style={{color: getColorByTeam(value.team)}}>{value.name}: </span> 
           {value.message}
         </p>
       )}
