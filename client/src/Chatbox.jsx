@@ -5,14 +5,15 @@ import React, { useState, useRef, useEffect } from "react";
 export default function Chatbox({ height, width, padding, fontSize }) {
   const [messages] = useAtom(messagesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom);
+  const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
 
   function onMessageSubmit (e) {
     e.preventDefault();
-    console.log("[onMessageSubmit", e)
     socket.emit("sendMessage", { message, team: clientPlayer.team, socketId: clientPlayer.socketId })
     setMessage('')
   }
+  
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({
@@ -21,11 +22,11 @@ export default function Chatbox({ height, width, padding, fontSize }) {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // scrollToBottom();
   }, [messages]);
 
   useEffect(() => {
-    scrollToBottom();
+    // scrollToBottom();
   }, []); // must be a child component to scroll on load
 
   return <>
@@ -59,7 +60,7 @@ export default function Chatbox({ height, width, padding, fontSize }) {
         }} 
         onChange={e => setMessage(e.target.value)} 
         value={message}
-        placeholder="type here..."
+        placeholder="say something..."
       />
     </form>
   </>

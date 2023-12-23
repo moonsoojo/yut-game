@@ -12,10 +12,10 @@ export default function Neptune2({ position, tile, device }) {
   const neptune = useRef();
 
   useFrame((state, delta) => {
-    neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
+    // neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
-  const {
+  /*const {
     countNeptune1,
     countNeptune2,
     sizeNeptune,
@@ -88,7 +88,7 @@ export default function Neptune2({ position, tile, device }) {
     colorTwo: {
       value: "#6EF2FE",
     },
-  });
+  });*/
 
   return (
     <group position={position} scale={0.4}>
@@ -103,17 +103,17 @@ export default function Neptune2({ position, tile, device }) {
         />
         {/* remove rings */}
         <NeptuneParticles
-          countNeptune1={countNeptune1}
-          countNeptune2={countNeptune2}
-          sizeNeptune={sizeNeptune}
-          radius1MinNeptune={radius1MinNeptune}
-          radius1MaxNeptune={radius1MaxNeptune}
-          radius2MinNeptune={radius2MinNeptune}
-          radius2MaxNeptune={radius2MaxNeptune}
-          colorOne={colorOne}
-          colorTwo={colorTwo}
-          countSparkles1={countSparkles1}
-          countSparkles2={countSparkles2}
+          countNeptune1={261}
+          countNeptune2={327}
+          sizeNeptune={0.07}
+          radius1MinNeptune={1.74}
+          radius1MaxNeptune={2.72}
+          radius2MinNeptune={3.09}
+          radius2MaxNeptune={4.27}
+          colorOne={"#3289FF"}
+          colorTwo={"#6EF2FE"}
+          countSparkles1={7}
+          countSparkles2={6}
         />
       </group>
       <HelperArrow

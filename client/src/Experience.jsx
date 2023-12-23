@@ -79,13 +79,13 @@ export default function Experience() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
+    // socket.emit("")
     // let player = localStorage.getItem('clientPlayer')
     // socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
     //   if (response.status === "success") {
     //     localStorage.setItem('clientPlayer', JSON.stringify(response.player))
     //   }
     // })
-    socket.emit("useEffect", device)
   }, []);
 
   let zoom;
@@ -170,8 +170,6 @@ export default function Experience() {
     )
   }
 
-  console.log('[Experience] zoom', zoom)
-
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
@@ -200,20 +198,12 @@ export default function Experience() {
   // const orbitControls = useRef();
 
   useEffect(() => {
-    // console.log(center.current.position)
-    // console.log(camera.current.lookAt)
     camera.current.lookAt(
       layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
       layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
       layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
     )
-    // orbit controls override camera's lookAt
-    // console.log(orbitControls.current.target)
-    // orbitControls.current.target = center.current.position
-    // console.log("[yuts, first render] clientPlayer", clientPlayer)
-    // if (clientPlayer != null) {
-    //   setLoaded(true);
-    // }
+    // camera.current.lookAt(-3,0,-7)
   }, [device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -382,7 +372,7 @@ export default function Experience() {
       </group>
     );
   }
-  const {
+  /*const {
     turbidity,
     rayleigh,
     mieCoefficient,
@@ -457,14 +447,14 @@ export default function Experience() {
       max: 10,
       step: 0.01,
     },
-  });
+  });*/
 
-  const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
+  // const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
 
-  useEffect(() => {
-    gl.toneMapping = THREE.ACESFilmicToneMapping;
-    gl.toneMappingExposure = exposure;
-  }, [gl, scene, exposure]);
+  // useEffect(() => {
+  //   gl.toneMapping = THREE.ACESFilmicToneMapping;
+  //   gl.toneMappingExposure = exposure;
+  // }, [gl, scene, exposure]);
 
   function prettifyMoves(moves) {
     let prettifiedMoves = ""
@@ -576,10 +566,10 @@ export default function Experience() {
         ref={camera}
         // lookAt={center.current.position}
       />
-      <Leva hidden />
+      {/* <Leva hidden /> */}
       <directionalLight
-        position={lightPosition}
-        intensity={lightIntensity}
+        position={[0.13, 0.42, 0.25]}
+        intensity={5.62}
         castShadow
       />
       <group scale={layout[device].scale}>
@@ -878,10 +868,14 @@ export default function Experience() {
           <group position={layout[device].chat.position}>
             <Html>
               <Chatbox
-                height={`${chatboxHeight.toString()}px`}
-                width={`${chatboxWidth.toString()}px`}
-                padding={`${chatboxPadding.toString()}px`}
-                fontSize={`${chatFontSize.toString()}px`}
+                // height={`${chatboxHeight.toString()}px`}
+                // width={`${chatboxWidth.toString()}px`}
+                // padding={`${chatboxPadding.toString()}px`}
+                // fontSize={`${chatFontSize.toString()}px`}
+                height={`${layout[device].chat.heightMax.toString()}px`}
+                width={`${layout[device].chat.widthMax.toString()}px`}
+                padding={`${layout[device].chat.paddingMax.toString()}px`}
+                fontSize={`${layout[device].chat.fontSizeMax.toString()}px`}
               />
             </Html>
           </group>

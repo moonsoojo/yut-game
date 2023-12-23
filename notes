@@ -1,4 +1,6 @@
-camera not centered when local storage is populated
+camera doesn't shift in landing page, but does in game
+  remove 'scrollToBottom' in message dimsBox
+zoom doesn't fit the screen when mobile orientation changes from landscape to portrait
 change 'players' to 'clients'
 
 

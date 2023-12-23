@@ -84,7 +84,6 @@ export default function Home() {
       mediaMax,
       window.innerWidth
     )
-    console.log('zoom', zoom)
   } else {
     zoom = calcScale(
       layout[device].camera.zoomMin,

@@ -10,8 +10,7 @@ export default function Mars({ position, tile, device }) {
   const mars = useRef();
 
   useFrame((state, delta) => {
-    const elapsedTime = state.clock.elapsedTime;
-    mars.current.rotation.y = elapsedTime * 0.5;
+    // mars.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   return (
