@@ -1,5 +1,5 @@
 
-import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom } from "../SocketManager";
+import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, clientsAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -25,6 +25,8 @@ export default function Piece ({
   const [clientPlayer] = useAtom(clientPlayerAtom);
   const [players] = useAtom(playersAtom);
   const [client] = useAtom(clientAtom)
+  const [clients] = useAtom(clientsAtom)
+
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -49,7 +51,7 @@ export default function Piece ({
     clientPlayer.team == team && 
     isMyTurn(turn, teams, clientPlayer.socketId) && 
     hasValidMove(teams[team].moves) && selection == null &&
-    players[clientPlayer.socketId].yutsAsleep) {
+    clients[client.socketId].yutsAsleep) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)

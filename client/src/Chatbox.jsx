@@ -1,10 +1,9 @@
-import { socket, messagesAtom, clientPlayerAtom, clientAtom } from "./SocketManager";
+import { socket, messagesAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 
 export default function Chatbox({ height, width, padding, fontSize }) {
   const [messages] = useAtom(messagesAtom);
-  const [clientPlayer] = useAtom(clientPlayerAtom);
   const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
 

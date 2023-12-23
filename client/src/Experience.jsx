@@ -37,7 +37,6 @@ import {
   socket,
   legalTilesAtom,
   clientPlayerAtom,
-  playersAtom,
   clientAtom,
   clientsAtom,
 } from "./SocketManager";
@@ -79,13 +78,6 @@ export default function Experience() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-    // socket.emit("")
-    // let player = localStorage.getItem('clientPlayer')
-    // socket.emit("localStoragePlayer", ({ player: JSON.parse(player) }), (response) => {
-    //   if (response.status === "success") {
-    //     localStorage.setItem('clientPlayer', JSON.stringify(response.player))
-    //   }
-    // })
   }, []);
 
   let zoom;
@@ -176,7 +168,6 @@ export default function Experience() {
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
-  const [players] = useAtom(playersAtom);
   const [client] = useAtom(clientAtom);
   const [clients] = useAtom(clientsAtom);
 
@@ -554,6 +545,108 @@ export default function Experience() {
     setJoinTeam1(true);
   }
 
+  function PiecesSection(client) {
+    if (client.team != undefined) {
+      return (
+        <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+          { (gamePhase === "game" && 29 in legalTiles) ?
+            <ScoreButton
+              position={[0,0,0]}
+              device={device}
+            /> :
+            teams[client.team].pieces.map((value, index) =>
+              value == null ? (
+                <mesh
+                  position={newHomePiecePositions[index]}
+                  key={index}
+                >
+                  <sphereGeometry args={[0.2]} />
+                </mesh>
+              ) : value === "scored" ? (
+                <mesh
+                  position={newHomePiecePositions[index]}
+                  key={index}
+                >
+                  <sphereGeometry args={[0.2]} />
+                  <meshStandardMaterial color={client.team == 0 ? "red" : "green"} />
+                </mesh>
+              ) : (
+                <Piece
+                  position={newHomePiecePositions[index]}
+                  rotation={layout[device].homePieces[client.team].rotation}
+                  keyName={`count${index}`}
+                  tile={-1}
+                  team={client.team}
+                  id={value.id}
+                  key={index}
+                  scale={1}
+                />
+              )
+            )
+          }
+          {/* moves */}
+          {gamePhase === "pregame" && <>
+            <TextButton
+              text={`Moves:`}
+              position={layout[device].moves.text}
+              // size={layout[device].moves.size}
+            />
+            <TextButton
+              text={`${prettifyMoves(teams[0].moves)}`}
+              position={layout[device].moves.list}
+              color="red"
+              // size={layout[device].moves.size}
+            />
+            <TextButton
+              text={`${prettifyMoves(teams[1].moves)}`}
+              position={[
+                layout[device].moves.list[0] + 0.5,
+                layout[device].moves.list[1],
+                layout[device].moves.list[2],
+              ]}
+              color="green"
+              // size={layout[device].moves.size}
+            />
+          </>}
+          {gamePhase !== "lobby" && 
+            <>
+              <TextButton
+                text={`Moves:`}
+                position={layout[device].moves.text}
+                // size={layout[device].moves.size}
+              />
+              <TextButton
+                text={`${prettifyMoves(teams[turn.team].moves)}`}
+                position={layout[device].moves.list}
+                // size={layout[device].moves.size}
+              />
+            </>
+          }
+        </group>
+      )
+    } else {
+      return (      
+      <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+        { (gamePhase === "game" && 29 in legalTiles) ?
+          <ScoreButton
+            position={[0,0,0]}
+            device={device}
+          /> : teams[0].pieces.map((value, index) =>
+          (
+            <mesh
+            position={newHomePiecePositions[index]}
+            key={index}
+          >
+            <boxGeometry args={[0.4, 0.4, 0.4]} />
+            <meshStandardMaterial color="#505050"/>
+          </mesh>
+          ))
+        }
+      </group>
+      )
+    }
+  }
+
   return (
     <>
       {/* <Perf/> */}
@@ -650,7 +743,6 @@ export default function Experience() {
             {teams[0].players.map((value, index) => (
               <TextButton
                 text={`${value.name}, ${device === "landscapeDesktop" ? 
-                // text={`${value.displayName} ${device === "" ? 
                   `visible: ${clients[value.socketId].visibility}, 
                   yutsAsleep: ${clients[value.socketId].yutsAsleep},
                   thrown: ${clients[value.socketId].thrown}`: ''}`}
@@ -734,7 +826,6 @@ export default function Experience() {
             {teams[1].players.map((value, index) => (
               <TextButton
                 text={`${value.name}, ${device === "landscapeDesktop" ? 
-                // text={`${value.displayName} ${device === "" ? 
                   `visible: ${clients[value.socketId].visibility}, 
                   yutsAsleep: ${clients[value.socketId].yutsAsleep},
                   thrown: ${clients[value.socketId].thrown}`: ''}`}
@@ -790,7 +881,7 @@ export default function Experience() {
               <>            
                 <TextButton
                   text={`TURN: ${
-                    teams[turn.team].players[turn.players[turn.team]]?.displayName
+                    teams[turn.team].players[turn.players[turn.team]]?.name
                   }`}
                   position={layout[device].turn.position}
                   size={layout[device].throwCount.size}
@@ -800,82 +891,7 @@ export default function Experience() {
             )}
           </group>
           {/* pieces section */}
-          { clientPlayer &&
-          <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
-            { (gamePhase === "game" && 29 in legalTiles) ?
-              <ScoreButton
-                position={[0,0,0]}
-                device={device}
-              /> :
-              teams[clientPlayer.team].pieces.map((value, index) =>
-                value == null ? (
-                  <mesh
-                    position={newHomePiecePositions[index]}
-                    key={index}
-                  >
-                    <sphereGeometry args={[0.2]} />
-                  </mesh>
-                ) : value === "scored" ? (
-                  <mesh
-                    position={newHomePiecePositions[index]}
-                    key={index}
-                  >
-                    <sphereGeometry args={[0.2]} />
-                    <meshStandardMaterial color={clientPlayer.team == 0 ? "red" : "green"} />
-                  </mesh>
-                ) : (
-                  <Piece
-                    position={newHomePiecePositions[index]}
-                    rotation={layout[device].homePieces[clientPlayer.team].rotation}
-                    keyName={`count${index}`}
-                    tile={-1}
-                    team={clientPlayer.team}
-                    id={value.id}
-                    key={index}
-                    scale={1}
-                  />
-                )
-              )
-            }
-            {/* moves */}
-            {gamePhase === "pregame" && <>
-              <TextButton
-                text={`Moves:`}
-                position={layout[device].moves.text}
-                // size={layout[device].moves.size}
-              />
-              <TextButton
-                text={`${prettifyMoves(teams[0].moves)}`}
-                position={layout[device].moves.list}
-                color="red"
-                // size={layout[device].moves.size}
-              />
-              <TextButton
-                text={`${prettifyMoves(teams[1].moves)}`}
-                position={[
-                  layout[device].moves.list[0] + 0.5,
-                  layout[device].moves.list[1],
-                  layout[device].moves.list[2],
-                ]}
-                color="green"
-                // size={layout[device].moves.size}
-              />
-            </>}
-            {gamePhase !== "lobby" && 
-              <>
-                <TextButton
-                  text={`Moves:`}
-                  position={layout[device].moves.text}
-                  // size={layout[device].moves.size}
-                />
-                <TextButton
-                  text={`${prettifyMoves(teams[turn.team].moves)}`}
-                  position={layout[device].moves.list}
-                  // size={layout[device].moves.size}
-                />
-              </>
-            }
-          </group>}
+          <PiecesSection client={client}/>
           {/* chat section */}
           <group position={layout[device].chat.position}>
             <Html>

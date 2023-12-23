@@ -62,7 +62,7 @@ export default function YutsNew3({ device = "portrait" }) {
       });
     }
     setTimeout(() => {
-      if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === clientPlayer.socketId) {
+      if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === client.socketId) {
         setShowResetYoots(true);
       }
       // setShowResetYoots(true);
@@ -86,7 +86,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (clientPlayer && isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(players)) {
+    if (clientPlayer && isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients)) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
@@ -171,7 +171,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }
 
   function handleYutThrow() {
-    socket.emit("throwYuts", {socketIdThrower: clientPlayer.socketId});
+    socket.emit("throwYuts");
   }
 
   function handleYootReset() {

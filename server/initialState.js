@@ -5,7 +5,7 @@ export default {
   teams: [
     {
       index: 0,
-      // displayName: "",
+      // name: "",
       players: [], // list of objects
       pieces: [
         { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
@@ -26,7 +26,7 @@ export default {
     },
     { 
       index: 1,
-      // displayName: "",
+      // name: "",
       players: [], // list of objects
       pieces: [
         { tile: -1, team: 1, id: 0, history: [] },
@@ -57,7 +57,7 @@ export default {
   },
   player: {
     //   team: int,
-    //   displayName: string,
+    //   name: string,
     //   socketId: string,
     //   yutsAsleep: boolean,
     //   participating: boolean,
@@ -66,7 +66,17 @@ export default {
   players: {
     // "socketId1": {
     //   team: int,
-    //   displayName: string,
+    //   name: string,
+    //   socketId: string,
+    //   yutsAsleep: boolean,
+    //   participating: boolean,
+    //   firstLoad: boolean
+    // }
+  },
+  clients: {
+    // "socketId1": {
+    //   team: int,
+    //   name: string,
     //   socketId: string,
     //   yutsAsleep: boolean,
     //   participating: boolean,

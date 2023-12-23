@@ -14,17 +14,8 @@ export function bothTeamsHavePlayers(teams) {
   }
 }
 
-export function allPlayersReady(players) {
-  for (const socketId of Object.keys(players)) {
-    if (players[socketId].ready == false) {
-      return false;
-    }
-  }
-  return true;
-}
-
-export function countPlayers2(players) {
-  return Object.keys(players).length
+export function countClients(clients) {
+  return Object.keys(clients).length
 }
 
 export function movesIsEmpty (moves) {
@@ -73,13 +64,12 @@ export function getPlayerBySocketId(teams, socketId) {
   return {} // not found
 }
 
-export function allYutsAsleep(players) {
+export function allYutsAsleep(clients) {
   let flag = true;
-  for (const socketId of Object.keys(players)) {
-    if (players[socketId].visibility && !players[socketId].yutsAsleep) {
+  for (const socketId of Object.keys(clients)) {
+    if (clients[socketId].visibility && !clients[socketId].yutsAsleep) {
       flag = false;
     }
   }
-  console.log("[allYutsAsleep]", flag)
   return flag
 }

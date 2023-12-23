@@ -100,25 +100,25 @@ function makeId(length) {
   return result;
 }
 
-function assignTeam(teams) {
-  if (countPlayers(teams) == 0) {
-    return getRandomInt(2);
-  } else if (countPlayers(teams) == 1) {
-    for (let i = 0; i < teams.length; i++) {
-      if (teams[i].players.length == 0) {
-        return i
-      }
-    }
-  } else {
-    if (teams[0].players.length > teams[1].players.length) {
-      return 1
-    } else if (teams[0].players.length < teams[1].players.length) {
-      return 0
-    } else {
-      return getRandomInt(2);
-    }
-  }
-}
+// function assignTeam(teams) {
+//   if (countPlayers(teams) == 0) {
+//     return getRandomInt(2);
+//   } else if (countPlayers(teams) == 1) {
+//     for (let i = 0; i < teams.length; i++) {
+//       if (teams[i].players.length == 0) {
+//         return i
+//       }
+//     }
+//   } else {
+//     if (teams[0].players.length > teams[1].players.length) {
+//       return 1
+//     } else if (teams[0].players.length < teams[1].players.length) {
+//       return 0
+//     } else {
+//       return getRandomInt(2);
+//     }
+//   }
+// }
 
 function removePlayerFromGame(teams, socketId) {
   for (let i = 0; i < teams.length; i++) {
@@ -139,9 +139,6 @@ function countPlayers(teams) {
     }
   }
   return count
-}
-function countPlayers2(players) {
-  return Object.keys(players).length
 }
 
 function setTurn(turn, team, players) {
@@ -214,16 +211,19 @@ function getRandomInt(max) {
 }
 
 function findRandomPlayer(teams) {
-  while (true) {
     let randomTeam = getRandomInt(2)
-    let teamToChooseFrom = teams[randomTeam]
-    if (teamToChooseFrom.players.length > 0) {
-      let randomPlayer = getRandomInt(teamToChooseFrom.players.length)
-      return teamToChooseFrom.players[randomPlayer]
+    if (teams[randomTeam].players.length > 0) {
+      let randomPlayer = getRandomInt(teams[randomTeam].players.length)
+      return teams[randomTeam].players[randomPlayer]
     } else {
-      continue;
+      if (randomTeam == 0) {
+        randomTeam = 1
+      } else {
+        randomTeam = 0
+      }
+      let randomPlayer = getRandomInt(teams[randomTeam].players.length)
+      return teams[randomTeam].players[randomPlayer]
     }
-  }
 }
 
 /* function onConnect(socket) {
@@ -271,6 +271,7 @@ function findRandomPlayer(teams) {
 } */
 
 function onConnect(socket, storageClient) {
+
   storageClient = JSON.parse(storageClient);
   console.log("[onConnect] storageClient", storageClient)
   // game state
@@ -285,7 +286,7 @@ function onConnect(socket, storageClient) {
   client.name = makeId(5)
   client.yutsAsleep = false
   client.visibility = true
-  clients.thrown = false
+  client.thrown = false
   client.reset = false
   
   if (storageClient !== null) {
@@ -297,6 +298,10 @@ function onConnect(socket, storageClient) {
   io.to(socket.id).emit('setUpClient', client)
   clients[socket.id] = client
   io.emit("clients", clients)
+
+  if (hostId == null) {
+    hostId = socket.id
+  }
 }
 
 io.on("connection", (socket) => { // socket.handshake.query is data obj
@@ -316,6 +321,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     teams[team].players.push(clients[socket.id])
     clients[socket.id].thrown = false
     let updatedClient = JSON.parse(JSON.stringify(clients[socket.id]))
+    if (hostId == null) {
+      hostId = socket.id
+    }
+  
     io.emit("setUpClient", updatedClient)
     io.emit("clients", clients);
     io.emit("teams", teams);
@@ -460,15 +469,15 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("visibilityChange", ({flag}) => {
-    if (players[socket.id] != undefined) {
+    if (clients[socket.id] != undefined) {
       clients[socket.id].visibility = flag
-      players[socket.id].visibility = flag
+      clients[socket.id].visibility = flag
       if (flag == false) {
-        players[socket.id].participating = false
+        clients[socket.id].participating = false
         clients[socket.id].participating = false
       }
       io.emit("clients", clients);
-      io.emit("players", players);
+      // io.emit("players", players);
     }
   })
 
@@ -497,7 +506,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         })
       }
     } 
-    io.emit("players", players)
+    // io.emit("players", players)
     io.emit("clients", clients);
   })
 
@@ -570,13 +579,13 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("tiles", tiles);
     io.emit("teams", teams);
     io.emit("turn", turn);
-    io.emit("players", players)
+    // io.emit("players", players)
   });
 
   function allYutsAsleep(players) {
     let flag = true;
-    for (const socketId of Object.keys(players)) {
-      if (players[socketId].visibility && !players[socketId].yutsAsleep) {
+    for (const socketId of Object.keys(clients)) {
+      if (clients[socketId].visibility && !clients[socketId].yutsAsleep) {
         flag = false;
       }
     }
@@ -585,7 +594,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   }
 
   // if player throws, at least one player's visibility is true
-  socket.on("throwYuts", ({socketIdThrower}) => {
+  socket.on("throwYuts", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
@@ -596,19 +605,19 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
     // should also check if screen is visible
     // bro went to another screen
-    if (players[socketIdThrower].yutsAsleep && 
+    if (clients[socket.id].yutsAsleep && 
       teams[turn.team].throws > 0 && 
-      teams[turn.team].players[turn.players[turn.team]].socketId === socketIdThrower &&
-      allYutsAsleep(players)) {
+      teams[turn.team].players[turn.players[turn.team]].socketId === socket.id &&
+      allYutsAsleep(clients)) {
 
       teams[turn.team].throws--;
       io.emit("teams", teams);
 
-      players[socketIdThrower].thrown = true;
+      players[socket.id].thrown = true;
 
       const yutForceVectors = [];
-      for (const socketId of Object.keys(players)) {
-        if (players[socketId].visibility) {
+      for (const socketId of Object.keys(clients)) {
+        if (clients[socketId].visibility) {
           for (let i = 0; i < 4; i++) {
             yutForceVectors.push({
               rotation: rotations[i],
@@ -634,10 +643,11 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
             // });
           }
           io.to(socketId).emit("throwYuts", yutForceVectors);
-          players[socketId].yutsAsleep = false;
+          clients[socketId].yutsAsleep = false;
         }
       }
-      io.emit("players", players);
+      // io.emit("players", players);
+      io.emit("clients", clients);
     }
   });
 
@@ -649,21 +659,22 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       let positionsInHand = JSON.parse(JSON.stringify(initialState.resetYutPositions))
       let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
-      for (const socketId of Object.keys(players)) {
-        if (players[socketId].visibility) {
-          players[socketId].yutsAsleep = false;
+      for (const socketId of Object.keys(clients)) {
+        if (clients[socketId].visibility) {
+          clients[socketId].yutsAsleep = false;
           if (socketId === socketIdEmitter) {
-            players[socketId].reset = true;
+            clients[socketId].reset = true;
           }
         }
       }
 
-      io.emit("players", players)
+      // io.emit("players", players)
+      io.emit("clients", clients)
       io.emit("teams", teams)
   
       // reset yuts
-      for (const socketId of Object.keys(players)) {
-        if (players[socketId].visibility) {
+      for (const socketId of Object.keys(clients)) {
+        if (clients[socketId].visibility) {
           const yutForceVectors = [];
           for (let i = 0; i < 4; i++) {
             yutForceVectors.push({
@@ -726,7 +737,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("recordThrow", ({result}) => {
     console.log("[recordThrow] result", result, "socketId", socket.id)
-    players[socket.id].thrown = false;
+    clients[socket.id].thrown = false;
     
     if (gamePhase === "pregame") {
       teams[turn.team].moves[result.toString()]++
@@ -749,12 +760,18 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       }
     }
     io.emit("teams", teams)
-    io.emit("players", players)
+    // io.emit("players", players)
+    io.emit("clients", clients)
   })
 
   socket.on("throwInProgress", (flag) => {
     throwInProgress = flag;
     io.emit("throwInProgress", flag)
+  })
+
+  socket.on("readyToStart", (value) => {
+    readyToStart = value
+    io.to(hostId).emit("readyToStart", readyToStart)
   })
 
   socket.on("disconnect", () => {
@@ -763,10 +780,10 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     teams = removePlayerFromGame(teams, socket.id)
     io.emit("teams", teams)
 
-    delete players[socket.id];
-    io.emit("players", players)
+    delete clients[socket.id];
+    io.emit("clients", clients)
 
-    if (Object.keys(players).length < 2) {
+    if (countPlayers(teams) < 2) {
       readyToStart = false;
       io.emit("readyToStart", readyToStart)
     }
@@ -776,12 +793,13 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     } else {
       hostId = null;
     }
+    console.log("[disconnect] hostId", hostId);
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)
-      // players[getCurrentPlayerSocketId(turn, teams)].thrown = false;
+      clients[socket.id].thrown = false;
       io.emit("turn", turn)
-      io.emit("players", players)
+      io.emit("clients", clients)
     }
   });
 });

@@ -51,7 +51,7 @@ export default function UserForm() {
   function validateName(name) {
     for (let i = 0; i < teams.length; i++) {
       for (let j = 0; j < teams[i].players.length; j++) {
-        if (teams[i].players[j].displayName === name) {
+        if (teams[i].players[j].name === name) {
           return false;
         }
       }
