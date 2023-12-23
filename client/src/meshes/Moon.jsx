@@ -48,11 +48,6 @@ export default function Moon({ position, tile, scale = 1, device }) {
       socket.emit("select", null);
     }
   }
-
-  useEffect(() => {
-    socket.emit("moonLocDebug", layout['portrait'].center)
-  }, [])
-
   return (
     <group
       ref={moon}

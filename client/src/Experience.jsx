@@ -545,7 +545,8 @@ export default function Experience() {
     setJoinTeam1(true);
   }
 
-  function PiecesSection(client) {
+  // pre-condition: 'client' from 'clientAtom'
+  function PiecesSection() {
     if (client.team != undefined) {
       return (
         <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
@@ -891,7 +892,7 @@ export default function Experience() {
             )}
           </group>
           {/* pieces section */}
-          <PiecesSection client={client}/>
+          <PiecesSection/>
           {/* chat section */}
           <group position={layout[device].chat.position}>
             <Html>

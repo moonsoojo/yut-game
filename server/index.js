@@ -273,7 +273,6 @@ function findRandomPlayer(teams) {
 function onConnect(socket, storageClient) {
 
   storageClient = JSON.parse(storageClient);
-  console.log("[onConnect] storageClient", storageClient)
   // game state
   io.emit("tiles", tiles);
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
@@ -296,6 +295,7 @@ function onConnect(socket, storageClient) {
     io.emit("teams", teams);
   }
   io.to(socket.id).emit('setUpClient', client)
+  console.log("[onConnect] client", client)
   clients[socket.id] = client
   io.emit("clients", clients)
 
@@ -306,7 +306,6 @@ function onConnect(socket, storageClient) {
 
 io.on("connection", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
-  console.log(JSON.parse(socket.handshake.query.client)); 
 
   // spectator
   // need parse & stringify to avoid keys as list of numbers
@@ -315,7 +314,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client))));
 
   socket.on("join", ({ team, name }, callback) => {
-    console.log("[join] socketId", socket.id)
     clients[socket.id].team = team
     clients[socket.id].name = name
     teams[team].players.push(clients[socket.id])
@@ -451,21 +449,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       team,
       message
     })
-    console.log("[sendMessage]", messages)
     // display should start from the bottom, and get pushed up on new messages
     io.emit("messages", messages)
-  })
-
-  socket.on("lookAtDebug", (value) => {
-    console.log("[lookAtDebug]", value)
-  })
-
-  socket.on("useEffect", (device) => {
-    console.log("[useEffect]", device)
-  })
-
-  socket.on("moonLocDebug", (value) => {
-    console.log("[moonLocDebug]", value)
   })
 
   socket.on("visibilityChange", ({flag}) => {
@@ -482,7 +467,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("yutsAsleep", ({flag}, callback) => {
-    console.log("[yutsAsleep] flag", flag, "socketId", socket.id)
     clients[socket.id].yutsAsleep = flag
     if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0)) {
       callback({
@@ -520,8 +504,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   function passTurnPregame(turn, teams, gamePhase) {
-    console.log("[passTurnPregame] moves in team 0", teams[0].moves)
-    console.log("[passTurnPregame] moves in team 1", teams[1].moves)
     if (allTeamsHaveMove(teams)) {
       let firstTeamToThrow = calcFirstTeamToThrow(teams)
       if (firstTeamToThrow == -1) {
@@ -589,7 +571,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
         flag = false;
       }
     }
-    console.log("[allYutsAsleep]", flag)
     return flag
   }
 
@@ -652,7 +633,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   });
 
   socket.on("resetYuts", ({ socketIdEmitter }) => {
-    console.log("[resetYuts]")
     if (socketIdEmitter === getCurrentPlayerSocketId(turn, teams)) {
       teams[turn.team].throws++
 
@@ -736,7 +716,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("recordThrow", ({result}) => {
-    console.log("[recordThrow] result", result, "socketId", socket.id)
     clients[socket.id].thrown = false;
     
     if (gamePhase === "pregame") {
@@ -775,7 +754,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("user disconnected", socket.id);
 
     teams = removePlayerFromGame(teams, socket.id)
     io.emit("teams", teams)
@@ -793,7 +772,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     } else {
       hostId = null;
     }
-    console.log("[disconnect] hostId", hostId);
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)

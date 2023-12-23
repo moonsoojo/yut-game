@@ -104,11 +104,10 @@ export const SocketManager = () => {
       setClient(value);
     }
     function onSetUpPlayer({player}) {
-      console.log("[onSetUpPlayer] player", player)
       setClientPlayer(player);
     }
     function onDisconnect() {
-      console.log("disconnected", clientPlayer);
+      console.log("disconnected");
     }
     function onSelect(value) {
       setSelection(value);

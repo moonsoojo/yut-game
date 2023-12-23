@@ -37,7 +37,7 @@ export default function TextButton({
           onPointerDown={handlePointerClick}
         >
           <boxGeometry args={[boxWidth, boxHeight, 0.1]} />
-          <meshStandardMaterial transparent opacity={0.5} />
+          <meshStandardMaterial transparent opacity={0} />
         </mesh>
       )}
       {/* must use absolute path - string starts with a slash */}
