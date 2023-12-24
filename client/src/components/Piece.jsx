@@ -1,5 +1,5 @@
 
-import { selectionAtom, playersAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, clientsAtom } from "../SocketManager";
+import { selectionAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, clientsAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
