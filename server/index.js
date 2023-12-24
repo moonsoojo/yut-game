@@ -594,7 +594,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       teams[turn.team].throws--;
       io.emit("teams", teams);
 
-      players[socket.id].thrown = true;
+      clients[socket.id].thrown = true;
 
       const yutForceVectors = [];
       for (const socketId of Object.keys(clients)) {
@@ -627,7 +627,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
           clients[socketId].yutsAsleep = false;
         }
       }
-      // io.emit("players", players);
       io.emit("clients", clients);
     }
   });
