@@ -1,5 +1,5 @@
 
-import { selectionAtom, clientPlayerAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, clientsAtom } from "../SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, clientsAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -22,7 +22,6 @@ export default function Piece ({
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
-  const [clientPlayer] = useAtom(clientPlayerAtom);
   const [client] = useAtom(clientAtom)
   const [clients] = useAtom(clientsAtom)
 
@@ -83,9 +82,9 @@ export default function Piece ({
 
   function handlePointerDown(event) {
     if (gamePhase === "game" && 
-    clientPlayer.team == team && 
+    client.team == team && 
     hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, clientPlayer.socketId)) {
+    isMyTurn(turn, teams, client.socketId)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;
