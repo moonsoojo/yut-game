@@ -69,7 +69,6 @@ export const gamePhaseAtom = atom("lobby");
 export const clientPlayerAtom = atom(null);
 export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
-export const playersAtom = atom({});
 export const messagesAtom = atom([]);
 export const nameAtom = atom('');
 export const clientsAtom = atom({})
@@ -88,7 +87,6 @@ export const SocketManager = () => {
   const [clientPlayer, setClientPlayer] = useAtom(clientPlayerAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
-  const [_players, setPlayers] = useAtom(playersAtom);
   const [_messages, setMessages] = useAtom(messagesAtom);
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
@@ -143,9 +141,6 @@ export const SocketManager = () => {
     function onLegalTiles({ legalTiles }) {
       setLegalTiles(legalTiles)
     }
-    function onPlayers(players) {
-      setPlayers(players)
-    }
     function onMessages(messages) {
       setMessages(messages)
     }
@@ -164,7 +159,6 @@ export const SocketManager = () => {
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("legalTiles", onLegalTiles);
-    socket.on("players", onPlayers);
     socket.on("messages", onMessages);
     return () => {
       socket.off("connect", onConnect);
@@ -182,7 +176,6 @@ export const SocketManager = () => {
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("legalTiles", onLegalTiles);
-      socket.off("players", onPlayers);
       socket.off("messages", onMessages);
     };
   }, []);

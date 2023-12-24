@@ -23,7 +23,6 @@ export default function Piece ({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [clientPlayer] = useAtom(clientPlayerAtom);
-  const [players] = useAtom(playersAtom);
   const [client] = useAtom(clientAtom)
   const [clients] = useAtom(clientsAtom)
 
@@ -48,8 +47,8 @@ export default function Piece ({
 
   useFrame((state, delta) => {
     if (gamePhase === "game" && 
-    clientPlayer.team == team && 
-    isMyTurn(turn, teams, clientPlayer.socketId) && 
+    client.team == team && 
+    isMyTurn(turn, teams, client.socketId) && 
     hasValidMove(teams[team].moves) && selection == null &&
     clients[client.socketId].yutsAsleep) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)

@@ -4,7 +4,7 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { playersAtom, yutThrowValuesAtom, clientPlayerAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
+import { clientsAtom, yutThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYutsAsleep } from "../../server/src/helpers.js";
 import layout from "../../layout.js";
@@ -23,8 +23,8 @@ export default function YutsNew3({ device = "portrait" }) {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
-  const [clientPlayer] = useAtom(clientPlayerAtom)
-  const [players] = useAtom(playersAtom);
+  const [client] = useAtom(clientAtom)
+  const [clients] = useAtom(clientsAtom);
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [showResetYoots, setShowResetYoots] = useState(false)
 
@@ -86,7 +86,7 @@ export default function YutsNew3({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (clientPlayer && isMyTurn(turn, teams, clientPlayer.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients)) {
+    if (client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients)) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
         yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientPlayerAtom } from "../SocketManager";
+import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom, clientsAtom } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
@@ -14,11 +14,12 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [legalTiles] = useAtom(legalTilesAtom)
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
-  const [clientPlayer] = useAtom(clientPlayerAtom)
+  const [client] = useAtom(clientAtom)
+  const [clients] = useAtom(clientsAtom)
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
+    if (selection != null && isMyTurn(turn, teams, client.socketId)) {
       
       document.body.style.cursor = "pointer";
       wrapper.current.opacity += 0.2;
@@ -27,7 +28,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, clientPlayer.socketId)) {
+    if (selection != null && isMyTurn(turn, teams, client.socketId)) {
       
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
@@ -38,7 +39,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
     event.stopPropagation();
     if (selection != null) {
       
-      if (isMyTurn(turn, teams, clientPlayer.socketId)) {
+      if (isMyTurn(turn, teams, client.socketId)) {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
         }
