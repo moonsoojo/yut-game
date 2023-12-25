@@ -363,7 +363,7 @@ export default function Home() {
           onPointerDown={handleRulebook}
         >
           <boxGeometry args={layout[device].title.rulebook.dimsBox} />
-          <meshStandardMaterial transparent opacity={0.5} />
+          <meshStandardMaterial transparent opacity={0} />
         </mesh>
         <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
@@ -390,7 +390,7 @@ export default function Home() {
           onPointerDown={handleLetsPlay}
         >
           <boxGeometry args={layout[device].title.letsPlay.dimsBox} />
-          <meshStandardMaterial transparent opacity={0.5} />
+          <meshStandardMaterial transparent opacity={0} />
         </mesh>
         {/* <Html position={layout[device].title.letsPlay.position}>
           <div
