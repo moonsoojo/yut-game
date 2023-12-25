@@ -94,7 +94,7 @@ export default function YutsNew3({ device = "portrait" }) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissiveIntensity = 0
       }
-      yutFloorMaterial.current.opacity = 0
+      yutFloorMaterial.current.opacity = 0.5
     }
     let allYutsOnFloor = true;
     for (let i = 0; i < yuts.length; i++) {
@@ -245,12 +245,13 @@ export default function YutsNew3({ device = "portrait" }) {
                 geometry={nodes.Cylinder007.geometry}
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
-                scale={[1, 6.161, 1]}
+                scale={[1.4, 8.6254, 1.4]}
+                // 1, 6.161, 1
                 ref={yutMeshes[index]}
               >
               </mesh>
             ) : (
-              <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
+              <group rotation={[0, 0, -Math.PI / 2]} scale={[1.4, 8.6254, 1.4]}>
                 <mesh
                   castShadow
                   receiveShadow

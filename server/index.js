@@ -227,12 +227,13 @@ function onConnect(socket, storageClient) {
     client.team = storageClient.team
     client.name = storageClient.name
     teams[storageClient.team].players.push(client)
-    io.emit("teams", teams);
+    // io.emit("teams", teams);
   }
   io.to(socket.id).emit('setUpClient', client)
   console.log("[onConnect] client", client)
   clients[socket.id] = client
   io.emit("clients", clients)
+  io.emit("teams", teams);
 
   if (hostId == null) {
     hostId = socket.id
