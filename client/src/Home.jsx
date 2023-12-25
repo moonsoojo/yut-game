@@ -280,7 +280,7 @@ export default function Home() {
       <group>
         <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
-        size={1} 
+        size={0.9} 
         height={0.01} 
         rotation={[-Math.PI / 2, 0, 0, "XZY"]}
         position={layout[device].title.position1}> 
@@ -289,7 +289,7 @@ export default function Home() {
         </Text3D>
         <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
-        size={1} 
+        size={0.9} 
         height={0.01} 
         rotation={[-Math.PI / 2, 0, 0, "XZY"]}
         position={layout[device].title.position2}> 
@@ -307,7 +307,7 @@ export default function Home() {
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
             position={layout[device].title.yuts.position1}
-            rotation={[0, -Math.PI / 2, -Math.PI / 2]}
+            rotation={layout[device].title.yuts.rotation1}
             scale={layout[device].title.yuts.scale}
           />
           <mesh
@@ -316,7 +316,7 @@ export default function Home() {
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
             position={layout[device].title.yuts.position2}
-            rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+            rotation={layout[device].title.yuts.rotation2}
             scale={layout[device].title.yuts.scale}
           />
           <mesh
@@ -325,7 +325,7 @@ export default function Home() {
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
             position={layout[device].title.yuts.position3}
-            rotation={[0, - 7 * Math.PI / 16, -Math.PI / 2]}
+            rotation={layout[device].title.yuts.rotation3}
             scale={layout[device].title.yuts.scale}
           />
           <mesh
@@ -334,7 +334,7 @@ export default function Home() {
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
             position={layout[device].title.yuts.position4}
-            rotation={[0, - 9 * Math.PI / 16, -Math.PI / 2]}
+            rotation={layout[device].title.yuts.rotation4}
             scale={layout[device].title.yuts.scale}
           />
         </group>

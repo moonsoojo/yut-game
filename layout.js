@@ -23,11 +23,15 @@ export default {
       position1: [-4.7, 0, -14.5],
       position2: [-4.7, 0, -13],
       yuts: {
-        position1: [-1, 0, -4],
-        position2: [-2, 0, -3.5],
-        position3: [0, 0, -3],
-        position4: [1, 0, -4.5],
-        scale: [0.32, 2, 0.32]
+        position1: [-0.5, 0, -14],
+        rotation1: [0, -Math.PI / 2, -Math.PI / 2],
+        position2: [0.1, 0, -14],
+        rotation2: [0, -Math.PI / 2, -Math.PI / 2],
+        position3: [0.7, 0, -14],
+        rotation3: [0, -Math.PI / 2, -Math.PI / 2],
+        position4: [1.3, 0, -14],
+        rotation4: [0, -Math.PI / 2, -Math.PI / 2],
+        scale: [0.256, 1.6, 0.256]
       },
       letsPlay: {
         position1: [-2, 0, -0.5],
@@ -231,11 +235,15 @@ export default {
       position2: [-13.5, 0, -4],
       fontSize: '80px',
       yuts: {
-        position1: [-3, 0, 0],
-        position2: [-3.5, 0, -1],
-        position3: [-4, 0, 0],
-        position4: [-2.5, 0, -0.5],
-        scale: [0.25, 1.5, 0.25]
+        position1: [-9.9, 0, -5.2],
+        rotation1: [0, -Math.PI / 2, -Math.PI / 2],
+        position2: [-9.4, 0, -5.2],
+        rotation2: [0, -Math.PI / 2, -Math.PI / 2],
+        position3: [-8.9, 0, -5.2],
+        rotation3: [0, -Math.PI / 2, -Math.PI / 2],
+        position4: [-8.4, 0, -5.2],
+        rotation4: [0, -Math.PI / 2, -Math.PI / 2],
+        scale: [0.21, 1.3, 0.21]
       },
       rockets: {
         position1: [0.3,0,-3],
@@ -463,11 +471,15 @@ export default {
       position2: [-13.5, 0, -4],
       fontSize: '40px',
       yuts: {
-        position1: [-3, 0, 0],
-        position2: [-3.5, 0, -1],
-        position3: [-4, 0, 0],
-        position4: [-2.5, 0, -0.5],
-        scale: [0.25, 1.5, 0.25]
+        position1: [-9.9, 0, -5.2],
+        rotation1: [0, -Math.PI / 2, -Math.PI / 2],
+        position2: [-9.4, 0, -5.2],
+        rotation2: [0, -Math.PI / 2, -Math.PI / 2],
+        position3: [-8.9, 0, -5.2],
+        rotation3: [0, -Math.PI / 2, -Math.PI / 2],
+        position4: [-8.4, 0, -5.2],
+        rotation4: [0, -Math.PI / 2, -Math.PI / 2],
+        scale: [0.21, 1.3, 0.21]
       },
       rockets: {
         position1: [0.3,0,-3],
