@@ -73,9 +73,7 @@ export default function YutsNew3({ device = "portrait" }) {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
       socket.emit("yutsAsleep", {flag: true}, (response) => {
-        if (response.status === "readyToStart") {
-          socket.emit("readyToStart", true)
-        } else if (response.status === "record") {
+        if (response.status === "record") {
           let result = observeThrow();
           socket.emit("recordThrow", {result})
         } else if (response.status === "reset") {

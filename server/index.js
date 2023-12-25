@@ -246,7 +246,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   // need parse & stringify to avoid keys as list of numbers
   onConnect(
     socket, 
-    JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client))));
+    JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client)))
+  );
 
   socket.on("join", ({ team, name }, callback) => {
     clients[socket.id].team = team
@@ -258,9 +259,14 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
       hostId = socket.id
     }
   
-    io.emit("setUpClient", updatedClient)
+    io.to(socket.id).emit("setUpClient", updatedClient)
     io.emit("clients", clients);
     io.emit("teams", teams);
+
+    if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
+      readyToStart = true;
+      io.to(hostId).emit(readyToStart);
+    }
     callback({
       status: "success",
       client: updatedClient
@@ -291,10 +297,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   socket.on("yutsAsleep", ({flag}, callback) => {
     clients[socket.id].yutsAsleep = flag
-    if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0)) {
-      callback({
-        status: "readyToStart"
-      })
+    if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0) && allYutsAsleep(clients)) {
+      readyToStart = true;
+      io.to(hostId).emit("readyToStart", readyToStart);
     } else if (gamePhase !== "lobby") {
       if (socket.id === getCurrentPlayerSocketId(turn, teams)) {
         if (clients[socket.id].reset) {

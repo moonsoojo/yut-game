@@ -627,23 +627,16 @@ export default function Experience() {
       )
     } else {
       return (      
-      <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
-        { (gamePhase === "game" && 29 in legalTiles) ?
-          <ScoreButton
-            position={[0,0,0]}
-            device={device}
-          /> : teams[0].pieces.map((value, index) =>
-          (
-            <mesh
-            position={newHomePiecePositions[index]}
-            key={index}
-          >
-            <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial color="#505050"/>
-          </mesh>
-          ))
-        }
-      </group>
+        <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+          {teams[0].pieces.map((value, index) =>
+            (<mesh
+              position={newHomePiecePositions[index]}
+              key={index}
+            >
+              <boxGeometry args={[0.4, 0.4, 0.4]} />
+              <meshStandardMaterial color="#505050"/>
+            </mesh>))}
+        </group>
       )
     }
   }
@@ -852,9 +845,10 @@ export default function Experience() {
             {readyToStart && gamePhase === "lobby" && (
               <TextButton
                 text="Start"
-                position={layout[device].throwCount.position}
-                boxWidth={1.2}
-                boxHeight={0.3}
+                position={layout[device].startBanner.position}
+                size={layout[device].startBanner.fontSize}
+                boxWidth={layout[device].startBanner.boxWidth}
+                boxHeight={layout[device].startBanner.boxHeight}
                 handlePointerClick={() => {socket.emit("startGame")}}
               />
             )}

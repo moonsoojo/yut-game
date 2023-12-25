@@ -48,7 +48,7 @@ export default {
     },
     team0: {
       scale: 1,
-      position: [-7, 0, -14],
+      position: [-7, 0, -15],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.2]
@@ -65,7 +65,7 @@ export default {
     },
     team1: {
       scale: 1,
-      position: [-3, 0, -14],
+      position: [-3, 0, -15],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.2]
@@ -164,7 +164,10 @@ export default {
       },
     },
     startBanner: {
-      position: [3, 0, -3.5],
+      position: [-3.9, -1.2, 0.8],
+      fontSize: 0.5,
+      boxWidth: 2,
+      boxHeight: 0.5,
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
     startGameBanner: {
@@ -395,7 +398,10 @@ export default {
       },
     },
     startBanner: {
-      position: [2.7, -1.2, -2.5],
+      position: [-0.8, -1.2, -5],
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
     },
     startGameBanner: {
@@ -615,7 +621,10 @@ export default {
       },
     },
     startBanner: {
-      position: [2.7, -1.2, -2.5],
+      position: [-0.8, -1.2, -5],
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
     },
     startGameBanner: {
