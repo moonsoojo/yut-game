@@ -54,7 +54,6 @@ export const gameSlice = createSlice({
   reducers: {
     setSelection: (state, action) => {
       // how to handle click between star and score button
-      console.log(action);
       state.selection = action.payload;
     },
     finishPiece: (state, action) => {

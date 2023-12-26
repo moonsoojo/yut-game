@@ -224,14 +224,12 @@ function onConnect(socket, storageClient) {
   client.thrown = false
   client.reset = false
   
-  console.log("[onConnect] storageClient", storageClient)
   if (storageClient !== null) {
     client.team = storageClient.team
     client.name = storageClient.name
     teams[storageClient.team].players.push(client)
     // io.emit("teams", teams);
   }
-  console.log("[onConnect] client", client)
   io.to(socket.id).emit('setUpClient', client)
   clients[socket.id] = JSON.parse(JSON.stringify(client))
   io.emit("clients", clients)
@@ -406,13 +404,9 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   // if player throws, at least one player's visibility is true
   socket.on("throwYuts", () => {
-    console.log("[throwYuts]")
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
-    console.log("[throwYuts] current player socket id", teams[turn.team].players[turn.players[turn.team]].socketId)
-    console.log("[throwYuts] emitter socket id", socket.id)
-    console.log("[throwYuts] teams", JSON.stringify(teams))
     if (clients[socket.id].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socket.id &&

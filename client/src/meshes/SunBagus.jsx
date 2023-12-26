@@ -556,7 +556,6 @@ function Sun({ tile, ...props }) {
 
   function CalculateLOD(cameraPosition, sunPosition) {
     var distanceToCamera = cameraPosition.distanceTo(sunPosition);
-    // console.log(distanceToCamera);
     if (distanceToCamera < 4) {
       return 1;
     }
@@ -625,7 +624,6 @@ function Sun({ tile, ...props }) {
   useFrame(({ gl, scene, camera }) => {
     scene.background = new THREE.Color(0x000d1c);
     var cameraWorldPosition = new THREE.Vector3();
-    // console.log(camera);
     cameraWorldPosition.copy(camera.position);
     camera.localToWorld(cameraWorldPosition);
     var lodLevel = CalculateLOD(cameraWorldPosition, meshRef.current.position);

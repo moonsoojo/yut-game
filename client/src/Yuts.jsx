@@ -106,12 +106,6 @@ export default function YutsNew3({ device = "portrait" }) {
     if (allYutsOnFloor) {
       setOutOfBounds(false);
     }
-    // log yoot positions
-    let positions = []
-    for (let i = 0; i < yuts.length; i++) {
-      positions.push(yuts[i].current.translation())
-    }
-    // console.log("[Yuts] yut positions", positions);
   })
 
   function observeThrow() {
@@ -179,13 +173,13 @@ export default function YutsNew3({ device = "portrait" }) {
 
   return (
     <group dispose={null}>
-      { showResetYoots && <TextButton
+      { /* showResetYoots && <TextButton
         text='Reset yoots'
         position={[-1,0,-5]}
         boxWidth={1.2}
         boxHeight={0.3}
         handlePointerClick={handleYootReset}
-      /> }
+      /> */}
       <RigidBody
         type="fixed"
         restitution={0.01}

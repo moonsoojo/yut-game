@@ -52,7 +52,6 @@ export default function Home() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-    console.log("[Home] useEffect")
   }, []);
 
   // yoot model
@@ -62,7 +61,6 @@ export default function Home() {
   const camera = useRef();
 
   useEffect(() => {
-    console.log("[Home] device", device)
     camera.current.lookAt(
       layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
       layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
@@ -94,7 +92,6 @@ export default function Home() {
     )
   }
 
-  console.log("[Home] zoom", zoom)
 
   // const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
 

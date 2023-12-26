@@ -49,7 +49,6 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
     }
   }
 
-  // console.log("legalTiles", legalTiles)
   return legalTiles
 }
 
@@ -66,7 +65,6 @@ function getFullHistory(history, path, forward) {
 }
 
 function checkFinishRule(forks) {
-  // console.log("[checkFinishRule] forks", forks)
   for (let i = 0; i < forks.length; i++) {
     if (forks[i] == 29) {
       return [29]
@@ -88,15 +86,10 @@ function checkBackdoFork(forks, history) {
 // if first step, keep forks
 // else, go straight
 function getNextTiles(tile, forward) {
-  // console.log("[getNextTiles] tile", tile, "forward", forward)
   let nextTiles = [];
   if (tile == -1 && (forward)) {
     return [1]
   }
-  // } else if (tile == 0 && (forward)) {
-  //   return [29]
-  // }
-  // doesn't fix all tests
 
   // on board
   let [start, end] = getStartAndEndVertices(forward);
@@ -129,7 +122,6 @@ function getDestination(tile, steps, forward, path) {
     if (edge[start] == tile) {
       let nextTile;
       let forks = getNextTiles(tile, forward);
-      // console.log("[getDestination] forks", forks)
       if (forks.length > 1) {
         // choose next tile
         // recursively call getDestination with
@@ -144,10 +136,6 @@ function getDestination(tile, steps, forward, path) {
 }
 
 function chooseTileFromFork(path, forks) {
-  // console.log("[chooseTileFromFork] path", path, "forks", forks)
-  // if (path[path.length-1] == 0) {
-  //   return 29
-  // }
   let closestIndexDistance = 1000;
   let closestIndex = -2;
   for (const fork of forks) {
