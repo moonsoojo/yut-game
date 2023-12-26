@@ -4,11 +4,17 @@ let outOfBoundsPosition = [
   floorPosition[1],
   floorPosition[2]
 ]
+let throwPosition = [
+  floorPosition[0]-0.9,
+  floorPosition[1],
+  floorPosition[2]+1.5
+]
 
 export default {
   yut: {
     floor: floorPosition, // change value on top
-    outOfBounds: outOfBoundsPosition
+    outOfBounds: outOfBoundsPosition,
+    throwPos: throwPosition
   },
   portrait: {
     center: [-3, 0, -7],
@@ -81,12 +87,12 @@ export default {
       }
     },
     throwCount: {
-      position: [-1.2,0,-2.5],
-      size: 0.24
+      position: throwPosition,
+      size: 0.3
     },
     turn: {
       position: [-1.2, 0, -1.7],
-      size: 0.24
+      size: 0.22
     },
     gamePhase: {
       position: [-1.2, 0, -2.1],
@@ -310,12 +316,12 @@ export default {
       }
     },
     throwCount: {
-      position: [-2.7, 0, 0.8],
-      size: 0.21
+      position: throwPosition,
+      size: 0.3
     },
     turn: {
       position: [-0.8, 0, -1.5],
-      size: 0.24
+      size: 0.22
     },
     gamePhase: {
       position: [-0.8, 0, -1.9],
@@ -543,12 +549,12 @@ export default {
       }
     },
     throwCount: {
-      position: [-2.7, 0, 0.8],
+      position: throwPosition,
       size: 0.21
     },
     turn: {
       position: [-0.8, 0, -1.5],
-      size: 0.24
+      size: 0.22
     },
     gamePhase: {
       position: [-0.8, 0, -1.9],

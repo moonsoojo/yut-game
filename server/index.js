@@ -36,7 +36,7 @@ let waitingToPass = false;
 */
 let messages = []
 
-let test = false;
+let test = true;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -44,23 +44,24 @@ if (test) {
     players: [0,0]
   }
   // teams[0].moves['1'] = 1
-  teams[0].pieces[0] = null;
-  teams[0].pieces[1] = null;
-  teams[0].pieces[2] = null;
+  // teams[0].pieces[0] = null;
+  // teams[0].pieces[1] = null;
+  // teams[0].pieces[2] = null;
   teams[1].pieces[0] = null;
-  teams[1].pieces[2] = 'scored';
-  teams[1].pieces[3] = 'scored';
+  teams[1].pieces[1] = null;
+  // teams[1].pieces[2] = 'scored';
+  // teams[1].pieces[3] = 'scored';
   teams[1].throws = 1;
-  tiles[28] = [
-    { tile: 28, team: 0, id: 0,  history: [22, 27]},
-    { tile: 22, team: 0, id: 1,  history: [22, 27]},
+  tiles[8] = [
+    { tile: 10, team: 0, id: 0,  history: [0, 1]},
+    { tile: 10, team: 0, id: 1,  history: [0, 1]},
   ]
-  tiles[10] = [
-    { tile: 10, team: 1, id: 0,  history: [8,9]},
-  ]
-  tiles[17] = [
-    { tile: 17, team: 0, id: 2,  history: [15,16]},
-  ]
+  // tiles[10] = [
+  //   { tile: 10, team: 1, id: 0,  history: [8,9]},
+  // ]
+  // tiles[17] = [
+  //   { tile: 17, team: 0, id: 2,  history: [15,16]},
+  // ]
   // displayPiecesOnTiles(0);
   // displayPiecesOnTiles(1);
 }
@@ -213,7 +214,7 @@ function onConnect(socket, storageClient) {
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
   io.emit("messages", messages)
   io.emit("gamePhase", gamePhase);
-  io.emit("teams", teams);
+  io.emit("turn", turn)
 
   let client = {}
   client.socketId = socket.id
@@ -223,15 +224,16 @@ function onConnect(socket, storageClient) {
   client.thrown = false
   client.reset = false
   
+  console.log("[onConnect] storageClient", storageClient)
   if (storageClient !== null) {
     client.team = storageClient.team
     client.name = storageClient.name
     teams[storageClient.team].players.push(client)
     // io.emit("teams", teams);
   }
-  io.to(socket.id).emit('setUpClient', client)
   console.log("[onConnect] client", client)
-  clients[socket.id] = client
+  io.to(socket.id).emit('setUpClient', client)
+  clients[socket.id] = JSON.parse(JSON.stringify(client))
   io.emit("clients", clients)
   io.emit("teams", teams);
 
@@ -263,6 +265,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.to(socket.id).emit("setUpClient", updatedClient)
     io.emit("clients", clients);
     io.emit("teams", teams);
+    io.emit("turn", turn);
 
     if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
       readyToStart = true;
@@ -403,9 +406,13 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
   // if player throws, at least one player's visibility is true
   socket.on("throwYuts", () => {
+    console.log("[throwYuts]")
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYutPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
 
+    console.log("[throwYuts] current player socket id", teams[turn.team].players[turn.players[turn.team]].socketId)
+    console.log("[throwYuts] emitter socket id", socket.id)
+    console.log("[throwYuts] teams", JSON.stringify(teams))
     if (clients[socket.id].yutsAsleep && 
       teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].socketId === socket.id &&
@@ -592,7 +599,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)
-      clients[socket.id].thrown = false;
+      clients[getCurrentPlayerSocketId(turn, teams)].thrown = false;
       io.emit("turn", turn)
       io.emit("clients", clients)
     }

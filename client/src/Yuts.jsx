@@ -61,12 +61,12 @@ export default function YutsNew3({ device = "portrait" }) {
         z: yutThrowValues[i].torqueImpulse.z,
       });
     }
-    setTimeout(() => {
-      if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === client.socketId) {
-        setShowResetYoots(true);
-      }
+    // setTimeout(() => {
+    //   if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === client.socketId) {
+    //     setShowResetYoots(true);
+    //   }
       // setShowResetYoots(true);
-    }, RESET_TIME)
+    // }, RESET_TIME)
   }, [yutThrowValues]);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function YutsNew3({ device = "portrait" }) {
       for (let i = 0; i < yutMeshes.length; i++) {
         yutMeshes[i].current.material.emissiveIntensity = 0
       }
-      yutFloorMaterial.current.opacity = 0.5
+      yutFloorMaterial.current.opacity = 0.1
     }
     let allYutsOnFloor = true;
     for (let i = 0; i < yuts.length; i++) {
@@ -152,7 +152,7 @@ export default function YutsNew3({ device = "portrait" }) {
       }
       // test: set all result to the same value
       // if (gamePhase === "game") {
-      //   result = 4
+      //   result = 3
       // }
     }
       
@@ -245,13 +245,15 @@ export default function YutsNew3({ device = "portrait" }) {
                 geometry={nodes.Cylinder007.geometry}
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
-                scale={[1.4, 8.6254, 1.4]}
+                scale={[1, 6.161, 1]}
                 // 1, 6.161, 1
+                // [1.4, 8.6254, 1.4]
                 ref={yutMeshes[index]}
               >
               </mesh>
             ) : (
-              <group rotation={[0, 0, -Math.PI / 2]} scale={[1.4, 8.6254, 1.4]}>
+              <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
+                {/* [1.4, 8.6254, 1.4] */}
                 <mesh
                   castShadow
                   receiveShadow
@@ -277,6 +279,12 @@ export default function YutsNew3({ device = "portrait" }) {
           position={layout.yut.outOfBounds}
         />
       </>}
+      {/* { client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && 
+      <TextButton
+        text='THROW'
+        position={layout.yut.throwPos}
+      />
+      } */}
     </group>
   );
 }

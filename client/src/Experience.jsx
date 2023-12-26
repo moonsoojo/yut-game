@@ -44,7 +44,7 @@ import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import { Perf } from 'r3f-perf'
 import Piece from "./components/Piece.jsx";
-import { isMyTurn } from "../../server/src/helpers.js";
+import { allYutsAsleep, isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 import Chatbox from "./Chatbox.jsx";
 
@@ -495,10 +495,10 @@ export default function Experience() {
     e.preventDefault()
     socket.emit("join", { team: 0, name: joinTeam0Name }, (response) => {
       if (response.status === "success") {
-        localStorage.setItem('yootGame', JSON.stringify({
-          gameId: 1,
-          ...response.client
-        }))
+        // localStorage.setItem('yootGame', JSON.stringify({
+        //   gameId: 1,
+        //   ...response.client
+        // }))
       }
     })
   }
@@ -860,10 +860,10 @@ export default function Experience() {
             />
             <Yuts device={device}/>
             {/* throw count */}
-            {(gamePhase === "pregame" || gamePhase === "game") && (
+            {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && (
               <>            
                 <TextButton
-                  text={`Throws: ${
+                  text={`Throw: ${
                     teams[turn.team].throws
                   }`}
                   position={layout[device].throwCount.position}
@@ -879,7 +879,7 @@ export default function Experience() {
                     teams[turn.team].players[turn.players[turn.team]]?.name
                   }`}
                   position={layout[device].turn.position}
-                  size={layout[device].throwCount.size}
+                  size={layout[device].turn.size}
                   color={turn.team == 0 ? "red" : "turquoise"}
                 />
               </>

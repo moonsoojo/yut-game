@@ -100,6 +100,14 @@ export const SocketManager = () => {
     }
     function onSetUpClient(value) {
       setClient(value);
+      console.log("[onSetUpClient] local storage item", JSON.stringify({
+        gameId: 1,
+        ...value
+      }))
+      localStorage.setItem('yootGame', JSON.stringify({
+        gameId: 1,
+        ...value
+      }))
     }
     function onSetUpPlayer({player}) {
       setClientPlayer(player);
@@ -117,6 +125,7 @@ export const SocketManager = () => {
       setTiles(value);
     }
     function onTeams(value) {
+      console.log("[SocketManager] teams", value)
       setTeams(value);
     }
     function onYutThrow(yutForceVectors) {

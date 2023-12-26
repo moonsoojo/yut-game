@@ -124,6 +124,7 @@ export default {
     { x: 0.6, y: 0.5, z: 0, },
   ],
   initialYutRotations: [
+    // must be set to non-0 value to reset the rotation
     { x: 0, y: 1, z: 0, w: 1 },
     { x: 0, y: 1, z: 0, w: 1 },
     { x: 0, y: 1, z: 0, w: 1 },
