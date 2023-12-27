@@ -5,7 +5,7 @@ import { useRef } from "react";
 import React from "react";
 import Tile from "../components/Tile";
 
-export default function Mars({ position, tile, device }) {
+export default function Mars({ position, tile, scale=0.4, device }) {
   const { nodes, materials } = useGLTF("/models/Mars 4.glb");
   const mars = useRef();
 
@@ -14,7 +14,7 @@ export default function Mars({ position, tile, device }) {
   });
 
   return (
-    <group position={position} scale={0.4}>
+    <group position={position} scale={scale}>
       <mesh
         castShadow
         receiveShadow
@@ -23,7 +23,7 @@ export default function Mars({ position, tile, device }) {
         scale={1.5}
         ref={mars}
       />
-      <Tile tile={tile} wrapperRadius={0.6} device={device}/>
+      { tile != undefined && <Tile tile={tile} wrapperRadius={0.6} device={device}/> }
       <HelperArrow
         position={[-0.1, 0, -1]}
         rotation={[-Math.PI/2, 0, Math.PI/16, "XYZ"]}

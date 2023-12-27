@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@react-spring/three": "^9.7.3",
-    "@react-three/drei": "^9.68.3",
+    "@react-three/drei": "^9.92.7",
     "@react-three/fiber": "8.9",
     "@react-three/rapier": "^1.0.0",
     "@reduxjs/toolkit": "^1.9.5",

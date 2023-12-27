@@ -8,6 +8,7 @@ export default function TextButton({
   text,
   boxWidth,
   boxHeight,
+  boxPosition = [boxWidth / 2, boxHeight / 2, 0],
   color="yellow",
   size=0.3
 }) {
@@ -23,21 +24,19 @@ export default function TextButton({
     document.body.style.cursor = "default";
   }
 
-  const boxAdjustedPosition = [boxWidth / 2, boxHeight / 2, 0];
-
   return (
     <group position={position} rotation={rotation}>
       {handlePointerClick == undefined ? (
         <></>
       ) : (
         <mesh
-          position={boxAdjustedPosition}
+          position={boxPosition}
           onPointerEnter={handlePointerEnter}
           onPointerOut={handlePointerOut}
           onPointerDown={handlePointerClick}
         >
           <boxGeometry args={[boxWidth, boxHeight, 0.1]} />
-          <meshStandardMaterial transparent opacity={0} />
+          <meshStandardMaterial transparent opacity={0.3} />
         </mesh>
       )}
       {/* must use absolute path - string starts with a slash */}

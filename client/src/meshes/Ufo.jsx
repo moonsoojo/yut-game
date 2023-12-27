@@ -7,7 +7,7 @@ import { animated } from "@react-spring/three";
 import React from "react";
 
 export default function Ufo({
-  tile,
+  //tile,
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1
@@ -25,9 +25,9 @@ export default function Ufo({
   }, []);
 
   useFrame((state, delta) => {
-    if (tile >= 0) {
-      ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
-    }
+    // if (tile >= 0) {
+    //   ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
+    // }
   });
 
   return (

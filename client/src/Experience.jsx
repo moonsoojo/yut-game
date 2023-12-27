@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
+
+// assets
 import Yuts from "./Yuts.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune2 from "./meshes/Neptune2.jsx";
@@ -9,6 +11,8 @@ import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
 import Controls3d from "./Controls3d";
+import Rulebook from "./Rulebook.jsx";
+
 import layout from "../../layout.js";
 import React from "react";
 import { Leva, useControls } from "leva";
@@ -47,6 +51,7 @@ import Piece from "./components/Piece.jsx";
 import { allYutsAsleep, isMyTurn } from "../../server/src/helpers.js";
 import LandingPage from "./pages/landingPage.jsx";
 import Chatbox from "./Chatbox.jsx";
+import Rulebook2 from "./Rulebook2.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -80,87 +85,17 @@ export default function Experience() {
     window.addEventListener("resize", handleResize, false);
   }, []);
 
-  let zoom;
-  let chatFontSize;
-  let chatboxPadding;
-  let chatboxHeight;
-  let chatboxWidth;
+  const [zoom, setZoom] = useState(50);
+  const [chatFontSize, setChatFontSize] = useState(0);
+  const [chatboxPadding, setChatboxPadding] = useState(0);
+  const [chatboxHeight, setChatboxHeight] = useState(0);
+  const [chatboxWidth, setChatboxWidth] = useState(0);
+  const [rulebookWidth, setRulebookWidth] = useState(0);
+  const [rulebookHeight, setRulebookHeight] = useState(0);
   function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
     return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
   }
-  if (device !== "portrait") {
-    zoom = calcScale(
-      layout[device].camera.zoomMin,
-      layout[device].camera.zoomMax,
-      landscapeMobileCutoff,
-      mediaMax,
-      window.innerWidth
-    )
-    chatFontSize = calcScale(
-      layout[device].chat.fontSizeMin,
-      layout[device].chat.fontSizeMax,
-      landscapeMobileCutoff,
-      mediaMax,
-      window.innerWidth
-    )
-    chatboxPadding = calcScale(
-      layout[device].chat.paddingMin,
-      layout[device].chat.paddingMax,
-      landscapeMobileCutoff,
-      mediaMax,
-      window.innerWidth
-    )
-    chatboxHeight = calcScale(
-      layout[device].chat.heightMin,
-      layout[device].chat.heightMax,
-      landscapeMobileCutoff,
-      mediaMax,
-      window.innerWidth
-    )
-    chatboxWidth = calcScale(
-      layout[device].chat.widthMin,
-      layout[device].chat.widthMax,
-      landscapeMobileCutoff,
-      mediaMax,
-      window.innerWidth
-    )
-  } else {
-    zoom = calcScale(
-      layout[device].camera.zoomMin,
-      layout[device].camera.zoomMax,
-      0,
-      landscapeMobileCutoff,
-      window.innerWidth
-    )
-    chatFontSize = calcScale(
-      layout[device].chat.fontSizeMin,
-      layout[device].chat.fontSizeMax,
-      0,
-      landscapeMobileCutoff,
-      window.innerWidth
-    )
-    chatboxPadding = calcScale(
-      layout[device].chat.paddingMin,
-      layout[device].chat.paddingMax,
-      0,
-      landscapeMobileCutoff,
-      window.innerWidth
-    )
-    chatboxHeight = calcScale(
-      layout[device].chat.heightMin,
-      layout[device].chat.heightMax,
-      0,
-      landscapeMobileCutoff,
-      window.innerWidth
-    )
-    chatboxWidth = calcScale(
-      layout[device].chat.widthMin,
-      layout[device].chat.widthMax,
-      0,
-      landscapeMobileCutoff,
-      window.innerWidth
-    )
-  }
+  
 
   const [clientPlayer] = useAtom(clientPlayerAtom)
   const [readyToStart] = useAtom(readyToStartAtom);
@@ -195,6 +130,79 @@ export default function Experience() {
       layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
     )
     // camera.current.lookAt(-3,0,-7)
+    if (device !== "portrait") {
+      setZoom(calcScale(
+        layout[device].camera.zoomMin,
+        layout[device].camera.zoomMax,
+        landscapeMobileCutoff,
+        mediaMax,
+        window.innerWidth
+      ))
+      setChatFontSize(calcScale(
+        layout[device].chat.fontSizeMin,
+        layout[device].chat.fontSizeMax,
+        landscapeMobileCutoff,
+        mediaMax,
+        window.innerWidth
+      ))
+      setChatboxPadding(calcScale(
+        layout[device].chat.paddingMin,
+        layout[device].chat.paddingMax,
+        landscapeMobileCutoff,
+        mediaMax,
+        window.innerWidth
+      ))
+      setChatboxHeight(calcScale(
+        layout[device].chat.heightMin,
+        layout[device].chat.heightMax,
+        landscapeMobileCutoff,
+        mediaMax,
+        window.innerWidth
+      ))
+      setChatboxWidth(calcScale(
+        layout[device].chat.widthMin,
+        layout[device].chat.widthMax,
+        landscapeMobileCutoff,
+        mediaMax,
+        window.innerWidth
+      ))
+    } else {
+      setZoom(calcScale(
+        layout[device].camera.zoomMin,
+        layout[device].camera.zoomMax,
+        0,
+        landscapeMobileCutoff,
+        window.innerWidth
+      ))
+      setChatFontSize(calcScale(
+        layout[device].chat.fontSizeMin,
+        layout[device].chat.fontSizeMax,
+        0,
+        landscapeMobileCutoff,
+        window.innerWidth
+      ))
+      setChatboxPadding(calcScale(
+        layout[device].chat.paddingMin,
+        layout[device].chat.paddingMax,
+        0,
+        landscapeMobileCutoff,
+        window.innerWidth
+      ))
+      setChatboxHeight(calcScale(
+        layout[device].chat.heightMin,
+        layout[device].chat.heightMax,
+        0,
+        landscapeMobileCutoff,
+        window.innerWidth
+      ))
+      setChatboxWidth(calcScale(
+        layout[device].chat.widthMin,
+        layout[device].chat.widthMax,
+        0,
+        landscapeMobileCutoff,
+        window.innerWidth
+      ))
+    }
   }, [device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -641,12 +649,21 @@ export default function Experience() {
     }
   }
 
+  const [showRulebook, setShowRulebook] = useState(true);
+  function handleShowRulebook() {
+    console.log("handle show rulebook")
+    if (showRulebook) {
+      setShowRulebook(false)
+    } else {
+      setShowRulebook(true)
+    }
+  }
+
   return (
     <>
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
       <color args={ ['#030202']} attach="background" />
-
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -662,9 +679,9 @@ export default function Experience() {
       />
       {/* <Leva hidden /> */}
       <directionalLight
-        position={[0.13, 0.42, 0.25]}
-        intensity={5.62}
-        castShadow
+        position={[0, 1, 0.5]}
+        intensity={4.5}
+        // castShadow
       />
       <group scale={layout[device].scale}>
       { <Physics>
@@ -690,7 +707,7 @@ export default function Experience() {
               handlePointerClick={handleJoinTeam0}
             /> }
             { client.team == undefined && !joinTeam0 && <group position={layout[device].team0.joinInput.position}><Html>
-              <form
+            <form
               onSubmit={e => handleJoinTeam0Submit(e)}>
               <input
               style={{
@@ -860,8 +877,8 @@ export default function Experience() {
             />
             <Yuts device={device}/>
             {/* throw count */}
-            {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && (
-              <>            
+            {/* {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && ( */}
+             {( <>            
                 <TextButton
                   text={`Throw: ${
                     teams[turn.team].throws
@@ -889,20 +906,39 @@ export default function Experience() {
           <PiecesSection/>
           {/* chat section */}
           <group position={layout[device].chat.position}>
-            <Html>
-              <Chatbox
-                height={`${chatboxHeight.toString()}px`}
-                width={`${chatboxWidth.toString()}px`}
-                padding={`${chatboxPadding.toString()}px`}
-                fontSize={`${chatFontSize.toString()}px`}
-              />
-            </Html>
+            <Chatbox
+              height={`${chatboxHeight.toString()}px`}
+              width={`${chatboxWidth.toString()}px`}
+              padding={`${chatboxPadding.toString()}px`}
+              fontSize={`${chatFontSize.toString()}px`}
+              device={device}
+            />
           </group>
           {/* menu */}
           <TextButton
             text={`Menu`}
             position={layout[device].menu.position}
           />
+          {/* RULEBOOK */}
+          <group>
+          <TextButton
+            text={`Rulebook`}
+            position={layout[device].rulebook.button.position}
+            boxWidth={2}
+            boxHeight={0.4}
+            handlePointerClick={handleShowRulebook}
+          />
+          {/* { showRulebook && <Rulebook 
+            position={layout[device].rulebook.position}
+            width={rulebookWidth}
+            height={rulebookHeight}
+            padding={layout[device].rulebook.padding}
+          />} */}
+          { showRulebook && <Rulebook2
+            position={layout[device].rulebook.position}
+            handleShow={handleShowRulebook}
+          />}
+          </group>
         </Physics>}
       </group>
     </>
