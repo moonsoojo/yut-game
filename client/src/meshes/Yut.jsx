@@ -1,28 +1,30 @@
+import React from "react";
 import { useGLTF } from "@react-three/drei";
 import { useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
-import React from "react";
 
-export default function Yut({ type, position, rotation, scale }) {
+export default function Yut({ 
+  position, 
+  rotation=[0, 0, -Math.PI / 2], 
+  scale=1
+}) {
   const { scene, materials } = useGLTF(
-    `/models/yut-${type === "regular" ? "regular" : "backdo"}.glb`
+    "/models/yut.glb"
   );
-
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
+  const scaleArray=[1 * scale, 6.161 * scale, 1 * scale]
 
   return (
     <mesh
       castShadow
       receiveShadow
-      geometry={
-        type === "regular" ? nodes.Cube001.geometry : nodes.Cube003.geometry
-      }
-      material={materials["Material.002"]}
+      geometry={nodes.Cylinder007.geometry}
       position={position}
+      material={materials["Texture wrap.005"]}
       rotation={rotation}
-      scale={scale}
+      scale={scaleArray}
     />
   );
 }

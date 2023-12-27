@@ -20,8 +20,8 @@ export default {
     center: [-3, 0, -7],
     camera: {
       // zoom: 40,
-      zoomMin: 25,
-      zoomMax: 40,
+      zoomMin: 0,
+      zoomMax: 55,
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
     },
@@ -121,6 +121,17 @@ export default {
     },
     menu: {
       position: [-7.3,-0.5,-2.3],
+    },
+    rulebook: {
+      button: {
+        position:[-7.3,-0.5,-2.8],
+      },
+      position: [-3, 0.5, -13.8],
+      widthMax: 469,
+      widthMin: 0,
+      heightMin: 0,
+      heightMax: 170,
+      padding: 5
     },
     moves: {
       text: [0,0,2],

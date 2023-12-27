@@ -1,32 +1,38 @@
+import { Html } from "@react-three/drei";
 import { socket, messagesAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 
-export default function Chatbox({ height, width, padding, fontSize }) {
+export default function Chatbox({ height, width, padding, fontSize, device }) {
   const [messages] = useAtom(messagesAtom);
   const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
 
+  console.log("[chatbox]", height, width, padding, fontSize, device)
+
   function onMessageSubmit (e) {
+    console.log("[onMessageSubmit]")
     e.preventDefault();
     socket.emit("sendMessage", { message, team: client.team })
     setMessage('')
   }
   
-  const messagesEndRef = useRef(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
-  };
+  // const messagesEndRef = useRef(null);
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({
+  //     behavior: "smooth",
+  //   });
+  // };
 
-  useEffect(() => {
-    // scrollToBottom();
-  }, [messages]);
+  // useEffect(() => {
+  //   // scrollToBottom();
+  // }, [messages]);
 
-  useEffect(() => {
-    // scrollToBottom();
-  }, []); // must be a child component to scroll on load
+  // useEffect(() => {
+  //   // scrollToBottom();
+  // }, []); // must be a child component to scroll on load
+  // must be disabled, or it will disappear when a new blender-created
+  // mesh is loaded
 
   function getColorByTeam(team) {
     if (team == undefined) {
@@ -38,7 +44,7 @@ export default function Chatbox({ height, width, padding, fontSize }) {
     }
   }
 
-  return <>
+  return <Html>
     <div style={{
       'borderRadius': '5px',
       'height': height,
@@ -55,7 +61,7 @@ export default function Chatbox({ height, width, padding, fontSize }) {
           {value.message}
         </p>
       )}
-      <div ref={messagesEndRef} />
+      {/* <div ref={messagesEndRef} /> */}
     </div>
     <form onSubmit={(e) => onMessageSubmit(e)}>
       <input 
@@ -72,5 +78,5 @@ export default function Chatbox({ height, width, padding, fontSize }) {
         placeholder="say something..."
       />
     </form>
-  </>
+  </Html>
 }

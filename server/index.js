@@ -36,7 +36,7 @@ let waitingToPass = false;
 */
 let messages = []
 
-let test = true;
+let test = false;
 if (test) {
   gamePhase = "game"
   turn = {
@@ -349,7 +349,6 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     } else {
       turn = passTurn(turn, teams)
     }
-    
     return {turn, teams, gamePhase}
   }
 
@@ -409,7 +408,8 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
     if (clients[socket.id].yutsAsleep && 
       teams[turn.team].throws > 0 && 
-      teams[turn.team].players[turn.players[turn.team]].socketId === socket.id &&
+      teams[turn.team].players[turn.players[turn.team]].socketId === socket.id && // after throw, 
+      // turn was passed, but the client was disconnected (tab switch)
       allYutsAsleep(clients)) {
 
       teams[turn.team].throws--;

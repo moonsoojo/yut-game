@@ -29,7 +29,7 @@ export default function Rocket({
   //[(Math.PI * 3) / 4, 0, -Math.PI]
 
   return (
-    <group position={position} scale={scale}>
+    <group position={position} rotation={rotation} scale={scale}>
       <group scale={0.02} position={[0.5, 0, 0]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/4, "YZX"]}>
         <mesh
           castShadow
@@ -199,4 +199,4 @@ export default function Rocket({
   )
 }
 
-
+useGLTF.preload("/models/rockets/rocket-with-astronaut0.glb");

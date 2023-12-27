@@ -6,7 +6,7 @@ import { useGraph } from "@react-three/fiber";
 import React from "react";
 
 export default function Star({ position, tile, device, scale }) {
-  const { scene, materials, animations } = useGLTF(
+  const { scene, materials } = useGLTF(
     "/models/stars/star-yellow copy 1.glb"
   );
 
@@ -14,7 +14,7 @@ export default function Star({ position, tile, device, scale }) {
   const { nodes } = useGraph(clone);
 
   return (
-    <group position={position} scale={scale}>
+    <group position={position} scale={scale} dispose={null}>
       <mesh
         castShadow
         receiveShadow
@@ -22,7 +22,9 @@ export default function Star({ position, tile, device, scale }) {
       >
         <meshStandardMaterial color={"yellow"} />
       </mesh>
-      <Tile tile={tile} wrapperRadius={0.4} device={device}/>
+      { tile != undefined && <Tile tile={tile} wrapperRadius={0.4} device={device}/> }
     </group>
   );
 }
+
+useGLTF.preload("/models/stars/star-yellow copy 1.glb");
