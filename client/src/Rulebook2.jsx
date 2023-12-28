@@ -22,7 +22,7 @@ import Cancel from "./meshes/Cancel";
 export default function Rulebook2 ({position, handleShow}) {
 
   // useStates
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
 
   function handleNextPage() {
     setPage(page+1)
