@@ -206,9 +206,9 @@ function findRandomPlayer(teams) {
     }
 }
 
-function onConnect(socket, storageClient) {
+function setUp(socket, storageClient) {
 
-  storageClient = JSON.parse(storageClient);
+  // storageClient = JSON.parse(storageClient);
   // game state
   io.emit("tiles", tiles);
   io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
@@ -228,26 +228,63 @@ function onConnect(socket, storageClient) {
     client.team = storageClient.team
     client.name = storageClient.name
     teams[storageClient.team].players.push(client)
-    // io.emit("teams", teams);
+    io.emit("teams", teams);
+  } else {
+    io.to(socket.id).emit("teams", teams);
   }
   io.to(socket.id).emit('setUpClient', client)
   clients[socket.id] = JSON.parse(JSON.stringify(client))
   io.emit("clients", clients)
-  io.emit("teams", teams);
+  console.log("[onConnect] clients", clients)
+  console.log("[onConnect] teams", JSON.stringify(teams))
+  console.log("[onConnect] client", client)
 
   if (hostId == null) {
     hostId = socket.id
   }
+  
 }
 
-io.on("connection", (socket) => { // socket.handshake.query is data obj
+function allYutsAsleep(clients) {
+  let flag = true;
+  for (const socketId of Object.keys(clients)) {
+    if (clients[socketId].visibility && !clients[socketId].yutsAsleep) {
+      flag = false;
+    }
+  }
+  return flag
+}
+
+function passTurnPregame(turn, teams, gamePhase) {
+  if (allTeamsHaveMove(teams)) {
+    let firstTeamToThrow = calcFirstTeamToThrow(teams)
+    if (firstTeamToThrow == -1) {
+      turn = passTurn(turn, teams)
+    } else {
+      // turn has been decided
+      turn = setTurn(turn, firstTeamToThrow, [0, 0])
+      gamePhase = "game"
+    }
+    // clear moves in teams
+    for (let i = 0; i < teams.length; i++) {
+      teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
+    }
+  } else {
+    turn = passTurn(turn, teams)
+  }
+  return {turn, teams, gamePhase}
+}
+
+io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
   // spectator
   // need parse & stringify to avoid keys as list of numbers
-  onConnect(
+
+  console.log("[connect] local storage client", socket.handshake.query.client)
+  setUp(
     socket, 
-    JSON.parse(JSON.stringify(JSON.parse(socket.handshake.query.client)))
+    JSON.parse(socket.handshake.query.client)
   );
 
   socket.on("join", ({ team, name }, callback) => {
@@ -267,7 +304,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
 
     if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
       readyToStart = true;
-      io.to(hostId).emit(readyToStart);
+      io.to(hostId).emit("readyToStart", readyToStart);
     }
     callback({
       status: "success",
@@ -298,6 +335,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("yutsAsleep", ({flag}, callback) => {
+    console.log("[yutsAsleep]", socket.id, flag)
     clients[socket.id].yutsAsleep = flag
     if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0) && allYutsAsleep(clients)) {
       readyToStart = true;
@@ -332,25 +370,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("gamePhase", gamePhase);
   })
 
-  function passTurnPregame(turn, teams, gamePhase) {
-    if (allTeamsHaveMove(teams)) {
-      let firstTeamToThrow = calcFirstTeamToThrow(teams)
-      if (firstTeamToThrow == -1) {
-        turn = passTurn(turn, teams)
-      } else {
-        // turn has been decided
-        turn = setTurn(turn, firstTeamToThrow, [0, 0])
-        gamePhase = "game"
-      }
-      // clear moves in teams
-      for (let i = 0; i < teams.length; i++) {
-        teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
-      }
-    } else {
-      turn = passTurn(turn, teams)
-    }
-    return {turn, teams, gamePhase}
-  }
+
 
   socket.on("select", (payload) => {
     selection = payload;
@@ -391,15 +411,7 @@ io.on("connection", (socket) => { // socket.handshake.query is data obj
     io.emit("turn", turn);
   });
 
-  function allYutsAsleep(clients) {
-    let flag = true;
-    for (const socketId of Object.keys(clients)) {
-      if (clients[socketId].visibility && !clients[socketId].yutsAsleep) {
-        flag = false;
-      }
-    }
-    return flag
-  }
+
 
   // if player throws, at least one player's visibility is true
   socket.on("throwYuts", () => {

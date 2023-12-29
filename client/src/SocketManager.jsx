@@ -6,7 +6,7 @@ import initialState from "../../server/initialState";
 export const socket = io(
   "http://192.168.86.158:3000", { 
     query: {
-      client: JSON.stringify(localStorage.getItem('yootGame'))
+      client: localStorage.getItem('yootGame')
     }
   }
 ); // http://192.168.1.181:3000 //http://192.168.86.158:3000

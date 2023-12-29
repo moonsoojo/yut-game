@@ -106,6 +106,12 @@ export default function Experience() {
   const [client] = useAtom(clientAtom);
   const [clients] = useAtom(clientsAtom);
 
+  useEffect(() => {
+    console.log("teams", teams)
+  }, [teams, readyToStart])
+
+  
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       socket.emit("visibilityChange", {flag: false})
@@ -649,9 +655,8 @@ export default function Experience() {
     }
   }
 
-  const [showRulebook, setShowRulebook] = useState(true);
+  const [showRulebook, setShowRulebook] = useState(false);
   function handleShowRulebook() {
-    console.log("handle show rulebook")
     if (showRulebook) {
       setShowRulebook(false)
     } else {
@@ -920,25 +925,25 @@ export default function Experience() {
             position={layout[device].menu.position}
           />
           {/* RULEBOOK */}
-          <group>
-          <TextButton
-            text={`Rulebook`}
-            position={layout[device].rulebook.button.position}
-            boxWidth={2}
-            boxHeight={0.4}
-            handlePointerClick={handleShowRulebook}
-          />
-          {/* { showRulebook && <Rulebook 
-            position={layout[device].rulebook.position}
-            width={rulebookWidth}
-            height={rulebookHeight}
-            padding={layout[device].rulebook.padding}
-          />} */}
-          { showRulebook && <Rulebook2
-            position={layout[device].rulebook.position}
-            handleShow={handleShowRulebook}
-          />}
-          </group>
+          { device === "portrait" && <group>
+            <TextButton
+              text={`Rulebook`}
+              position={layout[device].rulebook.button.position}
+              boxWidth={2}
+              boxHeight={0.4}
+              handlePointerClick={handleShowRulebook}
+            />
+            {/* { showRulebook && <Rulebook 
+              position={layout[device].rulebook.position}
+              width={rulebookWidth}
+              height={rulebookHeight}
+              padding={layout[device].rulebook.padding}
+            />} */}
+            { showRulebook  && <Rulebook2
+              position={layout[device].rulebook.position}
+              handleShow={handleShowRulebook}
+            />}
+          </group>}
         </Physics>}
       </group>
     </>
