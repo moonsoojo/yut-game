@@ -1,7 +1,10 @@
-import { useRef, useEffect, useState } from "react";
-import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
+// js
+import React, { useRef, useEffect, useState } from "react";
+import { useAtom, atom } from "jotai";
+import { allYutsAsleep, isMyTurn } from "../../server/src/helpers.js";
+import layout from "../../layout.js";
 
-// assets
+// meshes
 import Yuts from "./Yuts.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune2 from "./meshes/Neptune2.jsx";
@@ -10,11 +13,17 @@ import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
 import SunBagus from "./meshes/SunBagus.jsx";
-import Controls3d from "./Controls3d";
-import Rulebook from "./Rulebook.jsx";
 
-import layout from "../../layout.js";
-import React from "react";
+// custom components
+import Chatbox from "./Chatbox.jsx";
+import Rulebook from "./Rulebook.jsx";
+import Rulebook2 from "./Rulebook2.jsx";
+import TextButton from "./components/TextButton";
+import ScoreButton from "./ScoreButton.jsx";
+import Piece from "./components/Piece.jsx";
+
+// three js
+import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
 import { Leva, useControls } from "leva";
 import {
   Environment,
@@ -32,7 +41,10 @@ import {
 } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useAtom, atom } from "jotai";
+// import { Perf } from 'r3f-perf'
+
+
+// server
 import {
   readyToStartAtom,
   teamsAtom,
@@ -40,18 +52,10 @@ import {
   gamePhaseAtom,
   socket,
   legalTilesAtom,
-  clientPlayerAtom,
   clientAtom,
   clientsAtom,
 } from "./SocketManager";
-import TextButton from "./components/TextButton";
-import ScoreButton from "./ScoreButton.jsx";
-import { Perf } from 'r3f-perf'
-import Piece from "./components/Piece.jsx";
-import { allYutsAsleep, isMyTurn } from "../../server/src/helpers.js";
-import LandingPage from "./pages/landingPage.jsx";
-import Chatbox from "./Chatbox.jsx";
-import Rulebook2 from "./Rulebook2.jsx";
+import { useParams } from "wouter";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -503,14 +507,15 @@ export default function Experience() {
   }
   function handleJoinTeam0Submit (e) {
     e.preventDefault()
-    socket.emit("join", { team: 0, name: joinTeam0Name }, (response) => {
-      if (response.status === "success") {
-        // localStorage.setItem('yootGame', JSON.stringify({
-        //   gameId: 1,
-        //   ...response.client
-        // }))
-      }
-    })
+    // socket.emit("joinTeam", { team: 0, name: joinTeam0Name }, (response) => {
+    //   if (response.status === "success") {
+    //     localStorage.setItem('yootGame', JSON.stringify({
+    //       gameId: 1,
+    //       ...response.client
+    //     }))
+    //   }
+    // })
+    socket.emit("joinTeam", { team: 0, name: joinTeam0Name })
   }
   function handleJoinTeam0Cancel () {
     setJoinTeam0Name('')
@@ -541,14 +546,15 @@ export default function Experience() {
   }
   function handleJoinTeam1Submit (e) {
     e.preventDefault();
-    socket.emit("join", { team: 1, name: joinTeam1Name }, (response) => {
-      if (response.status === "success") {
-        localStorage.setItem('yootGame', JSON.stringify({
-          gameId: 1,
-          ...response.client
-        }))
-      }
-    })
+    // socket.emit("joinTeam", { team: 1, name: joinTeam1Name }, (response) => {
+    //   if (response.status === "success") {
+    //     localStorage.setItem('yootGame', JSON.stringify({
+    //       gameId: 1,
+    //       ...response.client
+    //     }))
+    //   }
+    // })
+    socket.emit("joinTeam", { team: 1, name: joinTeam1Name });
   }
   function handleJoinTeam1Cancel () {
     setJoinTeam1Name('')

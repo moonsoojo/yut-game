@@ -1,32 +1,21 @@
-// import { Server } from "socket.io";
+import { Server } from "socket.io";
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
 import { score } from "./src/score.js";
 import { getCurrentPlayerSocketId, movesIsEmpty, clearMoves } from "./src/helpers.js";
 
-import express from 'express';
-import { Server } from 'socket.io';
-import http from 'http';
-import router from './router.js'; // needs .js suffix
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
+const io = new Server({
   cors: {
     origin: [
       "http://localhost:5173", 
-      "http://localhost:5000", 
       "http://192.168.86.158:5173", // home
       "http://192.168.1.181:5173" // home 2
     ],
   },
+  pingTimeout: 60000
 });
 
-const PORT = process.env.PORT || 5000
-
-app.use(router);
-
-server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
+io.listen(5000);
 
 let selection = null;
 let tiles = JSON.parse(JSON.stringify(initialState.tiles));
@@ -217,6 +206,50 @@ function findRandomPlayer(teams) {
     }
 }
 
+function setUp(socket, storageClient) {
+
+  // storageClient = JSON.parse(storageClient);
+  // game state
+  io.to(socket.id).emit("tiles", tiles);
+  io.to(socket.id).emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
+  io.to(socket.id).emit("messages", messages)
+  io.to(socket.id).emit("gamePhase", gamePhase);
+  io.to(socket.id).emit("turn", turn)
+
+  let client = {}
+  client.socketId = socket.id
+  client.name = makeId(5)
+  client.yutsAsleep = false
+  client.visibility = true
+  client.thrown = false
+  client.reset = false
+  
+  if (storageClient !== null) {
+    client.team = storageClient.team
+    client.name = storageClient.name
+    teams[storageClient.team].players.push(client)
+    io.emit("teams", teams);
+  } else {
+    io.to(socket.id).emit("teams", teams);
+  }
+
+  clients[socket.id] = JSON.parse(JSON.stringify(client))
+  io.emit("clients", clients)
+
+  let info = {
+    tiles, selection, messages, gamePhase, turn, client, clients
+  }
+  io.to(socket.id).emit('setUpClient', info)
+
+  // console.log("[onConnect] clients", clients)
+  // console.log("[onConnect] teams", JSON.stringify(teams))
+  // console.log("[onConnect] client", client)
+
+  // if (hostId == null) {
+  //   hostId = socket.id
+  // }
+}
+
 function allYutsAsleep(clients) {
   let flag = true;
   for (const socketId of Object.keys(clients)) {
@@ -247,22 +280,6 @@ function passTurnPregame(turn, teams, gamePhase) {
   return {turn, teams, gamePhase}
 }
 
-function joinSpectator(socketId) {
-  
-  // if (storageClient !== null) {
-  //   client.team = storageClient.team
-  //   client.name = storageClient.name
-  //   teams[storageClient.team].players.push(client)
-  //   io.emit("teams", teams);
-  // } else {
-  //   io.to(socket.id).emit("teams", teams);
-  // }
-
-  // console.log("[onConnect] clients", clients)
-  // console.log("[onConnect] teams", JSON.stringify(teams))
-  // console.log("[onConnect] client", client)
-}
-
 io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
@@ -270,92 +287,34 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   // need parse & stringify to avoid keys as list of numbers
 
   // console.log("[connect] local storage client", socket.handshake.query.client)
-  // setUp(
-  //   socket, 
-  //   JSON.parse(socket.handshake.query.client)
-  // );
+  setUp(
+    socket, 
+    JSON.parse(socket.handshake.query.client)
+  );
 
-  // if there is information saved in local storage,
-    // join team
-  // else,
-    // set up client
-
-  // if (socket.handshake.query.client === 'null') {
-  //   joinSpectator(socket.id);
-  // } else {
-  //   let storedInfo = JSON.parse(socket.handshake.query.client)
-  //   let player = {}
-  //   player.socketId = socket.id
-  //   player.name = makeId(5)
-  //   player.yutsAsleep = false
-  //   player.visibility = true
-  //   player.thrown = false
-  //   player.reset = false
-  //   player.team = storedInfo.team
-  //   player.name = storedInfo.name
-  //   teams[player.team].players.push(player);
-  //   console.log("teams", teams)
-  //   console.log("emitting teams")
-  //   io.emit("teams", teams);
-  //   console.log("emitted teams")
-  //   io.to(socket.id).emit("joinTeam", player)
-  //   clients[socket.id] = JSON.parse(JSON.stringify(player));
-  //   io.emit("clients", clients)
-
-  //   if (hostId == null) {
-  //     hostId = socket.id
-  //   }
-  // }
-
-  socket.on("joinRoom", ({ room, savedClient }, callback) => {
-    console.log("[joinRoom] socket id", socket.id, "joined room", room, 'with savedClient', savedClient)
-
-    if (savedClient === null) {
-      let spectator = {}
-      spectator.socketId = socket.id
-      spectator.name = makeId(5)
-      spectator.yutsAsleep = false
-      spectator.visibility = true
-      // spectator.thrown = false
-      spectator.reset = false
-
-      clients[socket.id] = JSON.parse(JSON.stringify(spectator))
-
-      let gameState = {
-        tiles, 
-        selection, 
-        messages, 
-        gamePhase, 
-        turn, 
-        client: JSON.parse(JSON.stringify(spectator)), 
-        clients
-      }
-      io.to(socket.id).emit('joinSpectator', gameState)
-      io.emit("clients", clients)
-    } else {
-      savedClient = JSON.parse(savedClient)
-      // join team with saved information
-    }
-  })
-
-  socket.on("joinTeam", ({ team, name }, callback) => {
-    console.log("[joinTeam] socketId", socket.id)
+  socket.on("join", ({ team, name }, callback) => {
     clients[socket.id].team = team
     clients[socket.id].name = name
+    teams[team].players.push(clients[socket.id])
     clients[socket.id].thrown = false
     let updatedClient = JSON.parse(JSON.stringify(clients[socket.id]))
-    teams[team].players.push(updatedClient)
-
-    io.to(socket.id).emit("joinTeam", { client: updatedClient })
-    io.emit("teams", teams)
-    io.emit("clients", clients);
-
-    if (hostId == null) { // if there's no host, there's only one player
+    if (hostId == null) {
       hostId = socket.id
-    } else if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
+    }
+  
+    io.to(socket.id).emit("setUpClient", updatedClient)
+    io.emit("clients", clients);
+    io.emit("teams", teams);
+    io.emit("turn", turn);
+
+    if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
       readyToStart = true;
       io.to(hostId).emit("readyToStart", readyToStart);
     }
+    callback({
+      status: "success",
+      client: updatedClient
+    })
   })
 
   socket.on("sendMessage", ({ message, team }) => {
@@ -381,6 +340,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("yutsAsleep", ({flag}, callback) => {
+    console.log("[yutsAsleep]", socket.id, flag)
     clients[socket.id].yutsAsleep = flag
     if (gamePhase === "lobby" && (teams[0].players.length > 0 && teams[1].players.length > 0) && allYutsAsleep(clients)) {
       readyToStart = true;
@@ -648,7 +608,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)
-      clients[socket.id].thrown = false;
+      clients[getCurrentPlayerSocketId(turn, teams)].thrown = false;
       io.emit("turn", turn)
       io.emit("clients", clients)
     }

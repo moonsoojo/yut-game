@@ -25,6 +25,7 @@
     "firebase": "^10.7.1",
     "jotai": "^2.3.1",
     "leva": "^0.9.35",
+    "query-string": "^8.1.0",
     "r3f": "^1.0.0",
     "r3f-perf": "^7.1.2",
     "react": "18.2",
@@ -38,7 +39,7 @@
     "three-stdlib": "^2.24.2",
     "vercel": "^30.2.3",
     "vite-plugin-glsl": "^1.1.2",
-    "zustand": "^4.4.0",
-    "wouter": "2.11.0"
+    "wouter": "^3.0.0-rc.2",
+    "zustand": "^4.4.0"
   }
 }

@@ -1,10 +1,15 @@
 import { useEffect } from "react";
-import { io } from "socket.io-client";
 import { useAtom, atom } from "jotai";
-import initialState from "../../server/initialState";
+
+import { io } from "socket.io-client";
+import { useParams } from "wouter";
+
+import initialState from "../../server/initialState"; 
+
+const ENDPOINT = 'localhost:5000';
 
 export const socket = io(
-  "http://192.168.86.158:3000", { 
+  ENDPOINT, { 
     query: {
       client: localStorage.getItem('yootGame')
     }
@@ -65,8 +70,6 @@ export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
-// info about player
-export const clientPlayerAtom = atom(null);
 export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const messagesAtom = atom([]);
@@ -83,38 +86,44 @@ export const SocketManager = () => {
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  // info about player
-  const [clientPlayer, setClientPlayer] = useAtom(clientPlayerAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [_messages, setMessages] = useAtom(messagesAtom);
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
 
+  const params = useParams();
+
   useEffect(() => {
+    console.log("[SocketManager] socket", socket)
+
+    socket.emit('joinRoom', { 
+      room: params.id, 
+      savedClient: localStorage.getItem('yootGame') 
+    }, () => {})
+
     function onConnect() {
       console.log("connected");
     }
     function onClients(value) {
       setClients(value)
     }
-    function onSetUpClient(gameState) {
+    function onJoinSpectator(gameState) {
+      console.log("gameState", gameState)
       setClient(gameState.client);
+      setClients(gameState.clients);
       setGamePhase(gameState.gamePhase);
       setTurn(gameState.turn);
       setMessages(gameState.messages);
       setSelection(gameState.selection);
       setTiles(gameState.tiles);
-      setClients(gameState.clients);
-      if (gameState.client.team != undefined) {
-        localStorage.setItem('yootGame', JSON.stringify({
-          gameId: 1,
-          ...gameState.client
-        }))
-      }
     }
-    function onSetUpPlayer({player}) {
-      setClientPlayer(player);
+    function onJoinTeam({client}) {
+      setClient(client);
+      localStorage.setItem('yootGame', JSON.stringify({
+        gameId: 1,
+        ...client
+      }))
     }
     function onDisconnect() {
       console.log("disconnected");
@@ -129,6 +138,7 @@ export const SocketManager = () => {
       setTiles(value);
     }
     function onTeams(value) {
+      console.log("[onTeams] teams", value)
       setTeams(value);
     }
     function onYutThrow(yutForceVectors) {
@@ -157,9 +167,9 @@ export const SocketManager = () => {
       setMessages(messages)
     }
     socket.on("connect", onConnect);
-    socket.on("setUpClient", onSetUpClient)
+    socket.on("joinSpectator", onJoinSpectator)
+    socket.on("joinTeam", onJoinTeam)
     socket.on("clients", onClients)
-    socket.on("setUpPlayer", onSetUpPlayer)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
@@ -173,10 +183,11 @@ export const SocketManager = () => {
     socket.on("legalTiles", onLegalTiles);
     socket.on("messages", onMessages);
     return () => {
+      // socket.emit('disconnect');
       socket.off("connect", onConnect);
-      socket.off("setUpClient", onSetUpClient)
+      socket.off("joinSpectator", onJoinSpectator)
+      socket.off("joinTeam", onJoinTeam)
       socket.off("clients", onClients)
-      socket.off("setUpPlayer", onSetUpPlayer)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
@@ -190,5 +201,5 @@ export const SocketManager = () => {
       socket.off("legalTiles", onLegalTiles);
       socket.off("messages", onMessages);
     };
-  }, []);
+  }, [ENDPOINT, params]);
 };

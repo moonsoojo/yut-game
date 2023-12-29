@@ -11,12 +11,12 @@ import { Route, Link, useLocation, Router } from "wouter"
 
 export default function App () {
   return (<>
-    <SocketManager/>
     <Canvas>
       <Route path="/">
         <Home/>
       </Route>
       <Route path="/game/:id">
+        <SocketManager/>
         <Experience/>
       </Route>
     </Canvas>
