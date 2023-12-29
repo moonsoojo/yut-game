@@ -98,12 +98,18 @@ export const SocketManager = () => {
     function onClients(value) {
       setClients(value)
     }
-    function onSetUpClient(value) {
-      setClient(value);
-      if (value.team != undefined) {
+    function onSetUpClient(gameState) {
+      setClient(gameState.client);
+      setGamePhase(gameState.gamePhase);
+      setTurn(gameState.turn);
+      setMessages(gameState.messages);
+      setSelection(gameState.selection);
+      setTiles(gameState.tiles);
+      setClients(gameState.clients);
+      if (gameState.client.team != undefined) {
         localStorage.setItem('yootGame', JSON.stringify({
           gameId: 1,
-          ...value
+          ...gameState.client
         }))
       }
     }

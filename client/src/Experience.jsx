@@ -97,7 +97,6 @@ export default function Experience() {
   }
   
 
-  const [clientPlayer] = useAtom(clientPlayerAtom)
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
@@ -107,10 +106,7 @@ export default function Experience() {
   const [clients] = useAtom(clientsAtom);
 
   useEffect(() => {
-    console.log("teams", teams)
   }, [teams, readyToStart])
-
-  
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
@@ -209,7 +205,7 @@ export default function Experience() {
         window.innerWidth
       ))
     }
-  }, [device])
+  }, [window.innerWidth, window.innerHeight, device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;

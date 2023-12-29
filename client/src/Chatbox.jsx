@@ -8,8 +8,6 @@ export default function Chatbox({ height, width, padding, fontSize, device }) {
   const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
 
-  console.log("[chatbox]", height, width, padding, fontSize, device)
-
   function onMessageSubmit (e) {
     console.log("[onMessageSubmit]")
     e.preventDefault();

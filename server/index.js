@@ -210,11 +210,11 @@ function setUp(socket, storageClient) {
 
   // storageClient = JSON.parse(storageClient);
   // game state
-  io.emit("tiles", tiles);
-  io.emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
-  io.emit("messages", messages)
-  io.emit("gamePhase", gamePhase);
-  io.emit("turn", turn)
+  io.to(socket.id).emit("tiles", tiles);
+  io.to(socket.id).emit("selection", selection); // shouldn't be able to select when game is in 'lobby'
+  io.to(socket.id).emit("messages", messages)
+  io.to(socket.id).emit("gamePhase", gamePhase);
+  io.to(socket.id).emit("turn", turn)
 
   let client = {}
   client.socketId = socket.id
@@ -232,17 +232,22 @@ function setUp(socket, storageClient) {
   } else {
     io.to(socket.id).emit("teams", teams);
   }
-  io.to(socket.id).emit('setUpClient', client)
+
   clients[socket.id] = JSON.parse(JSON.stringify(client))
   io.emit("clients", clients)
+
+  let info = {
+    tiles, selection, messages, gamePhase, turn, client, clients
+  }
+  io.to(socket.id).emit('setUpClient', info)
+
   console.log("[onConnect] clients", clients)
   console.log("[onConnect] teams", JSON.stringify(teams))
   console.log("[onConnect] client", client)
 
-  if (hostId == null) {
-    hostId = socket.id
-  }
-  
+  // if (hostId == null) {
+  //   hostId = socket.id
+  // }
 }
 
 function allYutsAsleep(clients) {
@@ -369,8 +374,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     gamePhase = "pregame"
     io.emit("gamePhase", gamePhase);
   })
-
-
 
   socket.on("select", (payload) => {
     selection = payload;
