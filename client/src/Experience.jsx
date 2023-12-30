@@ -94,13 +94,10 @@ export default function Experience() {
   const [chatboxPadding, setChatboxPadding] = useState(0);
   const [chatboxHeight, setChatboxHeight] = useState(0);
   const [chatboxWidth, setChatboxWidth] = useState(0);
-  const [rulebookWidth, setRulebookWidth] = useState(0);
-  const [rulebookHeight, setRulebookHeight] = useState(0);
   function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
     return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
   }
   
-
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);

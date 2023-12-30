@@ -111,7 +111,6 @@ export const SocketManager = () => {
     function onJoinSpectator(gameState) {
       console.log("gameState", gameState)
       setClient(gameState.client);
-      setClients(gameState.clients);
       setGamePhase(gameState.gamePhase);
       setTurn(gameState.turn);
       setMessages(gameState.messages);
@@ -123,6 +122,18 @@ export const SocketManager = () => {
       localStorage.setItem('yootGame', JSON.stringify({
         gameId: 1,
         ...client
+      }))
+    }
+    function onJoinTeamLocalStorage({gameState}) {
+      setClient(gameState.client);
+      setGamePhase(gameState.gamePhase);
+      setTurn(gameState.turn);
+      setMessages(gameState.messages);
+      setSelection(gameState.selection);
+      setTiles(gameState.tiles);
+      localStorage.setItem('yootGame', JSON.stringify({
+        gameId: 1,
+        ...gameState.client
       }))
     }
     function onDisconnect() {
@@ -169,6 +180,7 @@ export const SocketManager = () => {
     socket.on("connect", onConnect);
     socket.on("joinSpectator", onJoinSpectator)
     socket.on("joinTeam", onJoinTeam)
+    socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
     socket.on("clients", onClients)
     socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
@@ -183,10 +195,12 @@ export const SocketManager = () => {
     socket.on("legalTiles", onLegalTiles);
     socket.on("messages", onMessages);
     return () => {
-      // socket.emit('disconnect');
+      socket.emit('disconnect');
+      socket.off();
       socket.off("connect", onConnect);
       socket.off("joinSpectator", onJoinSpectator)
       socket.off("joinTeam", onJoinTeam)
+      socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
       socket.off("clients", onClients)
       socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);

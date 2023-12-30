@@ -9,6 +9,8 @@ import { Server } from 'socket.io';
 import http from 'http';
 import router from './router.js'; // needs .js suffix
 
+import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -266,51 +268,22 @@ function joinSpectator(socketId) {
 io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
-  // spectator
-  // need parse & stringify to avoid keys as list of numbers
-
-  // console.log("[connect] local storage client", socket.handshake.query.client)
-  // setUp(
-  //   socket, 
-  //   JSON.parse(socket.handshake.query.client)
-  // );
-
-  // if there is information saved in local storage,
-    // join team
-  // else,
-    // set up client
-
-  // if (socket.handshake.query.client === 'null') {
-  //   joinSpectator(socket.id);
-  // } else {
-  //   let storedInfo = JSON.parse(socket.handshake.query.client)
-  //   let player = {}
-  //   player.socketId = socket.id
-  //   player.name = makeId(5)
-  //   player.yutsAsleep = false
-  //   player.visibility = true
-  //   player.thrown = false
-  //   player.reset = false
-  //   player.team = storedInfo.team
-  //   player.name = storedInfo.name
-  //   teams[player.team].players.push(player);
-  //   console.log("teams", teams)
-  //   console.log("emitting teams")
-  //   io.emit("teams", teams);
-  //   console.log("emitted teams")
-  //   io.to(socket.id).emit("joinTeam", player)
-  //   clients[socket.id] = JSON.parse(JSON.stringify(player));
-  //   io.emit("clients", clients)
-
-  //   if (hostId == null) {
-  //     hostId = socket.id
-  //   }
-  // }
-
   socket.on("joinRoom", ({ room, savedClient }, callback) => {
-    console.log("[joinRoom] socket id", socket.id, "joined room", room, 'with savedClient', savedClient)
 
-    if (savedClient === null) {
+    let name = makeId(5)
+    const { error, user } = addUser({ id: socket.id, name, room })
+
+    if (error) return callback(error); 
+
+    socket.emit("message", { user: 'admin', text: `${user.name}, welcome to the room ${user.room}`})
+    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!`})
+    socket.join(user.room);
+
+    callback();
+
+    /*if (!savedClient) {
+
+
       let spectator = {}
       spectator.socketId = socket.id
       spectator.name = makeId(5)
@@ -328,15 +301,37 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         gamePhase, 
         turn, 
         client: JSON.parse(JSON.stringify(spectator)), 
-        clients
       }
       io.to(socket.id).emit('joinSpectator', gameState)
       io.emit("clients", clients)
     } else {
       savedClient = JSON.parse(savedClient)
       // join team with saved information
+      let player = {}
+      player.socketId = socket.id
+      player.name = savedClient.name
+      player.yutsAsleep = false
+      player.visibility = true
+      player.thrown = false
+      player.reset = false
+      player.team = savedClient.team
+
+      clients[socket.id] = JSON.parse(JSON.stringify(player))
+      teams[savedClient.team].players.push(player)
+
+      let gameState = {
+        tiles, 
+        selection, 
+        messages, 
+        gamePhase, 
+        turn, 
+        client: JSON.parse(JSON.stringify(player)), 
+      }
+      io.to(socket.id).emit('joinTeamLocalStorage', {gameState})
+      io.emit("clients", clients)
+      io.emit("teams", teams);
     }
-  })
+  })*/
 
   socket.on("joinTeam", ({ team, name }, callback) => {
     console.log("[joinTeam] socketId", socket.id)
