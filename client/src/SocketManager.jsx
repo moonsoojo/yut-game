@@ -88,7 +88,7 @@ export const SocketManager = () => {
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
-  const [_messages, setMessages] = useAtom(messagesAtom);
+  const [messages, setMessages] = useAtom(messagesAtom);
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
 
@@ -102,6 +102,20 @@ export const SocketManager = () => {
       savedClient: localStorage.getItem('yootGame') 
     }, () => {})
 
+    return () => {
+      socket.emit('disconnect');
+
+      socket.off();
+    }
+  }, [ENDPOINT, params]);
+
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages([...messages, message]);
+    })
+  }, [messages])
+
+  useEffect(() => {
     function onConnect() {
       console.log("connected");
     }
@@ -174,9 +188,9 @@ export const SocketManager = () => {
     function onLegalTiles({ legalTiles }) {
       setLegalTiles(legalTiles)
     }
-    function onMessages(messages) {
-      setMessages(messages)
-    }
+    // function onMessages(messages) {
+    //   setMessages(messages)
+    // }
     socket.on("connect", onConnect);
     socket.on("joinSpectator", onJoinSpectator)
     socket.on("joinTeam", onJoinTeam)
@@ -193,7 +207,7 @@ export const SocketManager = () => {
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("legalTiles", onLegalTiles);
-    socket.on("messages", onMessages);
+    // socket.on("messages", onMessages);
     return () => {
       socket.emit('disconnect');
       socket.off();
@@ -213,7 +227,7 @@ export const SocketManager = () => {
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("legalTiles", onLegalTiles);
-      socket.off("messages", onMessages);
+      // socket.off("messages", onMessages);
     };
-  }, [ENDPOINT, params]);
+  }, []);
 };

@@ -1,7 +1,8 @@
-import { Html } from "@react-three/drei";
+import { Html, Scroll } from "@react-three/drei";
 import { socket, messagesAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 export default function Chatbox({ height, width, padding, fontSize, device }) {
   const [messages] = useAtom(messagesAtom);
@@ -11,8 +12,9 @@ export default function Chatbox({ height, width, padding, fontSize, device }) {
   function onMessageSubmit (e) {
     console.log("[onMessageSubmit]")
     e.preventDefault();
-    socket.emit("sendMessage", { message, team: client.team })
-    setMessage('')
+    socket.emit("sendMessage", { message, team: client.team }, () => {
+      setMessage('')
+    })
   }
   
   // const messagesEndRef = useRef(null);
@@ -43,24 +45,28 @@ export default function Chatbox({ height, width, padding, fontSize, device }) {
   }
 
   return <Html>
-    <div style={{
-      'borderRadius': '5px',
-      'height': height,
-      'width': width,
-      'padding': padding,
-      'fontSize': fontSize,
-      'background': 'rgba(128, 128, 128, 0.3)',
-      'overflowY': 'auto',
-      'wordWrap': 'break-word'
-    }}>
-      {messages.map((value, index) => 
-        <p style={{color: 'white', margin: 0}} key={index}>
-          <span style={{color: getColorByTeam(value.team)}}>{value.name}: </span> 
-          {value.message}
-        </p>
-      )}
-      {/* <div ref={messagesEndRef} /> */}
-    </div>
+    
+      <div style={{
+        'borderRadius': '5px',
+        'height': height,
+        'width': width,
+        'padding': padding,
+        'fontSize': fontSize,
+        'background': 'rgba(128, 128, 128, 0.3)',
+        'overflowY': 'auto',
+        'wordWrap': 'break-word'
+      }}>
+        <ScrollToBottom className="messages">
+        {messages.map((value, index) => 
+          <p style={{color: 'white', margin: 0}} key={index}>
+            <span style={{color: getColorByTeam(value.team)}}>{value.user}: </span> 
+            {value.text}
+          </p>
+        )}
+        {/* <div ref={messagesEndRef} /> */}
+        </ScrollToBottom>
+      </div>
+    
     <form onSubmit={(e) => onMessageSubmit(e)}>
       <input 
         id='input-message'

@@ -8,6 +8,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import router from './router.js'; // needs .js suffix
+import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
 
@@ -27,6 +28,7 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 5000
 
 app.use(router);
+app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
@@ -265,6 +267,8 @@ function joinSpectator(socketId) {
   // console.log("[onConnect] client", client)
 }
 
+// user with chatbox
+// take care of 'join team' after this
 io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
@@ -330,8 +334,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       io.to(socket.id).emit('joinTeamLocalStorage', {gameState})
       io.emit("clients", clients)
       io.emit("teams", teams);
-    }
-  })*/
+    }*/
+  })
 
   socket.on("joinTeam", ({ team, name }, callback) => {
     console.log("[joinTeam] socketId", socket.id)
@@ -353,14 +357,20 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  socket.on("sendMessage", ({ message, team }) => {
-    messages.push({
-      "name": clients[socket.id].name,
-      team,
-      message
-    })
-    // display should start from the bottom, and get pushed up on new messages
-    io.emit("messages", messages)
+  socket.on("sendMessage", ({ message, team }, callback) => {
+    const user = getUser(socket.id);
+
+    io.to(user.room).emit('message', { user: user.name, text: message, team });
+
+    callback();
+
+    // messages.push({
+    //   "name": clients[socket.id].name,
+    //   team,
+    //   message
+    // })
+    
+    // io.emit("messages", messages)
   })
 
   socket.on("visibilityChange", ({flag}) => {
@@ -624,7 +634,13 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
 
-    teams = removePlayerFromGame(teams, socket.id)
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left.`})
+    }
+
+    /* teams = removePlayerFromGame(teams, socket.id)
     io.emit("teams", teams)
 
     delete clients[socket.id];
@@ -646,6 +662,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       clients[socket.id].thrown = false;
       io.emit("turn", turn)
       io.emit("clients", clients)
-    }
+    } */
   });
 });

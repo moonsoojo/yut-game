@@ -72,14 +72,14 @@ export default function YutsNew3({ device = "portrait" }) {
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
-      socket.emit("yutsAsleep", {flag: true}, (response) => {
-        if (response.status === "record") {
-          let result = observeThrow();
-          socket.emit("recordThrow", {result})
-        } else if (response.status === "reset") {
-          // don't record throw
-        }
-      })
+      // socket.emit("yutsAsleep", {flag: true}, (response) => {
+      //   if (response.status === "record") {
+      //     let result = observeThrow();
+      //     socket.emit("recordThrow", {result})
+      //   } else if (response.status === "reset") {
+      //     // don't record throw
+      //   }
+      // })
     }
   }, [sleepCount])
 
