@@ -4,8 +4,8 @@ import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, 
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
-import { isMyTurn } from "../../../server/src/helpers";
-import layout from "../../../layout";
+import { isMyTurn } from "../helpers/helpers";
+import layout from "../layout";
 
 export default function Tile({ tile, wrapperRadius, device }) {
   const wrapper = useRef();

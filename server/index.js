@@ -20,7 +20,8 @@ const io = new Server(server, {
       "http://localhost:5173", 
       "http://localhost:5000", 
       "http://192.168.86.158:5173", // home
-      "http://192.168.1.181:5173" // home 2
+      "http://192.168.1.181:5173", // home 2
+      "https://master.dh445c3qmwe4t.amplifyapp.com"
     ],
   },
 });

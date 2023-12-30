@@ -5,11 +5,11 @@ import Tile from '../components/Tile';
 import HelperArrow from "./HelperArrow";
 import { useRef, useEffect } from "react";
 import { useAtom } from "jotai";
-import layout from "../../../layout";
+import layout from "../layout";
 
 export default function Moon({ position, tile, scale = 1, device }) {
   const props = useTexture({
-    map: "/textures/moon/moon-color.jpg", // must use absolute path - string starts with a slash
+    map: "textures/moon/moon-color.jpg", // must use absolute path - string starts with a slash
   });
 
   const wrap = useRef();

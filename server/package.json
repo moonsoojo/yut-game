@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "node index.js",
     "test": "react-scripts test"
   },
   "dependencies": {

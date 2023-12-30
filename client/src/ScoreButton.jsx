@@ -6,7 +6,7 @@ import { selectionAtom, legalTilesAtom, displayScoreOptionsAtom, socket } from "
 import { useAtom } from "jotai";
 import Pointer from "./meshes/Pointer";
 import TextButton from "./components/TextButton";
-import layout from "../../layout";
+import layout from "./layout";
 
 const SCORE_TILE = 29
 export default function ScoreButton({ position, device='portrait' }) {

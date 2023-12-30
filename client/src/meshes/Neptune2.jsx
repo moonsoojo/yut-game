@@ -8,7 +8,7 @@ import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";
 
 export default function Neptune2({ position, tile, device }) {
-  const { nodes, materials } = useGLTF("/models/neptune-sphere.glb");
+  const { nodes, materials } = useGLTF("models/neptune-sphere.glb");
   const neptune = useRef();
 
   useFrame((state, delta) => {

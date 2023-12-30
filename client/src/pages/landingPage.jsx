@@ -1,5 +1,5 @@
 import TextButton from "../components/TextButton.jsx";
-import layout from "../../../layout.js";
+import layout from "./layout.js";
 import React, { useState } from 'react';
 import { Text3D, Html } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";

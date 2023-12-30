@@ -6,8 +6,8 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { clientsAtom, yutThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYutsAsleep } from "../../server/src/helpers.js";
-import layout from "../../layout.js";
+import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYutsAsleep } from "./helpers/helpers.js";
+import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 
 THREE.ColorManagement.legacyMode = false;

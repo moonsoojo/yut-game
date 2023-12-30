@@ -6,7 +6,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { nameAtom, teamsAtom, socket } from './SocketManager';
 import { useAtom } from 'jotai';
-import layout from '../../layout';
+import layout from './layout';
 // import { useNavigate } from 'react-router-dom'
 
 export default function UserForm() {

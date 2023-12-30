@@ -1,8 +1,8 @@
 // js
 import React, { useRef, useEffect, useState } from "react";
 import { useAtom, atom } from "jotai";
-import { allYutsAsleep, isMyTurn } from "../../server/src/helpers.js";
-import layout from "../../layout.js";
+import { allYutsAsleep, isMyTurn } from "./helpers/helpers.js";
+import layout from "./layout.js";
 
 // meshes
 import Yuts from "./Yuts.jsx";
@@ -684,7 +684,7 @@ export default function Experience() {
       {/* <Leva hidden /> */}
       <directionalLight
         position={[0, 1, 0.5]}
-        intensity={4.5}
+        intensity={14}
         // castShadow
       />
       <group scale={layout[device].scale}>

@@ -6,7 +6,7 @@ import React from "react";
 import Tile from "../components/Tile";
 
 export default function Mars({ position, tile, scale=0.4, device }) {
-  const { nodes, materials } = useGLTF("/models/Mars 4.glb");
+  const { nodes, materials } = useGLTF("models/Mars 4.glb");
   const mars = useRef();
 
   useFrame((state, delta) => {

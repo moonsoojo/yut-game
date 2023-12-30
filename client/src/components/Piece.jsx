@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { hasValidMove, isMyTurn } from "../../../server/src/helpers.js";
+import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
 
 export default function Piece ({
   position,

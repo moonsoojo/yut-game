@@ -10,7 +10,7 @@ import GoalDetails from "./GoalDetails";
 import MoveDetails from "./MoveDetails";
 import ScoreDetails from "./ScoreDetails";
 import TextButton from "./components/TextButton";
-import layout from "../../layout";
+import layout from "./layout";
 
 // State
 import { useAtom } from "jotai";

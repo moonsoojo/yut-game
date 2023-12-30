@@ -1,7 +1,7 @@
 // React
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from "wouter";
-import layout from '../../layout';
+import layout from './layout';
 
 // Three
 import { Leva, useControls } from "leva";
@@ -55,8 +55,8 @@ export default function Home() {
   }, []);
 
   // yoot model
-  const nodes = useGLTF("/models/yut.glb").nodes;
-  const materials = useGLTF("/models/yut.glb").materials;
+  const nodes = useGLTF("models/yut.glb").nodes;
+  const materials = useGLTF("models/yut.glb").materials;
 
   const camera = useRef();
 
@@ -222,7 +222,7 @@ export default function Home() {
     step: 0.01,
   }
   let lightIntensity = {
-    value: 1.62,
+    value: 4,
     min: 0,
     max: 10,
     step: 0.01,
@@ -263,7 +263,7 @@ export default function Home() {
   }
 
   function handleLetsPlay() {
-    setLocation(`/game/${makeId(3)}`)
+    setLocation(`/${makeId(3)}`)
   }
 
   return (

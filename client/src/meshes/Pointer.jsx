@@ -1,7 +1,7 @@
 import React from "react";
 import { useRef } from "react"
 import { useFrame } from "@react-three/fiber";
-import layout from "../../../layout";
+import layout from "../layout";
 
 export default function Pointer({ color, tile, device }) {
   const ref = useRef(null);

@@ -4,9 +4,9 @@ import { useAtom, atom } from "jotai";
 import { io } from "socket.io-client";
 import { useParams } from "wouter";
 
-import initialState from "../../server/initialState"; 
+import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
