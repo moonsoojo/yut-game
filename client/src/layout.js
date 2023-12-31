@@ -86,6 +86,14 @@ export default {
         position: [2, 0, -0.42]
       }
     },
+    joinTeamModal: {
+      0: {
+        position: []
+      },
+      1: {
+        position: []
+      }
+    },
     throwCount: {
       position: throwPosition,
       size: 0.3

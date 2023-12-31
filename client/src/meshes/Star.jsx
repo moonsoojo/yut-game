@@ -7,7 +7,7 @@ import React from "react";
 
 export default function Star({ position, tile, device, scale }) {
   const { scene, materials } = useGLTF(
-    "models/stars/star-yellow copy 1.glb"
+    "models/star.glb"
   );
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);

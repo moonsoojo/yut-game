@@ -56,6 +56,7 @@ import {
   clientsAtom,
 } from "./SocketManager";
 import { useParams } from "wouter";
+import JoinTeamModal from "./JoinTeamModal.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -480,15 +481,14 @@ export default function Experience() {
     [1.5, 0, 1]
   ]
 
-  const [joinTeam0, setJoinTeam0] = useState(true)
+  const [joinTeam, setJoinTeam] = useState(null);
+  const [showJoinTeam0Button, setShowJoinTeam0Button] = useState(true)
   const [joinTeam0SubmitHover, setJoinTeam0SubmitHover] = useState(false)
   const [joinTeam0CancelHover, setJoinTeam0CancelHover] = useState(false)
-  const [joinTeam0Name, setJoinTeam0Name] = useState('')
-  // submit button, cancel button
+  // show both buttons
+  // set the team you're joining
   function handleJoinTeam0 () {
-    setJoinTeam0(false);
-    setJoinTeam1(true);
-    setJoinTeam1Name('');
+    setJoinTeam(0);
   }
   function handleJoinTeam0SubmitMouseEnter () {
     setJoinTeam0SubmitHover(true)
@@ -502,32 +502,11 @@ export default function Experience() {
   function handleJoinTeam0CancelMouseLeave () {
     setJoinTeam0CancelHover(false)
   }
-  function handleJoinTeam0Submit (e) {
-    e.preventDefault()
-    // socket.emit("joinTeam", { team: 0, name: joinTeam0Name }, (response) => {
-    //   if (response.status === "success") {
-    //     localStorage.setItem('yootGame', JSON.stringify({
-    //       gameId: 1,
-    //       ...response.client
-    //     }))
-    //   }
-    // })
-    socket.emit("joinTeam", { team: 0, name: joinTeam0Name })
-  }
-  function handleJoinTeam0Cancel () {
-    setJoinTeam0Name('')
-    setJoinTeam0(true);
-  }
-
-  const [joinTeam1, setJoinTeam1] = useState(true)
+  const [showJoinTeam1Button, setShowJoinTeam1Button] = useState(true)
   const [joinTeam1SubmitHover, setJoinTeam1SubmitHover] = useState(false)
   const [joinTeam1CancelHover, setJoinTeam1CancelHover] = useState(false)
-  const [joinTeam1Name, setJoinTeam1Name] = useState('')
-  // submit button, cancel button
   function handleJoinTeam1 () {
-    setJoinTeam1(false);
-    setJoinTeam0(true);
-    setJoinTeam0Name('');
+    setJoinTeam(1)
   }
   function handleJoinTeam1SubmitMouseEnter () {
     setJoinTeam1SubmitHover(true)
@@ -540,22 +519,6 @@ export default function Experience() {
   }
   function handleJoinTeam1CancelMouseLeave () {
     setJoinTeam1CancelHover(false)
-  }
-  function handleJoinTeam1Submit (e) {
-    e.preventDefault();
-    // socket.emit("joinTeam", { team: 1, name: joinTeam1Name }, (response) => {
-    //   if (response.status === "success") {
-    //     localStorage.setItem('yootGame', JSON.stringify({
-    //       gameId: 1,
-    //       ...response.client
-    //     }))
-    //   }
-    // })
-    socket.emit("joinTeam", { team: 1, name: joinTeam1Name });
-  }
-  function handleJoinTeam1Cancel () {
-    setJoinTeam1Name('')
-    setJoinTeam1(true);
   }
 
   // pre-condition: 'client' from 'clientAtom'
@@ -688,7 +651,7 @@ export default function Experience() {
         // castShadow
       />
       <group scale={layout[device].scale}>
-      { <Physics>
+      { <group>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -702,7 +665,7 @@ export default function Experience() {
               color="red"
             />
             {/* join button */}
-            { client.team == undefined && joinTeam0 && <TextButton
+            { client.team == undefined && showJoinTeam0Button && <TextButton
               text="JOIN"
               boxWidth={0.9}
               boxHeight={0.3}
@@ -710,46 +673,6 @@ export default function Experience() {
               position={layout[device].team0.join.position}
               handlePointerClick={handleJoinTeam0}
             /> }
-            { client.team == undefined && !joinTeam0 && <group position={layout[device].team0.joinInput.position}><Html>
-            <form
-              onSubmit={e => handleJoinTeam0Submit(e)}>
-              <input
-              style={{
-                background: 'none',
-                border: 'none',
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                color: 'yellow',
-                padding: '0px',
-                width: `${zoom * 1.1}px`
-              }}
-              onChange={e => setJoinTeam0Name(e.target.value)}
-              placeholder="name..."/>
-              <button 
-              id='join-team-0-submit-button'
-              style={{
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                background: 'none',
-                border: 'none',
-                color: `${joinTeam0SubmitHover ? 'white' : 'yellow'}`,
-                padding: '0px'}}
-              onMouseOver={handleJoinTeam0SubmitMouseEnter}
-              onMouseOut={handleJoinTeam0SubmitMouseLeave}
-              type="submit">&#x2713;</button>
-              {/* highlight on hover */}
-              <button 
-              id='join-team-0-cancel-button'
-              style={{
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                background: 'none',
-                border: 'none',
-                color: `${joinTeam0CancelHover ? 'white' : 'yellow'}`,}}
-              onMouseOver={handleJoinTeam0CancelMouseEnter}
-              onMouseOut={handleJoinTeam0CancelMouseLeave}
-              onMouseDown={handleJoinTeam0Cancel}>&#10008;</button>
-            </form></Html></group> }
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
               <HomePieces team={0} scale={0.5}/>
@@ -786,7 +709,7 @@ export default function Experience() {
               color="turquoise"
             />
             {/* join button */}
-            { client.team == undefined && joinTeam1 && <TextButton
+            { client.team == undefined && showJoinTeam1Button && <TextButton
               text="JOIN"
               boxWidth={0.9}
               boxHeight={0.3}
@@ -794,50 +717,11 @@ export default function Experience() {
               position={layout[device].team1.join.position}
               handlePointerClick={handleJoinTeam1}
             />}
-            { client.team == undefined && !joinTeam1 && <group position={layout[device].team1.joinInput.position}><Html>
-              <form
-              onSubmit={e => handleJoinTeam1Submit(e)}>
-              <input
-              style={{
-                background: 'none',
-                border: 'none',
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                color: 'yellow',
-                padding: '0px',
-                width: `${zoom * 1.1}px`
-              }}
-              onChange={e => setJoinTeam1Name(e.target.value)}
-              placeholder="name..."/>
-              <button 
-              id='join-team-1-submit-button'
-              style={{
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                background: 'none',
-                border: 'none',
-                color: `${joinTeam1SubmitHover ? 'white' : 'yellow'}`,
-                padding: '0px'}}
-              onMouseOver={handleJoinTeam1SubmitMouseEnter}
-              onMouseOut={handleJoinTeam1SubmitMouseLeave}
-              type="submit">&#x2713;</button>
-              {/* highlight on hover */}
-              <button 
-              id='join-team-1-cancel-button'
-              style={{
-                fontFamily: 'Luckiest Guy',
-                fontSize: `${zoom * 0.3}px`,
-                background: 'none',
-                border: 'none',
-                color: `${joinTeam1CancelHover ? 'white' : 'yellow'}`,}}
-              onMouseOver={handleJoinTeam1CancelMouseEnter}
-              onMouseOut={handleJoinTeam1CancelMouseLeave}
-              onMouseDown={handleJoinTeam1Cancel}>&#10008;</button>
-            </form></Html></group> }
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
             </group>
+            {/* player ids */}
             {teams[1].players.map((value, index) => (
               <TextButton
                 text={`${value.name}, ${device === "landscapeDesktop" ? 
@@ -857,6 +741,9 @@ export default function Experience() {
               />
             ))}
           </group>
+          {/* join modal */}
+          { joinTeam && <JoinTeamModal position={layout[device].joinTeamModal[joinTeam].position}/> }
+          {/* board */}
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
           </group>
@@ -879,7 +766,9 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            <Yuts device={device}/>
+            <Physics>
+              <Yuts device={device}/>
+            </Physics>
             {/* throw count */}
             {/* {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && ( */}
              {( <>            
@@ -943,7 +832,7 @@ export default function Experience() {
               handleShow={handleShowRulebook}
             />}
           </group>}
-        </Physics>}
+        </group>}
       </group>
     </>
   );
