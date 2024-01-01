@@ -1,51 +1,123 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Html } from '@react-three/drei';
+import { socket } from './SocketManager';
+import { useParams } from "wouter";
 
-// set width
-// set size
+export default function JoinTeamModal({ position, team, setJoinTeam }) {
 
-export default function JoinTeamModal({ position }) {
+  const [name, setName] = useState('')
+  const [submitHover, setSubmitHover] = useState(false)
+  const [cancelHover, setCancelHover] = useState(false)
+  const params = useParams();
+  
+  function handleJoinSubmit(e) {
+    e.preventDefault();
+    console.log("handleJoinSubmit");
+    socket.emit("joinTeam", { team, name, room: params.id }, ({ response }) => {
+      console.log("[JoinTeamModal] callback")
+      if (response === "error") {
+        console.log("[JoinTeamModal] join team error")
+      } else {
+        console.log("[JoinTeamModal] no error")
+        setName('')
+        setJoinTeam(null);
+      }
+    })
+  }
+  function handleJoinCancel(e) { // submits name and emits 'joinTeam'
+    e.preventDefault()
+    console.log("[handleJoinCancel]")
+    setName('')
+    setJoinTeam(null);
+    return false;
+  }
+
+  function handleSubmitMouseEnter () {
+    setSubmitHover(true)
+  }
+  function handleSubmitMouseLeave () {
+    setSubmitHover(false)
+  }
+  function handleCancelMouseEnter () {
+    setCancelHover(true)
+  }
+  function handleCancelMouseLeave () {
+    setCancelHover(false)
+  }
+
   return <group position={position}>
     <Html>
       <form
-        onSubmit={e => handleJoinTeam1Submit(e)}>
-        <input
-        style={{
-          background: 'none',
-          border: 'none',
-          fontFamily: 'Luckiest Guy',
-          fontSize: `${zoom * 0.3}px`,
-          color: 'yellow',
-          padding: '0px',
-          width: `${zoom * 1.1}px`
-        }}
-        onChange={e => setJoinTeam1Name(e.target.value)}
-        placeholder="name..."/>
-        <button 
-        id='join-team-1-submit-button'
-        style={{
-          fontFamily: 'Luckiest Guy',
-          fontSize: `${zoom * 0.3}px`,
-          background: 'none',
-          border: 'none',
-          color: `${joinTeam1SubmitHover ? 'white' : 'yellow'}`,
-          padding: '0px'}}
-        onMouseOver={handleJoinTeam1SubmitMouseEnter}
-        onMouseOut={handleJoinTeam1SubmitMouseLeave}
-        type="submit">&#x2713;</button>
-        {/* highlight on hover */}
-        <button 
-        id='join-team-1-cancel-button'
-        style={{
-          fontFamily: 'Luckiest Guy',
-          fontSize: `${zoom * 0.3}px`,
-          background: 'none',
-          border: 'none',
-          color: `${joinTeam1CancelHover ? 'white' : 'yellow'}`,}}
-        onMouseOver={handleJoinTeam1CancelMouseEnter}
-        onMouseOut={handleJoinTeam1CancelMouseLeave}
-        onMouseDown={handleJoinTeam1Cancel}>
-          &#10008;
-        </button>
+        onSubmit={e => handleJoinSubmit(e)}>
+        <div style={{
+          top: '40%',
+          width: '240px',
+          height: '150px',
+          backgroundColor: 'black',
+          border: '2px solid yellow',
+          padding: '20px'
+        }}>
+          <p style={{
+            fontFamily: 'Luckiest Guy',
+            color: 'yellow',
+            fontSize: '25px',
+            padding: '10px',
+            margin: '0px'
+          }}>Enter your name</p>
+          <input
+            style={{
+              background: 'none',
+              border: 'none',
+              fontFamily: 'Luckiest Guy',
+              fontSize: `20px`,
+              color: 'yellow',
+              padding: '10px',
+              width: `210px`,
+              border: '2px solid yellow'
+            }}
+            onChange={e => setName(e.target.value)}
+            placeholder="here..."/>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}>
+            <button 
+              id='join-team-submit-button'
+              style={{
+                fontFamily: 'Luckiest Guy',
+                fontSize: `20px`,
+                background: 'none',
+                border: '2px solid yellow',
+                margin: '10px',
+                padding: '5px',
+                color: `${submitHover ? 'white' : 'yellow'}`,
+                position: 'relative'}}
+              onMouseOver={handleSubmitMouseEnter}
+              onMouseOut={handleSubmitMouseLeave}
+              type="submit">
+            LEGGO!
+            </button>
+            {/* highlight on hover */}
+            <button 
+              id='join-team-cancel-button'
+              style={{
+                fontFamily: 'Luckiest Guy',
+                fontSize: `20px`,
+                background: 'none',
+                border: '2px solid red',
+                margin: '10px',
+                padding: '5px',
+                color: `${cancelHover ? 'white' : 'red'}`,}}
+              onMouseOver={handleCancelMouseEnter}
+              onMouseOut={handleCancelMouseLeave}
+              onMouseDown={e => handleJoinCancel(e)}
+              // need this to stop form from submitting
+              type="button">
+            NAH
+            </button>
+          </div>
+        </div>
       </form>
     </Html>
   </group>

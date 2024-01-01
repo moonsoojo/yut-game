@@ -6,7 +6,8 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+const ENDPOINT = 'localhost:5000/';
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -76,12 +77,13 @@ export const messagesAtom = atom([]);
 export const nameAtom = atom('');
 export const clientsAtom = atom({})
 export const clientAtom = atom({})
+export const roomAtom = atom({})
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
-  const [_teams, setTeams] = useAtom(teamsAtom);
+  const [teams, setTeams] = useAtom(teamsAtom);
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
@@ -91,6 +93,7 @@ export const SocketManager = () => {
   const [messages, setMessages] = useAtom(messagesAtom);
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
+  const [room, setRoom] = useAtom(roomAtom);
 
   const params = useParams();
 
@@ -100,7 +103,11 @@ export const SocketManager = () => {
     socket.emit('joinRoom', { 
       room: params.id, 
       savedClient: localStorage.getItem('yootGame') 
-    }, () => {})
+    }, ({ response }) => {
+      if (response === "error") {
+        console.log("[socketManager] join room error", error)
+      }
+    })
 
     return () => {
       socket.emit('disconnect');
@@ -109,11 +116,19 @@ export const SocketManager = () => {
     }
   }, [ENDPOINT, params]);
 
+  // without the dependency, it only shows the last message
   useEffect(() => {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
     })
   }, [messages])
+
+  useEffect(() => {
+    socket.on('room', (room) => {
+      console.log("[SocketManager] room", room)
+      setTeams(room.teams);
+    })
+  }, [room])
 
   useEffect(() => {
     function onConnect() {
@@ -162,10 +177,10 @@ export const SocketManager = () => {
     function onTiles(value) {
       setTiles(value);
     }
-    function onTeams(value) {
-      console.log("[onTeams] teams", value)
-      setTeams(value);
-    }
+    // function onTeams(value) {
+    //   console.log("[onTeams] teams", value)
+    //   setTeams(value);
+    // }
     function onYutThrow(yutForceVectors) {
       setYutThrowValues(yutForceVectors);
     }
@@ -200,7 +215,7 @@ export const SocketManager = () => {
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
-    socket.on("teams", onTeams);
+    // socket.on("teams", onTeams);
     socket.on("throwYuts", onYutThrow);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
@@ -220,7 +235,7 @@ export const SocketManager = () => {
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
-      socket.off("teams", onTeams);
+      // socket.off("teams", onTeams);
       socket.off("throwYuts", onYutThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);

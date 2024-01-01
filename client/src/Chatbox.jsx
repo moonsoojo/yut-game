@@ -3,16 +3,18 @@ import { socket, messagesAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { useParams } from "wouter";
 
 export default function Chatbox({ height, width, padding, fontSize, device }) {
   const [messages] = useAtom(messagesAtom);
   const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
+  const params = useParams();
 
   function onMessageSubmit (e) {
     console.log("[onMessageSubmit]")
     e.preventDefault();
-    socket.emit("sendMessage", { message, team: client.team }, () => {
+    socket.emit("sendMessage", { message, room: params.id }, () => {
       setMessage('')
     })
   }

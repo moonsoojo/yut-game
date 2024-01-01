@@ -19,6 +19,9 @@ import Earth from "./meshes/Earth.jsx";
 import Rocket from './meshes/Rocket.jsx';
 import Ufo from './meshes/Ufo.jsx';
 
+// multiplayer
+import { socket } from './SocketManager.jsx';
+
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
@@ -90,18 +93,6 @@ export default function Home() {
       landscapeMobileCutoff,
       window.innerWidth
     )
-  }
-
-
-  // const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
-
-  // useEffect(() => {
-  //   gl.toneMapping = THREE.ACESFilmicToneMapping;
-  //   gl.toneMappingExposure = 1;
-  // }, [gl, scene]);
-
-  function handlePlayOnline() {
-    // navigate(`/game/1`)
   }
 
   function handleRulebook() {
@@ -250,20 +241,17 @@ export default function Home() {
 
   const [location, setLocation] = useLocation();
 
-  function makeId(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-  }
-
   function handleLetsPlay() {
-    setLocation(`/${makeId(3)}`)
+    // create room
+    // on callback
+      // setLocation
+    socket.emit("createRoom", {}, ({ roomId, error }) => {
+      if (!roomId) {
+        console.log("[handleLetsPlay] error", error)
+      } else {
+        setLocation(`/${roomId}`)
+      }
+    })
   }
 
   return (

@@ -88,10 +88,10 @@ export default {
     },
     joinTeamModal: {
       0: {
-        position: []
+        position: [-6,0,-10]
       },
       1: {
-        position: []
+        position: [-6,0,-10]
       }
     },
     throwCount: {

@@ -11,6 +11,8 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
+import { addRoom, addSpectatorToRoom, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom } from './rooms.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 const server = http.createServer(app);
@@ -35,7 +37,7 @@ server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 let selection = null;
 let tiles = JSON.parse(JSON.stringify(initialState.tiles));
-let teams = JSON.parse(JSON.stringify(initialState.teams));
+// let teams = JSON.parse(JSON.stringify(initialState.teams));
 let turn = JSON.parse(JSON.stringify(initialState.turn));
 let gamePhase = JSON.parse(JSON.stringify(initialState.gamePhase)); // possible values: "lobby", "pregame", "game"=
 let hostId = null;
@@ -273,18 +275,35 @@ function joinSpectator(socketId) {
 io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
+  socket.on("createRoom", ({}, callback) => {
+    // let id = uuidv4() + '-' + Date.now()
+    let id = makeId(3)
+    const { room, error } = addRoom({ id })
+    console.log("[createRoom]", room)
+    if (room === null) {
+      return callback({ error })
+    } else {
+      return callback({ roomId: room.id })
+    }
+  })
+
   socket.on("joinRoom", ({ room, savedClient }, callback) => {
-
+    console.log('[joinRoom] savedClient', savedClient)
     let name = makeId(5)
-    const { error, user } = addUser({ id: socket.id, name, room })
+    const { error, spectator } = addSpectatorToRoom({ id: socket.id, name, room })
 
-    if (error) return callback(error); 
+    if (error) return callback({ response: "error" }); 
 
-    socket.emit("message", { user: 'admin', text: `${user.name}, welcome to the room ${user.room}`})
-    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!`})
-    socket.join(user.room);
+    // sends only to the socket's client
+    socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
+    socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
+    // console.log("[joinRoom] room", getRoom({ id: spectator.room }))
+    console.log("[joinRoom] spectator", spectator)
+    socket.join(spectator.room);
+    // console.log("[joinRoom] room", getRoom({ id: spectator.room }))
+    io.to(spectator.room).emit('room', getRoom({ id: spectator.room }))
 
-    callback();
+    callback({ response: "ok" });
 
     /*if (!savedClient) {
 
@@ -338,9 +357,34 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }*/
   })
 
-  socket.on("joinTeam", ({ team, name }, callback) => {
-    console.log("[joinTeam] socketId", socket.id)
-    clients[socket.id].team = team
+  socket.on("joinTeam", ({ team, name, room }, callback) => {
+    console.log("[joinTeam] socketId", socket.id, "room", room)
+
+    // const user = getUser(socket.id)
+    const spectator = getSpectatorFromRoom({ id: socket.id, room })
+    const player = {
+      ...spectator,
+      team,
+      name
+    }
+    const { addedPlayer, error } = addPlayer({ player })
+
+    if (error) {
+      return callback({ response: 'error' })
+    }
+
+    console.log("[joinTeam] addedPlayer", addedPlayer)
+    io.to(addedPlayer.room).emit('room', getRoom({ id: addedPlayer.room }))
+    socket.broadcast.to(addedPlayer.room).emit(
+      'message', 
+      { 
+        user: 'admin', 
+        text: `${addedPlayer.name} has joined ${addedPlayer.team === 0 ? "the Rockets" : "the UFOs"}!`
+      }
+    )
+
+    return callback({ response: 'ok' });
+    /* clients[socket.id].team = team
     clients[socket.id].name = name
     clients[socket.id].thrown = false
     let updatedClient = JSON.parse(JSON.stringify(clients[socket.id]))
@@ -355,15 +399,18 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     } else if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
       readyToStart = true;
       io.to(hostId).emit("readyToStart", readyToStart);
-    }
+    }*/
   })
 
-  socket.on("sendMessage", ({ message, team }, callback) => {
-    const user = getUser(socket.id);
+  socket.on("sendMessage", ({ message, room }, callback) => {
+    const { response, user } = getUserFromRoom({ id: socket.id, room });
 
-    io.to(user.room).emit('message', { user: user.name, text: message, team });
-
-    callback();
+    if (response.status === 'error') {
+      return callback({ error: response.message })
+    } else {
+      io.to(user.room).emit('message', { user: user.name, text: message, team: user.team });
+      callback();
+    }
 
     // messages.push({
     //   "name": clients[socket.id].name,

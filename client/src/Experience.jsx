@@ -488,6 +488,7 @@ export default function Experience() {
   // show both buttons
   // set the team you're joining
   function handleJoinTeam0 () {
+    console.log("handleJoinTeam0")
     setJoinTeam(0);
   }
   function handleJoinTeam0SubmitMouseEnter () {
@@ -625,6 +626,8 @@ export default function Experience() {
       setShowRulebook(true)
     }
   }
+  
+
 
   return (
     <>
@@ -742,7 +745,12 @@ export default function Experience() {
             ))}
           </group>
           {/* join modal */}
-          { joinTeam && <JoinTeamModal position={layout[device].joinTeamModal[joinTeam].position}/> }
+          { (joinTeam !== null) && <JoinTeamModal
+            // must pass string to access key in object
+            position={layout[device].joinTeamModal[joinTeam.toString()].position}
+            team={joinTeam}
+            setJoinTeam={setJoinTeam}
+            /> }
           {/* board */}
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
