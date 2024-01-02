@@ -14,11 +14,13 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
     e.preventDefault();
     console.log("handleJoinSubmit");
     socket.emit("joinTeam", { team, name, room: params.id }, ({ response }) => {
-      console.log("[JoinTeamModal] callback")
-      if (response === "error") {
-        console.log("[JoinTeamModal] join team error")
+      if (response.status === "error") {
+        console.log("[JoinTeamModal] join team error", response.message)
       } else {
-        console.log("[JoinTeamModal] no error")
+        localStorage.setItem('yootGame', JSON.stringify({
+          gameId: params.id,
+          ...response.player
+        }))
         setName('')
         setJoinTeam(null);
       }

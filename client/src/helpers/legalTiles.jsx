@@ -23,6 +23,7 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
     }
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
+      // disabled; should be able to place piece on tile 0 first
       if (checkBackdoRule(moves, pieces)) {
         legalTiles[0] = { tile: 0, move: "-1", history: [] }
       } else {
@@ -150,6 +151,7 @@ function chooseTileFromFork(path, forks) {
 
 function checkBackdoRule(moves, pieces) {
   // should only have backdo
+  /*
   let hasBackdo = false;
   let hasAnotherMove = false;
   for (let move in moves) {
@@ -170,5 +172,7 @@ function checkBackdoRule(moves, pieces) {
     }
   }
   
-  return true;
+  return true; */
+
+  return false
 }

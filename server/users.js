@@ -1,27 +1,34 @@
 const users = []
 
-// user
-// spectator - team = -1
-// player - team = 0 or 1
-// separate variable for players
-export const addUser = ({ id, name, room }) => {
+// locate user in a game
+// pre condition: no two players have the same id && same room
+export const addUser = ({ id, room }) => {
   try {
-    name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
   
-    const existingUser = users.find((user) => user.name === name && user.room === room)
+    const existingUser = users.find((user) => user.id === id && user.room === room)
   
     if (existingUser) {
-      throw 'Username is taken'
+      throw 'User exists already'
     }
   
-    const user = { id, name, room };
+    const user = { id, room };
   
     users.push(user);
   
-    return { user }
+    return { 
+      addUserResponse: {
+        status: 'ok',
+        user
+      }
+    }
   } catch (error) {
-    return { error }
+    return { 
+      addUserResponse: {
+        status: 'error',
+        message: error 
+      }
+    }
   }
 }
 

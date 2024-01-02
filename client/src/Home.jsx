@@ -249,7 +249,7 @@ export default function Home() {
       if (!roomId) {
         console.log("[handleLetsPlay] error", error)
       } else {
-        setLocation(`/${roomId}`)
+        setLocation(`/game/${roomId}`)
       }
     })
   }

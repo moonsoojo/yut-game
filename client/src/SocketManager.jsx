@@ -6,7 +6,7 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000/';
+const ENDPOINT = 'localhost:5000/game/';
 // const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
@@ -104,7 +104,7 @@ export const SocketManager = () => {
       room: params.id, 
       savedClient: localStorage.getItem('yootGame') 
     }, ({ response }) => {
-      if (response === "error") {
+      if (response.status === "error") {
         console.log("[socketManager] join room error", error)
       }
     })
@@ -146,13 +146,13 @@ export const SocketManager = () => {
       setSelection(gameState.selection);
       setTiles(gameState.tiles);
     }
-    function onJoinTeam({client}) {
-      setClient(client);
-      localStorage.setItem('yootGame', JSON.stringify({
-        gameId: 1,
-        ...client
-      }))
-    }
+    // function onJoinTeam({client}) {
+    //   setClient(client);
+    //   localStorage.setItem('yootGame', JSON.stringify({
+    //     gameId: 1,
+    //     ...client
+    //   }))
+    // }
     function onJoinTeamLocalStorage({gameState}) {
       setClient(gameState.client);
       setGamePhase(gameState.gamePhase);
@@ -208,7 +208,7 @@ export const SocketManager = () => {
     // }
     socket.on("connect", onConnect);
     socket.on("joinSpectator", onJoinSpectator)
-    socket.on("joinTeam", onJoinTeam)
+    // socket.on("joinTeam", onJoinTeam)
     socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
     socket.on("clients", onClients)
     socket.on("disconnect", onDisconnect);
@@ -228,7 +228,7 @@ export const SocketManager = () => {
       socket.off();
       socket.off("connect", onConnect);
       socket.off("joinSpectator", onJoinSpectator)
-      socket.off("joinTeam", onJoinTeam)
+      // socket.off("joinTeam", onJoinTeam)
       socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
       socket.off("clients", onClients)
       socket.off("disconnect", onDisconnect);

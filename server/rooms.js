@@ -1,4 +1,6 @@
 const rooms = {}
+/*
+** schema **
 // gamePhase
 // teams
   // index
@@ -19,13 +21,12 @@ const rooms = {}
 // turn
 // legalTiles
 // selection
-// combine 'yoots' info by looking through players and spectators
+*/
 
 // add room
 export const addRoom = ({ id }) => {
 
   // make sure every room id is random on generation
-
   try {
     const room = {
       id,
@@ -82,8 +83,7 @@ export const addRoom = ({ id }) => {
   }
 }
 
-export const addSpectatorToRoom = ({ id, name, room }) => {
-  console.log("[addUserToRoom]", room)
+export const addSpectator = ({ id, name, room }) => {
 
   try {
 
@@ -97,10 +97,19 @@ export const addSpectatorToRoom = ({ id, name, room }) => {
     const spectator = { id, name, room };
     rooms[room].spectators.push(spectator)
   
-    return { spectator }
-
+    return {
+      addSpectatorResponse: {
+        status: 'ok',
+        spectator 
+      }
+    }
   } catch (error) {
-    return { error }
+    return { 
+      addSpectatorResponse: {
+        status: 'error',
+        message: error 
+      }
+    }
   }
 }
 
@@ -117,26 +126,86 @@ export const addPlayer = ({ player }) => {
   }
 }
 
+export const removeUserFromRoom = ({ id, room }) => {
+
+  const { getUserFromRoomResponse } = getUserFromRoom({ id, room })
+  if (getUserFromRoomResponse.status === 'error') {
+    return {
+      removeUserFromRoomResponse: {
+        status: 'error',
+        message: getUserFromRoomResponse.message
+      }
+    }
+  }
+  const userFromRoom = getUserFromRoomResponse.user
+  const team = userFromRoom.team
+
+  // spectator
+  if (!team) {
+    try {
+      const index = rooms[room].spectators.findIndex(
+        (spectator) => spectator.id === id
+      );
+  
+      if (index !== -1) {
+        return {
+          removeUserFromRoomResponse: {
+            status: 'ok',
+            user: rooms[room].spectators.splice(index, 1)[0]
+          }
+        }
+      }
+    } catch (error) {
+      return { 
+        removeUserFromRoomResponse: {
+          status: 'error',
+          message: error
+        }
+      }
+    }
+  } else { // player
+    try {
+      const index = rooms[room].teams[team].players.findIndex(
+        (player) => player.id === id
+      );
+      if (index !== -1) {
+        return {
+          removeUserFromRoomResponse: {
+            status: 'ok',
+            user: rooms[room].teams[team].players.splice(index, 1)[0]
+          }
+        }
+      }
+    } catch (error) {
+      return { 
+        removeUserFromRoomResponse: {
+          status: 'error',
+          message: error
+        }
+      }
+    }
+  }
+}
+
 export const getRoom = ({ id }) => rooms[id]
 
 export const getUserFromRoom = ({ id, room }) => {
-  console.log("[getUsersFromRoom]", id, room)
   let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
   const userFound = users.find((user) => user.id === id)
 
   if (!userFound) {
     return { 
-      response: {
+      getUserFromRoomResponse: {
         status: 'error', 
         message: 'user not found'
       }
     }
   } else {
     return { 
-      response: {
+      getUserFromRoomResponse: {
         status: 'ok', 
+        user: userFound 
       },
-      user: userFound 
     }
   }
 }
