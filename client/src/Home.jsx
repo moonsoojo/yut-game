@@ -245,12 +245,8 @@ export default function Home() {
     // create room
     // on callback
       // setLocation
-    socket.emit("createRoom", {}, ({ roomId, error }) => {
-      if (!roomId) {
-        console.log("[handleLetsPlay] error", error)
-      } else {
-        setLocation(`/game/${roomId}`)
-      }
+    socket.emit("createRoom", {}, ({ id }) => {
+      setLocation(`/${id}`)
     })
   }
 

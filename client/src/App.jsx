@@ -15,7 +15,7 @@ export default function App () {
       <Route path="/">
         <Home/>
       </Route>
-      <Route path="/game/:id">
+      <Route path="/:id">
         <SocketManager/>
         <Experience/>
       </Route>

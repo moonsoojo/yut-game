@@ -25,5 +25,4 @@ rooms
 notes
 - to scale, users and rooms should be objects
 - players in teams in rooms should be a list so that the order can be kept track
-- handle errors
 - i should be able to recognize the code when i step away and come back.

@@ -27,4 +27,4 @@ export default function Star({ position, tile, device, scale }) {
   );
 }
 
-useGLTF.preload("/models/stars/star-yellow copy 1.glb");
+useGLTF.preload("/models/star.glb");

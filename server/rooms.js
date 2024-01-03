@@ -27,90 +27,100 @@ const rooms = {}
 export const addRoom = ({ id }) => {
 
   // make sure every room id is random on generation
-  try {
-    const room = {
-      id,
-      gamePhase: 'lobby',
-      teams: [
-        {
-          index: 0,
-          players: [],
-          moves: {
-            "1": 0,
-            "2": 0,
-            "3": 0,
-            "4": 0,
-            "5": 0,
-            "-1": 0,
-            "0": 0
-          },
-          throws: 0,
-          pieces: [
-            { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
-            { tile: -1, team: 0, id: 1, path: [] },
-            { tile: -1, team: 0, id: 2, path: [] },
-            { tile: -1, team: 0, id: 3, path: [] },
-          ],
+  const room = {
+    id,
+    gamePhase: 'lobby',
+    teams: [
+      {
+        index: 0,
+        players: [],
+        moves: {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "-1": 0,
+          "0": 0
         },
-        {
-          index: 0,
-          players: [],
-          moves: {
-            "1": 0,
-            "2": 0,
-            "3": 0,
-            "4": 0,
-            "5": 0,
-            "-1": 0,
-            "0": 0
-          },
-          throws: 0,
-          pieces: [
-            { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
-            { tile: -1, team: 0, id: 1, path: [] },
-            { tile: -1, team: 0, id: 2, path: [] },
-            { tile: -1, team: 0, id: 3, path: [] },
-          ],
-        }
-      ],
-      spectators: []
-    }
-
-    rooms[id] = room
-    return { room }
-  } catch (error) {
-    return { room: null, error }
+        throws: 0,
+        pieces: [
+          { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
+          { tile: -1, team: 0, id: 1, path: [] },
+          { tile: -1, team: 0, id: 2, path: [] },
+          { tile: -1, team: 0, id: 3, path: [] },
+        ],
+      },
+      {
+        index: 0,
+        players: [],
+        moves: {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0,
+          "-1": 0,
+          "0": 0
+        },
+        throws: 0,
+        pieces: [
+          { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
+          { tile: -1, team: 0, id: 1, path: [] },
+          { tile: -1, team: 0, id: 2, path: [] },
+          { tile: -1, team: 0, id: 3, path: [] },
+        ],
+      }
+    ],
+    turn: {
+      team: 0,
+      players: [0, 0]
+    },
+    tiles: [
+      [], // { [ { team: int, id: int, tile: int, history: int[] } ] }
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+    ],
+    spectators: []
   }
+
+  rooms[id] = room
+  return { room }
 }
 
 export const addSpectator = ({ id, name, room }) => {
-
-  try {
-
-    let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
-    const existingUser = users.find((user) => user.name === name)
-  
-    if (existingUser) {
-      throw 'Username is taken'
-    }
   
     const spectator = { id, name, room };
     rooms[room].spectators.push(spectator)
   
-    return {
-      addSpectatorResponse: {
-        status: 'ok',
-        spectator 
-      }
-    }
-  } catch (error) {
-    return { 
-      addSpectatorResponse: {
-        status: 'error',
-        message: error 
-      }
-    }
-  }
+    return { spectator }
+
 }
 
 export const getSpectatorFromRoom = ({ id, room }) => {

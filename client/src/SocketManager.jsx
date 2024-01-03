@@ -6,7 +6,7 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000/game/';
+const ENDPOINT = 'localhost:5000';
 // const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
@@ -127,6 +127,12 @@ export const SocketManager = () => {
     socket.on('room', (room) => {
       console.log("[SocketManager] room", room)
       setTeams(room.teams);
+      // setSpectators(room.spectators);
+      setGamePhase(room.gamePhase);
+      setTiles(room.tiles);
+      setTurn(room.turn);
+      setLegalTiles(room.legalTiles);
+      setSelection(room.selection);
     })
   }, [room])
 
