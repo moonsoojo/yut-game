@@ -245,6 +245,8 @@ export default function Home() {
     // create room
     // on callback
       // setLocation
+    console.log('handle lets play')
+    socket.connect();
     socket.emit("createRoom", {}, ({ id }) => {
       setLocation(`/${id}`)
     })

@@ -20,7 +20,6 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173", 
-      "http://localhost:5000", 
       "http://192.168.86.158:5173", // home
       "http://192.168.1.181:5173", // home 2
       "https://master.dh445c3qmwe4t.amplifyapp.com"
@@ -261,8 +260,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   console.log("a user connected", socket.id)
 
   socket.on("createRoom", ({}, callback) => {
+    console.log('create room')
     let id = makeId(3)
     const { room } = addRoom({ id })
+    console.log('[connect] room', room)
     return callback({ id: room.id })
   })
 
@@ -272,13 +273,13 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       let name = makeId(5)
       const { spectator } = addSpectator({ id, name, room })
 
-      addUser({ id, room })
+      const { user } = addUser({ id, room })
 
       // sends only to the socket's client
       socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
       socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
       socket.join(spectator.room);
-      io.to(spectator.room).emit('room', getRoom({ id: spectator.room }))
+      io.to(spectator.room).emit('room', getRoom(spectator.room))
   
     } else {
       // join team
@@ -316,7 +317,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       })
     }
 
-    io.to(addedPlayer.room).emit('room', getRoom({ id: addedPlayer.room }))
+    io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
     socket.broadcast.to(addedPlayer.room).emit(
       'message', 
       { 
@@ -631,12 +632,17 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
     // remove user from room
     // remove user
+    const user = getUser(socket.id) // can't spread return value
+    console.log("[disconnect] user", user)
+    const userFromRoom = removeUserFromRoom({ id: user.id, room: user.room })
+    console.log("[disconnect] userFromRoom", userFromRoom)
 
-
-    // const user = removeUser(socket.id);
-
-    // const user = removeUser(socket.id);
-    // console.log("[disconnect] user", user)
+    // emit the room to everyone in the room
+    // tell everyone in the room that user left
+    socket.broadcast.to(userFromRoom.room).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
+    const room = getRoom(userFromRoom.room)
+    console.log("[disconnect] room", room)
+    io.to(userFromRoom.room).emit('room', room)
 
     /* teams = removePlayerFromGame(teams, socket.id)
     io.emit("teams", teams)

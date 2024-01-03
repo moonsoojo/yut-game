@@ -138,86 +138,38 @@ export const addPlayer = ({ player }) => {
 
 export const removeUserFromRoom = ({ id, room }) => {
 
-  const { getUserFromRoomResponse } = getUserFromRoom({ id, room })
-  if (getUserFromRoomResponse.status === 'error') {
-    return {
-      removeUserFromRoomResponse: {
-        status: 'error',
-        message: getUserFromRoomResponse.message
-      }
-    }
-  }
-  const userFromRoom = getUserFromRoomResponse.user
-  const team = userFromRoom.team
+  const user = getUserFromRoom({ id, room })
+  const team = user.team
 
   // spectator
   if (!team) {
-    try {
-      const index = rooms[room].spectators.findIndex(
-        (spectator) => spectator.id === id
-      );
-  
-      if (index !== -1) {
-        return {
-          removeUserFromRoomResponse: {
-            status: 'ok',
-            user: rooms[room].spectators.splice(index, 1)[0]
-          }
-        }
-      }
-    } catch (error) {
-      return { 
-        removeUserFromRoomResponse: {
-          status: 'error',
-          message: error
-        }
-      }
+    const index = rooms[room].spectators.findIndex((spectator) => spectator.id === id);
+
+    if (index !== -1) {
+      return rooms[room].spectators.splice(index, 1)[0]
     }
   } else { // player
-    try {
-      const index = rooms[room].teams[team].players.findIndex(
-        (player) => player.id === id
-      );
-      if (index !== -1) {
-        return {
-          removeUserFromRoomResponse: {
-            status: 'ok',
-            user: rooms[room].teams[team].players.splice(index, 1)[0]
-          }
-        }
-      }
-    } catch (error) {
-      return { 
-        removeUserFromRoomResponse: {
-          status: 'error',
-          message: error
-        }
-      }
+    const index = rooms[room].teams[team].players.findIndex(
+      (player) => player.id === id
+    );
+
+    if (index !== -1) {
+      return rooms[room].teams[team].players.splice(index, 1)[0]
     }
   }
 }
 
-export const getRoom = ({ id }) => rooms[id]
+export const getRoom = ( id ) => {
+  console.log("[getRoom] rooms", rooms)
+  console.log("[getRoom] id", id)
+  return rooms[id]
+}
 
 export const getUserFromRoom = ({ id, room }) => {
   let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
-  const userFound = users.find((user) => user.id === id)
+  const user = users.find((user) => user.id === id)
 
-  if (!userFound) {
-    return { 
-      getUserFromRoomResponse: {
-        status: 'error', 
-        message: 'user not found'
-      }
-    }
-  } else {
-    return { 
-      getUserFromRoomResponse: {
-        status: 'ok', 
-        user: userFound 
-      },
-    }
-  }
+  return user
 }
 
 // remove room

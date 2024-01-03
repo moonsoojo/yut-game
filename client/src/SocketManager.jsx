@@ -7,15 +7,18 @@ import { useParams } from "wouter";
 import initialState from "../initialState.js"; 
 
 const ENDPOINT = 'localhost:5000';
-// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
     query: {
       client: localStorage.getItem('yootGame')
-    }
-  }
-); // http://192.168.1.181:3000 //http://192.168.86.158:3000
+    },
+    autoConnect: false
+  },
+)
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+
+// http://192.168.1.181:3000 //http://192.168.86.158:3000
 // export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
 const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
@@ -98,7 +101,10 @@ export const SocketManager = () => {
   const params = useParams();
 
   useEffect(() => {
+
     console.log("[SocketManager] socket", socket)
+
+    socket.connect();
 
     socket.emit('joinRoom', { 
       room: params.id, 
@@ -110,11 +116,11 @@ export const SocketManager = () => {
     })
 
     return () => {
-      socket.emit('disconnect');
+      socket.disconnect()
 
       socket.off();
     }
-  }, [ENDPOINT, params]);
+  }, []);
 
   // without the dependency, it only shows the last message
   useEffect(() => {
@@ -217,7 +223,7 @@ export const SocketManager = () => {
     // socket.on("joinTeam", onJoinTeam)
     socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
     socket.on("clients", onClients)
-    socket.on("disconnect", onDisconnect);
+    // socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
@@ -230,14 +236,14 @@ export const SocketManager = () => {
     socket.on("legalTiles", onLegalTiles);
     // socket.on("messages", onMessages);
     return () => {
-      socket.emit('disconnect');
+      // socket.emit('disconnect');
       socket.off();
       socket.off("connect", onConnect);
       socket.off("joinSpectator", onJoinSpectator)
       // socket.off("joinTeam", onJoinTeam)
       socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
       socket.off("clients", onClients)
-      socket.off("disconnect", onDisconnect);
+      // socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
