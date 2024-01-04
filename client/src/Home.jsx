@@ -241,15 +241,20 @@ export default function Home() {
 
   const [location, setLocation] = useLocation();
 
+  function makeId(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
   function handleLetsPlay() {
-    // create room
-    // on callback
-      // setLocation
-    console.log('handle lets play')
-    socket.connect();
-    socket.emit("createRoom", {}, ({ id }) => {
-      setLocation(`/${id}`)
-    })
+    setLocation(`/${makeId(3)}`)
   }
 
   return (

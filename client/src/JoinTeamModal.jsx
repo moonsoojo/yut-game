@@ -9,6 +9,10 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const params = useParams();
+
+  // join team button should disappear for the team player joined
+  // player can click other button join to switch teams
+  // player should be removed from the original team
   
   function handleJoinSubmit(e) {
     e.preventDefault();

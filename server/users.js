@@ -23,7 +23,12 @@ export const removeUser = (id) => {
 export const getUser = (id) => {
   console.log('[getUser] id', id)
   console.log('[getUser] users', users)
-  return users.find((user) => user.id === id);
+  const userFound = users.find((user) => user.id === id);
+  if (userFound === undefined) {
+    return { error: 'user not found' }
+  } else {
+    return userFound
+  }
 }
 
 export const getUsersInRoom = (room) => users.filter((user) => user.room === room);

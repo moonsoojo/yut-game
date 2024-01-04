@@ -26,6 +26,10 @@ const rooms = {}
 // add room
 export const addRoom = ({ id }) => {
 
+  if (id in rooms) {
+    return { error: 'room exists' }
+  }
+
   // make sure every room id is random on generation
   const room = {
     id,
@@ -128,27 +132,36 @@ export const getSpectatorFromRoom = ({ id, room }) => {
 }
 
 export const addPlayer = ({ player }) => {
+
   rooms[player.room].teams[player.team].players.push(player)
+  return player
 }
 
 export const removeUserFromRoom = ({ id, room }) => {
 
+  if (!(room in rooms)) {
+    return { error: 'room not found' }
+  }
+
   const user = getUserFromRoom({ id, room })
   console.log('[removeUserFromRoom] user', user)
   const team = user.team
+  console.log('[removeUserFromRoom] team', team)
 
   // spectator
-  if (!team) {
+  if (team !== 0 && team !== 1) {
     const index = rooms[room].spectators.findIndex((spectator) => spectator.id === id);
 
+    console.log('[removeUserFromRoom] team not 0 or 1, index', index)
     if (index !== -1) {
       return rooms[room].spectators.splice(index, 1)[0]
     }
   } else { // player
+    console.log("[removeUserFromRoom] team", team)
     const index = rooms[room].teams[team].players.findIndex(
       (player) => player.id === id
     );
-
+    console.log("[removeUserFromRoom] index", index)
     if (index !== -1) {
       return rooms[room].teams[team].players.splice(index, 1)[0]
     }
@@ -156,7 +169,7 @@ export const removeUserFromRoom = ({ id, room }) => {
 }
 
 export const getRoom = ( id ) => {
-  console.log("[getRoom] rooms", rooms)
+  console.log("[getRoom] rooms", JSON.stringify(rooms))
   console.log("[getRoom] id", id)
   return rooms[id]
 }

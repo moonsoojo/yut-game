@@ -258,23 +258,22 @@ function passTurnPregame(turn, teams, gamePhase) {
 // user with chatbox
 // take care of 'join team' after this
 io.on("connect", (socket) => { // socket.handshake.query is data obj
-  console.log("a user connected", socket.id, 'query', socket.handshake.query)
+  console.log("a user connected", socket.id)
 
-  socket.on("createRoom", ({}, callback) => {
-    console.log('create room')
-    let id = makeId(3)
-    const { room } = addRoom({ id })
-    console.log('[connect] room', room)
-    return callback({ id: room.id })
+  socket.on("createRoom", ({ id }, callback) => {
+    console.log('create room', id)
+    
+    const { room, error } = addRoom({ id })
+    console.log('[connect] room', room, 'error', error)
+    return callback({ roomId: id })
   })
 
   socket.on("joinRoom", ({ room, savedClient }, callback) => {
     if (!savedClient) {
-      let id = socket.id
-      let name = makeId(5)
-      const { spectator } = addSpectator({ id, name, room })
+      const { user } = addUser({ id: socket.id, room })
 
-      const { user } = addUser({ id, room })
+      let name = makeId(5)
+      const { spectator } = addSpectator({ id: socket.id, name, room })
 
       // sends only to the socket's client
       socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
@@ -283,11 +282,38 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       io.to(spectator.room).emit('room', getRoom(spectator.room))
   
     } else {
-      // join team
-      // savedPlayer = JSON.parse(savedPlayer)
-      // id = socket.id
-      // name = savedPlayer.name
-      // savedPlayer.id = id
+      console.log('[joinRoom] client saved in local storage', JSON.parse(socket.handshake.query.client))
+  
+      const { user } = addUser({ id: socket.id, room })
+
+      const savedPlayer = {
+        ...JSON.parse(socket.handshake.query.client),
+        id: user.id,
+        room
+      }
+      const addedPlayer = addPlayer({ player: savedPlayer })
+
+      console.log("[joinRoom] addedPlayer", addedPlayer)
+      socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
+      socket.join(addedPlayer.room);
+      io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
+      socket.broadcast.to(addedPlayer.room).emit(
+        'message', 
+        { 
+          user: 'admin', 
+          text: `${addedPlayer.name} has joined ${addedPlayer.team === 0 ? "the Rockets" : "the UFOs"}!`
+        }
+      )
+  
+      if (hostId == null) { // if there's no host, there's only one player
+        hostId = socket.id
+      } else {
+        if (countPlayers(addedPlayer.room) >= 2) {
+          readyToStart = true;
+          console.log('hostId', hostId)
+          io.to(hostId).emit("readyToStart", readyToStart);
+        }
+      }
       
       // const { addedPlayer, error } = addPlayer({ savedPlayer })
       // remove player on disconnect
@@ -616,16 +642,26 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     // remove user from room
     // remove user
     const user = getUser(socket.id) // can't spread return value
-    console.log("[disconnect] user", user)
-    const userFromRoom = removeUserFromRoom({ id: user.id, room: user.room })
-    console.log("[disconnect] userFromRoom", userFromRoom)
+    if (user.error && user.error === "user not found") {
+      console.log("[disconnect]", user.error)
+    } else {
+      console.log("[disconnect] user", user)
+      const userFromRoom = removeUserFromRoom({ id: user.id, room: user.room })
+      if (userFromRoom.error && userFromRoom.error === "room not found") {
+        console.log("[disconnect]", userFromRoom.error)
+      } else {
+        console.log("[disconnect] userFromRoom", userFromRoom)
+    
+        // emit the room to everyone in the room
+        // tell everyone in the room that user left
+        socket.broadcast.to(userFromRoom.room).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
+        const room = getRoom(userFromRoom.room)
+        console.log("[disconnect] room", room)
+        io.to(userFromRoom.room).emit('room', room)
+      }
+    }
 
-    // emit the room to everyone in the room
-    // tell everyone in the room that user left
-    socket.broadcast.to(userFromRoom.room).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
-    const room = getRoom(userFromRoom.room)
-    console.log("[disconnect] room", room)
-    io.to(userFromRoom.room).emit('room', room)
+    // clean up room if there's no player
 
     /* teams = removePlayerFromGame(teams, socket.id)
     io.emit("teams", teams)

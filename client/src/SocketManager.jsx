@@ -106,13 +106,13 @@ export const SocketManager = () => {
 
     socket.connect();
 
-    socket.emit('joinRoom', { 
-      room: params.id, 
-      savedClient: localStorage.getItem('yootGame') 
-    }, ({ response }) => {
-      if (response.status === "error") {
-        console.log("[socketManager] join room error", error)
-      }
+    console.log("params.id", params.id)
+
+    socket.emit("createRoom", { id: params.id }, ({ roomId }) => {
+      socket.emit('joinRoom', { 
+        room: roomId, 
+        savedClient: localStorage.getItem('yootGame') 
+      })
     })
 
     return () => {
