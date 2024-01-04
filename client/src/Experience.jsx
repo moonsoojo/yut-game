@@ -670,7 +670,7 @@ export default function Experience() {
               color="red"
             />
             {/* join button */}
-            { client.team == undefined && showJoinTeam0Button && <TextButton
+            { client.team !== 0 && showJoinTeam0Button && <TextButton
               text="JOIN"
               boxWidth={0.9}
               boxHeight={0.3}
@@ -714,7 +714,7 @@ export default function Experience() {
               color="turquoise"
             />
             {/* join button */}
-            { client.team == undefined && showJoinTeam1Button && <TextButton
+            { client.team !== 1 && showJoinTeam1Button && <TextButton
               text="JOIN"
               boxWidth={0.9}
               boxHeight={0.3}

@@ -139,7 +139,11 @@ export const SocketManager = () => {
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
     })
-  }, [room])
+    socket.on('client', (client) => {
+      console.log("[SocketManager] client", client)
+      setClient(client);
+    })
+  }, [])
 
   // on join
   // set client: user

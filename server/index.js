@@ -275,6 +275,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       let name = makeId(5)
       const { spectator } = addSpectator({ id: socket.id, name, room })
 
+      
+      socket.emit("client", spectator)
+
       // sends only to the socket's client
       socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
       socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
@@ -282,6 +285,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       io.to(spectator.room).emit('room', getRoom(spectator.room))
   
     } else {
+      // join team
       console.log('[joinRoom] client saved in local storage', JSON.parse(socket.handshake.query.client))
   
       const { user } = addUser({ id: socket.id, room })
@@ -292,6 +296,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         room
       }
       const addedPlayer = addPlayer({ player: savedPlayer })
+      socket.emit("client", addedPlayer)
 
       console.log("[joinRoom] addedPlayer", addedPlayer)
       socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
@@ -335,28 +340,32 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       name
     }
 
-    addPlayer({ player })
+    console.log("[joinTeam] about to add player", player)
+    const addedPlayer = addPlayer({ player })
+    console.log("[joinTeam] addedPlayer", addedPlayer)
 
-    io.to(player.room).emit('room', getRoom(player.room))
-    socket.broadcast.to(player.room).emit(
+    socket.emit("client", addedPlayer)
+
+    io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
+    socket.broadcast.to(addedPlayer.room).emit(
       'message', 
       { 
         user: 'admin', 
-        text: `${player.name} has joined ${player.team === 0 ? "the Rockets" : "the UFOs"}!`
+        text: `${addedPlayer.name} has joined ${addedPlayer.team === 0 ? "the Rockets" : "the UFOs"}!`
       }
     )
 
     if (hostId == null) { // if there's no host, there's only one player
       hostId = socket.id
     } else {
-      if (countPlayers(player.room) >= 2) {
+      if (countPlayers(addedPlayer.room) >= 2) {
         readyToStart = true;
         console.log('hostId', hostId)
         io.to(hostId).emit("readyToStart", readyToStart);
       }
     }
 
-    callback({ response: 'ok', player });
+    callback({ response: 'ok', addedPlayer });
   })
 
   socket.on("sendMessage", ({ message, room }, callback) => {
