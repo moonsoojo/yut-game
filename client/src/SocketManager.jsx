@@ -133,7 +133,6 @@ export const SocketManager = () => {
     socket.on('room', (room) => {
       console.log("[SocketManager] room", room)
       setTeams(room.teams);
-      // setSpectators(room.spectators);
       setGamePhase(room.gamePhase);
       setTiles(room.tiles);
       setTurn(room.turn);
@@ -141,6 +140,12 @@ export const SocketManager = () => {
       setSelection(room.selection);
     })
   }, [room])
+
+  // on join
+  // set client: user
+  // on join team
+  // set client: player
+  // display join button for team if client.team !== (teamNumber)
 
   useEffect(() => {
     function onConnect() {
