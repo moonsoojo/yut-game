@@ -13,18 +13,16 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   function handleJoinSubmit(e) {
     e.preventDefault();
     console.log("handleJoinSubmit");
-    socket.emit("joinTeam", { team, name, room: params.id }, ({ response }) => {
-      if (response.status === "error") {
-        console.log("[JoinTeamModal] join team error", response.message)
-      } else {
+    socket.emit("joinTeam", { team, name, room: params.id }, ({ response, player }) => {
+      console.log("join team callback")
+      if (response === 'ok') {
         localStorage.setItem('yootGame', JSON.stringify({
-          gameId: params.id,
-          ...response.player
+          ...player
         }))
         setName('')
         setJoinTeam(null);
       }
-    })
+    });
   }
   function handleJoinCancel(e) { // submits name and emits 'joinTeam'
     e.preventDefault()

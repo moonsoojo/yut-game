@@ -11,7 +11,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -129,6 +129,7 @@ function removePlayerFromGame(teams, socketId) {
   return teams
 }*/
 
+/*
 function countPlayers(teams) {
   let count = 0
   for (let i = 0; i < teams.length; i++) {
@@ -137,7 +138,7 @@ function countPlayers(teams) {
     }
   }
   return count
-}
+} */
 
 function setTurn(turn, team, players) {
   turn.team = team;
@@ -257,7 +258,7 @@ function passTurnPregame(turn, teams, gamePhase) {
 // user with chatbox
 // take care of 'join team' after this
 io.on("connect", (socket) => { // socket.handshake.query is data obj
-  console.log("a user connected", socket.id)
+  console.log("a user connected", socket.id, 'query', socket.handshake.query)
 
   socket.on("createRoom", ({}, callback) => {
     console.log('create room')
@@ -283,12 +284,12 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   
     } else {
       // join team
-      savedPlayer = JSON.parse(savedPlayer)
-      id = socket.id
-      name = savedPlayer.name
-      savedPlayer.id = id
+      // savedPlayer = JSON.parse(savedPlayer)
+      // id = socket.id
+      // name = savedPlayer.name
+      // savedPlayer.id = id
       
-      const { addedPlayer, error } = addPlayer({ savedPlayer })
+      // const { addedPlayer, error } = addPlayer({ savedPlayer })
       // remove player on disconnect
     }
 
@@ -300,54 +301,36 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("joinTeam", ({ team, name, room }, callback) => {
 
-    const spectator = getSpectatorFromRoom({ id: socket.id, room })
+    // const spectator = getSpectatorFromRoom({ id: socket.id, room })
+    const spectator = removeUserFromRoom({ id: socket.id, room })
     const player = {
       ...spectator,
       team,
       name
     }
-    const { addedPlayer, error } = addPlayer({ player })
 
-    if (error) {
-      return callback({ 
-        response: {
-          status: 'error',
-          message: error
-        }
-      })
-    }
+    addPlayer({ player })
 
-    io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
-    socket.broadcast.to(addedPlayer.room).emit(
+    io.to(player.room).emit('room', getRoom(player.room))
+    socket.broadcast.to(player.room).emit(
       'message', 
       { 
         user: 'admin', 
-        text: `${addedPlayer.name} has joined ${addedPlayer.team === 0 ? "the Rockets" : "the UFOs"}!`
+        text: `${player.name} has joined ${player.team === 0 ? "the Rockets" : "the UFOs"}!`
       }
     )
 
-    return callback({ 
-      response: {
-        status: 'ok',
-        player: addedPlayer
-      } 
-    });
-    /* clients[socket.id].team = team
-    clients[socket.id].name = name
-    clients[socket.id].thrown = false
-    let updatedClient = JSON.parse(JSON.stringify(clients[socket.id]))
-    teams[team].players.push(updatedClient)
-
-    io.to(socket.id).emit("joinTeam", { client: updatedClient })
-    io.emit("teams", teams)
-    io.emit("clients", clients);
-
     if (hostId == null) { // if there's no host, there's only one player
       hostId = socket.id
-    } else if (teams[0].players.length > 0 && teams[1].players.length > 0 && allYutsAsleep(clients)) {
-      readyToStart = true;
-      io.to(hostId).emit("readyToStart", readyToStart);
-    }*/
+    } else {
+      if (countPlayers(player.room) >= 2) {
+        readyToStart = true;
+        console.log('hostId', hostId)
+        io.to(hostId).emit("readyToStart", readyToStart);
+      }
+    }
+
+    callback({ response: 'ok', player });
   })
 
   socket.on("sendMessage", ({ message, room }, callback) => {

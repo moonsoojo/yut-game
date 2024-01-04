@@ -522,6 +522,10 @@ export default function Experience() {
     setJoinTeam1CancelHover(false)
   }
 
+  useEffect(() => {
+    console.log('join team changed')
+  }, [joinTeam])
+
   // pre-condition: 'client' from 'clientAtom'
   function PiecesSection() {
     if (client.team != undefined) {
@@ -626,8 +630,6 @@ export default function Experience() {
       setShowRulebook(true)
     }
   }
-  
-
 
   return (
     <>

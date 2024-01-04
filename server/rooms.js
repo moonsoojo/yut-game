@@ -128,17 +128,13 @@ export const getSpectatorFromRoom = ({ id, room }) => {
 }
 
 export const addPlayer = ({ player }) => {
-  try {
-    rooms[player.room].teams[player.team].players.push(player)
-    return { addedPlayer: player }
-  } catch (error) {
-    return { error }
-  }
+  rooms[player.room].teams[player.team].players.push(player)
 }
 
 export const removeUserFromRoom = ({ id, room }) => {
 
   const user = getUserFromRoom({ id, room })
+  console.log('[removeUserFromRoom] user', user)
   const team = user.team
 
   // spectator
@@ -167,10 +163,14 @@ export const getRoom = ( id ) => {
 
 export const getUserFromRoom = ({ id, room }) => {
   let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
+  console.log("[getUserFromRoom] users", users)
   const user = users.find((user) => user.id === id)
 
   return user
 }
 
-// remove room
-// get room
+export const countPlayers = (roomId) => {
+  const room = getRoom(roomId);
+  const count = room.teams[0].players.length + room.teams[1].players.length
+  return count
+}
