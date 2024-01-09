@@ -11,7 +11,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, updateClients, getClients } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, updateClients, getClients, updateThrown } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 import { allYootsAsleep } from "../client/src/helpers/helpers.js";
 
@@ -353,10 +353,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("visibilityChange", ({flag}) => {
-    console.log("[visibilityChange] roomId", roomId)
     let room = getRoom(roomId)
     if (room) {
-      console.log("[visibilityChange] room", room)
       let clients = room.clients
       if (clients[socket.id] != undefined) {
         clients[socket.id].visibility = flag
@@ -445,21 +443,21 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   socket.on("throwYoots", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-
-    if (clients[socket.id].yootsAsleep && 
-      teams[turn.team].throws > 0 && 
-      teams[turn.team].players[turn.players[turn.team]].socketId === socket.id && // after throw, 
+    if (teams[turn.team].throws > 0 && 
+      teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
+      // after throw, 
       // turn was passed, but the client was disconnected (tab switch)
-      allYootsAsleep(clients)) {
+      isAllYootsAsleep(roomId)) {
 
       teams[turn.team].throws--;
       io.emit("teams", teams);
 
-      clients[socket.id].thrown = true;
+      updateThrown(roomId, socket.id, true)
 
-      const yootForceVectors = [];
-      for (const socketId of Object.keys(clients)) {
-        if (clients[socketId].visibility) {
+      let clients = getClients(roomId)
+      for (const id of Object.keys(clients)) {
+        const yootForceVectors = [];
+        if (clients[id].visibility) {
           for (let i = 0; i < 4; i++) {
             yootForceVectors.push({
               rotation: rotations[i],
@@ -472,7 +470,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
               positionInHand: positionsInHand[i],
             });
 
-            
             /* hard throw
             yootForceVectors.push({
               rotation: rotations[i],
@@ -485,8 +482,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
               positionInHand: positionsInHand[i],
             });*/
           }
-          io.to(socketId).emit("throwYoots", yootForceVectors);
-          clients[socketId].yootsAsleep = false;
+          io.to(id).emit("throwYoots", yootForceVectors);
+          clients = updateYootsAsleep(roomId, id, false)
         }
       }
       io.emit("clients", clients);

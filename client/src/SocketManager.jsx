@@ -81,6 +81,7 @@ export const nameAtom = atom('');
 export const clientsAtom = atom({})
 export const clientAtom = atom({})
 export const roomAtom = atom({})
+// export const allYootsAsleepAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -97,6 +98,7 @@ export const SocketManager = () => {
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
+  // const [_allYootsAsleep, setAllYootsAsleep] = useAtom(allYootsAsleepAtom)
 
   const params = useParams();
 

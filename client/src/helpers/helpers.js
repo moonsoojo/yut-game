@@ -1,6 +1,6 @@
 export function getCurrentPlayerSocketId (turn, teams) {
   if (teams[turn.team].players[turn.players[turn.team]] != undefined) {
-    return teams[turn.team].players[turn.players[turn.team]].socketId
+    return teams[turn.team].players[turn.players[turn.team]].id
   } else {
     return "no_player_found"
   }

@@ -78,12 +78,19 @@ export default function Yoots({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (client && isMyTurn(turn, teams, client.id) && teams[turn.team].throws > 0 && allYootsAsleep(clients)) {
-      for (let i = 0; i < yootMeshes.length; i++) {
-        yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
-        yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
-      }
-      yootFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
+    console.log("[Yoots] client", client, 
+    "turn", turn,
+    "teams", teams,
+    "clients", clients)
+    if (client && 
+      isMyTurn(turn, teams, client.id) && 
+      teams[turn.team].throws > 0 && 
+      allYootsAsleep(clients)) { // refactor this so server sends this info to client
+        for (let i = 0; i < yootMeshes.length; i++) {
+          yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
+          yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
+        }
+        yootFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
     } else {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.emissiveIntensity = 0

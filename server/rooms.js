@@ -257,6 +257,7 @@ export const isAllYootsAsleep = (roomId) => {
 
 export const updateYootsAsleep = (roomId, clientId, state) => {
   rooms[roomId].clients[clientId].yootsAsleep = state
+  return rooms[roomId].clients
 }
 
 export const getTurn = (roomId) => {
@@ -271,4 +272,8 @@ export const getCurrentPlayerId = (roomId) => {
 
 export const getThrown = (roomId, clientId) => {
   return rooms[roomId].clients[clientId].thrown
+}
+
+export const updateThrown = (roomId, clientId, state) => {
+  rooms[roomId].clients[clientId].thrown = state
 }
