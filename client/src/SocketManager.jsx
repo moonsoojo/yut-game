@@ -102,16 +102,18 @@ export const SocketManager = () => {
 
   useEffect(() => {
 
-    console.log("[SocketManager] socket", socket)
-
     socket.connect();
 
-    console.log("params.id", params.id)
+    socket.emit("createRoom", { id: params.id }, ({ roomId, error }) => {
+      if (error) {
+        console.log('error in creating room', roomId)
+      }
 
-    socket.emit("createRoom", { id: params.id }, ({ roomId }) => {
       socket.emit('joinRoom', { 
-        room: roomId, 
+        roomId, 
         savedClient: localStorage.getItem('yootGame') 
+      }, (response) => {
+        console.log("[joinRoom callback]", response)
       })
     })
 
@@ -131,7 +133,6 @@ export const SocketManager = () => {
 
   useEffect(() => {
     socket.on('room', (room) => {
-      console.log("[SocketManager] room", room)
       setTeams(room.teams);
       setGamePhase(room.gamePhase);
       setTiles(room.tiles);
@@ -140,16 +141,9 @@ export const SocketManager = () => {
       setSelection(room.selection);
     })
     socket.on('client', (client) => {
-      console.log("[SocketManager] client", client)
       setClient(client);
     })
   }, [])
-
-  // on join
-  // set client: user
-  // on join team
-  // set client: player
-  // display join button for team if client.team !== (teamNumber)
 
   useEffect(() => {
     function onConnect() {
@@ -159,7 +153,6 @@ export const SocketManager = () => {
       setClients(value)
     }
     function onJoinSpectator(gameState) {
-      console.log("gameState", gameState)
       setClient(gameState.client);
       setGamePhase(gameState.gamePhase);
       setTurn(gameState.turn);
@@ -185,9 +178,6 @@ export const SocketManager = () => {
         gameId: 1,
         ...gameState.client
       }))
-    }
-    function onDisconnect() {
-      console.log("disconnected");
     }
     function onSelect(value) {
       setSelection(value);

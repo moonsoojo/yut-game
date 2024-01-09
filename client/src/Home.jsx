@@ -274,10 +274,11 @@ export default function Home() {
       />
       <Leva hidden />
       <directionalLight
-        position={lightPosition.value}
-        intensity={lightIntensity.value}
-        castShadow
+        position={[0, 1, 0.5]}
+        intensity={4}
+        // castShadow
       />
+      <ambientLight intensity={ 1 } />
       <group>
         <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 

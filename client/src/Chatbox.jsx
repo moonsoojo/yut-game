@@ -12,10 +12,13 @@ export default function Chatbox({ height, width, padding, fontSize, device }) {
   const params = useParams();
 
   function onMessageSubmit (e) {
-    console.log("[onMessageSubmit]")
     e.preventDefault();
-    socket.emit("sendMessage", { message, room: params.id }, () => {
-      setMessage('')
+    socket.emit("sendMessage", { message, roomId: params.id }, ({ error }) => {
+      if (error) {
+        console.log(error)
+      } else {
+        setMessage('')
+      }
     })
   }
   

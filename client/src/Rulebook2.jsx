@@ -845,9 +845,6 @@ export default function Rulebook2 ({position, handleShow}) {
     }
   }
 
-  // const htmlRef = useRef(null);
-  // console.log(htmlRef.current)
-
   return <group position={position}>
     {/* background */}
     <mesh>

@@ -21,6 +21,7 @@ const rooms = {}
 // turn
 // legalTiles
 // selection
+// yoot states
 */
 
 // add room
@@ -111,7 +112,13 @@ export const addRoom = ({ id }) => {
       [],
       [],
     ],
-    spectators: []
+    spectators: [],
+    selection: null,
+    hostId: null,
+    clients: {},
+    readyToStart: false,
+    messages: []
+    // waitingToPass
   }
 
   rooms[id] = room
@@ -132,7 +139,6 @@ export const getSpectatorFromRoom = ({ id, room }) => {
 }
 
 export const addPlayer = ({ player }) => {
-
   rooms[player.room].teams[player.team].players.push(player)
   return player
 }
@@ -144,24 +150,19 @@ export const removeUserFromRoom = ({ id, room }) => {
   }
 
   const user = getUserFromRoom({ id, room })
-  console.log('[removeUserFromRoom] user', user)
   const team = user.team
-  console.log('[removeUserFromRoom] team', team)
 
   // spectator
   if (team !== 0 && team !== 1) {
     const index = rooms[room].spectators.findIndex((spectator) => spectator.id === id);
 
-    console.log('[removeUserFromRoom] team not 0 or 1, index', index)
     if (index !== -1) {
       return rooms[room].spectators.splice(index, 1)[0]
     }
   } else { // player
-    console.log("[removeUserFromRoom] team", team)
     const index = rooms[room].teams[team].players.findIndex(
       (player) => player.id === id
     );
-    console.log("[removeUserFromRoom] index", index)
     if (index !== -1) {
       return rooms[room].teams[team].players.splice(index, 1)[0]
     }
@@ -169,14 +170,11 @@ export const removeUserFromRoom = ({ id, room }) => {
 }
 
 export const getRoom = ( id ) => {
-  console.log("[getRoom] rooms", JSON.stringify(rooms))
-  console.log("[getRoom] id", id)
   return rooms[id]
 }
 
 export const getUserFromRoom = ({ id, room }) => {
   let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
-  console.log("[getUserFromRoom] users", users)
   const user = users.find((user) => user.id === id)
 
   return user
@@ -184,6 +182,29 @@ export const getUserFromRoom = ({ id, room }) => {
 
 export const countPlayers = (roomId) => {
   const room = getRoom(roomId);
-  const count = room.teams[0].players.length + room.teams[1].players.length
-  return count
+  return room.teams[0].players.length + room.teams[1].players.length
+}
+
+export const deleteRoom = (roomId) => {
+  delete rooms[roomId]
+}
+
+export const addThrow = (roomId, team) => {
+  rooms[roomId].teams[team].throws++
+}
+
+export const addClient = (roomId, client) => {
+  rooms[roomId].clients[client.id] = client
+  console.log("[addClient] clients", rooms[roomId].clients)
+  console.log("[addClient] rooms[roomId]", rooms[roomId])
+}
+
+export const updateHostId = (roomId, hostId) => {
+  rooms[roomId].hostId = hostId
+  return rooms[roomId]
+}
+
+export const updateReadyToStart = (roomId, state) => {
+  rooms[roomId].readyToStart = state
+  return rooms[roomId]
 }

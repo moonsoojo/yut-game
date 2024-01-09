@@ -55,7 +55,6 @@ import {
   clientAtom,
   clientsAtom,
 } from "./SocketManager";
-import { useParams } from "wouter";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
 let mediaMax = 2560;
@@ -106,9 +105,6 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
   const [clients] = useAtom(clientsAtom);
-
-  useEffect(() => {
-  }, [teams, readyToStart])
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
@@ -375,90 +371,6 @@ export default function Experience() {
       </group>
     );
   }
-  /*const {
-    turbidity,
-    rayleigh,
-    mieCoefficient,
-    mieDirectionalG,
-    inclination,
-    azimuth,
-    distance,
-    exposure,
-    sunPosition,
-    lightPosition,
-    lightIntensity,
-  } = useControls("sky", {
-    turbidity: {
-      value: 1.5,
-      min: 0,
-      max: 20,
-      step: 0.1,
-    },
-    rayleigh: {
-      value: 0.07,
-      min: 0.01,
-      max: 4,
-      step: 0.001,
-    },
-    mieCoefficient: {
-      value: 0.1,
-      min: 0,
-      max: 0.1,
-      step: 0.001,
-    },
-    mieDirectionalG: {
-      value: 1.0,
-      min: 0,
-      max: 1,
-      step: 0.001,
-    },
-    inclination: {
-      value: 0.57,
-      min: 0,
-      max: 3.14,
-      step: 0.01,
-    },
-    azimuth: {
-      value: -81.1,
-      min: -180,
-      max: 180,
-      step: 0.1,
-    },
-    distance: {
-      value: 80.3,
-      min: 0,
-      max: 100,
-      step: 0.01,
-    },
-    exposure: {
-      value: 0.25,
-      min: 0,
-      max: 1,
-      step: 0.0001,
-    },
-    sunPosition: {
-      value: [-0.49, 0.11, 0.3],
-      step: 0.01,
-    },
-    lightPosition: {
-      value: [0.13, 0.42, 0.25],
-      step: 0.01,
-    },
-    lightIntensity: {
-      value: 5.62,
-      min: 0,
-      max: 10,
-      step: 0.01,
-    },
-  });*/
-
-  const exposure = 0.25;
-  const { gl, scene } = useThree(({ gl, scene }) => ({ gl, scene }));
-
-  useEffect(() => {
-    gl.toneMapping = THREE.ACESFilmicToneMapping;
-    gl.toneMappingExposure = exposure;
-  }, [gl, scene, exposure]);
 
   function prettifyMoves(moves) {
     let prettifiedMoves = ""
@@ -488,7 +400,6 @@ export default function Experience() {
   // show both buttons
   // set the team you're joining
   function handleJoinTeam0 () {
-    console.log("handleJoinTeam0")
     setJoinTeam(0);
   }
   function handleJoinTeam0SubmitMouseEnter () {
@@ -521,10 +432,6 @@ export default function Experience() {
   function handleJoinTeam1CancelMouseLeave () {
     setJoinTeam1CancelHover(false)
   }
-
-  useEffect(() => {
-    console.log('join team changed')
-  }, [joinTeam])
 
   // pre-condition: 'client' from 'clientAtom'
   function PiecesSection() {
@@ -652,9 +559,10 @@ export default function Experience() {
       {/* <Leva hidden /> */}
       <directionalLight
         position={[0, 1, 0.5]}
-        intensity={14}
+        intensity={3}
         // castShadow
       />
+      <ambientLight intensity={ 1 } />
       <group scale={layout[device].scale}>
       { <group>
           {/* team 0 */}

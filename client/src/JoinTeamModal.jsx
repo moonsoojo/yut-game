@@ -10,15 +10,28 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   const [cancelHover, setCancelHover] = useState(false)
   const params = useParams();
 
-  // join team button should disappear for the team player joined
-  // player can click other button join to switch teams
-  // player should be removed from the original team
-  
+  /*async function handleSubmit(e) {
+    e.preventDefault()
+    if (name.length == 0) {
+      setAlert('Enter something')
+    } else if (name.length > 15) {
+      setAlert('Must be shorter than 16 characters.')
+    } else if (!validateName(name)) {
+      setAlert('Name is already taken.')
+    } else {
+      setAlert("let's go!")
+      socket.emit("submitName", { name }, (response) => {
+        if (response.status === "success") {
+          localStorage.setItem('clientPlayer', JSON.stringify(response.clientPlayer))
+        }
+      })
+      // navigate(`/game`)
+    }
+  }*/
+
   function handleJoinSubmit(e) {
     e.preventDefault();
-    console.log("handleJoinSubmit");
     socket.emit("joinTeam", { team, name, room: params.id }, ({ response, player }) => {
-      console.log("join team callback")
       if (response === 'ok') {
         localStorage.setItem('yootGame', JSON.stringify({
           ...player
@@ -30,7 +43,6 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   }
   function handleJoinCancel(e) { // submits name and emits 'joinTeam'
     e.preventDefault()
-    console.log("[handleJoinCancel]")
     setName('')
     setJoinTeam(null);
     return false;
