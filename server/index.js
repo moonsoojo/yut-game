@@ -219,7 +219,7 @@ function findRandomPlayer(teams) {
 
 io.on("connect", (socket) => { // socket.handshake.query is data obj
 
-  let roomId = '';
+  let roomIdServer = '';
   // console.log("[connect]", socket.handshake.query)
   socket.on("createRoom", ({ id }, callback) => {
     
@@ -232,8 +232,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("joinRoom", ({ roomId, savedClient }, callback) => {
     console.log("[joinRoom]", roomId)
-    roomId = roomId
-    console.log("[joinRoom] room", roomId, "savedClient", savedClient)
+    roomIdServer = roomId
+    console.log("[joinRoom] room", roomIdServer, "savedClient", savedClient)
 
     if (!savedClient) {
 
@@ -361,8 +361,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("visibilityChange", ({flag}) => {
-    console.log("[visibilityChange] roomId", roomId)
-    let room = getRoom(roomId)
+    console.log("[visibilityChange] roomId", roomIdServer)
+    let room = getRoom(roomIdServer)
     if (room) {
       console.log("[visibilityChange] room", room)
       let clients = room.clients
@@ -627,53 +627,35 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("disconnect", () => {
 
-    console.log("[disconnect] roomId", roomId)
+    console.log("[disconnect] roomId", roomIdServer)
 
-    let room = getRoom(roomId)
+    let room = getRoom(roomIdServer)
     if (room) {
-      const userFromRoom = removeUserFromRoom({ id: socket.id, room: roomId })
+      const userFromRoom = removeUserFromRoom({ id: socket.id, room: room.id })
       if (userFromRoom.error && userFromRoom.error === "room not found") {
         // nothing happens
       } else {
         // emit the room to everyone in the room
         // tell everyone in the room that user left
-        if (countPlayers(roomId) > 0) {
-          socket.broadcast.to(userFromRoom.room).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
-          const room = getRoom(userFromRoom.room)
-          io.to(userFromRoom.room).emit('room', room)
+        if (countPlayers(room.id) > 0) {
+          socket.broadcast.to(room.id).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
+          io.to(room.id).emit('room', room)
+          if (room.hostId === socket.id) {
+            updateHostId(room.id, findRandomPlayer(getRoom(room.id).teams).id)
+          }
+          if (countPlayers(room.id) < 2) {
+            io.emit("readyToStart", false)
+          }
         } else {
           console.log("[disconnect] room empty")
-          deleteRoom(roomId)
-          console.log("[disconnect] rooms[roomId]", getRoom(roomId))
-        }
-  
-        if (countPlayers(roomId) < 2) {
-          readyToStart = false;
-          io.emit("readyToStart", readyToStart)
-        }
-  
-        if (countPlayers(roomId) > 0) {
-          hostId = findRandomPlayer(getRoom(roomId).teams).id
-        } else {
-          hostId = null;
+          deleteRoom(room.id)
+          console.log("[disconnect] rooms[roomId]", getRoom(room.id))
         }
       }
     }
 
 
-    /* teams = removePlayerFromGame(teams, socket.id)
-    io.emit("teams", teams)
-
-    delete clients[socket.id];
-    io.emit("clients", clients)
-
-
-    
-    if (countPlayers(teams) > 0) {
-      hostId = findRandomPlayer(teams).socketId
-    } else {
-      hostId = null;
-    }
+    /*
 
     if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)

@@ -106,6 +106,7 @@ export default function Experience() {
   const [client] = useAtom(clientAtom);
   const [clients] = useAtom(clientsAtom);
 
+  // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       socket.emit("visibilityChange", {flag: false})
