@@ -21,13 +21,13 @@ export const socket = io(
 // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
-const initialYutRotations = JSON.parse(JSON.stringify(initialState.initialYutRotations))
-const initialYutPositions = JSON.parse(JSON.stringify(initialState.initialYutPositions))
+const initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+const initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
 
-export const yutThrowValuesAtom = atom([
+export const yootThrowValuesAtom = atom([
   {
-    rotation: initialYutRotations[0],
-    positionInHand: initialYutPositions[0],
+    rotation: initialYootRotations[0],
+    positionInHand: initialYootPositions[0],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -36,8 +36,8 @@ export const yutThrowValuesAtom = atom([
     },
   },
   {
-    rotation: initialYutRotations[1],
-    positionInHand: initialYutPositions[1],
+    rotation: initialYootRotations[1],
+    positionInHand: initialYootPositions[1],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -46,8 +46,8 @@ export const yutThrowValuesAtom = atom([
     },
   },
   {
-    rotation: initialYutRotations[2],
-    positionInHand: initialYutPositions[2],
+    rotation: initialYootRotations[2],
+    positionInHand: initialYootPositions[2],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -56,8 +56,8 @@ export const yutThrowValuesAtom = atom([
     },
   },
   {
-    rotation: initialYutRotations[3],
-    positionInHand: initialYutPositions[3],
+    rotation: initialYootRotations[3],
+    positionInHand: initialYootPositions[3],
     yImpulse: 0,
     torqueImpulse: {
       x: 0,
@@ -88,7 +88,7 @@ export const SocketManager = () => {
   const [_tiles, setTiles] = useAtom(tilesAtom);
   const [teams, setTeams] = useAtom(teamsAtom);
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
-  const [_yutThrowValues, setYutThrowValues] = useAtom(yutThrowValuesAtom);
+  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   // UI updates
@@ -110,7 +110,7 @@ export const SocketManager = () => {
       }
 
       socket.emit('joinRoom', { 
-        roomId, 
+        id: roomId, 
         savedClient: localStorage.getItem('yootGame') 
       }, (response) => {
         console.log("[joinRoom callback]", response)
@@ -139,9 +139,25 @@ export const SocketManager = () => {
       setTurn(room.turn);
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
+      setClients(room.clients);
     })
     socket.on('client', (client) => {
       setClient(client);
+    })
+    socket.on('clients', (clients) => {
+      setClients(clients);
+    })
+    socket.on('teams', (teams) => {
+      setTeams(teams);
+    })
+    socket.on('gamePhase', (gamePhase) => {
+      setGamePhase(gamePhase);
+    })
+    socket.on('readyToStart', (readyToStart) => {
+      setReadyToStart(readyToStart);
+    })
+    socket.on('throwYoots', (yootForceVectors) => {
+      setYootThrowValues(yootForceVectors);
     })
   }, [])
 
@@ -192,9 +208,9 @@ export const SocketManager = () => {
     //   console.log("[onTeams] teams", value)
     //   setTeams(value);
     // }
-    function onYutThrow(yutForceVectors) {
-      setYutThrowValues(yutForceVectors);
-    }
+    // function onYutThrow(yutForceVectors) {
+    //   setYutThrowValues(yutForceVectors);
+    // }
     function onReset({ tiles, selection, gamePhase, teams }) {
       setTiles(tiles);
       setSelection(selection);
@@ -217,8 +233,8 @@ export const SocketManager = () => {
     // function onMessages(messages) {
     //   setMessages(messages)
     // }
-    socket.on("connect", onConnect);
-    socket.on("joinSpectator", onJoinSpectator)
+    // socket.on("connect", onConnect);
+    // socket.on("joinSpectator", onJoinSpectator)
     // socket.on("joinTeam", onJoinTeam)
     socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
     socket.on("clients", onClients)
@@ -227,7 +243,7 @@ export const SocketManager = () => {
     socket.on("characters", onCharacters);
     socket.on("tiles", onTiles);
     // socket.on("teams", onTeams);
-    socket.on("throwYuts", onYutThrow);
+    // socket.on("throwYuts", onYutThrow);
     socket.on("reset", onReset);
     socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
@@ -237,8 +253,8 @@ export const SocketManager = () => {
     return () => {
       // socket.emit('disconnect');
       socket.off();
-      socket.off("connect", onConnect);
-      socket.off("joinSpectator", onJoinSpectator)
+      // socket.off("connect", onConnect);
+      // socket.off("joinSpectator", onJoinSpectator)
       // socket.off("joinTeam", onJoinTeam)
       socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
       socket.off("clients", onClients)
@@ -247,7 +263,7 @@ export const SocketManager = () => {
       socket.off("characters", onCharacters);
       socket.off("tiles", onTiles);
       // socket.off("teams", onTeams);
-      socket.off("throwYuts", onYutThrow);
+      // socket.off("throwYuts", onYutThrow);
       socket.off("reset", onReset);
       socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);

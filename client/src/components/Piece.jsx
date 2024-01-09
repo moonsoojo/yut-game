@@ -49,7 +49,7 @@ export default function Piece ({
     client.team == team && 
     isMyTurn(turn, teams, client.socketId) && 
     hasValidMove(teams[team].moves) && selection == null &&
-    clients[client.socketId].yutsAsleep) {
+    clients[client.socketId].yootsAsleep) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)

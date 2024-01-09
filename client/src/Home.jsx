@@ -58,8 +58,8 @@ export default function Home() {
   }, []);
 
   // yoot model
-  const nodes = useGLTF("models/yut.glb").nodes;
-  const materials = useGLTF("models/yut.glb").materials;
+  const nodes = useGLTF("models/yoot.glb").nodes;
+  const materials = useGLTF("models/yoot.glb").materials;
 
   const camera = useRef();
 
@@ -308,36 +308,36 @@ export default function Home() {
             receiveShadow
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
-            position={layout[device].title.yuts.position1}
-            rotation={layout[device].title.yuts.rotation1}
-            scale={layout[device].title.yuts.scale}
+            position={layout[device].title.yoots.position1}
+            rotation={layout[device].title.yoots.rotation1}
+            scale={layout[device].title.yoots.scale}
           />
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
-            position={layout[device].title.yuts.position2}
-            rotation={layout[device].title.yuts.rotation2}
-            scale={layout[device].title.yuts.scale}
+            position={layout[device].title.yoots.position2}
+            rotation={layout[device].title.yoots.rotation2}
+            scale={layout[device].title.yoots.scale}
           />
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
-            position={layout[device].title.yuts.position3}
-            rotation={layout[device].title.yuts.rotation3}
-            scale={layout[device].title.yuts.scale}
+            position={layout[device].title.yoots.position3}
+            rotation={layout[device].title.yoots.rotation3}
+            scale={layout[device].title.yoots.scale}
           />
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.Cylinder007.geometry}
             material={materials["Texture wrap.005"]}
-            position={layout[device].title.yuts.position4}
-            rotation={layout[device].title.yuts.rotation4}
-            scale={layout[device].title.yuts.scale}
+            position={layout[device].title.yoots.position4}
+            rotation={layout[device].title.yoots.rotation4}
+            scale={layout[device].title.yoots.scale}
           />
         </group>
         <Text3D 

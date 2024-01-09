@@ -64,10 +64,10 @@ export function getPlayerBySocketId(teams, socketId) {
   return {} // not found
 }
 
-export function allYutsAsleep(clients) {
+export function allYootsAsleep(clients) {
   let flag = true;
   for (const socketId of Object.keys(clients)) {
-    if (clients[socketId].visibility && !clients[socketId].yutsAsleep) {
+    if (clients[socketId].visibility && !clients[socketId].yootsAsleep) {
       flag = false;
     }
   }

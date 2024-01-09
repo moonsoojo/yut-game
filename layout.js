@@ -11,7 +11,7 @@ let throwPosition = [
 ]
 
 export default {
-  yut: {
+  yoot: {
     floor: floorPosition, // change value on top
     outOfBounds: outOfBoundsPosition,
     throwPos: throwPosition
@@ -28,7 +28,7 @@ export default {
     title: {
       position1: [-4.7, 0, -14.5],
       position2: [-4.7, 0, -13],
-      yuts: {
+      yoots: {
         position1: [-0.5, 0, -14],
         rotation1: [0, -Math.PI / 2, -Math.PI / 2],
         position2: [0.1, 0, -14],
@@ -254,7 +254,7 @@ export default {
       position1: [-13.5, 0, -5.5],
       position2: [-13.5, 0, -4],
       fontSize: '80px',
-      yuts: {
+      yoots: {
         position1: [-9.9, 0, -5.2],
         rotation1: [0, -Math.PI / 2, -Math.PI / 2],
         position2: [-9.4, 0, -5.2],
@@ -493,7 +493,7 @@ export default {
       position1: [-13.5, 0, -5.5],
       position2: [-13.5, 0, -4],
       fontSize: '40px',
-      yuts: {
+      yoots: {
         position1: [-9.9, 0, -5.2],
         rotation1: [0, -Math.PI / 2, -Math.PI / 2],
         position2: [-9.4, 0, -5.2],

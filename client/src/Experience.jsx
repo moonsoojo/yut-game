@@ -1,11 +1,10 @@
 // js
 import React, { useRef, useEffect, useState } from "react";
 import { useAtom, atom } from "jotai";
-import { allYutsAsleep, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 
 // meshes
-import Yuts from "./Yuts.jsx";
+import Yoots from "./Yoots.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune2 from "./meshes/Neptune2.jsx";
 import Earth from "./meshes/Earth.jsx";
@@ -596,7 +595,7 @@ export default function Experience() {
               <TextButton
                 text={`${value.name}, ${device === "landscapeDesktop" ? 
                   `visible: ${clients[value.socketId].visibility}, 
-                  yutsAsleep: ${clients[value.socketId].yutsAsleep},
+                  yootsAsleep: ${clients[value.socketId].yootsAsleep},
                   thrown: ${clients[value.socketId].thrown}`: ''}`}
                 position={[
                   layout[device].team0.names.position[0],
@@ -640,7 +639,7 @@ export default function Experience() {
               <TextButton
                 text={`${value.name}, ${device === "landscapeDesktop" ? 
                   `visible: ${clients[value.socketId].visibility}, 
-                  yutsAsleep: ${clients[value.socketId].yutsAsleep},
+                  yootsAsleep: ${clients[value.socketId].yootsAsleep},
                   thrown: ${clients[value.socketId].thrown}`: ''}`}
                 position={[
                   layout[device].team1.names.position[0],
@@ -666,7 +665,7 @@ export default function Experience() {
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
           </group>
-          {/* yut section */}
+          {/* yoot section */}
           <group>
             {/* START GAME text */}
             {readyToStart && gamePhase === "lobby" && (
@@ -686,10 +685,10 @@ export default function Experience() {
               size={layout[device].gamePhase.size}
             />
             <Physics>
-              <Yuts device={device}/>
+              <Yoots device={device}/>
             </Physics>
             {/* throw count */}
-            {/* {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && ( */}
+            {/* {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYootsAsleep(clients) && ( */}
              {( <>            
                 <TextButton
                   text={`Throw: ${

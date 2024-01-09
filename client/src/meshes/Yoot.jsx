@@ -4,13 +4,13 @@ import { useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 
-export default function Yut({ 
+export default function Yoot({ 
   position, 
   rotation=[0, 0, -Math.PI / 2], 
   scale=1
 }) {
   const { scene, materials } = useGLTF(
-    "/models/yut.glb"
+    "/models/yoot.glb"
   );
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);

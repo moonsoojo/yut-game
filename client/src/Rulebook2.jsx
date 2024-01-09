@@ -5,8 +5,8 @@ import { SkeletonUtils } from "three-stdlib";
 import { useGraph, useFrame } from "@react-three/fiber";
 import { useMemo } from "react";
 import { Html, useGLTF, Text3D } from "@react-three/drei";
-import Yut from "./meshes/Yut";
-import YutRhino from "./meshes/YutRhino";
+import Yoot from "./meshes/Yoot";
+import YootRhino from "./meshes/YootRhino";
 import Rocket from "./meshes/Rocket";
 import Cursor from "./meshes/Cursor";
 import Earth from "./meshes/Earth";
@@ -283,22 +283,22 @@ export default function Rulebook2 ({position, handleShow}) {
       return <group>
         {/* do */}
         <group position={[-0.8,0,-0.1]}>
-          <Yut 
+          <Yoot 
             position={[0,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.6,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.9,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
@@ -310,21 +310,21 @@ export default function Rulebook2 ({position, handleShow}) {
         </group>
         {/* ge */}
         <group position={[1.2,0,-0.1]}>
-          <Yut 
+          <Yoot 
             position={[0,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
           position={[0.6,0,1]} 
           rotation={[0, Math.PI/2, -Math.PI / 2]}
           scale={0.15}/>
-          <Yut 
+          <Yoot 
           position={[0.9,0,1]} 
           rotation={[0, Math.PI/2, -Math.PI / 2]}
           scale={0.15}/>
@@ -335,22 +335,22 @@ export default function Rulebook2 ({position, handleShow}) {
         </group>
         {/* gul */}
         <group position={[3.2,0,-0.1]}>
-          <Yut 
+          <Yoot 
             position={[0,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.6,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
           position={[0.9,0,1]} 
           rotation={[0, Math.PI/2, -Math.PI / 2]}
           scale={0.15}/>
@@ -361,22 +361,22 @@ export default function Rulebook2 ({position, handleShow}) {
         </group>
         {/* back-do */}
         <group position={[5.2,0,-0.1]}>
-          <YutRhino 
+          <YootRhino 
             position={[0,0.1,1]} // must be raised object is raised from the center in blender
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.6,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.9,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
@@ -396,22 +396,22 @@ export default function Rulebook2 ({position, handleShow}) {
         />
         {/* yoot */}
         <group position={[0,0,0.3]}>
-          <Yut 
+          <Yoot 
             position={[0,0.1,1]}
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0.1,1]} 
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.6,0.1,1]} 
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
           />
-          <YutRhino 
+          <YootRhino 
             position={[0.9,0.1,1]} 
             rotation={[Math.PI/2,Math.PI/2,0]}
             scale={0.15}
@@ -431,22 +431,22 @@ export default function Rulebook2 ({position, handleShow}) {
         </group>
         {/* mo! */}
         <group position={[3.5,0,0.3]}>
-          <Yut 
+          <Yoot 
             position={[0.0,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.3,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <Yut 
+          <Yoot 
             position={[0.6,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}
           />
-          <YutRhino 
+          <YootRhino 
             position={[0.9,0,1]} 
             rotation={[0, Math.PI/2, -Math.PI / 2]}
             scale={0.15}

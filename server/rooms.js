@@ -34,7 +34,6 @@ export const addRoom = ({ id }) => {
   // make sure every room id is random on generation
   const room = {
     id,
-    gamePhase: 'lobby',
     teams: [
       {
         index: 0,
@@ -117,6 +116,7 @@ export const addRoom = ({ id }) => {
     hostId: null,
     clients: {},
     readyToStart: false,
+    gamePhase: 'lobby',
     messages: []
     // waitingToPass
   }
@@ -151,6 +151,11 @@ export const removeUserFromRoom = ({ id, room }) => {
 
   const user = getUserFromRoom({ id, room })
   const team = user.team
+
+  if (id in rooms[room].clients) {
+    delete rooms[room].clients[id]
+    console.log("[removeUserFromRoom] clients", rooms[room].clients)
+  }
 
   // spectator
   if (team !== 0 && team !== 1) {
@@ -199,12 +204,71 @@ export const addClient = (roomId, client) => {
   console.log("[addClient] rooms[roomId]", rooms[roomId])
 }
 
+export const getHostId = (roomId) => {
+  return rooms[roomId].hostId
+}
+
 export const updateHostId = (roomId, hostId) => {
   rooms[roomId].hostId = hostId
   return rooms[roomId]
 }
 
+export const isReadyToStart = (roomId) => {
+  const room = rooms[roomId]
+  if (room.gamePhase === 'lobby' && 
+  room.teams[0].players.length > 0 &&
+  room.teams[1].players.length > 0 &&
+  isAllYootsAsleep(roomId)) {
+    return true
+  } else {
+    return false;
+  }
+}
+
 export const updateReadyToStart = (roomId, state) => {
   rooms[roomId].readyToStart = state
   return rooms[roomId]
+}
+
+export const getGamePhase = (roomId) => {
+  return rooms[roomId].gamePhase
+}
+
+export const updateGamePhase = (roomId, gamePhase) => {
+  rooms[roomId].gamePhase = gamePhase
+}
+
+export const getClients = (roomId) => {
+  return rooms[roomId].clients
+}
+
+export const updateClients = (roomId, clients) => {
+  rooms[roomId].clients = clients
+}
+
+export const isAllYootsAsleep = (roomId) => {
+  for (const id of Object.keys(rooms[roomId].clients)) {
+    if (rooms[roomId].clients[id].yootsAsleep === false) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export const updateYootsAsleep = (roomId, clientId, state) => {
+  rooms[roomId].clients[clientId].yootsAsleep = state
+}
+
+export const getTurn = (roomId) => {
+  return rooms[roomId].turn
+}
+
+export const getCurrentPlayerId = (roomId) => {
+  let turn = rooms[roomId].turn
+  let currentPlayer = turn.players[turn.team]
+  return rooms[roomId].teams[turn.team].players[currentPlayer]
+}
+
+export const getThrown = (roomId, clientId) => {
+  return rooms[roomId].clients[clientId].thrown
 }

@@ -215,7 +215,7 @@ export default function Controls3d({
               boxHeight={0.3}
             />
             <TextButton
-              text="Dice (yuts)"
+              text="Dice (yoots)"
               position={layout[device].diceButton.position}
               rotation={[0, 0, 0]}
               handlePointerClick={clickDice}

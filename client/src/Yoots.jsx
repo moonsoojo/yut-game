@@ -4,21 +4,21 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { clientsAtom, yutThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
+import { clientsAtom, yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYutsAsleep } from "./helpers/helpers.js";
+import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYootsAsleep } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
-export default function YutsNew3({ device = "portrait" }) {
+export default function Yoots({ device = "portrait" }) {
   // const [subscribeKeys, getKeys] = useKeyboardControls();
-  const nodes = useGLTF("/models/yut.glb").nodes;
-  const materials = useGLTF("/models/yut.glb").materials;
-  const nodesRhino = useGLTF("/models/yut-rhino.glb").nodes;
-  const materialsRhino = useGLTF("/models/yut-rhino.glb").materials;
-  const [yutThrowValues] = useAtom(yutThrowValuesAtom);
+  const nodes = useGLTF("/models/yoot.glb").nodes;
+  const materials = useGLTF("/models/yoot.glb").materials;
+  const nodesRhino = useGLTF("/models/yoot-rhino.glb").nodes;
+  const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
+  const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
@@ -28,19 +28,19 @@ export default function YutsNew3({ device = "portrait" }) {
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [showResetYoots, setShowResetYoots] = useState(false)
 
-  const NUM_YUTS = 4;
-  let yuts = [];
-  let yutMeshes = [];
-  for (let i = 0; i < NUM_YUTS; i++) {
-    yuts.push(useRef());
-    yutMeshes.push(useRef());
+  const NUM_YOOTS = 4;
+  let yoots = [];
+  let yootMeshes = [];
+  for (let i = 0; i < NUM_YOOTS; i++) {
+    yoots.push(useRef());
+    yootMeshes.push(useRef());
   }
-  let yutFloorMaterial = useRef();
+  let yootFloorMaterial = useRef();
 
   useEffect(() => {
-    for (let i = 0; i < yutMeshes.length; i++) {
-      yutMeshes[i].current.material.roughness = 0.5
-      yutMeshes[i].current.material.metalness = 0
+    for (let i = 0; i < yootMeshes.length; i++) {
+      yootMeshes[i].current.material.roughness = 0.5
+      yootMeshes[i].current.material.metalness = 0
     }
   }, []);
 
@@ -48,62 +48,56 @@ export default function YutsNew3({ device = "portrait" }) {
   useEffect(() => {
     // client lags if you emit here
     for (let i = 0; i < 4; i++) {
-      yuts[i].current.setTranslation(yutThrowValues[i].positionInHand);
-      yuts[i].current.setRotation(yutThrowValues[i].rotation, true);
-      yuts[i].current.applyImpulse({
+      yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
+      yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
+      yoots[i].current.applyImpulse({
         x: 0,
-        y: yutThrowValues[i].yImpulse,
+        y: yootThrowValues[i].yImpulse,
         z: 0,
       });
-      yuts[i].current.applyTorqueImpulse({
-        x: yutThrowValues[i].torqueImpulse.x,
-        y: yutThrowValues[i].torqueImpulse.y,
-        z: yutThrowValues[i].torqueImpulse.z,
+      yoots[i].current.applyTorqueImpulse({
+        x: yootThrowValues[i].torqueImpulse.x,
+        y: yootThrowValues[i].torqueImpulse.y,
+        z: yootThrowValues[i].torqueImpulse.z,
       });
     }
-    // setTimeout(() => {
-    //   if (sleepCount % 4 != 0 && getCurrentPlayerSocketId(turn, teams) === client.socketId) {
-    //     setShowResetYoots(true);
-    //   }
-      // setShowResetYoots(true);
-    // }, RESET_TIME)
-  }, [yutThrowValues]);
+  }, [yootThrowValues]);
 
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
-      // socket.emit("yutsAsleep", {flag: true}, (response) => {
-      //   if (response.status === "record") {
-      //     let result = observeThrow();
-      //     socket.emit("recordThrow", {result})
-      //   } else if (response.status === "reset") {
-      //     // don't record throw
-      //   }
-      // })
+      socket.emit("yootsAsleep", {flag: true}, (response) => {
+        if (response.status === "record") {
+          let result = observeThrow();
+          socket.emit("recordThrow", {result})
+        } else if (response.status === "reset") {
+          // don't record throw
+        }
+      })
     }
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients)) {
-      for (let i = 0; i < yutMeshes.length; i++) {
-        yutMeshes[i].current.material.emissive = new THREE.Color( 'white' );
-        yutMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
+    if (client && isMyTurn(turn, teams, client.id) && teams[turn.team].throws > 0 && allYootsAsleep(clients)) {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
+        yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
       }
-      yutFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
+      yootFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
     } else {
-      for (let i = 0; i < yutMeshes.length; i++) {
-        yutMeshes[i].current.material.emissiveIntensity = 0
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.emissiveIntensity = 0
       }
-      yutFloorMaterial.current.opacity = 0.1
+      yootFloorMaterial.current.opacity = 0.1
     }
-    let allYutsOnFloor = true;
-    for (let i = 0; i < yuts.length; i++) {
-      if (yuts[i].current.translation().y < 0) {
+    let allYootsOnFloor = true;
+    for (let i = 0; i < yoots.length; i++) {
+      if (yoots[i].current.translation().y < 0) {
         setOutOfBounds(true);
-        allYutsOnFloor = false
+        allYootsOnFloor = false
       }
     }
-    if (allYutsOnFloor) {
+    if (allYootsOnFloor) {
       setOutOfBounds(false);
     }
   })
@@ -113,8 +107,8 @@ export default function YutsNew3({ device = "portrait" }) {
 
     // nak
     let nak = false;
-    for (let i = 0; i < yuts.length; i++) {
-      if (yuts[i].current.translation().y < 0) {
+    for (let i = 0; i < yoots.length; i++) {
+      if (yoots[i].current.translation().y < 0) {
         nak = true;
       }
     }
@@ -122,12 +116,12 @@ export default function YutsNew3({ device = "portrait" }) {
       let countUps = 0
       let backdoUp = false
 
-      yuts.forEach(yut => {
+      yoots.forEach(yoot => {
         let vector = new THREE.Vector3( 0, 1, 0 );
-        vector.applyQuaternion( yut.current.rotation() );
+        vector.applyQuaternion( yoot.current.rotation() );
         if (vector.y < 0) {
           countUps++
-          if (yut.current.userData === "backdo") {
+          if (yoot.current.userData === "backdo") {
             backdoUp = true;
           }
         }
@@ -162,13 +156,13 @@ export default function YutsNew3({ device = "portrait" }) {
     console.log("onWakeHandler")
   }
 
-  function handleYutThrow() {
-    socket.emit("throwYuts");
+  function handleYootThrow() {
+    socket.emit("throwYoots");
   }
 
   function handleYootReset() {
     setShowResetYoots(false);
-    socket.emit("resetYuts", { socketIdEmitter: clientPlayer.socketId })
+    socket.emit("resetYoots", { socketIdEmitter: clientPlayer.socketId })
   }
 
   return (
@@ -183,17 +177,17 @@ export default function YutsNew3({ device = "portrait" }) {
       <RigidBody
         type="fixed"
         restitution={0.01}
-        position={layout.yut.floor}
+        position={layout.yoot.floor}
         friction={0.9}
       >
         <CuboidCollider args={[2, 0.2, 2]} restitution={0.2} friction={1} />
-        <mesh onPointerDown={handleYutThrow}>
+        <mesh onPointerDown={handleYootThrow}>
           <boxGeometry args={[4, 0.4, 4]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
             opacity={0.3}
-            ref={yutFloorMaterial}
+            ref={yootFloorMaterial}
           />
         </mesh>
       </RigidBody>
@@ -213,7 +207,7 @@ export default function YutsNew3({ device = "portrait" }) {
           />
         </mesh>
       </RigidBody>
-      {yuts.map((ref, index) => {
+      {yoots.map((ref, index) => {
         return (
           <RigidBody
             ref={ref}            
@@ -222,9 +216,9 @@ export default function YutsNew3({ device = "portrait" }) {
             colliders="hull"
             restitution={0.3}
             friction={0.6}
-            name={`yut${index}`}
+            name={`yoot${index}`}
             linearDamping={0.3}
-            angularDamping={0.1} // when this value is high, yuts spin more
+            angularDamping={0.1} // when this value is high, yoots spin more
             scale={0.15}
             gravityScale={2.5}
             key={index}
@@ -242,7 +236,7 @@ export default function YutsNew3({ device = "portrait" }) {
                 scale={[1, 6.161, 1]}
                 // 1, 6.161, 1
                 // [1.4, 8.6254, 1.4]
-                ref={yutMeshes[index]}
+                ref={yootMeshes[index]}
               >
               </mesh>
             ) : (
@@ -253,7 +247,7 @@ export default function YutsNew3({ device = "portrait" }) {
                   receiveShadow
                   geometry={nodesRhino.Cylinder002_1.geometry}
                   material={materialsRhino["Texture wrap.005"]}
-                  ref={yutMeshes[index]}
+                  ref={yootMeshes[index]}
                 />
                 <mesh
                   castShadow
@@ -270,13 +264,13 @@ export default function YutsNew3({ device = "portrait" }) {
       { outOfBounds && <>
         <TextButton
           text='out of bounds'
-          position={layout.yut.outOfBounds}
+          position={layout.yoot.outOfBounds}
         />
       </>}
-      {/* { client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYutsAsleep(clients) && 
+      {/* { client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYootsAsleep(clients) && 
       <TextButton
         text='THROW'
-        position={layout.yut.throwPos}
+        position={layout.yoot.throwPos}
       />
       } */}
     </group>

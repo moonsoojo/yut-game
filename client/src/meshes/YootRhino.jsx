@@ -4,13 +4,13 @@ import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import React from "react";
 
-export default function YutRhino({ 
+export default function YootRhino({ 
   position, 
   rotation=[0, 0, -Math.PI / 2], 
   scale=1
 }) {
   const { scene, materials } = useGLTF(
-    "/models/yut-rhino.glb"
+    "/models/yoot-rhino.glb"
   );
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);

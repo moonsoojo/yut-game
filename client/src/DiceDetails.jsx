@@ -1,6 +1,6 @@
 import React from "react";
 import { Text3D } from "@react-three/drei";
-import Yut from "./meshes/Yut";
+import Yoot from "./meshes/Yoot";
 
 export default function DiceDetails() {
   return (
@@ -28,25 +28,25 @@ export default function DiceDetails() {
           1 Step (Do)
           <meshStandardMaterial color="white" />
         </Text3D>
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, 0]}
           rotation={[0, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.3]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.6]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="backdo"
           position={[0, 0, -0.9]}
           rotation={[Math.PI, 0, 0]}
@@ -64,25 +64,25 @@ export default function DiceDetails() {
           <meshStandardMaterial color="white" />
           Back Step (BackDo)
         </Text3D>
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, 0]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.3]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.6]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut type="backdo" position={[0, 0, -0.9]} scale={0.1} />
+        <Yoot type="backdo" position={[0, 0, -0.9]} scale={0.1} />
       </group>
       <group position={[-2, 0, 6.5]} rotation={[0, 0, 0]}>
         <Text3D
@@ -95,15 +95,15 @@ export default function DiceDetails() {
           2 Steps (Ge)
           <meshStandardMaterial color="white" />
         </Text3D>
-        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
-        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
-        <Yut
+        <Yoot type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yoot
           type="regular"
           position={[0, 0, -0.6]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="backdo"
           position={[0, 0, -0.9]}
           rotation={[Math.PI, 0, 0]}
@@ -121,10 +121,10 @@ export default function DiceDetails() {
           3 Steps (Gul)
           <meshStandardMaterial color="white" />
         </Text3D>
-        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
-        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
-        <Yut type="regular" position={[0, 0, -0.6]} scale={0.1} />
-        <Yut
+        <Yoot type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, -0.6]} scale={0.1} />
+        <Yoot
           type="backdo"
           position={[0, 0, -0.9]}
           rotation={[Math.PI, 0, 0]}
@@ -139,13 +139,13 @@ export default function DiceDetails() {
           rotation={[0, Math.PI / 2, 0]}
           position={[-1, 0, 0]}
         >
-          4 Steps (Yut)
+          4 Steps (Yoot)
           <meshStandardMaterial color="white" />
         </Text3D>
-        <Yut type="regular" position={[0, 0, 0]} scale={0.1} />
-        <Yut type="regular" position={[0, 0, -0.3]} scale={0.1} />
-        <Yut type="regular" position={[0, 0, -0.6]} scale={0.1} />
-        <Yut type="backdo" position={[0, 0, -0.9]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, 0]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, -0.3]} scale={0.1} />
+        <Yoot type="regular" position={[0, 0, -0.6]} scale={0.1} />
+        <Yoot type="backdo" position={[0, 0, -0.9]} scale={0.1} />
       </group>
       <group position={[4, 0, 6.5]} rotation={[0, 0, 0]}>
         <Text3D
@@ -158,25 +158,25 @@ export default function DiceDetails() {
           5 Steps (Mo)
           <meshStandardMaterial color="white" />
         </Text3D>
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, 0]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.3]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="regular"
           position={[0, 0, -0.6]}
           rotation={[Math.PI, 0, 0]}
           scale={0.1}
         />
-        <Yut
+        <Yoot
           type="backdo"
           position={[0, 0, -0.9]}
           rotation={[Math.PI, 0, 0]}
