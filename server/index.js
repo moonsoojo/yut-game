@@ -2,7 +2,7 @@
 import initialState from "./initialState.js";
 import { move } from "./src/move.js";
 import { score } from "./src/score.js";
-import { getCurrentPlayerSocketId, movesIsEmpty, clearMoves } from "./src/helpers.js";
+import { getCurrentPlayerSocketId } from "./src/helpers.js";
 
 import express from 'express';
 import { Server } from 'socket.io';
@@ -11,7 +11,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, updateClients, getClients, updateThrown } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, updateClients, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 import { allYootsAsleep } from "../client/src/helpers/helpers.js";
 
@@ -99,93 +99,9 @@ function makeId(length) {
   return result;
 }
 
-function setTurn(turn, team, players) {
-  turn.team = team;
-  turn.players = players;
-  return turn
-}
-
-function passTurn(turn, teams) {
-  if (turn.team == teams.length - 1) {
-    turn.team = 0
-  } else {
-    turn.team++
-  }
-
-  if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
-    turn.players[turn.team] = 0
-  } else {
-    turn.players[turn.team]++
-  }
-
-  return turn
-}
-
-function allTeamsHaveMove(teams) {
-  let allTeamsHaveMove = true;
-  for (let i = 0; i < teams.length; i++) {
-    let hasMove = false;
-    for (let move in teams[i].moves) {
-      if (teams[i].moves[move] > 0) {
-        hasMove = true;
-        break;
-      }
-    }
-    if (!hasMove) {
-      allTeamsHaveMove = false;
-      break;
-    }
-  }
-  return allTeamsHaveMove
-}
-
-function calcFirstTeamToThrow(teams) {
-  let topThrow = -2;
-  let topThrowTeam = -1;
-  let tie = false;
-  for (let i = 0; i < teams.length; i++) {
-    for (let move in teams[i].moves) {
-      if (teams[i].moves[move] > 0) {
-        if (parseInt(move) > topThrow) {
-          topThrow = parseInt(move)
-          topThrowTeam = i
-        } else if (parseInt(move) == topThrow) {
-          tie = true;
-        }
-        break;
-      }
-    }
-  }
-  if (tie) {
-    return -1
-  } else {
-    return topThrowTeam
-  }
-}
-
 // 0, inclusive to max, exclusive
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
-}
-
-function passTurnPregame(turn, teams, gamePhase) {
-  if (allTeamsHaveMove(teams)) {
-    let firstTeamToThrow = calcFirstTeamToThrow(teams)
-    if (firstTeamToThrow == -1) {
-      turn = passTurn(turn, teams)
-    } else {
-      // turn has been decided
-      turn = setTurn(turn, firstTeamToThrow, [0, 0])
-      gamePhase = "game"
-    }
-    // clear moves in teams
-    for (let i = 0; i < teams.length; i++) {
-      teams[i].moves = JSON.parse(JSON.stringify(initialState.moves));
-    }
-  } else {
-    turn = passTurn(turn, teams)
-  }
-  return {turn, teams, gamePhase}
 }
 
 function findRandomPlayer(teams) {
@@ -263,7 +179,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
       console.log("[joinRoom] addedPlayer", addedPlayer)
       socket.join(addedPlayer.room);
-      io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
+
+      let { room, error } = getRoom(addedPlayer.room)
+      if (error) {
+        return callback({ response: error })
+      }
       socket.broadcast.to(addedPlayer.room).emit(
         'message', 
         { 
@@ -277,9 +197,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         visibility: true,
         yootsAsleep: false,
         thrown: false,
-        participating: false
       }
-      let room = getRoom(roomId)
       addClient(roomId, client)
       io.to(roomId).emit('room', room)
 
@@ -352,24 +270,28 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  socket.on("visibilityChange", ({flag}) => {
+  // if visibility is on and yuts are not asleep, emit "readyToThrow: false"
+  socket.on("visibilityChange", ({flag}, callback) => {
     let room = getRoom(roomId)
     if (room) {
-      let clients = room.clients
-      if (clients[socket.id] != undefined) {
-        clients[socket.id].visibility = flag
-        if (flag == false) {
-          clients[socket.id].participating = false
-        }
-        updateClients(roomId, clients);
-        io.to(roomId).emit("clients", clients);
+      const { client, error } = updateVisibility(roomId, socket.id, flag)
+      if (error) {
+        callback({ response: error })
+      } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
+        io.to(roomId).emit("readyToThrow", false)
       }
     }
   })
 
   socket.on("yootsAsleep", ({flag}, callback) => {
-    updateYootsAsleep(roomId, socket.id, flag)
-    io.emit("clients", getClients(roomId));
+    console.log("[yootsAsleep] flag", flag)
+    const { error } = updateYootsAsleep(roomId, socket.id, flag)
+    if (error) {
+      return callback({ response: error })
+    }
+    if (isAllYootsAsleep(roomId)) {
+      io.to(roomId).emit("readyToThrow", true)
+    }
 
     if (isReadyToStart(roomId)) {
       updateReadyToStart(roomId, true)
@@ -378,24 +300,30 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       if (socket.id === getCurrentPlayerId(roomId)) {
         if (getThrown(roomId, socket.id) == true) {
           callback({
-            status: "record"
+            response: "record"
           })
         } 
       } else {
         callback({
-          status: "noRecord"
+          response: "noRecord"
         })
       }
     } 
   })
 
-  socket.on("startGame", () => {
+  socket.on("startGame", (callback) => {
     updateReadyToStart(roomId, false)
     io.to(roomId).emit("readyToStart", false);
-    addThrow(roomId, getRoom(roomId).turn.team)
-    io.to(roomId).emit("teams", getRoom(roomId).teams)
+    let { room, error } = getRoom(roomId)
+    if (error) {
+      return callback({ response: error })
+    }
+    const turn = getTurn(roomId)
+    addThrow(roomId, turn.team)
+    console.log("[startGame] is all yoots asleep", isAllYootsAsleep(roomId))
+    io.to(roomId).emit("teams", room.teams)
     updateGamePhase(roomId, 'pregame')
-    io.to(roomId).emit("gamePhase", getRoom(roomId).gamePhase);
+    io.to(roomId).emit("gamePhase", room.gamePhase);
   })
 
   socket.on("select", (payload) => {
@@ -410,8 +338,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       if (movesIsEmpty(teams[turn.team].moves)) {
         teams[turn.team].moves = clearMoves(teams[turn.team].moves)
         if (teams[0].players.length > 0 && teams[1].players.length > 0) {
-          turn = passTurn(turn, teams)
-          teams[turn.team].throws++;
+          turn = passTurn(roomId)
+          addThrow(roomId, turn.team)++;
         } else {
           waitingToPass = true
         }
@@ -428,8 +356,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     if (teams[turn.team].throws == 0) {
       if (movesIsEmpty(teams[turn.team].moves)) {
         teams[turn.team].moves = clearMoves(teams[turn.team].moves)
-        turn = passTurn(turn, teams)
-        teams[turn.team].throws++;
+        turn = passTurn(roomId)
+        addThrow(roomId, turn.team);
       }
     }
     io.emit("tiles", tiles);
@@ -443,6 +371,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   socket.on("throwYoots", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+    let teams = getTeams(roomId)
+    let turn = getTurn(roomId)
     if (teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
       // after throw, 
@@ -450,43 +380,45 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       isAllYootsAsleep(roomId)) {
 
       teams[turn.team].throws--;
-      io.emit("teams", teams);
+      updateTeams(roomId, teams)
+      io.to(roomId).emit('teams', teams)
 
       updateThrown(roomId, socket.id, true)
+      // emit clients
 
       let clients = getClients(roomId)
-      for (const id of Object.keys(clients)) {
-        const yootForceVectors = [];
-        if (clients[id].visibility) {
-          for (let i = 0; i < 4; i++) {
-            yootForceVectors.push({
-              rotation: rotations[i],
-              yImpulse: generateRandomNumberInRange(0.4, 0.1),
-              torqueImpulse: {
-                x: generateRandomNumberInRange(0.005, 0.003),
-                y: generateRandomNumberInRange(0.03, 0.02),
-                z: generateRandomNumberInRange(0.003, 0.001),
-              },
-              positionInHand: positionsInHand[i],
-            });
+      const yootForceVectors = [];
+      for (let i = 0; i < 4; i++) {
+        yootForceVectors.push({
+          rotation: rotations[i],
+          yImpulse: generateRandomNumberInRange(0.4, 0.1),
+          torqueImpulse: {
+            x: generateRandomNumberInRange(0.005, 0.003),
+            y: generateRandomNumberInRange(0.03, 0.02),
+            z: generateRandomNumberInRange(0.003, 0.001),
+          },
+          positionInHand: positionsInHand[i],
+        });
 
-            /* hard throw
-            yootForceVectors.push({
-              rotation: rotations[i],
-              yImpulse: generateRandomNumberInRange(0.7, 0.2),
-              torqueImpulse: {
-                x: generateRandomNumberInRange(0.002, 0.001),
-                y: generateRandomNumberInRange(0.3, 0.2),
-                z: generateRandomNumberInRange(0.06, 0.03),
-              },
-              positionInHand: positionsInHand[i],
-            });*/
-          }
+        /* hard throw
+        yootForceVectors.push({
+          rotation: rotations[i],
+          yImpulse: generateRandomNumberInRange(0.7, 0.2),
+          torqueImpulse: {
+            x: generateRandomNumberInRange(0.002, 0.001),
+            y: generateRandomNumberInRange(0.3, 0.2),
+            z: generateRandomNumberInRange(0.06, 0.03),
+          },
+          positionInHand: positionsInHand[i],
+        });*/
+      }
+      for (const id of Object.keys(clients)) {
+        if (clients[id].visibility) {
           io.to(id).emit("throwYoots", yootForceVectors);
-          clients = updateYootsAsleep(roomId, id, false)
+          updateYootsAsleep(roomId, id, false)
         }
       }
-      io.emit("clients", clients);
+      io.to(roomId).emit("clients", clients);
     }
   });
 
@@ -569,34 +501,33 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   });
 
   socket.on("legalTiles", ({ legalTiles }) => {
-    io.emit("legalTiles", { legalTiles })
+    updateLegalTiles(roomId, legalTiles)
+    io.to(roomId).emit("legalTiles", { legalTiles: getLegalTiles(roomId) })
   })
 
-  socket.on("recordThrow", ({result}) => {
-    clients[socket.id].thrown = false;
-    
-    if (gamePhase === "pregame") {
-      teams[turn.team].moves[result.toString()]++
-      result = passTurnPregame(turn, teams, gamePhase)
-      turn = result.turn
-      teams = result.teams
-      gamePhase = result.gamePhase
-      teams[turn.team].throws++;
+  socket.on("recordThrow", ({move}) => {
+    console.log("[recordThrow] move", move)
+    updateThrown(roomId, socket.id, false)
+    if (getGamePhase(roomId) === "pregame") {
+      addMove(roomId, getTurn(roomId).team, move.toString())
+      let { turn, teams, gamePhase } = passTurnPregame(roomId)
+      addThrow(roomId, turn.team)
       io.emit("turn", turn)
+      io.emit("teams", teams)
       io.emit("gamePhase", gamePhase)
-    } else if (gamePhase === "game") {
-      teams[turn.team].moves[result.toString()]++
-      if (movesIsEmpty(teams[turn.team].moves)) {
-        teams[turn.team].moves = clearMoves(teams[turn.team].moves)
-        turn = passTurn(turn, teams)
-        teams[turn.team].throws++;
-        io.emit("turn", turn)
-      } else if (result == 4 || result == 5) {
-        teams[turn.team].throws++;
+    } else if (getGamePhase(roomId) === "game") {
+      let turn = getTurn(roomId)
+      addMove(roomId, turn.team, move.toString())
+      if (movesIsEmpty(roomId, turn.team)) {
+        clearMoves(roomId, turn.team)
+        turn = passTurn(roomId)
+        addThrow(roomId, turn.team)
+        io.to(roomId).emit("turn", turn)
+      } else if (move == 4 || move == 5) {
+        addThrow(roomId, turn.team);
       }
+      io.emit("teams", getTeams(roomId))
     }
-    io.emit("teams", teams)
-    io.emit("clients", clients)
   })
 
   socket.on("throwInProgress", (flag) => {
@@ -608,7 +539,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
     console.log("[disconnect] roomId", roomId)
 
-    let room = getRoom(roomId)
+    let { room, error } = getRoom(roomId)
     if (room) {
       const userFromRoom = removeUserFromRoom({ id: socket.id, room: room.id })
       if (userFromRoom.error && userFromRoom.error === "room not found") {
@@ -620,7 +551,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
           socket.broadcast.to(room.id).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
           io.to(room.id).emit('room', room)
           if (room.hostId === socket.id) {
-            updateHostId(room.id, findRandomPlayer(getRoom(room.id).teams).id)
+            updateHostId(room.id, findRandomPlayer(room.teams).id)
           }
           if (!isReadyToStart(roomId)) {
             updateReadyToStart(roomId, false)

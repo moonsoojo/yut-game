@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom, clientsAtom } from "../SocketManager";
+import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
@@ -15,7 +15,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)
-  const [clients] = useAtom(clientsAtom)
 
   function handlePointerEnter(event) {
     event.stopPropagation();

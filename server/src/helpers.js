@@ -18,22 +18,6 @@ export function countClients(clients) {
   return Object.keys(clients).length
 }
 
-export function movesIsEmpty (moves) {
-  for (const move in moves) {
-    if (parseInt(move) != 0 && moves[move] > 0) {
-      return false;
-    }
-  }
-  return true;
-}
-
-export function clearMoves(moves) {
-  for (const move in moves) {
-    moves[move] = 0
-  }
-  return moves;
-}
-
 export function hasValidMove (moves) {
   let flag = false;
   for (let move in moves) {

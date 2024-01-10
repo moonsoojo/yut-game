@@ -108,9 +108,13 @@ export default function Experience() {
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      socket.emit("visibilityChange", {flag: false})
+      socket.emit("visibilityChange", {flag: false}, ({ response }) => {
+        console.log("[visibilityChange] response", response)
+      })
     } else {
-      socket.emit("visibilityChange", {flag: true})
+      socket.emit("visibilityChange", {flag: true}, ({ response }) => {
+        console.log("[visibilityChange] response", response)
+      })
     }
   });
 
@@ -675,7 +679,11 @@ export default function Experience() {
                 size={layout[device].startBanner.fontSize}
                 boxWidth={layout[device].startBanner.boxWidth}
                 boxHeight={layout[device].startBanner.boxHeight}
-                handlePointerClick={() => {socket.emit("startGame")}}
+                handlePointerClick={() => {
+                  socket.emit("startGame", ({ response }) => {
+                    console.log("[startGame] response", response)
+                  })
+                }}
               />
             )}
             <TextButton

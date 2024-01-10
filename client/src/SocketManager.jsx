@@ -81,6 +81,7 @@ export const nameAtom = atom('');
 export const clientsAtom = atom({})
 export const clientAtom = atom({})
 export const roomAtom = atom({})
+export const readyToThrowAtom = atom(false)
 // export const allYootsAsleepAtom = atom(false)
 
 export const SocketManager = () => {
@@ -98,7 +99,7 @@ export const SocketManager = () => {
   const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
-  // const [_allYootsAsleep, setAllYootsAsleep] = useAtom(allYootsAsleepAtom)
+  const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
 
   const params = useParams();
 
@@ -107,8 +108,9 @@ export const SocketManager = () => {
     socket.connect();
 
     socket.emit("createRoom", { id: params.id }, ({ roomId, error }) => {
+      console.log("[SocketManager] roomId", roomId)
       if (error) {
-        console.log('error in creating room', roomId)
+        console.log('error in creating room', roomId, error)
       }
 
       socket.emit('joinRoom', { 
@@ -135,6 +137,7 @@ export const SocketManager = () => {
 
   useEffect(() => {
     socket.on('room', (room) => {
+      console.log("[SocketManager] room.teams", room.teams)
       setTeams(room.teams);
       setGamePhase(room.gamePhase);
       setTiles(room.tiles);
@@ -158,8 +161,14 @@ export const SocketManager = () => {
     socket.on('readyToStart', (readyToStart) => {
       setReadyToStart(readyToStart);
     })
+    socket.on('readyToThrow', (readyToThrow) => {
+      setReadyToThrow(readyToThrow);
+    })
     socket.on('throwYoots', (yootForceVectors) => {
       setYootThrowValues(yootForceVectors);
+    })
+    socket.on('legalTiles', ({ legalTiles }) => {
+      setLegalTiles(legalTiles)
     })
   }, [])
 

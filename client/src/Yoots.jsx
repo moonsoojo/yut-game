@@ -4,7 +4,7 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { clientsAtom, yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
+import { clientsAtom, yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYootsAsleep } from "./helpers/helpers.js";
 import layout from "./layout.js";
@@ -27,6 +27,7 @@ export default function Yoots({ device = "portrait" }) {
   const [clients] = useAtom(clientsAtom);
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [showResetYoots, setShowResetYoots] = useState(false)
+  const [readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
 
   const NUM_YOOTS = 4;
   let yoots = [];
@@ -66,11 +67,12 @@ export default function Yoots({ device = "portrait" }) {
   useEffect(() => {
     if (sleepCount % 4 == 0 && sleepCount > 0) {
       // doesn't fire if client is not visible
-      socket.emit("yootsAsleep", {flag: true}, (response) => {
-        if (response.status === "record") {
-          let result = observeThrow();
-          socket.emit("recordThrow", {result})
-        } else if (response.status === "reset") {
+      socket.emit("yootsAsleep", {flag: true}, ({response}) => {
+        console.log("[yootsAsleep] response", response)
+        if (response === "record") {
+          let move = observeThrow();
+          socket.emit("recordThrow", {move})
+        } else if (response === "noRecord") {
           // don't record throw
         }
       })
@@ -78,14 +80,14 @@ export default function Yoots({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    console.log("[Yoots] client", client, 
-    "turn", turn,
-    "teams", teams,
-    "clients", clients)
+    // console.log("[Yoots] client", client, 
+    // "turn", turn,
+    // "teams", teams,
+    // "clients", clients)
     if (client && 
       isMyTurn(turn, teams, client.id) && 
       teams[turn.team].throws > 0 && 
-      allYootsAsleep(clients)) { // refactor this so server sends this info to client
+      readyToThrow) { // refactor this so server sends this info to client
         for (let i = 0; i < yootMeshes.length; i++) {
           yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
           yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
