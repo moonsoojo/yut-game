@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYootsAsleep } from "./helpers/helpers.js";
+import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 

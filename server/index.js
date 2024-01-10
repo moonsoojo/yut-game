@@ -158,9 +158,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         yootsAsleep: false,
         thrown: false
       }
-      let room = getRoom(spectator.room)
       addClient(spectator.room, client)
-      io.to(spectator.room).emit('room', room)
+      let { room, error } = getRoom(spectator.room)
+      io.to(roomId).emit('room', room)
 
       callback('join room without savedClient success')
   
@@ -215,9 +215,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  socket.on("joinTeam", ({ team, name, room }, callback) => {
+  socket.on("joinTeam", ({ team, name }, callback) => {
 
-    const spectator = removeUserFromRoom({ id: socket.id, room })
+    const spectator = removeUserFromRoom({ id: socket.id, roomId })
     const player = {
       ...spectator,
       team,
@@ -229,8 +229,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     console.log("[joinTeam] addedPlayer", addedPlayer)
 
     socket.emit("client", addedPlayer)
-
-    io.to(addedPlayer.room).emit('room', getRoom(addedPlayer.room))
+    const { room } = getRoom(addedPlayer.room)
+    io.to(addedPlayer.room).emit('room', room)
     socket.broadcast.to(addedPlayer.room).emit(
       'message', 
       { 
@@ -271,14 +271,12 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   // if visibility is on and yuts are not asleep, emit "readyToThrow: false"
   socket.on("visibilityChange", ({flag}, callback) => {
-    let room = getRoom(roomId)
-    if (room) {
-      const { client, error } = updateVisibility(roomId, socket.id, flag)
-      if (error) {
-        callback({ response: error })
-      } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
-        io.to(roomId).emit("readyToThrow", false)
-      }
+    console.log("[visibilityChange] roomId", roomId, "clientId", socket.id, "flag", flag)
+    const { client, error } = updateVisibility(roomId, socket.id, flag)
+    if (error) {
+      callback({ response: error })
+    } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
+      io.to(roomId).emit("readyToThrow", false)
     }
   })
 
@@ -540,7 +538,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
     let { room, error } = getRoom(roomId)
     if (room) {
-      const userFromRoom = removeUserFromRoom({ id: socket.id, room: room.id })
+      const userFromRoom = removeUserFromRoom({ id: socket.id, roomId: room.id })
       if (userFromRoom.error && userFromRoom.error === "room not found") {
         // nothing happens
       } else {

@@ -145,33 +145,33 @@ export const addPlayer = ({ player }) => {
   return player
 }
 
-export const removeUserFromRoom = ({ id, room }) => {
+export const removeUserFromRoom = ({ id, roomId }) => {
 
-  if (!(room in rooms)) {
+  if (!(roomId in rooms)) {
     return { error: 'room not found' }
   }
 
-  const user = getUserFromRoom({ id, room })
+  const user = getUserFromRoom({ id, roomId })
   const team = user.team
 
-  if (id in rooms[room].clients) {
-    delete rooms[room].clients[id]
-    console.log("[removeUserFromRoom] clients", rooms[room].clients)
+  if (id in rooms[roomId].clients) {
+    delete rooms[roomId].clients[id]
+    console.log("[removeUserFromRoom] clients", rooms[roomId].clients)
   }
 
   // spectator
   if (team !== 0 && team !== 1) {
-    const index = rooms[room].spectators.findIndex((spectator) => spectator.id === id);
+    const index = rooms[roomId].spectators.findIndex((spectator) => spectator.id === id);
 
     if (index !== -1) {
-      return rooms[room].spectators.splice(index, 1)[0]
+      return rooms[roomId].spectators.splice(index, 1)[0]
     }
   } else { // player
-    const index = rooms[room].teams[team].players.findIndex(
+    const index = rooms[roomId].teams[team].players.findIndex(
       (player) => player.id === id
     );
     if (index !== -1) {
-      return rooms[room].teams[team].players.splice(index, 1)[0]
+      return rooms[roomId].teams[team].players.splice(index, 1)[0]
     }
   }
 }
@@ -184,8 +184,8 @@ export const getRoom = ( id ) => {
   }
 }
 
-export const getUserFromRoom = ({ id, room }) => {
-  let users = rooms[room].teams[0].players.concat(rooms[room].teams[1].players.concat(rooms[room].spectators))
+export const getUserFromRoom = ({ id, roomId }) => {
+  let users = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players.concat(rooms[roomId].spectators))
   const user = users.find((user) => user.id === id)
 
   return user
