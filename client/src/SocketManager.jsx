@@ -78,11 +78,9 @@ export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const messagesAtom = atom([]);
 export const nameAtom = atom('');
-export const clientsAtom = atom({})
 export const clientAtom = atom({})
 export const roomAtom = atom({})
 export const readyToThrowAtom = atom(false)
-// export const allYootsAsleepAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -96,7 +94,6 @@ export const SocketManager = () => {
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
-  const [_clients, setClients] = useAtom(clientsAtom);
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
   const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
@@ -144,13 +141,9 @@ export const SocketManager = () => {
       setTurn(room.turn);
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
-      setClients(room.clients);
     })
     socket.on('client', (client) => {
       setClient(client);
-    })
-    socket.on('clients', (clients) => {
-      setClients(clients);
     })
     socket.on('teams', (teams) => {
       setTeams(teams);
@@ -175,9 +168,6 @@ export const SocketManager = () => {
   useEffect(() => {
     function onConnect() {
       console.log("connected");
-    }
-    function onClients(value) {
-      setClients(value)
     }
     function onJoinSpectator(gameState) {
       setClient(gameState.client);
@@ -248,7 +238,6 @@ export const SocketManager = () => {
     // socket.on("joinSpectator", onJoinSpectator)
     // socket.on("joinTeam", onJoinTeam)
     socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
-    socket.on("clients", onClients)
     // socket.on("disconnect", onDisconnect);
     socket.on("select", onSelect);
     socket.on("characters", onCharacters);
@@ -268,7 +257,6 @@ export const SocketManager = () => {
       // socket.off("joinSpectator", onJoinSpectator)
       // socket.off("joinTeam", onJoinTeam)
       socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
-      socket.off("clients", onClients)
       // socket.off("disconnect", onDisconnect);
       socket.off("select", onSelect);
       socket.off("characters", onCharacters);

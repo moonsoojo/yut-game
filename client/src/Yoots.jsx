@@ -4,7 +4,7 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { clientsAtom, yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
+import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn, allYootsAsleep } from "./helpers/helpers.js";
 import layout from "./layout.js";
@@ -24,7 +24,6 @@ export default function Yoots({ device = "portrait" }) {
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
   const [client] = useAtom(clientAtom)
-  const [clients] = useAtom(clientsAtom);
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [showResetYoots, setShowResetYoots] = useState(false)
   const [readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
@@ -80,10 +79,6 @@ export default function Yoots({ device = "portrait" }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    // console.log("[Yoots] client", client, 
-    // "turn", turn,
-    // "teams", teams,
-    // "clients", clients)
     if (client && 
       isMyTurn(turn, teams, client.id) && 
       teams[turn.team].throws > 0 && 
@@ -276,12 +271,6 @@ export default function Yoots({ device = "portrait" }) {
           position={layout.yoot.outOfBounds}
         />
       </>}
-      {/* { client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYootsAsleep(clients) && 
-      <TextButton
-        text='THROW'
-        position={layout.yoot.throwPos}
-      />
-      } */}
     </group>
   );
 }

@@ -14,10 +14,6 @@ export function bothTeamsHavePlayers(teams) {
   }
 }
 
-export function countClients(clients) {
-  return Object.keys(clients).length
-}
-
 export function movesIsEmpty (moves) {
   for (const move in moves) {
     if (parseInt(move) != 0 && moves[move] > 0) {
@@ -62,14 +58,4 @@ export function getPlayerBySocketId(teams, socketId) {
     }
   }
   return {} // not found
-}
-
-export function allYootsAsleep(clients) {
-  let flag = true;
-  for (const socketId of Object.keys(clients)) {
-    if (clients[socketId].visibility && !clients[socketId].yootsAsleep) {
-      flag = false;
-    }
-  }
-  return flag
 }

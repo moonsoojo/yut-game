@@ -52,7 +52,6 @@ import {
   socket,
   legalTilesAtom,
   clientAtom,
-  clientsAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
@@ -103,7 +102,6 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
-  const [clients] = useAtom(clientsAtom);
 
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
@@ -597,10 +595,7 @@ export default function Experience() {
             {/* player ids */}
             {teams[0].players.map((value, index) => (
               <TextButton
-                text={`${value.name}, ${device === "landscapeDesktop" ? 
-                  `visible: ${clients[value.socketId].visibility}, 
-                  yootsAsleep: ${clients[value.socketId].yootsAsleep},
-                  thrown: ${clients[value.socketId].thrown}`: ''}`}
+                text={`${value.name}`}
                 position={[
                   layout[device].team0.names.position[0],
                   layout[device].team0.names.position[1], 
@@ -641,10 +636,7 @@ export default function Experience() {
             {/* player ids */}
             {teams[1].players.map((value, index) => (
               <TextButton
-                text={`${value.name}, ${device === "landscapeDesktop" ? 
-                  `visible: ${clients[value.socketId].visibility}, 
-                  yootsAsleep: ${clients[value.socketId].yootsAsleep},
-                  thrown: ${clients[value.socketId].thrown}`: ''}`}
+                text={`${value.name}`}
                 position={[
                   layout[device].team1.names.position[0],
                   layout[device].team1.names.position[1], 
@@ -696,7 +688,6 @@ export default function Experience() {
               <Yoots device={device}/>
             </Physics>
             {/* throw count */}
-            {/* {client && isMyTurn(turn, teams, client.socketId) && teams[turn.team].throws > 0 && allYootsAsleep(clients) && ( */}
              {( <>            
                 <TextButton
                   text={`Throw: ${

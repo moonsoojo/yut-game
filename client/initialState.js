@@ -62,16 +62,6 @@ export default {
     //   participating: boolean,
     //   firstLoad: boolean
   },
-  clients: {
-    // "socketId1": {
-    //   team: int,
-    //   name: string,
-    //   socketId: string,
-    //   yootsAsleep: boolean,
-    //   participating: boolean,
-    //   firstLoad: boolean
-    // }
-  },
   turn: {
     team: 0,
     players: [0, 0] // list of ints
