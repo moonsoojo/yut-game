@@ -20,6 +20,7 @@ export default function Yoots({ device = "portrait" }) {
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
+  const [wakeCount, setWakeCount] = useState(0);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
@@ -61,10 +62,13 @@ export default function Yoots({ device = "portrait" }) {
         z: yootThrowValues[i].torqueImpulse.z,
       });
     }
+    setSleepCount(0);
+    setWakeCount(0);
   }, [yootThrowValues]);
 
   useEffect(() => {
-    if (sleepCount % 4 == 0 && sleepCount > 0) {
+    if (sleepCount > 0 && sleepCount == wakeCount) {
+      console.log("[sleepCount useEffect] sleepCount === wakeCount")
       // doesn't fire if client is not visible
       socket.emit("yootsAsleep", {flag: true}, ({response}) => {
         console.log("[yootsAsleep] response", response)
@@ -76,7 +80,7 @@ export default function Yoots({ device = "portrait" }) {
         }
       })
     }
-  }, [sleepCount])
+  }, [sleepCount, wakeCount])
 
   useFrame((state, delta) => {
     if (client && 
@@ -158,6 +162,7 @@ export default function Yoots({ device = "portrait" }) {
 
   function onWakeHandler() {
     console.log("onWakeHandler")
+    setWakeCount((count) => count+1);
   }
 
   function handleYootThrow() {
@@ -227,7 +232,7 @@ export default function Yoots({ device = "portrait" }) {
             gravityScale={2.5}
             key={index}
             onSleep={onSleepHandler}
-            // onWake={onWakeHandler}
+            onWake={onWakeHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (
