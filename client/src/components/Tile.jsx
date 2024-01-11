@@ -18,8 +18,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, client.socketId)) {
-      
+    if (selection != null && isMyTurn(turn, teams, client.id)) {
       document.body.style.cursor = "pointer";
       wrapper.current.opacity += 0.2;
     }
@@ -27,7 +26,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, client.socketId)) {
+    if (selection != null && isMyTurn(turn, teams, client.id)) {
       
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
@@ -38,9 +37,9 @@ export default function Tile({ tile, wrapperRadius, device }) {
     event.stopPropagation();
     if (selection != null) {
       
-      if (isMyTurn(turn, teams, client.socketId)) {
+      if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", { selection, tile, moveInfo: legalTiles[tile] });
+          socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] });
         }
         socket.emit("legalTiles", {legalTiles: {}})
         socket.emit("select", null);

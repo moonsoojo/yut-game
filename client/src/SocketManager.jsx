@@ -141,6 +141,7 @@ export const SocketManager = () => {
       setTurn(room.turn);
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
+      setReadyToThrow(room.readyToThrow)
     })
     socket.on('client', (client) => {
       setClient(client);
@@ -162,6 +163,12 @@ export const SocketManager = () => {
     })
     socket.on('legalTiles', ({ legalTiles }) => {
       setLegalTiles(legalTiles)
+    })
+    socket.on('select', (selection) => {
+      setSelection(selection)
+    })
+    socket.on('tiles', (tiles) => {
+      setTiles(tiles)
     })
   }, [])
 

@@ -46,7 +46,7 @@ export default function Piece ({
   useFrame((state, delta) => {
     if (gamePhase === "game" && 
     client.team == team && 
-    isMyTurn(turn, teams, client.socketId) && 
+    isMyTurn(turn, teams, client.id) && 
     hasValidMove(teams[team].moves) && selection == null &&
     readyToThrow) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
@@ -83,7 +83,7 @@ export default function Piece ({
     if (gamePhase === "game" && 
     client.team == team && 
     hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, client.socketId)) {
+    isMyTurn(turn, teams, client.id)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;

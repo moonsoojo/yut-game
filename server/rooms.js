@@ -216,6 +216,10 @@ export const getClient = (roomId, clientId) => {
   return rooms[roomId].clients[clientId]
 }
 
+export const updateClientTurn = (roomId, clientId) => {
+  rooms[roomId].clients[clientId]
+}
+
 export const getHostId = (roomId) => {
   return rooms[roomId].hostId
 }
@@ -313,8 +317,8 @@ function allTeamsHaveMove (teams) {
 
 export const passTurn = (roomId) => {
   console.log("[passTurn] roomId", roomId)
-  let turn = rooms[roomId].turn
-  let teams = rooms[roomId].teams
+  let turn = getTurn(roomId)
+  let teams = getTeams(roomId)
   if (turn.team == teams.length - 1) {
     turn.team = 0
   } else {
@@ -449,3 +453,18 @@ export const updateLegalTiles = (roomId, legalTiles) => {
   rooms[roomId].legalTiles = legalTiles
 }
 
+export const getTiles = (roomId) => {
+  return rooms[roomId].tiles
+}
+
+export const updateTiles = (roomId, tiles) => {
+  rooms[roomId].tiles = tiles
+}
+
+export const getSelection = (roomId) => {
+  return rooms[roomId].selection
+}
+
+export const updateSelection = (roomId, selection) => {
+  rooms[roomId].selection = selection
+}

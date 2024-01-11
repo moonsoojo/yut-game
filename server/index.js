@@ -11,7 +11,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -34,26 +34,42 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-let test = false;
+let test = true;
 if (test) {
-  gamePhase = "game"
-  turn = {
-    team: 1,
+  const roomId = 'Lny'
+  addRoom({ id: roomId })
+
+  let teams = JSON.parse(JSON.stringify(initialState.teams))
+  let tiles = JSON.parse(JSON.stringify(initialState.tiles))
+  
+  updateGamePhase(roomId, 'game')
+  let turn = {
+    team: 0,
     players: [0,0]
   }
+  updateTurn(roomId, turn)
+
   // teams[0].moves['1'] = 1
   // teams[0].pieces[0] = null;
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
+
   teams[1].pieces[0] = null;
   teams[1].pieces[1] = null;
+  teams[1].pieces[2] = null;
   // teams[1].pieces[2] = 'scored';
   // teams[1].pieces[3] = 'scored';
-  teams[1].throws = 1;
-  tiles[8] = [
-    { tile: 10, team: 0, id: 0,  history: [0, 1]},
-    { tile: 10, team: 0, id: 1,  history: [0, 1]},
+  updateTeams(roomId, teams)
+  
+  addThrow(roomId, turn.team)
+  tiles[5] = [
+    { tile: 5, team: 1, id: 0,  history: [0, 1,2,3,4]},
   ]
+  tiles[3] = [
+    { tile: 3, team: 1, id: 1,  history: [0, 1,2]},
+    { tile: 3, team: 1, id: 2,  history: [0, 1,2]},
+  ]
+  updateTiles(roomId, tiles)
   // tiles[10] = [
   //   { tile: 10, team: 1, id: 0,  history: [8,9]},
   // ]
@@ -62,6 +78,8 @@ if (test) {
   // ]
   // displayPiecesOnTiles(0);
   // displayPiecesOnTiles(1);
+
+  updateReadyToThrow(roomId, true)
 }
 
 function displayPiecesOnTiles(team) {
@@ -324,28 +342,39 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("select", (payload) => {
-    selection = payload;
-    io.emit("select", selection);
+    updateSelection(roomId, payload)
+    io.to(roomId).emit("select", payload);
   });
 
-  socket.on("move", ({selection, tile, moveInfo}) => {
-    [tiles, teams] = move(tiles, teams, selection.tile, tile, moveInfo.move, moveInfo.history, selection.pieces)
+  socket.on("move", ({ destination, moveInfo }) => {
+    let [tiles, teams] = move(
+      getTiles(roomId), 
+      getTeams(roomId), 
+      getSelection(roomId).tile, 
+      destination, 
+      moveInfo.move, 
+      moveInfo.history, 
+      getSelection(roomId).pieces
+    )
 
+    let turn = getTurn(roomId)
     if ((teams[turn.team].throws == 0)) {
-      if (movesIsEmpty(teams[turn.team].moves)) {
-        teams[turn.team].moves = clearMoves(teams[turn.team].moves)
+      if (movesIsEmpty(roomId, turn.team)) {
+        teams[turn.team].moves = clearMoves(roomId, turn.team)
         if (teams[0].players.length > 0 && teams[1].players.length > 0) {
           turn = passTurn(roomId)
-          addThrow(roomId, turn.team)++;
-        } else {
-          waitingToPass = true
+          // update turn in 'rooms.js'
+          addThrow(roomId, turn.team);
+          io.to(roomId).emit("turn", turn);
         }
       }
     }
 
-    io.emit("tiles", tiles);
-    io.emit("teams", teams);
-    io.emit("turn", turn);
+    updateTiles(roomId, tiles)
+    io.to(roomId).emit("tiles", tiles);
+    updateTeams(roomId, teams);
+    io.to(roomId).emit("teams", teams);
+
   });
 
   socket.on("score", ({selection, moveInfo}) => {
@@ -370,6 +399,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let teams = getTeams(roomId)
     let turn = getTurn(roomId)
+    
+    console.log("[throwYoots] teams[turn.team].throws", teams[turn.team].throws, 
+    "teams[turn.team].players[turn.players[turn.team]].id === socket.id",
+    teams[turn.team].players[turn.players[turn.team]].id === socket.id,
+    "isAllYootsAsleep(roomId)", isAllYootsAsleep(roomId))
     if (teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
       // after throw, 
@@ -509,11 +543,15 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       addMove(roomId, getTurn(roomId).team, move.toString())
       let { turn, teams, gamePhase } = passTurnPregame(roomId)
       addThrow(roomId, turn.team)
-      io.emit("turn", turn)
-      io.emit("teams", teams)
-      io.emit("gamePhase", gamePhase)
+      updateTurn(roomId, turn)
+      io.to(roomId).emit("turn", turn)
+      updateTeams(roomId, teams)
+      io.to(roomId).emit("teams", teams)
+      updateGamePhase(roomId, gamePhase)
+      io.to(roomId).emit("gamePhase", gamePhase)
     } else if (getGamePhase(roomId) === "game") {
       let turn = getTurn(roomId)
+      console.log("[recordThrow] turn.team", turn.team)
       addMove(roomId, turn.team, move.toString())
       if (movesIsEmpty(roomId, turn.team)) {
         clearMoves(roomId, turn.team)

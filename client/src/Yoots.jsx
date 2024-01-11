@@ -67,7 +67,8 @@ export default function Yoots({ device = "portrait" }) {
   }, [yootThrowValues]);
 
   useEffect(() => {
-    if (sleepCount > 0 && sleepCount == wakeCount) {
+    if ((gamePhase !== "lobby" && sleepCount > 0 && sleepCount == wakeCount) ||
+    (gamePhase === "lobby" && sleepCount % 4 == 0 && sleepCount > 0)) {
       console.log("[sleepCount useEffect] sleepCount === wakeCount")
       // doesn't fire if client is not visible
       socket.emit("yootsAsleep", {flag: true}, ({response}) => {
@@ -161,7 +162,8 @@ export default function Yoots({ device = "portrait" }) {
   }
 
   function onWakeHandler() {
-    console.log("onWakeHandler")
+    console.log("onWakeHandler") // not triggered on client load
+    // interesting find: yoots drop in lobby / throw again in game&pregame when client rerenders
     setWakeCount((count) => count+1);
   }
 
