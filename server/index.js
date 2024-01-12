@@ -11,7 +11,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -342,39 +342,32 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("select", (payload) => {
+    console.log("[select] payload", payload)
     updateSelection(roomId, payload)
     io.to(roomId).emit("select", payload);
   });
 
-  socket.on("move", ({ destination, moveInfo }) => {
-    let [tiles, teams] = move(
-      getTiles(roomId), 
-      getTeams(roomId), 
-      getSelection(roomId).tile, 
-      destination, 
-      moveInfo.move, 
-      moveInfo.history, 
-      getSelection(roomId).pieces
-    )
+  socket.on("move", ({ destination }) => {
+    makeMove(roomId, destination)
 
-    let turn = getTurn(roomId)
-    if ((teams[turn.team].throws == 0)) {
-      if (movesIsEmpty(roomId, turn.team)) {
-        teams[turn.team].moves = clearMoves(roomId, turn.team)
-        if (teams[0].players.length > 0 && teams[1].players.length > 0) {
-          turn = passTurn(roomId)
+    console.log("[move] turn", getTurn(roomId))
+    console.log("[move] getThrows", getThrows(roomId, getTurn(roomId).team))
+    if (getThrows(roomId, getTurn(roomId).team) == 0) {
+      console.log("[move] movesIsEmpty(...)", movesIsEmpty(roomId, getTurn(roomId).team))
+      if (movesIsEmpty(roomId, getTurn(roomId).team)) {
+        clearMoves(roomId, getTurn(roomId).team)
+        console.log("[move] bothTeamsHavePlayers(roomId)", bothTeamsHavePlayers(roomId))
+        if (bothTeamsHavePlayers(roomId)) {
+          let newTurn = passTurn(roomId)
           // update turn in 'rooms.js'
-          addThrow(roomId, turn.team);
-          io.to(roomId).emit("turn", turn);
+          addThrow(roomId, getTurn(roomId).team);
+          io.to(roomId).emit("turn", newTurn);
         }
       }
     }
 
-    updateTiles(roomId, tiles)
-    io.to(roomId).emit("tiles", tiles);
-    updateTeams(roomId, teams);
-    io.to(roomId).emit("teams", teams);
-
+    io.to(roomId).emit("teams", getTeams(roomId));
+    io.to(roomId).emit("tiles", getTiles(roomId));
   });
 
   socket.on("score", ({selection, moveInfo}) => {
@@ -541,14 +534,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     updateThrown(roomId, socket.id, false)
     if (getGamePhase(roomId) === "pregame") {
       addMove(roomId, getTurn(roomId).team, move.toString())
-      let { turn, teams, gamePhase } = passTurnPregame(roomId)
-      addThrow(roomId, turn.team)
-      updateTurn(roomId, turn)
-      io.to(roomId).emit("turn", turn)
-      updateTeams(roomId, teams)
-      io.to(roomId).emit("teams", teams)
-      updateGamePhase(roomId, gamePhase)
-      io.to(roomId).emit("gamePhase", gamePhase)
+      passTurnPregame(roomId)
+      addThrow(roomId, getTurn(roomId).team)
+      io.to(roomId).emit("turn", getTurn(roomId))
+      io.to(roomId).emit("teams", getTeams(roomId))
+      io.to(roomId).emit("gamePhase", getGamePhase(roomId))
     } else if (getGamePhase(roomId) === "game") {
       let turn = getTurn(roomId)
       console.log("[recordThrow] turn.team", turn.team)

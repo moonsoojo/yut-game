@@ -96,12 +96,12 @@ export default function Piece ({
         let history = tile == -1 ? [] : tiles[tile][0].history
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
-          socket.emit("legalTiles", {legalTiles})
+          socket.emit("legalTiles", { legalTiles })
           socket.emit("select", { tile, pieces })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", ({selection, tile, moveInfo: legalTiles[tile]}))
+          socket.emit("move", ({ destination: tile }))
         }
         socket.emit("legalTiles", {legalTiles: {}})
         socket.emit("select", null);

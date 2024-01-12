@@ -198,12 +198,25 @@ export const countPlayers = (roomId) => {
   }
 }
 
+export function bothTeamsHavePlayers(roomId) {
+  let teams = getTeams(roomId)
+  if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+    return true
+  } else {
+    return false;
+  }
+}
+
 export const deleteRoom = (roomId) => {
   delete rooms[roomId]
 }
 
 export const addThrow = (roomId, team) => {
   rooms[roomId].teams[team].throws++
+}
+
+export const getThrows = (roomId, team) => {
+  return rooms[roomId].teams[team].throws
 }
 
 export const addClient = (roomId, client) => {
@@ -360,7 +373,6 @@ function calcFirstTeamToThrow(teams) {
 
 export const passTurnPregame = (roomId) => {
   const room = rooms[roomId]
-  let turn = room.turn
   let teams = room.teams
   if (allTeamsHaveMove(teams)) {
     let firstTeamToThrow = calcFirstTeamToThrow(teams)
@@ -372,13 +384,13 @@ export const passTurnPregame = (roomId) => {
       updateGamePhase(roomId, "game")
     }
     // clear moves in teams
-    for (let i = 0; i < teams.length; i++) {
+    for (let i = 0; i < 2; i++) {
       clearMoves(roomId, i)
     }
   } else {
     passTurn(roomId)
   }
-  return { turn: rooms[roomId].turn, teams: rooms[roomId].teams, gamePhase: rooms[roomId].gamePhase }
+  return { turn: rooms[roomId].turn }
 }
 
 export const getCurrentPlayerId = (roomId) => {
@@ -429,6 +441,12 @@ export const addMove = (roomId, team, move) => {
   }
 }
 
+export const subtractMove = (roomId, team, move) => {
+  if (roomId in rooms) {
+    rooms[roomId].teams[team].moves[move]--
+  }
+}
+
 export const movesIsEmpty = (roomId, team) => {
   const moves = rooms[roomId].teams[team].moves
   for (const move in moves) {
@@ -467,4 +485,52 @@ export const getSelection = (roomId) => {
 
 export const updateSelection = (roomId, selection) => {
   rooms[roomId].selection = selection
+}
+
+export const makeMove = (roomId, destination) => {
+  let tiles = getTiles(roomId)
+  let teams = getTeams(roomId)
+  let selection = getSelection(roomId)
+  let from = selection.tile
+  let to = destination
+  let legalTiles = getLegalTiles(roomId)
+  console.log("[makeMove] legalTiles", legalTiles)
+  let moveUsed = legalTiles[destination].move
+  console.log("[makeMove] moveUsed", moveUsed)
+  let history = legalTiles[destination].history
+  let pieces = selection.pieces
+
+  let starting = from == -1 ? true : false;
+  let movingTeam = pieces[0].team;
+
+  if (tiles[to].length > 0) {
+    let occupyingTeam = tiles[to][0].team
+    if (occupyingTeam != movingTeam) {
+      for (let piece of tiles[to]) {
+        piece.tile = -1
+        piece.history = []
+        teams[occupyingTeam].pieces[piece.id] = piece
+      }
+      tiles[to] = []
+      addThrow(roomId, movingTeam);
+    }
+  }
+
+  for (const piece of pieces) {
+    tiles[to].push({tile: to, team: piece.team, id: piece.id, history})
+  }
+
+  // take from 1st index (not 0th) and go until the end
+
+  if (starting) {
+    let piece = pieces[0]
+    teams[movingTeam].pieces[piece.id] = null
+  } else {
+    tiles[from] = []
+  }
+
+  // remove move
+  subtractMove(roomId, movingTeam, moveUsed)
+  updateTeams(roomId, teams)
+  updateTiles(roomId, tiles)
 }

@@ -6,13 +6,6 @@ export function getCurrentPlayerSocketId (turn, teams) {
   }
 }
 
-export function bothTeamsHavePlayers(teams) {
-  if (teams[0].players.length > 0 && teams[1].players.length > 0) {
-    return true
-  } else {
-    return false;
-  }
-}
 
 
 export function hasValidMove (moves) {
