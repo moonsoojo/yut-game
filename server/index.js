@@ -1,7 +1,5 @@
 // import { Server } from "socket.io";
 import initialState from "./initialState.js";
-import { move } from "./src/move.js";
-import { score } from "./src/score.js";
 import { getCurrentPlayerSocketId } from "./src/helpers.js";
 
 import express from 'express';
@@ -11,7 +9,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -276,30 +274,25 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     if (!room) {
       callback({ error: 'no room with id' + roomId })
     } else {
-      const { response, user } = getUserFromRoom({ id: socket.id, roomId });
+      const user = getUserFromRoom({ id: socket.id, roomId });
   
-      if (response.status === 'error') {
-        return callback({ error: response.message })
-      } else {
-        io.to(roomId).emit('message', { user: user.name, text: message, team: user.team });
-        callback();
-      }
+      io.to(roomId).emit('message', { user: user.name, text: message, team: user.team });
+      callback({});
     }
   })
 
   // if visibility is on and yuts are not asleep, emit "readyToThrow: false"
   socket.on("visibilityChange", ({flag}, callback) => {
-    console.log("[visibilityChange] roomId", roomId, "clientId", socket.id, "flag", flag)
-    const { client, error } = updateVisibility(roomId, socket.id, flag)
+    const { error } = updateVisibility(roomId, socket.id, flag)
     if (error) {
       callback({ response: error })
     } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
+      updateReadyToThrow(roomId, false)
       io.to(roomId).emit("readyToThrow", false)
     }
   })
 
   socket.on("yootsAsleep", ({flag}, callback) => {
-    console.log("[yootsAsleep] flag", flag)
     const { error } = updateYootsAsleep(roomId, socket.id, flag)
     if (error) {
       return callback({ response: error })
@@ -335,14 +328,13 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
     const turn = getTurn(roomId)
     addThrow(roomId, turn.team)
-    console.log("[startGame] is all yoots asleep", isAllYootsAsleep(roomId))
     io.to(roomId).emit("teams", room.teams)
     updateGamePhase(roomId, 'pregame')
+    // how does this work? the room changed after I updated the game phase
     io.to(roomId).emit("gamePhase", room.gamePhase);
   })
 
   socket.on("select", (payload) => {
-    console.log("[select] payload", payload)
     updateSelection(roomId, payload)
     io.to(roomId).emit("select", payload);
   });
@@ -350,13 +342,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   socket.on("move", ({ destination }) => {
     makeMove(roomId, destination)
 
-    console.log("[move] turn", getTurn(roomId))
-    console.log("[move] getThrows", getThrows(roomId, getTurn(roomId).team))
     if (getThrows(roomId, getTurn(roomId).team) == 0) {
-      console.log("[move] movesIsEmpty(...)", movesIsEmpty(roomId, getTurn(roomId).team))
       if (movesIsEmpty(roomId, getTurn(roomId).team)) {
         clearMoves(roomId, getTurn(roomId).team)
-        console.log("[move] bothTeamsHavePlayers(roomId)", bothTeamsHavePlayers(roomId))
         if (bothTeamsHavePlayers(roomId)) {
           let newTurn = passTurn(roomId)
           // update turn in 'rooms.js'
@@ -370,18 +358,19 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     io.to(roomId).emit("tiles", getTiles(roomId));
   });
 
-  socket.on("score", ({selection, moveInfo}) => {
-    [tiles, teams] = score(tiles, teams, selection.tile, moveInfo.move, moveInfo.path, selection.pieces)
-    if (teams[turn.team].throws == 0) {
-      if (movesIsEmpty(teams[turn.team].moves)) {
-        teams[turn.team].moves = clearMoves(teams[turn.team].moves)
-        turn = passTurn(roomId)
-        addThrow(roomId, turn.team);
+  // need to get move from client because there can be multiple
+  socket.on("score", ({ selectedMove }) => {
+    score(roomId, selectedMove)
+    if (getThrows(roomId, getTurn(roomId).team) == 0) {
+      if (movesIsEmpty(roomId, getTurn(roomId).team)) {
+        clearMoves(roomId, getTurn(roomId).team)
+        passTurn(roomId)
+        addThrow(roomId, getTurn(roomId).team);
       }
     }
-    io.emit("tiles", tiles);
-    io.emit("teams", teams);
-    io.emit("turn", turn);
+    io.to(roomId).emit("tiles", getTiles(roomId));
+    io.to(roomId).emit("teams", getTeams(roomId));
+    io.to(roomId).emit("turn", getTurn(roomId));
   });
 
 
@@ -555,11 +544,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  socket.on("throwInProgress", (flag) => {
-    throwInProgress = flag;
-    io.emit("throwInProgress", flag)
-  })
-
   socket.on("disconnect", () => {
 
     console.log("[disconnect] roomId", roomId)
@@ -591,9 +575,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
 
 
-    /*
-
-    if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
+    /*if (socket.id == getCurrentPlayerSocketId(turn, teams)) {
       turn = passTurn(turn, teams)
       clients[socket.id].thrown = false;
       io.emit("turn", turn)

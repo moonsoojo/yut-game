@@ -31,7 +31,7 @@ export default function ScoreButton({ position, device='portrait' }) {
       // precondition: legalTiles is already populated
       if (29 in legalTiles) {
         if (legalTiles[29].length == 1) {
-          socket.emit("score", { selection, moveInfo: legalTiles[29][0] })
+          socket.emit("score", { selectedMove: legalTiles[29][0] })
           socket.emit("select", null);
           socket.emit("legalTiles", { legalTiles: {} })
         } else {
@@ -46,7 +46,7 @@ export default function ScoreButton({ position, device='portrait' }) {
       text={moveInfo.move}
       position={position}
       handlePointerClick={() => {
-        socket.emit("score", {selection, moveInfo});
+        socket.emit("score", {selectedMove: moveInfo});
         socket.emit("select", null)
         socket.emit("legalTiles", { legalTiles: {} });
         setDisplayScoreOptions(false);

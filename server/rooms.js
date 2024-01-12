@@ -534,3 +534,22 @@ export const makeMove = (roomId, destination) => {
   updateTeams(roomId, teams)
   updateTiles(roomId, tiles)
 }
+
+export const score = (roomId, selectedMove) => {
+  let tiles = rooms[roomId].tiles
+  let teams = rooms[roomId].teams
+  let from = rooms[roomId].selection.tile
+  let moveUsed = selectedMove.move
+  let pieces = rooms[roomId].selection.pieces
+  let movingTeam = pieces[0].team;
+
+  for (const piece of pieces) {
+    teams[movingTeam].pieces[piece.id] = "scored"
+  }
+
+  tiles[from] = []
+  teams[movingTeam].moves[moveUsed]--;
+
+  updateTiles(roomId, tiles)
+  updateTeams(roomId, teams)
+}
