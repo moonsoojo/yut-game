@@ -32,7 +32,7 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-let test = true;
+let test = false;
 if (test) {
   const roomId = 'Lny'
   addRoom({ id: roomId })
@@ -305,7 +305,13 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     if (updateYootsAsleepError) {
       return callback({ error: updateYootsAsleepError })
     }
-    if (isAllYootsAsleep(roomId)) {
+    const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
+    if (isAllYootsAsleepError) {
+      return callback({ error: isAllYootsAsleepError })
+    }
+    console.log("[yootsAsleep] allYootsAsleep", allYootsAsleep)
+    if (allYootsAsleep) {
+      updateReadyToThrow(roomId, true)
       io.to(roomId).emit("readyToThrow", true)
     }
 
@@ -394,15 +400,22 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     let teams = getTeams(roomId)
     let turn = getTurn(roomId)
     
-    console.log("[throwYoots] teams[turn.team].throws", teams[turn.team].throws, 
-    "teams[turn.team].players[turn.players[turn.team]].id === socket.id",
-    teams[turn.team].players[turn.players[turn.team]].id === socket.id,
-    "isAllYootsAsleep(roomId)", isAllYootsAsleep(roomId))
+    // console.log("[throwYoots] teams[turn.team].throws", teams[turn.team].throws, 
+    // "teams[turn.team].players[turn.players[turn.team]].id === socket.id",
+    // teams[turn.team].players[turn.players[turn.team]].id === socket.id,
+    // "isAllYootsAsleep(roomId)", isAllYootsAsleep(roomId))
+
+    const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
+    if (isAllYootsAsleepError) {
+      return callback({ error: isAllYootsAsleepError })
+    }
+    console.log("[throwYoots] allYootsAsleep", allYootsAsleep)
+
     if (teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
       // after throw, 
       // turn was passed, but the client was disconnected (tab switch)
-      isAllYootsAsleep(roomId)) {
+      allYootsAsleep) {
 
       teams[turn.team].throws--;
       updateTeams(roomId, teams)
@@ -450,7 +463,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   });
 
-  socket.on("resetYoots", ({ socketIdEmitter }) => {
+  /*socket.on("resetYoots", ({ socketIdEmitter }) => {
     if (socketIdEmitter === getCurrentPlayerSocketId(turn, teams)) {
       teams[turn.team].throws++
 
@@ -489,9 +502,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         }
       }
     }
-  })
+  })*/
 
-  socket.on("reset", () => {
+  /*socket.on("reset", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
 
@@ -526,7 +539,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       });
     }
     io.emit("throwYoots", yootForceVectors);
-  });
+  });*/
 
   socket.on("legalTiles", ({ legalTiles }) => {
     updateLegalTiles(roomId, legalTiles)

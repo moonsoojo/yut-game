@@ -16,7 +16,6 @@ export const socket = io(
       client: localStorage.getItem('yootGame')
     },
     autoConnect: false,
-    async
   },
 )
 
@@ -26,7 +25,8 @@ export const socket = io(
 const initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
 const initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
 
-export const yootThrowValuesAtom = atom([
+export const yootThrowValuesAtom = atom(null)
+/*export const yootThrowValuesAtom = atom([
   {
     rotation: initialYootRotations[0],
     positionInHand: initialYootPositions[0],
@@ -67,7 +67,7 @@ export const yootThrowValuesAtom = atom([
       z: 0,
     },
   },
-]);
+]);*/
 
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);

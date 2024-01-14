@@ -20,7 +20,7 @@ export default function Yoots({ device = "portrait" }) {
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [wakeCount, setWakeCount] = useState(0);
+  const [wakeCount, setWakeCount] = useState(4);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
@@ -48,27 +48,29 @@ export default function Yoots({ device = "portrait" }) {
   let RESET_TIME = 10000
   useEffect(() => {
     // client lags if you emit here
-    for (let i = 0; i < 4; i++) {
-      yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
-      yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
-      yoots[i].current.applyImpulse({
-        x: 0,
-        y: yootThrowValues[i].yImpulse,
-        z: 0,
-      });
-      yoots[i].current.applyTorqueImpulse({
-        x: yootThrowValues[i].torqueImpulse.x,
-        y: yootThrowValues[i].torqueImpulse.y,
-        z: yootThrowValues[i].torqueImpulse.z,
-      });
+    if (yootThrowValues !== null) {
+      for (let i = 0; i < 4; i++) {
+        yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
+        yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
+        yoots[i].current.applyImpulse({
+          x: 0,
+          y: yootThrowValues[i].yImpulse,
+          z: 0,
+        });
+        yoots[i].current.applyTorqueImpulse({
+          x: yootThrowValues[i].torqueImpulse.x,
+          y: yootThrowValues[i].torqueImpulse.y,
+          z: yootThrowValues[i].torqueImpulse.z,
+        });
+      }
+      setSleepCount(0);
+      setWakeCount(0);
     }
-    setSleepCount(0);
-    setWakeCount(0);
   }, [yootThrowValues]);
 
   useEffect(() => {
-    if ((gamePhase !== "lobby" && sleepCount > 0 && sleepCount == wakeCount) ||
-    (gamePhase === "lobby" && sleepCount % 4 == 0 && sleepCount > 0)) {
+    console.log("[Yoots] sleepCount", sleepCount, "wakeCount", wakeCount)
+    if (sleepCount > 0 && sleepCount == wakeCount) {
       console.log("[sleepCount useEffect] sleepCount === wakeCount")
       // doesn't fire if client is not visible
       socket.emit("yootsAsleep", {flag: true}, ({response}) => {
@@ -84,6 +86,8 @@ export default function Yoots({ device = "portrait" }) {
   }, [sleepCount, wakeCount])
 
   useFrame((state, delta) => {
+    // console.log("[Yoots] client", client, "isMyTurn", isMyTurn(turn, teams, client.id),
+    // "readyToThrow", readyToThrow)
     if (client && 
       isMyTurn(turn, teams, client.id) && 
       teams[turn.team].throws > 0 && 

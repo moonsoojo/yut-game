@@ -299,19 +299,21 @@ export const getYootsAsleep = (roomId, id) => {
 }
 
 export const isAllYootsAsleep = (roomId) => {
-  // what if no client is visible?
+  if (!(roomId in rooms)) {
+    return { isAllYootsAsleepError: "room not found" }
+  }
   for (const id of Object.keys(rooms[roomId].clients)) {
     if (rooms[roomId].clients[id].visibility && 
       rooms[roomId].clients[id].yootsAsleep === false) {
-        return false;
+        return { allYootsAsleep: false };
     }
   }
-  return true;
+  return { allYootsAsleep: true };
 }
 
 export const updateYootsAsleep = (roomId, clientId, state) => {
   if (!(roomId in rooms)) {
-    return { updateYootsAsleepError: room.error }
+    return { updateYootsAsleepError: "room not found" }
   }
   rooms[roomId].clients[clientId].yootsAsleep = state
   return {}
@@ -410,11 +412,13 @@ export const passTurnPregame = (roomId) => {
 }
 
 export const getCurrentPlayerId = (roomId) => {
-  let turn = rooms[roomId].turn
-  console.log("[getCurrentPlayerId] turn", turn)
-  let currentPlayer = turn.players[turn.team]
-  console.log("[getCurrentPlayerId] currentPlayer", currentPlayer)
-  return rooms[roomId].teams[turn.team].players[currentPlayer].id
+  if (roomId in rooms) {
+    let turn = rooms[roomId].turn
+    console.log("[getCurrentPlayerId] turn", turn)
+    let currentPlayer = turn.players[turn.team]
+    console.log("[getCurrentPlayerId] currentPlayer", currentPlayer)
+    return rooms[roomId].teams[turn.team].players[currentPlayer].id
+  }
 }
 
 export const getThrown = (roomId, clientId) => {
