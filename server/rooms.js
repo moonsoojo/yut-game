@@ -226,7 +226,11 @@ export const addClient = (roomId, client) => {
 }
 
 export const getClient = (roomId, clientId) => {
-  return rooms[roomId].clients[clientId]
+  if (clientId in clients) {
+    return { client: rooms[roomId].clients[clientId] }
+  } else {
+    return { getClientError: "client not found" }
+  }
 }
 
 export const updateClientTurn = (roomId, clientId) => {
@@ -238,19 +242,32 @@ export const getHostId = (roomId) => {
 }
 
 export const updateHostId = (roomId, hostId) => {
+  console.log("[updateHostId] hostId type", typeof hostId)
+  if (!(roomId in rooms)) {
+    return { updateHostIdError: "room not found" }
+  }
   rooms[roomId].hostId = hostId
-  return rooms[roomId]
+}
+
+export const countPlayersTeam = (roomId, team) => {
+  if (!(roomId in rooms)) {
+    return { countPlayersTeamError: "room not found" }
+  }
+  return rooms[roomId].teams[team].players.length
 }
 
 export const isReadyToStart = (roomId) => {
   const room = rooms[roomId]
+  if (!(roomId in rooms)) {
+    return { isReadyToStartError: "room not found" }
+  }
   if (room.gamePhase === 'lobby' && 
   room.teams[0].players.length > 0 &&
   room.teams[1].players.length > 0 &&
   isAllYootsAsleep(roomId)) {
-    return true
+    return { readyToStart: true }
   } else {
-    return false;
+    return { readyToStart: false }
   }
 }
 
@@ -293,9 +310,8 @@ export const isAllYootsAsleep = (roomId) => {
 }
 
 export const updateYootsAsleep = (roomId, clientId, state) => {
-  let room = getRoom(roomId)
-  if (room.error === "room not found") {
-    return { error: room.error }
+  if (!(roomId in rooms)) {
+    return { updateYootsAsleepError: room.error }
   }
   rooms[roomId].clients[clientId].yootsAsleep = state
   return {}
@@ -406,7 +422,13 @@ export const getThrown = (roomId, clientId) => {
 }
 
 export const updateThrown = (roomId, clientId, state) => {
+  if (!(roomId in rooms)) {
+    return { updateThrownError: "room not found" }
+  } else if (!(clientId in rooms[roomId].clients)) {
+    return { updateThrownError: "client not found" }
+  }
   rooms[roomId].clients[clientId].thrown = state
+  return {}
 }
 
 export const getTeams = (roomId) => {
@@ -421,12 +443,13 @@ export const updateTeams = (roomId, teams) => {
 }
 
 export const updateVisibility = (roomId, clientId, state) => {
-  if (roomId in rooms) {
-    rooms[roomId].clients[clientId].visibility = state
-    return { client: rooms[roomId].clients[clientId] }
-  } else {
-    return { error: 'room not found' }
+  if (!(roomId in rooms)) {
+    return { error: "room not found" }
+  } else if (!(clientId in rooms[roomId].clients)) {
+    return { error: "client not found in room" }
   }
+  rooms[roomId].clients[clientId].visibility = state
+  return {}
 }
 
 export const updateReadyToThrow = (roomId, state) => {

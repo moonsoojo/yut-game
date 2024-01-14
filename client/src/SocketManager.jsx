@@ -6,17 +6,19 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000';
+// const ENDPOINT = 'localhost:5000';
+
+const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
     query: {
       client: localStorage.getItem('yootGame')
     },
-    autoConnect: false
+    autoConnect: false,
+    async
   },
 )
-// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000

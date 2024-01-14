@@ -168,7 +168,9 @@ export default function Yoots({ device = "portrait" }) {
   }
 
   function handleYootThrow() {
-    socket.emit("throwYoots");
+    socket.emit("throwYoots", ({}), ({ error }) => {
+      console.log(error)
+    });
   }
 
   function handleYootReset() {

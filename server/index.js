@@ -9,7 +9,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, getClient, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -176,6 +176,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       }
       addClient(spectator.room, client)
       let { room, error } = getRoom(spectator.room)
+      if (error) {
+        return callback({ error })
+      }
       io.to(roomId).emit('room', room)
 
       callback('join room without savedClient success')
@@ -197,7 +200,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
       let { room, error } = getRoom(addedPlayer.room)
       if (error) {
-        return callback({ response: error })
+        return callback({ error })
       }
       socket.broadcast.to(addedPlayer.room).emit(
         'message', 
@@ -216,15 +219,16 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       addClient(roomId, client)
       io.to(roomId).emit('room', room)
 
-      let hostId = room.hostId
-      console.log("[joinRoom] hostId", hostId)
-      if (hostId == null) { // if there's no host, there's only one player
+      console.log("[joinRoom] hostId", getHostId(roomId))
+      if (getHostId(roomId) == null) { // if there's no host, there's only one player
         updateHostId(roomId, socket.id)
       } else {
-        if (isReadyToStart(roomId)) {
-          updateReadyToStart(roomId, true)
-          io.to(hostId).emit("readyToStart", true);
+        let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
+        if (isReadyToStartError) {
+          return callback({ error: isReadyToStartError })
         }
+        updateReadyToStart(roomId, readyToStart)
+        io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
       }
       
       callback('join room with savedClient success')
@@ -255,17 +259,21 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       }
     )
 
-    let hostId = getRoom(roomId).hostId
-    if (hostId == null) { // if there's no host, there's only one player
-      hostId = socket.id
-    } else {
-      if (isReadyToStart(roomId)) {
-        updateReadyToStart(roomId, true)
-        io.to(hostId).emit("readyToStart", true);
+    if (getHostId(roomId) == null) { // if there's no host, there's only one player
+      const { updateHostIdError } = updateHostId(roomId, socket.id)
+      if (updateHostIdError) {
+        return callback({ error: updateHostIdError })
       }
+    } else {
+      let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
+      if (isReadyToStartError) {
+        return callback({ error: isReadyToStartError })
+      }
+      updateReadyToStart(roomId, readyToStart)
+      io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
     }
 
-    callback({ response: 'ok', player: addedPlayer });
+    callback({ player: addedPlayer });
   })
 
   socket.on("sendMessage", ({ message, roomId }, callback) => {
@@ -293,18 +301,22 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("yootsAsleep", ({flag}, callback) => {
-    const { error } = updateYootsAsleep(roomId, socket.id, flag)
-    if (error) {
-      return callback({ response: error })
+    const { updateYootsAsleepError } = updateYootsAsleep(roomId, socket.id, flag)
+    if (updateYootsAsleepError) {
+      return callback({ error: updateYootsAsleepError })
     }
     if (isAllYootsAsleep(roomId)) {
       io.to(roomId).emit("readyToThrow", true)
     }
 
-    if (isReadyToStart(roomId)) {
-      updateReadyToStart(roomId, true)
-      io.to(getHostId(roomId)).emit("readyToStart", true);
-    } else if (getGamePhase(roomId) !== "lobby") {
+    if (getGamePhase(roomId) === "lobby") {
+      let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
+      if (isReadyToStartError) {
+        return callback({ error: isReadyToStartError })
+      }
+      updateReadyToStart(roomId, readyToStart)
+      io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
+    } else {
       if (socket.id === getCurrentPlayerId(roomId)) {
         if (getThrown(roomId, socket.id) == true) {
           callback({
@@ -376,7 +388,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
 
   // if player throws, at least one player's visibility is true
-  socket.on("throwYoots", () => {
+  socket.on("throwYoots", (callback) => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let teams = getTeams(roomId)
@@ -396,7 +408,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       updateTeams(roomId, teams)
       io.to(roomId).emit('teams', teams)
 
-      updateThrown(roomId, socket.id, true)
+      let { updateThrownError } = updateThrown(roomId, socket.id, true)
+      if (updateThrownError) {
+        return callback({ error: updateThrownError })
+      }
       // emit clients
 
       let clients = getClients(roomId)
@@ -562,15 +577,19 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
           if (room.hostId === socket.id) {
             updateHostId(room.id, findRandomPlayer(room.teams).id)
           }
-          if (!isReadyToStart(roomId)) {
+          if (userFromRoom.team && countPlayersTeam(roomId, userFromRoom.team) == 0)
+          {
             updateReadyToStart(roomId, false)
-            io.to(getHostId(room.id)).emit("readyToStart", false)
+            io.to(getHostId(roomId)).emit("readyToStart", false);
           }
         } else {
           console.log("[disconnect] room empty")
           deleteRoom(room.id)
           console.log("[disconnect] rooms[roomId]", getRoom(room.id))
         }
+        // start button doesn't disappear when there's only one player left 
+        // in the team in my phone
+
       }
     }
 

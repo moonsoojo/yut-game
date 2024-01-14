@@ -31,8 +31,10 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
 
   function handleJoinSubmit(e) {
     e.preventDefault();
-    socket.emit("joinTeam", { team, name }, ({ response, player }) => {
-      if (response === 'ok') {
+    socket.emit("joinTeam", { team, name }, ({ error, player }) => {
+      if (error) {
+        console.log("[JoinTeamModal] error", error)
+      } else if (player) {
         localStorage.setItem('yootGame', JSON.stringify({
           ...player
         }))
@@ -41,6 +43,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
       }
     });
   }
+  
   function handleJoinCancel(e) { // submits name and emits 'joinTeam'
     e.preventDefault()
     setName('')
