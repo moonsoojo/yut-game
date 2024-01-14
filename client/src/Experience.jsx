@@ -105,6 +105,7 @@ export default function Experience() {
 
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
+    console.log("visibility change");
     if (document.hidden) {
       socket.emit("visibilityChange", {flag: false}, ({ response }) => {
         console.log("[visibilityChange] response", response)

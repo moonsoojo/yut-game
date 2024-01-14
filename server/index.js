@@ -9,7 +9,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -289,9 +289,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  // if visibility is on and yuts are not asleep, emit "readyToThrow: false"
+  // console log not fired when i switched apps in mobile
   socket.on("visibilityChange", ({flag}, callback) => {
+    console.log("[visibilityChange] flag", flag)
     const { error } = updateVisibility(roomId, socket.id, flag)
+    console.log("[visibilityChange] updated visibility", getVisibility(roomId, socket.id))
     if (error) {
       callback({ response: error })
     } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
@@ -394,7 +396,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
 
   // if player throws, at least one player's visibility is true
-  socket.on("throwYoots", (callback) => {
+  socket.on("throwYoots", ({}, callback) => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let teams = getTeams(roomId)
@@ -546,9 +548,12 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     io.to(roomId).emit("legalTiles", { legalTiles: getLegalTiles(roomId) })
   })
 
-  socket.on("recordThrow", ({move}) => {
+  socket.on("recordThrow", ({move}, callback) => {
     console.log("[recordThrow] move", move)
-    updateThrown(roomId, socket.id, false)
+    let { updateThrownError } = updateThrown(roomId, socket.id, true)
+    if (updateThrownError) {
+      return callback({ error: updateThrownError })
+    }
     if (getGamePhase(roomId) === "pregame") {
       addMove(roomId, getTurn(roomId).team, move.toString())
       passTurnPregame(roomId)

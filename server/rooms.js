@@ -247,6 +247,7 @@ export const updateHostId = (roomId, hostId) => {
     return { updateHostIdError: "room not found" }
   }
   rooms[roomId].hostId = hostId
+  return {}
 }
 
 export const countPlayersTeam = (roomId, team) => {
@@ -454,6 +455,12 @@ export const updateVisibility = (roomId, clientId, state) => {
   }
   rooms[roomId].clients[clientId].visibility = state
   return {}
+}
+
+export const getVisibility = (roomId, clientId) => {
+  if (roomId in rooms && clientId in rooms[roomId].clients) {
+    return rooms[roomId].clients[clientId].visibility
+  }
 }
 
 export const updateReadyToThrow = (roomId, state) => {
