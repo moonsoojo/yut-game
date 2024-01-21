@@ -39,7 +39,11 @@ export default function Tile({ tile, wrapperRadius, device }) {
       
       if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] });
+          socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] }, ({ error }) => {
+            if (error) {
+              console.log("move error", error)
+            }
+          });
         }
         socket.emit("legalTiles", {legalTiles: {}})
         socket.emit("select", null);

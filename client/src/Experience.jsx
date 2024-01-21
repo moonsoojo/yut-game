@@ -59,6 +59,8 @@ let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
+export const disconnectAtom = atom(false)
+
 export default function Experience() {
 
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
@@ -102,6 +104,7 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
+  const [disconnect] = useAtom(disconnectAtom);
 
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
@@ -752,6 +755,18 @@ export default function Experience() {
           </group>}
         </group>}
       </group>
+      {disconnect && <mesh position={[0,0,0]}>
+        <boxGeometry args={[10, 0.1, 10]}/>
+        <meshStandardMaterial color="black" transparent opacity={0.5}/>
+        <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.3} 
+        height={0.01} 
+        position={[0,5,-5]}
+        rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}>
+          Disconnected. Please refresh
+        </Text3D>
+      </mesh>}
     </>
   );
 }

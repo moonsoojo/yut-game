@@ -21,7 +21,10 @@ const rooms = {}
 // turn
 // legalTiles
 // selection
-// yoot states
+// clients
+  // yootsAsleep
+  // visibility
+  // thrown
 */
 
 // add room
@@ -184,7 +187,9 @@ export const joinTeam = ({ roomId, id, team, name }) => {
   // remove player from spectators
   // join team
   // client remains intact
-  if (roomId in rooms) {
+  if (!(roomId in rooms)) {
+    return { joinTeamError: "unable to find room" }
+  } else {
     const user = getUserFromRoom({ id, roomId })
     const existingTeam = user.team
 
@@ -207,7 +212,7 @@ export const joinTeam = ({ roomId, id, team, name }) => {
 
 export const getRoom = ( id ) => {
   if (!(id in rooms)) {
-    return { error: 'room not found' }
+    return { getRoomError: 'room not found' }
   } else {
     return { room: rooms[id] }
   }
@@ -258,8 +263,14 @@ export const getThrows = (roomId, team) => {
   }
 }
 
-export const addClient = (roomId, client) => {
+export const addNewClient = (roomId, clientId) => {
   if (roomId in rooms) {
+    const client = {
+      id: clientId,
+      yootsAsleep: false,
+      visibility: true,
+      thrown: false
+    }
     rooms[roomId].clients[client.id] = client
     console.log("[addClient] clients", rooms[roomId].clients)
     console.log("[addClient] rooms[roomId]", rooms[roomId])
@@ -460,7 +471,7 @@ export const passTurnPregame = (roomId) => {
     let teams = room.teams
     if (allTeamsHaveMove(teams)) {
       let firstTeamToThrow = calcFirstTeamToThrow(teams)
-      if (firstTeamToThrow == -1) {
+      if (firstTeamToThrow == -1) { // tie
         passTurn(roomId)
       } else {
         // turn has been decided
@@ -474,7 +485,7 @@ export const passTurnPregame = (roomId) => {
     } else {
       passTurn(roomId)
     }
-    return { turn: rooms[roomId].turn }
+    // return { turn: rooms[roomId].turn }
   }
 }
 

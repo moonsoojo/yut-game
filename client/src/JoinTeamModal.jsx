@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
 import { socket } from './SocketManager';
 import { useParams } from "wouter";
+import { disconnectAtom } from './Experience';
+import { useAtom } from 'jotai';
 
 export default function JoinTeamModal({ position, team, setJoinTeam }) {
 
   const [name, setName] = useState('')
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
+  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const params = useParams();
 
   /*async function handleSubmit(e) {
@@ -34,6 +37,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
     socket.emit("joinTeam", { team, name }, ({ error, player }) => {
       if (error) {
         console.log("[JoinTeamModal] error", error)
+        // setDisconnect(true)
       } else if (player) {
         localStorage.setItem('yootGame', JSON.stringify({
           ...player
