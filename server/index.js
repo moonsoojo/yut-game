@@ -260,6 +260,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     // add player back to clients
 
     console.log("[joinTeam] addedPlayer", addedPlayer)
+    // join team: pass turn skips players
 
     socket.emit("client", addedPlayer) // client only deals with game state like team, not yoot state
     const { room } = getRoom(addedPlayer.room)
