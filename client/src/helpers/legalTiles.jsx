@@ -150,7 +150,7 @@ function chooseTileFromFork(path, forks) {
 }
 
 function checkBackdoRule(moves, pieces) {
-  // should only have backdo
+  // check if player only has 'backdo'
   /*
   let hasBackdo = false;
   let hasAnotherMove = false;
@@ -164,6 +164,17 @@ function checkBackdoRule(moves, pieces) {
   if (!(hasBackdo && !hasAnotherMove)) {
     return false;
   }
+  */
+
+  let hasBackdo = false;
+  for (let move in moves) {
+    if (move === "-1" && moves[move] > 0) {
+      hasBackdo = true;
+    }
+  }
+  if (!hasBackdo) {
+    return false;
+  }
 
   // should have no pieces on the board
   for (let piece of pieces) {
@@ -172,7 +183,5 @@ function checkBackdoRule(moves, pieces) {
     }
   }
   
-  return true; */
-
-  return false
+  return true; 
 }

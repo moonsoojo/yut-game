@@ -65,7 +65,7 @@ export default function Piece ({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, client.socketId)) {
+    if (isMyTurn(turn, teams, client.id)) {
       wrapperMat.current.opacity += 0.4;
       document.body.style.cursor = "pointer";
     }
@@ -73,7 +73,7 @@ export default function Piece ({
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, client.socketId)) {
+    if (isMyTurn(turn, teams, client.id)) {
       wrapperMat.current.opacity -= 0.4;
       document.body.style.cursor = "default";
     }

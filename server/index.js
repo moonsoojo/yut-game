@@ -9,7 +9,7 @@ import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
 import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, getReadyToThrow, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility, getClient, joinTeam } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -34,7 +34,7 @@ server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 let test = false;
 if (test) {
-  const roomId = 'Lny'
+  const roomId = 'HMx'
   addRoom({ id: roomId })
 
   let teams = JSON.parse(JSON.stringify(initialState.teams))
@@ -52,20 +52,26 @@ if (test) {
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
+  teams[0].pieces[0] = null;
+  teams[0].pieces[1] = null;
+  teams[0].pieces[2] = 'scored';
+  teams[0].pieces[3] = 'scored';
   teams[1].pieces[0] = null;
   teams[1].pieces[1] = null;
-  teams[1].pieces[2] = null;
   // teams[1].pieces[2] = 'scored';
   // teams[1].pieces[3] = 'scored';
   updateTeams(roomId, teams)
   
   addThrow(roomId, turn.team)
-  tiles[5] = [
-    { tile: 5, team: 1, id: 0,  history: [0, 1,2,3,4]},
+  tiles[19] = [
+    { tile: 19, team: 0, id: 0,  history: [15,16,17,18]},
+    { tile: 19, team: 0, id: 1,  history: [15,16,17,18]},
   ]
-  tiles[3] = [
-    { tile: 3, team: 1, id: 1,  history: [0, 1,2]},
-    { tile: 3, team: 1, id: 2,  history: [0, 1,2]},
+  tiles[4] = [
+    { tile: 4, team: 1, id: 0,  history: [0, 1,2,3]},
+  ]
+  tiles[13] = [
+    { tile: 13, team: 1, id: 1,  history: [10,11,12]},
   ]
   updateTiles(roomId, tiles)
   // tiles[10] = [
@@ -191,6 +197,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         id: socket.id,
         room: roomId
       }
+      // when bro and i joined another room, when bro joined, 
+      // we didn't see each other. when we refreshed the page, we did
       const addedPlayer = addPlayer({ player: savedPlayer })
       socket.emit("client", addedPlayer)
 
@@ -237,18 +245,23 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("joinTeam", ({ team, name }, callback) => {
 
-    const spectator = removeUserFromRoom({ id: socket.id, roomId })
-    const player = {
-      ...spectator,
-      team,
-      name
-    }
+    // const client = getClient(roomId, socket.id)
+    // const spectator = removeUserFromRoom({ id: socket.id, roomId })
+    const addedPlayer = joinTeam({ roomId, id: socket.id, team, name })
+    // const player = {
+    //   ...spectator,
+    //   team,
+    //   name
+    // }
 
-    const addedPlayer = addPlayer({ player })
+    // const addedPlayer = addPlayer({ player })
+    // addClient(roomId, client)
+
+    // add player back to clients
 
     console.log("[joinTeam] addedPlayer", addedPlayer)
 
-    socket.emit("client", addedPlayer)
+    socket.emit("client", addedPlayer) // client only deals with game state like team, not yoot state
     const { room } = getRoom(addedPlayer.room)
     io.to(addedPlayer.room).emit('room', room)
     socket.broadcast.to(addedPlayer.room).emit(
@@ -284,8 +297,12 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     } else {
       const user = getUserFromRoom({ id: socket.id, roomId });
   
-      io.to(roomId).emit('message', { user: user.name, text: message, team: user.team });
-      callback({});
+      if (user !== undefined) {
+        io.to(roomId).emit('message', { user: user.name, text: message, team: user.team });
+        callback({});
+      } else {
+        callback({ error: `user with id ${socket.id} in room ${roomId} not found`})
+      }
     }
   })
 
@@ -296,9 +313,22 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     console.log("[visibilityChange] updated visibility", getVisibility(roomId, socket.id))
     if (error) {
       callback({ response: error })
-    } else if (flag === true && !getYootsAsleep(roomId, socket.id)) {
-      updateReadyToThrow(roomId, false)
-      io.to(roomId).emit("readyToThrow", false)
+    } else if (flag === true) {
+      const { yootsAsleep, getYootsAsleepError } = getYootsAsleep(roomId, socket.id)
+      if (getYootsAsleepError) {
+        callback({ response: getYootsAsleepError })
+      }
+      const { updateYootsAsleepError } = updateYootsAsleep(roomId, socket.id, yootsAsleep)
+      if (updateYootsAsleepError) {
+        callback({ response: updateYootsAsleepError })
+      }
+      if (!yootsAsleep) {
+        updateReadyToThrow(roomId, false)
+        io.to(roomId).emit("readyToThrow", false)
+      } else if (isAllYootsAsleep(roomId)) {
+        updateReadyToThrow(roomId, true)
+        io.to(roomId).emit("readyToThrow", true)
+      }
     }
   })
 
@@ -401,23 +431,14 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let teams = getTeams(roomId)
     let turn = getTurn(roomId)
-    
-    // console.log("[throwYoots] teams[turn.team].throws", teams[turn.team].throws, 
-    // "teams[turn.team].players[turn.players[turn.team]].id === socket.id",
-    // teams[turn.team].players[turn.players[turn.team]].id === socket.id,
-    // "isAllYootsAsleep(roomId)", isAllYootsAsleep(roomId))
 
-    const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
-    if (isAllYootsAsleepError) {
-      return callback({ error: isAllYootsAsleepError })
-    }
-    console.log("[throwYoots] allYootsAsleep", allYootsAsleep)
+
 
     if (teams[turn.team].throws > 0 && 
       teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
       // after throw, 
       // turn was passed, but the client was disconnected (tab switch)
-      allYootsAsleep) {
+      getReadyToThrow(roomId)) {
 
       teams[turn.team].throws--;
       updateTeams(roomId, teams)
@@ -591,15 +612,29 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         // tell everyone in the room that user left
         if (countPlayers(room.id) > 0) {
           socket.broadcast.to(room.id).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
-          io.to(room.id).emit('room', room)
           if (room.hostId === socket.id) {
             updateHostId(room.id, findRandomPlayer(room.teams).id)
           }
+
           if (userFromRoom.team && countPlayersTeam(roomId, userFromRoom.team) == 0)
           {
             updateReadyToStart(roomId, false)
             io.to(getHostId(roomId)).emit("readyToStart", false);
           }
+
+          // other players should be able to play if their yoots are asleep
+          const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
+          if (isAllYootsAsleepError) {
+            return callback({ error: isAllYootsAsleepError })
+          }
+          console.log("[disconnect] allYootsAsleep", allYootsAsleep)
+          if (allYootsAsleep) {
+            updateReadyToThrow(roomId, true)
+            // this is handled by emitting 'room'
+            // io.to(roomId).emit("readyToThrow", true)
+          }
+
+          io.to(room.id).emit('room', room)
         } else {
           console.log("[disconnect] room empty")
           deleteRoom(room.id)

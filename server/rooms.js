@@ -128,21 +128,25 @@ export const addRoom = ({ id }) => {
 }
 
 export const addSpectator = ({ id, name, room }) => {
-  
+  if (room in rooms) {
     const spectator = { id, name, room };
     rooms[room].spectators.push(spectator)
   
     return { spectator }
-
+  }
 }
 
 export const getSpectatorFromRoom = ({ id, room }) => {
-  return rooms[room].spectators.find((spectator) => spectator.id === id)
+  if (room in rooms) {
+    return rooms[room].spectators.find((spectator) => spectator.id === id)
+  }
 }
 
 export const addPlayer = ({ player }) => {
-  rooms[player.room].teams[player.team].players.push(player)
-  return player
+  if (player.room in rooms) {
+    rooms[player.room].teams[player.team].players.push(player)
+    return player
+  }
 }
 
 export const removeUserFromRoom = ({ id, roomId }) => {
@@ -176,6 +180,31 @@ export const removeUserFromRoom = ({ id, roomId }) => {
   }
 }
 
+export const joinTeam = ({ roomId, id, team, name }) => {
+  // remove player from spectators
+  // join team
+  // client remains intact
+  if (roomId in rooms) {
+    const user = getUserFromRoom({ id, roomId })
+    const existingTeam = user.team
+
+    if (existingTeam !== 0 && existingTeam !== 1) {
+      const index = rooms[roomId].spectators.findIndex((spectator) => spectator.id === id);
+  
+      if (index !== -1) {
+        const player = {
+          ...user,
+          team,
+          name
+        }
+        rooms[roomId].teams[team].players.push(player)
+        return player
+      }
+    }
+  }
+
+}
+
 export const getRoom = ( id ) => {
   if (!(id in rooms)) {
     return { error: 'room not found' }
@@ -185,10 +214,12 @@ export const getRoom = ( id ) => {
 }
 
 export const getUserFromRoom = ({ id, roomId }) => {
-  let users = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players.concat(rooms[roomId].spectators))
-  const user = users.find((user) => user.id === id)
-
-  return user
+  if (roomId in rooms) {
+    let users = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players.concat(rooms[roomId].spectators))
+    const user = users.find((user) => user.id === id)
+  
+    return user
+  }
 }
 
 export const countPlayers = (roomId) => {
@@ -199,50 +230,65 @@ export const countPlayers = (roomId) => {
 }
 
 export function bothTeamsHavePlayers(roomId) {
-  let teams = getTeams(roomId)
-  if (teams[0].players.length > 0 && teams[1].players.length > 0) {
-    return true
-  } else {
-    return false;
+  if (roomId in rooms) {
+    let teams = getTeams(roomId)
+    if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+      return true
+    } else {
+      return false;
+    }
   }
 }
 
 export const deleteRoom = (roomId) => {
-  delete rooms[roomId]
+  if (roomId in rooms) {
+    delete rooms[roomId]
+  }
 }
 
 export const addThrow = (roomId, team) => {
-  rooms[roomId].teams[team].throws++
+  if (roomId in rooms) {
+    rooms[roomId].teams[team].throws++
+  }
 }
 
 export const getThrows = (roomId, team) => {
-  return rooms[roomId].teams[team].throws
+  if (roomId in rooms) {
+    return rooms[roomId].teams[team].throws
+  }
 }
 
 export const addClient = (roomId, client) => {
-  rooms[roomId].clients[client.id] = client
-  console.log("[addClient] clients", rooms[roomId].clients)
-  console.log("[addClient] rooms[roomId]", rooms[roomId])
+  if (roomId in rooms) {
+    rooms[roomId].clients[client.id] = client
+    console.log("[addClient] clients", rooms[roomId].clients)
+    console.log("[addClient] rooms[roomId]", rooms[roomId])
+  }
 }
 
 export const getClient = (roomId, clientId) => {
-  if (clientId in clients) {
-    return { client: rooms[roomId].clients[clientId] }
-  } else {
-    return { getClientError: "client not found" }
+  if (roomId in rooms) {
+    if (clientId in rooms[roomId].clients) {
+      return { client: rooms[roomId].clients[clientId] }
+    } else {
+      return { getClientError: "client not found" }
+    }
   }
 }
 
 export const updateClientTurn = (roomId, clientId) => {
-  rooms[roomId].clients[clientId]
+  if (roomId in rooms) {
+    rooms[roomId].clients[clientId]
+  }
 }
 
 export const getHostId = (roomId) => {
-  return rooms[roomId].hostId
+  if (roomId in rooms) {
+    return rooms[roomId].hostId
+  }
 }
 
 export const updateHostId = (roomId, hostId) => {
-  console.log("[updateHostId] hostId type", typeof hostId)
   if (!(roomId in rooms)) {
     return { updateHostIdError: "room not found" }
   }
@@ -258,14 +304,15 @@ export const countPlayersTeam = (roomId, team) => {
 }
 
 export const isReadyToStart = (roomId) => {
-  const room = rooms[roomId]
   if (!(roomId in rooms)) {
     return { isReadyToStartError: "room not found" }
   }
+  
+  const room = rooms[roomId]
   if (room.gamePhase === 'lobby' && 
-  room.teams[0].players.length > 0 &&
-  room.teams[1].players.length > 0 &&
-  isAllYootsAsleep(roomId)) {
+    room.teams[0].players.length > 0 &&
+    room.teams[1].players.length > 0 &&
+    isAllYootsAsleep(roomId)) {
     return { readyToStart: true }
   } else {
     return { readyToStart: false }
@@ -273,30 +320,41 @@ export const isReadyToStart = (roomId) => {
 }
 
 export const updateReadyToStart = (roomId, state) => {
-  rooms[roomId].readyToStart = state
-  return rooms[roomId]
+  if (roomId in rooms) {
+    rooms[roomId].readyToStart = state
+    return rooms[roomId]
+  }
 }
 
 export const getGamePhase = (roomId) => {
-  return rooms[roomId].gamePhase
+  if (roomId in rooms) {
+    return rooms[roomId].gamePhase
+  }
 }
 
 export const updateGamePhase = (roomId, gamePhase) => {
-  rooms[roomId].gamePhase = gamePhase
+  if (roomId in rooms) {
+    rooms[roomId].gamePhase = gamePhase
+  }
 }
 
 export const getClients = (roomId) => {
-  return rooms[roomId].clients
+  if (roomId in rooms) {
+    return rooms[roomId].clients
+  }
 }
 
 export const updateClients = (roomId, clients) => {
-  rooms[roomId].clients = clients
+  if (roomId in rooms) {
+    rooms[roomId].clients = clients
+  }
 }
 
 export const getYootsAsleep = (roomId, id) => {
-  if (roomId in rooms) {
-    return rooms[roomId].clients[id].yootsAsleep
+  if (!(roomId in rooms)) {
+    return { getYootsAsleepError: "room not found" }
   }
+  return { yootsAsleep: rooms[roomId].clients[id].yootsAsleep } 
 }
 
 export const isAllYootsAsleep = (roomId) => {
@@ -321,12 +379,16 @@ export const updateYootsAsleep = (roomId, clientId, state) => {
 }
 
 export const getTurn = (roomId) => {
-  return rooms[roomId].turn
+  if (roomId in rooms) {
+    return rooms[roomId].turn
+  }
 }
 
 export const updateTurn = (roomId, turn) => {
-  rooms[roomId].turn = turn
-  return rooms[roomId].turn
+  if (roomId in rooms) {
+    rooms[roomId].turn = turn
+    return rooms[roomId].turn
+  }
 }
 
 function allTeamsHaveMove (teams) {
@@ -349,21 +411,23 @@ function allTeamsHaveMove (teams) {
 
 export const passTurn = (roomId) => {
   console.log("[passTurn] roomId", roomId)
-  let turn = getTurn(roomId)
-  let teams = getTeams(roomId)
-  if (turn.team == teams.length - 1) {
-    turn.team = 0
-  } else {
-    turn.team++
+  if (roomId in rooms) {
+    let turn = getTurn(roomId)
+    let teams = getTeams(roomId)
+    if (turn.team == teams.length - 1) {
+      turn.team = 0
+    } else {
+      turn.team++
+    }
+  
+    if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
+      turn.players[turn.team] = 0
+    } else {
+      turn.players[turn.team]++
+    }
+  
+    return updateTurn(roomId, turn)
   }
-
-  if (turn.players[turn.team] == teams[turn.team].players.length - 1) {
-    turn.players[turn.team] = 0
-  } else {
-    turn.players[turn.team]++
-  }
-
-  return updateTurn(roomId, turn)
 }
 
 function calcFirstTeamToThrow(teams) {
@@ -391,25 +455,27 @@ function calcFirstTeamToThrow(teams) {
 }
 
 export const passTurnPregame = (roomId) => {
-  const room = rooms[roomId]
-  let teams = room.teams
-  if (allTeamsHaveMove(teams)) {
-    let firstTeamToThrow = calcFirstTeamToThrow(teams)
-    if (firstTeamToThrow == -1) {
-      passTurn(roomId)
+  if (roomId in rooms) {
+    const room = rooms[roomId]
+    let teams = room.teams
+    if (allTeamsHaveMove(teams)) {
+      let firstTeamToThrow = calcFirstTeamToThrow(teams)
+      if (firstTeamToThrow == -1) {
+        passTurn(roomId)
+      } else {
+        // turn has been decided
+        updateTurn(roomId, { team: firstTeamToThrow, players: [0,0] })
+        updateGamePhase(roomId, "game")
+      }
+      // clear moves in teams
+      for (let i = 0; i < 2; i++) {
+        clearMoves(roomId, i)
+      }
     } else {
-      // turn has been decided
-      updateTurn(roomId, { team: firstTeamToThrow, players: [0,0] })
-      updateGamePhase(roomId, "game")
+      passTurn(roomId)
     }
-    // clear moves in teams
-    for (let i = 0; i < 2; i++) {
-      clearMoves(roomId, i)
-    }
-  } else {
-    passTurn(roomId)
+    return { turn: rooms[roomId].turn }
   }
-  return { turn: rooms[roomId].turn }
 }
 
 export const getCurrentPlayerId = (roomId) => {
@@ -423,7 +489,9 @@ export const getCurrentPlayerId = (roomId) => {
 }
 
 export const getThrown = (roomId, clientId) => {
-  return rooms[roomId].clients[clientId].thrown
+  if (roomId in rooms) {
+    return rooms[roomId].clients[clientId].thrown
+  }
 }
 
 export const updateThrown = (roomId, clientId, state) => {
@@ -437,7 +505,9 @@ export const updateThrown = (roomId, clientId, state) => {
 }
 
 export const getTeams = (roomId) => {
-  return rooms[roomId].teams
+  if (roomId in rooms) {
+    return rooms[roomId].teams
+  }
 }
 
 export const updateTeams = (roomId, teams) => {
@@ -463,6 +533,12 @@ export const getVisibility = (roomId, clientId) => {
   }
 }
 
+export const getReadyToThrow = (roomId) => {
+  if (roomId in rooms) {
+    return rooms[roomId].readyToThrow
+  }
+}
+
 export const updateReadyToThrow = (roomId, state) => {
   if (roomId in rooms) {
     rooms[roomId].readyToThrow = state
@@ -482,108 +558,128 @@ export const subtractMove = (roomId, team, move) => {
 }
 
 export const movesIsEmpty = (roomId, team) => {
-  const moves = rooms[roomId].teams[team].moves
-  for (const move in moves) {
-    if (parseInt(move) != 0 && moves[move] > 0) {
-      return false;
+  if (roomId in rooms) {
+    const moves = rooms[roomId].teams[team].moves
+    for (const move in moves) {
+      if (parseInt(move) != 0 && moves[move] > 0) {
+        return false;
+      }
     }
+    return true;
   }
-  return true;
 }
 
 export const clearMoves = (roomId, team) => {
-  for (const move in rooms[roomId].teams[team].moves) {
-    rooms[roomId].teams[team].moves[move] = 0
+  if (roomId in rooms) {
+    for (const move in rooms[roomId].teams[team].moves) {
+      rooms[roomId].teams[team].moves[move] = 0
+    }
   }
 }
 
 export const getLegalTiles = (roomId) => {
-  return rooms[roomId].legalTiles
+  if (roomId in rooms) {
+    return rooms[roomId].legalTiles
+  }
 }
 
 export const updateLegalTiles = (roomId, legalTiles) => {
-  rooms[roomId].legalTiles = legalTiles
+  if (roomId in rooms) {
+    rooms[roomId].legalTiles = legalTiles
+  }
 }
 
 export const getTiles = (roomId) => {
-  return rooms[roomId].tiles
+  if (roomId in rooms) {
+    return rooms[roomId].tiles
+  }
 }
 
 export const updateTiles = (roomId, tiles) => {
-  rooms[roomId].tiles = tiles
+  if (roomId in rooms) {
+    rooms[roomId].tiles = tiles
+  }
 }
 
 export const getSelection = (roomId) => {
-  return rooms[roomId].selection
+  if (roomId in rooms) {
+    return rooms[roomId].selection
+  }
 }
 
 export const updateSelection = (roomId, selection) => {
-  rooms[roomId].selection = selection
+  if (roomId in rooms) {
+    rooms[roomId].selection = selection
+  }
 }
 
 export const makeMove = (roomId, destination) => {
-  let tiles = getTiles(roomId)
-  let teams = getTeams(roomId)
-  let selection = getSelection(roomId)
-  let from = selection.tile
-  let to = destination
-  let legalTiles = getLegalTiles(roomId)
-  console.log("[makeMove] legalTiles", legalTiles)
-  let moveUsed = legalTiles[destination].move
-  console.log("[makeMove] moveUsed", moveUsed)
-  let history = legalTiles[destination].history
-  let pieces = selection.pieces
-
-  let starting = from == -1 ? true : false;
-  let movingTeam = pieces[0].team;
-
-  if (tiles[to].length > 0) {
-    let occupyingTeam = tiles[to][0].team
-    if (occupyingTeam != movingTeam) {
-      for (let piece of tiles[to]) {
-        piece.tile = -1
-        piece.history = []
-        teams[occupyingTeam].pieces[piece.id] = piece
+  if (roomId in rooms) {
+    let tiles = getTiles(roomId)
+    let teams = getTeams(roomId)
+    let selection = getSelection(roomId)
+    let from = selection.tile
+    let to = destination
+    let legalTiles = getLegalTiles(roomId)
+    console.log("[makeMove] legalTiles", legalTiles)
+    let moveUsed = legalTiles[destination].move
+    console.log("[makeMove] moveUsed", moveUsed)
+    let history = legalTiles[destination].history
+    let pieces = selection.pieces
+  
+    let starting = from == -1 ? true : false;
+    let movingTeam = pieces[0].team;
+  
+    if (tiles[to].length > 0) {
+      let occupyingTeam = tiles[to][0].team
+      if (occupyingTeam != movingTeam) {
+        for (let piece of tiles[to]) {
+          piece.tile = -1
+          piece.history = []
+          teams[occupyingTeam].pieces[piece.id] = piece
+        }
+        tiles[to] = []
+        addThrow(roomId, movingTeam);
       }
-      tiles[to] = []
-      addThrow(roomId, movingTeam);
     }
+  
+    for (const piece of pieces) {
+      tiles[to].push({tile: to, team: piece.team, id: piece.id, history})
+    }
+  
+    // take from 1st index (not 0th) and go until the end
+  
+    if (starting) {
+      let piece = pieces[0]
+      teams[movingTeam].pieces[piece.id] = null
+    } else {
+      tiles[from] = []
+    }
+  
+    // remove move
+    subtractMove(roomId, movingTeam, moveUsed)
+    updateTeams(roomId, teams)
+    updateTiles(roomId, tiles)
   }
-
-  for (const piece of pieces) {
-    tiles[to].push({tile: to, team: piece.team, id: piece.id, history})
-  }
-
-  // take from 1st index (not 0th) and go until the end
-
-  if (starting) {
-    let piece = pieces[0]
-    teams[movingTeam].pieces[piece.id] = null
-  } else {
-    tiles[from] = []
-  }
-
-  // remove move
-  subtractMove(roomId, movingTeam, moveUsed)
-  updateTeams(roomId, teams)
-  updateTiles(roomId, tiles)
 }
 
 export const score = (roomId, selectedMove) => {
-  let tiles = rooms[roomId].tiles
-  let teams = rooms[roomId].teams
-  let from = rooms[roomId].selection.tile
-  let moveUsed = selectedMove.move
-  let pieces = rooms[roomId].selection.pieces
-  let movingTeam = pieces[0].team;
-
-  for (const piece of pieces) {
-    teams[movingTeam].pieces[piece.id] = "scored"
+  if (roomId in rooms) {
+    let tiles = rooms[roomId].tiles
+    let teams = rooms[roomId].teams
+    let from = rooms[roomId].selection.tile
+    let moveUsed = selectedMove.move
+    let pieces = rooms[roomId].selection.pieces
+    let movingTeam = pieces[0].team;
+  
+    for (const piece of pieces) {
+      teams[movingTeam].pieces[piece.id] = "scored"
+    }
+  
+    tiles[from] = []
+    teams[movingTeam].moves[moveUsed]--;
+  
+    updateTiles(roomId, tiles)
+    updateTeams(roomId, teams)
   }
-
-  tiles[from] = []
-  teams[movingTeam].moves[moveUsed]--;
-
-  updateTiles(roomId, tiles)
-  updateTeams(roomId, teams)
 }
