@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
 import { socket } from './SocketManager';
 import { useParams } from "wouter";
-import { disconnectAtom } from './Experience';
+import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 
 export default function JoinTeamModal({ position, team, setJoinTeam }) {
@@ -37,7 +37,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
     socket.emit("joinTeam", { team, name }, ({ error, player }) => {
       if (error) {
         console.log("[JoinTeamModal] error", error)
-        // setDisconnect(true)
+        setDisconnect(true)
       } else if (player) {
         localStorage.setItem('yootGame', JSON.stringify({
           ...player

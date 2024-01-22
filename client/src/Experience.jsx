@@ -52,14 +52,13 @@ import {
   socket,
   legalTilesAtom,
   clientAtom,
+  disconnectAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
-
-export const disconnectAtom = atom(false)
 
 export default function Experience() {
 
@@ -755,18 +754,22 @@ export default function Experience() {
           </group>}
         </group>}
       </group>
-      {disconnect && <mesh position={[0,0,0]}>
-        <boxGeometry args={[10, 0.1, 10]}/>
-        <meshStandardMaterial color="black" transparent opacity={0.5}/>
+      {disconnect && <group>
+        <mesh position={[0,2,0]}>
+          <boxGeometry args={[200, 0.1, 200]}/>
+          <meshStandardMaterial color="black" transparent opacity={0.5}/>
+        </mesh>
         <Text3D 
-        font="/fonts/Luckiest Guy_Regular.json" 
-        size={0.3} 
-        height={0.01} 
-        position={[0,5,-5]}
-        rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}>
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.4} 
+          height={0.01} 
+          position={[-6,5,-5]}
+          rotation={[-Math.PI/2,0,0, "YXZ"]}
+        >
           Disconnected. Please refresh
         </Text3D>
-      </mesh>}
+      </group>
+      }
     </>
   );
 }

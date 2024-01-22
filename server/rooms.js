@@ -272,8 +272,8 @@ export const addNewClient = (roomId, clientId) => {
       thrown: false
     }
     rooms[roomId].clients[client.id] = client
-    console.log("[addClient] clients", rooms[roomId].clients)
-    console.log("[addClient] rooms[roomId]", rooms[roomId])
+    console.log("[addNewClient] clients", rooms[roomId].clients)
+    console.log("[addNewClient] rooms[roomId]", rooms[roomId])
   }
 }
 

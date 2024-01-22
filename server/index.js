@@ -16,12 +16,20 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173", 
-      "http://192.168.86.158:5173", // home
-      "http://192.168.1.181:5173", // home 2
-      "https://master.dh445c3qmwe4t.amplifyapp.com"
-    ],
+    // origin: [
+    //   // "http://localhost:5173", 
+    //   // "http://localhost:5174", 
+    //   // "http://192.168.86.158:5173", // home
+    //   // "http://192.168.1.181:5173", // home 2
+    //   // "http://192.168.86.158:5174", // home
+    //   // "http://192.168.1.181:5174", // home 2
+    //   // "https://master.dh445c3qmwe4t.amplifyapp.com",
+    //   // "https://yootgameonline.com",
+    //   // "https://www.yootgameonline.com",
+    //   // "https://yootgame3d.com",
+    //   // "https://www.yootgame3d.com",
+    // ],
+    origin: "*"
   },
 });
 
@@ -32,7 +40,7 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-let test = true;
+let test = false;
 if (test) {
   const roomId = '1V7'
   addRoom({ id: roomId })
@@ -150,8 +158,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   let roomId = '';
   // console.log("[connect]", socket.handshake.query)
   socket.on("createRoom", ({ id }, callback) => {
-    
+    console.log("[createRoom] id", id)
     const response = addRoom({ id })
+    console.log("[createRoom] addRoom response", response)
     if (response.error) {
       return callback({ roomId: id, error: response.error })
     }
@@ -236,6 +245,12 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("joinTeam", ({ team, name }, callback) => {
 
+    const { room, getRoomError } = getRoom(roomId)
+    console.log("room", room, "getRoomError", getRoomError)
+    if (getRoomError) {
+      return callback({ error: getRoomError })
+    }
+
     // const client = getClient(roomId, socket.id)
     // const spectator = removeUserFromRoom({ id: socket.id, roomId })
     const addedPlayer = joinTeam({ roomId, id: socket.id, team, name })
@@ -258,10 +273,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
 
     socket.emit("client", addedPlayer) // client only deals with game state like team, not yoot state
-    const { room, getRoomError } = getRoom(roomId)
-    if (getRoomError) {
-      return callback({ error: getRoomError })
-    }
     io.to(roomId).emit('room', room)
     socket.broadcast.to(roomId).emit(
       'message', 

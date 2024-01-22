@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-// const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'localhost:5000';
 
-const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -83,6 +83,7 @@ export const nameAtom = atom('');
 export const clientAtom = atom({})
 export const roomAtom = atom({})
 export const readyToThrowAtom = atom(false)
+export const disconnectAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -99,12 +100,17 @@ export const SocketManager = () => {
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
   const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
+  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
 
   const params = useParams();
 
   useEffect(() => {
 
     socket.connect();
+
+    socket.on('connect', () => { console.log("[connect]"); setDisconnect(false) })
+    socket.on('connect_error', err => { console.log("[connect_error]", err); setDisconnect(true) })
+    // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
 
     socket.emit("createRoom", { id: params.id }, ({ roomId, error }) => {
       console.log("[SocketManager] roomId", roomId)
@@ -171,6 +177,10 @@ export const SocketManager = () => {
     })
     socket.on('tiles', (tiles) => {
       setTiles(tiles)
+    })
+    socket.on('disconnect', () => {
+      console.log("[disconnect]")
+      setDisconnect(true);
     })
   }, [])
 
