@@ -53,12 +53,15 @@ import {
   legalTilesAtom,
   clientAtom,
   disconnectAtom,
+  displayDisconnectAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
+
+
 
 export default function Experience() {
 
@@ -104,6 +107,19 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
   const [disconnect] = useAtom(disconnectAtom);
+  const previousDisconnect = useRef();
+  const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
+
+  useEffect(() => {
+    console.log("[Experience] disconnect", disconnect)
+
+    if (disconnect) {
+      setDisplayDisconnect(true);
+      previousDisconnect.current = disconnect;
+    } else if (previousDisconnect.current == true) {
+      setDisplayDisconnect(true);
+    }
+  }, [disconnect])
 
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
@@ -534,6 +550,15 @@ export default function Experience() {
     }
   }
 
+  function handleDisconnectPointerDown(e) {
+    e.stopPropagation()
+    location.reload();
+  }
+
+  function handleDisconnectPointerUp(e) {
+    e.stopPropagation()
+  }
+
   const [showRulebook, setShowRulebook] = useState(false);
   function handleShowRulebook() {
     if (showRulebook) {
@@ -718,7 +743,7 @@ export default function Experience() {
           {/* pieces section */}
           <PiecesSection/>
           {/* chat section */}
-          <group position={layout[device].chat.position}>
+          { !displayDisconnect && <group position={layout[device].chat.position}>
             <Chatbox
               height={`${chatboxHeight.toString()}px`}
               width={`${chatboxWidth.toString()}px`}
@@ -726,7 +751,7 @@ export default function Experience() {
               fontSize={`${chatFontSize.toString()}px`}
               device={device}
             />
-          </group>
+          </group> }
           {/* menu */}
           <TextButton
             text={`Menu`}
@@ -754,8 +779,8 @@ export default function Experience() {
           </group>}
         </group>}
       </group>
-      {disconnect && <group>
-        <mesh position={[0,2,0]}>
+      {displayDisconnect && <group>
+        <mesh position={[0,2,0]} onPointerDown={e => handleDisconnectPointerDown(e)} onPointerUp={e => handleDisconnectPointerUp(e)}>
           <boxGeometry args={[200, 0.1, 200]}/>
           <meshStandardMaterial color="black" transparent opacity={0.5}/>
         </mesh>

@@ -1,5 +1,5 @@
 import { Html, Scroll } from "@react-three/drei";
-import { socket, messagesAtom, clientAtom } from "./SocketManager";
+import { socket, messagesAtom, clientAtom, disconnectAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';

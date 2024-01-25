@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000';
+// const ENDPOINT = 'localhost:5000';
 
-// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -84,6 +84,7 @@ export const clientAtom = atom({})
 export const roomAtom = atom({})
 export const readyToThrowAtom = atom(false)
 export const disconnectAtom = atom(false)
+export const displayDisconnectAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -101,35 +102,41 @@ export const SocketManager = () => {
   const [room, setRoom] = useAtom(roomAtom);
   const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
+  const [displayDisconnect] = useAtom(displayDisconnectAtom)
 
   const params = useParams();
 
   useEffect(() => {
 
-    socket.connect();
+    console.log("[SocketManager] connect")
 
-    socket.on('connect', () => { console.log("[connect]"); setDisconnect(false) })
-    socket.on('connect_error', err => { console.log("[connect_error]", err); setDisconnect(true) })
-    // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
+    if (!displayDisconnect) {
 
-    socket.emit("createRoom", { id: params.id }, ({ roomId, error }) => {
-      console.log("[SocketManager] roomId", roomId)
-      if (error) {
-        console.log('error in creating room', roomId, error)
-      }
+      socket.connect();
 
-      socket.emit('joinRoom', { 
-        id: roomId, 
-        savedClient: localStorage.getItem('yootGame') 
-      }, (response) => {
-        console.log("[joinRoom callback]", response)
+      socket.on('connect', () => { console.log("[connect]"); setDisconnect(false) })
+      socket.on('connect_error', err => { console.log("[connect_error]", err); setDisconnect(true) })
+      // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
+  
+      socket.emit("createRoom", { id: params.id }, ({ roomId, error }) => {
+        console.log("[SocketManager] roomId", roomId)
+        if (error) {
+          console.log('error in creating room', roomId, error)
+        }
+  
+        socket.emit('joinRoom', { 
+          id: roomId, 
+          savedClient: localStorage.getItem('yootGame') 
+        }, (response) => {
+          console.log("[joinRoom callback]", response)
+        })
       })
-    })
-
-    return () => {
-      socket.disconnect()
-
-      socket.off();
+  
+      return () => {
+        socket.disconnect()
+  
+        socket.off();
+      }
     }
   }, []);
 

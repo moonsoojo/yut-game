@@ -152,6 +152,29 @@ export const addPlayer = ({ player }) => {
   }
 }
 
+export const removeSpectator = ({ roomId, spectatorId }) => {
+  if (roomId in rooms) {
+    const index = rooms[roomId].spectators.findIndex((spectator) => spectator.id === spectatorId);
+
+    if (index !== -1) {
+      return { removedSpectator: rooms[roomId].spectators.splice(index, 1)[0] }
+    } else {
+      return { removeSpectatorError: `spectator ${spectatorId} not found in room ${roomId}`}
+    }
+  }
+}
+
+export const removePlayer = ({ roomId, team, playerId }) => {
+  const index = rooms[roomId].teams[team].players.findIndex(
+    (player) => player.id === playerId
+  );
+  if (index !== -1) {
+    return { removedPlayer: rooms[roomId].teams[team].players.splice(index, 1)[0] }
+  } else {
+    return { removePlayerError: `player not found in ${team} of room ${roomId}` }
+  }
+}
+
 export const removeUserFromRoom = ({ id, roomId }) => {
 
   if (!(roomId in rooms)) {
@@ -183,6 +206,20 @@ export const removeUserFromRoom = ({ id, roomId }) => {
   }
 }
 
+/*export const checkDuplicateName = ({ roomId, clientId, name }) => {
+  if (!(roomId in rooms)) {
+    return { checkDuplicateNameError: `room ${roomId} not found` }
+  }
+
+  let players = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players)
+  const duplicateNameUser = players.find((player) => (player.id !== clientId && player.name === name))
+  console.log("[checkDuplicateName] duplicateNameUser", duplicateNameUser)
+  if (duplicateNameUser) {
+    return { isDuplicate: true }
+  }
+  return { isDuplicate: false }
+}*/
+
 export const joinTeam = ({ roomId, id, team, name }) => {
   // remove player from spectators
   // join team
@@ -191,19 +228,42 @@ export const joinTeam = ({ roomId, id, team, name }) => {
     return { joinTeamError: "unable to find room" }
   } else {
     const user = getUserFromRoom({ id, roomId })
+    console.log("[joinTeam] user", user)
     const existingTeam = user.team
 
     if (existingTeam !== 0 && existingTeam !== 1) {
-      const index = rooms[roomId].spectators.findIndex((spectator) => spectator.id === id);
-  
-      if (index !== -1) {
+      const { removedSpectator, removeSpectatorError } = removeSpectator({ roomId, spectatorId: id })
+      console.log("[joinTeam] removed spectator", removedSpectator)
+
+      if (removedSpectator) {
         const player = {
-          ...user,
+          ...removedSpectator,
           team,
           name
         }
+        console.log("[joinTeam] joining player", player)
         rooms[roomId].teams[team].players.push(player)
-        return player
+        return { joinedPlayer: player }
+      } else {
+        return { joinTeamError: removeSpectatorError }
+      }
+    } else {
+      const { removedPlayer, removePlayerError } = removePlayer({ roomId, team: existingTeam, playerId: id })
+      if (removePlayerError) {
+        return { joinTeamError: removePlayerError }
+      }
+
+      if (removedPlayer) {
+        const player = {
+          ...removedPlayer,
+          team,
+          name
+        }
+        console.log("[joinTeam] joining player", player)
+        rooms[roomId].teams[team].players.push(player)
+        return { joinedPlayer: player }
+      } else {
+        return { joinTeamError: removePlayerError }
       }
     }
   }
@@ -214,6 +274,14 @@ export const getRoom = ( id ) => {
   if (!(id in rooms)) {
     return { getRoomError: 'room not found' }
   } else {
+    console.log("[getRoom] clients", rooms[id].clients)
+    console.log("[getRoom] room's teams", JSON.stringify(rooms[id].teams))
+    console.log("[getRoom] room's turn", JSON.stringify(rooms[id].turn))
+    console.log("[getRoom] room's spectators", JSON.stringify(rooms[id].spectators))
+    console.log("[getRoom] room's selection", JSON.stringify(rooms[id].selection))
+    console.log("[getRoom] room's hostId", rooms[id].hostId)
+    console.log("[getRoom] room's readyToThrow", rooms[id].readyToThrow)
+    console.log("[getRoom] room's legalTiles", rooms[id].legalTiles)
     return { room: rooms[id] }
   }
 }
@@ -273,7 +341,13 @@ export const addNewClient = (roomId, clientId) => {
     }
     rooms[roomId].clients[client.id] = client
     console.log("[addNewClient] clients", rooms[roomId].clients)
-    console.log("[addNewClient] rooms[roomId]", rooms[roomId])
+    // console.log("[addNewClient] room's teams", JSON.stringify(rooms[roomId].teams))
+    // console.log("[addNewClient] room's turn", JSON.stringify(rooms[roomId].turn))
+    // console.log("[addNewClient] room's spectators", JSON.stringify(rooms[roomId].spectators))
+    // console.log("[addNewClient] room's selection", JSON.stringify(rooms[roomId].selection))
+    // console.log("[addNewClient] room's hostId", rooms[roomId].hostId)
+    // console.log("[addNewClient] room's readyToThrow", rooms[roomId].readyToThrow)
+    // console.log("[addNewClient] room's legalTiles", rooms[roomId].legalTiles)
   }
 }
 
@@ -373,6 +447,7 @@ export const isAllYootsAsleep = (roomId) => {
     return { isAllYootsAsleepError: "room not found" }
   }
   for (const id of Object.keys(rooms[roomId].clients)) {
+    console.log(`[isAllYootsAsleep] ${id}, visibility ${rooms[roomId].clients[id].visibility} yootsAsleep ${rooms[roomId].clients[id].yootsAsleep}`)
     if (rooms[roomId].clients[id].visibility && 
       rooms[roomId].clients[id].yootsAsleep === false) {
         return { allYootsAsleep: false };
@@ -419,6 +494,7 @@ function allTeamsHaveMove (teams) {
   }
   return allTeamsHaveMove
 }
+
 
 export const passTurn = (roomId) => {
   console.log("[passTurn] roomId", roomId)
@@ -494,8 +570,10 @@ export const getCurrentPlayerId = (roomId) => {
     let turn = rooms[roomId].turn
     console.log("[getCurrentPlayerId] turn", turn)
     let currentPlayer = turn.players[turn.team]
-    console.log("[getCurrentPlayerId] currentPlayer", currentPlayer)
-    return rooms[roomId].teams[turn.team].players[currentPlayer].id
+    if (rooms[roomId].teams[turn.team].players[currentPlayer] === undefined) {
+      return { getCurrentPlayerIdError: "no player in specified index" }
+    }
+    return { currentPlayerId: rooms[roomId].teams[turn.team].players[currentPlayer].id }
   }
 }
 
@@ -553,6 +631,9 @@ export const getReadyToThrow = (roomId) => {
 export const updateReadyToThrow = (roomId, state) => {
   if (roomId in rooms) {
     rooms[roomId].readyToThrow = state
+    return {}
+  } else {
+    return { updateReadyToThrowError: `room ${roomId} not found` }
   }
 }
 

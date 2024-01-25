@@ -8,44 +8,33 @@ import { useAtom } from 'jotai';
 export default function JoinTeamModal({ position, team, setJoinTeam }) {
 
   const [name, setName] = useState('')
+  const [alert, setAlert] = useState('')
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const params = useParams();
 
-  /*async function handleSubmit(e) {
-    e.preventDefault()
+  function handleJoinSubmit(e) {
+    e.preventDefault();
     if (name.length == 0) {
       setAlert('Enter something')
     } else if (name.length > 15) {
       setAlert('Must be shorter than 16 characters.')
-    } else if (!validateName(name)) {
-      setAlert('Name is already taken.')
     } else {
-      setAlert("let's go!")
-      socket.emit("submitName", { name }, (response) => {
-        if (response.status === "success") {
-          localStorage.setItem('clientPlayer', JSON.stringify(response.clientPlayer))
+      setAlert("")
+      socket.emit("joinTeam", { team, name }, ({ error, player }) => {
+        if (error) {
+          console.log("[JoinTeamModal] error", error)
+          setDisconnect(true)
+        } else if (player) {
+          localStorage.setItem('yootGame', JSON.stringify({
+            ...player
+          }))
+          setName('')
+          setJoinTeam(null);
         }
-      })
-      // navigate(`/game`)
+      });
     }
-  }*/
-
-  function handleJoinSubmit(e) {
-    e.preventDefault();
-    socket.emit("joinTeam", { team, name }, ({ error, player }) => {
-      if (error) {
-        console.log("[JoinTeamModal] error", error)
-        setDisconnect(true)
-      } else if (player) {
-        localStorage.setItem('yootGame', JSON.stringify({
-          ...player
-        }))
-        setName('')
-        setJoinTeam(null);
-      }
-    });
   }
   
   function handleJoinCancel(e) { // submits name and emits 'joinTeam'
@@ -75,7 +64,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
         <div style={{
           top: '40%',
           width: '240px',
-          height: '150px',
+          height: '170px',
           backgroundColor: 'black',
           border: '2px solid yellow',
           padding: '20px'
@@ -100,6 +89,11 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
             }}
             onChange={e => setName(e.target.value)}
             placeholder="here..."/>
+          <div>
+            <p style={{ margin: '5px', color: 'red', fontFamily: 'Luckiest Guy', height: '20px' }}>
+              {alert}
+            </p>
+          </div>
           <div style={{
             display: 'flex',
             flexDirection: 'row',
