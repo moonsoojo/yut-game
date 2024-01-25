@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom' //Routes instead of Switch
-import Home from './Home'
+import React from 'react';
+import Home from './xxxxxxxxxxxxxxxxxxHome'
 import Experience from './Experience';
-import { Text3D, Html } from "@react-three/drei";
 import { Canvas } from '@react-three/fiber';
-import * as THREE from "three";
 import { SocketManager } from './SocketManager';
-import { useAtom } from 'jotai';
-import { Route, Link, useLocation, Router } from "wouter"
+import { Route } from "wouter"
 
 export default function App () {
   return (<>

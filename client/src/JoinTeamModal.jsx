@@ -24,7 +24,6 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
       setAlert("")
       socket.emit("joinTeam", { team, name }, ({ error, player }) => {
         if (error) {
-          console.log("[JoinTeamModal] error", error)
           setDisconnect(true)
         } else if (player) {
           localStorage.setItem('yootGame', JSON.stringify({

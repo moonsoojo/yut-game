@@ -8,7 +8,7 @@ import HelperArrow from "./HelperArrow";
 import Tile from "../components/Tile";
 
 export default function Saturn({ position, tile, device }) {
-  const { nodes, materials } = useGLTF("models/Saturn 3.glb");
+  const { nodes, materials } = useGLTF("models/saturn.glb");
   const satelliteTexture1 = useLoader(
     TextureLoader,
     "/textures/saturn-satellite-texture-map-1.jpg"
@@ -174,5 +174,3 @@ export default function Saturn({ position, tile, device }) {
     </group>
   );
 }
-
-useGLTF.preload("/models/Saturn 3.glb");

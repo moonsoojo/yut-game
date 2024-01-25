@@ -6,44 +6,27 @@ import layout from "./layout.js";
 // meshes
 import Yoots from "./Yoots.jsx";
 import Star from "./meshes/Star.jsx";
-import Neptune2 from "./meshes/Neptune2.jsx";
+import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
-import SunBagus from "./meshes/SunBagus.jsx";
 
 // custom components
 import Chatbox from "./Chatbox.jsx";
 import Rulebook from "./Rulebook.jsx";
-import Rulebook2 from "./Rulebook2.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import Piece from "./components/Piece.jsx";
 
 // three js
-import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
-import { Leva, useControls } from "leva";
+import { Physics } from "@react-three/rapier";
 import {
-  Environment,
-  Sky,
-  ContactShadows,
-  RandomizedLight,
-  AccumulativeShadows,
-  SoftShadows,
-  Stars,
-  Html,
   Text3D,
-  OrthographicCamera,
-  OrbitControls,
-  Text
+  OrthographicCamera
 } from "@react-three/drei";
-import { useThree, useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-// import { Perf } from 'r3f-perf'
 
-
-// server
+// socket manager
 import {
   readyToStartAtom,
   teamsAtom,
@@ -60,8 +43,6 @@ import JoinTeamModal from "./JoinTeamModal.jsx";
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
-
-
 
 export default function Experience() {
 
@@ -89,6 +70,13 @@ export default function Experience() {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
+
+    socket.emit('joinRoom', { 
+      id: roomId,
+      savedClient: localStorage.getItem('yootGame')
+    }, (response) => {
+      console.log("[joinRoom callback]", response)
+    })
   }, []);
 
   const [zoom, setZoom] = useState(50);
@@ -108,6 +96,7 @@ export default function Experience() {
   const [client] = useAtom(clientAtom);
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
+  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
 
   useEffect(() => {
@@ -253,7 +242,7 @@ export default function Experience() {
       } else if (i == 10) {
         tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
       } else if (i == 15) {
-        tiles.push(<Neptune2 position={position} tile={i} key={i} device={device}/>);
+        tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
       } else {
         tiles.push(
           <Star
@@ -766,13 +755,7 @@ export default function Experience() {
               boxHeight={0.4}
               handlePointerClick={handleShowRulebook}
             />
-            {/* { showRulebook && <Rulebook 
-              position={layout[device].rulebook.position}
-              width={rulebookWidth}
-              height={rulebookHeight}
-              padding={layout[device].rulebook.padding}
-            />} */}
-            { showRulebook  && <Rulebook2
+            { showRulebook  && <Rulebook
               position={layout[device].rulebook.position}
               handleShow={handleShowRulebook}
             />}
