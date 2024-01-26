@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Float, PresentationControls, Text3D } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useLocation } from "wouter";
+import * as THREE from 'three';
 
 import RocketAnimated from './meshes/RocketAnimated';
 import UfoAnimated from './meshes/UfoAnimated';
@@ -12,13 +13,25 @@ import Stars from './particles/Stars';
 import Tiles from './Tiles';
 import { Yoot2 } from './meshes/Yoot2';
 import TextButton from './components/TextButton';
+import { makeId } from './helpers/helpers';
 
 // text colors to green like earth
 export default function Home() {
 
   const [location, setLocation] = useLocation();
+  const [fade, setFade] = useState(false)
 
   const device = "landscapeDesktop"
+
+  useEffect(() => {
+    return () => {
+      setFade(true)
+    }
+  }, [])
+
+  // const { opacity } = useSpring({
+  //   opacity: !fade ? 1 : 0
+  // })
 
   const { ufoRotation, ufoPosition } = useSpring({
     from: {
@@ -56,9 +69,10 @@ export default function Home() {
     </group>
   }
 
+  const quaternion = new THREE.Quaternion()
   useFrame((state) => {
     const camera = state.camera
-    // console.log(camera.rotation) 
+    // console.log('home', camera.position) 
     // rotate camera to look at what you want
     // const camera = state.camera    
     const euler = new Euler(
@@ -67,13 +81,21 @@ export default function Home() {
       0.11327856815709492, 
       "XYZ"
     )
-    camera.setRotationFromEuler(euler)
+    // quaternion.setFromEuler(euler)
+    // camera.setRotationFromEuler(euler)
+    camera.quaternion.setFromEuler(euler)
+    console.log('home', camera.quaternion)
     
     // set position in index.jsx
     // console.log(camera.position)
     
     /* how to make camera.lookAt() with default camera */
     // camera.lookAt(new Vector3(-0.311, -0.661, -0.683))
+
+    // camera.position.x = -3.431723242390655
+    // camera.position.y = 12.798027537168215
+    // camera.position.z = 6.469516796871723 
+    
   })
 
   function Yoots() {
@@ -89,18 +111,6 @@ export default function Home() {
         <Yoot2 scale={0.5} position={[0,0,-3]}/>
       </Float>
     </animated.group>
-  }
-
-  function makeId(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
   }
 
   function handleLetsPlay() {
@@ -134,14 +144,41 @@ export default function Home() {
         GAME!
         <meshStandardMaterial color="yellow"/>
       </Text3D>
-      <Text3D 
+      {/* <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.7} 
         height={0.01} 
-        position={[0, -3.5, 0]}
+        position={[0, -2.5, 0]}
       >
         ABOUT
-        <meshStandardMaterial color="yellow"/>
+        <meshStandardMaterial color="limegreen"/>
+      </Text3D> */}
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.5} 
+        height={0.01} 
+        position={[0, -2.5, 0]}
+      >
+        a board game enjoyed 
+        <meshStandardMaterial color="limegreen"/>
+      </Text3D>
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.5} 
+        height={0.01} 
+        position={[0, -3.5, 0]}
+      >
+        with family during the
+        <meshStandardMaterial color="limegreen"/>
+      </Text3D>
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.5} 
+        height={0.01} 
+        position={[0, -4.5, 0]}
+      >
+        holidays in Korea
+        <meshStandardMaterial color="limegreen"/>
       </Text3D>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 

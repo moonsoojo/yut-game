@@ -13,7 +13,6 @@ export default function TextButton({
   size=0.3
 }) {
   const [hover, setHover] = useState(false);
-  console.log(handlePointerClick, 'text', text)
 
   function handlePointerEnter() {
     setHover(true);

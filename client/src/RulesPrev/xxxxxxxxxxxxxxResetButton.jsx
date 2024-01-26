@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 // import { useRocketStore } from "./state/zstore";
 // import { useRocketStore } from "./state/zstore2";
 import { Text3D } from "@react-three/drei";
-import { socket } from "./SocketManager";
+import { socket } from "../SocketManager";
 
 export default function ResetButton({ position, rotation }) {
   const [hover, setHover] = useState(false);

@@ -5,6 +5,7 @@ import { SocketManager } from './SocketManager';
 import { Route } from "wouter"
 import { OrbitControls } from '@react-three/drei';
 import Stars from './particles/Stars';
+import Experience2 from './Experience2';
 
 export default function App () {
   return (<>
@@ -16,7 +17,8 @@ export default function App () {
     </Route>
     <Route path="/:id">
       {/* <SocketManager/> */}
-      <Experience/>
+      <Experience2/>
+      {/* <Experience/> */}
     </Route>
   </>)
 }

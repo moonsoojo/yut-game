@@ -1,7 +1,7 @@
 // React
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from "wouter";
-import layout from './layout.js';
+import layout from '../layout.js';
 
 // Three
 import { Leva, useControls } from "leva";
@@ -10,17 +10,17 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 // Assets
-import Star from "./meshes/Star.jsx";
-import Neptune from "./meshes/Neptune.jsx";
-import Mars from "./meshes/Mars.jsx";
-import Saturn from "./meshes/Saturn.jsx";
-import Moon from "./meshes/Moon.jsx";
-import Earth from "./meshes/Earth.jsx";
-import Rocket from './meshes/Rocket.jsx';
-import Ufo from './meshes/Ufo.jsx';
+import Star from "../meshes/Star.jsx";
+import Neptune from "../meshes/Neptune.jsx";
+import Mars from "../meshes/Mars.jsx";
+import Saturn from "../meshes/Saturn.jsx";
+import Moon from "../meshes/Moon.jsx";
+import Earth from "../meshes/Earth.jsx";
+import Rocket from '../meshes/Rocket.jsx';
+import Ufo from '../meshes/Ufo.jsx';
 
 // multiplayer
-import { socket } from './SocketManager.jsx';
+import { socket } from '../SocketManager.jsx';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
