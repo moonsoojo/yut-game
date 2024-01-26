@@ -5,11 +5,16 @@ import { useRef } from "react";
 import React from "react";
 import Tile from "../components/Tile";
 
-export default function Mars({ position, tile, scale=0.4, device }) {
+export default function Mars({ 
+  position, 
+  tile, 
+  scale=0.4, 
+  device 
+}) {
   const { nodes, materials } = useGLTF("models/mars.glb");
   const mars = useRef();
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     mars.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 

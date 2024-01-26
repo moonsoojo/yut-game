@@ -1,16 +1,16 @@
-import { useGLTF } from "@react-three/drei";
-import { useRef, useMemo, useEffect } from "react";
-import { SkeletonUtils } from "three-stdlib";
-import { useGraph } from "@react-three/fiber";
+import React, { useRef, useMemo, useEffect } from "react";
 import { animated } from "@react-spring/three";
-import React from "react";
+import { useGLTF } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph, useFrame } from "@react-three/fiber";
 
-export default function Ufo({
+
+export default function UfoAnimated({
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1
 }) {
-  const { scene, materials } = useGLTF("models/ufo.glb");
+  const { scene, materials } = useGLTF("models/ufo2.glb");
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
@@ -23,12 +23,9 @@ export default function Ufo({
   }, []);
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
-      <animated.group
-        dispose={null}
-        scale={0.5}
-      >
-        <group rotation={[-Math.PI/4,0,0]}>
+    <group>
+      <animated.group position={position} rotation={rotation} scale={scale}>
+        <group>
           <mesh
             castShadow
             receiveShadow

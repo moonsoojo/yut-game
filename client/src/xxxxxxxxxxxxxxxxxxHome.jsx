@@ -26,7 +26,7 @@ let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
-export default function Home() {
+export default function xxxxxxxxxHome() {
 
   const [size, setSize] = useState([0,0])
   

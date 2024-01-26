@@ -6,6 +6,10 @@ export function getCurrentPlayerSocketId (turn, teams) {
   }
 }
 
+export function getCurrentPlayer(turn, teams) {
+  return teams[turn.team].players[turn.players[turn.team]]
+}
+
 export function bothTeamsHavePlayers(teams) {
   if (teams[0].players.length > 0 && teams[1].players.length > 0) {
     return true
@@ -58,4 +62,18 @@ export function getPlayerBySocketId(teams, socketId) {
     }
   }
   return {} // not found
+}
+
+export function prettifyMoves(moves) {
+  let prettifiedMoves = ""
+  for (let move in moves) {
+    for (let i = 0; i < moves[move]; i++) {
+      if (prettifiedMoves === "") {
+        prettifiedMoves = move
+      } else {
+        prettifiedMoves += `, ${move}`
+      }
+    }
+  }
+  return prettifiedMoves
 }

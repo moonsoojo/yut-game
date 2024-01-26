@@ -13,6 +13,7 @@ export default function TextButton({
   size=0.3
 }) {
   const [hover, setHover] = useState(false);
+  console.log(handlePointerClick, 'text', text)
 
   function handlePointerEnter() {
     setHover(true);
@@ -25,8 +26,8 @@ export default function TextButton({
   }
 
   return (
-    <group position={position} rotation={rotation}>
-      {handlePointerClick == undefined ? (
+    <group name='text-button' position={position} rotation={rotation}>
+      {handlePointerClick === undefined ? (
         <></>
       ) : (
         <mesh
@@ -36,7 +37,7 @@ export default function TextButton({
           onPointerDown={handlePointerClick}
         >
           <boxGeometry args={[boxWidth, boxHeight, 0.1]} />
-          <meshStandardMaterial transparent opacity={0.3} />
+          <meshStandardMaterial transparent opacity={0}/>
         </mesh>
       )}
       {/* must use absolute path - string starts with a slash */}

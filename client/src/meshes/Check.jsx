@@ -5,7 +5,6 @@ export default function Check({
   position, 
   rotation=[0,0,0], 
   scale,
-  color="green"
 }) {
   const { nodes } = useGLTF("/models/check.glb");
   const scaleArray = [1 * scale, 0.1 * scale, 1 * scale]
@@ -19,10 +18,8 @@ export default function Check({
         rotation={[Math.PI / 2, 0, 2.574]}
         scale={[-0.323, -0.056, -0.633]}
       >
-        <meshStandardMaterial color={color}/>
+        <meshStandardMaterial color="green"/>
       </mesh>
     </group>
   );
 }
-
-useGLTF.preload("/models/check.glb");

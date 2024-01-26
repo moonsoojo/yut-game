@@ -319,13 +319,10 @@ io.on("connect", (socket) => {
     } 
   })
 
-  socket.on("startGame", (callback) => {
+  socket.on("startGame", () => {
     updateReadyToStart(roomId, false)
     io.to(roomId).emit("readyToStart", false);
-    let { room, error } = getRoom(roomId)
-    if (error) {
-      return callback({ response: error })
-    }
+    let room = getRoom(roomId)
     const turn = getTurn(roomId)
     addThrow(roomId, turn.team)
     io.to(roomId).emit("teams", room.teams)
@@ -346,16 +343,8 @@ io.on("connect", (socket) => {
     if (getThrows(roomId, getTurn(roomId).team) == 0) {
       if (movesIsEmpty(roomId, getTurn(roomId).team)) {
         clearMoves(roomId, getTurn(roomId).team)
-        const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
-        if (isAllYootsAsleepError) {
-          return callback({ error: isAllYootsAsleepError })
-        }
-        if (allYootsAsleep) {
-          const { updateReadyToThrowError } = updateReadyToThrow(roomId, true)
-          if (updateReadyToThrowError) {
-            return callback({ error: updateReadyToThrowError })
-          }
-          io.to(roomId).emit("readyToThrow", true);
+        if (isAllYootsAsleep(roomId)) {
+          io.to(roomId).emit("readyToThrow", updateReadyToThrow(roomId, true));
         }
         if (bothTeamsHavePlayers(roomId)) {
           let newTurn = passTurn(roomId)
@@ -568,7 +557,7 @@ io.on("connect", (socket) => {
 
     console.log("[disconnect] roomId", roomId, "socket id", socket.id)
 
-    let { room } = getRoom(roomId)
+    let room = getRoom(roomId)
     if (room) {
       const { client } = getClient(roomId, socket.id)
       const removedClient = client

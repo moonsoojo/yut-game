@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import { RigidBody, CuboidCollider, Physics } from "@react-three/rapier";
 import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -183,7 +183,7 @@ export default function Yoots({ device = "portrait" }) {
   }
 
   return (
-    <group dispose={null}>
+    <Physics>
       { /* showResetYoots && <TextButton
         text='Reset yoots'
         position={[-1,0,-5]}
@@ -284,6 +284,6 @@ export default function Yoots({ device = "portrait" }) {
           position={layout.yoot.outOfBounds}
         />
       </>}
-    </group>
+    </Physics>
   );
 }

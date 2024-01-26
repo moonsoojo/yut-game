@@ -5,7 +5,12 @@ import React from "react";
 import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";
 
-export default function Earth({ position, tile, device, scale=0.4 }) {
+export default function Earth({ 
+  position, 
+  tile, 
+  device, 
+  scale=0.4 
+}) {
   const { nodes, materials } = useGLTF("models/earth.glb");
 
   const earth = useRef();

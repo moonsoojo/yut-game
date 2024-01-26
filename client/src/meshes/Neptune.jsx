@@ -3,7 +3,6 @@ import { useRef } from "react";
 import HelperArrow from "./HelperArrow";
 import React from "react";
 import NeptuneParticles from "./NeptuneParticles";
-import { useControls } from "leva";
 import { useFrame } from "@react-three/fiber";
 import Tile from "../components/Tile";
 
@@ -11,7 +10,7 @@ export default function Neptune({ position, tile, device }) {
   const { nodes, materials } = useGLTF("models/neptune.glb");
   const neptune = useRef();
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     neptune.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
@@ -24,9 +23,7 @@ export default function Neptune({ position, tile, device }) {
           geometry={nodes.Sphere002.geometry}
           material={materials["Blue Planet"]}
           scale={1.3}
-          // ref={neptune1Ref}
         />
-        {/* remove rings */}
         <NeptuneParticles
           countNeptune1={261}
           countNeptune2={327}

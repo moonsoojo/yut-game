@@ -1,7 +1,11 @@
 import { useGLTF } from "@react-three/drei";
 import React from "react";
 
-export default function Cursor({position, rotation=[Math.PI/2, 0, 5 * Math.PI/8], scale}) {
+export default function Cursor({
+  position, 
+  rotation=[Math.PI/2, 0, 5 * Math.PI/8], 
+  scale
+}) {
   const { nodes } = useGLTF("/models/cursor.glb");
   const scaleArray = [1 * scale, 1 * scale, 1 * scale]
   return (
@@ -19,5 +23,3 @@ export default function Cursor({position, rotation=[Math.PI/2, 0, 5 * Math.PI/8]
     </group>
   );
 }
-
-useGLTF.preload("/models/cursor.glb");

@@ -12,7 +12,6 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
-  const params = useParams();
 
   function handleJoinSubmit(e) {
     e.preventDefault();
@@ -56,7 +55,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
     setCancelHover(false)
   }
 
-  return <group position={position}>
+  return <group name='join-team-modal' position={position}>
     <Html>
       <form
         onSubmit={e => handleJoinSubmit(e)}>
@@ -89,7 +88,12 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
             onChange={e => setName(e.target.value)}
             placeholder="here..."/>
           <div>
-            <p style={{ margin: '5px', color: 'red', fontFamily: 'Luckiest Guy', height: '20px' }}>
+            <p style={{ 
+              margin: '5px', 
+              color: 'red', 
+              fontFamily: 'Luckiest Guy', 
+              height: '20px' 
+            }}>
               {alert}
             </p>
           </div>
@@ -108,13 +112,14 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
                 margin: '10px',
                 padding: '5px',
                 color: `${submitHover ? 'white' : 'yellow'}`,
-                position: 'relative'}}
+                position: 'relative'
+              }}
               onMouseOver={handleSubmitMouseEnter}
               onMouseOut={handleSubmitMouseLeave}
-              type="submit">
+              type="submit"
+            >
             LEGGO!
             </button>
-            {/* highlight on hover */}
             <button 
               id='join-team-cancel-button'
               style={{
@@ -124,7 +129,8 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
                 border: '2px solid red',
                 margin: '10px',
                 padding: '5px',
-                color: `${cancelHover ? 'white' : 'red'}`,}}
+                color: `${cancelHover ? 'white' : 'red'}`
+              }}
               onMouseOver={handleCancelMouseEnter}
               onMouseOut={handleCancelMouseLeave}
               onMouseDown={e => handleJoinCancel(e)}

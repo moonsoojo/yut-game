@@ -1,11 +1,4 @@
 import edgeList from "./edgeList.js";
-
-/* todo */
-// path history by piece // append it on 'move'
-// [original tile, ... destination tile]
-// make backdo use path history // implement once 'move' is implemented
-
-// schema
 // legalTiles: {
 //   "1": { destination: 1, move: 1, path: [1, 2, 3]},
 //   "29": [
@@ -23,7 +16,6 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
     }
     if (moves[move] > 0) {
       let forward = parseInt(move) > 0 ? true: false
-      // disabled; should be able to place piece on tile 0 first
       if (checkBackdoRule(moves, pieces)) {
         legalTiles[0] = { tile: 0, move: "-1", history: [] }
       } else {
@@ -74,7 +66,6 @@ function checkFinishRule(forks) {
   return forks
 }
 
-// precondition: history is an array
 function checkBackdoFork(forks, history) {
   if (history.length == 0) {
     return forks
@@ -112,7 +103,6 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
-  // path.push(tile)
   if (steps == 0 || tile == 29) {
     return { tile, path }
   }
@@ -124,13 +114,11 @@ function getDestination(tile, steps, forward, path) {
       let nextTile;
       let forks = getNextTiles(tile, forward);
       if (forks.length > 1) {
-        // choose next tile
-        // recursively call getDestination with
         nextTile = chooseTileFromFork(path, forks)
       } else {
         nextTile = edge[end]
       }
-      steps--; // updates value after reading
+      steps--;
       return getDestination(nextTile, steps, forward, path)
     }
   }

@@ -1,6 +1,4 @@
-import React, { useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useRef, useEffect, useState } from "react";
+import React from "react";
 import * as THREE from "three";
 
 function randomNumberBetween(min, max) {

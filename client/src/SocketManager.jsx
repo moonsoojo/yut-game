@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAtom, atom } from "jotai";
 
 import { io } from "socket.io-client";
@@ -62,8 +62,9 @@ export const SocketManager = () => {
   const [_hostId, setHostId] = useAtom(hostIdAtom);
 
   // server-client connection
-  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
-  const [displayDisconnect] = useAtom(displayDisconnectAtom)
+  const [disconnect, setDisconnect] = useAtom(disconnectAtom)
+  const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom)
+  const previousDisconnect = useRef();
 
   const params = useParams();
 
@@ -124,8 +125,10 @@ export const SocketManager = () => {
       socket.on('tiles', (tiles) => {
         setTiles(tiles)
       })
+      socket.on('turn', (turn) => {
+        setTurn(turn)
+      })
       socket.on('disconnect', () => {
-        console.log("[disconnect]")
         setDisconnect(true);
       })
   
@@ -145,109 +148,11 @@ export const SocketManager = () => {
   }, [messages])
 
   useEffect(() => {
-    function onConnect() {
-      console.log("connected");
+    if (disconnect) {
+      setDisplayDisconnect(true);
+      previousDisconnect.current = disconnect;
+    } else if (previousDisconnect.current == true) {
+      setDisplayDisconnect(true);
     }
-    function onJoinSpectator(gameState) {
-      setClient(gameState.client);
-      setGamePhase(gameState.gamePhase);
-      setTurn(gameState.turn);
-      setMessages(gameState.messages);
-      setSelection(gameState.selection);
-      setTiles(gameState.tiles);
-    }
-    // function onJoinTeam({client}) {
-    //   setClient(client);
-    //   localStorage.setItem('yootGame', JSON.stringify({
-    //     gameId: 1,
-    //     ...client
-    //   }))
-    // }
-    function onJoinTeamLocalStorage({gameState}) {
-      setClient(gameState.client);
-      setGamePhase(gameState.gamePhase);
-      setTurn(gameState.turn);
-      setMessages(gameState.messages);
-      setSelection(gameState.selection);
-      setTiles(gameState.tiles);
-      localStorage.setItem('yootGame', JSON.stringify({
-        gameId: 1,
-        ...gameState.client
-      }))
-    }
-    function onSelect(value) {
-      setSelection(value);
-    }
-    function onCharacters(value) {
-      setCharacters(value);
-    }
-    function onTiles(value) {
-      setTiles(value);
-    }
-    // function onTeams(value) {
-    //   console.log("[onTeams] teams", value)
-    //   setTeams(value);
-    // }
-    // function onYutThrow(yutForceVectors) {
-    //   setYutThrowValues(yutForceVectors);
-    // }
-    function onReset({ tiles, selection, gamePhase, teams }) {
-      setTiles(tiles);
-      setSelection(selection);
-      setGamePhase(gamePhase);
-      setTeams(teams);
-    }
-    function onReadyToStart(flag) {
-      setReadyToStart(flag);
-    }
-    function onTurn(turn) {
-      setTurn(turn);
-    }
-    function onGamePhase(gamePhase) {
-      setGamePhase(gamePhase)
-    }
-    //UI events
-    function onLegalTiles({ legalTiles }) {
-      setLegalTiles(legalTiles)
-    }
-    // function onMessages(messages) {
-    //   setMessages(messages)
-    // }
-    // socket.on("connect", onConnect);
-    // socket.on("joinSpectator", onJoinSpectator)
-    // socket.on("joinTeam", onJoinTeam)
-    socket.on("joinTeamLocalStorage", onJoinTeamLocalStorage)
-    // socket.on("disconnect", onDisconnect);
-    socket.on("select", onSelect);
-    socket.on("characters", onCharacters);
-    socket.on("tiles", onTiles);
-    // socket.on("teams", onTeams);
-    // socket.on("throwYuts", onYutThrow);
-    socket.on("reset", onReset);
-    socket.on("readyToStart", onReadyToStart);
-    socket.on("turn", onTurn);
-    socket.on("gamePhase", onGamePhase);
-    socket.on("legalTiles", onLegalTiles);
-    // socket.on("messages", onMessages);
-    return () => {
-      // socket.emit('disconnect');
-      socket.off();
-      // socket.off("connect", onConnect);
-      // socket.off("joinSpectator", onJoinSpectator)
-      // socket.off("joinTeam", onJoinTeam)
-      socket.off("joinTeamLocalStorage", onJoinTeamLocalStorage)
-      // socket.off("disconnect", onDisconnect);
-      socket.off("select", onSelect);
-      socket.off("characters", onCharacters);
-      socket.off("tiles", onTiles);
-      // socket.off("teams", onTeams);
-      // socket.off("throwYuts", onYutThrow);
-      socket.off("reset", onReset);
-      socket.off("readyToStart", onReadyToStart);
-      socket.off("turn", onTurn);
-      socket.off("gamePhase", onGamePhase);
-      socket.off("legalTiles", onLegalTiles);
-      // socket.off("messages", onMessages);
-    };
-  }, []);
+  }, [disconnect])
 };

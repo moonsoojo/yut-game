@@ -4,8 +4,7 @@ import React from "react";
 export default function Cancel({
   position, 
   rotation=[0,0,0], 
-  scale,
-  color="red"
+  scale
 }) {
   const { nodes } = useGLTF("/models/cancel.glb");
   const scaleArray = [1 * scale, 0.1 * scale, 1 * scale]
@@ -23,5 +22,3 @@ export default function Cancel({
     </group>
   );
 }
-
-useGLTF.preload("/models/cancel.glb");

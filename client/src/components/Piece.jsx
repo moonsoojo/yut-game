@@ -25,40 +25,36 @@ export default function Piece ({
   const [client] = useAtom(clientAtom)
   const [readyToThrow] = useAtom(readyToThrowAtom)
 
-  const group = useRef();
+  const piece = useRef();
   const wrapperMat = useRef();
 
-  // if tile == -1, scale = 1
-  // else, scale = 0.5
   if (selection != null) {
-    if (selection.tile == -1) {
-      if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
-        scale *= 1.5
-      }
-    } else {
-      if (selection.tile == tile) {
-        scale *= 1.5
-      }
-    }
-
+    scale *= 1.5
+    // if (selection.tile == -1) {
+    //   if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
+    //     scale *= 1.5
+    //   }
+    // } else if (selection.tile == tile) {
+    //     scale *= 1.5
+    //   }
+    // }
   }
 
-  useFrame((state, delta) => {
-    if (gamePhase === "game" && 
-    client.team == team && 
-    isMyTurn(turn, teams, client.id) && 
-    hasValidMove(teams[team].moves) && selection == null &&
-    readyToThrow) {
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
-      // wrapperMatRef.current.color.g = (Math.cos(state.clock.elapsedTime * 2.5) - 1) // pass down wrapper ref 
+  useFrame((state) => {
+    if (gamePhase === "game" 
+    && client.team == team 
+    && isMyTurn(turn, teams, client.id) 
+    && hasValidMove(teams[team].moves) 
+    && selection == null 
+    && readyToThrow) {
+      piece.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
+      piece.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
+      piece.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       wrapperMat.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.2
     } else {
-      group.current.scale.x = scale
-      group.current.scale.y = scale
-      group.current.scale.z = scale
-      // wrapperMatRef.current.color.g = (Math.cos(state.clock.elapsedTime * 2.5) - 1) // pass down wrapper ref 
+      piece.current.scale.x = scale
+      piece.current.scale.y = scale
+      piece.current.scale.z = scale
       wrapperMat.current.opacity = 0
     }
   });
@@ -80,16 +76,16 @@ export default function Piece ({
   }
 
   function handlePointerDown(event) {
-    if (gamePhase === "game" && 
-    client.team == team && 
-    hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, client.id)) {
+    if (gamePhase === "game" 
+    && client.team == team 
+    && hasValidMove(teams[team].moves) 
+    && isMyTurn(turn, teams, client.id)) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;
         let pieces;
         if (starting) {
-          pieces = [{tile, team, id, history: []}]
+          pieces = [ { tile, team, id, history: [] } ]
         } else {
           pieces = tiles[tile];
         }
@@ -114,9 +110,10 @@ export default function Piece ({
 
   return (
     <group
+      name='piece'
       position={position}
       rotation={rotation}
-      ref={group}
+      ref={piece}
       dispose={null}
       scale={scale}
     >

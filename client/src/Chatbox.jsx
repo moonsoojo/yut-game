@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useParams } from "wouter";
 
-export default function Chatbox({ height, width, padding, fontSize, device }) {
+export default function Chatbox({ position, height, width, padding, fontSize }) {
   const [messages] = useAtom(messagesAtom);
   const [message, setMessage] = useState('');
   const params = useParams();
@@ -48,8 +48,7 @@ export default function Chatbox({ height, width, padding, fontSize, device }) {
     }
   }
 
-  return <Html>
-    
+  return <Html position={position}>
       <div style={{
         'borderRadius': '5px',
         'height': height,

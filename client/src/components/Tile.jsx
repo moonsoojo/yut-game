@@ -8,13 +8,14 @@ import { isMyTurn } from "../helpers/helpers";
 import layout from "../layout";
 
 export default function Tile({ tile, wrapperRadius, device }) {
-  const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
   const [tiles] = useAtom(tilesAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)
+
+  const wrapper = useRef();
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -27,7 +28,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
   function handlePointerLeave(event) {
     event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
-      
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
     }
@@ -35,19 +35,13 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   function handlePointerDown(event) {
     event.stopPropagation();
-    if (selection != null) {
-      
-      if (isMyTurn(turn, teams, client.id)) {
-        if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] }, ({ error }) => {
-            if (error) {
-              console.log("move error", error)
-            }
-          });
-        }
-        socket.emit("legalTiles", {legalTiles: {}})
-        socket.emit("select", null);
-      }
+    if (selection != null 
+    && isMyTurn(turn, teams, client.id) 
+    && selection.tile != tile 
+    && tile in legalTiles) {
+      socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] });
+      socket.emit("legalTiles", {legalTiles: {}})
+      socket.emit("select", null);
     }
   }
 
@@ -65,7 +59,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
     [0.15, 1, 0.4],
   ];
 
-  function Pieces() { // app crashes when you click on a legalTile
+  function Pieces() {
     if (tiles[tile].length > 0) {
       return (
         <>
@@ -87,14 +81,14 @@ export default function Tile({ tile, wrapperRadius, device }) {
   }
 
   return (
-    <group>
+    <group name={`tile-${tile}`}>
       <mesh
+        name={`tile-${tile}-wrapper`}
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
         onPointerDown={(e) => handlePointerDown(e)}
         scale={4}
       >
-        {/* wrapper */}
         <sphereGeometry args={[wrapperRadius]} />
         <meshStandardMaterial
           transparent
@@ -104,11 +98,12 @@ export default function Tile({ tile, wrapperRadius, device }) {
         />
       </mesh>
       {/* scale necessary because it's different from pieces at home or under team name */}
-      <group scale={layout[device].tilePieceScale}>
+      <group name={`tile-${tile}-pieces`} scale={layout[device].tilePieceScale}>
         <Pieces/>
       </group>
-      { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
-      {/* { <Pointer tile={tile} color={"turquoise" } device={device} />} */}
+      { selection != null 
+      && tile in legalTiles 
+      && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
     </group>
   );
 }

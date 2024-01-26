@@ -6,7 +6,7 @@ import { useGraph } from "@react-three/fiber";
 import React from "react";
 
 export default function Star({ position, tile, device, scale }) {
-  const { scene, materials } = useGLTF(
+  const { scene } = useGLTF(
     "models/star.glb"
   );
 
@@ -26,5 +26,3 @@ export default function Star({ position, tile, device, scale }) {
     </group>
   );
 }
-
-useGLTF.preload("/models/star.glb");

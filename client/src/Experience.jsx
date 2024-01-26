@@ -39,99 +39,87 @@ import {
   displayDisconnectAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
+import Tiles from "./Tiles.jsx";
+import HomePieces from "./HomePieces.jsx";
+import { getCurrentPlayer, prettifyMoves } from "./helpers/helpers.js";
+import PiecesSection from "./PiecesSection.jsx";
+import TeamDisplay from "./TeamDisplay.jsx";
+import DisconnectScreen from "./DisconnectScreen.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
-export default function Experience() {
-
-  function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
-    if (windowWidth < landscapeMobileCutoff) {
-      return "portrait"
-    } else if (windowWidth < landscapeDesktopCutoff) {
-      return "landscapeMobile"
-    } else {
-      return "landscapeDesktop"
-    }
+function getDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
+  if (windowWidth < landscapeMobileCutoff) {
+    return "portrait"
+  } else if (windowWidth < landscapeDesktopCutoff) {
+    return "landscapeMobile"
+  } else {
+    return "landscapeDesktop"
   }
+}
+function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
+  return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
+}
 
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
+export default function Experience() {
+  let [device, setDevice] = useState(
+    getDevice(
+      window.innerWidth, 
+      landscapeMobileCutoff, 
+      landscapeDesktopCutoff
+    )
+  )
 
   const handleResize = () => {
-    if (window.innerWidth < landscapeMobileCutoff) {
-      setDevice("portrait")
-    } else if (window.innerWidth < landscapeDesktopCutoff) {
-      setDevice("landscapeMobile")
-    } else {
-      setDevice("landscapeDesktop")
-    }
+    console.log("[Experience] window.innerWidth", window.innerWidth)
+    setDevice(
+      getDevice(
+        window.innerWidth, 
+        landscapeMobileCutoff, 
+        landscapeDesktopCutoff
+      )
+    )
   }
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-
-    socket.emit('joinRoom', { 
-      id: roomId,
-      savedClient: localStorage.getItem('yootGame')
-    }, (response) => {
-      console.log("[joinRoom callback]", response)
-    })
   }, []);
+
+  // this happens before the client connects to the server
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      socket.emit("visibilityChange", {flag: false})
+    } else {
+      socket.emit("visibilityChange", {flag: true})
+    }
+  });
+
+  
+  
+  const [readyToStart] = useAtom(readyToStartAtom);
+  const [teams] = useAtom(teamsAtom);
+  const [turn] = useAtom(turnAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [client] = useAtom(clientAtom);
+
+  const [displayDisconnect] = useAtom(displayDisconnectAtom);
+  function handleDisconnectPointerDown(e) {
+    e.stopPropagation()
+    location.reload();
+  }
+  function handleDisconnectPointerUp(e) {
+    e.stopPropagation()
+  }
 
   const [zoom, setZoom] = useState(50);
   const [chatFontSize, setChatFontSize] = useState(0);
   const [chatboxPadding, setChatboxPadding] = useState(0);
   const [chatboxHeight, setChatboxHeight] = useState(0);
   const [chatboxWidth, setChatboxWidth] = useState(0);
-  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
-    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
-  }
-  
-  const [readyToStart] = useAtom(readyToStartAtom);
-  const [teams] = useAtom(teamsAtom);
-  const [turn] = useAtom(turnAtom);
-  const [gamePhase] = useAtom(gamePhaseAtom)
-  const [legalTiles] = useAtom(legalTilesAtom);
-  const [client] = useAtom(clientAtom);
-  const [disconnect] = useAtom(disconnectAtom);
-  const previousDisconnect = useRef();
-  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
-  const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
 
-  useEffect(() => {
-    console.log("[Experience] disconnect", disconnect)
-
-    if (disconnect) {
-      setDisplayDisconnect(true);
-      previousDisconnect.current = disconnect;
-    } else if (previousDisconnect.current == true) {
-      setDisplayDisconnect(true);
-    }
-  }, [disconnect])
-
-  // this happens before the client connects to the server
-  document.addEventListener("visibilitychange", () => {
-    console.log("visibility change");
-    if (document.hidden) {
-      socket.emit("visibilityChange", {flag: false}, ({ response }) => {
-        console.log("[visibilityChange] response", response)
-      })
-    } else {
-      socket.emit("visibilityChange", {flag: true}, ({ response }) => {
-        console.log("[visibilityChange] response", response)
-      })
-    }
-  });
-
-  const numTiles = 29;
-
-  const tileRefs = [...Array(numTiles)];
-  for (let i = 0; i < numTiles; i++) {
-    tileRefs[i] = useRef();
-  }
   const camera = useRef();
-  // const orbitControls = useRef();
 
   useEffect(() => {
     camera.current.lookAt(
@@ -139,7 +127,6 @@ export default function Experience() {
       layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
       layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
     )
-    // camera.current.lookAt(-3,0,-7)
     if (device !== "portrait") {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
@@ -213,339 +200,15 @@ export default function Experience() {
         window.innerWidth
       ))
     }
-  }, [window.innerWidth, window.innerHeight, device])
-
-  const TILE_RADIUS = layout[device].tileRadius.ring;
-  const NUM_STARS = 20;
-
-  function Tiles() {
-    let tiles = [];
-
-    //circle
-    for (let i = 0; i < NUM_STARS; i++) {
-      let position = [
-        -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
-        0,
-        Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
-      ];
-      if (i == 0) {
-        tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
-      } else if (i == 5) {
-        tiles.push(
-          <Mars
-            position={position}
-            tile={i}
-            key={i}
-            device={device}
-          />
-        );
-      } else if (i == 10) {
-        tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
-      } else if (i == 15) {
-        tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
-      } else {
-        tiles.push(
-          <Star
-            position={position}
-            tile={i}
-            key={i}
-            scale={layout[device].star.scale}
-            device={device}
-          />
-        );
-      }
-    }
-
-    //shortcuts
-    const radiusShortcut1 = layout[device].tileRadius.shortcut1;
-    const radiusShortcut2 = layout[device].tileRadius.shortcut2;
-    for (let i = 0; i < NUM_STARS; i++) {
-      let indexShortcut1;
-      let indexShortcut2;
-      if (i == 0) {
-        indexShortcut1 = 24;
-        indexShortcut2 = 23;
-      } else if (i == 5) {
-        indexShortcut1 = 28;
-        indexShortcut2 = 27;
-      } else if (i == 10) {
-        indexShortcut1 = 20;
-        indexShortcut2 = 21;
-      } else if (i == 15) {
-        indexShortcut1 = 25;
-        indexShortcut2 = 26;
-      }
-      if (i == 0 || i == 5 || i == 10 || i == 15) {
-        let position1 = [
-          Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-            radiusShortcut1,
-          0,
-          Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-            radiusShortcut1,
-        ]
-        tiles.push(
-          <Star
-            position={position1}
-            tile={indexShortcut1}
-            key={i + 30}
-            scale={layout[device].star.scale}
-            device={device}
-          />
-        );
-        let position2 = [
-          Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-            radiusShortcut2,
-          0,
-          Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
-            radiusShortcut2,
-        ]
-        tiles.push(
-          <Star
-            position={position2}
-            tile={indexShortcut2}
-            key={i + 41}
-            scale={layout[device].star.scale}
-            device={device}
-          />
-        );
-      }
-    }
-    // center piece
-    tiles.push(
-      <Moon
-        position={[0,0,0]}
-        intensity={3}
-        // scale={0.4}
-        key={100}
-        tile={22}
-        device={device}
-      />
-    );
-    return tiles;
-  }
-
-  // team group
-  // pieces
-  // moves
-  // throws
-  // names
-  function HomePieces({team, scale=1}) {
-    let space = layout[device].homePieces[team].space;
-    let positionStartX = 0
-    let positionStartY = 0
-    let positionStartZ = 0.5
-
-    return (
-      <group scale={scale}>
-        {teams[team].pieces.map((value, index) =>
-          value == null ? (
-            <mesh
-              position={[
-                positionStartX + index * space,
-                positionStartY,
-                positionStartZ,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.2]} />
-            </mesh>
-          ) : value === "scored" ? (
-            <mesh
-              position={[
-                positionStartX + index * space,
-                positionStartY,
-                positionStartZ,
-              ]}
-              key={index}
-            >
-              <sphereGeometry args={[0.2]} />
-              <meshStandardMaterial color={team == 0 ? "red" : "green"} />
-            </mesh>
-          ) : (
-              <Piece
-                position={[
-                positionStartX + index * space,
-                positionStartY,
-                positionStartZ,
-              ]}
-              rotation={layout[device].homePieces[team].rotation}
-              keyName={`count${index}`}
-              tile={-1}
-              team={team}
-              id={value.id}
-              key={index}
-              scale={1}
-            />
-          )
-        )}
-      </group>
-    );
-  }
-
-  function prettifyMoves(moves) {
-    let prettifiedMoves = ""
-    for (let move in moves) {
-      for (let i = 0; i < moves[move]; i++) {
-        if (prettifiedMoves === "") {
-          prettifiedMoves = move
-        } else {
-          prettifiedMoves += `, ${move}`
-        }
-      }
-    }
-    return prettifiedMoves
-  }
-
-  const newHomePiecePositions = [
-    [0.5, 0, 0],
-    [1.5, 0, 0],
-    [0.5, 0, 1],
-    [1.5, 0, 1]
-  ]
+    console.log('zoom', zoom)
+  }, [window.innerWidth, window.innerHeight, device, zoom])
 
   const [joinTeam, setJoinTeam] = useState(null);
-  const [showJoinTeam0Button, setShowJoinTeam0Button] = useState(true)
-  const [joinTeam0SubmitHover, setJoinTeam0SubmitHover] = useState(false)
-  const [joinTeam0CancelHover, setJoinTeam0CancelHover] = useState(false)
-  // show both buttons
-  // set the team you're joining
   function handleJoinTeam0 () {
     setJoinTeam(0);
   }
-  function handleJoinTeam0SubmitMouseEnter () {
-    setJoinTeam0SubmitHover(true)
-  }
-  function handleJoinTeam0SubmitMouseLeave () {
-    setJoinTeam0SubmitHover(false)
-  }
-  function handleJoinTeam0CancelMouseEnter () {
-    setJoinTeam0CancelHover(true)
-  }
-  function handleJoinTeam0CancelMouseLeave () {
-    setJoinTeam0CancelHover(false)
-  }
-  const [showJoinTeam1Button, setShowJoinTeam1Button] = useState(true)
-  const [joinTeam1SubmitHover, setJoinTeam1SubmitHover] = useState(false)
-  const [joinTeam1CancelHover, setJoinTeam1CancelHover] = useState(false)
   function handleJoinTeam1 () {
     setJoinTeam(1)
-  }
-  function handleJoinTeam1SubmitMouseEnter () {
-    setJoinTeam1SubmitHover(true)
-  }
-  function handleJoinTeam1SubmitMouseLeave () {
-    setJoinTeam1SubmitHover(false)
-  }
-  function handleJoinTeam1CancelMouseEnter () {
-    setJoinTeam1CancelHover(true)
-  }
-  function handleJoinTeam1CancelMouseLeave () {
-    setJoinTeam1CancelHover(false)
-  }
-
-  // pre-condition: 'client' from 'clientAtom'
-  function PiecesSection() {
-    if (client.team != undefined) {
-      return (
-        <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
-          { (gamePhase === "game" && 29 in legalTiles) ?
-            <ScoreButton
-              position={[0,0,0]}
-              device={device}
-            /> :
-            teams[client.team].pieces.map((value, index) =>
-              value == null ? (
-                <mesh
-                  position={newHomePiecePositions[index]}
-                  key={index}
-                >
-                  <sphereGeometry args={[0.2]} />
-                </mesh>
-              ) : value === "scored" ? (
-                <mesh
-                  position={newHomePiecePositions[index]}
-                  key={index}
-                >
-                  <sphereGeometry args={[0.2]} />
-                  <meshStandardMaterial color={client.team == 0 ? "red" : "green"} />
-                </mesh>
-              ) : (
-                <Piece
-                  position={newHomePiecePositions[index]}
-                  rotation={layout[device].homePieces[client.team].rotation}
-                  keyName={`count${index}`}
-                  tile={-1}
-                  team={client.team}
-                  id={value.id}
-                  key={index}
-                  scale={1}
-                />
-              )
-            )
-          }
-          {/* moves */}
-          {gamePhase === "pregame" && <>
-            <TextButton
-              text={`Moves:`}
-              position={layout[device].moves.text}
-              // size={layout[device].moves.size}
-            />
-            <TextButton
-              text={`${prettifyMoves(teams[0].moves)}`}
-              position={layout[device].moves.list}
-              color="red"
-              // size={layout[device].moves.size}
-            />
-            <TextButton
-              text={`${prettifyMoves(teams[1].moves)}`}
-              position={[
-                layout[device].moves.list[0] + 0.5,
-                layout[device].moves.list[1],
-                layout[device].moves.list[2],
-              ]}
-              color="green"
-              // size={layout[device].moves.size}
-            />
-          </>}
-          {gamePhase !== "lobby" && 
-            <>
-              <TextButton
-                text={`Moves:`}
-                position={layout[device].moves.text}
-                // size={layout[device].moves.size}
-              />
-              <TextButton
-                text={`${prettifyMoves(teams[turn.team].moves)}`}
-                position={layout[device].moves.list}
-                // size={layout[device].moves.size}
-              />
-            </>
-          }
-        </group>
-      )
-    } else {
-      return (      
-        <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
-          {teams[0].pieces.map((value, index) =>
-            (<mesh
-              position={newHomePiecePositions[index]}
-              key={index}
-            >
-              <boxGeometry args={[0.4, 0.4, 0.4]} />
-              <meshStandardMaterial color="#505050"/>
-            </mesh>))}
-        </group>
-      )
-    }
-  }
-
-  function handleDisconnectPointerDown(e) {
-    e.stopPropagation()
-    location.reload();
-  }
-
-  function handleDisconnectPointerUp(e) {
-    e.stopPropagation()
   }
 
   const [showRulebook, setShowRulebook] = useState(false);
@@ -559,9 +222,6 @@ export default function Experience() {
 
   return (
     <>
-      {/* <Perf/> */}
-      {/* <OrbitControls/> */}
-      <color args={ ['#030202']} attach="background" />
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -573,211 +233,119 @@ export default function Experience() {
         far={2000}
         position={layout[device].camera.position}
         ref={camera}
-        // lookAt={center.current.position}
       />
-      {/* <Leva hidden /> */}
       <directionalLight
         position={[0, 1, 0.5]}
         intensity={3}
-        // castShadow
       />
       <ambientLight intensity={ 1 } />
-      <group scale={layout[device].scale}>
-      { <group>
-          {/* team 0 */}
-          <group
-            position={layout[device].team0.position}
-            scale={layout[device].team0.scale}
-          >
-            {/* team name */}
+      <color args={ ['#001124']} attach="background" />
+      <TeamDisplay
+        position={layout[device].team0.position}
+        scale={layout[device].team0.scale}
+        joinPosition={layout[device].team0.join.position}
+        handleJoinTeam={handleJoinTeam0}
+        team={0}
+        pieceRotation={layout[device].homePieces[0].rotation}
+        piecePosition={layout[device].team0.pieces.position}
+        pieceSpace={layout[device].homePieces[0].space}
+        namesPosition={layout[device].team0.names.position}
+      />
+      <TeamDisplay
+        position={layout[device].team1.position}
+        scale={layout[device].team1.scale}
+        joinPosition={layout[device].team1.join.position}
+        handleJoinTeam={handleJoinTeam1}
+        team={1}
+        pieceRotation={layout[device].homePieces[1].rotation}
+        piecePosition={layout[device].team0.pieces.position}
+        pieceSpace={layout[device].homePieces[1].space}
+        namesPosition={layout[device].team0.names.position}
+      />
+      <group>
+        {/* join modal */}
+        { joinTeam !== null && <JoinTeamModal
+          // must pass string to access key in object
+          position={layout[device].joinTeamModal[joinTeam].position}
+          team={joinTeam}
+          setJoinTeam={setJoinTeam}
+        /> }
+        {/* board */}
+        <Tiles 
+          device={device} 
+          position={layout[device].center} 
+          scale={layout[device].tiles.scale}
+        />
+        <group name='yoot-section'>
+          {/* START GAME text */}
+          {readyToStart && gamePhase === "lobby" && (
             <TextButton
-              text="Rockets"
-              boxWidth={1.2}
-              boxHeight={0.3}
-              color="red"
+              text="Start"
+              position={layout[device].startBanner.position}
+              size={layout[device].startBanner.fontSize}
+              boxWidth={layout[device].startBanner.boxWidth}
+              boxHeight={layout[device].startBanner.boxHeight}
+              handlePointerClick={() => { socket.emit("startGame") }}
             />
-            {/* join button */}
-            { client.team !== 0 && showJoinTeam0Button && <TextButton
-              text="JOIN"
-              boxWidth={0.9}
-              boxHeight={0.3}
-              color="yellow"
-              position={layout[device].team0.join.position}
-              handlePointerClick={handleJoinTeam0}
-            /> }
-            {/* pieces */}
-            <group position={layout[device].team0.pieces.position}>
-              <HomePieces team={0} scale={0.5}/>
-            </group>
-            {/* player ids */}
-            {teams[0].players.map((value, index) => (
-              <TextButton
-                text={`${value.name}`}
-                position={[
-                  layout[device].team0.names.position[0],
-                  layout[device].team0.names.position[1], 
-                  layout[device].team0.names.position[2] + 0.5 * (index)]}
-                color={
-                  turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby"
-                    ? "white"
-                    : "yellow"
-                }
-                key={index}
-              />
-            ))}
-          </group>
-          {/* team 1 */}
-          <group
-          position={layout[device].team1.position}
-          scale={layout[device].team1.scale}>
-            {/* team name */}
-            <TextButton
-              text="UFOs"
-              boxWidth={1.2}
-              boxHeight={0.3}
-              color="turquoise"
-            />
-            {/* join button */}
-            { client.team !== 1 && showJoinTeam1Button && <TextButton
-              text="JOIN"
-              boxWidth={0.9}
-              boxHeight={0.3}
-              color="yellow"
-              position={layout[device].team1.join.position}
-              handlePointerClick={handleJoinTeam1}
-            />}
-            {/* pieces */}
-            <group position={layout[device].team1.pieces.position}>
-              <HomePieces team={1} scale={0.5}/>
-            </group>
-            {/* player ids */}
-            {teams[1].players.map((value, index) => (
-              <TextButton
-                text={`${value.name}`}
-                position={[
-                  layout[device].team1.names.position[0],
-                  layout[device].team1.names.position[1], 
-                  layout[device].team1.names.position[2] + 0.5 * (index)]}
-                color={
-                  turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby"
-                    ? "white"
-                    : "yellow"
-                }
-                key={index}
-              />
-            ))}
-          </group>
-          {/* join modal */}
-          { (joinTeam !== null) && <JoinTeamModal
-            // must pass string to access key in object
-            position={layout[device].joinTeamModal[joinTeam.toString()].position}
-            team={joinTeam}
-            setJoinTeam={setJoinTeam}
-            /> }
-          {/* board */}
-          <group position={layout[device].center} scale={layout[device].tiles.scale}>
-            <Tiles />
-          </group>
-          {/* yoot section */}
-          <group>
-            {/* START GAME text */}
-            {readyToStart && gamePhase === "lobby" && (
-              <TextButton
-                text="Start"
-                position={layout[device].startBanner.position}
-                size={layout[device].startBanner.fontSize}
-                boxWidth={layout[device].startBanner.boxWidth}
-                boxHeight={layout[device].startBanner.boxHeight}
-                handlePointerClick={() => {
-                  socket.emit("startGame", ({ response }) => {
-                    console.log("[startGame] response", response)
-                  })
-                }}
-              />
-            )}
-            <TextButton
-              text={`Phase: ${gamePhase}`}
-              position={layout[device].gamePhase.position}
-              handlePointerClick={() => socket.emit("startGame")}
-              size={layout[device].gamePhase.size}
-            />
-            <Physics>
-              <Yoots device={device}/>
-            </Physics>
-            {/* throw count */}
-             {( <>            
-                <TextButton
-                  text={`Throw: ${
-                    teams[turn.team].throws
-                  }`}
-                  position={layout[device].throwCount.position}
-                  size={layout[device].throwCount.size}
-                />
-              </>
-            )}
-            {/* turn */}
-            {(gamePhase === "pregame" || gamePhase === "game") && (
-              <>            
-                <TextButton
-                  text={`TURN: ${
-                    teams[turn.team].players[turn.players[turn.team]]?.name
-                  }`}
-                  position={layout[device].turn.position}
-                  size={layout[device].turn.size}
-                  color={turn.team == 0 ? "red" : "turquoise"}
-                />
-              </>
-            )}
-          </group>
-          {/* pieces section */}
-          <PiecesSection/>
-          {/* chat section */}
-          { !displayDisconnect && <group position={layout[device].chat.position}>
-            <Chatbox
-              height={`${chatboxHeight.toString()}px`}
-              width={`${chatboxWidth.toString()}px`}
-              padding={`${chatboxPadding.toString()}px`}
-              fontSize={`${chatFontSize.toString()}px`}
-              device={device}
-            />
-          </group> }
-          {/* menu */}
+          )}
+          {/* PHASE text */}
           <TextButton
-            text={`Menu`}
-            position={layout[device].menu.position}
+            text={`Phase: ${gamePhase}`}
+            position={layout[device].gamePhase.position}
+            size={layout[device].gamePhase.size}
           />
-          {/* RULEBOOK */}
-          { device === "portrait" && <group>
-            <TextButton
-              text={`Rulebook`}
-              position={layout[device].rulebook.button.position}
-              boxWidth={2}
-              boxHeight={0.4}
-              handlePointerClick={handleShowRulebook}
-            />
-            { showRulebook  && <Rulebook
-              position={layout[device].rulebook.position}
-              handleShow={handleShowRulebook}
-            />}
-          </group>}
-        </group>}
+          <Yoots device={device}/>
+          {/* throw count */}
+          <TextButton
+            text={`Throw: ${teams[turn.team].throws}`}
+            position={layout[device].throwCount.position}
+            size={layout[device].throwCount.size}
+          />
+          {/* turn */}
+          {gamePhase !== "lobby" && <TextButton
+            text={`TURN: ${getCurrentPlayer(turn, teams).name}`}
+            position={layout[device].turn.position}
+            size={layout[device].turn.size}
+            color={turn.team == 0 ? "red" : "turquoise"}
+          />}
+        </group>
+        {/* pieces section */}
+        <PiecesSection
+          sectionPosition={layout[device].piecesSection.position}
+          sectionScale={layout[device].piecesSection.scale}
+          moveTextPosition={layout[device].moves.text}
+          moveTextListPosition={layout[device].moves.list}
+        />
+        {/* chat section */}
+        { !displayDisconnect && <Chatbox
+          position={layout[device].chat.position}
+          height={`${chatboxHeight.toString()}px`}
+          width={`${chatboxWidth.toString()}px`}
+          padding={`${chatboxPadding.toString()}px`}
+          fontSize={`${chatFontSize.toString()}px`}
+          device={device}
+        /> }
+        {/* menu */}
+        <TextButton
+          text={`Menu`}
+          position={layout[device].menu.position}
+        />
+        {/* RULEBOOK */}
+        { device === "portrait" && <group name='rulebook'>
+          <TextButton
+            text={`Rulebook`}
+            position={layout[device].rulebook.button.position}
+            boxWidth={2}
+            boxHeight={0.4}
+            handlePointerClick={handleShowRulebook}
+          />
+          { showRulebook  && <Rulebook
+            position={layout[device].rulebook.position}
+            handleShow={handleShowRulebook}
+          /> }
+        </group> }
       </group>
-      {displayDisconnect && <group>
-        <mesh position={[0,2,0]} onPointerDown={e => handleDisconnectPointerDown(e)} onPointerUp={e => handleDisconnectPointerUp(e)}>
-          <boxGeometry args={[200, 0.1, 200]}/>
-          <meshStandardMaterial color="black" transparent opacity={0.5}/>
-        </mesh>
-        <Text3D 
-          font="/fonts/Luckiest Guy_Regular.json" 
-          size={0.4} 
-          height={0.01} 
-          position={[-6,5,-5]}
-          rotation={[-Math.PI/2,0,0, "YXZ"]}
-        >
-          Disconnected. Please refresh
-        </Text3D>
-      </group>
-      }
+      { displayDisconnect && <DisconnectScreen/> }
     </>
   );
 }

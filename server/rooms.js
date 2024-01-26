@@ -437,17 +437,14 @@ export const getYootsAsleep = (roomId, id) => {
 }
 
 export const isAllYootsAsleep = (roomId) => {
-  if (!(roomId in rooms)) {
-    return { isAllYootsAsleepError: "room not found" }
-  }
   for (const id of Object.keys(rooms[roomId].clients)) {
     console.log(`[isAllYootsAsleep] ${id}, visibility ${rooms[roomId].clients[id].visibility} yootsAsleep ${rooms[roomId].clients[id].yootsAsleep}`)
     if (rooms[roomId].clients[id].visibility && 
       rooms[roomId].clients[id].yootsAsleep === false) {
-        return { allYootsAsleep: false };
+        return false;
     }
   }
-  return { allYootsAsleep: true };
+  return true
 }
 
 export const updateYootsAsleep = (roomId, clientId, state) => {

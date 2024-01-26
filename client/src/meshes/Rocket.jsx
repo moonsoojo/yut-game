@@ -1,12 +1,10 @@
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import React from "react";
 
 export default function Rocket({
-  // tile,
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1
@@ -19,14 +17,6 @@ export default function Rocket({
   const { nodes } = useGraph(clone);
   
   const flameRef = useRef();
-  
-  useFrame((state, delta) => {
-    // if (tile >= 0) {
-    //   flameRef.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
-    // }
-  });
-
-  //[(Math.PI * 3) / 4, 0, -Math.PI]
 
   return (
     <group position={position} rotation={rotation} scale={scale}>
