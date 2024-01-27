@@ -6,7 +6,9 @@ import YootButton from './YootButton';
 import { useFrame } from '@react-three/fiber';
 import { readyToThrowAtom, socket, yootThrowValuesAtom } from './SocketManager';
 import { useAtom } from 'jotai';
+import * as THREE from 'three';
 
+const NUM_YOOTS = 4
 export default function Yoots2() {
 
   // rigidbodies
@@ -19,11 +21,10 @@ export default function Yoots2() {
   const yoot0Mat = useRef()
   const yoot1Mat = useRef()
   const yoot2Mat = useRef()
-  const yootRhinoMat0 = useRef()
-  const yootRhinoMat1 = useRef()
+  const yoot3Mat = useRef()
 
   const [sleepCount, setSleepCount] = useState(0)
-  const [wakeCount, setWakeCount] = useState(4) // yoot is always moving on first render
+  const [wakeCount, setWakeCount] = useState(NUM_YOOTS) // yoot is always moving on first render
   const [yootsAwake, setYootsAwake] = useState(true)
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
@@ -31,6 +32,7 @@ export default function Yoots2() {
   useEffect(() => {
     console.log("sleep count", sleepCount, "wake count", wakeCount)
     if (sleepCount > 0 && sleepCount == wakeCount) {
+      setYootsAwake(false)
       socket.emit("yootsAsleep", {flag: true}, ({response}) => {
         if (response === "record") {
           let move = observeThrow();
@@ -40,14 +42,16 @@ export default function Yoots2() {
         }
       })
     } else if (wakeCount > sleepCount) {
+      console.log("[Yoots2] settings yoots to awake")
       setYootsAwake(true)
     }
   }, [sleepCount, wakeCount])
 
   useEffect(() => {
+    console.log("[Yoots2] yoot throw values changed")
     // client lags if you emit here
     if (yootThrowValues !== null) {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < NUM_YOOTS; i++) {
         yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
         yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
         yoots[i].current.applyImpulse({
@@ -68,19 +72,63 @@ export default function Yoots2() {
 
   useEffect(() => {
     if (!yootsAwake) {
+      console.log("[Yoots2] yoots not awake")
       yoot0Mat.current.material.visible = false;
       yoot1Mat.current.material.visible = false;
       yoot2Mat.current.material.visible = false;
-      yootRhinoMat0.current.material.visible = false;
-      yootRhinoMat1.current.material.visible = false;
+      yoot3Mat.current.material.visible = false;
     } else {
       yoot0Mat.current.material.visible = true;
       yoot1Mat.current.material.visible = true;
       yoot2Mat.current.material.visible = true;
-      yootRhinoMat0.current.material.visible = true;
-      yootRhinoMat1.current.material.visible = true;
+      yoot3Mat.current.material.visible = true;
     }
   }, [yootsAwake])
+
+  function observeThrow() {
+    let result = 0
+
+    // nak
+    let nak = false;
+    for (let i = 0; i < yoots.length; i++) {
+      if (yoots[i].current.translation().y < 0) {
+        nak = true;
+      }
+    }
+    if (!nak) {
+      let countUps = 0
+      let backdoUp = false
+
+      yoots.forEach(yoot => {
+        let vector = new THREE.Vector3( 0, 1, 0 );
+        vector.applyQuaternion( yoot.current.rotation() );
+        if (vector.y < 0) {
+          countUps++
+          if (yoot.current.userData === "backdo") {
+            backdoUp = true;
+          }
+        }
+      });
+  
+      if (countUps == 0) {
+        result = 5
+      } else if (countUps == 1) {
+        if (backdoUp == true) {
+          result = -1
+        } else {
+          result = countUps
+        }
+      } else {
+        result = countUps
+      }
+      // test: set all result to the same value
+      // if (gamePhase === "game") {
+      //   result = 3
+      // }
+    }
+      
+    return result
+  }
 
   function handleSleep() {
     setSleepCount(count => count+1)
@@ -116,8 +164,9 @@ export default function Yoots2() {
       rotation={[0, Math.PI/2, -Math.PI/2]}
       onWake={handleWake}
       onSleep={handleSleep}
+      colliders='hull'
     >
-      <Yoot scale={0.3} ref={yoot0Mat}/>
+      <Yoot scale={0.2} ref={yoot0Mat}/>
     </RigidBody>
     <RigidBody 
       ref={yoot1} 
@@ -126,8 +175,9 @@ export default function Yoots2() {
       rotation={[0, Math.PI/2, -Math.PI/2]}
       onWake={handleWake}
       onSleep={handleSleep}
+      colliders='hull'
     >
-      <Yoot scale={0.3} ref={yoot1Mat}/>
+      <Yoot scale={0.2} ref={yoot1Mat}/>
     </RigidBody>
     <RigidBody 
       ref={yoot2} 
@@ -136,8 +186,9 @@ export default function Yoots2() {
       rotation={[0, Math.PI/2, -Math.PI/2]}
       onWake={handleWake}
       onSleep={handleSleep}
+      colliders='hull'
     >
-      <Yoot scale={0.3} ref={yoot2Mat}/>
+      <Yoot scale={0.2} ref={yoot2Mat}/>
     </RigidBody>
     <RigidBody 
       ref={yoot3} 
@@ -146,8 +197,9 @@ export default function Yoots2() {
       rotation={[0, Math.PI/2, -Math.PI/2]}
       onWake={handleWake}
       onSleep={handleSleep}
+      colliders='hull'
     >
-      <YootRhino scale={0.3} ref={{ yootRhinoMat0, yootRhinoMat1 }}/>
+      <YootRhino scale={0.2} ref={yoot3Mat}/>
     </RigidBody>
   </Physics>
 }

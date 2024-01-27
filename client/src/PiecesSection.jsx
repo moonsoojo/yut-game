@@ -3,6 +3,7 @@ import React from "react";
 import { clientAtom, gamePhaseAtom, legalTilesAtom, teamsAtom } from "./SocketManager";
 import TextButton from "./components/TextButton";
 import { prettifyMoves } from "./helpers/helpers";
+import Piece from "./components/Piece";
 
 export default function PiecesSection({
   sectionPosition,
