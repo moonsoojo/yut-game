@@ -8,8 +8,7 @@ import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
-import { addUser, removeUser, getUser, getUsersInRoom } from './users.js';
-import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, getReadyToThrow, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addNewClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility, joinTeam, getClient, checkReadyToStart, addYoots, joinTeam2, getRandomPlayer, countSpectators } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getSpectatorFromRoom, getReadyToThrow, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getYoots, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility, joinTeam, getYoot, checkReadyToStart, addYoots, joinTeam2, getRandomPlayer, countSpectators } from './rooms.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
@@ -131,12 +130,15 @@ function makeId(length) {
 io.on("connect", (socket) => { 
 
   let roomId = '';
-  socket.on("createRoom", ({ id }) => {
+  socket.on("createRoom", ({ id }, callback) => {
+    console.log('[createRoom]')
     // if room with id already exists, it won't add it
     addRoom({ id })
+    return callback({ roomId: id })
   })
 
   socket.on("joinRoom", ({ id, savedClient }) => {
+    console.log('[joinRoom] roomId', id)
     roomId = id
 
     socket.join(roomId);
@@ -174,10 +176,10 @@ io.on("connect", (socket) => {
 
       socket.emit("message", { 
         user: 'admin', 
-        text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`
+        text: `${savedPlayer.name}, welcome back to the room ${savedPlayer.room}`
       })
 
-      const { joinTeam2Error } = joinTeam2({ player: joinedPlayer })
+      const { joinTeam2Error } = joinTeam2({ player: savedPlayer })
       if (joinTeam2Error) {
         return callback({ error: joinTeam2Error })
       }
@@ -239,10 +241,8 @@ io.on("connect", (socket) => {
   })*/
 
   // console log not fired when i switched apps in mobile
-  socket.on("visibilityChange", ({flag}, callback) => {
-    console.log("[visibilityChange] flag", flag)
+  socket.on("visibilityChange", (flag, callback) => {
     const { error } = updateVisibility(roomId, socket.id, flag)
-    console.log("[visibilityChange] updated visibility", getVisibility(roomId, socket.id))
     if (error) {
       callback({ response: error })
     } else if (flag === true) {
@@ -375,7 +375,7 @@ io.on("connect", (socket) => {
   });
 
   // if player throws, at least one player's visibility is true
-  socket.on("throwYoots", ({}, callback) => {
+  socket.on("throwYoots", () => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let teams = getTeams(roomId)
@@ -559,8 +559,9 @@ io.on("connect", (socket) => {
 
     let room = getRoom(roomId)
     if (room) {
-      const { client } = getClient(roomId, socket.id)
-      const removedClient = client
+      const { yoot } = getYoot(roomId, socket.id)
+      // save it to pass 'thrown' to another player
+      const removedYoot = yoot
       const userFromRoom = removeUserFromRoom({ id: socket.id, roomId: room.id })
       if (userFromRoom.error && userFromRoom.error === "room not found") {
         // nothing happens
@@ -594,8 +595,8 @@ io.on("connect", (socket) => {
             turn.players[turn.team] = 0
             updateTurn(roomId, turn)
           }
-          console.log("[disconnect] removedClient.thrown", removedClient.thrown, "current player ID", currentPlayerId)
-          updateThrown(roomId, currentPlayerId, removedClient.thrown)
+          console.log("[disconnect] removedClient.thrown", removedYoot.thrown, "current player ID", currentPlayerId)
+          updateThrown(roomId, currentPlayerId, removedYoot.thrown)
 
           io.to(room.id).emit('room', room)
         } else if (countSpectators(room.id) > 0) {

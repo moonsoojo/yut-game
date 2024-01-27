@@ -175,9 +175,9 @@ export const removeUserFromRoom = ({ id, roomId }) => {
   const user = getUserFromRoom({ id, roomId })
   const team = user.team
 
-  if (id in rooms[roomId].clients) {
-    delete rooms[roomId].clients[id]
-    console.log("[removeUserFromRoom] clients", rooms[roomId].clients)
+  if (id in rooms[roomId].yoots) {
+    delete rooms[roomId].yoots[id]
+    console.log("[removeUserFromRoom] yoots", rooms[roomId].yoots)
   }
 
   // spectator
@@ -258,7 +258,7 @@ export const joinTeam2 = ({ player }) => {
   const roomId = player.room
 
   if (getHostId(roomId) == null) {
-    updateHostId(roomId, socket.id)
+    updateHostId(roomId, player.id)
   }
   
   const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
@@ -267,7 +267,7 @@ export const joinTeam2 = ({ player }) => {
   }
 
   const turn = getTurn(roomId)
-  if (socket.id === currentPlayerId 
+  if (player.id === currentPlayerId 
     && movesIsEmpty(roomId, turn.team) 
     && getThrows(roomId, turn.team) == 0 
     && getGamePhase(roomId) !== "lobby") {
@@ -278,7 +278,8 @@ export const joinTeam2 = ({ player }) => {
 }
 
 export const getRoom = ( id ) => {
-  console.log("[getRoom] room's clients", rooms[id].clients)
+  console.log("[getRoom] roomId", id)
+  console.log("[getRoom] room's yoots", rooms[id].yoots)
   console.log("[getRoom] room's teams", JSON.stringify(rooms[id].teams))
   console.log("[getRoom] room's turn", JSON.stringify(rooms[id].turn))
   console.log("[getRoom] room's spectators", JSON.stringify(rooms[id].spectators))
@@ -345,19 +346,13 @@ export const addYoots = (roomId, clientId) => {
   rooms[roomId].yoots[clientId] = yoots
 }
 
-export const getClient = (roomId, clientId) => {
+export const getYoot = (roomId, clientId) => {
   if (roomId in rooms) {
-    if (clientId in rooms[roomId].clients) {
-      return { client: rooms[roomId].clients[clientId] }
+    if (clientId in rooms[roomId].yoots) {
+      return { yoot: rooms[roomId].yoots[clientId] }
     } else {
-      return { getClientError: "client not found" }
+      return { getYootError: `yoot from client ${clientId}not found` }
     }
-  }
-}
-
-export const updateClientTurn = (roomId, clientId) => {
-  if (roomId in rooms) {
-    rooms[roomId].clients[clientId]
   }
 }
 
@@ -417,15 +412,15 @@ export const updateGamePhase = (roomId, gamePhase) => {
   }
 }
 
-export const getClients = (roomId) => {
+export const getYoots = (roomId) => {
   if (roomId in rooms) {
-    return rooms[roomId].clients
+    return rooms[roomId].yoots
   }
 }
 
-export const updateClients = (roomId, clients) => {
+export const updateYoots = (roomId, yoots) => {
   if (roomId in rooms) {
-    rooms[roomId].clients = clients
+    rooms[roomId].yoots = yoots
   }
 }
 

@@ -6,6 +6,7 @@ import HomePieces from "./HomePieces";
 
 export default function TeamDisplay({
   position,
+  rotation,
   scale,
   joinPosition,
   handleJoinTeam,
@@ -22,6 +23,7 @@ export default function TeamDisplay({
 
   return <group
     position={position}
+    rotation={rotation}
     scale={scale}
   >
     {/* team name */}

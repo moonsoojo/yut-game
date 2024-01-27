@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import layout from "./layout.js";
 
 // meshes
-import Yoots from "./Yoots.jsx";
+import Yoots2 from "./Yoots2.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
@@ -45,6 +45,9 @@ import { getCurrentPlayer, prettifyMoves } from "./helpers/helpers.js";
 import PiecesSection from "./PiecesSection.jsx";
 import TeamDisplay from "./TeamDisplay.jsx";
 import DisconnectScreen from "./DisconnectScreen.jsx";
+import Stars from "./particles/Stars.jsx";
+import YootButton from "./YootButton.jsx";
+import NewYoots from "./Yoots2.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -122,11 +125,6 @@ export default function Experience() {
   const camera = useRef();
 
   useEffect(() => {
-    camera.current.lookAt(
-      layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
-      layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
-      layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
-    )
     if (device !== "portrait") {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
@@ -232,14 +230,9 @@ export default function Experience() {
         near={0.1}
         far={2000}
         position={layout[device].camera.position}
+        rotation={layout[device].camera.rotation}
         ref={camera}
       />
-      <directionalLight
-        position={[0, 1, 0.5]}
-        intensity={3}
-      />
-      <ambientLight intensity={ 1 } />
-      <color args={ ['#001124']} attach="background" />
       <TeamDisplay
         position={layout[device].team0.position}
         scale={layout[device].team0.scale}
@@ -276,9 +269,15 @@ export default function Experience() {
           position={layout[device].center} 
           scale={layout[device].tiles.scale}
         />
-        <group name='yoot-section'>
+        <group name='yoot-section' position={layout[device].yootSection.position}>
+          { <YootButton 
+          // { gamePhase !== "lobby" && <YootButton 
+            position={layout[device].yootButton.position} 
+            rotation={[0,Math.PI/2, 0]}
+          /> }
           {/* START GAME text */}
-          {readyToStart && gamePhase === "lobby" && (
+          {(
+          // {readyToStart && gamePhase === "lobby" && (
             <TextButton
               text="Start"
               position={layout[device].startBanner.position}
@@ -294,21 +293,25 @@ export default function Experience() {
             position={layout[device].gamePhase.position}
             size={layout[device].gamePhase.size}
           />
-          <Yoots device={device}/>
+          {/* <Yoots device={device}/> */}
           {/* throw count */}
           <TextButton
-            text={`Throw: ${teams[turn.team].throws}`}
+            text={`turns: ${1}`}
+            // text={`Throw: ${teams[turn.team].throws}`}
             position={layout[device].throwCount.position}
             size={layout[device].throwCount.size}
           />
           {/* turn */}
-          {gamePhase !== "lobby" && <TextButton
-            text={`TURN: ${getCurrentPlayer(turn, teams).name}`}
+          {<TextButton
+          // {gamePhase !== "lobby" && <TextButton
+            text={`TURN: ${'black'}`}
+            // text={`TURN: ${getCurrentPlayer(turn, teams).name}`}
             position={layout[device].turn.position}
             size={layout[device].turn.size}
             color={turn.team == 0 ? "red" : "turquoise"}
           />}
         </group>
+        <Yoots2/>
         {/* pieces section */}
         <PiecesSection
           sectionPosition={layout[device].piecesSection.position}
@@ -345,6 +348,7 @@ export default function Experience() {
           /> }
         </group> }
       </group>
+      <Stars position={[0,0,0]} size={1} count={10000}/>
       { displayDisconnect && <DisconnectScreen/> }
     </>
   );

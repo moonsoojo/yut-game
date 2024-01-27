@@ -195,10 +195,6 @@ export default {
       boxHeight: 0.5,
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
-    startGameBanner: {
-      position: [2,0,10],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
     throwButton: {
       position: [-4, 0, 11],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -250,12 +246,13 @@ export default {
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   landscapeDesktop: {
-    center: [-5.3, 0, -2.5],
+    center: [0,0,0],
     camera: {
       // zoom: 150,
       zoomMin: 35,
       zoomMax: 150,
-      position: [-5.3, 25, 1.5],
+      position: [0,10,0],
+      rotation: [-Math.PI/2, 0, 0],
       lookAtOffset: [0, 0, 0]
     },
     title: {
@@ -302,7 +299,7 @@ export default {
     },
     team0: {
       scale: 0.7,
-      position: [-13, 0, -5.5],
+      position: [-7, 0, -3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.2]
@@ -319,7 +316,7 @@ export default {
     },
     team1: {
       scale: 0.7,
-      position: [-13, 0, -3.5],
+      position: [-7, 0, -1],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.1]
@@ -334,33 +331,39 @@ export default {
         position: [2, 0, -0.42]
       }
     },
-    throwCount: {
-      position: throwPosition,
+    yootSection: {
+      position: [4.5, 0, -1]
+    },
+    gamePhase: {
+      position: [0,0,0],
       size: 0.3
     },
     turn: {
-      position: [-0.8, 0, -1.5],
-      size: 0.22
+      position: [0, 0, 0.5],
+      size: 0.3
     },
-    gamePhase: {
-      position: [-0.8, 0, -1.9],
-      size: 0.24
+    throwCount: {
+      position: [0,0,1],
+      size: 0.3
+    },
+    yootButton: {
+      position: [1,0,2.5]
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-13,-0.5,-1],
+      position: [-7, 0, 1],
       fontSizeMin: 12,
       fontSizeMax: 40,
       heightMin: 70,
       heightMax: 250,
       widthMin: 140,
-      widthMax: 550,
+      widthMax: 400,
       paddingMin: 5,
       paddingMax: 10,
     },
     piecesSection: {
-      position: [-0.8, 0, -4],
+      position: [4.5, 0, -3],
       scale: 0.8
     },
     actionButtons: {
@@ -368,7 +371,7 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     menu: {
-      position: [0, 0, -6]
+      position: [-7, 0, 0.9]
     },
     moves: {
       text: [0,0,2],
@@ -423,15 +426,11 @@ export default {
       },
     },
     startBanner: {
-      position: [-0.8, -1.2, -5],
+      position: [0,0,2],
       fontSize: 0.6,
       boxWidth: 2.4,
       boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
-    },
-    startGameBanner: {
-      position: [6, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     scoreButton: {
       position: [6, 0, 3.5],
@@ -648,10 +647,6 @@ export default {
       boxWidth: 2.4,
       boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
-    },
-    startGameBanner: {
-      position: [6, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     scoreButton: {
       position: [6, 0, 3.5],
