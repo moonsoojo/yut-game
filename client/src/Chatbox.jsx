@@ -12,9 +12,9 @@ export default function Chatbox({ position, height, width, padding, fontSize }) 
 
   function onMessageSubmit (e) {
     e.preventDefault();
-    socket.emit("sendMessage", { message, roomId: params.id }, ({ error }) => {
+    socket.emit("sendMessage", { message, roomId: params.id }, () => {
       if (error) {
-        console.log(error)
+        // log error
       } else {
         setMessage('')
       }
@@ -62,7 +62,7 @@ export default function Chatbox({ position, height, width, padding, fontSize }) 
         <ScrollToBottom className="messages">
         {messages.map((value, index) => 
           <p style={{color: 'white', margin: 0}} key={index}>
-            <span style={{color: getColorByTeam(value.team)}}>{value.user}: </span> 
+            <span style={{color: getColorByTeam(value.team)}}>{value.name}: </span> 
             {value.text}
           </p>
         )}

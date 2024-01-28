@@ -5,40 +5,41 @@ function randomNumberBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-const countNeptune1 = 1000;
-const sizeNeptune = 0.2;
-const radius1MinNeptune = -20;
-const radius1MaxNeptune = 20;
-const colorOneHex = "#FFFFFF";
-const colorTwoHex = "#000000";
-const positions1 = new Float32Array(countNeptune1 * 3);
-const colors1 = new Float32Array(countNeptune1 * 3);
-const colorInitial = new THREE.Color(colorOneHex);
-const colorFinal = new THREE.Color(colorTwoHex);
-const textureLoader = new THREE.TextureLoader();
-const pointsMap = textureLoader.load("/textures/1.png");
+export default function Stars({
+  position=[0,0,0],
+  count=1000,
+  size=1
+}) {
+  const radius1MinNeptune = -20;
+  const radius1MaxNeptune = 20;
+  const colorOneHex = "#FFFFFF";
+  const colorTwoHex = "#000000";
+  const positions1 = new Float32Array(count * 3);
+  const colors1 = new Float32Array(count * 3);
+  const colorInitial = new THREE.Color(colorOneHex);
+  const colorFinal = new THREE.Color(colorTwoHex);
+  const textureLoader = new THREE.TextureLoader();
+  const pointsMap = textureLoader.load("/textures/1.png");
 
-for (let i = 0; i < countNeptune1; i++) {
-  const i3 = i * 3;
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
 
-  const randomX1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-  const randomY1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-  const randomZ1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    const randomX1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    const randomY1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    const randomZ1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
 
-  positions1[i3] = randomX1;
-  positions1[i3 + 1] = randomY1;
-  positions1[i3 + 2] = randomZ1;
+    positions1[i3] = randomX1;
+    positions1[i3 + 1] = randomY1;
+    positions1[i3 + 2] = randomZ1;
 
-  const mixedColor = colorInitial.clone();
-  mixedColor.lerp(colorFinal, Math.random());
+    const mixedColor = colorInitial.clone();
+    mixedColor.lerp(colorFinal, Math.random());
 
-  colors1[i3] = mixedColor.r;
-  colors1[i3 + 1] = mixedColor.g;
-  colors1[i3 + 2] = mixedColor.b;
-}
+    colors1[i3] = mixedColor.r;
+    colors1[i3 + 1] = mixedColor.g;
+    colors1[i3 + 2] = mixedColor.b;
+  }
 
-
-function stars(position) {
   return (
     <group position={position}>
       <points>
@@ -59,7 +60,7 @@ function stars(position) {
         </bufferGeometry>
         <pointsMaterial
           color="white"
-          size={sizeNeptune}
+          size={size}
           sizeAttenuation
           transparent
           blending={THREE.AdditiveBlending}
@@ -72,10 +73,4 @@ function stars(position) {
       </points>
     </group>
   );
-}
-
-export default function Stars({
-  position=[0,0,0],
-}) {
-  return stars(position);
 }

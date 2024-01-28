@@ -115,50 +115,7 @@ export default function Yoots({ device = "portrait" }) {
     }
   })
 
-  function observeThrow() {
-    let result = 0
 
-    // nak
-    let nak = false;
-    for (let i = 0; i < yoots.length; i++) {
-      if (yoots[i].current.translation().y < 0) {
-        nak = true;
-      }
-    }
-    if (!nak) {
-      let countUps = 0
-      let backdoUp = false
-
-      yoots.forEach(yoot => {
-        let vector = new THREE.Vector3( 0, 1, 0 );
-        vector.applyQuaternion( yoot.current.rotation() );
-        if (vector.y < 0) {
-          countUps++
-          if (yoot.current.userData === "backdo") {
-            backdoUp = true;
-          }
-        }
-      });
-  
-      if (countUps == 0) {
-        result = 5
-      } else if (countUps == 1) {
-        if (backdoUp == true) {
-          result = -1
-        } else {
-          result = countUps
-        }
-      } else {
-        result = countUps
-      }
-      // test: set all result to the same value
-      // if (gamePhase === "game") {
-      //   result = 3
-      // }
-    }
-      
-    return result
-  }
 
   function onSleepHandler() {
     console.log("onSleepHandler")

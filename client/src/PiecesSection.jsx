@@ -1,19 +1,21 @@
 import { useAtom } from "jotai";
 import React from "react";
-import { clientAtom, gamePhaseAtom, legalTilesAtom, teamsAtom } from "./SocketManager";
+import { gamePhaseAtom, legalTilesAtom, teamsAtom, turnAtom } from "./SocketManager";
 import TextButton from "./components/TextButton";
 import { prettifyMoves } from "./helpers/helpers";
+import Piece from "./components/Piece";
 
 export default function PiecesSection({
   sectionPosition,
   sectionScale,
   moveTextPosition,
   moveTextListPosition,
+  team
 }) {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom)
   const [teams] = useAtom(teamsAtom)
-  const [client] = useAtom(clientAtom)
+  const [turn] = useAtom(turnAtom)
 
   const POSITIONS = [
     [0.5, 0, 0],
@@ -65,7 +67,7 @@ export default function PiecesSection({
   function GameMoves({moveTextPosition, moveTextListPosition}) {
     return <group>
       <TextButton
-        text={`Moves:`}
+        text={`Moves: `}
         position={moveTextPosition}
       />
       <TextButton
@@ -90,7 +92,7 @@ export default function PiecesSection({
     </group>
   }
 
-  if (client.team != undefined) {
+  if (team !== undefined) {
     return (
       <group position={sectionPosition} scale={sectionScale}>
         { (gamePhase === "game" && 29 in legalTiles) ?
@@ -98,7 +100,7 @@ export default function PiecesSection({
             position={[0,0,0]}
             device={device}
           /> :
-          teams[client.team].pieces.map((value, index) =>
+          teams[team].pieces.map((value, index) =>
             value == null ? (
               <Placeholder position={POSITIONS[index]} key={index}/>
             ) : value === "scored" ? (
@@ -109,7 +111,7 @@ export default function PiecesSection({
                 rotation={[0,0,0]}
                 keyName={`count${index}`}
                 tile={-1}
-                team={client.team}
+                team={team}
                 id={value.id}
                 key={index}
                 scale={1}

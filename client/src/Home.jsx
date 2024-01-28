@@ -24,6 +24,7 @@ export default function Home() {
   const device = "landscapeDesktop"
 
   useEffect(() => {
+    console.log("[Home]")
     return () => {
       setFade(true)
     }
@@ -84,7 +85,6 @@ export default function Home() {
     // quaternion.setFromEuler(euler)
     // camera.setRotationFromEuler(euler)
     camera.quaternion.setFromEuler(euler)
-    console.log('home', camera.quaternion)
     
     // set position in index.jsx
     // console.log(camera.position)
@@ -177,7 +177,7 @@ export default function Home() {
         height={0.01} 
         position={[0, -4.5, 0]}
       >
-        holidays in Korea
+        Lunar New Year.
         <meshStandardMaterial color="limegreen"/>
       </Text3D>
       <Text3D 
@@ -208,8 +208,7 @@ export default function Home() {
       <Pieces/>
       <Yoots/>
     </group>
-    
-    <Stars/>
+    <Stars position={[0,0,0]} size={0.2} count={1000}/>
     </PresentationControls>
   </>
 }

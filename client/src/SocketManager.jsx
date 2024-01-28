@@ -77,7 +77,8 @@ export const SocketManager = () => {
       socket.on('connect', () => { setDisconnect(false) })
       socket.on('connect_error', (err) => { setDisconnect(true) })
   
-      socket.emit("createRoom", { id: params.id }, () => {
+      socket.emit("createRoom", { id: params.id }, ({ roomId }) => {
+        console.log('create room callback')
         socket.emit('joinRoom', { 
           id: roomId, 
           savedClient: localStorage.getItem('yootGame') 
@@ -143,6 +144,7 @@ export const SocketManager = () => {
   // without the dependency, it only shows the last message
   useEffect(() => {
     socket.on('message', (message) => {
+      console.log("[SocketManager] message", message)
       setMessages([...messages, message]);
     })
   }, [messages])

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
 import { socket } from './SocketManager';
-import { useParams } from "wouter";
 import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 
@@ -29,6 +28,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
             ...player
           }))
           setName('')
+          console.log("[JoinTeamModal] setJoinTeam(null)")
           setJoinTeam(null);
         }
       });

@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import layout from "./layout.js";
 
 // meshes
-import Yoots from "./Yoots.jsx";
+import Yoots2 from "./Yoots2.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
@@ -45,6 +45,9 @@ import { getCurrentPlayer, prettifyMoves } from "./helpers/helpers.js";
 import PiecesSection from "./PiecesSection.jsx";
 import TeamDisplay from "./TeamDisplay.jsx";
 import DisconnectScreen from "./DisconnectScreen.jsx";
+import Stars from "./particles/Stars.jsx";
+import YootButton from "./YootButton.jsx";
+import { useThree } from "@react-three/fiber";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -90,9 +93,9 @@ export default function Experience() {
   // this happens before the client connects to the server
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      socket.emit("visibilityChange", {flag: false})
+      socket.emit("visibilityChange", false)
     } else {
-      socket.emit("visibilityChange", {flag: true})
+      socket.emit("visibilityChange", true)
     }
   });
 
@@ -122,11 +125,6 @@ export default function Experience() {
   const camera = useRef();
 
   useEffect(() => {
-    camera.current.lookAt(
-      layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
-      layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
-      layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
-    )
     if (device !== "portrait") {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
@@ -220,6 +218,13 @@ export default function Experience() {
     }
   }
 
+  function handleStart(e) {
+    console.log("[Experience] readyToStart", readyToStart)
+    if (readyToStart) {
+      socket.emit("startGame")
+    }
+  }
+
   return (
     <>
       <OrthographicCamera
@@ -232,14 +237,9 @@ export default function Experience() {
         near={0.1}
         far={2000}
         position={layout[device].camera.position}
+        rotation={layout[device].camera.rotation}
         ref={camera}
       />
-      <directionalLight
-        position={[0, 1, 0.5]}
-        intensity={3}
-      />
-      <ambientLight intensity={ 1 } />
-      <color args={ ['#001124']} attach="background" />
       <TeamDisplay
         position={layout[device].team0.position}
         scale={layout[device].team0.scale}
@@ -258,15 +258,15 @@ export default function Experience() {
         handleJoinTeam={handleJoinTeam1}
         team={1}
         pieceRotation={layout[device].homePieces[1].rotation}
-        piecePosition={layout[device].team0.pieces.position}
+        piecePosition={layout[device].team1.pieces.position}
         pieceSpace={layout[device].homePieces[1].space}
-        namesPosition={layout[device].team0.names.position}
+        namesPosition={layout[device].team1.names.position}
       />
       <group>
         {/* join modal */}
         { joinTeam !== null && <JoinTeamModal
           // must pass string to access key in object
-          position={layout[device].joinTeamModal[joinTeam].position}
+          position={layout[device].joinTeamModal.position}
           team={joinTeam}
           setJoinTeam={setJoinTeam}
         /> }
@@ -276,45 +276,56 @@ export default function Experience() {
           position={layout[device].center} 
           scale={layout[device].tiles.scale}
         />
-        <group name='yoot-section'>
-          {/* START GAME text */}
-          {readyToStart && gamePhase === "lobby" && (
-            <TextButton
-              text="Start"
-              position={layout[device].startBanner.position}
-              size={layout[device].startBanner.fontSize}
-              boxWidth={layout[device].startBanner.boxWidth}
-              boxHeight={layout[device].startBanner.boxHeight}
-              handlePointerClick={() => { socket.emit("startGame") }}
-            />
-          )}
+        <group name='yoot-section' position={layout[device].yootSection.position}>
           {/* PHASE text */}
           <TextButton
             text={`Phase: ${gamePhase}`}
             position={layout[device].gamePhase.position}
             size={layout[device].gamePhase.size}
           />
-          <Yoots device={device}/>
-          {/* throw count */}
-          <TextButton
-            text={`Throw: ${teams[turn.team].throws}`}
-            position={layout[device].throwCount.position}
-            size={layout[device].throwCount.size}
-          />
-          {/* turn */}
-          {gamePhase !== "lobby" && <TextButton
-            text={`TURN: ${getCurrentPlayer(turn, teams).name}`}
-            position={layout[device].turn.position}
-            size={layout[device].turn.size}
-            color={turn.team == 0 ? "red" : "turquoise"}
-          />}
+          {/* START GAME text */}
+          { gamePhase === "lobby" && (
+            <TextButton
+              text="Start"
+              position={layout[device].startBanner.position}
+              size={layout[device].startBanner.fontSize}
+              boxWidth={layout[device].startBanner.boxWidth}
+              boxHeight={layout[device].startBanner.boxHeight}
+              color={ readyToStart ? "yellow" : "grey" }
+              handlePointerClick={handleStart}
+            />
+          )}
+          { gamePhase !== "lobby" && <group>
+            <YootButton 
+              position={layout[device].yootButton.position} 
+              rotation={[0,Math.PI/2, 0]}
+            /> 
+            {/* throw count */}
+            <TextButton
+              text={`count: ${teams[turn.team].throws}`}
+              // text={`Throw: ${teams[turn.team].throws}`}
+              position={layout[device].throwCount.position}
+              size={layout[device].throwCount.size}
+            />
+            {/* turn */}
+            {<TextButton
+            // {gamePhase !== "lobby" && <TextButton
+              text={`TURN: ${teams[turn.team].players[turn.players[turn.team]].name}`}
+              // text={`TURN: ${getCurrentPlayer(turn, teams).name}`}
+              position={layout[device].turn.position}
+              size={layout[device].turn.size}
+              color={turn.team == 0 ? "red" : "turquoise"}
+            />}
+          </group>}
         </group>
+        { !displayDisconnect && <Yoots2/> }
         {/* pieces section */}
         <PiecesSection
           sectionPosition={layout[device].piecesSection.position}
           sectionScale={layout[device].piecesSection.scale}
           moveTextPosition={layout[device].moves.text}
           moveTextListPosition={layout[device].moves.list}
+          team={client.team}
         />
         {/* chat section */}
         { !displayDisconnect && <Chatbox
@@ -345,6 +356,7 @@ export default function Experience() {
           /> }
         </group> }
       </group>
+      <Stars position={[0,0,0]} size={1} count={10000}/>
       { displayDisconnect && <DisconnectScreen/> }
     </>
   );

@@ -6,27 +6,27 @@ export default function HomePieces({pieceRotation, team, scale=1, position, team
   let POSITION_START_Y = 0
   let POSITION_START_Z = 0.5
 
-  function Placeholder({key}) {
+  function Placeholder({index}) {
     return <mesh
       position={[
         POSITION_START_X + index * space,
         POSITION_START_Y,
         POSITION_START_Z,
       ]}
-      key={key}
+      key={index}
     >
       <sphereGeometry args={[0.2]} />
     </mesh>
   }
 
-  function Scored({team, key}) {
+  function Scored({team, index}) {
     return <mesh
       position={[
         POSITION_START_X + index * space,
         POSITION_START_Y,
         POSITION_START_Z,
       ]}
-      key={key}
+      key={index}
     >
       <sphereGeometry args={[0.2]} />
       <meshStandardMaterial color={team == 0 ? "red" : "green"} />
@@ -37,9 +37,9 @@ export default function HomePieces({pieceRotation, team, scale=1, position, team
     <group scale={scale} position={position}>
       {teams[team].pieces.map((value, index) =>
         value == null ? (
-          <Placeholder key={index}/>
+          <Placeholder index={index}/>
         ) : value === "scored" ? (
-          <Scored key={index}/>
+          <Scored index={index}/>
         ) : (
           <Piece
             position={[
