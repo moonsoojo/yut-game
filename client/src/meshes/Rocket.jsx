@@ -12,7 +12,7 @@ export default function Rocket({
   scale=1
 }) {
   const { scene, materials } = useGLTF(
-    "models/rockets/rocket-with-astronaut0.glb"
+    "models/rocket.glb"
   );
   
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);

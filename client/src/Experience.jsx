@@ -6,7 +6,7 @@ import layout from "./layout.js";
 // meshes
 import Yoots from "./Yoots.jsx";
 import Star from "./meshes/Star.jsx";
-import Neptune2 from "./meshes/Neptune2.jsx";
+import Neptune2 from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
@@ -31,15 +31,16 @@ import {
   RandomizedLight,
   AccumulativeShadows,
   SoftShadows,
-  Stars,
   Html,
   Text3D,
   OrthographicCamera,
   OrbitControls,
-  Text
+  Text,
+  PresentationControls
 } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import Stars from './particles/Stars'
 // import { Perf } from 'r3f-perf'
 
 
@@ -569,10 +570,15 @@ export default function Experience() {
   }
 
   return (
-    <>
+    <PresentationControls
+      global
+      polar={[-0.4, 0.2]}
+      azimuth={[-1, 0.75]}
+      config={{ mass: 2, tension: 400 }}
+      snap={{ mass: 4, tension: 400 }}
+    >
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
-      <color args={ ['#030202']} attach="background" />
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -587,12 +593,6 @@ export default function Experience() {
         // lookAt={center.current.position}
       />
       {/* <Leva hidden /> */}
-      <directionalLight
-        position={[0, 1, 0.5]}
-        intensity={3}
-        // castShadow
-      />
-      <ambientLight intensity={ 1 } />
       <group scale={layout[device].scale}>
       { <group>
           {/* team 0 */}
@@ -793,9 +793,9 @@ export default function Experience() {
         >
           Disconnected. Please refresh
         </Text3D>
-      </group>
-      }
-    </>
+      </group>}
+      <Stars count={3000} size={5}/>
+    </PresentationControls>
   );
 }
 
