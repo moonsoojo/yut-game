@@ -1,4 +1,4 @@
-let floorPosition = [-5.3,3,-2.5]
+let floorPosition = [0,3,0]
 let outOfBoundsPosition = [
   floorPosition[0]-1,
   floorPosition[1],
@@ -24,6 +24,9 @@ export default {
       zoomMax: 55,
       position: [-3, 25, 6],
       lookAtOffset: [0, 0, 0]
+    },
+    yootButton: {
+      position: [5,0,2.5]
     },
     title: {
       position1: [-4.7, 0, -14.5],
@@ -87,12 +90,7 @@ export default {
       }
     },
     joinTeamModal: {
-      0: {
-        position: [-6,0,-10]
-      },
-      1: {
-        position: [-6,0,-10]
-      }
+      position: [-1.2, 0, -1]
     },
     throwCount: {
       position: throwPosition,
@@ -250,13 +248,16 @@ export default {
     textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   landscapeDesktop: {
-    center: [-5.3, 0, -2.5],
+    center: [0,0,0],
     camera: {
       // zoom: 150,
       zoomMin: 35,
       zoomMax: 150,
-      position: [-5.3, 25, 1.5],
+      position: [0,10,0],
       lookAtOffset: [0, 0, 0]
+    },
+    yootButton: {
+      position: [6,0,2.5]
     },
     title: {
       position1: [-13.5, 0, -5.5],
@@ -301,8 +302,8 @@ export default {
       }
     },
     team0: {
-      scale: 0.7,
-      position: [-13, 0, -5.5],
+      scale: 1,
+      position: [-8, 0, -3.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.2]
@@ -318,8 +319,8 @@ export default {
       }
     },
     team1: {
-      scale: 0.7,
-      position: [-13, 0, -3.5],
+      scale: 1,
+      position: [-8, 0, -0.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.1]
@@ -334,22 +335,29 @@ export default {
         position: [2, 0, -0.42]
       }
     },
+    gamePhase: {
+      position: [5, 0, -1],
+      size: 0.3
+    },
     throwCount: {
-      position: throwPosition,
+      position: [5, 0, -0.5],
       size: 0.3
     },
     turn: {
-      position: [-0.8, 0, -1.5],
-      size: 0.22
+      position: [5, 0, 0],
+      size: 0.3
     },
-    gamePhase: {
-      position: [-0.8, 0, -1.9],
-      size: 0.24
+    startBanner: {
+      position: [5, 0, 1],
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
+      rotation: [0, Math.PI / 2, 0],
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-13,-0.5,-1],
+      position: [-8,0,2],
       fontSizeMin: 12,
       fontSizeMax: 40,
       heightMin: 70,
@@ -359,20 +367,23 @@ export default {
       paddingMin: 5,
       paddingMax: 10,
     },
+    joinTeamModal: {
+      position: [-1.2, 0, -1]
+    },
     piecesSection: {
-      position: [-0.8, 0, -4],
-      scale: 0.8
+      position: [5, 0, -3],
+      scale: 1
     },
     actionButtons: {
       position: [1.5, 0, 16],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     menu: {
-      position: [0, 0, -6]
+      position: [-8, 0, 1.9]
     },
     moves: {
-      text: [0,0,2],
-      list: [1.5,0,2],
+      text: [0,0,1.5],
+      list: [1.5, 0, 1.5],
       // size: 0.3
     },
     tiles: {
@@ -421,13 +432,6 @@ export default {
         space: 0.8,
         rotation: [0, 0, 0],
       },
-    },
-    startBanner: {
-      position: [-0.8, -1.2, -5],
-      fontSize: 0.6,
-      boxWidth: 2.4,
-      boxHeight: 0.7,
-      rotation: [0, Math.PI / 2, 0],
     },
     startGameBanner: {
       position: [6, 0, 3],
@@ -493,6 +497,9 @@ export default {
       zoomMax: 40,
       position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
+    },
+    yootButton: {
+      position: [5,0,2.5]
     },
     title: {
       position1: [-13.5, 0, -5.5],
@@ -588,6 +595,9 @@ export default {
       widthMax: 220,
       paddingMin: 5,
       paddingMax: 7,
+    },
+    joinTeamModal: {
+      position: [-1.2, 0, -1]
     },
     piecesSection: {
       position: [-0.8, 0, -4],

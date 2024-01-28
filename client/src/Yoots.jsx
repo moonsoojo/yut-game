@@ -9,15 +9,17 @@ import { useAtom } from "jotai";
 import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
+import YootButton from "./YootButton.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
-export default function Yoots({ device = "portrait" }) {
+export default function Yoots({ device = "portrait", buttonPos }) {
   // const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yoot.glb").nodes;
   const materials = useGLTF("/models/yoot.glb").materials;
   const nodesRhino = useGLTF("/models/yoot-rhino.glb").nodes;
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
+  
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [wakeCount, setWakeCount] = useState(4);
@@ -105,7 +107,7 @@ export default function Yoots({ device = "portrait" }) {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.emissiveIntensity = 0
       }
-      yootFloorMaterial.current.opacity = 0.1
+      yootFloorMaterial.current.opacity = 0
     }
     let allYootsOnFloor = true;
     for (let i = 0; i < yoots.length; i++) {
@@ -190,12 +192,12 @@ export default function Yoots({ device = "portrait" }) {
         friction={0.9}
       >
         <CuboidCollider args={[4, 0.2, 4]} restitution={0.2} friction={1} />
-        <mesh onPointerDown={handleYootThrow}>
+        <mesh>
           <boxGeometry args={[8, 0.4, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
-            opacity={0.3}
+            opacity={0}
             ref={yootFloorMaterial}
           />
         </mesh>
@@ -220,7 +222,7 @@ export default function Yoots({ device = "portrait" }) {
         return (
           <RigidBody
             ref={ref}            
-            position={[-6 + 0.5*index, 10, -2.5]} // if not set by socketManager
+            position={[-1.5 + 1*index, 10, 0]} // if not set by socketManager
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}
@@ -243,22 +245,18 @@ export default function Yoots({ device = "portrait" }) {
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
                 scale={[1, 6.161, 1]}
-                // 1, 6.161, 1
-                // [1.4, 8.6254, 1.4]
                 ref={yootMeshes[index]}
-              >
-              </mesh>
+              />
             ) : (
-              <group rotation={[0, 0, -Math.PI / 2]} scale={[1, 6.161, 1]}>
-                {/* [1.4, 8.6254, 1.4] */}
-                <mesh
-                  castShadow
-                  receiveShadow
-                  geometry={nodesRhino.Cylinder007.geometry}
-                  material={materialsRhino["Texture wrap.005"]}
-                  ref={yootMeshes[index]}
-                />
-              </group>
+              <mesh
+                castShadow
+                receiveShadow
+                geometry={nodesRhino.Cylinder007.geometry}
+                material={materialsRhino["Texture wrap.005"]}
+                ref={yootMeshes[index]}
+                rotation={[0, 0, -Math.PI / 2]} 
+                scale={[1, 6.161, 1]}
+              />
             )}
           </RigidBody>
         );
@@ -270,6 +268,12 @@ export default function Yoots({ device = "portrait" }) {
           position={layout.yoot.outOfBounds}
         />
       </>}
+      { gamePhase !== "lobby" && <YootButton 
+        position={buttonPos} 
+        rotation={[0, Math.PI/2, 0]}
+        handlePointerDown={handleYootThrow}
+        readyToThrow={readyToThrow}
+       />}
     </group>
   );
 }

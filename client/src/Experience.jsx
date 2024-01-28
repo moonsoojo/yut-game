@@ -55,6 +55,7 @@ import {
   clientAtom,
   disconnectAtom,
   displayDisconnectAtom,
+  readyToThrowAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
@@ -107,6 +108,8 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
+  const [readyToThrow] = useAtom(readyToThrowAtom);
+
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
   const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
@@ -151,7 +154,6 @@ export default function Experience() {
       layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
       layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
     )
-    // camera.current.lookAt(-3,0,-7)
     if (device !== "portrait") {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
@@ -414,6 +416,12 @@ export default function Experience() {
     [0.5, 0, 1],
     [1.5, 0, 1]
   ]
+  const ufoHomePositions = [
+    [0.5, 0, -0.5],
+    [1.5, 0, -0.5],
+    [0.5, 0, 0.5],
+    [1.5, 0, 0.5]
+  ]
 
   const [joinTeam, setJoinTeam] = useState(null);
   const [showJoinTeam0Button, setShowJoinTeam0Button] = useState(true)
@@ -455,11 +463,17 @@ export default function Experience() {
     setJoinTeam1CancelHover(false)
   }
 
+  function handleStart() {
+    socket.emit("startGame", ({ response }) => {
+      console.log("[startGame] response", response)
+    })
+  }
+
   // pre-condition: 'client' from 'clientAtom'
-  function PiecesSection() {
+  function PiecesSection({position, scale}) {
     if (client.team != undefined) {
       return (
-        <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+        <group position={position} scale={scale}>
           { (gamePhase === "game" && 29 in legalTiles) ?
             <ScoreButton
               position={[0,0,0]}
@@ -483,7 +497,11 @@ export default function Experience() {
                 </mesh>
               ) : (
                 <Piece
-                  position={newHomePiecePositions[index]}
+                  position={
+                    client.team == 0 
+                    ? newHomePiecePositions[index]
+                    : ufoHomePositions[index]
+                  }
                   rotation={layout[device].homePieces[client.team].rotation}
                   keyName={`count${index}`}
                   tile={-1}
@@ -590,7 +608,6 @@ export default function Experience() {
         far={2000}
         position={layout[device].camera.position}
         ref={camera}
-        // lookAt={center.current.position}
       />
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
@@ -681,7 +698,7 @@ export default function Experience() {
           {/* join modal */}
           { (joinTeam !== null) && <JoinTeamModal
             // must pass string to access key in object
-            position={layout[device].joinTeamModal[joinTeam.toString()].position}
+            position={layout[device].joinTeamModal.position}
             team={joinTeam}
             setJoinTeam={setJoinTeam}
             /> }
@@ -692,6 +709,7 @@ export default function Experience() {
           {/* yoot section */}
           <group>
             {/* START GAME text */}
+            {/* {( */}
             {readyToStart && gamePhase === "lobby" && (
               <TextButton
                 text="Start"
@@ -699,11 +717,7 @@ export default function Experience() {
                 size={layout[device].startBanner.fontSize}
                 boxWidth={layout[device].startBanner.boxWidth}
                 boxHeight={layout[device].startBanner.boxHeight}
-                handlePointerClick={() => {
-                  socket.emit("startGame", ({ response }) => {
-                    console.log("[startGame] response", response)
-                  })
-                }}
+                handlePointerClick={handleStart}
               />
             )}
             <TextButton
@@ -713,10 +727,14 @@ export default function Experience() {
               size={layout[device].gamePhase.size}
             />
             <Physics>
-              <Yoots device={device}/>
+              <Yoots 
+                device={device} 
+                buttonPos={layout[device].yootButton.position}
+                readyToThrow={readyToThrow}
+              />
             </Physics>
             {/* throw count */}
-             {( <>            
+             {(
                 <TextButton
                   text={`Throw: ${
                     teams[turn.team].throws
@@ -724,7 +742,6 @@ export default function Experience() {
                   position={layout[device].throwCount.position}
                   size={layout[device].throwCount.size}
                 />
-              </>
             )}
             {/* turn */}
             {(gamePhase === "pregame" || gamePhase === "game") && (
@@ -741,17 +758,20 @@ export default function Experience() {
             )}
           </group>
           {/* pieces section */}
-          <PiecesSection/>
+          <PiecesSection 
+            position={layout[device].piecesSection.position}
+            scale={layout[device].piecesSection.scale}
+          />
           {/* chat section */}
-          { !displayDisconnect && <group position={layout[device].chat.position}>
+          { !displayDisconnect &&
             <Chatbox
+              position={layout[device].chat.position}
               height={`${chatboxHeight.toString()}px`}
               width={`${chatboxWidth.toString()}px`}
               padding={`${chatboxPadding.toString()}px`}
               fontSize={`${chatFontSize.toString()}px`}
               device={device}
-            />
-          </group> }
+            /> }
           {/* menu */}
           <TextButton
             text={`Menu`}

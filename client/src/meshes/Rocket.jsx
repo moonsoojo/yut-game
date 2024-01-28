@@ -198,5 +198,3 @@ export default function Rocket({
     </group>
   )
 }
-
-useGLTF.preload("/models/rockets/rocket-with-astronaut0.glb");

@@ -107,10 +107,10 @@ export default {
   //    ] 
   // }
   initialYootPositions: [
-    { x: -6, y: 10, z: -2.5, },
-    { x: -5.5, y: 10, z: -2.5, },
-    { x: -5, y: 10, z: -2.5, },
-    { x: -4.5, y: 10, z: -2.5, },
+    { x: -1.5, y: 10, z: 0, },
+    { x: -0.5, y: 10, z: 0, },
+    { x: 0.5, y: 10, z: 0, },
+    { x: 1.5, y: 10, z: 0, },
   ],
   initialYootRotations: [
     // must be set to non-0 value to reset the rotation
