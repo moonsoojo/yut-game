@@ -24,6 +24,7 @@ export default function Home() {
   const device = "landscapeDesktop"
 
   useEffect(() => {
+    console.log("[Home]")
     return () => {
       setFade(true)
     }

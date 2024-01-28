@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000';
+// const ENDPOINT = 'localhost:5000';
 
-// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -144,6 +144,7 @@ export const SocketManager = () => {
   // without the dependency, it only shows the last message
   useEffect(() => {
     socket.on('message', (message) => {
+      console.log("[SocketManager] message", message)
       setMessages([...messages, message]);
     })
   }, [messages])

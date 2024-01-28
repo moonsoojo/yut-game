@@ -4,7 +4,7 @@ import Yoot from './meshes/Yoot2';
 import YootRhino from './meshes/YootRhino2';
 import YootButton from './YootButton';
 import { useFrame } from '@react-three/fiber';
-import { readyToThrowAtom, socket, yootThrowValuesAtom } from './SocketManager';
+import { gamePhaseAtom, readyToThrowAtom, socket, yootThrowValuesAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 import * as THREE from 'three';
 
@@ -28,12 +28,14 @@ export default function Yoots2() {
   const [yootsAwake, setYootsAwake] = useState(true)
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
+  const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
 
   useEffect(() => {
-    console.log("sleep count", sleepCount, "wake count", wakeCount)
+    console.log("[Yoots2] sleepCount", sleepCount, "wakeCount", wakeCount)
     if (sleepCount > 0 && sleepCount == wakeCount) {
       setYootsAwake(false)
-      socket.emit("yootsAsleep", {flag: true}, ({response}) => {
+      console.log("[Yoots2][sleepCount, wakeCount useEffect] yootsAsleep")
+      socket.emit("yootsAsleep", { flag: true }, ({response}) => {
         if (response === "record") {
           let move = observeThrow();
           socket.emit("recordThrow", {move})
@@ -42,15 +44,14 @@ export default function Yoots2() {
         }
       })
     } else if (wakeCount > sleepCount) {
-      console.log("[Yoots2] settings yoots to awake")
       setYootsAwake(true)
     }
   }, [sleepCount, wakeCount])
 
   useEffect(() => {
-    console.log("[Yoots2] yoot throw values changed")
     // client lags if you emit here
     if (yootThrowValues !== null) {
+      console.log("[Yoots2] yootThrowValues", yootThrowValues)
       for (let i = 0; i < NUM_YOOTS; i++) {
         yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
         yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
@@ -71,19 +72,68 @@ export default function Yoots2() {
   }, [yootThrowValues]);
 
   useEffect(() => {
-    if (!yootsAwake) {
-      console.log("[Yoots2] yoots not awake")
-      yoot0Mat.current.material.visible = false;
-      yoot1Mat.current.material.visible = false;
-      yoot2Mat.current.material.visible = false;
-      yoot3Mat.current.material.visible = false;
+    console.log("[Yoots2][yootsAwake useEffect] yootsAwake", yootsAwake)
+    if (!yootsAwake || gamePhase === "lobby") {
+      console.log("[Yoots2] yoot0Mat.current.material", yoot0Mat.current.material)
+      yoot0Mat.current.material.transparent = true;
+      yoot0Mat.current.material.opacity = 0;
+      // yoot0Mat.current.material.visible = false;
+      // yoot1Mat.current.material.visible = false;
+      yoot1Mat.current.material.transparent = true;
+      yoot1Mat.current.material.opacity = 0;
+      // yoot2Mat.current.material.visible = false;
+      yoot2Mat.current.material.transparent = true;
+      yoot2Mat.current.material.opacity = 0;
+      // yoot3Mat.current.material.visible = false;
+      yoot3Mat.current.material.transparent = true;
+      yoot3Mat.current.material.opacity = 0;
     } else {
-      yoot0Mat.current.material.visible = true;
-      yoot1Mat.current.material.visible = true;
-      yoot2Mat.current.material.visible = true;
-      yoot3Mat.current.material.visible = true;
+      yoot0Mat.current.material.transparent = true;
+      yoot0Mat.current.material.opacity = 1;
+      // yoot0Mat.current.material.visible = true;
+      yoot1Mat.current.material.transparent = true;
+      yoot1Mat.current.material.opacity = 1;
+      // yoot1Mat.current.material.visible = true;
+      yoot2Mat.current.material.transparent = true;
+      yoot2Mat.current.material.opacity = 1;
+      // yoot2Mat.current.material.visible = true;
+      yoot3Mat.current.material.transparent = true;
+      yoot3Mat.current.material.opacity = 1;
+      // yoot3Mat.current.material.visible = true;
     }
   }, [yootsAwake])
+
+  useEffect(() => {
+    console.log("[Yoots2][empty useEffect] yootsAwake", yootsAwake)
+    if (!yootsAwake || gamePhase === "lobby") {
+      console.log("[Yoots2] yoot0Mat.current.material", yoot0Mat.current.material)
+      yoot0Mat.current.material.transparent = true;
+      yoot0Mat.current.material.opacity = 0;
+      // yoot0Mat.current.material.visible = false;
+      // yoot1Mat.current.material.visible = false;
+      yoot1Mat.current.material.transparent = true;
+      yoot1Mat.current.material.opacity = 0;
+      // yoot2Mat.current.material.visible = false;
+      yoot2Mat.current.material.transparent = true;
+      yoot2Mat.current.material.opacity = 0;
+      // yoot3Mat.current.material.visible = false;
+      yoot3Mat.current.material.transparent = true;
+      yoot3Mat.current.material.opacity = 0;
+    } else {
+      yoot0Mat.current.material.transparent = true;
+      yoot0Mat.current.material.opacity = 1;
+      // yoot0Mat.current.material.visible = true;
+      yoot1Mat.current.material.transparent = true;
+      yoot1Mat.current.material.opacity = 1;
+      // yoot1Mat.current.material.visible = true;
+      yoot2Mat.current.material.transparent = true;
+      yoot2Mat.current.material.opacity = 1;
+      // yoot2Mat.current.material.visible = true;
+      yoot3Mat.current.material.transparent = true;
+      yoot3Mat.current.material.opacity = 1;
+      // yoot3Mat.current.material.visible = true;
+    }
+  }, [])
 
   function observeThrow() {
     let result = 0

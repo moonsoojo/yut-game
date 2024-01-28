@@ -87,12 +87,7 @@ export default {
       }
     },
     joinTeamModal: {
-      0: {
-        position: [-6,0,-10]
-      },
-      1: {
-        position: [-6,0,-10]
-      }
+      position: [-6,0,-10]
     },
     throwCount: {
       position: throwPosition,
@@ -316,7 +311,7 @@ export default {
     },
     team1: {
       scale: 0.7,
-      position: [-7, 0, -1],
+      position: [-7, 0, -0.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.1]
@@ -352,7 +347,7 @@ export default {
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-7, 0, 1],
+      position: [-7, 0, 1.9],
       fontSizeMin: 12,
       fontSizeMax: 40,
       heightMin: 70,
@@ -362,16 +357,19 @@ export default {
       paddingMin: 5,
       paddingMax: 10,
     },
+    joinTeamModal: {
+      position: [0,0,0]
+    },
     piecesSection: {
-      position: [4.5, 0, -3],
-      scale: 0.8
+      position: [4.5, 0, -3.5],
+      scale: 1
     },
     actionButtons: {
       position: [1.5, 0, 16],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     menu: {
-      position: [-7, 0, 0.9]
+      position: [-7, 0, 1.8]
     },
     moves: {
       text: [0,0,2],
@@ -566,6 +564,9 @@ export default {
     throwCount: {
       position: throwPosition,
       size: 0.21
+    },
+    joinTeamModal: {
+      position: [0,0,0]
     },
     turn: {
       position: [-0.8, 0, -1.5],

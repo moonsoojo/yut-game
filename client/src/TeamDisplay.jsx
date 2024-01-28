@@ -34,7 +34,7 @@ export default function TeamDisplay({
       color={ team == 0 ? "red" : "turquoise" }
     />
     {/* join button */}
-    { client.team !== 0 && <TextButton
+    { client.team !== team && <TextButton
       text="JOIN"
       boxWidth={0.9}
       boxHeight={0.3}

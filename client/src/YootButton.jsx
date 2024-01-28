@@ -1,6 +1,6 @@
 import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { socket, readyToThrowAtom } from './SocketManager';
 import { useAtom } from "jotai";
@@ -19,6 +19,10 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
 
   const [readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom);
+
+  useEffect(() => {
+    console.log("[YootButton] readyToThrow", readyToThrow)
+  }, [readyToThrow])
 
   const buttonEdges = useRef();
   const yoot0 = useRef();
@@ -133,7 +137,7 @@ export default function YootButton({
         onPointerDown={handlePointerDown}
       >
         <boxGeometry args={[3, 0.3, 2]}/>
-        <meshStandardMaterial transparent opacity={0.3}/>
+        <meshStandardMaterial transparent opacity={0}/>
       </mesh>
     </group>
   );
