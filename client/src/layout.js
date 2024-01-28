@@ -1,4 +1,4 @@
-let floorPosition = [0.1,0,0]
+let floorPosition = [-5.3,3,-2.5]
 let outOfBoundsPosition = [
   floorPosition[0]-1,
   floorPosition[1],

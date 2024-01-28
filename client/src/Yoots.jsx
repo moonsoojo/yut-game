@@ -47,6 +47,9 @@ export default function Yoots({ device = "portrait" }) {
 
   let RESET_TIME = 10000
   useEffect(() => {
+    for (let i = 0; i < yootMeshes.length; i++) {
+      yootMeshes[i].current.material.visible = true
+    }
     // client lags if you emit here
     if (yootThrowValues !== null) {
       for (let i = 0; i < 4; i++) {
@@ -71,6 +74,9 @@ export default function Yoots({ device = "portrait" }) {
   useEffect(() => {
     console.log("[Yoots] sleepCount", sleepCount, "wakeCount", wakeCount)
     if (sleepCount > 0 && sleepCount == wakeCount) {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.visible = false
+      }
       console.log("[sleepCount useEffect] sleepCount === wakeCount")
       // doesn't fire if client is not visible
       socket.emit("yootsAsleep", {flag: true}, ({response}) => {
@@ -86,8 +92,6 @@ export default function Yoots({ device = "portrait" }) {
   }, [sleepCount, wakeCount])
 
   useFrame((state, delta) => {
-    // console.log("[Yoots] client", client, "isMyTurn", isMyTurn(turn, teams, client.id),
-    // "readyToThrow", readyToThrow)
     if (client && 
       isMyTurn(turn, teams, client.id) && 
       teams[turn.team].throws > 0 && 
@@ -177,29 +181,17 @@ export default function Yoots({ device = "portrait" }) {
     });
   }
 
-  function handleYootReset() {
-    setShowResetYoots(false);
-    socket.emit("resetYoots", { socketIdEmitter: clientPlayer.socketId })
-  }
-
   return (
     <group dispose={null}>
-      { /* showResetYoots && <TextButton
-        text='Reset yoots'
-        position={[-1,0,-5]}
-        boxWidth={1.2}
-        boxHeight={0.3}
-        handlePointerClick={handleYootReset}
-      /> */}
       <RigidBody
         type="fixed"
         restitution={0.01}
         position={layout.yoot.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[2, 0.2, 2]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[4, 0.2, 4]} restitution={0.2} friction={1} />
         <mesh onPointerDown={handleYootThrow}>
-          <boxGeometry args={[4, 0.4, 4]} />
+          <boxGeometry args={[8, 0.4, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
@@ -228,7 +220,7 @@ export default function Yoots({ device = "portrait" }) {
         return (
           <RigidBody
             ref={ref}            
-            position={[-1 + 0.5*index, 1, 0]} // if not set by socketManager
+            position={[-6 + 0.5*index, 10, -2.5]} // if not set by socketManager
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}
@@ -262,15 +254,9 @@ export default function Yoots({ device = "portrait" }) {
                 <mesh
                   castShadow
                   receiveShadow
-                  geometry={nodesRhino.Cylinder002_1.geometry}
+                  geometry={nodesRhino.Cylinder007.geometry}
                   material={materialsRhino["Texture wrap.005"]}
                   ref={yootMeshes[index]}
-                />
-                <mesh
-                  castShadow
-                  receiveShadow
-                  geometry={nodesRhino.Cylinder002_2.geometry}
-                  material={materialsRhino.Rihno}
                 />
               </group>
             )}
