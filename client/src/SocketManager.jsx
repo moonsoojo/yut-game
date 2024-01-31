@@ -22,8 +22,6 @@ export const socket = io(
 // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // export const socket = io("http://192.168.86.158:3000"); // http://192.168.1.181:3000 //http://192.168.86.158:3000
 // doesn't work when another app is running on the same port
-const initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-const initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
 
 export const yootThrowValuesAtom = atom(null)
 /*export const yootThrowValuesAtom = atom([
@@ -82,7 +80,6 @@ export const messagesAtom = atom([]);
 export const nameAtom = atom('');
 export const clientAtom = atom({})
 export const roomAtom = atom({})
-export const readyToThrowAtom = atom(false)
 export const winnerAtom = atom(null)
 export const disconnectAtom = atom(false)
 export const displayDisconnectAtom = atom(false)
@@ -101,7 +98,6 @@ export const SocketManager = () => {
   const [messages, setMessages] = useAtom(messagesAtom);
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
-  const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
   const [_winner, setWinner] = useAtom(winnerAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect] = useAtom(displayDisconnectAtom)
@@ -158,7 +154,6 @@ export const SocketManager = () => {
       setTurn(room.turn);
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
-      setReadyToThrow(room.readyToThrow)
       setReadyToStart(room.readyToStart)
       setWinner(room.winner)
       setReadyToStart(room.readyToStart)
@@ -174,9 +169,6 @@ export const SocketManager = () => {
     })
     socket.on('readyToStart', (readyToStart) => {
       setReadyToStart(readyToStart);
-    })
-    socket.on('readyToThrow', (readyToThrow) => {
-      setReadyToThrow(readyToThrow);
     })
     socket.on('throwYoots', (yootForceVectors) => {
       setYootThrowValues(yootForceVectors);

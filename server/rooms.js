@@ -206,7 +206,6 @@ export const getRoom = ( id ) => {
     console.log("[getRoom] room's spectators", JSON.stringify(rooms[id].spectators))
     console.log("[getRoom] room's selection", JSON.stringify(rooms[id].selection))
     console.log("[getRoom] room's hostId", rooms[id].hostId)
-    console.log("[getRoom] room's readyToThrow", rooms[id].readyToThrow)
     console.log("[getRoom] room's legalTiles", rooms[id].legalTiles)
     return { room: rooms[id] }
   }
@@ -272,7 +271,6 @@ export const addNewClient = (roomId, clientId) => {
     // console.log("[addNewClient] room's spectators", JSON.stringify(rooms[roomId].spectators))
     // console.log("[addNewClient] room's selection", JSON.stringify(rooms[roomId].selection))
     // console.log("[addNewClient] room's hostId", rooms[roomId].hostId)
-    // console.log("[addNewClient] room's readyToThrow", rooms[roomId].readyToThrow)
     // console.log("[addNewClient] room's legalTiles", rooms[roomId].legalTiles)
   }
 }
@@ -545,21 +543,6 @@ export const updateVisibility = (roomId, clientId, state) => {
 export const getVisibility = (roomId, clientId) => {
   if (roomId in rooms && clientId in rooms[roomId].clients) {
     return rooms[roomId].clients[clientId].visibility
-  }
-}
-
-export const getReadyToThrow = (roomId) => {
-  if (roomId in rooms) {
-    return rooms[roomId].readyToThrow
-  }
-}
-
-export const updateReadyToThrow = (roomId, state) => {
-  if (roomId in rooms) {
-    rooms[roomId].readyToThrow = state
-    return {}
-  } else {
-    return { updateReadyToThrowError: `room ${roomId} not found` }
   }
 }
 

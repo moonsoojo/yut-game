@@ -7,7 +7,6 @@ import * as THREE from 'three'
 export default function YootButton({ 
   position, 
   rotation, 
-  readyToThrow,
   handlePointerDown,
   throws
 }) {
@@ -49,7 +48,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scale}
       >
-        <meshStandardMaterial color={ (readyToThrow && throws > 0) ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ (throws > 0) ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -72,7 +71,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot0}
         >
-          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -84,7 +83,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot1}
           >
-          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -96,7 +95,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot2}
           >
-          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -108,7 +107,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot3}
           >
-          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -119,7 +118,7 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ (readyToThrow && throws > 0) ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ throws > 0 ? "#963600" : "grey" }/>
       </Text3D>
       <mesh 
         position={[0, 0.1, 0]} 

@@ -27,7 +27,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
   function handlePointerLeave(event) {
     event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
-      
       document.body.style.cursor = "default";
       wrapper.current.opacity -= 0.2;
     }

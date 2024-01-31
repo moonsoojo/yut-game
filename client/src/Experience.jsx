@@ -6,7 +6,7 @@ import layout from "./layout.js";
 // meshes
 import Yoots from "./Yoots.jsx";
 import Star from "./meshes/Star.jsx";
-import Neptune2 from "./meshes/Neptune.jsx";
+import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
@@ -53,7 +53,6 @@ import {
   clientAtom,
   disconnectAtom,
   displayDisconnectAtom,
-  readyToThrowAtom,
   winnerAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
@@ -110,7 +109,6 @@ export default function Experience() {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
-  const [readyToThrow] = useAtom(readyToThrowAtom);
   const [winner] = useAtom(winnerAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
@@ -259,7 +257,7 @@ export default function Experience() {
       } else if (i == 10) {
         tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
       } else if (i == 15) {
-        tiles.push(<Neptune2 position={position} tile={i} key={i} device={device}/>);
+        tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
       } else {
         tiles.push(
           <Star
@@ -729,11 +727,10 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            <Physics debug>
+            <Physics>
               <Yoots 
                 device={device} 
                 buttonPos={layout[device].yootButton.position}
-                readyToThrow={readyToThrow}
               />
             </Physics>
             {/* throw count */}

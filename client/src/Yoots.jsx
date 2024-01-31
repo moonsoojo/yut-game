@@ -4,7 +4,7 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
+import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
@@ -29,7 +29,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   const [client] = useAtom(clientAtom)
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [showResetYoots, setShowResetYoots] = useState(false)
-  const [readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
 
   const NUM_YOOTS = 4;
   let yoots = [];
@@ -82,8 +81,8 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         yootMeshes[i].current.material.visible = false
       }
       console.log("[sleepCount useEffect] sleepCount === wakeCount")
-      // doesn't fire if client is not visible
-      socket.emit("yootsAsleep", {flag: true}, ({response}) => {
+      // doesn't fire if client is not visible...?
+      socket.emit("yootsAsleep", ({response}) => {
         console.log("[yootsAsleep] response", response)
         if (response === "record") {
           let move = observeThrow();
@@ -96,10 +95,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }, [sleepCount, wakeCount])
 
   useFrame((state, delta) => {
-    if (client && 
-      isMyTurn(turn, teams, client.id) && 
-      teams[turn.team].throws > 0 && 
-      readyToThrow) { // refactor this so server sends this info to client
+    if (client
+      && isMyTurn(turn, teams, client.id)
+      && teams[turn.team].throws > 0) {
         for (let i = 0; i < yootMeshes.length; i++) {
           yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
           yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
@@ -193,9 +191,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         position={layout.yoot.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[4, 1, 4]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[8, 2, 8]} />
+          <boxGeometry args={[8, 1, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
@@ -283,7 +281,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
           position={buttonPos} 
           rotation={[0, Math.PI/2, 0]}
           handlePointerDown={handleYootThrow}
-          readyToThrow={readyToThrow}
           throws={teams[turn.team].throws}
         />
       </group>}
