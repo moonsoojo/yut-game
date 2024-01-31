@@ -4,6 +4,8 @@ import { Canvas } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
 import { Route } from "wouter"
 import Home2 from './Home2';
+import RocketsWin from './RocketsWin';
+import UfosWin from './UfosWin';
 
 export default function App () {
   return (<>
@@ -26,6 +28,8 @@ export default function App () {
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
+        {/* <RocketsWin/> */}
+        {/* <UfosWin/> */}
       </Route>
     </Canvas>
   </>)

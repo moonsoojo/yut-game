@@ -83,6 +83,7 @@ export const nameAtom = atom('');
 export const clientAtom = atom({})
 export const roomAtom = atom({})
 export const readyToThrowAtom = atom(false)
+export const winnerAtom = atom(null)
 export const disconnectAtom = atom(false)
 export const displayDisconnectAtom = atom(false)
 
@@ -101,6 +102,7 @@ export const SocketManager = () => {
   const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
   const [_readyToThrow, setReadyToThrow] = useAtom(readyToThrowAtom)
+  const [_winner, setWinner] = useAtom(winnerAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect] = useAtom(displayDisconnectAtom)
 
@@ -157,6 +159,9 @@ export const SocketManager = () => {
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
       setReadyToThrow(room.readyToThrow)
+      setReadyToStart(room.readyToStart)
+      setWinner(room.winner)
+      setReadyToStart(room.readyToStart)
     })
     socket.on('client', (client) => {
       setClient(client);
@@ -184,6 +189,9 @@ export const SocketManager = () => {
     })
     socket.on('tiles', (tiles) => {
       setTiles(tiles)
+    })
+    socket.on('winner', (winner) => {
+      setWinner(winner)
     })
     socket.on('disconnect', () => {
       console.log("[disconnect]")

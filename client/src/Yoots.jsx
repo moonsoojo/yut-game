@@ -6,7 +6,7 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, readyToThrowAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { bothTeamsHavePlayers, getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
+import { getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
@@ -55,6 +55,8 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     // client lags if you emit here
     if (yootThrowValues !== null) {
       for (let i = 0; i < 4; i++) {
+        yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
+        yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
         yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
         yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
         yoots[i].current.applyImpulse({
@@ -191,9 +193,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         position={layout.yoot.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[4, 0.2, 4]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[4, 1, 4]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[8, 0.4, 8]} />
+          <boxGeometry args={[8, 2, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
@@ -206,12 +208,12 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       <RigidBody
         type="fixed"
         restitution={0.01}
-        position={[0, -10, 0]}
+        position={[0, -5, 0]}
         friction={0.9}
       >
-        <CuboidCollider args={[100, 0.2, 100]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[100, 1, 100]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[200, 0.4, 200]} />
+          <boxGeometry args={[200, 2, 200]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
@@ -231,7 +233,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
             linearDamping={0.3}
             angularDamping={0.1} // when this value is high, yoots spin more
             scale={0.15}
-            gravityScale={2.5}
+            gravityScale={3.5}
             key={index}
             onSleep={onSleepHandler}
             onWake={onWakeHandler}
@@ -268,12 +270,23 @@ export default function Yoots({ device = "portrait", buttonPos }) {
           position={layout.yoot.outOfBounds}
         />
       </>}
-      { gamePhase !== "lobby" && <YootButton 
-        position={buttonPos} 
-        rotation={[0, Math.PI/2, 0]}
-        handlePointerDown={handleYootThrow}
-        readyToThrow={readyToThrow}
-       />}
+      { gamePhase !== "lobby" 
+      && getCurrentPlayerSocketId(turn, teams) === client.id 
+      && <group>
+        <TextButton
+          text='YOUR TURN!'
+          position={layout[device].yourTurn.position}
+          size={layout[device].turn.size}
+          color={client.team == 0 ? "red" : "turquoise"}
+        />
+        <YootButton 
+          position={buttonPos} 
+          rotation={[0, Math.PI/2, 0]}
+          handlePointerDown={handleYootThrow}
+          readyToThrow={readyToThrow}
+          throws={teams[turn.team].throws}
+        />
+      </group>}
     </group>
   );
 }

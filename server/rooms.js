@@ -1,3 +1,5 @@
+import initialState from "./initialState.js"
+
 const rooms = {}
 /*
 ** schema **
@@ -35,96 +37,8 @@ export const addRoom = ({ id }) => {
   }
 
   // make sure every room id is random on generation
-  const room = {
-    id,
-    teams: [
-      {
-        index: 0,
-        players: [],
-        moves: {
-          "1": 0,
-          "2": 0,
-          "3": 0,
-          "4": 0,
-          "5": 0,
-          "-1": 0,
-          "0": 0
-        },
-        throws: 0,
-        pieces: [
-          { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
-          { tile: -1, team: 0, id: 1, path: [] },
-          { tile: -1, team: 0, id: 2, path: [] },
-          { tile: -1, team: 0, id: 3, path: [] },
-        ],
-      },
-      {
-        index: 0,
-        players: [],
-        moves: {
-          "1": 0,
-          "2": 0,
-          "3": 0,
-          "4": 0,
-          "5": 0,
-          "-1": 0,
-          "0": 0
-        },
-        throws: 0,
-        pieces: [
-          { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
-          { tile: -1, team: 0, id: 1, path: [] },
-          { tile: -1, team: 0, id: 2, path: [] },
-          { tile: -1, team: 0, id: 3, path: [] },
-        ],
-      }
-    ],
-    turn: {
-      team: 0,
-      players: [0, 0]
-    },
-    tiles: [
-      [], // { [ { team: int, id: int, tile: int, history: int[] } ] }
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-    ],
-    spectators: [],
-    selection: null,
-    hostId: null,
-    clients: {},
-    readyToStart: false,
-    gamePhase: 'lobby',
-    readyToThrow: false,
-    legalTiles: {},
-    messages: []
-    // waitingToPass
-  }
+  const room = JSON.parse(JSON.stringify(initialState.room))
+  room.id = id
 
   rooms[id] = room
   return { room }
@@ -149,6 +63,18 @@ export const addPlayer = ({ player }) => {
   if (player.room in rooms) {
     rooms[player.room].teams[player.team].players.push(player)
     return player
+  }
+}
+
+export const won = (roomId, team) => {
+  if (roomId in rooms) {
+    for (const piece of rooms[roomId].teams[team].pieces) {
+      if (piece !== 'scored') {
+        return false;
+      }
+    }
+    rooms[roomId].winner = team
+    return true;
   }
 }
 
@@ -773,5 +699,31 @@ export const score = (roomId, selectedMove) => {
   
     updateTiles(roomId, tiles)
     updateTeams(roomId, teams)
+  }
+}
+
+export const resetGame = (roomId) => {
+  if (roomId in rooms) {
+    rooms[roomId].winner = null;
+    rooms[roomId].gamePhase = "lobby"
+    rooms[roomId].tiles = JSON.parse(JSON.stringify(initialState.tiles))
+    // they'll throw again during pregame
+    rooms[roomId].turn = JSON.parse(JSON.stringify(initialState.turn))
+    rooms[roomId].legalTiles = {}
+    rooms[roomId].selection = null
+    rooms[roomId].teams[0].pieces = JSON.parse(JSON.stringify(
+      initialState.room.teams[0].pieces
+    ))
+    rooms[roomId].teams[0].moves = JSON.parse(JSON.stringify(
+      initialState.moves
+    ))
+    rooms[roomId].teams[0].throws = 0
+    rooms[roomId].teams[1].pieces = JSON.parse(JSON.stringify(
+      initialState.room.teams[1].pieces
+    ))
+    rooms[roomId].teams[1].moves = JSON.parse(JSON.stringify(
+      initialState.moves
+    ))
+    rooms[roomId].teams[1].throws = 0
   }
 }

@@ -26,25 +26,24 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
       // disabled; should be able to place piece on tile 0 first
       if (checkBackdoRule(moves, pieces)) {
         legalTiles[0] = { tile: 0, move: "-1", history: [] }
+      }
+      let forks = getNextTiles(tile, forward)
+      if (forward) {
+        forks = checkFinishRule(forks)
       } else {
-        let forks = getNextTiles(tile, forward)
-        if (forward) {
-          forks = checkFinishRule(forks)
-        } else {
-          forks = checkBackdoFork(forks, history)
-        }
-        for (let i = 0; i < forks.length; i++) {
-          let path = starting ? [] : [tile]
-          let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-          let fullHistory = getFullHistory(history, destination.path, forward)
-          if (destination.tile == 29) {
-            if (!(29 in legalTiles)) {
-              legalTiles[29] = []
-            }
-            legalTiles[29].push({ tile: destination.tile, move, history: fullHistory })
-          } else {
-            legalTiles[destination.tile] = { tile: destination.tile, move, history: fullHistory }
+        forks = checkBackdoFork(forks, history)
+      }
+      for (let i = 0; i < forks.length; i++) {
+        let path = starting ? [] : [tile]
+        let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
+        let fullHistory = getFullHistory(history, destination.path, forward)
+        if (destination.tile == 29) {
+          if (!(29 in legalTiles)) {
+            legalTiles[29] = []
           }
+          legalTiles[29].push({ tile: destination.tile, move, history: fullHistory })
+        } else {
+          legalTiles[destination.tile] = { tile: destination.tile, move, history: fullHistory }
         }
       }
     }

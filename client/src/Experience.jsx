@@ -11,18 +11,16 @@ import Earth from "./meshes/Earth.jsx";
 import Mars from "./meshes/Mars.jsx";
 import Saturn from "./meshes/Saturn.jsx";
 import Moon from "./meshes/Moon.jsx";
-import SunBagus from "./meshes/SunBagus.jsx";
 
 // custom components
 import Chatbox from "./Chatbox.jsx";
-import Rulebook from "./Rulebook.jsx";
 import Rulebook2 from "./Rulebook2.jsx";
 import TextButton from "./components/TextButton";
 import ScoreButton from "./ScoreButton.jsx";
 import Piece from "./components/Piece.jsx";
 
 // three js
-import { CuboidCollider, RigidBody, Physics } from "@react-three/rapier";
+import { Physics } from "@react-three/rapier";
 import { Leva, useControls } from "leva";
 import {
   Environment,
@@ -56,8 +54,12 @@ import {
   disconnectAtom,
   displayDisconnectAtom,
   readyToThrowAtom,
+  winnerAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
+import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
+import UfosWin from "./UfosWin.jsx";
+import RocketsWin from "./RocketsWin.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -109,6 +111,7 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
   const [readyToThrow] = useAtom(readyToThrowAtom);
+  const [winner] = useAtom(winnerAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
@@ -587,28 +590,28 @@ export default function Experience() {
     }
   }
 
-  return (
-    <PresentationControls
-      global
-      polar={[-0.4, 0.2]}
-      azimuth={[-1, 0.75]}
-      config={{ mass: 2, tension: 400 }}
-      snap={{ mass: 4, tension: 400 }}
-    >
+  function handleRestart() {
+    socket.emit("restart")
+    location.reload()
+  }
+
+  return (<>
+    { winner == null && <group>
       {/* <Perf/> */}
       {/* <OrbitControls/> */}
       <OrthographicCamera
         makeDefault
         zoom={zoom}
-        top={200}
-        bottom={-200}
-        left={200}
-        right={-200}
-        near={0.1}
+        top={400}
+        bottom={-400}
+        left={400}
+        right={-400}
+        near={0.01}
         far={2000}
         position={layout[device].camera.position}
         ref={camera}
       />
+      <OrbitControls/>
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>
@@ -726,7 +729,7 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            <Physics>
+            <Physics debug>
               <Yoots 
                 device={device} 
                 buttonPos={layout[device].yootButton.position}
@@ -744,18 +747,16 @@ export default function Experience() {
                 />
             )}
             {/* turn */}
-            {(gamePhase === "pregame" || gamePhase === "game") && (
-              <>            
-                <TextButton
-                  text={`TURN: ${
-                    teams[turn.team].players[turn.players[turn.team]]?.name
-                  }`}
-                  position={layout[device].turn.position}
-                  size={layout[device].turn.size}
-                  color={turn.team == 0 ? "red" : "turquoise"}
-                />
-              </>
-            )}
+            {(gamePhase === "pregame" || gamePhase === "game") 
+            && getCurrentPlayerSocketId(turn, teams) !== client.id
+            && <TextButton
+              text={`TURN: ${
+                teams[turn.team].players[turn.players[turn.team]]?.name
+              }`}
+              position={layout[device].turn.position}
+              size={layout[device].turn.size}
+              color={turn.team == 0 ? "red" : "turquoise"}
+            />}
           </group>
           {/* pieces section */}
           <PiecesSection 
@@ -815,7 +816,10 @@ export default function Experience() {
         </Text3D>
       </group>}
       <Stars count={3000} size={5}/>
-    </PresentationControls>
+    </group> }
+    { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
+    { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
+    </>
   );
 }
 

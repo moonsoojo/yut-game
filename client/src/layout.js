@@ -1,4 +1,4 @@
-let floorPosition = [0,3,0]
+let floorPosition = [0,0,0]
 let outOfBoundsPosition = [
   floorPosition[0]-1,
   floorPosition[1],
@@ -253,7 +253,7 @@ export default {
       // zoom: 150,
       zoomMin: 35,
       zoomMax: 150,
-      position: [0,10,0],
+      position: [0,20,3],
       lookAtOffset: [0, 0, 0]
     },
     yootButton: {
@@ -344,7 +344,7 @@ export default {
       size: 0.3
     },
     turn: {
-      position: [5, 0, 0],
+      position: [5, 0, 2],
       size: 0.3
     },
     startBanner: {
@@ -353,6 +353,9 @@ export default {
       boxWidth: 2.4,
       boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
+    },
+    yourTurn: {
+      position: [5, 0, 1]
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],

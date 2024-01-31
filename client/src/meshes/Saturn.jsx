@@ -128,8 +128,6 @@ export default function Saturn({ position, tile, device }) {
                 Math.cos((19 * Math.PI) / 16) * 0.5,
                 Math.sin((19 * Math.PI) / 16) * 0.5,
                 0,
-                
-                
               ]}
             >
               <sphereGeometry args={[0.025, 32, 32]} />

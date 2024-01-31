@@ -7,11 +7,9 @@ import * as THREE from 'three'
 export default function YootButton({ 
   position, 
   rotation, 
-  readyToThrow, 
-  throwYoots, 
-  power,
-  handlePointerUp,
-  handlePointerDown
+  readyToThrow,
+  handlePointerDown,
+  throws
 }) {
   // yoots with material
   // get texture of yoot
@@ -51,7 +49,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scale}
       >
-        <meshStandardMaterial color={ readyToThrow ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ (readyToThrow && throws > 0) ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -74,7 +72,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot0}
         >
-          { !readyToThrow && <meshStandardMaterial color="grey"/>}
+          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -86,7 +84,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot1}
           >
-          { !readyToThrow && <meshStandardMaterial color="grey"/>}
+          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -98,7 +96,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot2}
           >
-          { !readyToThrow && <meshStandardMaterial color="grey"/>}
+          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -110,7 +108,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot3}
           >
-          { !readyToThrow && <meshStandardMaterial color="grey"/>}
+          { !(readyToThrow && throws > 0) && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -121,14 +119,13 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ readyToThrow ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ (readyToThrow && throws > 0) ? "#963600" : "grey" }/>
       </Text3D>
       <mesh 
         position={[0, 0.1, 0]} 
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
         onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
       >
         <boxGeometry args={[3, 0.3, 2]}/>
         <meshStandardMaterial transparent opacity={0}/>
