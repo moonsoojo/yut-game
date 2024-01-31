@@ -495,11 +495,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     let teams = getTeams(roomId)
     let turn = getTurn(roomId)
 
-    if (teams[turn.team].throws > 0 && 
-      teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
-      // after throw, 
-      // turn was passed, but the client was disconnected (tab switch)
-      getReadyToThrow(roomId)) {
+    // if (teams[turn.team].throws > 0 && 
+    //   teams[turn.team].players[turn.players[turn.team]].id === socket.id && 
+    //   // after throw, 
+    //   // turn was passed, but the client was disconnected (tab switch)
+    //   getReadyToThrow(roomId)) {
 
       teams[turn.team].throws--;
       updateTeams(roomId, teams)
@@ -543,13 +543,13 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         });*/
       }
       for (const id of Object.keys(clients)) {
-        if (clients[id].visibility) {
+        // if (clients[id].visibility) {
           io.to(id).emit("throwYoots", yootForceVectors);
           updateYootsAsleep(roomId, id, false)
-        }
+        // }
       }
       io.to(roomId).emit("clients", clients);
-    }
+    // }
   });
 
   socket.on("restart", () => {
