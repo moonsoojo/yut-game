@@ -6,7 +6,7 @@ import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
-import { addRoom, addSpectator, getUserFromRoom, getReadyToThrow, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addNewClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility, joinTeam, getClient, won, resetGame } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getReadyToThrow, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addNewClient, updateReadyToStart, getHostId, updateGamePhase, updateYootsAsleep, getCurrentPlayerId, getThrown, isAllYootsAsleep, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateTeams, getYootsAsleep, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, updateReadyToThrow, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, getClient, won, resetGame } from './rooms.js';
 
 MongoKerberosError.connect('mongodb:')
 
@@ -334,44 +334,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
     return callback({ isDuplicate })
   })*/
-
-  // console log not fired when i switched apps in mobile
-  socket.on("visibilityChange", ({flag}, callback) => {
-    console.log("[visibilityChange] flag", flag)
-    const { error } = updateVisibility(roomId, socket.id, flag)
-    console.log("[visibilityChange] updated visibility", getVisibility(roomId, socket.id))
-    if (error) {
-      callback({ response: error })
-    } else if (flag === true) {
-      const { yootsAsleep, getYootsAsleepError } = getYootsAsleep(roomId, socket.id)
-      if (getYootsAsleepError) {
-        callback({ response: getYootsAsleepError })
-      }
-      const { updateYootsAsleepError } = updateYootsAsleep(roomId, socket.id, yootsAsleep)
-      if (updateYootsAsleepError) {
-        callback({ response: updateYootsAsleepError })
-      }
-      if (!yootsAsleep) {
-        const { updateReadyToThrowError } = updateReadyToThrow(roomId, false)
-        if (updateReadyToThrowError) {
-          return callback({ error: updateReadyToThrowError })
-        }
-        io.to(roomId).emit("readyToThrow", false)
-      } else {
-        const { allYootsAsleep, isAllYootsAsleepError } = isAllYootsAsleep(roomId)
-        if (isAllYootsAsleepError) {
-          callback({ response: isAllYootsAsleepError})
-        }
-        if (allYootsAsleep) {
-          const { updateReadyToThrowError } = updateReadyToThrow(roomId, true)
-          if (updateReadyToThrowError) {
-            return callback({ error: updateReadyToThrowError })
-          }
-          io.to(roomId).emit("readyToThrow", true)
-        }
-      }
-    }
-  })
 
   socket.on("yootsAsleep", ({flag}, callback) => {
     const { updateYootsAsleepError } = updateYootsAsleep(roomId, socket.id, flag)

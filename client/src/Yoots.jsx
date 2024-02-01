@@ -22,7 +22,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [wakeCount, setWakeCount] = useState(4);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [teams] = useAtom(teamsAtom)
   const [turn] = useAtom(turnAtom);
@@ -70,18 +69,15 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         });
       }
       setSleepCount(0);
-      setWakeCount(0);
     }
   }, [yootThrowValues]);
 
   useEffect(() => {
-    console.log("[Yoots] sleepCount", sleepCount, "wakeCount", wakeCount)
-    if (sleepCount > 0 && sleepCount == wakeCount) {
+    console.log("[Yoots] sleepCount", sleepCount)
+    if (sleepCount == 4) {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.visible = false
       }
-      console.log("[sleepCount useEffect] sleepCount === wakeCount")
-      // doesn't fire if client is not visible...?
       socket.emit("yootsAsleep", ({response}) => {
         console.log("[yootsAsleep] response", response)
         if (response === "record") {
@@ -92,7 +88,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         }
       })
     }
-  }, [sleepCount, wakeCount])
+  }, [sleepCount])
 
   useFrame((state, delta) => {
     if (client
@@ -171,12 +167,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     setSleepCount((count) => count+1);
   }
 
-  function onWakeHandler() {
-    console.log("onWakeHandler") // not triggered on client load
-    // interesting find: yoots drop in lobby / throw again in game&pregame when client rerenders
-    setWakeCount((count) => count+1);
-  }
-
   function handleYootThrow() {
     socket.emit("throwYoots", ({}), ({ error }) => {
       console.log(error)
@@ -234,7 +224,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
             gravityScale={3.5}
             key={index}
             onSleep={onSleepHandler}
-            onWake={onWakeHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
           >
             {index != 0 ? (
@@ -271,6 +260,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       { gamePhase !== "lobby" 
       && getCurrentPlayerSocketId(turn, teams) === client.id 
       && <group>
+      {/* {<group> */}
         <TextButton
           text='YOUR TURN!'
           position={layout[device].yourTurn.position}
@@ -282,6 +272,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
           rotation={[0, Math.PI/2, 0]}
           handlePointerDown={handleYootThrow}
           throws={teams[turn.team].throws}
+          scale={0.8}
         />
       </group>}
     </group>

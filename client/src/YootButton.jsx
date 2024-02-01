@@ -2,12 +2,12 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import * as THREE from 'three'
 
 export default function YootButton({ 
   position, 
   rotation, 
   handlePointerDown,
+  scale,
   throws
 }) {
   // yoots with material
@@ -19,16 +19,13 @@ export default function YootButton({
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const yootNodes = useGraph(clone).nodes
 
-  const buttonEdges = useRef();
   const yoot0 = useRef();
   const yoot1 = useRef();
   const yoot2 = useRef();
   const yoot3 = useRef();
-  const throwTextMat = useRef();
-  const boxInner = useRef();
 
-  const scale = [1.4, -0.079, 1]
-  const scaleInner = [scale[0] - 0.1, scale[1]+0.2, scale[2]-0.1]
+  const scaleOuter = [1.4, -0.079, 1]
+  const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
   const scaleYoot = 0.15
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
@@ -40,13 +37,13 @@ export default function YootButton({
   }
 
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={scale}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube.geometry}
         rotation={[-Math.PI, 0, -Math.PI]}
-        scale={scale}
+        scale={scaleOuter}
       >
         <meshStandardMaterial color={ (throws > 0) ? "yellow" : "grey" }/>
       </mesh>
@@ -56,7 +53,6 @@ export default function YootButton({
         geometry={nodes.Cube.geometry}
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scaleInner}
-        ref={boxInner}
       >
         <meshStandardMaterial color="#000B18"/>
       </mesh>

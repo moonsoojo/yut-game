@@ -104,6 +104,22 @@ export default {
       position: [-1.2, 0, -2.1],
       size: 0.24
     },
+    hostId: {
+      position: [5, 0, -3],
+      size: 0.3
+    },
+    roomId: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    rulebook: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    settings: {
+      position: [3, 0, -3.5],
+      size: 0.3
+    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
@@ -126,6 +142,9 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     menu: {
+      position: [-7.3,-0.5,-2.3],
+    },
+    tips: {
       position: [-7.3,-0.5,-2.3],
     },
     rulebook: {
@@ -256,9 +275,6 @@ export default {
       position: [0,20,3],
       lookAtOffset: [0, 0, 0]
     },
-    yootButton: {
-      position: [6,0,2.5]
-    },
     title: {
       position1: [-13.5, 0, -5.5],
       position2: [-13.5, 0, -4],
@@ -335,27 +351,61 @@ export default {
         position: [2, 0, -0.42]
       }
     },
+    yootButton: {
+      position: [6,0,3]
+    },
     gamePhase: {
-      position: [5, 0, -1],
+      position: [5, 0, -2],
+      size: 0.3
+    },
+    hostId: {
+      position: [5, 0, -3],
+      size: 0.3
+    },
+    roomId: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    rulebook: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    settings: {
+      position: [5, 0, -2.9],
       size: 0.3
     },
     throwCount: {
-      position: [5, 0, -0.5],
+      position: [5, 0, -1.5],
       size: 0.3
     },
     turn: {
       position: [5, 0, 2],
       size: 0.3
     },
+    piecesSection: {
+      position: [5, 0, 0],
+      scale: 1
+    },
     startBanner: {
-      position: [5, 0, 1],
+      position: [5, 0, 2.5],
       fontSize: 0.6,
       boxWidth: 2.4,
-      boxHeight: 0.7,
+      boxHeight: 0.6,
       rotation: [0, Math.PI / 2, 0],
     },
+    startTip: {
+      position: [4.5, 0, 2],
+      line0Position: [0,0,0],
+      line1Position: [0,0,0.5],
+      line2Position: [0,0,1],
+      fontSize: 0.3,
+      rotation: [0, Math.PI / 2, 0],
+    },
+    spectatorMessage: {
+      position: [4.5, 0, 2.5]
+    },
     yourTurn: {
-      position: [5, 0, 1]
+      position: [5, 0, 1.7]
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
@@ -373,10 +423,6 @@ export default {
     joinTeamModal: {
       position: [-1.2, 0, -1]
     },
-    piecesSection: {
-      position: [5, 0, -3],
-      scale: 1
-    },
     actionButtons: {
       position: [1.5, 0, 16],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -384,9 +430,18 @@ export default {
     menu: {
       position: [-8, 0, 1.9]
     },
+    tips: {
+      position: [-8, 0, 1.9]
+    },
+    invite: {
+      position: [-6.8, 0, 1.9]
+    },
+    discord: {
+      position: [-5.1, 0, 1.9]
+    },
     moves: {
-      text: [0,0,1.5],
-      list: [1.5, 0, 1.5],
+      text: [0,0,-1],
+      list: [1.5, 0, -1],
       // size: 0.3
     },
     tiles: {
@@ -586,6 +641,22 @@ export default {
       position: [-0.8, 0, -1.9],
       size: 0.24
     },
+    hostId: {
+      position: [5, 0, -3],
+      size: 0.3
+    },
+    roomId: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    rulebook: {
+      position: [5, 0, -3.5],
+      size: 0.3
+    },
+    settings: {
+      position: [3, 0, -3.5],
+      size: 0.3
+    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
@@ -612,6 +683,9 @@ export default {
     },
     menu: {
       position: [0, 0, -6]
+    },
+    tips: {
+      position: [-7.3,-0.5,-2.3],
     },
     moves: {
       text: [0,0,2],

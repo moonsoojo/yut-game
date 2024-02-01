@@ -126,20 +126,6 @@ export default function Experience() {
     }
   }, [disconnect])
 
-  // this happens before the client connects to the server
-  document.addEventListener("visibilitychange", () => {
-    console.log("visibility change");
-    if (document.hidden) {
-      socket.emit("visibilityChange", {flag: false}, ({ response }) => {
-        console.log("[visibilityChange] response", response)
-      })
-    } else {
-      socket.emit("visibilityChange", {flag: true}, ({ response }) => {
-        console.log("[visibilityChange] response", response)
-      })
-    }
-  });
-
   const numTiles = 29;
 
   const tileRefs = [...Array(numTiles)];
@@ -593,6 +579,76 @@ export default function Experience() {
     location.reload()
   }
 
+  const [showTips, setShowTips] = useState(false)
+  function handleTips() {
+    if (showTips) {
+      setShowTips(false);
+    } else {
+      setShowTips(true);
+    }
+  }
+  function handleInvite() {
+
+  }
+  function handleDiscord() {
+
+  }
+  function handleRulebook() {
+
+  }
+  function handleSettings() {
+    
+  }
+  function SpectatorMessage({position}) {
+    return <group position={position}>
+      <TextButton
+        text="You must join"
+        position={layout[device].startTip.line0Position}
+        size={layout[device].startTip.fontSize}
+      />
+      <TextButton
+        text="a team to play"
+        position={layout[device].startTip.line1Position}
+        size={layout[device].startTip.fontSize}
+      />
+    </group>
+  }
+  function StartTip() {
+    if (!readyToStart) {
+      if (client.team === undefined) {
+        return <SpectatorMessage position={layout[device].startTip.position}/>
+      } else {
+        if (teams[0].players.length > 0 && teams[1].players.length > 0) {
+          return <group position={layout[device].startTip.position}>
+          <TextButton
+            text="Waiting for host"
+            position={layout[device].startTip.line0Position}
+            size={layout[device].startTip.fontSize}
+          />
+          <TextButton
+            text="to start"
+            position={layout[device].startTip.line1Position}
+            size={layout[device].startTip.fontSize}
+          />
+          </group>
+        } else {
+          return <group position={layout[device].startTip.position}>
+            <TextButton
+              text="Need a player"
+              position={layout[device].startTip.line0Position}
+              size={layout[device].startTip.fontSize}
+            />
+            <TextButton
+              text="on each team"
+              position={layout[device].startTip.line1Position}
+              size={layout[device].startTip.fontSize}
+            />
+          </group>
+        }
+      }
+    }
+  }
+
   return (<>
     { winner == null && <group>
       {/* <Perf/> */}
@@ -711,7 +767,9 @@ export default function Experience() {
           <group>
             {/* START GAME text */}
             {/* {( */}
-            {readyToStart && gamePhase === "lobby" && (
+            { readyToStart 
+            && gamePhase === "lobby" 
+            && (
               <TextButton
                 text="Start"
                 position={layout[device].startBanner.position}
@@ -721,11 +779,61 @@ export default function Experience() {
                 handlePointerClick={handleStart}
               />
             )}
+            { gamePhase === "lobby" && <StartTip/> }
+            {/* { !readyToStart 
+            && gamePhase === "lobby" 
+            && (
+              <group>
+                <TextButton
+                  text="Start button"
+                  position={layout[device].startTip.line0Position}
+                  size={layout[device].startTip.fontSize}
+                />
+                <TextButton
+                  text="will appear"
+                  position={layout[device].startTip.line1Position}
+                  size={layout[device].startTip.fontSize}
+                />
+                <TextButton
+                  text="for the host."
+                  position={layout[device].startTip.line2Position}
+                  size={layout[device].startTip.fontSize}
+                />
+              </group>
+            )} */}
             <TextButton
               text={`Phase: ${gamePhase}`}
               position={layout[device].gamePhase.position}
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
+            />
+            {/* <TextButton
+              text={`Host:`}
+              position={layout[device].hostId.position}
+              handlePointerClick={() => socket.emit("startGame")}
+              size={layout[device].gamePhase.size}
+            />
+            <TextButton
+              text={`Room:`}
+              position={layout[device].roomId.position}
+              handlePointerClick={() => socket.emit("startGame")}
+              size={layout[device].gamePhase.size}
+            /> */}
+            <TextButton
+              text={`Rulebook`}
+              position={layout[device].rulebook.position}
+              handlePointerClick={handleRulebook}
+              size={layout[device].gamePhase.size}
+              boxHeight={0.35}
+              boxWidth={1.9}
+            />
+            <TextButton
+              text={`Settings`}
+              position={layout[device].settings.position}
+              handlePointerClick={handleSettings}
+              size={layout[device].gamePhase.size}
+              boxHeight={0.35}
+              boxWidth={1.8}
             />
             <Physics>
               <Yoots 
@@ -734,14 +842,14 @@ export default function Experience() {
               />
             </Physics>
             {/* throw count */}
-             {(
-                <TextButton
-                  text={`Throw: ${
-                    teams[turn.team].throws
-                  }`}
-                  position={layout[device].throwCount.position}
-                  size={layout[device].throwCount.size}
-                />
+            {(
+              <TextButton
+                text={`Throw: ${
+                  teams[turn.team].throws
+                }`}
+                position={layout[device].throwCount.position}
+                size={layout[device].throwCount.size}
+              />
             )}
             {/* turn */}
             {(gamePhase === "pregame" || gamePhase === "game") 
@@ -753,6 +861,11 @@ export default function Experience() {
               position={layout[device].turn.position}
               size={layout[device].turn.size}
               color={turn.team == 0 ? "red" : "turquoise"}
+            />}
+            {(gamePhase === "pregame" || gamePhase === "game") 
+            && getCurrentPlayerSocketId(turn, teams) !== client.id
+            && client.team === undefined && <SpectatorMessage
+              position={layout[device].spectatorMessage.position}
             />}
           </group>
           {/* pieces section */}
@@ -772,8 +885,26 @@ export default function Experience() {
             /> }
           {/* menu */}
           <TextButton
-            text={`Menu`}
-            position={layout[device].menu.position}
+            text={`Tips`}
+            position={layout[device].tips.position}
+            handlePointerClick={handleTips}
+            boxWidth={0.8}
+            boxHeight={0.35}
+            color={showTips ? 'green': 'yellow'}
+          />
+          <TextButton
+            text={`Invite`}
+            position={layout[device].invite.position}
+            handlePointerClick={handleInvite}
+            boxWidth={1.2}
+            boxHeight={0.35}
+          />
+          <TextButton
+            text={`Discord`}
+            position={layout[device].discord.position}
+            handlePointerClick={handleDiscord}
+            boxWidth={1.5}
+            boxHeight={0.35}
           />
           {/* RULEBOOK */}
           { device === "portrait" && <group>
@@ -784,12 +915,6 @@ export default function Experience() {
               boxHeight={0.4}
               handlePointerClick={handleShowRulebook}
             />
-            {/* { showRulebook && <Rulebook 
-              position={layout[device].rulebook.position}
-              width={rulebookWidth}
-              height={rulebookHeight}
-              padding={layout[device].rulebook.padding}
-            />} */}
             { showRulebook  && <Rulebook2
               position={layout[device].rulebook.position}
               handleShow={handleShowRulebook}

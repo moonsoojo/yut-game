@@ -81,10 +81,9 @@ export default {
     spectators: [],
     selection: null,
     hostId: null,
-    clients: {},
-    readyToStart: false,
+    // readyToStart: false,
     gamePhase: 'lobby',
-    readyToThrow: false,
+    thrown: false,
     legalTiles: {},
     messages: [],
     winner: null

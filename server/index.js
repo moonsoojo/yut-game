@@ -6,7 +6,7 @@ import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
-import { addRoom, addSpectator, getUserFromRoom, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, addNewClient, updateReadyToStart, getHostId, updateGamePhase, getCurrentPlayerId, getThrown, getGamePhase, isReadyToStart, getClients, updateThrown, getTeams, getTurn, updateVisibility, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, getVisibility, joinTeam, getClient, won, resetGame } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, updateReadyToStart, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById } from './rooms.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -36,7 +36,8 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-let test = true;
+// have to wait for the server create the room first
+let test = false;
 if (test) {
   const roomId = 'aaa'
   addRoom({ id: roomId })
@@ -51,21 +52,31 @@ if (test) {
   }
   updateTurn(roomId, turn)
 
-  teams[0].moves['1'] = 1
+  teams[0].moves['3'] = 1
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
   teams[0].pieces[0] = null;
   teams[0].pieces[1] = 'scored';
-  teams[0].pieces[2] = 'scored';
-  teams[0].pieces[3] = 'scored';
-  // teams[1].pieces[2] = 'scored';
-  // teams[1].pieces[3] = 'scored';
+
+  teams[1].pieces[0] = null;
+  teams[1].pieces[1] = null;
+  teams[1].pieces[2] = 'scored';
+  teams[1].pieces[3] = null;
   updateTeams(roomId, teams)
   
-  addThrow(roomId, turn.team)
-  tiles[14] = [
-    { tile: 14, team: 0, id: 0,  history: [11,12,13]},
+  // addThrow(roomId, turn.team)
+  tiles[12] = [
+    { tile: 12, team: 0, id: 0,  history: [9,10,11]},
+  ]
+  tiles[16] = [
+    { tile: 16, team: 1, id: 0,  history: [11,12,13,14,15]},
+  ]
+  tiles[18] = [
+    { tile: 18, team: 1, id: 0,  history: [11,12,13,14,15,16,17]},
+  ]
+  tiles[21] = [
+    { tile: 21, team: 1, id: 0,  history: [3,4,5,20]},
   ]
   updateTiles(roomId, tiles)
   // tiles[10] = [
@@ -167,8 +178,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
       socket.join(spectator.room);
 
-      addNewClient(spectator.room, socket.id)
-
       // this is emitted by 'room'
 
       // if it's your turn
@@ -196,8 +205,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       // we didn't see each other. when we refreshed the page, we did
       const addedPlayer = addPlayer({ player: savedPlayer })
       socket.emit("client", addedPlayer)
-      
-      addNewClient(roomId, socket.id)
 
       socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
       console.log("[joinRoom] addedPlayer", addedPlayer)
@@ -226,14 +233,19 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         if (isReadyToStartError) {
           return callback({ error: isReadyToStartError })
         }
-        updateReadyToStart(roomId, readyToStart)
+        // updateReadyToStart(roomId, readyToStart)
+        // console.log("[joinRoom] host id", getHostId(roomId))
         io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
       }
       
-      const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-      const turn = getTurn(roomId)
-      if (socket.id === currentPlayerId && movesIsEmpty(roomId, turn.team) && getThrows(roomId, turn.team) == 0 && getGamePhase(roomId) !== "lobby") {
-        addThrow(roomId, getTurn(roomId).team)
+      try {
+        const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
+        const turn = getTurn(roomId)
+        if (socket.id === currentPlayerId && movesIsEmpty(roomId, turn.team) && getThrows(roomId, turn.team) == 0 && getGamePhase(roomId) !== "lobby") {
+          addThrow(roomId, getTurn(roomId).team)
+        }
+      } catch (err) {
+        console.log(`[joinRoom] ${err}`)
       }
 
       // doesn't update host Id
@@ -281,14 +293,18 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       if (isReadyToStartError) {
         return callback({ error: isReadyToStartError })
       }
-      updateReadyToStart(roomId, readyToStart)
+      // updateReadyToStart(roomId, readyToStart)
       io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
     }
 
-    const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-    const turn = getTurn(roomId)
-    if (socket.id === currentPlayerId && movesIsEmpty(roomId, turn.team) && getThrows(roomId, turn.team) == 0 && getGamePhase(roomId) !== "lobby") {
-      addThrow(roomId, getTurn(roomId).team)
+    try {
+      const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
+      const turn = getTurn(roomId)
+      if (socket.id === currentPlayerId && movesIsEmpty(roomId, turn.team) && getThrows(roomId, turn.team) == 0 && getGamePhase(roomId) !== "lobby") {
+        addThrow(roomId, getTurn(roomId).team)
+      }
+    } catch (err) {
+      console.log(`[joinTeam] ${err}`)
     }
     
     // doesn't update host Id
@@ -313,45 +329,27 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     }
   })
 
-  /*socket.on("checkDuplicateName", ({ name }, callback) => {
-    const { isDuplicate, checkDuplicateNameError } = checkDuplicateName({ roomId, clientId: socket.id, name })
-    if (checkDuplicateNameError) {
-      return callback({ error: checkDuplicateNameError })
-    }
-    return callback({ isDuplicate })
-  })*/
-
-  // console log not fired when i switched apps in mobile
-  socket.on("visibilityChange", ({flag}, callback) => {
-    console.log("[visibilityChange] flag", flag)
-    const { error } = updateVisibility(roomId, socket.id, flag)
-    console.log("[visibilityChange] updated visibility", getVisibility(roomId, socket.id))
-    if (error) {
-      return callback({ response: error })
-    } else  {
-      return callback({})
-    }
-  })
-
   socket.on("yootsAsleep", (callback) => {
-    const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-    console.log("[yootsAsleep] socket id", socket.id, "current player id", currentPlayerId)
-    if (socket.id === currentPlayerId) {
-      console.log("[yootsAsleep] get thrown", getThrown(roomId, socket.id))
-      if (getThrown(roomId, socket.id) == true) {
-        callback({
+    // turn passed but player didn't receive move
+    try {    
+      const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
+      console.log("[yootsAsleep] socket id", socket.id, "current player id", currentPlayerId, 'current player name', getNameById(roomId, currentPlayerId))
+      if (socket.id === currentPlayerId && getThrown({roomId}) == true) {
+        return callback({
           response: "record"
         })
-      } 
-    } else {
-      callback({
-        response: "noRecord"
-      })
+      } else {
+        return callback({
+          response: "noRecord"
+        })
+      }
+    } catch (err) {
+      console.log(`[yootsAsleep] ${err}`)
     }
   })
 
   socket.on("startGame", (callback) => {
-    updateReadyToStart(roomId, false)
+    // updateReadyToStart(roomId, false)
     io.to(roomId).emit("readyToStart", false);
     let { room, getRoomError } = getRoom(roomId)
     if (getRoomError) {
@@ -407,7 +405,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     io.to(roomId).emit("turn", getTurn(roomId));
   });
 
-  // if player throws, at least one player's visibility is true
   socket.on("throwYoots", ({}, callback) => {
     let positionsInHand = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let rotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
@@ -420,12 +417,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       updateTeams(roomId, teams)
       io.to(roomId).emit('teams', teams)
 
-      let { updateThrownError } = updateThrown(roomId, socket.id, true)
-      if (updateThrownError) {
-        return callback({ error: updateThrownError })
-      }
+      // let { updateThrownError } = updateThrown(roomId, socket.id, true)
+      // if (updateThrownError) {
+      //   return callback({ error: updateThrownError })
+      // }
 
-      let clients = getClients(roomId)
       const yootForceVectors = [];
       for (let i = 0; i < 4; i++) {
         yootForceVectors.push({
@@ -439,12 +435,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
           positionInHand: positionsInHand[i],
         });
       }
-      for (const id of Object.keys(clients)) {
-        if (clients[id].visibility) {
-          io.to(id).emit("throwYoots", yootForceVectors);
-        }
-      }
-      io.to(roomId).emit("clients", clients);
+      updateThrown({ roomId, flag: true })
+      io.to(roomId).emit("throwYoots", yootForceVectors);
     }
   });
 
@@ -468,10 +460,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
   socket.on("recordThrow", ({move}, callback) => {
     console.log("[recordThrow] move", move)
-    let { updateThrownError } = updateThrown(roomId, socket.id, false)
-    if (updateThrownError) {
-      return callback({ error: updateThrownError })
-    }
+    updateThrown({ roomId, flag: false })
     // io.to(roomId).emit("clients", clients)
     if (getGamePhase(roomId) === "pregame") {
       addMove(roomId, getTurn(roomId).team, move.toString())
@@ -504,8 +493,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
     let { room, getRoomError } = getRoom(roomId)
     if (room) {
-      const { client, getClientError } = getClient(roomId, socket.id)
-      const removedClient = client
       const userFromRoom = removeUserFromRoom({ id: socket.id, roomId: room.id })
       if (userFromRoom.error && userFromRoom.error === "room not found") {
         // nothing happens
@@ -520,19 +507,24 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
           if (userFromRoom.team && countPlayersTeam(roomId, userFromRoom.team) == 0)
           {
-            updateReadyToStart(roomId, false)
+            // updateReadyToStart(roomId, false)
             io.to(getHostId(roomId)).emit("readyToStart", false);
           }
 
           // if there's no player in current turn indexes
-          const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-          if (!currentPlayerId) {
-            let turn = getTurn(roomId)
-            turn.players[turn.team] = 0
-            updateTurn(roomId, turn)
+          try {
+            const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
+            if (!currentPlayerId) {
+              let turn = getTurn(roomId)
+              turn.players[turn.team] = 0
+              updateTurn(roomId, turn)
+            } else if (getThrown({roomId}) === true) {
+              updateThrown({roomId, flag: false})
+              addThrow(roomId, getTurn(roomId).team)
+            }
+          } catch (err) {
+            console.log(`[disconnect] ${err}`)
           }
-          console.log("[disconnect] removedClient.thrown", removedClient.thrown, "current player ID", currentPlayerId)
-          updateThrown(roomId, currentPlayerId, removedClient.thrown)
 
           io.to(room.id).emit('room', room)
         } else {

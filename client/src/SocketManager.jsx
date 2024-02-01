@@ -154,9 +154,8 @@ export const SocketManager = () => {
       setTurn(room.turn);
       setLegalTiles(room.legalTiles);
       setSelection(room.selection);
-      setReadyToStart(room.readyToStart)
+      // setReadyToStart(room.readyToStart)
       setWinner(room.winner)
-      setReadyToStart(room.readyToStart)
     })
     socket.on('client', (client) => {
       setClient(client);
@@ -244,9 +243,6 @@ export const SocketManager = () => {
       setGamePhase(gamePhase);
       setTeams(teams);
     }
-    function onReadyToStart(flag) {
-      setReadyToStart(flag);
-    }
     function onTurn(turn) {
       setTurn(turn);
     }
@@ -271,7 +267,6 @@ export const SocketManager = () => {
     // socket.on("teams", onTeams);
     // socket.on("throwYuts", onYutThrow);
     socket.on("reset", onReset);
-    socket.on("readyToStart", onReadyToStart);
     socket.on("turn", onTurn);
     socket.on("gamePhase", onGamePhase);
     socket.on("legalTiles", onLegalTiles);
@@ -290,7 +285,6 @@ export const SocketManager = () => {
       // socket.off("teams", onTeams);
       // socket.off("throwYuts", onYutThrow);
       socket.off("reset", onReset);
-      socket.off("readyToStart", onReadyToStart);
       socket.off("turn", onTurn);
       socket.off("gamePhase", onGamePhase);
       socket.off("legalTiles", onLegalTiles);
