@@ -212,6 +212,13 @@ export default {
       boxHeight: 0.5,
       rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
     },
+    startEarth: {
+      position: [0,0,0],
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
+      rotation: [0, Math.PI / 2, 0],
+    },
     startGameBanner: {
       position: [2,0,10],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -385,6 +392,19 @@ export default {
     piecesSection: {
       position: [5, 0, 0],
       scale: 1
+    },
+    startEarth: {
+      position: [0.4,0,6.8],
+      helperArrow: {
+        position: [1.2,0,5.8],
+        rotation: [Math.PI/2,0,-Math.PI * (5/8)],
+        color: 'yellow',
+        scale: 2
+      },
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
+      rotation: [0, Math.PI / 2, 0],
     },
     startBanner: {
       position: [5, 0, 2.5],
@@ -730,6 +750,13 @@ export default {
       },
     },
     startBanner: {
+      position: [-0.8, -1.2, -5],
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
+      rotation: [0, Math.PI / 2, 0],
+    },
+    startEarth: {
       position: [-0.8, -1.2, -5],
       fontSize: 0.6,
       boxWidth: 2.4,

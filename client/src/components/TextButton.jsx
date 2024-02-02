@@ -12,10 +12,9 @@ export default function TextButton({
   color="yellow",
   size=0.3
 }) {
-  const { nodes, materials } = useGLTF("models/rounded-rectangle.glb");
-  const { scene } = useGLTF("models/yoot-for-button.glb");
-  const scaleOuter = [0.65 * boxWidth, 0.01, 0.7 * boxHeight]
-  const scaleInner = [scaleOuter[0]*0.98, scaleOuter[1]*1.01, scaleOuter[2]*0.9]
+  const { nodes, materials } = useGLTF("models/square.glb");
+  const scaleOuter = [0.6 * boxWidth, 1, 0.7 * boxHeight]
+  const scaleInner = [scaleOuter[0]*0.95, scaleOuter[1]*0.9, scaleOuter[2]*0.9]
 
   const [hover, setHover] = useState(false);
 
@@ -42,7 +41,7 @@ export default function TextButton({
             onPointerDown={handlePointerClick}
           >
             <boxGeometry args={[boxWidth, boxHeight, 0.1]} />
-            <meshStandardMaterial transparent opacity={0.01} />
+            <meshStandardMaterial transparent opacity={0.1} />
           </mesh>
           <group 
             name="text-button-wrapper-border"
@@ -56,7 +55,7 @@ export default function TextButton({
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.Cube.geometry}
+              geometry={nodes.Cube001.geometry}
               rotation={[-Math.PI, 0, -Math.PI]}
               scale={scaleOuter}
             >
@@ -65,7 +64,7 @@ export default function TextButton({
             <mesh
               castShadow
               receiveShadow
-              geometry={nodes.Cube.geometry}
+              geometry={nodes.Cube001.geometry}
               rotation={[-Math.PI, 0, -Math.PI]}
               scale={scaleInner}
             >

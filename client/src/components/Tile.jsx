@@ -1,11 +1,13 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom } from "../SocketManager";
+import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom, showTipsAtom, tipsFinishedAtom } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
-import { isMyTurn } from "../helpers/helpers";
+import { getCurrentPlayerSocketId, isMyTurn } from "../helpers/helpers";
 import layout from "../layout";
+import { Text3D } from "@react-three/drei";
+import HelperArrow from "../meshes/HelperArrow";
 
 export default function Tile({ tile, wrapperRadius, device }) {
   const wrapper = useRef();
@@ -15,6 +17,8 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)
+  const [showTips] = useAtom(showTipsAtom)
+  const [_tipsFinished, setTipsFinished] = useAtom(tipsFinishedAtom)
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -35,7 +39,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection != null) {
-      
       if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] }, ({ error }) => {
@@ -46,6 +49,9 @@ export default function Tile({ tile, wrapperRadius, device }) {
         }
         socket.emit("legalTiles", {legalTiles: {}})
         socket.emit("select", null);
+      }
+      if (showTips) {
+        setTipsFinished(true);
       }
     }
   }
@@ -85,6 +91,67 @@ export default function Tile({ tile, wrapperRadius, device }) {
     return <></>
   }
 
+  const scaleOuterPlaceItHere = [3.2, 0.1, 2]
+  const scaleInnerPlaceItHere = [
+    scaleOuterPlaceItHere[0]*0.93, 
+    scaleOuterPlaceItHere[1]*1.1, 
+    scaleOuterPlaceItHere[2]*0.9
+  ]
+  function Tip() {
+    return <group position={[0,2,-8]} scale={4}>
+      <Text3D
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.3}
+        height={0.01}
+        position={[-1.3,0.05,-0.4]}
+        rotation={[-Math.PI/2, 0, 0]}
+      > 
+        Place the
+        <meshStandardMaterial color='green' />
+      </Text3D>
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.3} 
+        height={0.01}
+        position={[-1.3,0.05,0.1]}
+        rotation={[-Math.PI/2, 0, 0]}
+      > 
+        piece here
+        <meshStandardMaterial color='green' />
+      </Text3D>
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.3} 
+        height={0.01}
+        position={[-1.3,0.05,0.6]}
+        rotation={[-Math.PI/2, 0, 0]}
+      > 
+        with move {legalTiles[tile].move}
+        <meshStandardMaterial color='green' />
+      </Text3D>
+      <mesh
+        position={[0,0,0]}
+        scale={scaleInnerPlaceItHere}
+      >
+        <boxGeometry args={[1,1,1]} />
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh
+        position={[0,0,0]}
+        scale={scaleOuterPlaceItHere}
+      >
+        <boxGeometry args={[1,1,1]} />
+        <meshStandardMaterial color='yellow'/>
+      </mesh>
+      <HelperArrow
+        position={[0, 0, 1.4]}
+        rotation={[0, -Math.PI/2, -Math.PI/2]}
+        color="green"
+        scale={2}
+      />
+    </group>
+  }
+
   return (
     <group>
       <mesh
@@ -108,6 +175,10 @@ export default function Tile({ tile, wrapperRadius, device }) {
       </group>
       { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
       {/* { <Pointer tile={tile} color={"turquoise" } device={device} />} */}
+      { showTips 
+      && tile in legalTiles
+      && client.id === getCurrentPlayerSocketId(turn, teams)
+      && <Tip/>}
     </group>
   );
 }

@@ -54,11 +54,14 @@ import {
   disconnectAtom,
   displayDisconnectAtom,
   winnerAtom,
+  showTipsAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
 import RocketsWin from "./RocketsWin.jsx";
+import HelperArrow from "./meshes/HelperArrow.jsx";
+import Tips from "./Tips.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -579,7 +582,7 @@ export default function Experience() {
     location.reload()
   }
 
-  const [showTips, setShowTips] = useState(false)
+  const [showTips, setShowTips] = useAtom(showTipsAtom)
   function handleTips() {
     if (showTips) {
       setShowTips(false);
@@ -762,6 +765,17 @@ export default function Experience() {
           {/* board */}
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
+            <TextButton
+              text="Start"
+              position={layout[device].startEarth.position}
+              size={0.5}
+            />
+            <HelperArrow
+              position={layout[device].startEarth.helperArrow.position}
+              rotation={layout[device].startEarth.helperArrow.rotation}
+              color={layout[device].startEarth.helperArrow.color}
+              scale={layout[device].startEarth.helperArrow.scale}
+            />
           </group>
           {/* yoot section */}
           <group>
@@ -802,7 +816,9 @@ export default function Experience() {
               </group>
             )} */}
             <TextButton
-              text={`Phase: ${gamePhase}`}
+              text={`Phase: ${
+                gamePhase === "pregame" ? 'who first' : gamePhase
+              }`}
               position={layout[device].gamePhase.position}
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
@@ -825,7 +841,7 @@ export default function Experience() {
               handlePointerClick={handleRulebook}
               size={layout[device].gamePhase.size}
               boxHeight={0.35}
-              boxWidth={1.9}
+              boxWidth={1.95}
             />
             <TextButton
               text={`Settings`}
@@ -896,14 +912,14 @@ export default function Experience() {
             text={`Invite`}
             position={layout[device].invite.position}
             handlePointerClick={handleInvite}
-            boxWidth={1.2}
+            boxWidth={1.25}
             boxHeight={0.35}
           />
           <TextButton
             text={`Discord`}
             position={layout[device].discord.position}
             handlePointerClick={handleDiscord}
-            boxWidth={1.5}
+            boxWidth={1.55}
             boxHeight={0.35}
           />
           {/* RULEBOOK */}
@@ -941,6 +957,7 @@ export default function Experience() {
     </group> }
     { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
     { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
+    { showTips && <Tips/>}
     </>
   );
 }

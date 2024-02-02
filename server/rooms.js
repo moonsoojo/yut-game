@@ -167,7 +167,9 @@ export const joinTeam = ({ roomId, id, team, name }) => {
     return { joinTeamError: "unable to find room" }
   } else {
     const user = getUserFromRoom({ id, roomId })
-    console.log("[joinTeam] user", user)
+    if (!user) {
+      return { joinTeamError: "unable to find user" }
+    }
     const existingTeam = user.team
 
     if (existingTeam !== 0 && existingTeam !== 1) {

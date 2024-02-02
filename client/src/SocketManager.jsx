@@ -83,6 +83,8 @@ export const roomAtom = atom({})
 export const winnerAtom = atom(null)
 export const disconnectAtom = atom(false)
 export const displayDisconnectAtom = atom(false)
+export const showTipsAtom = atom(true)
+export const tipsFinishedAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
