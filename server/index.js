@@ -411,7 +411,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     let teams = getTeams(roomId)
     let turn = getTurn(roomId)
     if (teams[turn.team].throws > 0 
-      && teams[turn.team].players[turn.players[turn.team]].id === socket.id) {
+      && teams[turn.team].players[turn.players[turn.team]].id === socket.id
+      && !getThrown(roomId)) {
 
       teams[turn.team].throws--;
       updateTeams(roomId, teams)
@@ -461,7 +462,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   socket.on("recordThrow", ({move}, callback) => {
     console.log("[recordThrow] move", move)
     updateThrown({ roomId, flag: false })
-    // io.to(roomId).emit("clients", clients)
+    io.to(roomId).emit("thrown", false)
     if (getGamePhase(roomId) === "pregame") {
       addMove(roomId, getTurn(roomId).team, move.toString())
       passTurnPregame(roomId)
@@ -480,6 +481,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         io.to(roomId).emit("turn", turn)
       } else if (move == 4 || move == 5) {
         addThrow(roomId, turn.team);
+        io.to(roomId).emit("celebrate", move);
       }
       io.emit("teams", getTeams(roomId))
     }

@@ -17,7 +17,7 @@ export default function Tips() {
   // display tooltips on tiles within Tiles && check legalTiles 
   // to place it above it
 
-  const scaleOuterWhosFirst = [4.2, 0.1, 2]
+  const scaleOuterWhosFirst = [3.8, 0.1, 2]
   const scaleInnerWhosFirst = [
     scaleOuterWhosFirst[0]*0.95, 
     scaleOuterWhosFirst[1]*1.1, 
@@ -54,30 +54,30 @@ export default function Tips() {
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
         height={0.01}
-        position={[-1.9,0.05,-0.4]}
+        position={[-1.7,0.05,-0.4]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        Decide the order
+        Throw the yoot
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
         height={0.01}
-        position={[-1.9,0.05,0.1]}
+        position={[-1.7,0.05,0.1]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        by taking turns
+        to decide who
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
         height={0.01}
-        position={[-1.9,0.05,0.6]}
+        position={[-1.7,0.05,0.6]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        throwing the dice.
+        goes first.
         <meshStandardMaterial color='green' />
       </Text3D>
       <mesh
@@ -159,7 +159,7 @@ export default function Tips() {
         position={[-1.35,0.05,-0.4]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        dice button
+        the yoot
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -217,7 +217,7 @@ export default function Tips() {
         position={[-0.9,0.05,0.1]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        piece to
+        unit to
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -261,7 +261,7 @@ export default function Tips() {
         position={[-2.4,0.05,-1.3]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        That's it!
+        That's it! The goal of
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -271,7 +271,7 @@ export default function Tips() {
         position={[-2.4,0.05,-0.8]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        the goal is to
+        this game is to bring
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -281,7 +281,7 @@ export default function Tips() {
         position={[-2.4,0.05,-0.3]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        bring these around
+        the units around to
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -291,7 +291,7 @@ export default function Tips() {
         position={[-2.4,0.05,0.2]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        and pass Earth
+        Earth before the other
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -301,7 +301,7 @@ export default function Tips() {
         position={[-2.4,0.05,0.7]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        before the other team.
+        team.
         <meshStandardMaterial color='green' />
       </Text3D>
       <mesh
@@ -338,26 +338,26 @@ export default function Tips() {
   return <>
   {/* pregame */}
   { gamePhase === 'pregame' && <WhosFirst/>}
-  { gamePhase === 'pregame' 
+  {/* { gamePhase === 'pregame' 
   && client.id === getCurrentPlayerSocketId(turn, teams) 
   && teams[turn.team].throws > 0 
-  && <ThrowButton/>}
-  { gamePhase === 'pregame' 
+  && <ThrowButton/>} */}
+  {/* { gamePhase === 'pregame' 
   && client.id !== getCurrentPlayerSocketId(turn, teams) 
-  && <ButtonWillAppear/>}
+  && <ButtonWillAppear/>} */}
   {/* game */}
-  { gamePhase === 'game' 
+  {/* { gamePhase === 'game' 
   && client.id === getCurrentPlayerSocketId(turn, teams) 
   && teams[turn.team].throws > 0 
-  && <ThrowButton/>}
+  && <ThrowButton/>} */}
   { gamePhase === 'game' 
   && client.id === getCurrentPlayerSocketId(turn, teams) 
   && !movesIsEmpty(teams[turn.team].moves) 
   && selection === null 
   && <SelectAPiece/>}
-  { gamePhase === 'game' 
+  {/* { gamePhase === 'game' 
   && client.id !== getCurrentPlayerSocketId(turn, teams) 
-  && <ButtonWillAppear/>}
+  && <ButtonWillAppear/>} */}
   { tipsFinished
   && <ThatsIt/>}
   </>

@@ -2,13 +2,16 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
+import { clientAtom, teamsAtom, thrownAtom, turnAtom } from './SocketManager';
+import { useAtom } from 'jotai';
+import { getCurrentPlayerSocketId } from './helpers/helpers';
 
 export default function YootButton({ 
   position, 
   rotation, 
   handlePointerDown,
-  scale,
-  throws
+  throws,
+  scale
 }) {
   // yoots with material
   // get texture of yoot
@@ -18,6 +21,12 @@ export default function YootButton({
   const yootMaterials = useGLTF("/models/yoot-for-button.glb").materials
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const yootNodes = useGraph(clone).nodes
+  let buttonRef = useRef();
+
+  const [client] = useAtom(clientAtom)
+  const [turn] = useAtom(turnAtom)
+  const [teams] = useAtom(teamsAtom)
+  const [thrown] = useAtom(thrownAtom)
 
   const yoot0 = useRef();
   const yoot1 = useRef();
@@ -29,6 +38,18 @@ export default function YootButton({
   const scaleYoot = 0.15
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
+  useFrame((state, delta) => {
+    if (client.id === getCurrentPlayerSocketId(turn, teams) && throws > 0 && !thrown) {
+      buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
+      buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
+      buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
+    } else {
+      buttonRef.current.scale.x = 0.8
+      buttonRef.current.scale.y = 0.8
+      buttonRef.current.scale.z = 0.8
+    }
+  })
+
   function handlePointerEnter() {
     document.body.style.cursor = "pointer";
   }
@@ -37,7 +58,7 @@ export default function YootButton({
   }
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
+    <group position={position} rotation={rotation} scale={scale} ref={buttonRef}>
       <mesh
         castShadow
         receiveShadow
@@ -45,7 +66,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scaleOuter}
       >
-        <meshStandardMaterial color={ (throws > 0) ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ (throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -67,7 +88,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot0}
         >
-          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -79,7 +100,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot1}
           >
-          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -91,7 +112,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot2}
           >
-          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -103,7 +124,7 @@ export default function YootButton({
           scale={scaleYootArray}
           ref={yoot3}
           >
-          { !(throws > 0) && <meshStandardMaterial color="grey"/>}
+          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -114,7 +135,7 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ throws > 0 ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ (throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) ? "#963600" : "grey" }/>
       </Text3D>
       <mesh 
         position={[0, 0.1, 0]} 

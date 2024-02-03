@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-// const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'localhost:5000';
 
-const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -85,6 +85,8 @@ export const disconnectAtom = atom(false)
 export const displayDisconnectAtom = atom(false)
 export const showTipsAtom = atom(true)
 export const tipsFinishedAtom = atom(false)
+export const celebrateTextAtom = atom(null)
+export const thrownAtom = atom(false)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -95,6 +97,7 @@ export const SocketManager = () => {
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [_celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -103,6 +106,7 @@ export const SocketManager = () => {
   const [_winner, setWinner] = useAtom(winnerAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect] = useAtom(displayDisconnectAtom)
+  const [_thrown, setThrown] = useAtom(thrownAtom)
 
   const params = useParams();
 
@@ -173,6 +177,7 @@ export const SocketManager = () => {
     })
     socket.on('throwYoots', (yootForceVectors) => {
       setYootThrowValues(yootForceVectors);
+      setThrown(true)
     })
     socket.on('legalTiles', ({ legalTiles }) => {
       setLegalTiles(legalTiles)
@@ -185,6 +190,23 @@ export const SocketManager = () => {
     })
     socket.on('winner', (winner) => {
       setWinner(winner)
+    })
+    socket.on('thrown', (thrown) => {
+      setThrown(thrown)
+    })
+    socket.on('celebrate', (event) => {
+      let text;
+      if (event === 4) {
+        text = 'yoot!'
+      } else if (event === 5) {
+        text = 'mo!'
+      } else if (event === 'capture') {
+        text = 'bonus!'
+      }
+      setCelebrateText('bonus!')
+      setTimeout(() => {
+        setCelebrateText(null)
+      }, 5000)
     })
     socket.on('disconnect', () => {
       console.log("[disconnect]")

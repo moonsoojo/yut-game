@@ -28,15 +28,13 @@ export default function Fireworks({ delay, position, sprite }) {
   const emitter2 = React.useRef();
 
   useEffect(() => {
-    console.log("useEffect")
     system.current = new System();
     const renderer = new SpriteRenderer(scene, THREE);
     system.current.addRenderer(renderer)
     return () => {
-      console.log("return")
-      // system.current.removeRenderer(renderer)
       emitter2.current.removeAllParticles();
       emitter2.current.destroy();
+      system.current.destroy()
     }
   }, [])
 

@@ -71,3 +71,7 @@ export function makeId(length) {
   }
   return result;
 }
+
+export const generateRandomNumberInRange = (num, plusMinus) => {
+  return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+};

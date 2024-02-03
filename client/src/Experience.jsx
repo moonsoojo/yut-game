@@ -62,6 +62,7 @@ import UfosWin from "./UfosWin.jsx";
 import RocketsWin from "./RocketsWin.jsx";
 import HelperArrow from "./meshes/HelperArrow.jsx";
 import Tips from "./Tips.jsx";
+import Celebration from "./Celebration.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -958,6 +959,7 @@ export default function Experience() {
     { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
     { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
     { showTips && <Tips/>}
+    <Celebration/>
     </>
   );
 }

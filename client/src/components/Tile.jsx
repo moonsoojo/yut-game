@@ -91,19 +91,19 @@ export default function Tile({ tile, wrapperRadius, device }) {
     return <></>
   }
 
-  const scaleOuterPlaceItHere = [3.2, 0.1, 2]
+  const scaleOuterPlaceItHere = [2.5, 0.1, 1.3]
   const scaleInnerPlaceItHere = [
     scaleOuterPlaceItHere[0]*0.93, 
     scaleOuterPlaceItHere[1]*1.1, 
     scaleOuterPlaceItHere[2]*0.9
   ]
   function Tip() {
-    return <group position={[0,2,-8]} scale={4}>
+    return <group position={[0,2,-7]} scale={4}>
       <Text3D
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3}
         height={0.01}
-        position={[-1.3,0.05,-0.4]}
+        position={[-1.0,0.05,-0.1]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
         Place the
@@ -113,20 +113,10 @@ export default function Tile({ tile, wrapperRadius, device }) {
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
         height={0.01}
-        position={[-1.3,0.05,0.1]}
+        position={[-1,0.05,0.4]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        piece here
-        <meshStandardMaterial color='green' />
-      </Text3D>
-      <Text3D 
-        font="/fonts/Luckiest Guy_Regular.json" 
-        size={0.3} 
-        height={0.01}
-        position={[-1.3,0.05,0.6]}
-        rotation={[-Math.PI/2, 0, 0]}
-      > 
-        with move {legalTiles[tile].move}
+        unit here
         <meshStandardMaterial color='green' />
       </Text3D>
       <mesh
@@ -144,7 +134,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
         <meshStandardMaterial color='yellow'/>
       </mesh>
       <HelperArrow
-        position={[0, 0, 1.4]}
+        position={[0, 0, 1.1]}
         rotation={[0, -Math.PI/2, -Math.PI/2]}
         color="green"
         scale={2}

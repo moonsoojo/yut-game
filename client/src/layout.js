@@ -386,7 +386,7 @@ export default {
       size: 0.3
     },
     turn: {
-      position: [5, 0, 2],
+      position: [5, 0, 1.7],
       size: 0.3
     },
     piecesSection: {
