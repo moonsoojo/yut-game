@@ -197,16 +197,20 @@ export const SocketManager = () => {
     socket.on('celebrate', (event) => {
       let text;
       if (event === 4) {
-        text = 'yoot!'
+        text = 'yoot'
       } else if (event === 5) {
-        text = 'mo!'
+        text = 'mo'
       } else if (event === 'capture') {
-        text = 'bonus!'
+        text = 'bonus'
       }
-      setCelebrateText('bonus!')
+      if (Math.random() > 0.5) {
+        setCelebrateText('yoot')
+      } else {
+        setCelebrateText('mo')
+      }
       setTimeout(() => {
         setCelebrateText(null)
-      }, 5000)
+      }, 7000)
     })
     socket.on('disconnect', () => {
       console.log("[disconnect]")

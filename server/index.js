@@ -470,6 +470,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       io.to(roomId).emit("turn", getTurn(roomId))
       io.to(roomId).emit("teams", getTeams(roomId))
       io.to(roomId).emit("gamePhase", getGamePhase(roomId))
+      
+      io.to(roomId).emit("celebrate", 4);
     } else if (getGamePhase(roomId) === "game") {
       let turn = getTurn(roomId)
       console.log("[recordThrow] turn.team", turn.team)

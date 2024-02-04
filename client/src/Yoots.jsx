@@ -73,13 +73,13 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }, [yootThrowValues]);
 
   useEffect(() => {
-    console.log("[Yoots] sleepCount", sleepCount)
+    // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.visible = false
       }
       socket.emit("yootsAsleep", ({response}) => {
-        console.log("[yootsAsleep] response", response)
+        // console.log("[yootsAsleep] response", response)
         if (response === "record") {
           let move = observeThrow();
           socket.emit("recordThrow", {move})
@@ -163,7 +163,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }
 
   function onSleepHandler() {
-    console.log("onSleepHandler")
+    // console.log("onSleepHandler")
     setSleepCount((count) => count+1);
   }
 

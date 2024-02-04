@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Experience from './Experience';
 import { Canvas } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
 import { Route } from "wouter"
 import Home2 from './Home2';
-import RocketsWin from './RocketsWin';
-import UfosWin from './UfosWin';
+import Celebration from './Celebration';
+import * as THREE from 'three';
 
 export default function App () {
+
   return (<>
     <Canvas
       camera={ {
@@ -28,8 +29,6 @@ export default function App () {
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
-        {/* <RocketsWin/> */}
-        {/* <UfosWin/> */}
       </Route>
     </Canvas>
   </>)

@@ -39,7 +39,7 @@ import {
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import Stars from './particles/Stars'
-// import { Perf } from 'r3f-perf'
+import { Perf } from 'r3f-perf'
 
 
 // server
@@ -95,6 +95,7 @@ export default function Experience() {
   }
 
   useEffect(() => {
+    console.log("[Experience] use effect")
     window.addEventListener("resize", handleResize, false);
   }, []);
 
@@ -655,7 +656,7 @@ export default function Experience() {
 
   return (<>
     { winner == null && <group>
-      {/* <Perf/> */}
+      <Perf/>
       {/* <OrbitControls/> */}
       <OrthographicCamera
         makeDefault
