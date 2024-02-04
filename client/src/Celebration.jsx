@@ -1,7 +1,7 @@
 import { Text3D } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useAtom } from 'jotai';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { celebrateTextAtom } from './SocketManager';
 import Meteors from './particles/Meteors';
 import * as THREE from 'three';
@@ -25,15 +25,7 @@ import System, {
   ColorSpan,
 } from "three-nebula";
 
-export default function Celebration() {
-
-  let map = new THREE.TextureLoader().load("textures/dot.png");
-  var sprite = new THREE.SpriteMaterial({
-    map: map,
-    color: new THREE.Color("#FF2727"),
-    blending: THREE.AdditiveBlending,
-    fog: true,
-  });
+export default function Celebration({sprite}) {
 
   const text0Mat = useRef();
   const text1Mat = useRef();
@@ -58,7 +50,7 @@ export default function Celebration() {
   const { scene } = useThree();
 
   const system = useRef();
-  let numMeteors = 5
+  let numMeteors = 7
   const emitter0 = useRef();
   const emitter1 = useRef();
   const emitter2 = useRef();
@@ -70,16 +62,18 @@ export default function Celebration() {
   const emitter8 = useRef();
   const emitter9 = useRef();
   const emitters = [emitter0, emitter1, emitter2, emitter3, emitter4, emitter5, emitter6, emitter7, emitter8, emitter9]
-  console.log("new speeds")
   const speeds = useRef([
-    [4.1, 1.9],
+    [4.1, 2.9],
     [4.3, 1.67],
     [4.7, 1.3],
-    [4.2, 1.8],
+    [3.2, 2.8],
     [4.6, 1.5],
+    [3.7, 1.8],
+    [4.9, 2.3],
+    [3.3, 1.6],
+    [4.13, 2.69],
+    [3.8, 2.31]
   ]);
-
-  // const [speeds, setSpeeds] = useState(Array.apply(null, Array(numMeteors)).map(function () {}))
 
   const zone = new PointZone(0, 0);
   const colors = new ColorSpan([
@@ -96,19 +90,38 @@ export default function Celebration() {
     system.current = new System();
     const renderer = new SpriteRenderer(scene, THREE);
     system.current.addRenderer(renderer)
+    console.log("[Celebration] new emitters")
+    for (let i = 0; i < numMeteors; i++) {
+      emitters[i].current = new Emitter();
+      system.current.addEmitter(emitters[i].current)
+    }
+    return () => {
+      for (let i = 0; i < numMeteors; i++) {
+        emitters[i].current.destroy()
+      }
+      system.current.destroy()
+    }
   }, [])
 
   useEffect(() => {
-    if (celebrateText === "yoot" || celebrateText === "mo") {
+    if (celebrateText === "yoot" || celebrateText==="mo" || celebrateText==="capture") {
       for (let i = 0; i < numMeteors; i++) {
         const alpha = generateRandomNumberInRange(1, 0.4)
         const scale0 = generateRandomNumberInRange(1.5, 0.3)
         const scale1 = generateRandomNumberInRange(0.5, 0.3)
-        const color0 = celebrateText === "yoot" ? "#FFFF00" : colors.getValue()
-        const color1 = celebrateText === "yoot" ? "#FFFF00" : colors.getValue()
-
+        let color0;
+        let color1;
+        if (celebrateText === "yoot") {
+          color0 = "#FFFF00"
+          color1 = "#FFFF00"
+        } else if (celebrateText === "capture") {
+          color0 = "#FB5622"
+          color1 = "#FB5622"
+        } else {
+          color0 = colors.getValue()
+          color1 = colors.getValue()
+        }
         setTimeout(() => {
-          emitters[i].current = new Emitter();
           emitters[i].current
           .setRate(new Rate(1, new Span(0.01)))
           .setInitializers([
@@ -116,7 +129,7 @@ export default function Celebration() {
             new Mass(1),
             new Radius(0.1, 0.2),
             new Life(2),
-            new Body(new THREE.Sprite(sprite)),
+            new Body(sprite),
             new RadialVelocity(1, new Vector3D(0, 1, 0), 2)
           ])
           .setBehaviours([
@@ -130,13 +143,18 @@ export default function Celebration() {
           emitters[i].current.position.y = 5
           emitters[i].current.position.z = generateRandomNumberInRange(-3, 2)
       
-          system.current.addEmitter(emitters[i].current)
         }, 1000 * Math.random() * 1.5)
       }
   
       return () => {
-        // emitter.current.removeAllParticles();
-        // emitter.current.destroy();
+        // emitter0.current.stopEmit();
+        // emitter0.current.stopEmit();
+        // emitter1.current.stopEmit();
+        // emitter2.current.stopEmit();
+        // emitter3.current.stopEmit();
+        // emitter4.current.stopEmit();
+        // emitter5.current.stopEmit();
+        // emitter6.current.stopEmit();
         // system.current.destroy();
       }
     }
@@ -164,8 +182,8 @@ export default function Celebration() {
       position={[-2,0,-1]}
       rotation={[-Math.PI/2,0,0, "YXZ"]}
     >
-      <meshStandardMaterial transparent ref={text0Mat} color="limegreen"/>
-      {celebrateText}
+      <meshStandardMaterial transparent ref={text0Mat} color="green"/>
+      {celebrateText && "bonus"}
     </Text3D>
     <Text3D
       font="/fonts/Luckiest Guy_Regular.json" 
@@ -174,8 +192,8 @@ export default function Celebration() {
       position={[0.8,0,-1]}
       rotation={[-Math.PI/2,0,0, "YXZ"]}
     >
-      <meshStandardMaterial transparent ref={text1Mat} color="limegreen"/>
-      {celebrateText}
+      <meshStandardMaterial transparent ref={text1Mat} color="green"/>
+      {celebrateText && "bonus"}
     </Text3D>
     <Text3D
       font="/fonts/Luckiest Guy_Regular.json" 
@@ -184,8 +202,8 @@ export default function Celebration() {
       position={[0.8,0,1.5]}
       rotation={[-Math.PI/2,0,0, "YXZ"]}
     >
-      <meshStandardMaterial transparent ref={text2Mat} color="limegreen"/>
-      {celebrateText}
+      <meshStandardMaterial transparent ref={text2Mat} color="green"/>
+      {celebrateText && "bonus"}
     </Text3D>
     <Text3D
       font="/fonts/Luckiest Guy_Regular.json" 
@@ -194,41 +212,8 @@ export default function Celebration() {
       position={[-2,0,1.5]}
       rotation={[-Math.PI/2,0,0, "YXZ"]}
     >
-      <meshStandardMaterial transparent ref={text3Mat} color="limegreen"/>
-      {celebrateText}
+      <meshStandardMaterial transparent ref={text3Mat} color="green"/>
+      {celebrateText && "bonus"}
     </Text3D>
-    {/* <Meteors 
-      sprite={sprite} 
-      delay={0} 
-      alpha ={Math.random()+1} 
-      spawnPos={[
-        // -5 + generateRandomNumberInRange(3, 3),
-        // 5,
-        // 5 + generateRandomNumberInRange(3, 3),
-        10, -5, -3
-      ]}
-    />
-    <Meteors       
-      sprite={sprite} 
-      delay={0.3} 
-      alpha ={Math.random()+1} 
-      spawnPos={[
-        // -5 + generateRandomNumberInRange(3, 3),
-        // 5,
-        // 5 + generateRandomNumberInRange(3, 3),
-        9, -5, -5
-      ]}
-    />
-    <Meteors
-      sprite={sprite} 
-      delay={0.6} 
-      alpha ={Math.random()+1} 
-      spawnPos={[
-        // -5 + generateRandomNumberInRange(3, 3),
-        // 5,
-        // 5 + generateRandomNumberInRange(3, 3),
-        8, -5, -7
-      ]}
-    /> */}
   </group>
 }

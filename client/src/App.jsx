@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Experience from './Experience';
 import { Canvas } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
@@ -8,6 +8,15 @@ import Celebration from './Celebration';
 import * as THREE from 'three';
 
 export default function App () {
+
+  const map = useMemo(() => new THREE.TextureLoader().load("textures/dot.png"), [])
+  const material = useMemo(() => new THREE.SpriteMaterial({
+    map: map,
+    color: new THREE.Color("#FF2727"),
+    blending: THREE.AdditiveBlending,
+    fog: true,
+  }), [map])
+  const sprite = useMemo(() => new THREE.Sprite(material), [material])
 
   return (<>
     <Canvas
@@ -28,7 +37,7 @@ export default function App () {
       </Route>
       <Route path="/:id">
         <SocketManager/>
-        <Experience/>
+        <Experience sprite={sprite}/>
       </Route>
     </Canvas>
   </>)

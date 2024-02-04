@@ -70,7 +70,7 @@ let landscapeDesktopCutoff = 1000;
 
 
 
-export default function Experience() {
+export default function Experience({sprite}) {
 
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
@@ -960,7 +960,7 @@ export default function Experience() {
     { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
     { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
     { showTips && <Tips/>}
-    <Celebration/>
+    <Celebration sprite={sprite}/>
     </>
   );
 }

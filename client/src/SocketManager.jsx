@@ -97,7 +97,7 @@ export const SocketManager = () => {
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  const [_celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
+  const [celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -201,16 +201,15 @@ export const SocketManager = () => {
       } else if (event === 5) {
         text = 'mo'
       } else if (event === 'capture') {
-        text = 'bonus'
+        text = 'capture'
       }
-      if (Math.random() > 0.5) {
-        setCelebrateText('yoot')
-      } else {
-        setCelebrateText('mo')
+      setCelebrateText(text)
+      // setCelebrateText(text)
+      if (!celebrateText) {
+        setTimeout(() => {
+          setCelebrateText(null)
+        }, 5000)
       }
-      setTimeout(() => {
-        setCelebrateText(null)
-      }, 7000)
     })
     socket.on('disconnect', () => {
       console.log("[disconnect]")
