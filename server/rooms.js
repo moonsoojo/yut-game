@@ -167,7 +167,9 @@ export const joinTeam = ({ roomId, id, team, name }) => {
     return { joinTeamError: "unable to find room" }
   } else {
     const user = getUserFromRoom({ id, roomId })
-    console.log("[joinTeam] user", user)
+    if (!user) {
+      return { joinTeamError: "unable to find user" }
+    }
     const existingTeam = user.team
 
     if (existingTeam !== 0 && existingTeam !== 1) {
@@ -224,10 +226,12 @@ export const getRoom = ( id ) => {
 }
 
 export const getUserFromRoom = ({ id, roomId }) => {
+  console.log(`[getUserFromRoom] id ${id} roomId ${roomId}`)
   if (roomId in rooms) {
     let users = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players.concat(rooms[roomId].spectators))
+    console.log(`[getUserFromRoom] users ${JSON.stringify(users)}`)
     const user = users.find((user) => user.id === id)
-  
+    console.log(`[getUserFromRoom] user ${JSON.stringify(user)}`)
     return user
   }
 }
@@ -278,8 +282,34 @@ export const updateHostId = (roomId, hostId) => {
   if (!(roomId in rooms)) {
     return { updateHostIdError: "room not found" }
   }
+  console.log(`[updateHostId] roomId ${roomId} hostId ${hostId}`)
   rooms[roomId].hostId = hostId
+  rooms[roomId].hostName = getUserFromRoom({ id: hostId, roomId }).name
   return {}
+}
+
+export const assignHost = (roomId, socketId) => {
+  if (!(roomId in rooms)) {
+    throw new Error(`Room ${roomId} not found`)
+  }
+  if (rooms[roomId].hostId === null) {
+    rooms[roomId].hostId = socketId
+    rooms[roomId].hostName = getUserFromRoom({ id: socketId, roomId }).name
+    console.log(`[assignHost] ${rooms[roomId].hostName}`)
+  } else {
+    const players = rooms[roomId].teams[0].players.concat(rooms[roomId].teams[1].players)
+    if (players.length > 0) {
+      rooms[roomId].hostId = players[0].id
+      rooms[roomId].hostName = players[0].name
+      console.log(`[assignHost] ${rooms[roomId].hostName}`)
+    } else if (spectators.length > 0) {
+      rooms[roomId].hostId = rooms[roomId].spectators[0].id
+      rooms[roomId].hostName = rooms[roomId].spectators[0].name
+      console.log(`[assignHost] ${rooms[roomId].hostName}`)
+    } else {
+      throw new Error(`Room ${roomId} has no players`)
+    }
+  }
 }
 
 export const countPlayersTeam = (roomId, team) => {

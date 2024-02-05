@@ -54,11 +54,16 @@ import {
   disconnectAtom,
   displayDisconnectAtom,
   winnerAtom,
+  hostNameAtom,
+  roomIdAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
 import RocketsWin from "./RocketsWin.jsx";
+import Celebration from "./Celebration.jsx";
+import { Perf } from "r3f-perf";
+import CurvedArrow from "./meshes/CurvedArrow.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -90,6 +95,7 @@ export default function Experience() {
     }
   }
 
+  console.log(`[Experience] render`)
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
   }, []);
@@ -110,6 +116,8 @@ export default function Experience() {
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom);
   const [winner] = useAtom(winnerAtom)
+  const [hostName] = useAtom(hostNameAtom);
+  const [roomId] = useAtom(roomIdAtom);
 
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
@@ -762,6 +770,18 @@ export default function Experience() {
           {/* board */}
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />
+            <TextButton
+              text="Start"
+              position={layout[device].startEarth.position}
+              size={layout[device].startEarth.fontSize}
+              color='limegreen'
+            />
+            <CurvedArrow
+              position={layout[device].startEarth.helperArrow.position}
+              rotation={layout[device].startEarth.helperArrow.rotation}
+              color={layout[device].startEarth.helperArrow.color}
+              scale={layout[device].startEarth.helperArrow.scale}
+            />
           </group>
           {/* yoot section */}
           <group>
@@ -807,25 +827,13 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            {/* <TextButton
-              text={`Host:`}
-              position={layout[device].hostId.position}
-              handlePointerClick={() => socket.emit("startGame")}
-              size={layout[device].gamePhase.size}
-            />
             <TextButton
-              text={`Room:`}
-              position={layout[device].roomId.position}
-              handlePointerClick={() => socket.emit("startGame")}
-              size={layout[device].gamePhase.size}
-            /> */}
-            <TextButton
-              text={`Rulebook`}
+              text={`Rules`}
               position={layout[device].rulebook.position}
               handlePointerClick={handleRulebook}
               size={layout[device].gamePhase.size}
               boxHeight={0.35}
-              boxWidth={1.9}
+              boxWidth={1.2}
             />
             <TextButton
               text={`Settings`}
@@ -834,6 +842,16 @@ export default function Experience() {
               size={layout[device].gamePhase.size}
               boxHeight={0.35}
               boxWidth={1.8}
+            />
+            <TextButton
+              text={`HOST: ${hostName}`}
+              position={layout[device].hostName.position}
+              size={layout[device].hostName.size}
+            />            
+            <TextButton
+              text={`ROOM: ${roomId}`}
+              position={layout[device].roomId.position}
+              size={layout[device].roomId.size}
             />
             <Physics>
               <Yoots 
@@ -937,11 +955,11 @@ export default function Experience() {
           Disconnected. Please refresh
         </Text3D>
       </group>}
-      <Stars count={3000} size={5}/>
     </group> }
     { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
     { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
+    {/* <Celebration/> */}
+    <Perf/>
     </>
   );
 }
-

@@ -6,6 +6,7 @@ import { Route } from "wouter"
 import Home2 from './Home2';
 import RocketsWin from './RocketsWin';
 import UfosWin from './UfosWin';
+import Stars from './particles/Stars';
 
 export default function App () {
   return (<>
@@ -22,6 +23,7 @@ export default function App () {
       } }>
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
+      <Stars count={1000} size={0.2}/>
       <Route path="/">
         <Home2/>
       </Route>
@@ -31,6 +33,7 @@ export default function App () {
         {/* <RocketsWin/> */}
         {/* <UfosWin/> */}
       </Route>
+      
     </Canvas>
   </>)
 }

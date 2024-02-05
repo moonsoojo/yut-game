@@ -14,8 +14,6 @@ import UfoAnimated from './meshes/UfoAnimated';
 import { useFrame } from '@react-three/fiber';
 import { Euler } from 'three';
 import Yoot from './meshes/Yoot';
-import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier';
-import Stars from './particles/Stars';
 import TextButton from './components/TextButton';
 import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
@@ -214,7 +212,7 @@ export default function Home2() {
   const [location, setLocation] = useLocation();
 
   function handleLetsPlay() {
-    setLocation(`/${makeId(5)}`)
+    setLocation(`/${(makeId(5)).toUpperCase()}`)
   }
   
   return <PresentationControls
@@ -282,6 +280,5 @@ export default function Home2() {
       <Pieces/>
       <Yoots/>
     </group>
-    <Stars/>
   </PresentationControls>
 }

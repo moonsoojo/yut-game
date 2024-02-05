@@ -363,15 +363,32 @@ export default {
       size: 0.3
     },
     roomId: {
-      position: [5, 0, -3.5],
-      size: 0.3
+      position: [-3.5, 0, -3.3],
+      size: 0.2
+    },
+    hostName: {
+      position: [-3.5, 0, -3.7],
+      size: 0.2
     },
     rulebook: {
       position: [5, 0, -3.5],
       size: 0.3
     },
+    startEarth: {
+      position: [1, 0, 6.8],
+      helperArrow: {
+        position: [2.8,0,5],
+        rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/16,0],
+        color: 'limegreen',
+        scale: [0.4, 0.4, 1.2]
+      },
+      fontSize: 0.6,
+      boxWidth: 2.4,
+      boxHeight: 0.7,
+      rotation: [0, Math.PI / 2, 0],
+    },
     settings: {
-      position: [5, 0, -2.9],
+      position: [5.05, 0, -2.9],
       size: 0.3
     },
     throwCount: {
