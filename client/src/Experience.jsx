@@ -78,7 +78,6 @@ let landscapeDesktopCutoff = 1000;
 
 export default function Experience({sprite}) {
 
-
   function initializeDevice(windowWidth, landscapeMobileCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
       return "portrait"
@@ -93,25 +92,26 @@ export default function Experience({sprite}) {
     // console.log(`[Experience] ${JSON.stringify(camera)}`)
   }, [scene, camera])
 
-  function initializeZoom() {
-    if (window.innerWidth < landscapeMobileCutoff) {
-      return calcScale(
-        layout['portrait'].camera.zoomMin,
-        layout['portrait'].camera.zoomMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      )
-    } else {
-      return calcScale(
-        layout['landscapeDesktop'].camera.zoomMin,
-        layout['landscapeDesktop'].camera.zoomMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      )
-    }
-  }
+  // function initializeZoom() {
+  //   console.log(`[Experience] initializeZoom`)
+  //   if (window.innerWidth < landscapeMobileCutoff) {
+  //     return calcScale(
+  //       layout['portrait'].camera.zoomMin,
+  //       layout['portrait'].camera.zoomMax,
+  //       0,
+  //       landscapeMobileCutoff,
+  //       window.innerWidth
+  //     )
+  //   } else {
+  //     return calcScale(
+  //       layout['landscapeDesktop'].camera.zoomMin,
+  //       layout['landscapeDesktop'].camera.zoomMax,
+  //       landscapeMobileCutoff,
+  //       mediaMax,
+  //       window.innerWidth
+  //     )
+  //   }
+  // }
 
   function initializeChatDimensions() {
     let chatDimensions = {}
@@ -181,8 +181,6 @@ export default function Experience({sprite}) {
 
   const handleResize = () => {
     console.log(`${window.innerWidth} ${window.innerHeight}`)
-    setZoom(initializeZoom())
-    setChatDimensions(initializeChatDimensions())
     setDevice(initializeDevice(window.innerWidth, landscapeMobileCutoff))
   }
 
@@ -196,11 +194,21 @@ export default function Experience({sprite}) {
 
   useEffect(() => {
     console.log(`[Experience] ${device}`)
-    console.log(`[Experience] chatbox position ${layout[device].chat.position}`)
   }, [device])
 
-  const [zoom, setZoom] = useState(initializeZoom());
-  const [chatDimensions, setChatDimensions] = useState(initializeChatDimensions())
+  const [zoom, setZoom] = useState(device==="landscapeDesktop" ? 100 : 40)
+  const [chatDimensions, setChatDimensions] = useState(device === "landscapeDesktop" ? 
+  {
+    fontSize: 24,
+    height: 100,
+    width: 450,
+    padding: 7
+  } : {
+    fontSize: 13,
+    height: 50,
+    width: 100,
+    padding: 4
+  })
   
   console.log(`[Experience] render`)
   // THREE.ColorManagement.enabled = false;
@@ -906,7 +914,7 @@ export default function Experience({sprite}) {
           Disconnected. Please refresh
         </Text3D>
       </group>}
-      {/* <Stars count={3000} size={5}/> */}
+      <Stars count={500} size={5}/>
     </group> }
     { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart}/> }

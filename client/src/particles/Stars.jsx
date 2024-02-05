@@ -6,7 +6,7 @@ function randomNumberBetween(min, max) {
 }
 
 export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
-  const radius1MinNeptune = -20;
+  const radius1MinNeptune = 5;
   const radius1MaxNeptune = 20;
   const colorOneHex = "#FFFFFF";
   const colorTwoHex = "#000000";
@@ -20,13 +20,21 @@ export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
   
-    const randomX1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-    const randomY1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-    const randomZ1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    // const randomX1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    // const randomY1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    // const randomZ1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+
+    let radius = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+
+    const theta = Math.random() * Math.PI; // polar angle
+    const phi = Math.random() * 2 * Math.PI; // azimuthal angle
+    const x = radius * Math.sin(theta) * Math.cos(phi);
+    const y = radius * Math.sin(theta) * Math.sin(phi);
+    const z = radius * Math.cos(theta);
   
-    positions1[i3] = randomX1;
-    positions1[i3 + 1] = randomY1;
-    positions1[i3 + 2] = randomZ1;
+    positions1[i3] = x;
+    positions1[i3 + 1] = y;
+    positions1[i3 + 2] = z;
   
     const mixedColor = colorInitial.clone();
     mixedColor.lerp(colorFinal, Math.random());

@@ -7,8 +7,10 @@ import Home2 from './Home2';
 import Celebration from './Celebration';
 import * as THREE from 'three';
 import ExperienceClean from './ExperienceClean';
+import layout from './layout';
 
 export default function App () {
+
 
   return (<>
     <Canvas
