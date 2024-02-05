@@ -19,6 +19,7 @@ import Stars from './particles/Stars';
 import TextButton from './components/TextButton';
 import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
+import { Perf } from 'r3f-perf';
 
 // text colors to green like earth
 export default function Home2() {
@@ -224,6 +225,7 @@ export default function Home2() {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
+    <Perf/>
   <group position={[-14,2,-2]} rotation={[-Math.PI/4,Math.PI/8,Math.PI/32]}>
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 

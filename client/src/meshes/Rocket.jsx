@@ -11,9 +11,7 @@ export default function Rocket({
   rotation=[0,0,0],
   scale=1
 }) {
-  const { scene, materials } = useGLTF(
-    "models/rocket.glb"
-  );
+  const { scene, materials } = useGLTF("models/rocket.glb");
   
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);

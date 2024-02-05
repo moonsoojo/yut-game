@@ -507,7 +507,7 @@ export default {
       fontSizeMin: 12,
       fontSizeMax: 25,
       heightMin: 70,
-      heightMax: 100,
+      heightMax: 150,
       widthMin: 140,
       widthMax: 700,
       paddingMin: 5,

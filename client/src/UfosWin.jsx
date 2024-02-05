@@ -20,7 +20,7 @@ import System, {
 import Dust from './particles/Dust';
 import TextButton from './components/TextButton';
 
-export default function UfosWin() {
+export default function UfosWin({handleRestart}) {
 
   var map = new THREE.TextureLoader().load("./textures/dot.png");
   var material = new THREE.SpriteMaterial({

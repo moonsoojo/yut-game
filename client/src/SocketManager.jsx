@@ -128,6 +128,7 @@ export const SocketManager = () => {
       console.log(`[SocketManager] ${room.hostName}`)
       setHostName(room.hostName)
       setRoomId(room.id)
+      setThrown(room.thrown)
     })
     socket.on('client', (client) => {
       setClient(client);
@@ -171,7 +172,7 @@ export const SocketManager = () => {
       }
       console.log(`[SocketManager] [celebrate] ${event}`)
       setCelebrateText(text)
-      setCelebrateMeteors(true)
+      // setCelebrateMeteors(true)
       // setCelebrateText(text)
       if (!celebrateText) {
         setTimeout(() => {

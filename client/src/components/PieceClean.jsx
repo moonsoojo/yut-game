@@ -6,15 +6,16 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
 
-export default function Piece ({
+export default function PieceClean ({
   position,
   rotation,
   tile,
   team,
   id,
   scale,
+  hasValidMove,
+  isMyTurn
 }) {
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);

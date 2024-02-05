@@ -82,7 +82,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
               team={tiles[tile][0].team}
               id={value.id}
               key={index}
-              scale={1}
+              scale={0.8}
             />
           ))}
         </>

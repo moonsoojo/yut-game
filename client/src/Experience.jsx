@@ -58,6 +58,7 @@ import {
   roomIdAtom,
   hostNameAtom,
   selectionAtom,
+  thrownAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId, movesIsEmpty } from "./helpers/helpers.js";
@@ -85,6 +86,12 @@ export default function Experience({sprite}) {
       return "landscapeDesktop"
     }
   }
+
+  const {scene, camera} = useThree()
+  useEffect(() => {
+    // console.log(`[Experience] ${JSON.stringify(scene)}`)
+    // console.log(`[Experience] ${JSON.stringify(camera)}`)
+  }, [scene, camera])
 
   function initializeZoom() {
     if (window.innerWidth < landscapeMobileCutoff) {
@@ -195,6 +202,10 @@ export default function Experience({sprite}) {
   const [zoom, setZoom] = useState(initializeZoom());
   const [chatDimensions, setChatDimensions] = useState(initializeChatDimensions())
   
+  console.log(`[Experience] render`)
+  // THREE.ColorManagement.enabled = false;
+  // const renderer = useThree().gl;
+  // renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
@@ -205,13 +216,14 @@ export default function Experience({sprite}) {
   const [roomId] = useAtom(roomIdAtom)
   const [hostName] = useAtom(hostNameAtom)
   const [selection] = useAtom(selectionAtom)
+  const [thrown] = useAtom(thrownAtom)
   
   const piecesHighlightMat = useRef();
   useFrame((state, delta) => {
     if (client.id === getCurrentPlayerSocketId(turn, teams) 
     && !movesIsEmpty(teams[client.team].moves)
     && gamePhase === "game") {
-      if (piecesHighlightMat.current && !selection) {
+      if (piecesHighlightMat.current && !selection && !thrown) {
         piecesHighlightMat.current.opacity = Math.sin(state.clock.elapsedTime * 3) / 1.1
       }
     }
@@ -238,7 +250,6 @@ export default function Experience({sprite}) {
   for (let i = 0; i < numTiles; i++) {
     tileRefs[i] = useRef();
   }
-  const camera = useRef();
   // const orbitControls = useRef();
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
@@ -437,42 +448,14 @@ export default function Experience({sprite}) {
 
   const [joinTeam, setJoinTeam] = useState(null);
   const [showJoinTeam0Button, setShowJoinTeam0Button] = useState(true)
-  const [joinTeam0SubmitHover, setJoinTeam0SubmitHover] = useState(false)
-  const [joinTeam0CancelHover, setJoinTeam0CancelHover] = useState(false)
   // show both buttons
   // set the team you're joining
   function handleJoinTeam0 () {
     setJoinTeam(0);
   }
-  function handleJoinTeam0SubmitMouseEnter () {
-    setJoinTeam0SubmitHover(true)
-  }
-  function handleJoinTeam0SubmitMouseLeave () {
-    setJoinTeam0SubmitHover(false)
-  }
-  function handleJoinTeam0CancelMouseEnter () {
-    setJoinTeam0CancelHover(true)
-  }
-  function handleJoinTeam0CancelMouseLeave () {
-    setJoinTeam0CancelHover(false)
-  }
   const [showJoinTeam1Button, setShowJoinTeam1Button] = useState(true)
-  const [joinTeam1SubmitHover, setJoinTeam1SubmitHover] = useState(false)
-  const [joinTeam1CancelHover, setJoinTeam1CancelHover] = useState(false)
   function handleJoinTeam1 () {
     setJoinTeam(1)
-  }
-  function handleJoinTeam1SubmitMouseEnter () {
-    setJoinTeam1SubmitHover(true)
-  }
-  function handleJoinTeam1SubmitMouseLeave () {
-    setJoinTeam1SubmitHover(false)
-  }
-  function handleJoinTeam1CancelMouseEnter () {
-    setJoinTeam1CancelHover(true)
-  }
-  function handleJoinTeam1CancelMouseLeave () {
-    setJoinTeam1CancelHover(false)
   }
 
   // pre-condition: 'client' from 'clientAtom'

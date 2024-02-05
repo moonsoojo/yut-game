@@ -38,13 +38,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }
   let yootFloorMaterial = useRef();
 
-  useEffect(() => {
-    for (let i = 0; i < yootMeshes.length; i++) {
-      yootMeshes[i].current.material.roughness = 0.5
-      yootMeshes[i].current.material.metalness = 0
-    }
-  }, []);
-
   let RESET_TIME = 10000
   useEffect(() => {
     for (let i = 0; i < yootMeshes.length; i++) {
