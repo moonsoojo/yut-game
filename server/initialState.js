@@ -81,6 +81,7 @@ export default {
     spectators: [],
     selection: null,
     hostId: null,
+    hostName: '',
     // readyToStart: false,
     gamePhase: 'lobby',
     thrown: false,

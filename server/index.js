@@ -6,7 +6,7 @@ import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 
-import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, updateHostId, updateReadyToStart, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById } from './rooms.js';
+import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById, assignHost } from './rooms.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -37,7 +37,7 @@ app.use(cors());
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 // have to wait for the server create the room first
-let test = false;
+let test = true;
 if (test) {
   const roomId = 'aaa'
   addRoom({ id: roomId })
@@ -52,6 +52,8 @@ if (test) {
   }
   updateTurn(roomId, turn)
 
+  teams[0].moves['5'] = 1
+  teams[0].moves['4'] = 1
   teams[0].moves['3'] = 1
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
@@ -178,11 +180,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
       socket.join(spectator.room);
 
-      // this is emitted by 'room'
-
-      // if it's your turn
-      // and you have no moves or throws
-      // award a throw
+      try {
+        assignHost(roomId, socket.id)
+      } catch (err) {
+        console.log(`[joinRoom][no saved client] ${err}`)
+      }
       
       let { room, getRoomError } = getRoom(spectator.room)
       if (getRoomError) {
@@ -204,6 +206,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       // when bro and i joined another room, when bro joined, 
       // we didn't see each other. when we refreshed the page, we did
       const addedPlayer = addPlayer({ player: savedPlayer })
+      console.log(`addedPlayer ${JSON.stringify(addedPlayer)}`)
       socket.emit("client", addedPlayer)
 
       socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
@@ -227,7 +230,11 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
 
       console.log("[joinRoom] hostId", getHostId(roomId))
       if (getHostId(roomId) == null) { // if there's no host, there's only one player
-        updateHostId(roomId, socket.id)
+        try {
+          assignHost(roomId, socket.id)
+        } catch (err) {
+          console.log(`[joinRoom][no saved client] ${err}`)
+        }
       } else {
         let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
         if (isReadyToStartError) {
@@ -284,9 +291,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     )
 
     if (getHostId(roomId) == null) { // if there's no host, there's only one player
-      const { updateHostIdError } = updateHostId(roomId, socket.id)
-      if (updateHostIdError) {
-        return callback({ error: updateHostIdError })
+      try {
+        assignHost(roomId, socket.id)
+      } catch (err) {
+        console.log(`[joinRoom][no saved client] ${err}`)
       }
     } else {
       let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
@@ -470,11 +478,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       io.to(roomId).emit("turn", getTurn(roomId))
       io.to(roomId).emit("teams", getTeams(roomId))
       io.to(roomId).emit("gamePhase", getGamePhase(roomId))
-      
+
       io.to(roomId).emit("celebrate", 4);
     } else if (getGamePhase(roomId) === "game") {
       let turn = getTurn(roomId)
-      console.log("[recordThrow] turn.team", turn.team)
       addMove(roomId, turn.team, move.toString())
       if (movesIsEmpty(roomId, turn.team)) {
         clearMoves(roomId, turn.team)
@@ -485,6 +492,8 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         addThrow(roomId, turn.team);
         io.to(roomId).emit("celebrate", move);
       }
+      
+      io.to(roomId).emit("celebrate", 5);
       io.emit("teams", getTeams(roomId))
     }
   })
@@ -505,8 +514,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         // tell everyone in the room that user left
         if (countPlayers(room.id) > 0) {
           socket.broadcast.to(room.id).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
-          if (room.hostId === socket.id) {
-            updateHostId(room.id, findRandomPlayer(room.teams).id)
+          try {
+            assignHost(roomId, socket.id)
+          } catch (err) {
+            console.log(`[joinRoom][no saved client] ${err}`)
           }
 
           if (userFromRoom.team && countPlayersTeam(roomId, userFromRoom.team) == 0)

@@ -82,7 +82,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
               team={tiles[tile][0].team}
               id={value.id}
               key={index}
-              scale={0.7}
+              scale={1}
             />
           ))}
         </>
@@ -91,32 +91,22 @@ export default function Tile({ tile, wrapperRadius, device }) {
     return <></>
   }
 
-  const scaleOuterPlaceItHere = [2.5, 0.1, 1.3]
+  const scaleOuterPlaceItHere = [2.1, 0.1, 0.6]
   const scaleInnerPlaceItHere = [
     scaleOuterPlaceItHere[0]*0.93, 
     scaleOuterPlaceItHere[1]*1.1, 
     scaleOuterPlaceItHere[2]*0.9
   ]
   function Tip() {
-    return <group position={[0,2,-7]} scale={4}>
+    return <group position={layout[device].tips.placeHere.position} scale={4}>
       <Text3D
         font="/fonts/Luckiest Guy_Regular.json" 
-        size={0.3}
+        size={layout[device].tips.placeHere.size}
         height={0.01}
-        position={[-1.0,0.05,-0.1]}
+        position={[-0.9, 0.05, 0.1]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        Place the
-        <meshStandardMaterial color='green' />
-      </Text3D>
-      <Text3D 
-        font="/fonts/Luckiest Guy_Regular.json" 
-        size={0.3} 
-        height={0.01}
-        position={[-1,0.05,0.4]}
-        rotation={[-Math.PI/2, 0, 0]}
-      > 
-        unit here
+        Place here
         <meshStandardMaterial color='green' />
       </Text3D>
       <mesh
@@ -134,10 +124,10 @@ export default function Tile({ tile, wrapperRadius, device }) {
         <meshStandardMaterial color='yellow'/>
       </mesh>
       <HelperArrow
-        position={[0, 0, 1.1]}
+        position={[0.8, 0, 0.5]}
         rotation={[0, -Math.PI/2, -Math.PI/2]}
         color="green"
-        scale={2}
+        scale={[1, 0.8, 0.8]}
       />
     </group>
   }
@@ -165,10 +155,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
       </group>
       { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
       {/* { <Pointer tile={tile} color={"turquoise" } device={device} />} */}
-      { showTips 
-      && tile in legalTiles
-      && client.id === getCurrentPlayerSocketId(turn, teams)
-      && <Tip/>}
     </group>
   );
 }

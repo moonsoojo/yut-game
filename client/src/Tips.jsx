@@ -1,12 +1,13 @@
 import { useAtom } from 'jotai';
-import React from 'react';
-import { clientAtom, gamePhaseAtom, selectionAtom, showTipsAtom, teamsAtom, tipsFinishedAtom, turnAtom } from './SocketManager';
+import React, { useEffect } from 'react';
+import { clientAtom, gamePhaseAtom, legalTilesAtom, selectionAtom, showTipsAtom, teamsAtom, tipsFinishedAtom, turnAtom } from './SocketManager';
 import { Text3D } from '@react-three/drei';
 import { getCurrentPlayerSocketId, movesIsEmpty } from './helpers/helpers';
 import HelperArrow from './meshes/HelperArrow';
 import TextButton from './components/TextButton';
+import layout from './layout';
 
-export default function Tips() {
+export default function Tips({device}) {
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [turn] = useAtom(turnAtom)
   const [client] = useAtom(clientAtom)
@@ -14,8 +15,13 @@ export default function Tips() {
   const [selection] = useAtom(selectionAtom)
   const [tipsFinished] = useAtom(tipsFinishedAtom)
   const [_showTips, setShowTips] = useAtom(showTipsAtom)
+  const [legalTiles] = useAtom(legalTilesAtom)
   // display tooltips on tiles within Tiles && check legalTiles 
   // to place it above it
+
+  useEffect(() => {
+    console.log(`[Tips] ${tipsFinished}`)
+  }, [tipsFinished])
 
   const scaleOuterWhosFirst = [3.8, 0.1, 2]
   const scaleInnerWhosFirst = [
@@ -35,11 +41,11 @@ export default function Tips() {
     scaleOuterButtonWillAppear[1]*1.1, 
     scaleOuterButtonWillAppear[2]*0.9
   ]
-  const scaleOuterSelectAPiece = [2.2, 0.1, 2]
-  const scaleInnerSelectAPiece = [
-    scaleOuterSelectAPiece[0]*0.93, 
-    scaleOuterSelectAPiece[1]*1.1, 
-    scaleOuterSelectAPiece[2]*0.9
+  const scaleOuterSelectAUnit = [2, 0.1, 1.4]
+  const scaleInnerSelectAUnit = [
+    scaleOuterSelectAUnit[0]*0.93, 
+    scaleOuterSelectAUnit[1]*1.1, 
+    scaleOuterSelectAUnit[2]*0.9
   ]
   const scaleOuterThatsIt = [5.5, 0.1, 4]
   const scaleInnerThatsIt = [
@@ -47,9 +53,15 @@ export default function Tips() {
     scaleOuterThatsIt[1]*1.1, 
     scaleOuterThatsIt[2]*0.95
   ]
+  const scaleOuterPlaceItHere = [1.8, 0.1, 1]
+  const scaleInnerPlaceItHere = [
+    scaleOuterPlaceItHere[0]*0.93, 
+    scaleOuterPlaceItHere[1]*1.1, 
+    scaleOuterPlaceItHere[2]*0.9
+  ]
 
   function WhosFirst() {
-    return <group position={[-0.5,0.65,3.2]}>
+    return <group position={layout[device].tips.whosFirst.position}>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
@@ -198,48 +210,38 @@ export default function Tips() {
       </mesh>
     </group>
   }
-  function SelectAPiece() {
-    return <group position={[3.5,0.5,0.3]}>
+  function SelectAUnit() {
+    return <group position={layout[device].tips.selectAUnit.position}>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3}
         height={0.01}
-        position={[-0.9,0.05,-0.4]}
+        position={[-0.7,0.05,-0.1]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        select a
+        select
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3} 
         height={0.01}
-        position={[-0.9,0.05,0.1]}
+        position={[-0.7,0.05, 0.4]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        unit to
-        <meshStandardMaterial color='green' />
-      </Text3D>
-      <Text3D 
-        font="/fonts/Luckiest Guy_Regular.json" 
-        size={0.3} 
-        height={0.01}
-        position={[-0.9,0.05,0.6]}
-        rotation={[-Math.PI/2, 0, 0]}
-      > 
-        move
+        a unit
         <meshStandardMaterial color='green' />
       </Text3D>
       <mesh
         position={[0,0,0]}
-        scale={scaleInnerSelectAPiece}
+        scale={scaleInnerSelectAUnit}
       >
         <boxGeometry args={[1,1,1]} />
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh
         position={[0,0,0]}
-        scale={scaleOuterSelectAPiece}
+        scale={scaleOuterSelectAUnit}
       >
         <boxGeometry args={[1,1,1]} />
         <meshStandardMaterial color='yellow'/>
@@ -253,7 +255,7 @@ export default function Tips() {
     // open rulebook
   }
   function ThatsIt() {
-    return <group position={[0,0.6,-0.5]}>
+    return <group position={layout[device].tips.thatsIt.position}>
       <Text3D 
         font="/fonts/Luckiest Guy_Regular.json" 
         size={0.3}
@@ -261,7 +263,7 @@ export default function Tips() {
         position={[-2.4,0.05,-1.3]}
         rotation={[-Math.PI/2, 0, 0]}
       > 
-        That's it! The goal of
+        Great job! The goal of
         <meshStandardMaterial color='green' />
       </Text3D>
       <Text3D 
@@ -334,6 +336,50 @@ export default function Tips() {
       />
     </group>
   }
+  function PlaceHere() {
+    return <group position={layout[device].tips.placeHere.position} scale={2}>
+      <Text3D
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={layout[device].tips.placeHere.size}
+        height={0.01}
+        position={layout[device].tips.placeHere.line0Position}
+        rotation={[-Math.PI/2, 0, 0]}
+      > 
+        Click on
+        <meshStandardMaterial color='green' />
+      </Text3D>
+      <Text3D
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={layout[device].tips.placeHere.size}
+        height={0.01}
+        position={layout[device].tips.placeHere.line1Position}
+        rotation={[-Math.PI/2, 0, 0]}
+      > 
+        the lit tile
+        <meshStandardMaterial color='green' />
+      </Text3D>
+      <mesh
+        position={[0,0,0]}
+        scale={scaleInnerPlaceItHere}
+      >
+        <boxGeometry args={[1,1,1]} />
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh
+        position={[0,0,0]}
+        scale={scaleOuterPlaceItHere}
+      >
+        <boxGeometry args={[1,1,1]} />
+        <meshStandardMaterial color='yellow'/>
+      </mesh>
+      {/* <HelperArrow
+        position={[0.8, 0, 0.5]}
+        rotation={[0, -Math.PI/2, -Math.PI/2]}
+        color="green"
+        scale={[1, 0.8, 0.8]}
+      /> */}
+    </group>
+}
 
   return <>
   {/* pregame */}
@@ -354,11 +400,12 @@ export default function Tips() {
   && client.id === getCurrentPlayerSocketId(turn, teams) 
   && !movesIsEmpty(teams[turn.team].moves) 
   && selection === null 
-  && <SelectAPiece/>}
+  && <SelectAUnit/>}
   {/* { gamePhase === 'game' 
   && client.id !== getCurrentPlayerSocketId(turn, teams) 
   && <ButtonWillAppear/>} */}
   { tipsFinished
   && <ThatsIt/>}
+  { Object.keys(legalTiles) > 0 && <PlaceHere/>}
   </>
 }

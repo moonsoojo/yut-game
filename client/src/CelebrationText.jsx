@@ -3,6 +3,7 @@ import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { celebrateTextAtom, gamePhaseAtom } from './SocketManager';
+import Meteors from './particles/Meteors';
 import * as THREE from 'three';
 import { generateRandomNumberInRange } from './helpers/helpers';
 import System, {

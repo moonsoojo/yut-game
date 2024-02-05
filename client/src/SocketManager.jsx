@@ -24,49 +24,6 @@ export const socket = io(
 // doesn't work when another app is running on the same port
 
 export const yootThrowValuesAtom = atom(null)
-/*export const yootThrowValuesAtom = atom([
-  {
-    rotation: initialYootRotations[0],
-    positionInHand: initialYootPositions[0],
-    yImpulse: 0,
-    torqueImpulse: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  },
-  {
-    rotation: initialYootRotations[1],
-    positionInHand: initialYootPositions[1],
-    yImpulse: 0,
-    torqueImpulse: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  },
-  {
-    rotation: initialYootRotations[2],
-    positionInHand: initialYootPositions[2],
-    yImpulse: 0,
-    torqueImpulse: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  },
-  {
-    rotation: initialYootRotations[3],
-    positionInHand: initialYootPositions[3],
-    yImpulse: 0,
-    torqueImpulse: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  },
-]);*/
-
 export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
@@ -86,7 +43,10 @@ export const displayDisconnectAtom = atom(false)
 export const showTipsAtom = atom(true)
 export const tipsFinishedAtom = atom(false)
 export const celebrateTextAtom = atom(null)
+export const celebrateMeteorsAtom = atom(false)
 export const thrownAtom = atom(false)
+export const hostNameAtom = atom('')
+export const roomIdAtom = atom('')
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -98,6 +58,9 @@ export const SocketManager = () => {
   const [_turn, setTurn] = useAtom(turnAtom);
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
+  const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
+  const [_hostName, setHostName] = useAtom(hostNameAtom)
+  const [_roomId, setRoomId] = useAtom(roomIdAtom)
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -162,6 +125,9 @@ export const SocketManager = () => {
       setSelection(room.selection);
       // setReadyToStart(room.readyToStart)
       setWinner(room.winner)
+      console.log(`[SocketManager] ${room.hostName}`)
+      setHostName(room.hostName)
+      setRoomId(room.id)
     })
     socket.on('client', (client) => {
       setClient(client);
@@ -203,7 +169,9 @@ export const SocketManager = () => {
       } else if (event === 'capture') {
         text = 'capture'
       }
+      console.log(`[SocketManager] [celebrate] ${event}`)
       setCelebrateText(text)
+      setCelebrateMeteors(true)
       // setCelebrateText(text)
       if (!celebrateText) {
         setTimeout(() => {

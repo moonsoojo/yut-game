@@ -91,20 +91,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    // if (client
-    //   && isMyTurn(turn, teams, client.id)
-    //   && teams[turn.team].throws > 0) {
-    //     for (let i = 0; i < yootMeshes.length; i++) {
-    //       yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
-    //       yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
-    //     }
-    //     yootFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
-    // } else {
-    //   for (let i = 0; i < yootMeshes.length; i++) {
-    //     yootMeshes[i].current.material.emissiveIntensity = 0
-    //   }
-    //   yootFloorMaterial.current.opacity = 0
-    // }
     let allYootsOnFloor = true;
     for (let i = 0; i < yoots.length; i++) {
       if (yoots[i].current.translation().y < 0) {
@@ -154,9 +140,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         result = countUps
       }
       // test: set all result to the same value
-      if (gamePhase === "game") {
-        result = 5
-      }
+      // if (gamePhase === "game") {
+      //   result = 5
+      // }
     }
       
     return result

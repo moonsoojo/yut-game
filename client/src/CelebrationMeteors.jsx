@@ -2,7 +2,7 @@ import { Text3D } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { celebrateTextAtom, gamePhaseAtom } from './SocketManager';
+import { celebrateMeteorsAtom, gamePhaseAtom } from './SocketManager';
 import * as THREE from 'three';
 import { generateRandomNumberInRange } from './helpers/helpers';
 import System, {
@@ -24,29 +24,16 @@ import System, {
   ColorSpan,
 } from "three-nebula";
 
-export default function Celebration({sprite}) {
+export default function CelebrationMeteors({sprite}) {
 
   const text0Mat = useRef();
   const text1Mat = useRef();
   const text2Mat = useRef();
   const text3Mat = useRef();
-  const [celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
+  const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  const [fireTime, setFireTime] = useState(null)
-
-  useFrame((state, delta) => {
-    if (celebrateText && text0Mat.current !== undefined) {
-      text0Mat.current.opacity = Math.sin(state.clock.elapsedTime * 5)
-      text1Mat.current.opacity = Math.sin(state.clock.elapsedTime * 5)
-      text2Mat.current.opacity = Math.sin(state.clock.elapsedTime * 5)
-      text3Mat.current.opacity = Math.sin(state.clock.elapsedTime * 5)
-    } else {
-      text0Mat.current.opacity = 0
-      text1Mat.current.opacity = 0
-      text2Mat.current.opacity = 0
-      text3Mat.current.opacity = 0
-    }
-  })
+  const [expireTime, setExpireTime] = useState(0)
+  const [celebrateText, setCelebrateText] = useState('yoot')
 
   const { scene } = useThree();
 
@@ -88,7 +75,7 @@ export default function Celebration({sprite}) {
   colors.shouldRandomize = true
 
   useEffect(() => {
-    console.log("[Celebration] use effect")
+    console.log("[Celebration] no dependency use effect")
     system.current = new System();
     const renderer = new SpriteRenderer(scene, THREE);
     system.current.addRenderer(renderer)
@@ -105,7 +92,8 @@ export default function Celebration({sprite}) {
   }, [])
 
   useEffect(() => {
-    if (gamePhase !== "pregame" && (celebrateText === "yoot" || celebrateText ==="mo" || celebrateText==="capture")) {
+    console.log(`[CelebrationMeteors] ${celebrateMeteors}`)
+    if (celebrateMeteors) {
       for (let i = 0; i < numMeteors; i++) {
         const alpha = generateRandomNumberInRange(1, 0.4)
         const scale0 = generateRandomNumberInRange(1.5, 0.3)
@@ -159,21 +147,30 @@ export default function Celebration({sprite}) {
         // system.current.destroy();
       }
     }
-  }, [celebrateText])
+  }, [celebrateMeteors])
 
   let lifeTime = 7
   useFrame((state, delta) => {
-    if (!celebrateText) {
-      // pass
-    } else {
-      if (system.current) {
-        
-        if (!fireTime) {
-          console.log(`[Celebration] no fire time ${state.clock.elapsedTime}`)
-          setFireTime(state.clock.elapsedTime + lifeTime)
-        } else if (state.clock.elapsedTime > fireTime) {
-          console.log(`[Celebration] expired ${state.clock.elapsedTime}`)
-          setFireTime(null);
+    if (celebrateMeteors) {
+      if (expireTime == 0) {
+        console.log(`[CelebrationMeteors] expire time is 0`)
+        setExpireTime(state.clock.elapsedTime + lifeTime)
+      } else {
+        if (state.clock.elapsedTime < expireTime) {
+        console.log(`[CelebrationMeteors] not expired`)
+          if (system.current) {
+            system.current.update();
+            for (let i = 0; i < numMeteors; i++) {
+              if (emitters[i].current) {
+                emitters[i].current.position.x += (-delta * speeds.current[i][0])
+                emitters[i].current.position.z += (delta * speeds.current[i][1])
+              }
+            }
+          }
+        } else {
+          console.log(`[CelebrationMeteors] expired`)
+          setCelebrateMeteors(false)
+          setExpireTime(0)
           emitter0.current.destroy();
           emitter1.current.destroy();
           emitter2.current.destroy();
@@ -181,60 +178,11 @@ export default function Celebration({sprite}) {
           emitter4.current.destroy();
           emitter5.current.destroy();
           emitter6.current.destroy();
-        } else {
-          console.log(`[Celebration] firing`)
-          system.current.update();
-          for (let i = 0; i < numMeteors; i++) {
-            if (emitters[i].current) {
-              emitters[i].current.position.x += (-delta * speeds.current[i][0])
-              emitters[i].current.position.z += (delta * speeds.current[i][1])
-            }
-          }
         }
       }
     }
   })
 
   return <group>
-    <Text3D
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.3} 
-      height={0.01} 
-      position={[-2,0,-1]}
-      rotation={[-Math.PI/2,0,0, "YXZ"]}
-    >
-      <meshStandardMaterial transparent ref={text0Mat} color="green"/>
-      {celebrateText && "bonus"}
-    </Text3D>
-    <Text3D
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.3} 
-      height={0.01} 
-      position={[0.8,0,-1]}
-      rotation={[-Math.PI/2,0,0, "YXZ"]}
-    >
-      <meshStandardMaterial transparent ref={text1Mat} color="green"/>
-      {celebrateText && "bonus"}
-    </Text3D>
-    <Text3D
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.3} 
-      height={0.01} 
-      position={[0.8,0,1.5]}
-      rotation={[-Math.PI/2,0,0, "YXZ"]}
-    >
-      <meshStandardMaterial transparent ref={text2Mat} color="green"/>
-      {celebrateText && "bonus"}
-    </Text3D>
-    <Text3D
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.3} 
-      height={0.01} 
-      position={[-2,0,1.5]}
-      rotation={[-Math.PI/2,0,0, "YXZ"]}
-    >
-      <meshStandardMaterial transparent ref={text3Mat} color="green"/>
-      {celebrateText && "bonus"}
-    </Text3D>
   </group>
 }
