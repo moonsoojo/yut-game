@@ -71,6 +71,8 @@ let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
+export const cameraPosAtom = atom([0, 10, 3])
+
 export default function Experience() {
 
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
@@ -133,7 +135,17 @@ export default function Experience() {
     tileRefs[i] = useRef();
   }
   const camera = useRef();
+  const cameraIcon = useRef();
   // const orbitControls = useRef();
+
+  const [cameraPos, setCameraPos] = useAtom(cameraPosAtom)
+
+  useFrame((state, delta) => {
+    camera.current.position.x = 0
+    camera.current.position.y = 10
+    camera.current.position.z = 3
+    camera.current.lookAt(new THREE.Vector3(0,0,0))
+  })
 
   useEffect(() => {
     if (device !== "portrait") {
@@ -591,7 +603,7 @@ export default function Experience() {
   return (<>
     { winner == null && <group>
       {/* <Perf/> */}
-      <OrbitControls/>
+      {/* <OrbitControls/> */}
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -851,6 +863,7 @@ export default function Experience() {
     { winner == 1 && <UfosWin handleRestart={handleRestart}/> }
     {/* <Celebration/> */}
     {/* <Meteors/> */}
+    {/* HTML elements */}
     </>
   );
 }

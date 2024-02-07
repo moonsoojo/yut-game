@@ -11,6 +11,7 @@ import Showroom from './Showroom';
 import Meteors from './particles/Meteors';
 import { OrbitControls } from '@react-three/drei';
 import Celebration from './Celebration';
+import Interface from './Interface';
 
 export default function App () {
   return (<>
@@ -41,5 +42,6 @@ export default function App () {
         {/* <UfosWin/> */}
       </Route>
     </Canvas>
+    {/* <Interface/> */}
   </>)
 }
