@@ -5,7 +5,7 @@ import { useParams } from "wouter";
 import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 
-export default function JoinTeamModal({ position, team, setJoinTeam }) {
+export default function JoinTeamModal({ position, rotation, scale, team, setJoinTeam }) {
 
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
@@ -58,13 +58,17 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
   }
 
   return <group position={position}>
-    <Html>
+    <Html 
+      transform
+      position={position}
+      rotation={rotation}
+      scale={scale}
+    >
       <form
         onSubmit={e => handleJoinSubmit(e)}>
         <div style={{
           top: '40%',
           width: '240px',
-          height: '170px',
           backgroundColor: 'black',
           border: '2px solid yellow',
           padding: '20px'
@@ -90,7 +94,7 @@ export default function JoinTeamModal({ position, team, setJoinTeam }) {
             onChange={e => setName(e.target.value)}
             placeholder="here..."/>
           <div>
-            <p style={{ margin: '5px', color: 'red', fontFamily: 'Luckiest Guy', height: '20px' }}>
+            <p style={{ margin: '5px', color: 'red', fontFamily: 'Luckiest Guy' }}>
               {alert}
             </p>
           </div>

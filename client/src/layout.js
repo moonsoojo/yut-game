@@ -98,7 +98,9 @@ export default {
       }
     },
     joinTeamModal: {
-      position: [-1.2, 0, -1]
+      position: [0, 0, 0],
+      rotation: [-Math.PI/4, 0, 0],
+      scale: [1, 1, 1]
     },
     startTip: {
       position: [2, 0, 6.5],
@@ -406,7 +408,7 @@ export default {
     },
     team1: {
       scale: 1,
-      position: [-8, 0, -0.5],
+      position: [-8, 0, -0.75],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
       pieces: {
         position: [0.2, 0, 0.1]
@@ -537,7 +539,9 @@ export default {
       }
     },
     joinTeamModal: {
-      position: [-1.2, 0, -1]
+      position: [0, 0, 0],
+      rotation: [-Math.PI/4, 0, 0],
+      scale: [0.7, 0.7, 0.7]
     },
     actionButtons: {
       position: [1.5, 0, 16],

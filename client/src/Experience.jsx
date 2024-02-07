@@ -66,6 +66,7 @@ import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/Meteors.jsx";
+import DisconnectModal from "./DisconnectModal.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -507,15 +508,6 @@ export default function Experience() {
     }
   }
 
-  function handleDisconnectPointerDown(e) {
-    e.stopPropagation()
-    location.reload();
-  }
-
-  function handleDisconnectPointerUp(e) {
-    e.stopPropagation()
-  }
-
   const [showRulebook, setShowRulebook] = useState(false);
   function handleShowRulebook() {
     if (showRulebook) {
@@ -704,8 +696,9 @@ export default function Experience() {
           </group>
           {/* join modal */}
           { (joinTeam !== null) && <JoinTeamModal
-            // must pass string to access key in object
             position={layout[device].joinTeamModal.position}
+            rotation={layout[device].joinTeamModal.rotation}
+            scale={layout[device].joinTeamModal.scale}
             team={joinTeam}
             setJoinTeam={setJoinTeam}
             /> }
@@ -842,21 +835,11 @@ export default function Experience() {
           </group>}
         </group>}
       </group>
-      {displayDisconnect && <group>
-        <mesh position={[0,2,0]} onPointerDown={e => handleDisconnectPointerDown(e)} onPointerUp={e => handleDisconnectPointerUp(e)}>
-          <boxGeometry args={[200, 0.1, 200]}/>
-          <meshStandardMaterial color="black" transparent opacity={0.5}/>
-        </mesh>
-        <Text3D 
-          font="/fonts/Luckiest Guy_Regular.json" 
-          size={0.4} 
-          height={0.01} 
-          position={[-6,5,-5]}
-          rotation={[-Math.PI/2,0,0, "YXZ"]}
-        >
-          Disconnected. Please refresh
-        </Text3D>
-      </group>}
+      {displayDisconnect && <DisconnectModal
+        position={[0,0,0]}
+        rotation={[0,0,0]}
+        scale={[0.5,1.5,1]}
+      />}
       <Stars count={500} size={5}/>
     </group> }
     { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
