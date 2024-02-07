@@ -68,6 +68,7 @@ import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/Meteors.jsx";
 import DisconnectModal from "./DisconnectModal.jsx";
 import TutorialModal from "./TipsModal.jsx";
+import HtmlElement from "./HtmlElement.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -521,25 +522,15 @@ export default function Experience() {
     location.reload()
   }
 
-  const [showTips, setShowTips] = useState(false)
   function handleTips() {
-    if (showTips) {
-      setShowTips(false);
-    } else {
-      setShowTips(true);
-    }
   }
   function handleInvite() {
-
   }
   function handleDiscord() {
-
   }
   function handleRulebook() {
-
   }
   function handleSettings() {
-    
   }
   function SpectatorMessage({position}) {
     return <group position={position}>
@@ -623,13 +614,11 @@ export default function Experience() {
               color="red"
             />
             {/* join button */}
-            { client.team !== 0 && showJoinTeam0Button && <TextButton
+            { client.team !== 0 && showJoinTeam0Button && <HtmlElement
               text="JOIN"
-              boxWidth={0.9}
-              boxHeight={0.3}
-              color="yellow"
               position={layout[device].team0.join.position}
-              handlePointerClick={handleJoinTeam0}
+              handleClick={handleJoinTeam0}
+              fontSize={layout[device].team0.join.fontSize}
             /> }
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
@@ -664,14 +653,12 @@ export default function Experience() {
               color="turquoise"
             />
             {/* join button */}
-            { client.team !== 1 && showJoinTeam1Button && <TextButton
+            { client.team !== 1 && showJoinTeam1Button && <HtmlElement
               text="JOIN"
-              boxWidth={0.9}
-              boxHeight={0.3}
-              color="yellow"
               position={layout[device].team1.join.position}
-              handlePointerClick={handleJoinTeam1}
-            />}
+              handleClick={handleJoinTeam1}
+              fontSize={layout[device].team1.join.fontSize}
+            /> }
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
@@ -735,21 +722,18 @@ export default function Experience() {
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
-            <TextButton
-              text={`Rules`}
+
+            <HtmlElement
+              text='Rules'
               position={layout[device].rulebookButton.position}
-              handlePointerClick={handleRulebook}
-              size={layout[device].rulebookButton.size}
-              boxHeight={0.35}
-              boxWidth={1.2}
+              handleClick={handleRulebook}
+              fontSize={40}
             />
-            <TextButton
-              text={`Settings`}
+            <HtmlElement
+              text='Settings'
               position={layout[device].settings.position}
-              handlePointerClick={handleSettings}
-              size={layout[device].settings.size}
-              boxHeight={0.35}
-              boxWidth={1.8}
+              handleClick={handleSettings}
+              fontSize={40}
             />
             <TextButton
               text={`ROOM: ${roomId}`}
@@ -803,27 +787,23 @@ export default function Experience() {
               device={device}
             /> }
           {/* menu */}
-          <TextButton
+          <HtmlElement
             text={`Tips`}
-            position={layout[device].tips.button.position}
-            handlePointerClick={handleTips}
-            boxWidth={0.8}
-            boxHeight={0.35}
-            color={showTips ? 'green': 'yellow'}
+            position={layout[device].tips.button.position} 
+            fontSize={40}
+            handleClick={handleTips}
           />
-          <TextButton
+          <HtmlElement
             text={`Invite`}
-            position={layout[device].invite.position}
-            handlePointerClick={handleInvite}
-            boxWidth={1.25}
-            boxHeight={0.35}
+            position={layout[device].invite.position} 
+            fontSize={40}
+            handleClick={handleInvite}
           />
-          <TextButton
+          <HtmlElement
             text={`Discord`}
-            position={layout[device].discord.position}
-            handlePointerClick={handleDiscord}
-            boxWidth={1.55}
-            boxHeight={0.35}
+            position={layout[device].discord.position} 
+            fontSize={40}
+            handleClick={handleDiscord}
           />
           {/* RULEBOOK */}
           { device === "portrait" && <group>

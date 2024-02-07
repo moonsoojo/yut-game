@@ -405,7 +405,8 @@ export default {
         position: [0, 0, 1]
       },
       join: {
-        position: [2, 0, 0]
+        position: [2, 0, -0.3],
+        fontSize: 40
       },
       joinInput: {
         position: [2, 0, -0.42]
@@ -422,7 +423,8 @@ export default {
         position: [0, 0, 1]
       },
       join: {
-        position: [2, 0, 0]
+        position: [2, 0, -0.3],
+        fontSize: 40
       },
       joinInput: {
         position: [2, 0, -0.42]
@@ -448,11 +450,11 @@ export default {
       size: 0.2
     },
     rulebookButton: {
-      position: [5, 0, -3.5],
+      position: [4.9, 0, -4],
       size: 0.3
     },
     settings: {
-      position: [5.05, 0, -2.9],
+      position: [4.9, 0, -3.4],
       size: 0.3
     },
     throwCount: {
@@ -503,7 +505,7 @@ export default {
     },
     tips: {
       button: {
-        position: [-8, 0, 1.9]
+        position: [-8.1, 0, 1.4]
       },
       whosFirst: {
         position: [3,0.65,3.2]
@@ -561,10 +563,10 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-6.8, 0, 1.9]
+      position: [-7.1, 0, 1.4]
     },
     discord: {
-      position: [-5.1, 0, 1.9]
+      position: [-5.76, 0, 1.4]
     },
     moves: {
       text: [0,0,-1],

@@ -10,6 +10,7 @@ export default function TipsModal({ position, rotation, scale }) {
   function handleYesClick() {
     setAskTips(false);
     setTips(true);
+    document.body.style.cursor = "default";
   }
   function handlePointerEnter() {
     document.body.style.cursor = "pointer";
@@ -20,6 +21,7 @@ export default function TipsModal({ position, rotation, scale }) {
   function handleNoClick() {
     setAskTips(false);
     setTips(false);
+    document.body.style.cursor = "default";
   }
 
   return <group>
