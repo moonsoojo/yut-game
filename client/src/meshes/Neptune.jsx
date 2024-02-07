@@ -37,7 +37,7 @@ export default function Neptune({ position, tile, device, scale=0.36 }) {
         countSparkles2={6}
       />
       </group>
-      { tile != undefined && <Tile tile={tile} wrapperRadius={0.8} device={device}/> }
+      { tile != undefined && <Tile tile={tile} wrapperRadius={0.7} device={device}/> }
       {/* <HelperArrow  */}
     </group>
   );

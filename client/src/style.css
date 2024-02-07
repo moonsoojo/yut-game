@@ -9,3 +9,8 @@ body,
     height: 100%;
     background: rgb(0, 11, 24);
 }
+
+.r3f
+{
+    touch-action: none;
+}

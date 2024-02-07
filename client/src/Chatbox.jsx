@@ -4,10 +4,10 @@ import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useParams } from "wouter";
+import layout from "./layout";
 
-export default function Chatbox({ height, width, padding, fontSize, device, position }) {
+export default function Chatbox({ position, rotation, scale, device }) {
   const [messages] = useAtom(messagesAtom);
-  const [client] = useAtom(clientAtom);
   const [message, setMessage] = useState('');
   const params = useParams();
 
@@ -49,14 +49,18 @@ export default function Chatbox({ height, width, padding, fontSize, device, posi
     }
   }
 
-  return <Html position={position}>
-    
+  return <Html 
+    position={position}
+    rotation={rotation}
+    scale={scale}
+    transform
+  >
       <div style={{
-        'borderRadius': '5px',
-        'height': height,
-        'width': width,
-        'padding': padding,
-        'fontSize': fontSize,
+        borderRadius: layout[device].chat.box.borderRadius,
+        height: layout[device].chat.box.height,
+        width: layout[device].chat.box.width,
+        padding: layout[device].chat.box.padding,
+        fontSize: layout[device].chat.box.fontSize,
         'background': 'rgba(128, 128, 128, 0.3)',
         'overflowY': 'auto',
         'wordWrap': 'break-word'
@@ -76,11 +80,12 @@ export default function Chatbox({ height, width, padding, fontSize, device, posi
       <input 
         id='input-message'
         style={{ 
-          height: '20px',
-          borderRadius: '5px',
-          padding: padding,
-          border: 0,
-          width: width,
+          height: layout[device].chat.input.height,
+          borderRadius: layout[device].chat.input.borderRadius,
+          padding: layout[device].chat.input.padding,
+          border: layout[device].chat.input.border,
+          width: layout[device].chat.input.width,
+          fontSize: layout[device].chat.input.fontSize
         }} 
         onChange={e => setMessage(e.target.value)} 
         value={message}

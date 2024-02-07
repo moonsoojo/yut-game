@@ -7,10 +7,15 @@ import Home2 from './Home2';
 import RocketsWin from './RocketsWin';
 import UfosWin from './UfosWin';
 import Stars from './particles/Stars';
+import Showroom from './Showroom';
+import Meteors from './particles/Meteors';
+import { OrbitControls } from '@react-three/drei';
+import Celebration from './Celebration';
 
 export default function App () {
   return (<>
     <Canvas
+      className='r3f'
       camera={ {
         fov: 45,
         near: 0.1,
@@ -26,6 +31,8 @@ export default function App () {
       <Stars count={1000} size={0.2}/>
       <Route path="/">
         <Home2/>
+        {/* <Meteors/> */}
+        {/* <Celebration/> */}
       </Route>
       <Route path="/:id">
         <SocketManager/>
@@ -33,7 +40,6 @@ export default function App () {
         {/* <RocketsWin/> */}
         {/* <UfosWin/> */}
       </Route>
-      
     </Canvas>
   </>)
 }

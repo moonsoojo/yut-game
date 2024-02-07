@@ -61,23 +61,21 @@ import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
 import RocketsWin from "./RocketsWin.jsx";
-import Celebration from "./Celebration.jsx";
+import Celebration from "./particles/Meteors.jsx";
 import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
+import LetsPlayButton from "./LetsPlayButton.jsx";
+import Meteors from "./particles/Meteors.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
-
-
 
 export default function Experience() {
 
   function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
       return "portrait"
-    } else if (windowWidth < landscapeDesktopCutoff) {
-      return "landscapeMobile"
     } else {
       return "landscapeDesktop"
     }
@@ -88,8 +86,6 @@ export default function Experience() {
   const handleResize = () => {
     if (window.innerWidth < landscapeMobileCutoff) {
       setDevice("portrait")
-    } else if (window.innerWidth < landscapeDesktopCutoff) {
-      setDevice("landscapeMobile")
     } else {
       setDevice("landscapeDesktop")
     }
@@ -101,10 +97,6 @@ export default function Experience() {
   }, []);
 
   const [zoom, setZoom] = useState(50);
-  const [chatFontSize, setChatFontSize] = useState(0);
-  const [chatboxPadding, setChatboxPadding] = useState(0);
-  const [chatboxHeight, setChatboxHeight] = useState(0);
-  const [chatboxWidth, setChatboxWidth] = useState(0);
   function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
     return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
   }
@@ -144,11 +136,6 @@ export default function Experience() {
   // const orbitControls = useRef();
 
   useEffect(() => {
-    camera.current.lookAt(
-      layout[device].center[0] + layout[device].camera.lookAtOffset[0], 
-      layout[device].center[1] + layout[device].camera.lookAtOffset[1],  
-      layout[device].center[2] + layout[device].camera.lookAtOffset[2], 
-    )
     if (device !== "portrait") {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
@@ -157,66 +144,10 @@ export default function Experience() {
         mediaMax,
         window.innerWidth
       ))
-      setChatFontSize(calcScale(
-        layout[device].chat.fontSizeMin,
-        layout[device].chat.fontSizeMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
-      setChatboxPadding(calcScale(
-        layout[device].chat.paddingMin,
-        layout[device].chat.paddingMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
-      setChatboxHeight(calcScale(
-        layout[device].chat.heightMin,
-        layout[device].chat.heightMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
-      setChatboxWidth(calcScale(
-        layout[device].chat.widthMin,
-        layout[device].chat.widthMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
     } else {
       setZoom(calcScale(
         layout[device].camera.zoomMin,
         layout[device].camera.zoomMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-      setChatFontSize(calcScale(
-        layout[device].chat.fontSizeMin,
-        layout[device].chat.fontSizeMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-      setChatboxPadding(calcScale(
-        layout[device].chat.paddingMin,
-        layout[device].chat.paddingMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-      setChatboxHeight(calcScale(
-        layout[device].chat.heightMin,
-        layout[device].chat.heightMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-      setChatboxWidth(calcScale(
-        layout[device].chat.widthMin,
-        layout[device].chat.widthMax,
         0,
         landscapeMobileCutoff,
         window.innerWidth
@@ -660,7 +591,7 @@ export default function Experience() {
   return (<>
     { winner == null && <group>
       {/* <Perf/> */}
-      {/* <OrbitControls/> */}
+      <OrbitControls/>
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -673,7 +604,6 @@ export default function Experience() {
         position={layout[device].camera.position}
         ref={camera}
       />
-      <OrbitControls/>
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>
@@ -786,52 +716,26 @@ export default function Experience() {
           {/* yoot section */}
           <group>
             {/* START GAME text */}
-            {/* {( */}
             { readyToStart 
             && gamePhase === "lobby" 
-            && (
-              <TextButton
-                text="Start"
-                position={layout[device].startBanner.position}
-                size={layout[device].startBanner.fontSize}
-                boxWidth={layout[device].startBanner.boxWidth}
-                boxHeight={layout[device].startBanner.boxHeight}
-                handlePointerClick={handleStart}
-              />
-            )}
+            && <LetsPlayButton
+                position={layout[device].letsPlayButton.position}
+                size={layout[device].letsPlayButton.fontSize}
+            />}
             { gamePhase === "lobby" && <StartTip/> }
-            {/* { !readyToStart 
-            && gamePhase === "lobby" 
-            && (
-              <group>
-                <TextButton
-                  text="Start button"
-                  position={layout[device].startTip.line0Position}
-                  size={layout[device].startTip.fontSize}
-                />
-                <TextButton
-                  text="will appear"
-                  position={layout[device].startTip.line1Position}
-                  size={layout[device].startTip.fontSize}
-                />
-                <TextButton
-                  text="for the host."
-                  position={layout[device].startTip.line2Position}
-                  size={layout[device].startTip.fontSize}
-                />
-              </group>
-            )} */}
             <TextButton
-              text={`Phase: ${gamePhase}`}
+              text={`Phase: ${
+                gamePhase === "pregame" ? 'who first' : gamePhase
+              }`}
               position={layout[device].gamePhase.position}
               handlePointerClick={() => socket.emit("startGame")}
               size={layout[device].gamePhase.size}
             />
             <TextButton
               text={`Rules`}
-              position={layout[device].rulebook.position}
+              position={layout[device].rulebookButton.position}
               handlePointerClick={handleRulebook}
-              size={layout[device].gamePhase.size}
+              size={layout[device].rulebookButton.size}
               boxHeight={0.35}
               boxWidth={1.2}
             />
@@ -839,19 +743,19 @@ export default function Experience() {
               text={`Settings`}
               position={layout[device].settings.position}
               handlePointerClick={handleSettings}
-              size={layout[device].gamePhase.size}
+              size={layout[device].settings.size}
               boxHeight={0.35}
               boxWidth={1.8}
+            />
+            <TextButton
+              text={`ROOM: ${roomId}`}
+              position={layout[device].roomId.position}
+              size={layout[device].roomId.size}
             />
             <TextButton
               text={`HOST: ${hostName}`}
               position={layout[device].hostName.position}
               size={layout[device].hostName.size}
-            />            
-            <TextButton
-              text={`ROOM: ${roomId}`}
-              position={layout[device].roomId.position}
-              size={layout[device].roomId.size}
             />
             <Physics>
               <Yoots 
@@ -880,11 +784,6 @@ export default function Experience() {
               size={layout[device].turn.size}
               color={turn.team == 0 ? "red" : "turquoise"}
             />}
-            {(gamePhase === "pregame" || gamePhase === "game") 
-            && getCurrentPlayerSocketId(turn, teams) !== client.id
-            && client.team === undefined && <SpectatorMessage
-              position={layout[device].spectatorMessage.position}
-            />}
           </group>
           {/* pieces section */}
           <PiecesSection 
@@ -895,16 +794,14 @@ export default function Experience() {
           { !displayDisconnect &&
             <Chatbox
               position={layout[device].chat.position}
-              height={`${chatboxHeight.toString()}px`}
-              width={`${chatboxWidth.toString()}px`}
-              padding={`${chatboxPadding.toString()}px`}
-              fontSize={`${chatFontSize.toString()}px`}
+              rotation={layout[device].chat.rotation}
+              scale={layout[device].chat.scale}
               device={device}
             /> }
           {/* menu */}
           <TextButton
             text={`Tips`}
-            position={layout[device].tips.position}
+            position={layout[device].tips.button.position}
             handlePointerClick={handleTips}
             boxWidth={0.8}
             boxHeight={0.35}
@@ -914,25 +811,18 @@ export default function Experience() {
             text={`Invite`}
             position={layout[device].invite.position}
             handlePointerClick={handleInvite}
-            boxWidth={1.2}
+            boxWidth={1.25}
             boxHeight={0.35}
           />
           <TextButton
             text={`Discord`}
             position={layout[device].discord.position}
             handlePointerClick={handleDiscord}
-            boxWidth={1.5}
+            boxWidth={1.55}
             boxHeight={0.35}
           />
           {/* RULEBOOK */}
           { device === "portrait" && <group>
-            <TextButton
-              text={`Rulebook`}
-              position={layout[device].rulebook.button.position}
-              boxWidth={2}
-              boxHeight={0.4}
-              handlePointerClick={handleShowRulebook}
-            />
             { showRulebook  && <Rulebook2
               position={layout[device].rulebook.position}
               handleShow={handleShowRulebook}
@@ -955,11 +845,12 @@ export default function Experience() {
           Disconnected. Please refresh
         </Text3D>
       </group>}
+      <Stars count={500} size={5}/>
     </group> }
-    { (winner == 0) && <RocketsWin handleRestart={handleRestart}/> }
-    { (winner == 1) && <UfosWin handleRestart={handleRestart}/> }
+    { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
+    { winner == 1 && <UfosWin handleRestart={handleRestart}/> }
     {/* <Celebration/> */}
-    <Perf/>
+    {/* <Meteors/> */}
     </>
   );
 }

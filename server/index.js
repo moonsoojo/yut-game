@@ -161,6 +161,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     if (response.error) {
       return callback({ roomId: id, error: response.error })
     }
+    
     return callback({ roomId: id })
   })
 
@@ -248,7 +249,10 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       try {
         const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
         const turn = getTurn(roomId)
-        if (socket.id === currentPlayerId && movesIsEmpty(roomId, turn.team) && getThrows(roomId, turn.team) == 0 && getGamePhase(roomId) !== "lobby") {
+        if (socket.id === currentPlayerId 
+          && movesIsEmpty(roomId, turn.team) 
+          && getThrows(roomId, turn.team) == 0 
+          && getGamePhase(roomId) !== "lobby") {
           addThrow(roomId, getTurn(roomId).team)
         }
       } catch (err) {
@@ -357,6 +361,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
   })
 
   socket.on("startGame", (callback) => {
+    console.log(`[startGame]`)
     // updateReadyToStart(roomId, false)
     io.to(roomId).emit("readyToStart", false);
     let { room, getRoomError } = getRoom(roomId)

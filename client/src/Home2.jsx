@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Float, PresentationControls, Text3D } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 
@@ -18,10 +18,25 @@ import TextButton from './components/TextButton';
 import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
 
-// text colors to green like earth
+let mediaMax = 2560;
+let landscapeMobileCutoff = 550;
+let landscapeDesktopCutoff = 1000;
+
 export default function Home2() {
 
-  const device = "landscapeDesktop"
+  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
+  // let [fov, setFov] = useState(0);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+    console.log(`[Home2] ${device}`)
+    
+    console.log(window.innerWidth, window.innerHeight)
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(`[Home2] fov ${fov}`)
+  // }, [fov])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
@@ -31,6 +46,37 @@ export default function Home2() {
   const yoot2 = useRef()
   const yoot3 = useRef()
   const yoots = [yoot0, yoot1, yoot2, yoot3]
+
+  useFrame
+
+  function initializeDevice(windowWidth, landscapeMobileCutoff) {
+    if (windowWidth < landscapeMobileCutoff) {
+      return "portrait"
+    } else {
+      return "landscapeDesktop"
+    }
+  }
+
+  // asus monitor screen ratio: w / h 2560 / 1279
+  // first fov: 45
+  // let fovNormal = 35;
+  // let widthNormal = 2560
+  // let heightNormal = 1279
+  // let screenRatio = widthNormal / heightNormal
+  const handleResize = () => {
+    // let widthRatio = window.innerWidth / widthNormal
+    // let heightRatio = window.innerHeight / heightNormal
+    // if (widthRatio > heightRatio) {
+    //   setFov(fovNormal / heightRatio)
+    // } else {
+    //   setFov(fovNormal / widthRatio)
+    // }
+    if (window.innerWidth < landscapeMobileCutoff) {
+      setDevice("portrait")
+    } else {
+      setDevice("landscapeDesktop")
+    }
+  }
 
   function Tiles() {
     let tiles = [];
@@ -141,16 +187,16 @@ export default function Home2() {
   const { ufoRotation, ufoPosition } = useSpring({
     from: {
       ufoRotation: [-Math.PI/8,0,Math.PI * 1/4],
-      ufoPosition: [5, 2, -3]
+      ufoPosition: [4, 2, 4]
     },
     to: [
       {
         ufoRotation: [-Math.PI/8,0,Math.PI * -1/4],
-        ufoPosition: [3, 2, -3],
+        ufoPosition: [2, 2, 4],
       },
       {
         ufoRotation: [-Math.PI/8,0,Math.PI * 1/4],
-        ufoPosition: [5, 2, -3],
+        ufoPosition: [4, 2, 4],
       }
     ],
     config: {
@@ -161,13 +207,13 @@ export default function Home2() {
 
   function Pieces() {
     return <group>
-      <RocketAnimated position={[4,2,-5]} scale={0.5}/>
-      <RocketAnimated position={[0,2,-5]} scale={0.5}/>
-      <Float speed={5} floatIntensity={2}>
+      <RocketAnimated position={[4,2,0]} scale={0.5}/>
+      <RocketAnimated position={[-1,2,0]} scale={0.5}/>
+      <Float speed={3} floatIntensity={1}>
         <group rotation={[-Math.PI/12,0,0]}>
-          <UfoAnimated position={[-1.8, 2, -4]} scale={0.5}/>
-          <UfoAnimated position={[-3.4, 2, -4]} scale={0.5}/>
-          <UfoAnimated position={[-2.4, 2, -5.5]} scale={0.5}/>
+          <UfoAnimated position={[-1.5, 1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-2.5, 1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-2, 1, 4.2]} scale={0.5}/>
         </group>
       </Float>
       <UfoAnimated position={ufoPosition} scale={0.5} rotation={ufoRotation}/>
@@ -186,6 +232,7 @@ export default function Home2() {
       "XYZ"
     )
     camera.setRotationFromEuler(euler)
+    // camera.fov = fov
     
     // set position in index.jsx
     // console.log(camera.position)
@@ -194,18 +241,18 @@ export default function Home2() {
     // camera.lookAt(new Vector3(-0.311, -0.661, -0.683))
   })
 
-  function Yoots() {
-    return <animated.group 
-        scale={0.6} 
-        rotation={[Math.PI/4,Math.PI/2,0]}
-        position={[-7, 1, -5.5]}
-      >
-        <Float>
-          <Yoot scale={0.5} position={[0,0,0]}/>
-          <Yoot scale={0.5} position={[0,0,-1]}/>
-          <Yoot scale={0.5} position={[0,0,-2]}/>
-          <Yoot scale={0.5} position={[0,0,-3]}/>
-        </Float>
+  function Yoots({position, rotation, scale}) {
+    return <animated.group
+      position={position}
+      rotation={rotation}
+      scale={scale}
+    >
+      <Float floatIntensity={0.001} speed={2}>
+        <Yoot scale={0.5} position={[0,0,0]}/>
+        <Yoot scale={0.5} position={[0,0,-1]}/>
+        <Yoot scale={0.5} position={[0,0,-2]}/>
+        <Yoot scale={0.5} position={[0,0,-3]}/>
+      </Float>
     </animated.group>
   }
 
@@ -222,12 +269,12 @@ export default function Home2() {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
-  <group position={[-14,2,-2]} rotation={[-Math.PI/4,Math.PI/8,Math.PI/32]}>
+  <group position={layout[device].title.text.position} rotation={layout[device].title.text.rotation}>
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 
-      size={1.3} 
+      size={layout[device].title.text.size} 
       height={0.01} 
-      position={[0, 1.5, 0]}
+      position={layout[device].title.text.line0Position}
       // rotation={[-Math.PI/8,Math.PI/4,0]}
     >
       YOOT
@@ -235,50 +282,56 @@ export default function Home2() {
     </Text3D>
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 
-      size={1.3} 
+      size={layout[device].title.text.size} 
       height={0.01} 
-      position={[0, -0.5, 0]}
+      position={layout[device].title.text.line1Position}
       // rotation={[-Math.PI/8,Math.PI/4,0]}
     >
       GAME!
       <meshStandardMaterial color="yellow"/>
     </Text3D>
-    <Text3D 
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.7} 
-      height={0.01} 
-      position={[0, -3.5, 0]}
-      // rotation={[-Math.PI/8,Math.PI/4,0]}
-    >
-      ABOUT
-      <meshStandardMaterial color="yellow"/>
-    </Text3D>
-    <Text3D 
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.7} 
-      height={0.01} 
-      position={[0, -6.5, 0]}
-      // rotation={[-Math.PI/8,Math.PI/4,0]}
-    >
-      HOW TO PLAY
-      <meshStandardMaterial color="yellow"/>
-    </Text3D>
   </group>
-    <group>
+  { layout[device].title.about.show && <Text3D 
+    font="/fonts/Luckiest Guy_Regular.json" 
+    size={0.7} 
+    height={0.01} 
+    position={layout[device].title.about.position}
+    rotation={layout[device].title.about.rotation}
+  >
+    ABOUT
+    <meshStandardMaterial color="yellow"/>
+  </Text3D> }
+  <Text3D 
+    font="/fonts/Luckiest Guy_Regular.json" 
+    size={layout[device].title.howToPlay.size} 
+    height={0.01} 
+    position={layout[device].title.howToPlay.position}
+    rotation={layout[device].title.howToPlay.rotation}
+  >
+    HOW TO PLAY
+    <meshStandardMaterial color="yellow"/>
+  </Text3D>
+  <group>
+    <group scale={layout[device].title.letsPlay.scale}>
       <TextButton
         text="LET'S PLAY!"
-        position={[-2.2, 0, 2]}
-        rotation={[-Math.PI/2,0,0]}
+        position={layout[device].title.letsPlay.position}
+        rotation={layout[device].title.letsPlay.rotation}
         size={0.6} 
         boxHeight={0.8}
-        boxWidth={4.5}
+        boxWidth={4.2}
         handlePointerClick={handleLetsPlay}
       />
-      <group position={[0, 0, -5]}>
-        <Tiles/>
-      </group>
-      <Pieces/>
-      <Yoots/>
     </group>
+    <group position={layout[device].title.tiles.position} scale={layout[device].title.tiles.scale}>
+      <Tiles/>
+      <Pieces/>
+    </group>
+    <Yoots 
+      position={layout[device].title.yoots.position}
+      rotation={layout[device].title.yoots.rotation}
+      scale={layout[device].title.yoots.scale} 
+    />
+  </group>
   </PresentationControls>
 }

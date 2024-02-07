@@ -1,5 +1,5 @@
 
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom } from "../SocketManager";
+import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, thrownAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -23,6 +23,7 @@ export default function Piece ({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom)
+  const [thrown] = useAtom(thrownAtom)
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -46,7 +47,8 @@ export default function Piece ({
     if (gamePhase === "game" 
     && client.team == team 
     && isMyTurn(turn, teams, client.id) 
-    && hasValidMove(teams[team].moves) && selection == null) {
+    && hasValidMove(teams[team].moves) && selection == null
+    && !thrown) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
@@ -81,7 +83,8 @@ export default function Piece ({
     if (gamePhase === "game" && 
     client.team == team && 
     hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, client.id)) {
+    isMyTurn(turn, teams, client.id) &&
+    !thrown) {
       event.stopPropagation();
       if (selection == null) {
         let starting = tile == -1 ? true : false;

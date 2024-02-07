@@ -38,13 +38,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }
   let yootFloorMaterial = useRef();
 
-  useEffect(() => {
-    for (let i = 0; i < yootMeshes.length; i++) {
-      yootMeshes[i].current.material.roughness = 0.5
-      yootMeshes[i].current.material.metalness = 0
-    }
-  }, []);
-
   let RESET_TIME = 10000
   useEffect(() => {
     for (let i = 0; i < yootMeshes.length; i++) {
@@ -73,13 +66,13 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }, [yootThrowValues]);
 
   useEffect(() => {
-    console.log("[Yoots] sleepCount", sleepCount)
+    // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.visible = false
       }
       socket.emit("yootsAsleep", ({response}) => {
-        console.log("[yootsAsleep] response", response)
+        // console.log("[yootsAsleep] response", response)
         if (response === "record") {
           let move = observeThrow();
           socket.emit("recordThrow", {move})
@@ -91,20 +84,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }, [sleepCount])
 
   useFrame((state, delta) => {
-    if (client
-      && isMyTurn(turn, teams, client.id)
-      && teams[turn.team].throws > 0) {
-        for (let i = 0; i < yootMeshes.length; i++) {
-          yootMeshes[i].current.material.emissive = new THREE.Color( 'white' );
-          yootMeshes[i].current.material.emissiveIntensity = Math.sin(state.clock.elapsedTime * 3) * 0.3 + 0.3
-        }
-        yootFloorMaterial.current.opacity = Math.sin(state.clock.elapsedTime * 3) * 0.2
-    } else {
-      for (let i = 0; i < yootMeshes.length; i++) {
-        yootMeshes[i].current.material.emissiveIntensity = 0
-      }
-      yootFloorMaterial.current.opacity = 0
-    }
     let allYootsOnFloor = true;
     for (let i = 0; i < yoots.length; i++) {
       if (yoots[i].current.translation().y < 0) {
@@ -155,7 +134,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       }
       // test: set all result to the same value
       // if (gamePhase === "game") {
-      //   result = 3
+      //   result = 5
       // }
     }
       
@@ -163,7 +142,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   }
 
   function onSleepHandler() {
-    console.log("onSleepHandler")
+    // console.log("onSleepHandler")
     setSleepCount((count) => count+1);
   }
 
@@ -259,22 +238,19 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       </>}
       { gamePhase !== "lobby" 
       && getCurrentPlayerSocketId(turn, teams) === client.id 
-      && <group>
-      {/* {<group> */}
-        <TextButton
-          text='YOUR TURN!'
-          position={layout[device].yourTurn.position}
-          size={layout[device].turn.size}
-          color={client.team == 0 ? "red" : "turquoise"}
-        />
-        <YootButton 
-          position={buttonPos} 
-          rotation={[0, Math.PI/2, 0]}
-          handlePointerDown={handleYootThrow}
-          throws={teams[turn.team].throws}
-          scale={0.8}
-        />
-      </group>}
+      && <TextButton
+        text='YOUR TURN!'
+        position={layout[device].yourTurn.position}
+        size={layout[device].turn.size}
+        color={client.team == 0 ? "red" : "turquoise"}
+      />}
+      { gamePhase !== "lobby" && <YootButton 
+        position={buttonPos} 
+        rotation={[0, Math.PI/2, 0]}
+        handlePointerDown={handleYootThrow}
+        throws={teams[turn.team].throws}
+        scale={0.8}
+      />}
     </group>
   );
 }
