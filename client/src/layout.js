@@ -102,6 +102,11 @@ export default {
       rotation: [-Math.PI/4, 0, 0],
       scale: [1, 1, 1]
     },
+    disconnectModal: {
+      position: [0,0.1,0],
+      rotation: [0,0,0],
+      scale: [0.5,1.5,1]
+    },
     startTip: {
       position: [2, 0, 6.5],
       line0Position: [0,0,0],
@@ -542,6 +547,11 @@ export default {
       position: [0, 0, 0],
       rotation: [-Math.PI/4, 0, 0],
       scale: [0.7, 0.7, 0.7]
+    },
+    disconnectModal: {
+      position: [0,0.1,0],
+      rotation: [0,0,0],
+      scale: [0.5,1.5,1]
     },
     actionButtons: {
       position: [1.5, 0, 16],

@@ -67,12 +67,14 @@ import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/Meteors.jsx";
 import DisconnectModal from "./DisconnectModal.jsx";
+import TutorialModal from "./TipsModal.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
-export const cameraPosAtom = atom([0, 10, 3])
+export const askTipsAtom = atom(true)
+export const tipsAtom = atom(false)
 
 export default function Experience() {
 
@@ -113,6 +115,7 @@ export default function Experience() {
   const [winner] = useAtom(winnerAtom)
   const [hostName] = useAtom(hostNameAtom);
   const [roomId] = useAtom(roomIdAtom);
+  const [askTips] = useAtom(askTipsAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
@@ -135,12 +138,8 @@ export default function Experience() {
   for (let i = 0; i < numTiles; i++) {
     tileRefs[i] = useRef();
   }
+
   const camera = useRef();
-  const cameraIcon = useRef();
-  // const orbitControls = useRef();
-
-  const [cameraPos, setCameraPos] = useAtom(cameraPosAtom)
-
   useFrame((state, delta) => {
     camera.current.position.x = 0
     camera.current.position.y = 10
@@ -836,6 +835,11 @@ export default function Experience() {
         </group>}
       </group>
       {displayDisconnect && <DisconnectModal
+        position={layout[device].disconnectModal.position}
+        rotation={layout[device].disconnectModal.rotation}
+        scale={layout[device].disconnectModal.scale}
+      />}
+      {askTips && <TutorialModal
         position={[0,0,0]}
         rotation={[0,0,0]}
         scale={[0.5,1.5,1]}

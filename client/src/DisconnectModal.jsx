@@ -1,12 +1,11 @@
 import React from 'react';
-import { Html, Text3D } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 
 export default function DisconnectModal({ position, rotation, scale }) {
-  console.log(`DisconnectModal`)
+
   function handleDisconnectPointerDown(e) {
     e.stopPropagation()
   }
-
   function handleDisconnectPointerUp(e) {
     e.stopPropagation()
   }
@@ -16,7 +15,7 @@ export default function DisconnectModal({ position, rotation, scale }) {
   function handleRefreshEnter() {
     document.body.style.cursor = "pointer";
   }
-  function handleRefreshExit() {
+  function handleRefreshLeave() {
     document.body.style.cursor = "default";
   }
 
@@ -44,6 +43,7 @@ export default function DisconnectModal({ position, rotation, scale }) {
         fontSize: '30px',
         padding: '20px',
         color: 'yellow',
+        zIndex: '10'
       }}>
         Disconnected from server. Please refresh the page to reconnect.
         <div 
@@ -56,7 +56,7 @@ export default function DisconnectModal({ position, rotation, scale }) {
           }}
           onClick={handleRefreshClick}
           onPointerEnter={handleRefreshEnter}
-          onPointerLeave={handleRefreshExit}
+          onPointerLeave={handleRefreshLeave}
         >
           Refresh
         </div>
