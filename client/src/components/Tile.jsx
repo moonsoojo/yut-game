@@ -35,7 +35,6 @@ export default function Tile({ tile, wrapperRadius, device }) {
   function handlePointerDown(event) {
     event.stopPropagation();
     if (selection != null) {
-      
       if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", { destination: tile, moveInfo: legalTiles[tile] }, ({ error }) => {
@@ -76,7 +75,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
               team={tiles[tile][0].team}
               id={value.id}
               key={index}
-              scale={0.7}
+              scale={0.9}
             />
           ))}
         </>

@@ -24,20 +24,19 @@ export default {
       position: [0,20,3],
     },
     yootButton: {
-      position: [3,0,6.8]
+      position: [2.8,0,6.9]
     },
     title: {
       text: {
-        position: [-8,0,-6],
+        position: [-6.5,0,-8],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/24],
-        size: 1,
-        line0Position: [0, 1.5, 0],
-        line1Position: [0, 0, 0]
+        fontSize: 20,
+        scale: 3
       },
       letsPlay: {
-        position: [-7.7, 0, 3.7],
+        position: [-5.7, 0, 2],
         rotation: [-Math.PI/4 - Math.PI/32 * 2, Math.PI/8 - Math.PI/32 * 2, Math.PI/24],
-        scale: 0.7
+        fontSize: 30
       },
       tiles: {
         position: [-4.7, 0, -2],
@@ -49,32 +48,40 @@ export default {
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32]
       },
       howToPlay: {
-        position: [-5.5, 0, 3.4],
+        position: [-5.7, 0, 2.9],
         rotation: [-Math.PI/4 - Math.PI/32 * 2, Math.PI/8 - Math.PI/32 * 2, Math.PI/24],
-        size: 0.4
+        fontSize: 25
       },
       pieces: {
         position: [0,0,0],
         scale: 0.5
       },
       yoots: {
-        position: [-2.7, 0, -8.5],
+        position: [-2.4, 0, -8.4],
         rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.42
+        scale: 0.47
       }
     },
     team0: {
       scale: 1,
       position: [-4, 0, -7.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      title: {
+        position: [0,0,0],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
       pieces: {
-        position: [0.2, 0, 0.2]
+        position: [0.2, 0, 0.7]
       },
       names: {
-        position: [0, 0, 1.1]
+        position: [0, 0, 1.1],
+        rotation: [-Math.PI/2, 0, 0],
+        padding: '0px 15px 0px 0px',
+        divWidth: 150
       },
       join: {
-        position: [2, 0, 0]
+        position: [2, 0, 0.1],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       },
       joinInput: {
         position: [2, 0, -0.42]
@@ -84,28 +91,36 @@ export default {
       scale: 1,
       position: [0, 0, -7.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      title: {
+        position: [0,0,0],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
       pieces: {
-        position: [0.2, 0, 0.2]
+        position: [0.2, 0, 0.6]
       },
       names: {
-        position: [0, 0, 1.1]
+        position: [0, 0, 1.1],
+        rotation: [-Math.PI/2, 0, 0],
+        padding: '0px 15px 0px 0px',
+        divWidth: 150
       },
       join: {
-        position: [2, 0, 0]
+        position: [2, 0, 0.1],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       },
       joinInput: {
         position: [2, 0, -0.42]
       }
     },
     joinTeamModal: {
-      position: [0, 0, 0],
-      rotation: [-Math.PI/4, 0, 0],
+      position: [-1, 0, -0.7],
+      rotation: [-Math.PI/2, 0, 0],
       scale: [1, 1, 1]
     },
     disconnectModal: {
-      position: [0,0.1,0],
-      rotation: [0,0,0],
-      scale: [0.5,1.5,1]
+      position: [-2.3,0.1,-1],
+      rotation: [-Math.PI/2,0,0],
     },
     startTip: {
       position: [2, 0, 6.5],
@@ -121,19 +136,41 @@ export default {
       size: 0.24
     },
     throwCount: {
-      position: [2, 0, 4.7],
-      size: 0.24
+      position: [2, 0, 4.4],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13
+    },
+    gamePhase: {
+      position: [2, 0, 4.8],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13
     },
     turn: {
-      position: [2, 0, 5.5],
-      size: 0.24
+      position: [2, 0, 5.2],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13
     },
     yourTurn: {
-      position: [2, 0, 5.5],
+      position: [2, 0, 5.2],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13
+    },
+    startEarth: {
+      position: [0.5,0,4.5],
+      rotation: [-Math.PI/2, 0, 0],
+      helperArrow: {
+        position: [2,0,4],
+        rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/10,0],
+        color: 'limegreen',
+        scale: [0.2, 0.2, 0.6]
+      },
+      fontSize: 15
     },
     tips: {
       button: {
         position: [-4.3, 0, 3.5],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 13,
       },
       whosFirst: {
         position: [2.8, 1.2, 3.3]
@@ -152,27 +189,25 @@ export default {
         size: 0.2
       }
     },
-    gamePhase: {
-      position: [2, 0, 5.1],
-      size: 0.24
-    },
-    hostId: {
-      position: [5, 0, -3],
-      size: 0.3
+    hostName: {
+      position: [-4.1, 0, -4.5],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     roomId: {
-      position: [5, 0, -3.5],
-      size: 0.3
+      position: [-4.1, 0, -4.1],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-2.85,0,6.3],
+      position: [-4.35,0,5.3],
       rotation: [-Math.PI/2, 0, 0],
       scale: [0.5, 0.5, 0.5],
       box: {
         borderRadius: '5px',
-        height: '180px',
+        height: '150px',
         width: '200px',
         padding: '10px',
         fontSize: '20px',
@@ -206,8 +241,16 @@ export default {
       padding: 5
     },
     moves: {
-      text: [0,0,1.5],
-      list: [0,0,2]
+      text: {
+        position: [0, 0, 1.35],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15
+      },
+      list: {
+        position: [0, 0, 1.35],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15
+      },
     },
     tileRadius: {
       ring: 4,
@@ -253,46 +296,29 @@ export default {
       },
     },
     letsPlayButton: {
-      position: [2.3, -1.2, 6.5],
-      fontSize: 0.5,
-      boxWidth: 2,
-      boxHeight: 0.5,
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
+      position: [2,0,6.3],
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15,
     },
     invite: {
-      position: [-4.23,0,4.1],
+      position: [-4.3,0,4.1],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     discord: {
-      position: [-4.2, 0, 4.7]
+      position: [-4.3, 0, 4.7],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     rulebookButton: {
-      position: [3.5, 0, -3.4],
-      size: 0.3
+      position: [3.5, 0, -3.8],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     settings: {
-      position: [2.85, 0, -4],
-      size: 0.3
-    },
-    roomId: {
-      position: [-4.4, 0, -4],
-      size: 0.2
-    },
-    hostName: {
-      position: [-4.4, 0, -3.7],
-      size: 0.2
-    },
-    startEarth: {
-      position: [3,0,4],
-      helperArrow: {
-        position: [2,0,4],
-        rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/10,0],
-        color: 'limegreen',
-        scale: [0.2, 0.2, 0.6]
-      },
-      fontSize: 0.3,
-      boxWidth: 2.4,
-      boxHeight: 0.7,
-      rotation: [0, Math.PI / 2, 0],
+      position: [3, 0, -4.4],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     startGameBanner: {
       position: [2,0,10],
@@ -334,19 +360,18 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
-    joinTeam0Banner:  {
-      position: [5.5, 0, 4],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    joinTeam1Banner:  {
-      position: [5.5, 0, 2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
     tiles: {
       position: [-8, 0, 0],
       scale: 1
     },
-    textRotation: [-Math.PI / 2, 0, 0, "XZY"]
+    tipsModal: {
+      position: [-2.5,0,-0.9],
+      rotation: [-Math.PI/2,0,0],
+      height: 60,
+      padding: 10,
+      scale: [1,1,1],
+      fontSize: 15
+    },
   },
   landscapeDesktop: {
     center: [0,0,0],
@@ -358,16 +383,15 @@ export default {
     },
     title: {
       text: {
-        position: [-14,2,-2],
+        position: [-12.5,2,-3],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
-        size: 1.3,
-        line0Position: [0, 1.5, 0],
-        line1Position: [0, -0.5, 0]
+        fontSize: 20,
+        scale: 3.6,
       },
       board: {
       },
       letsPlay: {
-        position: [-2.2, 0, 2],
+        position: [-2.2, 0, 1.4],
         rotation: [-Math.PI/2,0,0]
       },
       tiles: {
@@ -376,20 +400,21 @@ export default {
       },
       about: {
         show: true,
-        position: [-14,-1.5,0],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32]
+        position: [-14,0,0],
+        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        fontSize: 40
       },
       howToPlay: {
-        position: [-14,-4.5,2],
+        position: [-14,-1.5,1.5],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
-        size: 0.7
+        fontSize: 40
       },      
       pieces: {
         position: [0,0,0],
         scale: 1
       },
       yoots: {
-        position: [-7, 1, -5.5],
+        position: [-7.5, 1, -4.5],
         rotation: [Math.PI/4,Math.PI/2,0],
         scale: 0.6
       }
@@ -397,115 +422,129 @@ export default {
     team0: {
       scale: 1,
       position: [-8, 0, -3.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      title: {
+        position: [0,0,0],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
       pieces: {
-        position: [0.2, 0, 0.2]
+        position: [0.23, 0, 0.6]
       },
       names: {
-        position: [0, 0, 1]
+        position: [0, 0, 1],
+        rotation: [-Math.PI/2, 0, 0],
+        padding: '0px 15px 0px 0px',
+        divWidth: 200
       },
       join: {
-        position: [2, 0, -0.3],
-        fontSize: 40
+        position: [2, 0, 0.15],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       },
-      joinInput: {
-        position: [2, 0, -0.42]
-      }
     },
     team1: {
       scale: 1,
-      position: [-8, 0, -0.75],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      position: [-8, 0, -1],
+      title: {
+        position: [0,0,0],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
       pieces: {
-        position: [0.2, 0, 0.1]
+        position: [0.3, 0, 0.5]
       },
       names: {
-        position: [0, 0, 1]
+        position: [0, 0, 1],
+        rotation: [-Math.PI/2, 0, 0],
+        padding: '0px 15px 0px 0px',
+        divWidth: 200
       },
       join: {
-        position: [2, 0, -0.3],
-        fontSize: 40
+        position: [2, 0, 0.15],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       },
       joinInput: {
         position: [2, 0, -0.42]
       }
     },
     yootButton: {
-      position: [6,0,3]
+      position: [5.8,0,3.2]
     },
     gamePhase: {
       position: [5, 0, -2],
-      size: 0.3
-    },
-    hostId: {
-      position: [5, 0, -3],
-      size: 0.3
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      fontSize: 15
     },
     roomId: {
-      position: [-3.5, 0, -3.3],
-      size: 0.2
+      position: [-4.5, 0, -3.1],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     hostName: {
-      position: [-3.5, 0, -3.7],
-      size: 0.2
+      position: [-4.5, 0, -3.5],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 13,
     },
     rulebookButton: {
-      position: [4.9, 0, -4],
-      size: 0.3
+      position: [5, 0, -3.5],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 15,
     },
     settings: {
-      position: [4.9, 0, -3.4],
-      size: 0.3
+      position: [5, 0, -2.8],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 15,
     },
     throwCount: {
       position: [5, 0, -1.5],
-      size: 0.3
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15
     },
     turn: {
-      position: [5, 0, 1.7],
-      size: 0.3
+      position: [5, 0, 1.5],
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15
+    },
+    yourTurn: {
+      position: [5, 0, 1.5],
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15
     },
     piecesSection: {
       position: [5, 0, 0],
       scale: 1
     },
     startEarth: {
-      position: [0.6, 0, 6.6],
+      position: [0.6, 0, 3.6],
+      rotation: [-Math.PI/2, 0, 0],
       helperArrow: {
-        position: [2.7,0,5],
+        position: [1.6,0,3.1],
         rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/12,0],
         color: 'limegreen',
-        scale: [0.25, 0.25, 0.75]
+        scale: [0.2, 0.2, 0.6]
       },
-      fontSize: 0.6,
-      boxWidth: 2.4,
-      boxHeight: 0.7,
-      rotation: [0, Math.PI / 2, 0],
+      fontSize: 15,
     },
     letsPlayButton: {
-      position: [5, 0, 2.5],
-      fontSize: 0.6,
-      boxWidth: 2.4,
-      boxHeight: 0.6,
-      rotation: [0, Math.PI / 2, 0],
+      position: [5,0,2.5],
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15,
     },
     startTip: {
-      position: [4.5, 0, 2],
+      position: [5, 0, 2],
+      rotation: [-Math.PI / 2, 0, 0],
       line0Position: [0,0,0],
       line1Position: [0,0,0.5],
       line2Position: [0,0,1],
-      fontSize: 0.3,
-      rotation: [0, Math.PI / 2, 0],
+      fontSize: 15,
     },
     spectatorMessage: {
       position: [4.5, 0, 2.5]
     },
-    yourTurn: {
-      position: [5, 0, 1.7]
-    },
     tips: {
       button: {
-        position: [-8.1, 0, 1.4]
+        position: [-8, 0, 1.35],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15
       },
       whosFirst: {
         position: [3,0.65,3.2]
@@ -527,13 +566,13 @@ export default {
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
     chat: {
-      position: [-5.5,0,3.1],
+      position: [-8,0,2],
       rotation: [-Math.PI/2, 0, 0],
       scale: [0.5, 0.5, 0.5],
       box: {
         borderRadius: '5px',
-        height: '120px',
-        width: '400px',
+        height: '110px',
+        width: '350px',
         padding: '10px',
         fontSize: '20px',
       },
@@ -542,18 +581,23 @@ export default {
         borderRadius: '5px',
         padding: '10px',
         border: 0,
-        width: '400px',
       }
     },
     joinTeamModal: {
-      position: [0, 0, 0],
-      rotation: [-Math.PI/4, 0, 0],
-      scale: [0.7, 0.7, 0.7]
+      position: [-1, 0, -0.7],
+      rotation: [-Math.PI/2, 0, 0],
     },
     disconnectModal: {
-      position: [0,0.1,0],
-      rotation: [0,0,0],
-      scale: [0.5,1.5,1]
+      position: [-2.6,0.1,-1],
+      rotation: [-Math.PI/2,0,0],
+    },
+    tipsModal: {
+      position: [-2.5,0,-0.9],
+      rotation: [-Math.PI/2,0,0],
+      height: 60,
+      padding: 10,
+      scale: [1,1,1],
+      fontSize: 15
     },
     actionButtons: {
       position: [1.5, 0, 16],
@@ -563,15 +607,26 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-7.1, 0, 1.4]
+      position: [-7, 0, 1.35],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 15
     },
     discord: {
-      position: [-5.76, 0, 1.4]
+      position: [-5.65, 0, 1.35],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 15
     },
     moves: {
-      text: [0,0,-1],
-      list: [1.5, 0, -1],
-      // size: 0.3
+      text: {
+        position: [0, 0, 1],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15
+      },
+      list: {
+        position: [1.4, 0, 1],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15
+      },
     },
     tiles: {
       position: [-8, 0, 0],
@@ -660,21 +715,6 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
-    team0Banner: {
-      position: [-12, 0, 3],
-    },
-    team1Banner: {
-      position: [-8, 0, 3],
-    },
-    joinTeam0Banner:  {
-      position: [5.5, 0, 4],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    joinTeam1Banner:  {
-      position: [5.5, 0, 2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
   landscapeMobile: {
     center: [-5.3, 0, -2.5],
@@ -741,7 +781,8 @@ export default {
         position: [0, 0, 1]
       },
       join: {
-        position: [2, 0, 0]
+        position: [2, 0, 0],
+        rotation: [-Math.PI / 2, 0, 0, "XZY"],
       }
     },
     team1: {
@@ -768,11 +809,8 @@ export default {
     },
     gamePhase: {
       position: [-0.8, 0, -1.9],
-      size: 0.24
-    },
-    hostId: {
-      position: [5, 0, -3],
-      size: 0.3
+      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      fontSize: 15
     },
     roomId: {
       position: [5, 0, -3.5],
@@ -780,6 +818,7 @@ export default {
     },
     rulebookButton: {
       position: [5, 0, -3.5],
+      rotation: [-Math.PI/2, 0, 0],
       size: 0.3
     },
     settings: {
@@ -856,11 +895,9 @@ export default {
       },
     },
     letsPlayButton: {
-      position: [-0.8, -1.2, -5],
-      fontSize: 0.6,
-      boxWidth: 2.4,
-      boxHeight: 0.7,
-      rotation: [0, Math.PI / 2, 0],
+      position: [0,0,0],
+      rotation: [-Math.PI / 2, 0, 0],
+      fontSize: 15,
     },
     invite: {
       position: [-6.8, 0, 1.9]
@@ -877,14 +914,15 @@ export default {
       rotation: [0, Math.PI / 2, 0],
     },
     startEarth: {
-      position: [-0.8, -1.2, -5],
+      position: [-0.8, -1.2, 0],
+      rotation: [-Math.PI/2, 0, 0],
       helperArrow: {
         position: [1.2,0,5.8],
         rotation: [Math.PI/2,0,-Math.PI * (5/8)],
         color: 'yellow',
         scale: 2
       },
-      fontSize: 0.6,
+      fontSize: 15,
       boxWidth: 2.4,
       boxHeight: 0.7,
       rotation: [0, Math.PI / 2, 0],
@@ -929,20 +967,5 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
-    team0Banner: {
-      position: [-12, 0, 3],
-    },
-    team1Banner: {
-      position: [-8, 0, 3],
-    },
-    joinTeam0Banner:  {
-      position: [5.5, 0, 4],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    joinTeam1Banner:  {
-      position: [5.5, 0, 2],
-      rotation: [0, Math.PI / 2, Math.PI / 2, "XZY"],
-    },
-    textRotation: [-Math.PI / 2, 0, 0, "XZY"]
   },
 };

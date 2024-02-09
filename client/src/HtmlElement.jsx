@@ -7,9 +7,9 @@ export default function HtmlElement({
   scale, 
   text, 
   fontSize,
-  handleClick
+  handleClick,
+  color="yellow"
 }) {
-  console.log(`[HtmlElement] ${text} ${handleClick}`)
   function handlePointerEnter() {
     if (handleClick) {
       document.body.style.cursor = "pointer";
@@ -24,20 +24,24 @@ export default function HtmlElement({
     position={position}
     rotation={rotation}
     scale={scale}
+    transform
   >
     <div
       style={{
-        border: '3px solid yellow',
-        padding: '5px 10px',
+        border: handleClick ? `1px solid ${color}` : '',
+        padding: '2px',
         fontFamily: 'Luckiest Guy',
-        color: 'yellow',
-        fontSize: `${fontSize}px`
+        color: color,
+        fontSize: `${fontSize}px`,
+        position: 'absolute',
+        width: 'fit-content',
+        whiteSpace: 'nowrap'
       }}  
       onPointerDown={handleClick}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >
-      {text}
+      {text} 
     </div>
   </Html>
 }

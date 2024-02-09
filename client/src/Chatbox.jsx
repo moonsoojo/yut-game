@@ -55,6 +55,9 @@ export default function Chatbox({ position, rotation, scale, device }) {
     scale={scale}
     transform
   >
+    <div style={{
+      position: 'absolute'
+    }}>
       <div style={{
         borderRadius: layout[device].chat.box.borderRadius,
         height: layout[device].chat.box.height,
@@ -63,7 +66,7 @@ export default function Chatbox({ position, rotation, scale, device }) {
         fontSize: layout[device].chat.box.fontSize,
         'background': 'rgba(128, 128, 128, 0.3)',
         'overflowY': 'auto',
-        'wordWrap': 'break-word'
+        'wordWrap': 'break-word',
       }}>
         <ScrollToBottom className="messages">
         {messages.map((value, index) => 
@@ -75,22 +78,22 @@ export default function Chatbox({ position, rotation, scale, device }) {
         {/* <div ref={messagesEndRef} /> */}
         </ScrollToBottom>
       </div>
-    
-    <form onSubmit={(e) => onMessageSubmit(e)}>
-      <input 
-        id='input-message'
-        style={{ 
-          height: layout[device].chat.input.height,
-          borderRadius: layout[device].chat.input.borderRadius,
-          padding: layout[device].chat.input.padding,
-          border: layout[device].chat.input.border,
-          width: layout[device].chat.input.width,
-          fontSize: layout[device].chat.input.fontSize
-        }} 
-        onChange={e => setMessage(e.target.value)} 
-        value={message}
-        placeholder="say something..."
-      />
-    </form>
+      <form onSubmit={(e) => onMessageSubmit(e)}>
+        <input 
+          id='input-message'
+          style={{ 
+            height: layout[device].chat.input.height,
+            borderRadius: layout[device].chat.input.borderRadius,
+            padding: layout[device].chat.input.padding,
+            border: layout[device].chat.input.border,
+            width: layout[device].chat.box.width,
+            fontSize: layout[device].chat.input.fontSize
+          }} 
+          onChange={e => setMessage(e.target.value)} 
+          value={message}
+          placeholder="say something..."
+        />
+      </form>
+    </div>
   </Html>
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Float, PresentationControls, Text3D } from "@react-three/drei";
+import { Float, Html, PresentationControls, Text3D } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 
 import Earth from './meshes/Earth';
@@ -14,9 +14,10 @@ import UfoAnimated from './meshes/UfoAnimated';
 import { useFrame } from '@react-three/fiber';
 import { Euler } from 'three';
 import Yoot from './meshes/Yoot';
-import TextButton from './components/TextButton';
 import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
+import HtmlElement from './HtmlElement';
+import HowToPlay from './HowToPlay';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -46,8 +47,7 @@ export default function Home2() {
   const yoot2 = useRef()
   const yoot3 = useRef()
   const yoots = [yoot0, yoot1, yoot2, yoot3]
-
-  useFrame
+  const [display, setDisplay] = useState('board')
 
   function initializeDevice(windowWidth, landscapeMobileCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
@@ -261,6 +261,9 @@ export default function Home2() {
   function handleLetsPlay() {
     setLocation(`/${(makeId(5)).toUpperCase()}`)
   }
+  function handleHowToPlay() {
+    setDisplay('howToPlay');
+  }
   
   return <PresentationControls
     global
@@ -269,69 +272,70 @@ export default function Home2() {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
-  <group position={layout[device].title.text.position} rotation={layout[device].title.text.rotation}>
-    <Text3D 
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={layout[device].title.text.size} 
-      height={0.01} 
-      position={layout[device].title.text.line0Position}
-      // rotation={[-Math.PI/8,Math.PI/4,0]}
+  <group 
+    position={layout[device].title.text.position} 
+    rotation={layout[device].title.text.rotation}
+    scale={layout[device].title.text.scale}
+  >
+    <Html 
+      transform
     >
-      YOOT
-      <meshStandardMaterial color="yellow"/>
-    </Text3D>
-    <Text3D 
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={layout[device].title.text.size} 
-      height={0.01} 
-      position={layout[device].title.text.line1Position}
-      // rotation={[-Math.PI/8,Math.PI/4,0]}
-    >
-      GAME!
-      <meshStandardMaterial color="yellow"/>
-    </Text3D>
+      <div
+        style={{
+          fontFamily: 'Luckiest Guy',
+          fontSize: `${layout[device].title.text.fontSize}px`,
+          color: 'yellow'
+        }}>
+        <div>YOOT</div>
+        <div>GAME!</div>
+      </div>
+    </Html> 
   </group>
-  { layout[device].title.about.show && <Text3D 
+  <Yoots 
+    position={layout[device].title.yoots.position}
+    rotation={layout[device].title.yoots.rotation}
+    scale={layout[device].title.yoots.scale} 
+  />
+  { layout[device].title.about.show && <HtmlElement 
     font="/fonts/Luckiest Guy_Regular.json" 
-    size={0.7} 
-    height={0.01} 
     position={layout[device].title.about.position}
     rotation={layout[device].title.about.rotation}
+    fontSize={layout[device].title.about.fontSize} 
+    text='about'
   >
     ABOUT
     <meshStandardMaterial color="yellow"/>
-  </Text3D> }
-  <Text3D 
-    font="/fonts/Luckiest Guy_Regular.json" 
-    size={layout[device].title.howToPlay.size} 
-    height={0.01} 
+  </HtmlElement> }
+  <HtmlElement
     position={layout[device].title.howToPlay.position}
     rotation={layout[device].title.howToPlay.rotation}
+    fontSize={layout[device].title.howToPlay.fontSize} 
+    handleClick={handleHowToPlay}
+    text='how to play'
   >
     HOW TO PLAY
-    <meshStandardMaterial color="yellow"/>
-  </Text3D>
+  </HtmlElement>
   <group>
     <group scale={layout[device].title.letsPlay.scale}>
-      <TextButton
+      <HtmlElement
         text="LET'S PLAY!"
         position={layout[device].title.letsPlay.position}
         rotation={layout[device].title.letsPlay.rotation}
-        size={0.6} 
-        boxHeight={0.8}
-        boxWidth={4.2}
-        handlePointerClick={handleLetsPlay}
+        fontSize={25}
+        handleClick={handleLetsPlay}
       />
     </group>
-    <group position={layout[device].title.tiles.position} scale={layout[device].title.tiles.scale}>
-      <Tiles/>
-      <Pieces/>
-    </group>
-    <Yoots 
-      position={layout[device].title.yoots.position}
-      rotation={layout[device].title.yoots.rotation}
-      scale={layout[device].title.yoots.scale} 
-    />
+    <group
+      position={layout[device].title.tiles.position} 
+      scale={layout[device].title.tiles.scale}
+    >
+      { display === 'board' && <group 
+      >
+        <Tiles/>
+        <Pieces/>
+      </group>}
+      { display === 'howToPlay' && <HowToPlay/>}
+    </group>  
   </group>
   </PresentationControls>
 }

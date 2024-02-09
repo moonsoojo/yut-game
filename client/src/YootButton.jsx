@@ -28,11 +28,6 @@ export default function YootButton({
   const [teams] = useAtom(teamsAtom)
   const [thrown] = useAtom(thrownAtom)
 
-  const yoot0 = useRef();
-  const yoot1 = useRef();
-  const yoot2 = useRef();
-  const yoot3 = useRef();
-
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
   const scaleYoot = 0.15
@@ -86,7 +81,6 @@ export default function YootButton({
           material={yootMaterials["Texture wrap.005"]}
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
-          ref={yoot0}
         >
           { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
@@ -98,7 +92,6 @@ export default function YootButton({
           material={yootMaterials["Texture wrap.005"]}
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
-          ref={yoot1}
           >
           { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
@@ -110,7 +103,6 @@ export default function YootButton({
           material={yootMaterials["Texture wrap.005"]}
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
-          ref={yoot2}
           >
           { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>
@@ -122,7 +114,6 @@ export default function YootButton({
           material={yootMaterials["Texture wrap.005"]}
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
-          ref={yoot3}
           >
           { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
         </mesh>

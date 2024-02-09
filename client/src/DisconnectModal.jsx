@@ -32,26 +32,28 @@ export default function DisconnectModal({ position, rotation, scale }) {
       transform
       position={position}
       rotation={rotation}
-      scale={scale}
     >
       <div style={{
-        width: '400px',
-        height: '200px',
-        border: '3px solid yellow',
+        width: '180px',
+        height: '100px',
+        border: '1px solid yellow',
         background: 'black',
         fontFamily: 'Luckiest Guy',
-        fontSize: '30px',
-        padding: '20px',
+        fontSize: '15px',
+        padding: '10px',
         color: 'yellow',
-        zIndex: '10'
+        zIndex: '10',
+        position: 'absolute'
       }}>
         Disconnected from server. Please refresh the page to reconnect.
         <div 
           style={{
-            border: '3px solid yellow',
+            border: '1px solid yellow',
             width: 'fit-content',
             padding: '5px',
-            margin: '30px 130px',
+            position: 'absolute',
+            left: '67px',
+            top: '75px',
             color: 'yellow'
           }}
           onClick={handleRefreshClick}

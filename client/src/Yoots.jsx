@@ -10,11 +10,11 @@ import { getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
+import HtmlElement from "./HtmlElement.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
 export default function Yoots({ device = "portrait", buttonPos }) {
-  // const [subscribeKeys, getKeys] = useKeyboardControls();
   const nodes = useGLTF("/models/yoot.glb").nodes;
   const materials = useGLTF("/models/yoot.glb").materials;
   const nodesRhino = useGLTF("/models/yoot-rhino.glb").nodes;
@@ -27,7 +27,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
   const [turn] = useAtom(turnAtom);
   const [client] = useAtom(clientAtom)
   const [outOfBounds, setOutOfBounds] = useState(false);
-  const [showResetYoots, setShowResetYoots] = useState(false)
 
   const NUM_YOOTS = 4;
   let yoots = [];
@@ -238,10 +237,11 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       </>}
       { gamePhase !== "lobby" 
       && getCurrentPlayerSocketId(turn, teams) === client.id 
-      && <TextButton
+      && <HtmlElement
         text='YOUR TURN!'
         position={layout[device].yourTurn.position}
-        size={layout[device].turn.size}
+        rotation={layout[device].yourTurn.rotation}
+        fontSize={layout[device].yourTurn.fontSize}
         color={client.team == 0 ? "red" : "turquoise"}
       />}
       { gamePhase !== "lobby" && <YootButton 
