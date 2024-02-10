@@ -1,4 +1,4 @@
-import { useGLTF } from '@react-three/drei';
+import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
@@ -97,11 +97,15 @@ export default function YootButtonModel({
         { !turnedOn && <meshStandardMaterial color="grey"/>}
       </mesh>
     </group>
-    <HtmlElement
-      text='THROW'
-      position={[-0.6, 0.2, -0.7]}
+    <Text3D
+      position={[-1, 0.2, -0.7]}
       rotation={[-Math.PI/2,0,-Math.PI/2]}
-      color={ turnedOn ? "yellow" : "grey" }
-    />
+      font="/fonts/Luckiest Guy_Regular.json" 
+      size={0.3} 
+      height={0.01}
+    >
+      THROW
+      <meshStandardMaterial color={ turnedOn ? "yellow" : "grey" }/>
+    </Text3D>
   </group>
 }

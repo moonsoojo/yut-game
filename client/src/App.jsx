@@ -12,6 +12,7 @@ import Meteors from './particles/Meteors';
 import { OrbitControls } from '@react-three/drei';
 import Celebration from './Celebration';
 import Interface from './Interface';
+import { Perf } from 'r3f-perf';
 
 export default function App () {
   return (<>
@@ -27,6 +28,7 @@ export default function App () {
           6.469516796871723 
         ],
       } }>
+      <Perf/>
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <Stars count={1000} size={0.2}/>
