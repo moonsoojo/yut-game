@@ -6,9 +6,12 @@ import HtmlElement from './HtmlElement';
 import { useFrame } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 import Cursor from './meshes/Cursor';
+import Star from './meshes/Star';
+import Earth from './meshes/Earth';
+import layout from './layout';
 
-export default function HowToPlay() {
-  const [page, setPage] = useState(0)
+export default function HowToPlay({ device }) {
+  const [page, setPage] = useState(1)
   // scrollable
   // page navigation at the bottom
   // loop
@@ -53,11 +56,6 @@ export default function HowToPlay() {
     const textTime = 6.7
     const [text, setText] = useState(false)
 
-    // button shines
-    // mouse appears
-    // it clicks the button
-    // yoots are thrown
-    // at the end, yoots are put to initial position, and the button is shining again
     useFrame((state, delta) => {
       if (startTime === 0) {
         setStartTime(state.clock.elapsedTime)
@@ -125,7 +123,7 @@ export default function HowToPlay() {
       }
     })
 
-    return <group>
+    return <group name='how-to-play-page-0'>
       <group rotation={[Math.PI/8, 0, 0]}>
         <HtmlElement
           text='1. Throw the yoot (dice).'
@@ -256,161 +254,54 @@ export default function HowToPlay() {
       /> }
     </group>
   }
-  function Page00() {
-
-    const nodes = useGLTF("models/yoot-highlight.glb").nodes;
-    const materials = useGLTF("models/yoot-highlight.glb").materials;
-    const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;
-    const materialsRhino = useGLTF("models/yoot-rhino-highlight.glb").materials;
-
-    const NUM_YOOTS = 4;
-    let yoots = [];
-    for (let i = 0; i < NUM_YOOTS; i++) {
-      yoots.push(useRef());
-    }
-
-    useEffect(() => {
-      const timeout = setTimeout(() => {
-        const interval = setInterval(() => {
-
-        })
-      }, 1000)
-
-      return () => {
-        clearTimeout(timeout)
-        clearInterval(interval)
-      }
-    }, [])
-
-    return <group>
-      <group rotation={[Math.PI/8, 0, 0]}>
-        <HtmlElement
-          text='1. Throw the yoot (dice).'
-          position={[-4,0,-3]}
-          rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='They way they lie determines'
-          position={[-3.5,0,-2.4]}
-          rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='how many steps to advance.'
-          position={[-3.5,0,-1.8]}
-          rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
-      </group>
-      <Physics>
-        <RigidBody type="fixed">
-          <CuboidCollider args={[20, 0.3, 20]} restitution={0.2} friction={1}/>
-          <mesh>
-            <boxGeometry args={[40, 0.6, 40]} />
-            <meshStandardMaterial 
-              transparent 
-              color='yellow'
-              opacity={0}
-            />
-          </mesh>
-        </RigidBody>
-        {yoots.map((ref, index) => {
-          return (
-            <RigidBody
-              ref={ref}            
-              position={[-2 + 0.8*index, 1, 3]}
-              rotation={[0, Math.PI/2, 0]}
-              colliders="hull"
-              restitution={0.3}
-              friction={0.6}
-              name={`yoot${index}`}
-              linearDamping={0.3}
-              angularDamping={0.1} // when this value is high, yoots spin more
-              scale={0.35}
-              gravityScale={2}
-              key={index}
-            >
-              {index != 0 ? (
-                <group>
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Cylinder011.geometry}
-                    material={materials["Texture wrap.008"]}
-                    position={[0, 0.021, 0]}
-                    rotation={[0, 0, -Math.PI / 2]}
-                    scale={[1, 6.161, 1]}
-                  />
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane.geometry}
-                    material={nodes.Plane.material}
-                    rotation={[-Math.PI, 0, 0]}
-                    scale={[4.905, 1, 0.455]}
-                  >
-                    <meshStandardMaterial 
-                      color="white" 
-                      transparent 
-                      opacity={0}
-                      ref={yootMats[index]}
-                    />
-                  </mesh>
-                </group>
-              ) : (
-                <group>
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodesRhino.Cylinder007.geometry}
-                    material={materialsRhino["Texture wrap.005"]}
-                    position={[0, 0.022, 0]}
-                    rotation={[0, 0, -Math.PI / 2]}
-                    scale={[1, 6.161, 1]}
-                  />
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodesRhino.Plane001.geometry}
-                    material={nodesRhino.Plane001.material}
-                    rotation={[-Math.PI, 0, 0]}
-                    scale={[4.892, 1, 0.443]}
-                  >
-                    <meshStandardMaterial 
-                      color="white" 
-                      transparent 
-                      opacity={0}
-                      ref={yootMats[index]}
-                    />
-                  </mesh>
-                </group>
-              )}
-            </RigidBody>
-          );
-        })}
-        { text && <HtmlElement
-          text='Move: 3'
-          position={[-4,0,0]}
-          rotation={[-Math.PI/4, 0, 0]}
-          scale={1}
-        />}
-      </Physics>
-      <YootButtonModel
-        position={[3, 0, 3]}
-        rotation={[Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]}
-      />
-    </group>
-  }
   function Page1() {
     // display first corner of the board
-    // display home pieces and move in the empty space to the left (towards center)
+    // display home pieces (UFO) and move in the empty space to the left (towards center)
     // piece is highlighted
     // click it with mouse
     // legal tile is highlighted
-    // click it
-    // piece moves there
-    // move is spent
+    // mouse moves there, and clicks with 'blink'
+    // piece spawns on top of Earth
+    // it teleports on tile 1, 2, and 3
+    // move disappears with 'blink'
+    function FirstCornerTiles({ position }) {
+      let tiles = [];
+
+      //circle
+      const NUM_STARS = 20
+      const TILE_RADIUS = 5;
+      for (let i = 0; i < 6; i++) {
+        let position = [
+          -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+          0,
+          Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        ];
+        if (i == 0) {
+          tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
+        } else {
+          tiles.push(
+            <Star
+              position={position}
+              tile={i}
+              key={i}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          );
+        }
+      }
+  
+      return <group position={position}>{tiles}</group>;
+    }
+    return <group name='how-to-play-page-1'>
+      <HtmlElement
+        text='2. Advance your piece.'
+        position={[-3.5,0,-3]}
+        rotation={[-Math.PI/8, 0, 0]}
+        fontSize={26}
+      />
+      <FirstCornerTiles position={[-2, 0, -1]}/>
+    </group>
   }
   function Page2() {
     // display helper text above Earth

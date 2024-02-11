@@ -259,7 +259,7 @@ export default {
     },
     tilePieceScale: 2.5,
     star: {
-      scale: 0.35,
+      scale: 0.4,
       rocketScale: 0.4,
       ufoScale: 0.2,
     },
