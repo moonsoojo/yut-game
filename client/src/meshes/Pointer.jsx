@@ -3,7 +3,7 @@ import { useRef } from "react"
 import { useFrame } from "@react-three/fiber";
 import layout from "../layout";
 
-export default function Pointer({ color, tile, device }) {
+export default function Pointer({ color, device, scale=4, position=[0, 1.5, 0] }) {
   const ref = useRef(null);
 
   useFrame((state, delta) => {
@@ -22,9 +22,9 @@ export default function Pointer({ color, tile, device }) {
     ref={ref} 
     receiveShadow 
     // position={ tile == 0 ? earthPosition : [0, 1.5, 0]} 
-    position={[0, 1.5, 0]} 
+    position={position} 
     rotation={[Math.PI, 0, 0]}
-    scale={4}>
+    scale={scale}>
     <coneGeometry args={[0.1, 0.3, 3]}/>
     <meshBasicMaterial color={color}/>
   </mesh>

@@ -9,6 +9,9 @@ import Cursor from './meshes/Cursor';
 import Star from './meshes/Star';
 import Earth from './meshes/Earth';
 import layout from './layout';
+import Rocket from './meshes/Rocket';
+import Pointer from './meshes/Pointer';
+import { Vector3 } from 'three';
 
 export default function HowToPlay({ device }) {
   const [page, setPage] = useState(1)
@@ -40,11 +43,11 @@ export default function HowToPlay({ device }) {
     const textRef = useRef()
     const yootMats = [yoot0Mat, yoot1Mat, yoot2Mat, yoot3Mat]
     const loopTime = 10
-    const [turnedOn, setTurnedOn] = useState(true)
+    const [yootButtonTurnedOn, setYootButtonTurnedOn] = useState(true)
     const throwTime = 2
     const [thrown, setThrown] = useState(false)
-    const grabEffectTime = 2.2
-    const [grabEffect, setGrabEffect] = useState(false)
+    const effectTime = 2.2
+    const [effect, setEffect] = useState(false)
     const record0Time = 5
     const [record0, setRecord0] = useState(false)
     const record1Time = 5.5
@@ -78,11 +81,11 @@ export default function HowToPlay({ device }) {
                 z: 0.16 + i * 0.01,
               });
             }
-            setTurnedOn(false)
+            setYootButtonTurnedOn(false)
             setThrown(true)
-            setGrabEffect(true)
-          } else if ((startTime + grabEffectTime < state.clock.elapsedTime) && grabEffect) {
-            setGrabEffect(false)
+            setEffect(true)
+          } else if ((startTime + effectTime < state.clock.elapsedTime) && effect) {
+            setEffect(false)
           } else if ((startTime + record0Time < state.clock.elapsedTime) && !record0) {
             yootMats[0].current.opacity = 1
             setRecord0(true)
@@ -118,7 +121,7 @@ export default function HowToPlay({ device }) {
           setRecord3(false)
           yootMats[3].current.opacity = 0
           setText(false)
-          setTurnedOn(true)
+          setYootButtonTurnedOn(true)
         }
       }
     })
@@ -245,25 +248,30 @@ export default function HowToPlay({ device }) {
       <YootButtonModel
         position={[3, 0, 3]}
         rotation={[Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]}
-        turnedOn={turnedOn}
+        turnedOn={yootButtonTurnedOn}
       />
-      { <Cursor
+      <Cursor
         position={[4, 0.3, 4.4]}
+        rotation={[0, 0, 0]}
         scale={[3, 3, 0.1]}
-        grabEffect={grabEffect}
-      /> }
+        effect={effect}
+      />
     </group>
   }
   function Page1() {
     // display first corner of the board
-    // display home pieces (UFO) and move in the empty space to the left (towards center)
+    // display home pieces and move in the empty space to the left (towards center)
     // piece is highlighted
     // click it with mouse
     // legal tile is highlighted
     // mouse moves there, and clicks with 'blink'
+      // use Math.lerp(position)
     // piece spawns on top of Earth
-    // it teleports on tile 1, 2, and 3
+    // it hops onto tile 1, 2, and 3
     // move disappears with 'blink'
+    const [cursorHover, setCursorHover] = useState(false)
+    const [selectPiece, setSelectPiece] = useState(false)
+    const cursorInitialPos = [1, 0.3, 2]
     function FirstCornerTiles({ position }) {
       let tiles = [];
 
@@ -284,23 +292,144 @@ export default function HowToPlay({ device }) {
               position={position}
               tile={i}
               key={i}
-              scale={layout[device].star.scale}
+              scale={(i === 3 && cursorHover) ? layout[device].star.scale * 1.5 : layout[device].star.scale}
               device={device}
             />
           );
         }
       }
   
-      return <group position={position}>{tiles}</group>;
+      return <group position={position}>
+        { tiles }
+        { selectPiece && <Pointer color='red' position={[4, 1.2, 3]} scale={2.5} />}
+      </group>;
     }
+    
+    const rocket0 = useRef()
+    const rocket1 = useRef()
+    const rocket2 = useRef()
+    const rocket3 = useRef()
+    const cursorRef = useRef()
+    function HomePieces({ position }) {
+      return <group position={position}>
+        <group name='rocket-0' ref={rocket0}>
+          <Rocket position={[-0.2,0,-0.5]}/>
+        </group>
+        <group name='rocket-1' ref={rocket1}>
+          <Rocket position={[0.8,0,-0.5]}/>
+        </group>
+        <group name='rocket-2' ref={rocket2}>
+          <Rocket position={[-0.2,0,0.5]}/>
+        </group>
+        <group name='rocket-3' ref={rocket3}>
+          <Rocket position={[0.8,0,0.5]} scale={selectPiece ? 2 : 1}/>
+        </group>
+      </group>
+    }
+    function MoveDisplay({ position }) {
+      return <Text3D
+        position={position}
+        rotation={[-Math.PI/2,0,0]}
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.5} 
+        height={0.01}
+      >
+      MOVE: 3
+      <meshStandardMaterial color={ "green" }/>
+    </Text3D>
+    }
+
+    const loopTime = 9
+    const [startTime, setStartTime] = useState(0)
+    const selectPieceTime = 3
+    // useState above HomePieces
+    const cursorPos1 = new Vector3(-1.3, 0.3, -0.6)
+    const cursorPos2 = new Vector3(1.2, 0.3, 1.1)
+    const cursorEffectTime = 3.2
+    const [cursorEffect, setCursorEffect] = useState(false)
+    const cursorMoveDelay = 5
+    const tileHighlight = 5.8
+    const cursorMoveStop = 7
+    const selectTileTime = 8
+    const [selectTile, setSelectTile] = useState(false)
+    const cursorEffect2Time = 8.2
+    const [cursorEffect2, setCursorEffect2] = useState(false)
+    // spawn rocket
+    // hop on tiles
+    // why does screen refresh on 'how to play'?
+    useFrame((state, delta) => {
+      if (startTime === 0) {
+        setStartTime(state.clock.elapsedTime)
+      } else {
+        if (startTime + loopTime > state.clock.elapsedTime) {
+          if (startTime + selectPieceTime > state.clock.elapsedTime) {
+            rocket0.current.scale.x = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket0.current.scale.y = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket0.current.scale.z = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket1.current.scale.x = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket1.current.scale.y = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket1.current.scale.z = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket2.current.scale.x = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket2.current.scale.y = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket2.current.scale.z = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket3.current.scale.x = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket3.current.scale.y = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            rocket3.current.scale.z = Math.sin((state.clock.elapsedTime - startTime) * 3) * 0.3 + 1.5
+            cursorRef.current.position.lerp(cursorPos1, 0.03)
+          } else if ((startTime + selectPieceTime < state.clock.elapsedTime) && !selectPiece) {
+            console.log('select piece')
+            setSelectPiece(true)
+            setCursorEffect(true)
+          } else if ((startTime + cursorEffectTime < state.clock.elapsedTime) && cursorEffect) {
+            console.log('cursor effect 1')
+            setCursorEffect(false)
+          } else if (startTime + cursorMoveDelay > state.clock.elapsedTime) {
+            // pause
+            console.log('pause')
+          } else if (startTime + cursorMoveStop > state.clock.elapsedTime) {
+            if (startTime + tileHighlight < state.clock.elapsedTime) {
+              setCursorHover(true)
+            }
+            cursorRef.current.position.lerp(cursorPos2, 0.03)
+          } else if ((startTime + selectTileTime < state.clock.elapsedTime) && !selectTile) {
+            console.log("cursor effect 2 started")
+            setSelectTile(true)
+            setCursorEffect2(true)
+          } else if ((startTime + cursorEffect2Time < state.clock.elapsedTime) && cursorEffect2) {
+            console.log("cursor effect 2 ended")
+            setCursorEffect2(false)
+          } 
+        } else {
+          console.log(`loop finished`)
+          setStartTime(0);
+          setSelectPiece(false)
+          cursorRef.current.position.x = cursorInitialPos[0]
+          cursorRef.current.position.y = cursorInitialPos[1]
+          cursorRef.current.position.z = cursorInitialPos[2]
+          setCursorHover(false)
+          setSelectTile(false)
+        }
+      }
+    })
+    // use state to highlight pieces and tile
     return <group name='how-to-play-page-1'>
       <HtmlElement
         text='2. Advance your piece.'
-        position={[-3.5,0,-3]}
+        position={[-3.5,0,-4]}
         rotation={[-Math.PI/8, 0, 0]}
         fontSize={26}
       />
-      <FirstCornerTiles position={[-2, 0, -1]}/>
+      <FirstCornerTiles position={[-2, 0, -0.5]}/>
+      <HomePieces position={[-2, 0, -1]}/>
+      <MoveDisplay position={[-2.8, 0, 2.7]}/>
+      <group ref={cursorRef}>
+        <Cursor
+          position={cursorInitialPos}
+          rotation={[0,0,0]}
+          scale={[3, 3, 0.1]}
+          effect={(cursorEffect || cursorEffect2)}
+        />
+      </group>
     </group>
   }
   function Page2() {
