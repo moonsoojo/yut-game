@@ -175,7 +175,6 @@ export default function Home2() {
       <Moon
         position={[0,0,0]}
         intensity={3}
-        // scale={0.4}
         key={100}
         tile={22}
         device={device}
@@ -334,7 +333,7 @@ export default function Home2() {
         <Tiles/>
         <Pieces/>
       </group>}
-      { display === 'howToPlay' && <HowToPlay/>}
+      { display === 'howToPlay' && <HowToPlay device={device}/>}
     </group>  
   </group>
   </PresentationControls>
