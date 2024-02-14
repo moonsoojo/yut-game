@@ -15,6 +15,7 @@ import Interface from './Interface';
 import { Perf } from 'r3f-perf';
 
 export default function App () {
+  console.log(`[App]`)
   return (<>
     <Canvas
       className='r3f'

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Float, Html, PresentationControls, Text3D } from "@react-three/drei";
+import { Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 
 import Earth from './meshes/Earth';
@@ -24,6 +24,7 @@ let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Home2() {
+  console.log(`[Home2]`)
 
   let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
   // let [fov, setFov] = useState(0);
@@ -35,18 +36,9 @@ export default function Home2() {
     console.log(window.innerWidth, window.innerHeight)
   }, []);
 
-  // useEffect(() => {
-  //   console.log(`[Home2] fov ${fov}`)
-  // }, [fov])
-
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
 
-  const yoot0 = useRef()
-  const yoot1 = useRef()
-  const yoot2 = useRef()
-  const yoot3 = useRef()
-  const yoots = [yoot0, yoot1, yoot2, yoot3]
   const [display, setDisplay] = useState('board')
 
   function initializeDevice(windowWidth, landscapeMobileCutoff) {
@@ -77,6 +69,12 @@ export default function Home2() {
       setDevice("landscapeDesktop")
     }
   }
+
+  // assets
+  
+  const { scene, materials } = useGLTF(
+    "models/yoot.glb"
+  );
 
   function Tiles() {
     let tiles = [];
@@ -247,7 +245,7 @@ export default function Home2() {
       scale={scale}
     >
       <Float floatIntensity={0.001} speed={2}>
-        <Yoot scale={0.5} position={[0,0,0]}/>
+        <Yoot scale={0.5} position={[0,0,0]} scene={scene} materials={materials}/>
         <Yoot scale={0.5} position={[0,0,-1]}/>
         <Yoot scale={0.5} position={[0,0,-2]}/>
         <Yoot scale={0.5} position={[0,0,-3]}/>
