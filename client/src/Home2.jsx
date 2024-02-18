@@ -262,6 +262,9 @@ export default function Home2() {
     setDisplay('howToPlay');
   }
   
+  // move board down to fill the gap
+  // add page navigation on how-to-play
+  // dots and arrows
   return <PresentationControls
     global
     polar={[-0.4, 0.2]}
@@ -269,59 +272,56 @@ export default function Home2() {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
-  <group 
-    position={layout[device].title.text.position} 
-    rotation={layout[device].title.text.rotation}
-    scale={layout[device].title.text.scale}
+  <group
+    position={layout[device].title.position}
+    rotation={layout[device].title.rotation}
+    scale={1.4}
   >
-    <Html 
-      transform
+    <group 
+      scale={layout[device].title.text.scale}
     >
-      <div
-        style={{
-          fontFamily: 'Luckiest Guy',
-          fontSize: `${layout[device].title.text.fontSize}px`,
-          color: 'yellow'
-        }}>
-        <div>YOOT</div>
-        <div>GAME!</div>
-      </div>
-    </Html> 
-  </group>
-  <Yoots 
-    position={layout[device].title.yoots.position}
-    rotation={layout[device].title.yoots.rotation}
-    scale={layout[device].title.yoots.scale} 
-  />
-  { layout[device].title.about.show && <HtmlElement 
-    font="/fonts/Luckiest Guy_Regular.json" 
-    position={layout[device].title.about.position}
-    rotation={layout[device].title.about.rotation}
-    fontSize={layout[device].title.about.fontSize} 
-    text='about'
-  >
-    ABOUT
-    <meshStandardMaterial color="yellow"/>
-  </HtmlElement> }
-  <HtmlElement
-    position={layout[device].title.howToPlay.position}
-    rotation={layout[device].title.howToPlay.rotation}
-    fontSize={layout[device].title.howToPlay.fontSize} 
-    handleClick={handleHowToPlay}
-    text='how to play'
-  >
-    HOW TO PLAY
-  </HtmlElement>
-  <group>
-    <group scale={layout[device].title.letsPlay.scale}>
-      <HtmlElement
-        text="LET'S PLAY!"
-        position={layout[device].title.letsPlay.position}
-        rotation={layout[device].title.letsPlay.rotation}
-        fontSize={25}
-        handleClick={handleLetsPlay}
-      />
+      <Html 
+        transform
+      >
+        <div
+          style={{
+            fontFamily: 'Luckiest Guy',
+            fontSize: `${layout[device].title.text.fontSize}px`,
+            color: 'yellow',
+            position: 'absolute'
+          }}>
+          <div>YOOT</div>
+          <div>GAME!</div>
+        </div>
+      </Html> 
     </group>
+    <Yoots 
+      position={layout[device].title.yoots.position}
+      rotation={layout[device].title.yoots.rotation}
+      scale={layout[device].title.yoots.scale} 
+    />
+    { layout[device].title.about.show && <HtmlElement 
+      position={layout[device].title.about.position}
+      font="/fonts/Luckiest Guy_Regular.json" 
+      fontSize={layout[device].title.about.fontSize} 
+      text='about'
+      color='yellow'
+    /> }
+    <HtmlElement
+      position={layout[device].title.howToPlay.position}
+      fontSize={layout[device].title.howToPlay.fontSize} 
+      handleClick={handleHowToPlay}
+      text='how to play'
+    />
+    <HtmlElement
+      position={layout[device].title.letsPlay.position}
+      text="LET'S PLAY!"
+      fontSize={layout[device].title.letsPlay.fontSize}
+      scale={layout[device].title.letsPlay.scale}
+      handleClick={handleLetsPlay}
+    />
+  </group>
+  <group>
     <group
       position={layout[device].title.tiles.position} 
       scale={layout[device].title.tiles.scale}

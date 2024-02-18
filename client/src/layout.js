@@ -382,6 +382,8 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
+      position: [-20,0,-9],
+      rotation: [-Math.PI/4,Math.PI/8,0],
       text: {
         position: [-12.5,2,-3],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
@@ -390,31 +392,32 @@ export default {
       },
       board: {
       },
-      letsPlay: {
-        position: [-2.2, 0, 1.4],
-        rotation: [-Math.PI/2,0,0]
-      },
       tiles: {
-        position: [0, 0, -5],
+        position: [0, 0, -4],
         scale: 1
       },
       about: {
         show: true,
-        position: [-14,0,0],
+        position: [0,-5,0],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
         fontSize: 40
       },
       howToPlay: {
-        position: [-14,-1.5,1.5],
+        position: [0,-7,0],
         rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
         fontSize: 40
       },      
+      letsPlay: {
+        position: [0,-9,0],
+        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        fontSize: 40
+      },
       pieces: {
         position: [0,0,0],
         scale: 1
       },
       yoots: {
-        position: [-7.5, 1, -4.5],
+        position: [8, -2, 0],
         rotation: [Math.PI/4,Math.PI/2,0],
         scale: 0.6
       }

@@ -41,15 +41,29 @@ import * as THREE from 'three';
 // skip to the next page when the loop finishes
 export default function HowToPlay({ device }) {
   const [page, setPage] = useState(2)
-  // scrollable
-  // page navigation at the bottom
-  // loop
+
+  const [pageTimeout, setPageTimeout] = useState(null)
+  useEffect(() => {
+    console.log(page)
+    clearTimeout(pageTimeout)
+    if (page === 0) {
+      const page1Timeout = setTimeout(() => {
+        setPage(1)
+      }, 9000)
+      setPageTimeout(page1Timeout)
+    } else if (page === 1) {
+      const page2Timeout = setTimeout(() => {
+        setPage(2)
+      }, 12000)
+      setPageTimeout(page2Timeout)
+    } else if (page === 2) {
+      const page0Timeout = setTimeout(() => {
+        setPage(0)
+      }, 14500)
+      setPageTimeout(page0Timeout)
+    }
+  }, [page])
   function Page0() {
-    // yoots
-    // apply impulse
-    // land
-    // highlight open sides (1, 2, 3)
-    // display move
     const nodes = useGLTF("models/yoot-highlight.glb").nodes;
     const materials = useGLTF("models/yoot-highlight.glb").materials;
     const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;
@@ -153,7 +167,10 @@ export default function HowToPlay({ device }) {
     })
 
     return <group name='how-to-play-page-0'>
-      <group rotation={[Math.PI/8, 0, 0]}>
+      <group
+        position={[0,0,-1]}
+        rotation={[Math.PI/8, 0, 0]}
+      >
         <HtmlElement
           text='1. Throw the yoot (dice).'
           position={[-4,0,-3]}
@@ -189,7 +206,7 @@ export default function HowToPlay({ device }) {
           return (
             <RigidBody
               ref={ref}            
-              position={[-2 + 0.8*index, 1, 3]}
+              position={[-2 + 0.8*index, 1, 2]}
               rotation={[0, Math.PI/2, 0]}
               colliders="hull"
               restitution={0.3}
@@ -260,7 +277,7 @@ export default function HowToPlay({ device }) {
           );
         })}
         { text && <Text3D
-          position={[-5, 0.2, 1]}
+          position={[-5, 0.2, 0]}
           rotation={[-Math.PI/2,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
@@ -272,12 +289,12 @@ export default function HowToPlay({ device }) {
         </Text3D>}
       </Physics>
       <YootButtonModel
-        position={[3, 0, 3]}
+        position={[3, 0, 2]}
         rotation={[Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]}
         turnedOn={yootButtonTurnedOn}
       />
       <Cursor
-        position={[4, 0.3, 4.4]}
+        position={[4, 0.3, 3.4]}
         rotation={[0, 0, 0]}
         scale={[3, 3, 0.1]}
         effect={effect}
@@ -288,7 +305,7 @@ export default function HowToPlay({ device }) {
   function Page1() {
     const springs = useSpring({
       from: {
-        cursorPos: [1, 0.3, 2],
+        cursorPos: [1, 0.3, 1],
         rocket3Scale: 1.5,
         cursorEffectOpacity: 0,
         legalTileScale: 0.4,
@@ -297,7 +314,7 @@ export default function HowToPlay({ device }) {
       },
       to: [
         {
-          cursorPos: [-0.6, 0.3, 0.5],
+          cursorPos: [-0.6, 0.3, -0.5],
           delay: 1000
         },
         {
@@ -318,7 +335,7 @@ export default function HowToPlay({ device }) {
           }
         },
         {
-          cursorPos: [2.2, 1.3, 3.3],
+          cursorPos: [2.2, 1.3, 2.3],
           delay: 800,
         },
         {
@@ -457,13 +474,13 @@ export default function HowToPlay({ device }) {
     return <group name='how-to-play-page-1'>
       <HtmlElement
         text='2. Advance your piece.'
-        position={[-3.5,0,-4]}
+        position={[-3.5,0,-5]}
         rotation={[-Math.PI/8, 0, 0]}
         fontSize={26}
       />
-      <FirstCornerTiles position={[-2, 0, -0.5]}/>
-      <HomePieces position={[-2, 0, -1]}/>
-      <MoveDisplay position={[-2.8, 0, 2.7]}/>
+      <FirstCornerTiles position={[-2, 0, -1.5]}/>
+      <HomePieces position={[-2, 0, -2]}/>
+      <MoveDisplay position={[-2.8, 0, 1.7]}/>
       <group ref={cursorRef}>
         <Cursor
           position={springs.cursorPos}
@@ -478,15 +495,6 @@ export default function HowToPlay({ device }) {
 
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
-    // display helper text above Earth
-    // show home pieces below Earth
-    // there's a piece one tile away from Earth. other pieces are finished
-    // click piece
-    // 'score' button shows
-    // click button
-    // tile fills in empty home slot, "congrats!" message displays
-    // fireworks go off in the background
-    // use useSpring with delays to coordinate the animation
     
     const { scene } = useThree();
     const zone = new PointZone(0, 0);
@@ -502,12 +510,9 @@ export default function HowToPlay({ device }) {
     let sprite = new THREE.Sprite(material);
     const system = useRef()
     const emitter = useRef();
-    console.log('emitter')
     
     const [fireStartTime, setFireStartTime] = useState(0)
     useEffect(() => {
-      
-      console.log('use effect')
       system.current = new System();
       const renderer = new SpriteRenderer(scene, THREE);
       system.current.addRenderer(renderer)
@@ -519,7 +524,7 @@ export default function HowToPlay({ device }) {
           new Position(zone),
           new Mass(1, 3),
           new Radius(0.1),
-          new Life(1, 2),
+          new Life(1, 1.7),
           new Body(sprite),
           new RadialVelocity(new Span(2, 2.3), new Vector3D(0, 3, 0), 180),
         ])
@@ -527,7 +532,6 @@ export default function HowToPlay({ device }) {
           new Alpha(5, 0), 
           new Scale(1, 1.3), 
           new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-          // new Force(0, -0.01, 0)
         ])
       system.current.addEmitter(emitter.current)
     }, [fireStartTime])
@@ -638,7 +642,7 @@ export default function HowToPlay({ device }) {
           rocket3Pos: rocket3AnimationsArray[1].rocket3Pos,
           rocket3Scale: 1,
           tilesScale: 1,
-          tilesPos: [0,0,0],
+          tilesPos: [0,0,-1],
           rocketHomeScale: 0,
           shortcutStarScale: layout[device].star.scale,
           moveScale: 0,
@@ -657,7 +661,7 @@ export default function HowToPlay({ device }) {
           rocket3AnimationsArray[0],
           {
             tilesScale: 1.5,
-            tilesPos: [-2, 0, -3],
+            tilesPos: [-2, 0, -4],
             rocketHomeScale: 1.3,
             checkmarkScale: 0.3,
             shortcutStarScale: 0,
@@ -870,40 +874,96 @@ export default function HowToPlay({ device }) {
     return <group>
       <HtmlElement
         text='3. The first team to'
-        position={[1,0,1]}
+        position={[1,0,0]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />
       <HtmlElement
         text='move four pieces'
-        position={[1,0,2]}
+        position={[1,0,1]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />
       <HtmlElement
         text='around the board'
-        position={[1,0,3]}
+        position={[1,0,2]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />
       <HtmlElement
         text='and pass Earth'
-        position={[1,0,4]}
+        position={[1,0,3]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />      
       <HtmlElement
         text='wins!'
-        position={[1,0,5]}
+        position={[1,0,4]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />
       <Tiles device={device}/>
     </group>
   }
+
+  function Pagination() {
+    function handlePageLeft() {
+      setPage(page => {
+        if (page === 0) {
+          return 2
+        } else {
+          return page-1
+        }
+      })
+    }
+    
+    function handlePageRight() {
+      setPage(page => {
+        if (page === 2) {
+          return 0
+        } else {
+          return page+1
+        }
+      })
+    }
+
+    function handlePage0() {
+      setPage(0)
+    }
+    function handlePage1() {
+      setPage(1)
+    }
+    function handlePage2() {
+      setPage(2)
+    }
+    return <group name='pagination'>
+      <mesh position={[-2, 0, 6]} rotation={[0, 0, Math.PI/2]} onPointerUp={handlePageLeft}>
+        <coneGeometry args={[0.2, 0.4, 3]}/>
+        <meshStandardMaterial color="yellow"/>
+      </mesh>
+      <mesh position={[-1, 0, 6]} onPointerUp={handlePage0}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 0 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[0, 0, 6]} onPointerUp={handlePage1}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 1 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[1, 0, 6]} onPointerUp={handlePage2}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 2 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[2, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
+      <coneGeometry args={[0.2, 0.4, 3]}/>
+        <meshStandardMaterial color="yellow"/>
+      </mesh>
+    </group>
+  }
+
   return <>
     {page === 0 && <Page0/>}
     {page === 1 && <Page1/>}
     {page === 2 && <Page2/>}
+    <Pagination/>
   </>
 }
