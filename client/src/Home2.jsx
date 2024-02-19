@@ -18,6 +18,9 @@ import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
 import HtmlElement from './HtmlElement';
 import HowToPlay from './HowToPlay';
+import Title from './Title';
+import About from './About';
+import Stars from './particles/Stars';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -261,6 +264,9 @@ export default function Home2() {
   function handleHowToPlay() {
     setDisplay('howToPlay');
   }
+  function handleAbout() {
+    setDisplay('about')
+  }
   
   // move board down to fill the gap
   // add page navigation on how-to-play
@@ -277,24 +283,10 @@ export default function Home2() {
     rotation={layout[device].title.rotation}
     scale={1.4}
   >
-    <group 
+    <Title 
       scale={layout[device].title.text.scale}
-    >
-      <Html 
-        transform
-      >
-        <div
-          style={{
-            fontFamily: 'Luckiest Guy',
-            fontSize: `${layout[device].title.text.fontSize}px`,
-            color: 'yellow',
-            position: 'absolute'
-          }}>
-          <div>YOOT</div>
-          <div>GAME!</div>
-        </div>
-      </Html> 
-    </group>
+      setDisplay={setDisplay}
+    />
     <Yoots 
       position={layout[device].title.yoots.position}
       rotation={layout[device].title.yoots.rotation}
@@ -304,6 +296,7 @@ export default function Home2() {
       position={layout[device].title.about.position}
       font="/fonts/Luckiest Guy_Regular.json" 
       fontSize={layout[device].title.about.fontSize} 
+      handleClick={handleAbout}
       text='about'
       color='yellow'
     /> }
@@ -332,7 +325,14 @@ export default function Home2() {
         <Pieces/>
       </group>}
       { display === 'howToPlay' && <HowToPlay device={device}/>}
+      { display === 'about' && <About 
+        device={device}
+        position={[-5, 0, -5]}
+        rotation={[-Math.PI/4, 0, Math.PI/32]}
+      />}
     </group>  
   </group>
+  
+  <Stars count={1000} size={0.2}/>
   </PresentationControls>
 }

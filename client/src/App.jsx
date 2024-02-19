@@ -32,7 +32,6 @@ export default function App () {
       <Perf/>
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
-      <Stars count={1000} size={0.2}/>
       <Route path="/">
         <Home2/>
         {/* <Meteors/> */}

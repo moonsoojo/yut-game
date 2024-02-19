@@ -40,11 +40,10 @@ import * as THREE from 'three';
 
 // skip to the next page when the loop finishes
 export default function HowToPlay({ device }) {
-  const [page, setPage] = useState(2)
+  const [page, setPage] = useState(0)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
-    console.log(page)
     clearTimeout(pageTimeout)
     if (page === 0) {
       const page1Timeout = setTimeout(() => {

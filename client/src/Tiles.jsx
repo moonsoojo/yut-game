@@ -8,7 +8,7 @@ import Star from './meshes/Star';
 import layout from './layout';
 import { animated } from '@react-spring/three';
 
-export default function Tiles({ device, position=[0,0,0], rotation=[0,0,0], scale }) {
+export default function Tiles({ device, position=[0,0,0], rotation=[0,0,0], scale=1 }) {
     const TILE_RADIUS = layout[device].tileRadius.ring
     const NUM_STARS = 20;
     let tiles = [];

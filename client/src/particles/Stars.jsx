@@ -6,8 +6,8 @@ function randomNumberBetween(min, max) {
 }
 
 export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
-  const radius1MinNeptune = -20;
-  const radius1MaxNeptune = 20;
+  const radius1MinNeptune = 20;
+  const radius1MaxNeptune = 40;
   const colorOneHex = "#FFFFFF";
   const colorTwoHex = "#000000";
   const positions1 = new Float32Array(count * 3);
@@ -20,9 +20,13 @@ export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
   
-    const randomX1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-    const randomY1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-    const randomZ1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    let radius1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
+    let polarAngle = Math.random() * (Math.PI);
+    let azimuthAngle = Math.random() * (Math.PI * 2);
+  
+    const randomX1 = radius1  * Math.sin(polarAngle) * Math.cos(azimuthAngle)
+    const randomY1 = radius1  * Math.sin(polarAngle) * Math.sin(azimuthAngle)
+    const randomZ1 = radius1  * Math.cos(polarAngle)
   
     positions1[i3] = randomX1;
     positions1[i3 + 1] = randomY1;
@@ -60,8 +64,7 @@ export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
           sizeAttenuation
           transparent
           blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          alphaTest={0}
+          depthTest={false}
           map={pointsMap}
           vertexColors={true}
         />

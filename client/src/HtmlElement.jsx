@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function HtmlElement({ 
   position, 
@@ -8,16 +8,20 @@ export default function HtmlElement({
   text, 
   fontSize,
   handleClick,
-  color="yellow"
+  color='yellow',
+  colorHover='green'
 }) {
+  const [currColor, setCurrColor] = useState(color);
   function handlePointerEnter() {
     if (handleClick) {
       document.body.style.cursor = "pointer";
+      setCurrColor(colorHover)
     }
   }
   function handlePointerLeave() {
     if (handleClick) {
       document.body.style.cursor = "default";
+      setCurrColor(color)
     }
   }
   return <Html
@@ -28,10 +32,10 @@ export default function HtmlElement({
   >
     <div
       style={{
-        border: handleClick ? `1px solid ${color}` : '',
+        border: handleClick ? `1px solid ${currColor}` : '',
         padding: '2px',
         fontFamily: 'Luckiest Guy',
-        color: color,
+        color: currColor,
         fontSize: `${fontSize}px`,
         position: 'absolute',
         width: 'fit-content',
