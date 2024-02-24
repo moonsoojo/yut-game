@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import React from "react";
+import { animated } from "@react-spring/three";
 
 export default function Star({ position, tile, device, scale }) {
   const { scene, materials } = useGLTF(
@@ -14,7 +15,7 @@ export default function Star({ position, tile, device, scale }) {
   const { nodes } = useGraph(clone);
 
   return (
-    <group position={position} scale={scale} dispose={null}>
+    <animated.group position={position} scale={scale} dispose={null}>
       <mesh
         castShadow
         receiveShadow
@@ -23,7 +24,7 @@ export default function Star({ position, tile, device, scale }) {
         <meshStandardMaterial color={"yellow"} />
       </mesh>
       { tile != undefined && <Tile tile={tile} wrapperRadius={0.4} device={device}/> }
-    </group>
+    </animated.group>
   );
 }
 

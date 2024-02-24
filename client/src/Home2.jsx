@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Float, Html, PresentationControls, Text3D } from "@react-three/drei";
+import { Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 
 import Earth from './meshes/Earth';
@@ -18,12 +18,16 @@ import { useLocation } from 'wouter';
 import { makeId } from './helpers/helpers';
 import HtmlElement from './HtmlElement';
 import HowToPlay from './HowToPlay';
+import Title from './Title';
+import About from './About';
+import Stars from './particles/Stars';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Home2() {
+  console.log(`[Home2]`)
 
   let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
   // let [fov, setFov] = useState(0);
@@ -35,18 +39,9 @@ export default function Home2() {
     console.log(window.innerWidth, window.innerHeight)
   }, []);
 
-  // useEffect(() => {
-  //   console.log(`[Home2] fov ${fov}`)
-  // }, [fov])
-
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
 
-  const yoot0 = useRef()
-  const yoot1 = useRef()
-  const yoot2 = useRef()
-  const yoot3 = useRef()
-  const yoots = [yoot0, yoot1, yoot2, yoot3]
   const [display, setDisplay] = useState('board')
 
   function initializeDevice(windowWidth, landscapeMobileCutoff) {
@@ -77,6 +72,12 @@ export default function Home2() {
       setDevice("landscapeDesktop")
     }
   }
+
+  // assets
+  
+  const { scene, materials } = useGLTF(
+    "models/yoot.glb"
+  );
 
   function Tiles() {
     let tiles = [];
@@ -247,7 +248,7 @@ export default function Home2() {
       scale={scale}
     >
       <Float floatIntensity={0.001} speed={2}>
-        <Yoot scale={0.5} position={[0,0,0]}/>
+        <Yoot scale={0.5} position={[0,0,0]} scene={scene} materials={materials}/>
         <Yoot scale={0.5} position={[0,0,-1]}/>
         <Yoot scale={0.5} position={[0,0,-2]}/>
         <Yoot scale={0.5} position={[0,0,-3]}/>
@@ -263,7 +264,13 @@ export default function Home2() {
   function handleHowToPlay() {
     setDisplay('howToPlay');
   }
+  function handleAbout() {
+    setDisplay('about')
+  }
   
+  // move board down to fill the gap
+  // add page navigation on how-to-play
+  // dots and arrows
   return <PresentationControls
     global
     polar={[-0.4, 0.2]}
@@ -271,59 +278,43 @@ export default function Home2() {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
-  <group 
-    position={layout[device].title.text.position} 
-    rotation={layout[device].title.text.rotation}
-    scale={layout[device].title.text.scale}
+  <group
+    position={layout[device].title.position}
+    rotation={layout[device].title.rotation}
+    scale={1.4}
   >
-    <Html 
-      transform
-    >
-      <div
-        style={{
-          fontFamily: 'Luckiest Guy',
-          fontSize: `${layout[device].title.text.fontSize}px`,
-          color: 'yellow'
-        }}>
-        <div>YOOT</div>
-        <div>GAME!</div>
-      </div>
-    </Html> 
+    <Title 
+      scale={layout[device].title.text.scale}
+      setDisplay={setDisplay}
+    />
+    <Yoots 
+      position={layout[device].title.yoots.position}
+      rotation={layout[device].title.yoots.rotation}
+      scale={layout[device].title.yoots.scale} 
+    />
+    { layout[device].title.about.show && <HtmlElement 
+      position={layout[device].title.about.position}
+      font="/fonts/Luckiest Guy_Regular.json" 
+      fontSize={layout[device].title.about.fontSize} 
+      handleClick={handleAbout}
+      text='about'
+      color='yellow'
+    /> }
+    <HtmlElement
+      position={layout[device].title.howToPlay.position}
+      fontSize={layout[device].title.howToPlay.fontSize} 
+      handleClick={handleHowToPlay}
+      text='how to play'
+    />
+    <HtmlElement
+      position={layout[device].title.letsPlay.position}
+      text="LET'S PLAY!"
+      fontSize={layout[device].title.letsPlay.fontSize}
+      scale={layout[device].title.letsPlay.scale}
+      handleClick={handleLetsPlay}
+    />
   </group>
-  <Yoots 
-    position={layout[device].title.yoots.position}
-    rotation={layout[device].title.yoots.rotation}
-    scale={layout[device].title.yoots.scale} 
-  />
-  { layout[device].title.about.show && <HtmlElement 
-    font="/fonts/Luckiest Guy_Regular.json" 
-    position={layout[device].title.about.position}
-    rotation={layout[device].title.about.rotation}
-    fontSize={layout[device].title.about.fontSize} 
-    text='about'
-  >
-    ABOUT
-    <meshStandardMaterial color="yellow"/>
-  </HtmlElement> }
-  <HtmlElement
-    position={layout[device].title.howToPlay.position}
-    rotation={layout[device].title.howToPlay.rotation}
-    fontSize={layout[device].title.howToPlay.fontSize} 
-    handleClick={handleHowToPlay}
-    text='how to play'
-  >
-    HOW TO PLAY
-  </HtmlElement>
   <group>
-    <group scale={layout[device].title.letsPlay.scale}>
-      <HtmlElement
-        text="LET'S PLAY!"
-        position={layout[device].title.letsPlay.position}
-        rotation={layout[device].title.letsPlay.rotation}
-        fontSize={25}
-        handleClick={handleLetsPlay}
-      />
-    </group>
     <group
       position={layout[device].title.tiles.position} 
       scale={layout[device].title.tiles.scale}
@@ -334,7 +325,14 @@ export default function Home2() {
         <Pieces/>
       </group>}
       { display === 'howToPlay' && <HowToPlay device={device}/>}
+      { display === 'about' && <About 
+        device={device}
+        position={[-5, 0, -5]}
+        rotation={[-Math.PI/4, 0, Math.PI/32]}
+      />}
     </group>  
   </group>
+  
+  <Stars count={1000} size={0.2}/>
   </PresentationControls>
 }

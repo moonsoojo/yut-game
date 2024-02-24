@@ -4,43 +4,27 @@ import { animated } from "@react-spring/three";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
-export default function Cursor({
+export default function Cursor2({
   position, 
   rotation=[0,0,0], 
-  scale, 
+  scale=1, 
   effectOpacity=0,
   effect=false
 }) {
   const { nodes } = useGLTF("models/cursor.glb");
-  let scaleArray;
-  let scaleArrayOuter;
-  if (scale.length === 1) {
-    scaleArray = [1 * scale, 1 * scale, 1 * scale]
-    scaleArrayOuter = [
-      1.1 * scaleArray[0], 
-      1.1 * scaleArray[1], 
-      0.01 * scaleArray[2]
-    ]
-  } else {
-    scaleArray = scale
-    scaleArrayOuter = [
-      1.1 * scaleArray[0], 
-      1.1 * scaleArray[1], 
-      0.01 * scaleArray[2]
-    ]
-  }
 
   return (
     <animated.group
       position={position}
       rotation={rotation}
+      scale={scale}
     >
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Curve.geometry}
         rotation={[-Math.PI / 2, 0, 0]}
-        scale={scaleArray}
+        scale={[1,1,1]}
       >
         <meshStandardMaterial color="white"/>
       </mesh>
@@ -49,7 +33,7 @@ export default function Cursor({
         receiveShadow
         geometry={nodes.Curve.geometry}
         rotation={[-Math.PI / 2, 0, 0]}
-        scale={scaleArrayOuter}
+        scale={[1.1, 1.1, 0.9]}
       >
         <meshStandardMaterial color="black"/>
       </mesh>

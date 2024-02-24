@@ -111,7 +111,6 @@ function NeptuneParticles2(position) {
           sizeAttenuation
           transparent
           blending={THREE.AdditiveBlending}
-          // depthWrite={false}
           depthTest={false}
           alphaTest={0}
           map={pointsMap}
@@ -203,70 +202,7 @@ function NeptuneParticles2(position) {
 
 export default function NeptuneParticles({
   position,
-  // countNeptune1,
-  // countNeptune2,
-  // sizeNeptune,
-  // radius1MinNeptune,
-  // radius1MaxNeptune,
-  // countSparkles1,
-  // colorOne,
-  // colorTwo,
-  // radius2MinNeptune,
-  // radius2MaxNeptune,
-  // countSparkles2,
 }) {
-  // const groupRef = useRef();
-  // const points1Ref = useRef();
-  // const points2Ref = useRef();
-  // const sparkles1Ref = useRef();
-  // const sparkles2Ref = useRef();
-
-  const pointsMap = textureLoader.load("/textures/particles/2.png");
-  const sparklesMap = textureLoader.load("/textures/particles/9.png");
-
-  // useFrame((state, delta) => {
-  //   for (let i = 0; i < countSparkles2; i++) {
-  //     const i3 = i * 3;
-  //     if (Math.random() < 0.0001) {
-  //       sparkles2Ref.current.geometry.dispose();
-  //       sparkles2Ref.current.material.dispose();
-  //       colorsSparkles2[i3] = 0;
-  //       colorsSparkles2[i3 + 1] = 0;
-  //       colorsSparkles2[i3 + 2] = 0;
-  //     } else {
-  //       colorsSparkles2[i3] = 1;
-  //       colorsSparkles2[i3 + 1] = 1;
-  //       colorsSparkles2[i3 + 2] = 1;
-  //     }
-  //   }
-  // });
-  // useEffect(() => {
-  //   points1Ref.current.geometry.dispose();
-  //   points1Ref.current.material.dispose();
-  //   sparkles1Ref.current.geometry.dispose();
-  //   sparkles1Ref.current.material.dispose();
-  //   points2Ref.current.geometry.dispose();
-  //   points2Ref.current.material.dispose();
-  //   sparkles2Ref.current.geometry.dispose();
-  //   sparkles2Ref.current.material.dispose();
-  // }, [
-  //   countNeptune1,
-  //   countNeptune2,
-  //   sizeNeptune,
-  //   radius1MinNeptune,
-  //   radius1MaxNeptune,
-  //   countSparkles1,
-  //   colorOne,
-  //   colorTwo,
-  //   radius2MinNeptune,
-  //   radius2MaxNeptune,
-  //   countSparkles2,
-  // ]);
-  const [dummy, setDummy] = useState(1);
-  // const neptuneParticles = useMemo(
-  //   () => NeptuneParticles2(position),
-  //   [position]
-  // );
 
   return NeptuneParticles2(position);
 }

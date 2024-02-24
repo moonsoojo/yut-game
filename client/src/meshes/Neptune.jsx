@@ -26,7 +26,7 @@ export default function Neptune({ position, tile, device, scale=0.36 }) {
       <NeptuneParticles
         countNeptune1={261}
         countNeptune2={327}
-        sizeNeptune={0.07}
+        sizeNeptune={0.07 * scale}
         radius1MinNeptune={1.74}
         radius1MaxNeptune={2.72}
         radius2MinNeptune={3.09}
