@@ -903,6 +903,21 @@ export default function HowToPlay({ device }) {
     </group>
   }
 
+  // capture, combine
+  function Page3() {
+
+  }
+
+  // yoot results
+  function Page4() {
+
+  }
+
+  // shortcuts / possible paths
+  function Page5() {
+    
+  }
+
   function Pagination() {
     function handlePageLeft() {
       setPage(page => {
