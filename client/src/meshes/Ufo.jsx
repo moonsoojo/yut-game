@@ -31,7 +31,7 @@ export default function Ufo({
   });
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
+    <animated.group position={position} rotation={rotation} scale={scale}>
       <animated.group
         dispose={null}
         scale={0.5}
@@ -282,7 +282,7 @@ export default function Ufo({
           />
         </group>
       </animated.group>
-    </group>
+    </animated.group>
   );
 }
 

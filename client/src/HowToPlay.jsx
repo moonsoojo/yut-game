@@ -1,4 +1,4 @@
-import { MeshDistortMaterial, Text3D, useGLTF } from '@react-three/drei';
+import { Float, MeshDistortMaterial, Text3D, useGLTF } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier';
 import React, { useEffect, useRef, useState } from 'react';
 import YootButtonModel from './meshes/YootButtonModel';
@@ -36,11 +36,13 @@ import System, {
   ColorSpan,
 } from "three-nebula";
 import * as THREE from 'three';
+import Ufo from './meshes/Ufo';
+import BonusTurn from './meshes/BonusTurn';
 
 
 // skip to the next page when the loop finishes
 export default function HowToPlay({ device }) {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(3)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
@@ -888,33 +890,243 @@ export default function HowToPlay({ device }) {
         fontSize={26}
       />
       <HtmlElement
-        text='and pass Earth'
+        text='wins!'
         position={[1,0,3]}
         rotation={[-Math.PI/8, -Math.PI/16, 0]}
         fontSize={26}
       />      
-      <HtmlElement
-        text='wins!'
-        position={[1,0,4]}
-        rotation={[-Math.PI/8, -Math.PI/16, 0]}
-        fontSize={26}
-      />
       <Tiles device={device}/>
     </group>
   }
 
-  // capture, combine
+  // capture
   function Page3() {
+    const springs = useSpring({
+      from: {
+        cursorPos: [1, 0.3, 1],
+        rocketScale: 1.5,
+        cursorEffectOpacity: 0,
+        legalTileScale: 0.4,
+        pointerOpacity: 0,
+        rocketPos: [-2,2,3],
+        ufoPos: [2, 1, 1.4],
+        ufoScale: 1.5,
+        moveTextScale: 1,
+        bonusTurnScale: 0,
+        yootButtonScale: 0,
+      },
+      to: [
+        {
+          cursorPos: [-0.5,2,4.5],
+          delay: 1000
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocketScale: 2.1,
+          legalTileScale: 0.8,
+          pointerOpacity: 1,
+          ufoScale: 2,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+        },
+        {
+          cursorPos: [3,2,2.5],
+          delay: 1000,
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocketScale: 1.5,
+          legalTileScale: 0.4,
+          pointerOpacity: 0,
+          ufoScale: 1.5,
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocketPos: [-1,2,3],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          rocketPos: [0.3,2,2.3],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          rocketPos: [1.5,2,1.5],
+          ufoPos: [8, -3, -5],
+          ufoScale: 0,
+          config: {
+            tension: 60,
+            friction: 26
+          }
+        },
+        {
+          rocketPos: [1.5,2,1.5],
+          ufoPos: [8, -3, -5],
+          ufoScale: 0,
+          config: {
+            tension: 60,
+            friction: 26
+          }
+        },
+        {
+          moveTextScale: 0,
+          bonusTurnScale: 2,
+          yootButtonScale: 1
+        },
+        {
+          delay: 5000,
+        },
+      ],
+      loop: true,
+      delay: 500
+    })
 
+    function FirstCornerTiles({ position }) {
+      let tiles = [];
+
+      //circle
+      const NUM_STARS = 20
+      const TILE_RADIUS = 5;
+      for (let i = 0; i < 4; i++) {
+        let position = [
+          -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+          0,
+          Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        ];
+        if (i === 3) {
+          tiles.push(
+            <group 
+              position={position}
+            >
+              <Star
+                tile={i}
+                key={i}
+                scale={springs.legalTileScale}
+                device={device}
+              />
+              <Pointer color='red' position={[-0.3,2.5,0]} scale={2} opacity={springs.pointerOpacity}/>
+            </group>
+          )
+        } else {            
+          tiles.push(
+            <Star
+              position={position}
+              tile={i}
+              key={i}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          )
+        }
+      }
+  
+      return <group position={position}>
+        { tiles }
+      </group>;
+    }
+
+    // ufo is flipped over, moved to a corner and scaled to 0. show sparkle
+    return <group>
+      <group name='text' position={[-3.5,0,-5]}>
+        <HtmlElement
+          text='4. If you move into a tile with'
+          position={[0,0,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text=' an enemy, it will be captured.'
+          position={[0,-1,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='You will get an extra turn.'
+          position={[0,-2,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+      </group>
+      {/* rocket */}
+      {/* ufo */}
+      {/* cursor */}
+      {/* move: 3 */}
+      {/* yoot button */}
+      {/* yell 'bonus turn!' */}
+      <FirstCornerTiles position={[-1, 0, -1]}/>
+      <animated.group name='rocket' position={springs.rocketPos}>
+        <Rocket position={[0.8,0,0.5]} scale={springs.rocketScale} />
+      </animated.group>
+      <animated.group name='ufo' position={springs.ufoPos}>
+        <Ufo position={[0.8,0,0.5]} scale={springs.ufoScale} />
+      </animated.group>
+      <animated.group scale={springs.moveTextScale}>
+        <Text3D
+          position={[-2, 0, 1]}
+          rotation={[-Math.PI/2,0,0]}
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.5} 
+          height={0.01}
+        >
+          MOVE: 3
+          <meshStandardMaterial color={ "green" }/>
+        </Text3D>
+      </animated.group>
+      <group>
+        <Cursor
+          position={springs.cursorPos}
+          rotation={[0,0,0]}
+          scale={[3, 3, 0.1]}
+          effectOpacity={springs.cursorEffectOpacity}
+          effect={true}
+        />
+      </group>
+      <BonusTurn rotation={[Math.PI/4 - Math.PI/16, Math.PI/2, 0]} position={[-3, 0, 0.5]} scale={springs.bonusTurnScale}/>
+      <Float>
+        <animated.group scale={springs.yootButtonScale}>
+          <YootButtonModel rotation={[Math.PI/4 - Math.PI/16, Math.PI/2, 0]} position={[0.5, 0, 0.5]} turnedOn={true}/>
+        </animated.group>
+      </Float>
+    </group>
   }
 
-  // yoot results
+  // combine
   function Page4() {
 
   }
+  
+  // yoot results
+  function Page5() {
+    
+  }
 
   // shortcuts / possible paths
-  function Page5() {
+  // regular path
+  // shortcut 1: through Mars and center
+  // shortcut 2: through Saturn and center
+  // shortcut 3: through Mars & Moon
+  function Page6() {
     
   }
 
@@ -948,6 +1160,10 @@ export default function HowToPlay({ device }) {
     function handlePage2() {
       setPage(2)
     }
+    function handlePage3() {
+      setPage(3)
+    }
+
     return <group name='pagination'>
       <mesh position={[-2, 0, 6]} rotation={[0, 0, Math.PI/2]} onPointerUp={handlePageLeft}>
         <coneGeometry args={[0.2, 0.4, 3]}/>
@@ -965,17 +1181,21 @@ export default function HowToPlay({ device }) {
         <sphereGeometry args={[0.2, 32, 16]}/>
         <meshStandardMaterial color={ page === 2 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[2, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
+      <mesh position={[2, 0, 6]} onPointerUp={handlePage3}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 3 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[3, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
       <coneGeometry args={[0.2, 0.4, 3]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>
     </group>
   }
 
+  const pages = [<Page0/>, <Page1/>, <Page2/>, <Page3/>, <Page4/>, <Page5/>, <Page6/>]
+
   return <>
-    {page === 0 && <Page0/>}
-    {page === 1 && <Page1/>}
-    {page === 2 && <Page2/>}
+    {pages[page]}
     <Pagination/>
   </>
 }
