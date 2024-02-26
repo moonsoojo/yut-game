@@ -19,7 +19,7 @@ export default function Cursor2({
       rotation={rotation}
       scale={scale}
     >
-      <mesh
+      <animated.mesh
         castShadow
         receiveShadow
         geometry={nodes.Curve.geometry}
@@ -27,8 +27,8 @@ export default function Cursor2({
         scale={[1,1,1]}
       >
         <meshStandardMaterial color="white"/>
-      </mesh>
-      <mesh
+      </animated.mesh>
+      <animated.mesh
         castShadow
         receiveShadow
         geometry={nodes.Curve.geometry}
@@ -36,18 +36,18 @@ export default function Cursor2({
         scale={[1.1, 1.1, 0.9]}
       >
         <meshStandardMaterial color="black"/>
-      </mesh>
+      </animated.mesh>
       { effect && <group name="cursor-effect">
-        <mesh position={[-0.8, 0, -0.3]} rotation={[Math.PI/2, 0, Math.PI/2]}>
-          <capsuleGeometry args={[0.03, 0.3, 10, 20]}/>
+        <mesh position={[-0.4,0,-0.103]} rotation={[Math.PI/2, 0, Math.PI/2]}>
+          <capsuleGeometry args={[0.04, 0.25, 10, 20]}/>
           <AnimatedMeshDistortMaterial color="green" transparent opacity={effectOpacity}/>
         </mesh>
-        <mesh position={[-0.6, 0, -0.7]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
-          <capsuleGeometry args={[0.03, 0.3, 10, 20]}/>
+        <mesh position={[-0.32,0,-0.3]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+          <capsuleGeometry args={[0.04, 0.25, 10, 20]}/>
           <AnimatedMeshDistortMaterial color="green" transparent opacity={effectOpacity}/>
         </mesh>
-        <mesh position={[-0.3, 0, -0.9]} rotation={[Math.PI/2, 0, 0]}>
-          <capsuleGeometry args={[0.03, 0.3, 10, 20]}/>
+        <mesh position={[-0.13,0,-0.36]} rotation={[Math.PI/2, 0, 0]}>
+          <capsuleGeometry args={[0.04, 0.25, 10, 20]}/>
           <AnimatedMeshDistortMaterial color="green" transparent opacity={effectOpacity}/>
         </mesh>
       </group> }

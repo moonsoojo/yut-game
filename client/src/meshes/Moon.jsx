@@ -6,8 +6,9 @@ import HelperArrow from "./HelperArrow";
 import { useRef, useEffect } from "react";
 import { useAtom } from "jotai";
 import layout from "../layout";
+import { animated } from "@react-spring/three";
 
-export default function Moon({ position, tile, scale = 1, device }) {
+export default function Moon({ position, tile, scale = 0.4, device }) {
   const props = useTexture({
     map: "textures/moon/moon-color.jpg", // must use absolute path - string starts with a slash
   });
@@ -15,10 +16,10 @@ export default function Moon({ position, tile, scale = 1, device }) {
   const moon = useRef();
 
   return (
-    <group
+    <animated.group
       ref={moon}
       position={position}
-      scale={0.4}
+      scale={scale}
     >
       <group scale={3.4}>
         <mesh>
@@ -37,6 +38,6 @@ export default function Moon({ position, tile, scale = 1, device }) {
         rotation={[0, 0, Math.PI/2]}
         scale={0.9}
       />
-    </group>
+    </animated.group>
   );
 }

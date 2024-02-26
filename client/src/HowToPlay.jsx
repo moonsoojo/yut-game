@@ -38,11 +38,13 @@ import System, {
 import * as THREE from 'three';
 import Ufo from './meshes/Ufo';
 import BonusTurn from './meshes/BonusTurn';
+import HelperArrow from './meshes/HelperArrow';
+import ArrowBlender from './meshes/ArrowBlender';
 
 
 // skip to the next page when the loop finishes
 export default function HowToPlay({ device }) {
-  const [page, setPage] = useState(3)
+  const [page, setPage] = useState(4)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
@@ -58,6 +60,26 @@ export default function HowToPlay({ device }) {
       }, 12000)
       setPageTimeout(page2Timeout)
     } else if (page === 2) {
+      const page3Timeout = setTimeout(() => {
+        setPage(3)
+      }, 14500)
+      setPageTimeout(page3Timeout)
+    } else if (page === 3) {
+      const page4Timeout = setTimeout(() => {
+        setPage(4)
+      }, 14500)
+      setPageTimeout(page4Timeout)
+    } else if (page === 4) {
+      const page5Timeout = setTimeout(() => {
+        setPage(5)
+      }, 17500)
+      setPageTimeout(page5Timeout)
+    } else if (page === 5) {
+      const page6Timeout = setTimeout(() => {
+        setPage(6)
+      }, 23500)
+      setPageTimeout(page6Timeout)
+    } else if (page === 6) {
       const page0Timeout = setTimeout(() => {
         setPage(0)
       }, 14500)
@@ -623,7 +645,6 @@ export default function HowToPlay({ device }) {
                 position[1]+1.5,
                 position[2]
               ],
-              // tilesPosition: [1,0,0.5],
               delay: 100,
               config: {
                 tension: 300,
@@ -637,8 +658,6 @@ export default function HowToPlay({ device }) {
       // doesn't trigger re-render
       const springs = useSpring({
         from: {
-          // tilesScale: 0.5,
-          // tilesPosition: [0, 0, 2.5],
           rocket3Pos: rocket3AnimationsArray[1].rocket3Pos,
           rocket3Scale: 1,
           tilesScale: 1,
@@ -654,7 +673,6 @@ export default function HowToPlay({ device }) {
           checkmarkColor: '#808080',
           checkmarkScale: 0,
           letsGoScale: 0,
-          // rocket3Scale: 0.5
         },
         to: [
           ...rocket3AnimationsArray.slice(2), 
@@ -721,9 +739,6 @@ export default function HowToPlay({ device }) {
             delay: 20000,
           },
         ],
-        config: {
-
-        },
         loop: true
       })
 
@@ -981,15 +996,6 @@ export default function HowToPlay({ device }) {
           }
         },
         {
-          rocketPos: [1.5,2,1.5],
-          ufoPos: [8, -3, -5],
-          ufoScale: 0,
-          config: {
-            tension: 60,
-            friction: 26
-          }
-        },
-        {
           moveTextScale: 0,
           bonusTurnScale: 2,
           yootButtonScale: 1
@@ -1068,12 +1074,7 @@ export default function HowToPlay({ device }) {
           fontSize={26}
         />
       </group>
-      {/* rocket */}
-      {/* ufo */}
-      {/* cursor */}
-      {/* move: 3 */}
-      {/* yoot button */}
-      {/* yell 'bonus turn!' */}
+
       <FirstCornerTiles position={[-1, 0, -1]}/>
       <animated.group name='rocket' position={springs.rocketPos}>
         <Rocket position={[0.8,0,0.5]} scale={springs.rocketScale} />
@@ -1112,22 +1113,958 @@ export default function HowToPlay({ device }) {
   }
 
   // combine
-  function Page4() {
+  function Page4() {    
+    const springs = useSpring({
+      from: {
+        cursorPos: [1, 0.3, 3],
+        rocket0Scale: 1.2,
+        rocket1Scale: 1.2,
+        cursorEffectOpacity: 0,
+        legalTile0Scale: 0.4,
+        legalTile1Scale: 0.4,
+        pointer0Opacity: 0,
+        pointer1Opacity: 0,
+        rocket0Pos: [
+          -Math.cos(((-1+5) * (Math.PI * 2)) / 20) * 5 -1,
+          0 + 1.5,
+          Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5 -1,
+        ],
+        rocket1Pos: [
+          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+          0 + 1.5,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+        ],
+        moveText0Scale: 1,
+        moveText1Scale: 0,
+        bonusTurnScale: 0,
+        yootButtonScale: 0,
+      },
+      to: [
+        {
+          cursorPos: [-1.2,2,5.5],
+          delay: 1000
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocket0Scale: 1.6,
+          rocket1Scale: 1.6,
+          legalTile0Scale: 0.6,
+          pointerOpacity: 1,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+        },
+        {
+          cursorPos: [2.8,2,5],
+          delay: 1000,
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocket0Scale: 1.2,
+          rocket1Scale: 1.2,
+          legalTile0Scale: 0.4,
+          pointer0Opacity: 0,
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1.5,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          rocket0Pos: [
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1.5,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          rocket0Pos: [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1.3,
+            0 + 1.5,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          rocket1Pos: [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
+            0 + 1.5,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          cursorPos: [6, 0.3, 1],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          moveText0Scale: 0,          
+          moveText1Scale: 1,
+        },
+        {
+          cursorPos: [2.8,2,5],
+          delay: 1000
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocket0Scale: 1.6,
+          rocket1Scale: 1.6,
+          legalTile1Scale: 0.6,
+          pointer1Opacity: 1,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+        },
+        {
+          cursorPos: [4, 2, 3],
+          delay: 1000
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocket0Scale: 1.2,
+          rocket1Scale: 1.2,
+          legalTile1Scale: 0.4,
+          pointer1Opacity: 0,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          cursorPos: [6, 0.3, 1],
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -1.3,
+            0 + 1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          rocket1Pos: [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
+            0 + 1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          rocket0Pos: [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -1.3,
+            0 + 1.5,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          rocket1Pos: [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
+            0 + 1.5,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          delay: 5000,
+        },
+      ],
+      loop: true,
+      delay: 500
+    })
 
+    function FirstCornerTiles({ position }) {
+      let tiles = [];
+
+      //circle
+      const NUM_STARS = 20
+      const TILE_RADIUS = 5;
+      for (let i = -1; i < 5; i++) {
+        let position = [
+          -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+          0,
+          Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        ];
+        if (i === 2) {
+          tiles.push(
+            <group 
+              position={position}
+            >
+              <Star
+                key={i}
+                scale={springs.legalTile0Scale}
+                device={device}
+              />
+              <Pointer color='red' position={[-0.3,2.5,0]} scale={2} opacity={springs.pointer0Opacity}/>
+            </group>
+          )
+        } else if (i === 4) {
+          tiles.push(
+            <group
+            position={position}>
+              <Mars
+                key={i}
+                scale={springs.legalTile1Scale}
+                device={device}
+              />
+              <Pointer color='red' position={[-0.3,1.7,0]} scale={2.3} opacity={springs.pointer1Opacity}/>
+            </group>
+          )
+        } else {            
+          tiles.push(
+            <Star
+              position={position}
+              key={i}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          )
+        }
+      }
+  
+      return <group position={position}>
+        { tiles }
+        <animated.group name='rocket-0' position={springs.rocket0Pos}>
+          <Rocket position={[0.8,0,0.5]} scale={springs.rocket0Scale} />
+        </animated.group>
+        <animated.group name='rocket-1' position={springs.rocket1Pos}>
+          <Rocket position={[0.8,0,0.5]} scale={springs.rocket1Scale} />
+        </animated.group>
+        <Cursor
+          position={springs.cursorPos}
+          rotation={[0,0,0]}
+          scale={[3, 3, 0.1]}
+          effectOpacity={springs.cursorEffectOpacity}
+          effect={true}
+        />
+      </group>;
+    }
+
+    // ufo is flipped over, moved to a corner and scaled to 0. show sparkle
+    return <group>
+      <group name='text' position={[-3.5,0,-5]}>
+        <HtmlElement
+          text='5. If you move a piece into a tile'
+          position={[0,0,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='with your own, the pieces will'
+          position={[0,-1,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='move together on the next turn.'
+          position={[0,-2,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+      </group>
+      <FirstCornerTiles position={[-1, 0, -1]}/>
+      <animated.group scale={springs.moveText0Scale}>
+        <Text3D
+          position={[-2, 0, 1]}
+          rotation={[-Math.PI/2,0,0]}
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.5} 
+          height={0.01}
+        >
+          MOVE: 3, 2
+          <meshStandardMaterial color={ "green" }/>
+        </Text3D>
+      </animated.group>
+      <animated.group scale={springs.moveText1Scale}>
+        <Text3D
+          position={[-2, 0, 1]}
+          rotation={[-Math.PI/2,0,0]}
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.5} 
+          height={0.01}
+        >
+          MOVE: 2
+          <meshStandardMaterial color={ "green" }/>
+        </Text3D>
+      </animated.group>
+    </group>
   }
   
-  // yoot results
   function Page5() {
-    
+    const springs = useSpring({
+      from: {
+        cursorPos: [1, 0.3, 3],
+        cursorScale: [0,0,0],
+        cursorEffectOpacity: 0,
+        rocket0Scale: 1.2,
+        legalTile0Scale: 0.4,
+        legalTile1Scale: 0.4,
+        legalTile2Scale: 0.4,
+        legalTile3Scale: 0.4,
+        pointer0Scale: 0,
+        pointer1Scale: 0,
+        pointer2Scale: 0,
+        pointer3Scale: 0,
+        pointer4Scale: 0,
+        rocket0Pos: [
+          -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+          0 + 1.5,
+          Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+        ],
+        scoreScale: 0,
+        tilesScale: 0.6,
+        tilesPos: [0,0,1.5],
+        tilesRotation: [0,0,0],
+        ruleTextScale: 1,
+        noteTextScale: 0,
+        moveTextScale: 0,
+      },
+      to: [
+        {
+          rocket0Pos: [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          delay: 1000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            0 - 1,
+            1.5,
+            0 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            0 - 1,
+            2.5,
+            0 - 1,
+          ],
+          rocket0Scale: 1.8,
+          legalTile0Scale: 0.6,
+          pointer0Scale: 1.5,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          rocket0Scale: 1.2,
+          legalTile0Scale: 0.4,
+          pointer0Scale: 0,
+          delay: 1000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          rocket0Scale: 1.2,
+          legalTile0Scale: 0.4,
+          pointer0Scale: 0,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          rocket0Scale: 1.2,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Scale: 0,
+          delay: 500,
+          scoreScale: 1,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          rocket0Scale: 1.2,
+          scoreScale: 0,
+          delay: 1000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Scale: 1.6,
+          rocket0Pos: [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          legalTile1Scale: 0.6,
+          pointer1Scale: 1,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Scale: 1.2,
+          rocket0Pos: [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          legalTile1Scale: 0.4,
+          pointer1Scale: 0,
+          delay: 1000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [-1,1.5,-1,],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          scoreScale: 1,
+          rocket0Scale: 0,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          scoreScale: 0,
+          rocket0Scale: 1.4,
+          rocket0Pos: [
+            Math.sin(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          tilesScale: 1,
+          tilesPos: [-3, 0, -1.5],
+          tilesRotation: [Math.PI/8, -Math.PI/4, 0],
+          ruleTextScale: 0,
+          noteTextScale: 1,
+          cursorPos: [3, 0, 5],
+          cursorScale: [2, 2, 2],
+          moveTextScale: 1,
+          delay: 1000
+        },
+        {
+          cursorPos: [-1.9, 0, 4],
+          delay: 1000
+        },
+        {
+          cursorEffectOpacity: 1,
+          rocket0Scale: 1.9,
+          legalTile2Scale: 0.4,
+          legalTile3Scale: 0.8,
+          pointer2Scale: 1,
+          pointer3Scale: 1,
+          pointer4Scale: 2.5,
+          delay: 1000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 200,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Scale: 1.4,
+          rocket0Pos: [
+            Math.sin(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 2000,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          pointer4Scale: 0,
+          legalTile3Scale: 0.4,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          delay: 5000
+        }
+      ],
+      config: {
+
+      },
+      loop: true
+    })
+
+
+    function Tiles(props) {
+      const TILE_RADIUS = layout[device].tileRadius.ring
+      const NUM_STARS = 20;
+      let tiles = [];
+  
+      //circle
+      for (let i = 0; i < NUM_STARS; i++) {
+        let position = [
+          -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+          0,
+          Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
+        ];
+        if (i == 0) {
+          tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
+        } else if (i == 3) {
+          tiles.push(
+            <Star
+              position={position}
+              tile={i}
+              key={i}
+              scale={springs.legalTile2Scale}
+              device={device}
+            />
+          );
+        } else if (i == 7) {
+          tiles.push(
+            <group>
+              <Star
+                position={position}
+                tile={i}
+                key={i}
+                scale={springs.legalTile3Scale}
+                device={device}
+              />
+              <Pointer color='red' position={[position[0], position[1] + 2, position[2]]} scale={springs.pointer4Scale}/>
+            </group>
+          );
+        } else if (i == 5) {
+          tiles.push(
+            <Mars
+              position={position}
+              tile={i}
+              key={i}
+              device={device}
+            />
+          );
+        } else if (i == 10) {
+          tiles.push(
+            <Saturn position={position} scale={springs.legalTile1Scale} tile={i} key={i} device={device}/>
+          );
+        } else if (i == 15) {
+          tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
+        } else {
+          tiles.push(
+            <Star
+              position={position}
+              tile={i}
+              key={i}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          );
+        }
+      }
+  
+      //shortcuts
+      const radiusShortcut1 = layout[device].tileRadius.shortcut1;
+      const radiusShortcut2 = layout[device].tileRadius.shortcut2;
+      for (let i = 0; i < NUM_STARS; i++) {
+        let indexShortcut1;
+        let indexShortcut2;
+        if (i == 0) {
+          indexShortcut1 = 24;
+          indexShortcut2 = 23;
+        } else if (i == 5) {
+          indexShortcut1 = 28;
+          indexShortcut2 = 27;
+        } else if (i == 10) {
+          indexShortcut1 = 20;
+          indexShortcut2 = 21;
+        } else if (i == 15) {
+          indexShortcut1 = 25;
+          indexShortcut2 = 26;
+        }
+        if (i == 0 || i == 5 || i == 10 || i == 15) {
+          let position1 = [
+            Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+              radiusShortcut1,
+            0,
+            Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+              radiusShortcut1,
+          ]
+          tiles.push(
+            <Star
+              position={position1}
+              tile={indexShortcut1}
+              key={i + 30}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          );
+          let position2 = [
+            Math.sin(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+              radiusShortcut2,
+            0,
+            Math.cos(((i -5) * (Math.PI * 2)) / NUM_STARS) *
+              radiusShortcut2,
+          ]
+          tiles.push(
+            <Star
+              position={position2}
+              tile={indexShortcut2}
+              key={i + 41}
+              scale={layout[device].star.scale}
+              device={device}
+            />
+          );
+        }
+      }
+      // center piece
+      tiles.push(
+        <Moon
+          position={[0,0,0]}
+          intensity={3}
+          key={100}
+          tile={22}
+          device={device}
+          scale={springs.legalTile0Scale}
+        />
+      );
+      return <animated.group {...props}>
+        {tiles}
+        <animated.group name='rocket-0' position={springs.rocket0Pos}>
+          <Rocket position={[0.8,0,0.5]} scale={springs.rocket0Scale} />
+        </animated.group>
+        <animated.group name='moon-arrow' scale={springs.pointer0Scale}>
+          <ArrowBlender
+            position={[0, 0.5, 1.5]}
+            rotation={[0, -Math.PI/2, 0]}
+            scale={0.5}
+            color='red'
+          />
+        </animated.group>
+        <animated.group name='saturn-arrow' scale={springs.pointer1Scale}>
+          <ArrowBlender
+            position={[0, 0.5, -3.5]}
+            rotation={[0, -Math.PI/2, 0]}
+            scale={0.5}
+            color='red'
+          />
+        </animated.group>
+        <animated.group name='mars-arrow-wrong' scale={springs.pointer2Scale}>
+          <ArrowBlender
+            position={[3.5, 0.5, 0]}
+            rotation={[0, -Math.PI, 0]}
+            scale={0.5}
+            color='grey'
+          />
+        </animated.group>
+        <animated.group name='mars-arrow-correct' scale={springs.pointer3Scale}>
+          <ArrowBlender
+            position={[4.6, 0.5, -1.5]}
+            rotation={[0, -Math.PI/8 * 11, 0]}
+            scale={0.5}
+            color='red'
+          />
+        </animated.group>
+        <animated.group scale={springs.scoreScale}>
+          <Text3D
+            font="/fonts/Luckiest Guy_Regular.json" 
+            size={0.5} 
+            height={0.01}
+            position={[-1, 2, 4]}
+            rotation={[-Math.PI/8, -Math.PI/16, 0]}
+          >
+            SCORE!
+            <meshStandardMaterial color='green'/>
+          </Text3D>
+        </animated.group>
+      </animated.group>;
+    }
+
+    return <group>
+      <animated.group name='text' position={[-3.5,0,-7]} scale={springs.ruleTextScale}>
+        <HtmlElement
+          text='6. When you start a move'
+          position={[0,0,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text=' from a planet or the Moon,'
+          position={[0,-1,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text=' you can take a shortcut.'
+          position={[0,-2,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+      </animated.group>
+      <animated.group name='note-text' position={[2,0,2]} rotation={[-Math.PI/4, 0, 0]} scale={springs.noteTextScale}>
+        <HtmlElement
+          text='NOTE:'
+          position={[0,0,0]}
+          fontSize={20}
+        />
+        <HtmlElement
+          text='You cannot bend in'
+          position={[0,-0.5,0]}
+          fontSize={20}
+        />
+        <HtmlElement
+          text=' the middle of a move.'
+          position={[0,-1,0]}
+          fontSize={20}
+        />
+      </animated.group>
+      <animated.group name='move-text' position={[-3,0,2.5]} rotation={[-Math.PI/4, 0, 0]} scale={springs.moveTextScale}>
+        <HtmlElement
+          text='move: 4'
+          position={[0,-2,0]}
+          fontSize={20}
+          color='green'
+        />
+      </animated.group>
+      <Cursor2
+        position={springs.cursorPos}
+        rotation={[0,0,0]}
+        scale={springs.cursorScale}
+        effectOpacity={springs.cursorEffectOpacity}
+        effect={true}
+      />
+      <Tiles position={springs.tilesPos} rotation={springs.tilesRotation} scale={springs.tilesScale}/>
+    </group>
   }
 
-  // shortcuts / possible paths
-  // regular path
-  // shortcut 1: through Mars and center
-  // shortcut 2: through Saturn and center
-  // shortcut 3: through Mars & Moon
+  // yoot results
   function Page6() {
-    
+    return <group>
+
+    </group>
   }
 
   function Pagination() {
@@ -1163,29 +2100,50 @@ export default function HowToPlay({ device }) {
     function handlePage3() {
       setPage(3)
     }
+    function handlePage4() {
+      setPage(4)
+    }
+    function handlePage5() {
+      setPage(5)
+    }
+    function handlePage6() {
+      setPage(6)
+    }
 
     return <group name='pagination'>
-      <mesh position={[-2, 0, 6]} rotation={[0, 0, Math.PI/2]} onPointerUp={handlePageLeft}>
+      <mesh position={[-4, 0, 6]} rotation={[0, 0, Math.PI/2]} onPointerUp={handlePageLeft}>
         <coneGeometry args={[0.2, 0.4, 3]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>
-      <mesh position={[-1, 0, 6]} onPointerUp={handlePage0}>
+      <mesh position={[-3, 0, 6]} onPointerUp={handlePage0}>
         <sphereGeometry args={[0.2, 32, 16]}/>
         <meshStandardMaterial color={ page === 0 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[0, 0, 6]} onPointerUp={handlePage1}>
+      <mesh position={[-2, 0, 6]} onPointerUp={handlePage1}>
         <sphereGeometry args={[0.2, 32, 16]}/>
         <meshStandardMaterial color={ page === 1 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[1, 0, 6]} onPointerUp={handlePage2}>
+      <mesh position={[-1, 0, 6]} onPointerUp={handlePage2}>
         <sphereGeometry args={[0.2, 32, 16]}/>
         <meshStandardMaterial color={ page === 2 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[2, 0, 6]} onPointerUp={handlePage3}>
+      <mesh position={[-0, 0, 6]} onPointerUp={handlePage3}>
         <sphereGeometry args={[0.2, 32, 16]}/>
         <meshStandardMaterial color={ page === 3 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[3, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
+      <mesh position={[1, 0, 6]} onPointerUp={handlePage4}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 4 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[2, 0, 6]} onPointerUp={handlePage5}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 5 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[3, 0, 6]} onPointerUp={handlePage6}>
+        <sphereGeometry args={[0.2, 32, 16]}/>
+        <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
+      </mesh>
+      <mesh position={[4, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
       <coneGeometry args={[0.2, 0.4, 3]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>

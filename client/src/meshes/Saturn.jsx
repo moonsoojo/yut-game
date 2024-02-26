@@ -6,8 +6,9 @@ import { TextureLoader } from "three/src/loaders/TextureLoader";
 import { useLoader } from "@react-three/fiber";
 import HelperArrow from "./HelperArrow";
 import Tile from "../components/Tile";
+import { animated } from "@react-spring/three";
 
-export default function Saturn({ position, tile, device }) {
+export default function Saturn({ position, scale=0.4, tile, device }) {
   const { nodes, materials } = useGLTF("models/Saturn 3.glb");
   const satelliteTexture1 = useLoader(
     TextureLoader,
@@ -45,7 +46,7 @@ export default function Saturn({ position, tile, device }) {
   });
   
   return (
-    <group position={position} scale={0.4}>
+    <animated.group position={position} scale={scale}>
       <group scale={0.9}>
         <mesh
           castShadow
@@ -169,7 +170,7 @@ export default function Saturn({ position, tile, device }) {
         rotation={[0, 0, Math.PI/2]}
         scale={0.9}
       />
-    </group>
+    </animated.group>
   );
 }
 

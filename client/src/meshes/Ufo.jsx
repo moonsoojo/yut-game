@@ -285,5 +285,3 @@ export default function Ufo({
     </animated.group>
   );
 }
-
-useGLTF.preload("/models/ufos/ufo0.glb");

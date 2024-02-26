@@ -13,7 +13,7 @@ export default function Pointer({ color, scale=4, position=[0, 1.5, 0], opacity=
     ref.current.rotation.y = state.clock.elapsedTime
   })
 
-  return <mesh 
+  return <animated.mesh 
     ref={ref} 
     receiveShadow 
     position={position} 
@@ -21,5 +21,5 @@ export default function Pointer({ color, scale=4, position=[0, 1.5, 0], opacity=
     scale={scale}>
     <coneGeometry args={[0.1, 0.3, 3]}/>
     <AnimatedMeshDistortMaterial color={color} transparent opacity={opacity}/>
-  </mesh>
+  </animated.mesh >
 }

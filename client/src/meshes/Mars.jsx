@@ -4,6 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import React from "react";
 import Tile from "../components/Tile";
+import { animated } from "@react-spring/three";
 
 export default function Mars({ position, tile, scale=0.4, device }) {
   const { nodes, materials } = useGLTF("models/Mars 4.glb");
@@ -14,7 +15,7 @@ export default function Mars({ position, tile, scale=0.4, device }) {
   });
 
   return (
-    <group position={position} scale={scale}>
+    <animated.group position={position} scale={scale}>
       <mesh
         castShadow
         receiveShadow
@@ -34,6 +35,6 @@ export default function Mars({ position, tile, scale=0.4, device }) {
         rotation={[0, 0, Math.PI/2]}
         scale={0.9}
       />
-    </group>
+    </animated.group>
   );
 }

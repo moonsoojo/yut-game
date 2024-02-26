@@ -202,5 +202,3 @@ export default function RocketAnimated({
     </Float>
   )
 }
-
-useGLTF.preload("/models/rocket-with-astronaut0.glb");
