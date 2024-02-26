@@ -26,7 +26,7 @@ export default function Moon({ position, tile, scale = 1, device }) {
           <meshStandardMaterial map={props.map} />
         </mesh>
       </group>
-      <Tile tile={tile} wrapperRadius={0.7} device={device}/>
+      { tile !== undefined && <Tile tile={tile} wrapperRadius={0.7} device={device}/> }
       <HelperArrow
         position={[0, 0, 1]}
         rotation={[Math.PI/2, 0, 0]}

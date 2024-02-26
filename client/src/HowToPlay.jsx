@@ -591,25 +591,23 @@ export default function HowToPlay({ device }) {
             Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
           ];
           if (i == 0) {
-            tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
+            tiles.push(<Earth position={position} key={i} device={device}/>);
           } else if (i == 5) {
             tiles.push(
               <Mars
                 position={position}
-                tile={i}
                 key={i}
                 device={device}
               />
             );
           } else if (i == 10) {
-            tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
+            tiles.push(<Saturn position={position} key={i} device={device}/>);
           } else if (i == 15) {
-            tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
+            tiles.push(<Neptune position={position} key={i} device={device}/>);
           } else {
             tiles.push(
               <Star
                 position={position}
-                tile={i}
                 key={i}
                 scale={layout[device].star.scale}
                 device={device}
@@ -808,7 +806,6 @@ export default function HowToPlay({ device }) {
           position={[0,0,0]}
           intensity={3}
           key={100}
-          tile={22}
           device={device}
         />
       );

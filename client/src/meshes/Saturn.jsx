@@ -158,7 +158,7 @@ export default function Saturn({ position, tile, device }) {
           </group>
         </mesh>
       </group>
-      <Tile tile={tile} wrapperRadius={0.5} device={device}/>
+      { tile != undefined && <Tile tile={tile} wrapperRadius={0.5} device={device}/> }
       <HelperArrow
         position={[0, 0, 0.9]}
         rotation={[Math.PI/2, 0, 0]}
