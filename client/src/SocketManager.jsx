@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-const ENDPOINT = 'localhost:5000';
+// const ENDPOINT = 'localhost:5000';
 
-// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -45,6 +45,8 @@ export const celebrateMeteorsAtom = atom(false)
 export const thrownAtom = atom(false)
 export const hostNameAtom = atom('')
 export const roomIdAtom = atom('')
+// possible values: ['bonus turn', 'out of bounds', 'your turn!', 'who goes first?']
+export const yellAtom = atom('')
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -68,6 +70,7 @@ export const SocketManager = () => {
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect] = useAtom(displayDisconnectAtom)
   const [_thrown, setThrown] = useAtom(thrownAtom)
+  const [_yell, setYell] = useAtom(yellAtom);
 
   const params = useParams();
 
@@ -158,6 +161,9 @@ export const SocketManager = () => {
     })
     socket.on('thrown', (thrown) => {
       setThrown(thrown)
+    })
+    socket.on('yell', (yell) => {
+      setYell(yell)
     })
     /*socket.on('celebrate', (event) => {
       let text;

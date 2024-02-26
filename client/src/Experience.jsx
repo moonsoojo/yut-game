@@ -69,6 +69,9 @@ import Meteors from "./particles/Meteors.jsx";
 import DisconnectModal from "./DisconnectModal.jsx";
 import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
+import MilkyWay from "./shader/MilkyWay.jsx";
+import Alert from "./Yell.jsx";
+import Yell from "./Yell.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -107,6 +110,9 @@ export default function Experience() {
     return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
   }
   
+  // separate everything into components
+  // should not put state here unless it's being used
+  // one change makes everything re-render
   const [readyToStart] = useAtom(readyToStartAtom);
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
@@ -612,6 +618,9 @@ export default function Experience() {
         position={layout[device].camera.position}
         ref={camera}
       />
+      {/* <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
+        <MilkyWay brightness={1}/>
+      </group> */}
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>
@@ -890,7 +899,6 @@ export default function Experience() {
     { winner == 1 && <UfosWin handleRestart={handleRestart}/> }
     {/* <Celebration/> */}
     {/* <Meteors/> */}
-    {/* HTML elements */}
     </>
   );
 }

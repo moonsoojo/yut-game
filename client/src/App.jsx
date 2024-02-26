@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Experience from './Experience';
 import { Canvas } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
@@ -9,13 +9,17 @@ import UfosWin from './UfosWin';
 import Stars from './particles/Stars';
 import Showroom from './Showroom';
 import Meteors from './particles/Meteors';
-import { OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import Celebration from './Celebration';
 import Interface from './Interface';
 import { Perf } from 'r3f-perf';
 
 export default function App () {
-  console.log(`[App]`)
+  const created = ({ gl }) =>
+  {
+      gl.setClearColor('#120d25', 1)
+  }
+
   return (<>
     <Canvas
       className='r3f'
@@ -28,8 +32,11 @@ export default function App () {
           12.798027537168215,
           6.469516796871723 
         ],
-      } }>
+      } }
+      onCreated={ created }
+      >
       <Perf/>
+      
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <Route path="/">

@@ -63,6 +63,7 @@ export default function HowToPlay({ device }) {
     }
   }, [page])
   function Page0() {
+    
     const nodes = useGLTF("models/yoot-highlight.glb").nodes;
     const materials = useGLTF("models/yoot-highlight.glb").materials;
     const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;

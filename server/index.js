@@ -431,11 +431,6 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
       updateTeams(roomId, teams)
       io.to(roomId).emit('teams', teams)
 
-      // let { updateThrownError } = updateThrown(roomId, socket.id, true)
-      // if (updateThrownError) {
-      //   return callback({ error: updateThrownError })
-      // }
-
       const yootForceVectors = [];
       for (let i = 0; i < 4; i++) {
         yootForceVectors.push({
@@ -472,7 +467,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
     io.to(roomId).emit("legalTiles", { legalTiles: getLegalTiles(roomId) })
   })
 
-  socket.on("recordThrow", ({move}, callback) => {
+  socket.on("recordThrow", ({move}) => {
     console.log("[recordThrow] move", move)
     updateThrown({ roomId, flag: false })
     io.to(roomId).emit("thrown", false)
@@ -493,8 +488,9 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         io.to(roomId).emit("turn", turn)
       } else if (move == 4 || move == 5) {
         addThrow(roomId, turn.team);
+        io.to(roomId).emit("yell", "bonus turn")
       }
-      io.emit("teams", getTeams(roomId))
+      io.to(roomId).emit("teams", getTeams(roomId))
     }
   })
 

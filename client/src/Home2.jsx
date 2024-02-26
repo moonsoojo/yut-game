@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
+import { Environment, Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 
 import Earth from './meshes/Earth';
@@ -334,5 +334,6 @@ export default function Home2() {
   </group>
   
   <Stars count={1000} size={0.2}/>
+  
   </PresentationControls>
 }
