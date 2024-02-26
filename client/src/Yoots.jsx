@@ -132,9 +132,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         result = countUps
       }
       // test: set all result to the same value
-      if (gamePhase === "game") {
-        result = 5
-      }
+      // if (gamePhase === "game") {
+      //   result = 5
+      // }
     }
       
     return result

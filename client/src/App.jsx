@@ -17,7 +17,7 @@ import { Perf } from 'r3f-perf';
 export default function App () {
   const created = ({ gl }) =>
   {
-      gl.setClearColor('#120d25', 1)
+      gl.setClearColor('#000b18', 1)
   }
 
   return (<>
