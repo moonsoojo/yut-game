@@ -4,6 +4,7 @@ import Tiles from './Tiles';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
 import Yoot from './meshes/Yoot';
+import { Float } from '@react-three/drei';
 
 export default function About(props) {
 
@@ -61,25 +62,34 @@ export default function About(props) {
             text='during the holidays in Korea.'
         />
         <group>
-            <Tiles device={props.device} rotation={[Math.PI/2, 0, 0]} scale={0.5} position={[5, -5, 0]}/>
             <HtmlElement
                 position={[-1,-4,-1]}
                 fontSize={26} 
                 text='Board'
             />
+            <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
+              <Tiles device={props.device} rotation={[Math.PI/2, 0, 0]} scale={0.5} position={[5, -5, 0]}/>
+            </Float>
+            
             <HtmlElement
                 position={[-1,-10,-1]}
                 fontSize={26} 
                 text='Pieces'
             />
+            <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
             <Rockets position={[3, -10, 0]} rotation={[Math.PI/4, 0, 0]}/>
+            </Float>
+            <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
             <Ufos position={[7, -10.5, 0]} rotation={[Math.PI/4, 0, 0]}/>
+            </Float>
             <HtmlElement
                 position={[10,-3,-1]}
                 fontSize={26} 
                 text='Yoot (Dice)'
             />
-            <Yoots position={[13, -6, -2]} rotation={[Math.PI/2, Math.PI/2, 0]} scale={0.5}/>
+            <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
+            <Yoots position={[13, -6, -2]} rotation={[0, Math.PI/2, 0]} scale={0.5}/>
+            </Float>
             <HtmlElement
                 position={[10,-9,-1]}
                 fontSize={26} 

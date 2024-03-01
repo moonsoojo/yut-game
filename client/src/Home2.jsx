@@ -248,10 +248,10 @@ export default function Home2() {
       scale={scale}
     >
       <Float floatIntensity={0.001} speed={2}>
-        <Yoot scale={0.5} position={[0,0,0]} scene={scene} materials={materials}/>
-        <Yoot scale={0.5} position={[0,0,-1]}/>
-        <Yoot scale={0.5} position={[0,0,-2]}/>
-        <Yoot scale={0.5} position={[0,0,-3]}/>
+        <Yoot scale={1} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
+        <Yoot scale={1} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
+        <Yoot scale={1} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
+        <Yoot scale={1} position={[0,0,4]} rotation={[0, 0, -Math.PI/2]} />
       </Float>
     </animated.group>
   }
@@ -283,10 +283,12 @@ export default function Home2() {
     rotation={layout[device].title.rotation}
     scale={1.4}
   >
+    <Float>
     <Title 
       scale={layout[device].title.text.scale}
       setDisplay={setDisplay}
     />
+    </Float>
     <Yoots 
       position={layout[device].title.yoots.position}
       rotation={layout[device].title.yoots.rotation}

@@ -1,6 +1,7 @@
-import React, {useRef} from 'react'
+import React, {useRef, useMemo} from 'react'
 import {useFrame, useThree} from '@react-three/fiber'
 import * as THREE from 'three'
+import { OrbitControls } from '@react-three/drei'
 
 const vertexShader = `
   varying vec3 Normal;
@@ -19,7 +20,7 @@ const float b=.1759;
 const float PI=3.14159265359;
 uniform float time;
 uniform sampler2D texture1;
-uniform vec3 colorTint;
+uniform vec4 colorTint;
 
 varying vec3 Normal;
 varying vec3 Position;
@@ -71,17 +72,16 @@ void main(){
     v = 1.0-v;
     vec2 textureUV = calculateUV(uv,d);
     vec3 texcolor = texture2D(texture1,textureUV).rgb;
-    gl_FragColor = vec4((v+texcolor.r)*colorTint.x,(v+texcolor.g)*colorTint.y,(v+texcolor.b)*colorTint.z,v) ;
+    gl_FragColor = vec4((v+texcolor.r)*colorTint.x,(v+texcolor.g)*colorTint.y,(v+texcolor.b)*colorTint.z,v*colorTint.w) ;
     //O.rgb = O.rgb*1.0/r;
     //O.xy=uv;
 }
 `
 
-function MilkyWay(props){
+function MilkyWay(props) {
     const meshRef = useRef();
     const secondMeshRef = useRef();
     const thirdMeshRef = useRef();
-    const {scene} = useThree();
     
     const loader = new THREE.TextureLoader();
     const sky = loader.load('./textures/star.jpg');
@@ -96,69 +96,79 @@ function MilkyWay(props){
     sky3.wrapT = THREE.RepeatWrapping;  
     sky3.repeat.set(4, 4);
 
+    const milkyWayUniform = useMemo(
+        () => ({
+            time: { value: 0 },
+            resolution: { value: new THREE.Vector4() },
+            texture1: { type: "t", value: sky2 },
+            colorTint: { value: new THREE.Vector4(props.colorTint1.x * props.brightness, props.colorTint1.y * props.brightness, props.colorTint1.z * props.brightness, props.colorTint1.w * props.brightness) }
+        }), [props.brightness, sky2, props.colorTint1]);
 
-    scene.background = new THREE.Color("rgb(0, 0, 0)");
+    const milkyWayUniformSecondLayer = useMemo(
+        () => ({
+            time: { value: 0 },
+            resolution: { value: new THREE.Vector4() },
+            texture1: { type: "t", value: sky3 },
+            colorTint: { value: new THREE.Vector4(props.colorTint2.x * props.brightness, props.colorTint2.y * props.brightness, props.colorTint2.z * props.brightness, props.colorTint2.w * props.brightness) }
+        }), [props.brightness, sky3, props.colorTint2]);
 
-    var MaterialMilkyWay = new THREE.ShaderMaterial({
+    const milkyWayUniformThirdLayer = useMemo(
+        () => ({
+            time: { value: 0 },
+            resolution: { value: new THREE.Vector4() },
+            texture1: { type: "t", value: sky },
+            colorTint: { value: new THREE.Vector4(props.colorTint3.x * props.brightness, props.colorTint3.y * props.brightness, props.colorTint3.z * props.brightness, props.colorTint3.w * props.brightness) }
+        }), [props.brightness, sky, props.colorTint3]);
+
+    const MaterialMilkyWay = new THREE.ShaderMaterial({
       extensions:{
         derivatives: "extension GL_OES_standard_derivatives : enable"
       },
       side : THREE.DoubleSide,
       transparent:true,
-      uniforms:{
-          time:{value:0},
-          resolution:{value : new THREE.Vector4()},
-          texture1: { type: "t", value: sky2 },
-          colorTint: { value: new THREE.Vector3(1.3, 1.0, 3.0, 0.3) }
-      },
+        uniforms: milkyWayUniform,
       vertexShader:vertexShader,
       fragmentShader:fragmentShader,
     });
 
-    var MaterialMilkyWaySecondLayer = new THREE.ShaderMaterial({
+    const MaterialMilkyWaySecondLayer = new THREE.ShaderMaterial({
         extensions: {
             derivatives: "extension GL_OES_standard_derivatives : enable"
         },
         side: THREE.DoubleSide,
         transparent: true,
-        uniforms: {
-            time: { value: 0 },
-            resolution: { value: new THREE.Vector4() },
-            texture1: { type: "t", value: sky3 },
-            colorTint: { value: new THREE.Vector3(1.3, 0.4, 0.0) }
-        },
+        uniforms: milkyWayUniformSecondLayer,
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
     });
 
-    var MaterialMilkyWayThirdLayer = new THREE.ShaderMaterial({
+    const MaterialMilkyWayThirdLayer = new THREE.ShaderMaterial({
         extensions: {
             derivatives: "extension GL_OES_standard_derivatives : enable"
         },
         side: THREE.DoubleSide,
         transparent: true,
-        uniforms: {
-            time: { value: 0 },
-            resolution: { value: new THREE.Vector4() },
-            texture1: { type: "t", value: sky },
-            colorTint: { value: new THREE.Vector3(1.3, 1.3, 3.3) }
-        },
+        uniforms: milkyWayUniformThirdLayer,
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
     });
 
-    useFrame((state, delta)=>{
-        meshRef.current.material.uniforms.time.value = state.clock.elapsedTime * 10;
-        secondMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime * 10;
-        thirdMeshRef.current.material.uniforms.time.value = state.clock.elapsedTime * 10;
+
+    useFrame((state) => {
+        meshRef.current.material.uniforms.time.value = state.clock.getElapsedTime();
+        secondMeshRef.current.material.uniforms.time.value = state.clock.getElapsedTime() / 1.0;
+        thirdMeshRef.current.material.uniforms.time.value = state.clock.getElapsedTime() / 1.3;
     });
+
+    const rotation = -35.0;
+   
 
     return(
       <>
-        <mesh {...props}
-          ref={meshRef}
-          scale={5.0}
-          rotation={[0.0,0.0,-35.0] }
+            <mesh {...props}
+                ref={meshRef}
+                scale={props.scale}
+                rotation={[0.0, 0.0, rotation] }
         >
             <planeGeometry args={[5.5,5.5,32]}/>
             <shaderMaterial attach="material"{...MaterialMilkyWay} />

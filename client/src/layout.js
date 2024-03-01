@@ -417,9 +417,9 @@ export default {
         scale: 1
       },
       yoots: {
-        position: [8, -2, 0],
+        position: [7, -2, 0],
         rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.6
+        scale: 0.4
       }
     },
     team0: {

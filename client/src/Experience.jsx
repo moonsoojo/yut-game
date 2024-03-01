@@ -618,9 +618,6 @@ export default function Experience() {
         position={layout[device].camera.position}
         ref={camera}
       />
-      {/* <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-        <MilkyWay brightness={1}/>
-      </group> */}
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>
@@ -893,7 +890,7 @@ export default function Experience() {
         height={layout[device].tipsModal.height}
         padding={layout[device].tipsModal.padding}
       />}
-      <Stars count={500} size={5}/>
+      <Stars count={7000} size={5}/>
     </group> }
     { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart}/> }

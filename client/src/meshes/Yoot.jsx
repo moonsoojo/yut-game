@@ -6,7 +6,7 @@ import { useGraph } from "@react-three/fiber";
 
 export default function Yoot({ 
   position, 
-  rotation=[0, 0, -Math.PI / 2], 
+  rotation=[0, 0, 0], 
   scale=1,
 }) {
   const { scene, materials } = useGLTF(
@@ -14,17 +14,16 @@ export default function Yoot({
   );
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
-  const scaleArray=[1 * scale, 6.161 * scale, 1 * scale]
 
   return (
-    <mesh
-      castShadow
-      receiveShadow
-      geometry={nodes.Cylinder007.geometry}
-      position={position}
-      material={materials["Texture wrap.005"]}
-      rotation={rotation}
-      scale={scaleArray}
-    />
+    <group position={position} rotation={rotation} scale={scale}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Cylinder007.geometry}
+        material={materials["Texture wrap.005"]}
+        scale={[1, 6.161, 1]}
+      />
+    </group>
   );
 }

@@ -38,13 +38,13 @@ import System, {
 import * as THREE from 'three';
 import Ufo from './meshes/Ufo';
 import BonusTurn from './meshes/BonusTurn';
-import HelperArrow from './meshes/HelperArrow';
 import ArrowBlender from './meshes/ArrowBlender';
+import YootSet from './meshes/YootSet';
 
 
 // skip to the next page when the loop finishes
 export default function HowToPlay({ device }) {
-  const [page, setPage] = useState(4)
+  const [page, setPage] = useState(0)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
@@ -2060,10 +2060,129 @@ export default function HowToPlay({ device }) {
     </group>
   }
 
-  // yoot results
+  // lay out outcomes on top
+  // title
+  // meaning
+  // shape
+  // bonus turn
   function Page6() {
     return <group>
-
+      <animated.group name='text' position={[-3.5,0,-7]}>
+        <HtmlElement
+          text='7. How to read the yoot (dice) throw'
+          position={[-1,0,0]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+      </animated.group>
+      <group position={[-3.5, 0, -1]} scale={0.8}>        
+        <HtmlElement
+          text='"DO"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='1 Step'
+          position={[-0.2,0,-2.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="do" scale={0.4}/>
+      </group>
+      <group position={[0, 0, -1]} scale={0.8}>        
+        <HtmlElement
+          text='"GE"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='2 steps'
+          position={[-0.2,0,-2.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="ge" scale={0.4}/>
+      </group>
+      <group position={[3.5, 0, -1]} scale={0.8}>        
+        <HtmlElement
+          text='"GULL"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='3 steps'
+          position={[-0.2,0,-2.8]}
+          rotation={[-Math.PI/8, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="girl" scale={0.4}/>
+      </group>
+      <group position={[-3.5, 0, 4]} scale={0.7}>        
+        <HtmlElement
+          text='"YOOT"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='4 steps'
+          position={[-0.2,0,-3.0]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='bonus turn'
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="yoot" scale={0.4}/>
+      </group>
+      <group position={[0, 0, 4]} scale={0.7}>        
+        <HtmlElement
+          text='"MO"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='5 steps'
+          position={[-0.2,0,-3.0]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='bonus turn'
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="mo" scale={0.4}/>
+      </group>
+      <group position={[3.5, 0, 4]} scale={0.7}>        
+        <HtmlElement
+          text='"BACKDO"'
+          position={[-0.2,0,-3.8]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='-1 step'
+          position={[-0.2,0,-3.0]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <HtmlElement
+          text='backward'
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          fontSize={26}
+        />
+        <YootSet points="backdo" scale={0.4}/>
+      </group>
     </group>
   }
 

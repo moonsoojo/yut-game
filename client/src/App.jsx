@@ -13,6 +13,8 @@ import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import Celebration from './Celebration';
 import Interface from './Interface';
 import { Perf } from 'r3f-perf';
+import MilkyWay from './shader/MilkyWay';
+import * as THREE from 'three';
 
 export default function App () {
   const created = ({ gl }) =>
@@ -47,6 +49,14 @@ export default function App () {
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
+        <group rotation={[-Math.PI/2 + Math.PI/32, 0, 0]} position={[0, -3, 0]} scale={0.5}>
+          <MilkyWay scale={15}
+              brightness={0.9}
+              colorTint1={new THREE.Vector4(0.5, 0.5, 1.0, 1.0)}
+              colorTint2={new THREE.Vector4(1.3, 0.4, 3.0, 1.0)}
+              colorTint3={new THREE.Vector4(1.3, 1.0, 3.3, 1.0)}
+          />
+        </group>
         {/* <RocketsWin/> */}
         {/* <UfosWin/> */}
       </Route>
