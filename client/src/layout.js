@@ -170,6 +170,125 @@ export default {
             fontSize: 22
           }
         }
+      },
+      page3: {
+        text: {
+          position: [-4.5,0,-5]
+        },
+        firstCornerTilesPos: [
+          [-1.5,0,-1],
+          [-0.5, 0, -1]
+        ],
+        cursorPos: [
+          [0, 0.3, 0],
+          [-1,2,4.5],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+            2,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+          ],
+          [5,2,3.5],
+        ],
+        rocketPos: [
+          [
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+          ]
+        ],
+        ufoPos: [
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+            0.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [7, -3, -5]
+        ],
+        pointer: {
+          position: [0.1,2.5,0]
+        },
+        bonusTurn: {
+          position: [-2, 0, 0.5]
+        },
+        yootButtonModel: {
+          position: [1.5, 0, 0.5]
+        },
+        moveText: {
+          position: [-2,0,1]
+        }
+      },
+      page4: {
+        text: {
+          position: [-5,0,-5]
+        },
+        cursorPos: [
+          [1, 0.3, 3],
+          [-1.2,2,5.5],
+          [3,2,5],
+          [6, 0.3, 1],
+          [2.8,2,5],
+          [4.5, 2, 3.2],
+          [6.5, 0.3, 1]
+        ],
+        pointer0: {
+          position: [-0.3,2.5,0]
+        },
+        pointer1: {
+          position: [-0.15,1.9,0]
+        }
+      },
+      page5: {
+        text: {
+          position: [-4,0,-6],
+          rotation: [-Math.PI/8, 0, 0]
+        },
+        tilesPos: [
+          [0,0,1.3],
+          [-3, 0, -1.5]
+        ],
+        tilesScale: [
+          0.6,
+          0.9
+        ],
+        tilesOnly: {
+          scale: 1.2
+        },
+        scoreText: {
+          position: [0.7, 2, 3.5],
+          rotation: [-Math.PI/4, 0, 0]
+        },
+        rocket0Scale: [
+          1.7,
+          2.3,
+          1.7,
+          0,
+          1.7,
+          2.3,
+          1.7,
+          0,
+          1.7,
+          2.3,
+          1.7,
+        ]
+      },
+      pagination: {
+        pageRadius: 0.3,
+        arrowRadius: 0.4
       }
     },
     about: {
@@ -646,6 +765,125 @@ export default {
             fontSize: 26
           }
         }
+      },
+      page3: {
+        text: {
+          position: [-3.5,0,-5]
+        },
+        firstCornerTilesPos: [
+          [-1.5,0,-1],
+          [-1.5,0,-1]
+        ],
+        cursorPos: [
+          [0, 0.3, 0],
+          [-1,2,4.5],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.2,
+            2,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-0.5,
+          ],
+          [5,2,3.5],
+        ],
+        rocketPos: [
+          [
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+          ]
+        ],
+        ufoPos: [
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+            0.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+          ],
+          [7, -3, -5]
+        ],
+        pointer: {
+          position: [-0.5,2.5,0]
+        },
+        bonusTurn: {
+          position: [-3, 0, 0.5]
+        },
+        yootButtonModel: {
+          position: [0.5, 0, 0.5]
+        },
+        moveText: {
+          position: [-2, 0, 1]
+        }
+      },
+      page4: {
+        text: {
+          position: [-3.5,0,-5]
+        },
+        cursorPos: [
+          [1, 0.3, 3],
+          [-1.2,2,5.5],
+          [2.8,2,5],
+          [6, 0.3, 1],
+          [2.8,2,5],
+          [4, 2, 3],
+          [6, 0.3, 1]
+        ],
+        pointer0: {
+          position: [-0.3,2.5,0]
+        },
+        pointer1: {
+          position: [-0.3,1.7,0]
+        }
+      },
+      page5: {
+        text: {
+          position: [-3.5,0,-7],
+          rotation: [-Math.PI/8, 0, 0]
+        },
+        tilesPos: [
+          [0,0,1.5],
+          [-3, 0, -1.5]
+        ],
+        tilesScale: [
+          0.6,
+          1
+        ],
+        tilesOnly: {
+          scale: 1
+        },
+        scoreText: {
+          position: [-1, 2, 4],
+          rotation: [-Math.PI/8, -Math.PI/16, 0]
+        },
+        rocket0Scale: [
+          1.2,
+          1.8,
+          1.2,
+          0,
+          1.2,
+          1.6,
+          1.2,
+          0,
+          1.4,
+          1.9,
+          1.4,
+        ]
+      },
+      pagination: {
+        pageRadius: 0.2,
+        arrowRadius: 0.4
       }
     },
     team0: {

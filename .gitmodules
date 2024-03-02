@@ -1,0 +1,3 @@
+[submodule "yut-game-client"]
+	path = yut-game-client
+	url = https://github.com/moonsujo/yut-game-client
