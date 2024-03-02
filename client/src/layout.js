@@ -27,40 +27,50 @@ export default {
       position: [2.8,0,6.9]
     },
     title: {
+      position: [0,0,0],
+      rotation: [0,0,0],
       text: {
-        position: [-6.5,0,-8],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/24],
+        position: [-5,0,-7.5],
+        rotation: [-Math.PI/4,0,Math.PI/64],
         fontSize: 20,
-        scale: 3
+        scale: 2
       },
       letsPlay: {
-        position: [-5.7, 0, 2],
-        rotation: [-Math.PI/4 - Math.PI/32 * 2, Math.PI/8 - Math.PI/32 * 2, Math.PI/24],
-        fontSize: 30
+        position: [-3.5, 0, 1.65],
+        rotation: [-Math.PI/4,0,0],
+        fontSize: 15
       },
       tiles: {
-        position: [-4.7, 0, -2],
-        scale: 0.7
+        position: [-3.5, 0, -2.8],
+        rotation: [0, -Math.PI/16, 0],
+        scale: 0.6
       },
       about: {
         show: false,
-        position: [-14,-1.5,0],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32]
+        position: [-3.1, 0, 0.3],
+        rotation: [-Math.PI/4,0,0],
+        fontSize: 15
       },
       howToPlay: {
-        position: [-5.7, 0, 2.9],
-        rotation: [-Math.PI/4 - Math.PI/32 * 2, Math.PI/8 - Math.PI/32 * 2, Math.PI/24],
-        fontSize: 25
+        position: [-3.7, 0, 1],
+        rotation: [-Math.PI/4,0,0],
+        fontSize: 15
       },
       pieces: {
         position: [0,0,0],
         scale: 0.5
       },
       yoots: {
-        position: [-2.4, 0, -8.4],
+        position: [-1.2, 0, -5.9],
         rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.47
+        scale: 0.17
       }
+    },
+    howToPlay: {
+      position: [0,0,0]
+    },
+    about: {
+      position: [-5, 0, -5]
     },
     team0: {
       scale: 1,
@@ -383,10 +393,9 @@ export default {
     },
     title: {
       position: [-20,0,-9],
-      rotation: [-Math.PI/4,Math.PI/8,0],
       text: {
-        position: [-12.5,2,-3],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        position: [0,0,0],
+        rotation: [0,0,0],
         fontSize: 20,
         scale: 3.6,
       },
@@ -399,17 +408,17 @@ export default {
       about: {
         show: true,
         position: [0,-5,0],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        rotation: [0,0,0],
         fontSize: 40
       },
       howToPlay: {
         position: [0,-7,0],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        rotation: [0,0,0],
         fontSize: 40
       },      
       letsPlay: {
         position: [0,-9,0],
-        rotation: [-Math.PI/4,Math.PI/8,Math.PI/32],
+        rotation: [0,0,0],
         fontSize: 40
       },
       pieces: {
@@ -418,9 +427,15 @@ export default {
       },
       yoots: {
         position: [7, -2, 0],
-        rotation: [Math.PI/4,Math.PI/2,0],
+        rotation: [Math.PI/8 * 3,Math.PI/2,0],
         scale: 0.4
       }
+    },
+    howToPlay: {
+      position: [0,0,0]
+    },
+    about: {
+      position: [-5, 0, -5]
     },
     team0: {
       scale: 1,

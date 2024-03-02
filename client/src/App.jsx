@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Experience from './Experience';
 import { Canvas } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
@@ -15,11 +15,55 @@ import Interface from './Interface';
 import { Perf } from 'r3f-perf';
 import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
+import layout from './layout';
+
+let mediaMax = 2560;
+let landscapeMobileCutoff = 550;
+let landscapeDesktopCutoff = 1000;
 
 export default function App () {
   const created = ({ gl }) =>
   {
       gl.setClearColor('#000b18', 1)
+  }
+
+  // asus monitor screen ratio: w / h 2560 / 1279
+  // first fov: 45
+  // let fovNormal = 35;
+  // let widthNormal = 2560
+  // let heightNormal = 1279
+  // let screenRatio = widthNormal / heightNormal
+  const handleResize = () => {
+    // let widthRatio = window.innerWidth / widthNormal
+    // let heightRatio = window.innerHeight / heightNormal
+    // if (widthRatio > heightRatio) {
+    //   setFov(fovNormal / heightRatio)
+    // } else {
+    //   setFov(fovNormal / widthRatio)
+    // }
+    if (window.innerWidth < landscapeMobileCutoff) {
+      setDevice("portrait")
+    } else {
+      setDevice("landscapeDesktop")
+    }
+  }
+  
+  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
+  // let [fov, setFov] = useState(0);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+    console.log(`[Home2] ${device}`)
+    
+    console.log(window.innerWidth, window.innerHeight)
+  }, []);
+
+  function initializeDevice(windowWidth, landscapeMobileCutoff) {
+    if (windowWidth < landscapeMobileCutoff) {
+      return "portrait"
+    } else {
+      return "landscapeDesktop"
+    }
   }
 
   return (<>
@@ -29,11 +73,11 @@ export default function App () {
         fov: 45,
         near: 0.1,
         far: 200,
-        position: [
+        position: ( device === "landscapeDesktop" ? [
           -3.431723242390655,
           12.798027537168215,
           6.469516796871723 
-        ],
+        ] : [0, 10, 5])
       } }
       onCreated={ created }
       >
@@ -42,19 +86,20 @@ export default function App () {
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <Route path="/">
-        <Home2/>
+        <Home2 device={device}/>
         {/* <Meteors/> */}
         {/* <Celebration/> */}
       </Route>
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
-        <group rotation={[-Math.PI/2 + Math.PI/32, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-          <MilkyWay scale={15}
-              brightness={0.9}
-              colorTint1={new THREE.Vector4(0.5, 0.5, 1.0, 1.0)}
-              colorTint2={new THREE.Vector4(1.3, 0.4, 3.0, 1.0)}
-              colorTint3={new THREE.Vector4(1.3, 1.0, 3.3, 1.0)}
+        <group rotation={[-Math.PI/2 + Math.PI/32, -Math.PI/8, 0]} position={[-1, -3, 0]} scale={0.5}>
+          <MilkyWay scale={10}
+            brightness={0.3}
+            colorTint1={new THREE.Vector4(1, 2, 2.0, 1.0)}
+            colorTint2={new THREE.Vector4(1.3, 3.4, 1.5, 1.0)}
+            colorTint3={new THREE.Vector4(1.3, 1.0, 1.3, 1.0)}
+            zOffset={-5.0}
           />
         </group>
         {/* <RocketsWin/> */}

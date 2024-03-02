@@ -2190,7 +2190,7 @@ export default function HowToPlay({ device }) {
     function handlePageLeft() {
       setPage(page => {
         if (page === 0) {
-          return 2
+          return 6
         } else {
           return page-1
         }
@@ -2199,7 +2199,7 @@ export default function HowToPlay({ device }) {
     
     function handlePageRight() {
       setPage(page => {
-        if (page === 2) {
+        if (page === 6) {
           return 0
         } else {
           return page+1

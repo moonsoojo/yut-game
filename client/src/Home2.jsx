@@ -22,63 +22,18 @@ import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
 
-let mediaMax = 2560;
-let landscapeMobileCutoff = 550;
-let landscapeDesktopCutoff = 1000;
-
-export default function Home2() {
+export default function Home2({ device }) {
   console.log(`[Home2]`)
 
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
-  // let [fov, setFov] = useState(0);
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-    console.log(`[Home2] ${device}`)
-    
-    console.log(window.innerWidth, window.innerHeight)
-  }, []);
-
-  const TILE_RADIUS = layout[device].tileRadius.ring;
-  const NUM_STARS = 20;
 
   const [display, setDisplay] = useState('board')
-
-  function initializeDevice(windowWidth, landscapeMobileCutoff) {
-    if (windowWidth < landscapeMobileCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-
-  // asus monitor screen ratio: w / h 2560 / 1279
-  // first fov: 45
-  // let fovNormal = 35;
-  // let widthNormal = 2560
-  // let heightNormal = 1279
-  // let screenRatio = widthNormal / heightNormal
-  const handleResize = () => {
-    // let widthRatio = window.innerWidth / widthNormal
-    // let heightRatio = window.innerHeight / heightNormal
-    // if (widthRatio > heightRatio) {
-    //   setFov(fovNormal / heightRatio)
-    // } else {
-    //   setFov(fovNormal / widthRatio)
-    // }
-    if (window.innerWidth < landscapeMobileCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-
-  // assets
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"
   );
 
+  const TILE_RADIUS = layout[device].tileRadius.ring;
+  const NUM_STARS = 20;
   function Tiles() {
     let tiles = [];
 
@@ -222,16 +177,29 @@ export default function Home2() {
 
   useFrame((state, delta) => {
     const camera = state.camera
-    // console.log(camera.rotation) 
-    // rotate camera to look at what you want
-    // const camera = state.camera    
-    const euler = new Euler(
-      -0.9678104558564694, 
-      0.07841126014215415,
-      0.11327856815709492, 
-      "XYZ"
-    )
-    camera.setRotationFromEuler(euler)
+    if (device === "landscapeDesktop") {
+      // console.log(camera.rotation) 
+      // rotate camera to look at what you want
+      // const camera = state.camera    
+      const euler = new Euler(
+        -0.9678104558564694, 
+        0.07841126014215415,
+        0.11327856815709492, 
+        "XYZ"
+      )
+      camera.setRotationFromEuler(euler)
+    } else if (device === "portrait") {
+      // console.log(camera.rotation) 
+      // rotate camera to look at what you want
+      // const camera = state.camera    
+      const euler = new Euler(
+        -0.9678104558564694, 
+        0,
+        0, 
+        "XYZ"
+      )
+      camera.setRotationFromEuler(euler)
+    }
     // camera.fov = fov
     
     // set position in index.jsx
@@ -247,7 +215,7 @@ export default function Home2() {
       rotation={rotation}
       scale={scale}
     >
-      <Float floatIntensity={0.001} speed={2}>
+      <Float floatIntensity={0.001} floatingRange={[0.05, 0.05]} speed={2} rotationIntensity={0.3}>
         <Yoot scale={1} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
         <Yoot scale={1} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
         <Yoot scale={1} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
@@ -283,42 +251,45 @@ export default function Home2() {
     rotation={layout[device].title.rotation}
     scale={1.4}
   >
-    <Float>
     <Title 
+      position={layout[device].title.text.position}
+      rotation={layout[device].title.text.rotation}
       scale={layout[device].title.text.scale}
       setDisplay={setDisplay}
     />
-    </Float>
     <Yoots 
       position={layout[device].title.yoots.position}
       rotation={layout[device].title.yoots.rotation}
       scale={layout[device].title.yoots.scale} 
     />
-    { layout[device].title.about.show && <HtmlElement 
+    <HtmlElement 
       position={layout[device].title.about.position}
-      font="/fonts/Luckiest Guy_Regular.json" 
+      rotation={layout[device].title.about.rotation}
       fontSize={layout[device].title.about.fontSize} 
       handleClick={handleAbout}
       text='about'
       color='yellow'
-    /> }
+    />
     <HtmlElement
       position={layout[device].title.howToPlay.position}
+      rotation={layout[device].title.howToPlay.rotation}
       fontSize={layout[device].title.howToPlay.fontSize} 
       handleClick={handleHowToPlay}
       text='how to play'
     />
     <HtmlElement
       position={layout[device].title.letsPlay.position}
-      text="LET'S PLAY!"
+      rotation={layout[device].title.letsPlay.rotation}
       fontSize={layout[device].title.letsPlay.fontSize}
+      text="LET'S PLAY!"
       scale={layout[device].title.letsPlay.scale}
       handleClick={handleLetsPlay}
     />
   </group>
   <group>
     <group
-      position={layout[device].title.tiles.position} 
+      position={layout[device].title.tiles.position}
+      rotation={layout[device].title.tiles.rotation}
       scale={layout[device].title.tiles.scale}
     >
       { display === 'board' && <group 
@@ -326,10 +297,13 @@ export default function Home2() {
         <Tiles/>
         <Pieces/>
       </group>}
-      { display === 'howToPlay' && <HowToPlay device={device}/>}
+      { display === 'howToPlay' && <HowToPlay 
+        device={device}
+        position={layout[device].howToPlay.position}
+      />}
       { display === 'about' && <About 
         device={device}
-        position={[-5, 0, -5]}
+        position={layout[device].about.position}
         rotation={[-Math.PI/4, 0, Math.PI/32]}
       />}
     </group>  

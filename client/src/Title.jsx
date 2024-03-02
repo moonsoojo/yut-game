@@ -1,7 +1,7 @@
 import { Text3D } from '@react-three/drei';
 import React, { useState } from 'react';
 
-export default function Title({ scale, setDisplay }) {
+export default function Title({ position, rotation, scale, setDisplay }) {
 
     const [hover, setHover] = useState(false);
     function handlePointerEnter() {
@@ -14,7 +14,7 @@ export default function Title({ scale, setDisplay }) {
         setDisplay('board')
     }
 
-    return <group scale={scale}
+    return <group scale={scale} position={position} rotation={rotation}
     >
       {/* line 1 */}
       {/* line 2 */}
