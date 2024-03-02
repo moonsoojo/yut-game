@@ -23,10 +23,9 @@ import About from './About';
 import Stars from './particles/Stars';
 
 export default function Home2({ device }) {
-  console.log(`[Home2]`)
+  console.log(`[App] ${device}`)
 
-
-  const [display, setDisplay] = useState('board')
+  const [display, setDisplay] = useState('howToPlay')
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"
@@ -188,6 +187,9 @@ export default function Home2({ device }) {
         "XYZ"
       )
       camera.setRotationFromEuler(euler)
+      camera.position.x = -3.431723242390655
+      camera.position.y = (12.798027537168215)
+      camera.position.z = (6.469516796871723 )
     } else if (device === "portrait") {
       // console.log(camera.rotation) 
       // rotate camera to look at what you want
@@ -199,6 +201,9 @@ export default function Home2({ device }) {
         "XYZ"
       )
       camera.setRotationFromEuler(euler)
+      camera.position.x = (0)
+      camera.position.y = (10)
+      camera.position.z = (5)
     }
     // camera.fov = fov
     
@@ -297,14 +302,19 @@ export default function Home2({ device }) {
         <Tiles/>
         <Pieces/>
       </group>}
-      { display === 'howToPlay' && <HowToPlay 
-        device={device}
-        position={layout[device].howToPlay.position}
-      />}
+    </group>
+    <group>
       { display === 'about' && <About 
         device={device}
         position={layout[device].about.position}
-        rotation={[-Math.PI/4, 0, Math.PI/32]}
+        rotation={layout[device].about.rotation}
+        scale={layout[device].about.scale}
+      />}
+      { display === 'howToPlay' && <HowToPlay 
+        device={device}
+        position={layout[device].howToPlay.position}
+        rotation={layout[device].howToPlay.rotation}
+        scale={layout[device].howToPlay.scale}
       />}
     </group>  
   </group>

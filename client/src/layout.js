@@ -30,47 +30,152 @@ export default {
       position: [0,0,0],
       rotation: [0,0,0],
       text: {
-        position: [-5,0,-7.5],
+        position: [-2.1,0,-5.8],
         rotation: [-Math.PI/4,0,Math.PI/64],
         fontSize: 20,
-        scale: 2
+        scale: 1.7
       },
-      letsPlay: {
-        position: [-3.5, 0, 1.65],
-        rotation: [-Math.PI/4,0,0],
-        fontSize: 15
+      yoots: {
+        position: [1.1, 0, -4.5],
+        rotation: [Math.PI/4,Math.PI/2,0],
+        scale: 0.14
       },
       tiles: {
-        position: [-3.5, 0, -2.8],
+        position: [0, 0, -1.8],
         rotation: [0, -Math.PI/16, 0],
-        scale: 0.6
+        scale: 0.5
       },
       about: {
         show: false,
-        position: [-3.1, 0, 0.3],
+        position: [-0.4, 0, 0.5],
         rotation: [-Math.PI/4,0,0],
-        fontSize: 15
+        fontSize: 10
       },
       howToPlay: {
-        position: [-3.7, 0, 1],
+        position: [-0.75, 0, 1],
         rotation: [-Math.PI/4,0,0],
-        fontSize: 15
+        fontSize: 10
+      },
+      letsPlay: {
+        position: [-0.63, 0, 1.48],
+        rotation: [-Math.PI/4,0,0],
+        fontSize: 10
       },
       pieces: {
         position: [0,0,0],
         scale: 0.5
       },
-      yoots: {
-        position: [-1.2, 0, -5.9],
-        rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.17
-      }
     },
     howToPlay: {
-      position: [0,0,0]
+      position: [0,0,-2],
+      rotation: [0,0,0],
+      scale: 0.4,
+      page0: {
+        text: {
+          position: [-1, 0, -1]
+        },
+        moveText: {
+          text: "MOVE: 4",
+          position: [-3.2, 0.2, -0.2]
+        },
+        yoot: {
+          initialPos: [
+            [-2 + 0, 1, 3],
+            [-2 + 0.8, 1, 3],
+            [-2 + 1.6, 1, 3],
+            [-2 + 2.4, 1, 3]
+          ],
+          initialThrowPos: [
+            { x: -1, y: 0.5, z: -1},
+            { x: -1 + 0.4, y: 0.5, z: -1},
+            { x: -1 + 0.8, y: 0.5, z: -1},
+            { x: -1 + 1.2, y: 0.5, z: -1}
+          ]
+        }
+      },
+      page1: {
+        text: {
+          position: [-3.5,0,-5],
+          rotation: [-Math.PI/8, 0, 0],
+          fontSize: 26
+        },
+        firstCornerTiles: {
+          position: [-2, 0, -1.5]
+        },
+        homePieces: {
+          position: [-2, 0, -2]
+        },
+        moveDisplay: {
+          position: [-2.8, 0, 1.7]
+        },
+        cursorPos0: [1, 0.3, 1],
+        cursorPos1: [-0.5, 0.3, -0.4],
+        cursorPos2: [2.3, 1.3, 3],
+        rocket3Pos0: [0,0,0],
+        rocket3Pos1: [
+          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1.5,
+          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos2: [
+          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos3: [
+          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos4: [
+          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+      },
+      page2: {
+        tilesPos0: [0,0,0],
+        tilesPos1: [-2, 0, -4],
+        tilesScale0: 1,
+        tilesScale1: 2,
+        rocketHomeScale1: 1,
+        rocket0Pos: [0.3,0,-0.5],
+        rocket1Pos: [0.9,0,-0.5],
+        rocket2Pos: [0.3,0,0.1],
+        checkPos: [0.9,0,0.6],
+        cursorPos: [
+          [1, 0, 4],
+          [0.3, 1.5, 4.8],
+          [1, 0.2, 2.9]
+        ],
+        moveText: {
+          rotation: [-Math.PI/8, 0, 0],
+          position: [-0.2,0,1.2],
+          fontSize: 22
+        },
+        scoreText: {
+          rotation: [-Math.PI/8, 0, 0],
+          position: [-0.1, 0, 2.5],
+          size: 0.4
+        },
+        letsGoText: {
+          lets: {
+            position: [-0.2,0,1.7],
+            rotation: [-Math.PI/8, 0, 0],
+            fontSize: 22
+          },
+          go: {
+            position: [-0.2,0,2.4],
+            rotation: [-Math.PI/8, 0, 0],
+            fontSize: 22
+          }
+        }
+      }
     },
     about: {
-      position: [-5, 0, -5]
+      position: [-2.5, 0, -4],
+      rotation: [-Math.PI/4,0,0],
+      scale: 0.35
     },
     team0: {
       scale: 1,
@@ -392,7 +497,8 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-20,0,-9],
+      position: [-21,0,-9],
+      rotation: [-Math.PI/4, Math.PI/8, 0],
       text: {
         position: [0,0,0],
         rotation: [0,0,0],
@@ -431,11 +537,116 @@ export default {
         scale: 0.4
       }
     },
-    howToPlay: {
-      position: [0,0,0]
-    },
     about: {
-      position: [-5, 0, -5]
+      position: [-6, 0, -9],
+      rotation: [-Math.PI/4,0,Math.PI/32],
+      scale: 1
+    },
+    howToPlay: {
+      position: [-1,0,-4],
+      rotation: [0,Math.PI/32,Math.PI/64],
+      scale: 1,
+      page0: {
+        text: {
+          position: [0, 0, -1]
+        },
+        moveText: {
+          text: "MOVE: 3",
+          position: [-5, 0.2, 0]
+        },
+        yoot: {
+          initialPos: [
+            [-2 + 0, 1, 3],
+            [-2 + 0.8, 1, 3],
+            [-2 + 1.6, 1, 3],
+            [-2 + 2.4, 1, 3]
+          ],
+          initialThrowPos: [
+            { x: -2 + 0, y: 1, z: -2},
+            { x: -2 + 0.8, y: 1, z: -2},
+            { x: -2 + 1.6, y: 1, z: -2},
+            { x: -2 + 2.4, y: 1, z: -2}
+          ]
+        }
+      },
+      page1: {
+        text: {
+          position: [-2.5,0,-5],
+          rotation: [-Math.PI/8, 0, 0],
+          fontSize: 26
+        },
+        firstCornerTiles: {
+          position: [-1, 0, -1.5]
+        },
+        homePieces: {
+          position: [-1, 0, -2]
+        },
+        moveDisplay: {
+          position: [-1.8, 0, 1.7]
+        },
+        cursorPos0: [1, 0.3, 1],
+        cursorPos1: [0.4, 0.3, -0.5],
+        cursorPos2: [3.2, 1.3, 2.3],
+        rocket3Pos0: [0,0,0],
+        rocket3Pos1: [
+          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1.5,
+          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos2: [
+          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos3: [
+          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+        rocket3Pos4: [
+          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          1,
+          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+        ],
+      },
+      page2: {
+        tilesPos0: [0,0,0],
+        tilesPos1: [-2, 0, -4],
+        tilesScale0: 0.8,
+        tilesScale1: 1.5,
+        rocketHomeScale1: 1.3,
+        rocket0Pos: [-0.4,0,-0.7],
+        rocket1Pos: [0.8,0,-0.7],
+        rocket2Pos: [-0.4,0,0.5],
+        checkPos: [0.6,0,1],
+        cursorPos: [
+          [1, 0, 4],
+          [0, 1.5, 5.8],
+          [0.3, 0.2, 3.9]
+        ],
+        moveText: {
+          position: [-0.5,0,2],
+          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          fontSize: 26
+        },
+        scoreText: {
+          position: [-0.5, 0, 3.5],
+          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          size: 0.5
+        },
+        letsGoText: {
+          lets: {
+            position: [-0.5,0,1.7],
+            rotation: [-Math.PI/8, -Math.PI/16, 0],
+            fontSize: 26
+          },
+          go: {
+            position: [-0.5,0,2.4],
+            rotation: [-Math.PI/8, -Math.PI/16, 0],
+            fontSize: 26
+          }
+        }
+      }
     },
     team0: {
       scale: 1,

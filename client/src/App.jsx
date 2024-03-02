@@ -47,16 +47,6 @@ export default function App () {
       setDevice("landscapeDesktop")
     }
   }
-  
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
-  // let [fov, setFov] = useState(0);
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-    console.log(`[Home2] ${device}`)
-    
-    console.log(window.innerWidth, window.innerHeight)
-  }, []);
 
   function initializeDevice(windowWidth, landscapeMobileCutoff) {
     if (windowWidth < landscapeMobileCutoff) {
@@ -65,7 +55,31 @@ export default function App () {
       return "landscapeDesktop"
     }
   }
+  
+  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
+  // let [fov, setFov] = useState(0);
 
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+    console.log(`[App] ${device}`)
+    
+    console.log(window.innerWidth, window.innerHeight)
+  }, []);
+
+  useEffect(() => {
+    console.log(`device ${device}`)
+  }, [device])
+
+  /*
+    values for galaxy
+    <MilkyWay scale={9}
+      brightness={0.5}
+      colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+      zOffset={-5.0}
+    />
+  */
   return (<>
     <Canvas
       className='r3f'
@@ -73,11 +87,6 @@ export default function App () {
         fov: 45,
         near: 0.1,
         far: 200,
-        position: ( device === "landscapeDesktop" ? [
-          -3.431723242390655,
-          12.798027537168215,
-          6.469516796871723 
-        ] : [0, 10, 5])
       } }
       onCreated={ created }
       >
@@ -94,11 +103,11 @@ export default function App () {
         <SocketManager/>
         <Experience/>
         <group rotation={[-Math.PI/2 + Math.PI/32, -Math.PI/8, 0]} position={[-1, -3, 0]} scale={0.5}>
-          <MilkyWay scale={10}
-            brightness={0.3}
-            colorTint1={new THREE.Vector4(1, 2, 2.0, 1.0)}
-            colorTint2={new THREE.Vector4(1.3, 3.4, 1.5, 1.0)}
-            colorTint3={new THREE.Vector4(1.3, 1.0, 1.3, 1.0)}
+          <MilkyWay scale={9}
+            brightness={0.5}
+            colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
             zOffset={-5.0}
           />
         </group>
