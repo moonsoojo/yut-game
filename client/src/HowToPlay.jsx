@@ -40,11 +40,13 @@ import Ufo from './meshes/Ufo';
 import BonusTurn from './meshes/BonusTurn';
 import ArrowBlender from './meshes/ArrowBlender';
 import YootSet from './meshes/YootSet';
+import { particleSettingAtom } from './SocketManager';
+import { useAtom } from 'jotai';
 
 
-// skip to the next page when the loop finishes
+const PAGE_2_PLAY_TIME = 12400 // scene loops, but it ends more quickly 
 export default function HowToPlay({ device, position, rotation, scale }) {
-  const [page, setPage] = useState(5)
+  const [page, setPage] = useState(2)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     } else if (page === 2) {
       const page3Timeout = setTimeout(() => {
         setPage(3)
-      }, 14500)
+      }, PAGE_2_PLAY_TIME)
       setPageTimeout(page3Timeout)
     } else if (page === 3) {
       const page4Timeout = setTimeout(() => {
@@ -537,82 +539,70 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
     
-    const { scene } = useThree();
-    const zone = new PointZone(0, 0);
-    const colors = new ColorSpan()
-    colors.shouldRandomize = true
-    var map = new THREE.TextureLoader().load("textures/dot.png");
-    var material = new THREE.SpriteMaterial({
-      map: map,
-      color: new THREE.Color("#FF2727"),
-      blending: THREE.AdditiveBlending,
-      fog: true,
-    });
-    let sprite = new THREE.Sprite(material);
-    const system = useRef()
-    const emitter = useRef();
-    
-    const [fireStartTime, setFireStartTime] = useState(0)
+    // const [fireStartTime, setFireStartTime] = useState(0)
+    // useEffect(() => {
+    //   system.current = new System();
+    //   const renderer = new SpriteRenderer(scene, THREE);
+    //   system.current.addRenderer(renderer)
+
+    //   emitter.current = new Emitter();
+    //   emitter.current
+    //     .setRate(new Rate(new Span(4, 8), new Span(0.2, 0.5)))
+    //     .setInitializers([
+    //       new Position(zone),
+    //       new Mass(1, 3),
+    //       new Radius(0.1),
+    //       new Life(1, 1.7),
+    //       new Body(sprite),
+    //       new RadialVelocity(new Span(2, 2.3), new Vector3D(0, 3, 0), 180),
+    //     ])
+    //     .setBehaviours([
+    //       new Alpha(5, 0), 
+    //       new Scale(1, 1.3), 
+    //       new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
+    //     ])
+    //   system.current.addEmitter(emitter.current)
+    // }, [fireStartTime])
+
+    // measure start time
+    // after 14 seconds
+    // fire fireworks
+    // after 2 seconds
+    // stop
+    // on component delete
+      // setParticleSettings(null)
+
+    const [startTime, setStartTime] = useState(null)
+    const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+
     useEffect(() => {
-      system.current = new System();
-      const renderer = new SpriteRenderer(scene, THREE);
-      system.current.addRenderer(renderer)
-
-      emitter.current = new Emitter();
-      emitter.current
-        .setRate(new Rate(new Span(4, 8), new Span(0.2, 0.5)))
-        .setInitializers([
-          new Position(zone),
-          new Mass(1, 3),
-          new Radius(0.1),
-          new Life(1, 1.7),
-          new Body(sprite),
-          new RadialVelocity(new Span(2, 2.3), new Vector3D(0, 3, 0), 180),
-        ])
-        .setBehaviours([
-          new Alpha(5, 0), 
-          new Scale(1, 1.3), 
-          new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-        ])
-      system.current.addEmitter(emitter.current)
-    }, [fireStartTime])
-
-    const loopTime = 15
-    const fireTime = 9.5
-    let fireInterval = 1
-    let fireIntervalCumulative = 0
-    let fireDuration = 4
-    let center = {
-      x: -1,
-      y: 0,
-      z: -4,
-      xRange: 0.1,
-      yRange: 0,
-      zRange: 0.1
-    }
+      console.log('page 2 mount')
+      return () => {
+        console.log('page 2 unmount') // triggers on page switch
+        setParticleSetting(null)
+      }
+    }, [])
+    
+    const fireworksTime = 10500
+    const [fired, setFired] = useState(false)
     useFrame((state, delta) => {
-      if (system.current !== undefined) {
-        system.current.update();
-        if (fireStartTime === 0) {
-          setFireStartTime(state.clock.elapsedTime)
-        } else {
-          if (fireStartTime + loopTime > state.clock.elapsedTime) {
-            if (fireStartTime + fireTime + fireIntervalCumulative < state.clock.elapsedTime) {
-              if (fireStartTime + fireTime + fireDuration > state.clock.elapsedTime) {
-
-                emitter.current.position.x = center.x + Math.random() * center.xRange + (Math.random() < 0.5 ? 1 : -1)
-                emitter.current.position.y = center.y + Math.random() * center.yRange + (Math.random() < 0.5 ? 1 : -1)
-                emitter.current.position.z = center.z + Math.random() * center.zRange + (Math.random() < 0.5 ? 1 : -1)
-                  
-                emitter.current.emit(2) // works when set to 2, but not 1
-                fireIntervalCumulative += fireInterval
-              }
-            }
-          } else {
-            fireIntervalCumulative = 0
-            setFireStartTime(0) // setting state re-renders component
-          }
-        }
+      console.log('[Page 2] run time', state.clock.elapsedTime - startTime)
+      if (!startTime) {
+        setStartTime(state.clock.elapsedTime)
+      } else if (startTime + (fireworksTime / 1000) < state.clock.elapsedTime && !fired) {
+        console.log(`[Page2] fire`)
+        setParticleSetting({
+          texturePath: './textures/dot.png',
+          color: "#FF0000"
+        })
+        setFired(true)
+      } else if (startTime + (PAGE_2_PLAY_TIME / 1000) < state.clock.elapsedTime && fired) {
+        console.log(`[Page2] reset particle system and time`)
+        // reset start time
+        // reset emitter
+        setParticleSetting(null)
+        setStartTime(null)
+        setFired(false)
       }
     })
 
@@ -1048,10 +1038,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tiles.push(
             <group 
               position={position}
+              key={i}
             >
               <Star
                 tile={i}
-                key={i}
                 scale={springs.legalTileScale}
                 device={device}
               />

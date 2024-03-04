@@ -16,6 +16,7 @@ import { Perf } from 'r3f-perf';
 import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
 import layout from './layout';
+import ParticleSystem from './particles/ParticleSystem';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -94,6 +95,7 @@ export default function App () {
       
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
+      <ParticleSystem/>
       <Route path="/">
         <Home2 device={device}/>
         {/* <Meteors/> */}

@@ -47,6 +47,7 @@ export const hostNameAtom = atom('')
 export const roomIdAtom = atom('')
 // possible values: ['bonus turn', 'out of bounds', 'your turn!', 'who goes first?']
 export const yellAtom = atom('')
+export const particleSettingAtom = atom(null)
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
