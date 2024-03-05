@@ -61,11 +61,8 @@ export default function ParticleSystem() {
   }, [scene]);
 
   useEffect(() => {
-    console.log(`[ParticleSystem] ${particleSetting}`)
     if (particleSetting) {
       let rate = new Rate(100, new Span(1.5, 2.5))
-      console.log(rate)
-      console.log(rate.nextTime)
       if (particleSetting.delay) {
       }
         emitter.current
@@ -89,27 +86,20 @@ export default function ParticleSystem() {
     }
   }, [particleSetting])
 
-  let center = {
-    x: -0.5,
-    y: 0,
-    z: -2,
-    xRange: 0.5,
-    yRange: 0,
-    zRange: 0.5,
-  };
+
   useFrame((state, delta) => {
     if (system.current !== undefined) {
       system.current.update();
-      if (particleSetting?.randomizePosition) {
+      if (particleSetting?.position.randomize) {
         emitter.current.position.x =
-          center.x +
-          (Math.random() < 0.5 ? 1 : -1) * center.xRange;
+          particleSetting.position.x +
+          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.xRange;
         emitter.current.position.y =
-          center.y +
-          (Math.random() < 0.5 ? 1 : -1) * center.yRange;
+          particleSetting.position.y +
+          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.yRange;
         emitter.current.position.z =
-          center.z +
-          (Math.random() < 0.5 ? 1 : -1) * center.zRange;
+          particleSetting.position.z +
+          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.zRange;
       }
     }
   });

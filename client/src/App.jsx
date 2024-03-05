@@ -62,14 +62,7 @@ export default function App () {
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-    console.log(`[App] ${device}`)
-    
-    console.log(window.innerWidth, window.innerHeight)
   }, []);
-
-  useEffect(() => {
-    console.log(`device ${device}`)
-  }, [device])
 
   /*
     values for galaxy

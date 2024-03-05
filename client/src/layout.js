@@ -169,6 +169,14 @@ export default {
             rotation: [-Math.PI/8, 0, 0],
             fontSize: 22
           }
+        },
+        fireworks: {
+          positionX: -0.5,
+          positionY: 0,
+          positionZ: -2,
+          xRange: 0.5,
+          yRange: 0,
+          zRange: 0.5
         }
       },
       page3: {
@@ -764,6 +772,14 @@ export default {
             rotation: [-Math.PI/8, -Math.PI/16, 0],
             fontSize: 26
           }
+        },
+        fireworks: {
+          positionX: -2,
+          positionY: 0,
+          positionZ: -3.5,
+          xRange: 1,
+          yRange: 0,
+          zRange: 0.5
         }
       },
       page3: {

@@ -46,10 +46,11 @@ import { useAtom } from 'jotai';
 
 const PAGE_2_PLAY_TIME = 14400 // scene loops, but it ends more quickly 
 export default function HowToPlay({ device, position, rotation, scale }) {
-  const [page, setPage] = useState(2)
+  const [page, setPage] = useState(0)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
+    console.log('page use effect')
     clearTimeout(pageTimeout)
     if (page === 0) {
       const page1Timeout = setTimeout(() => {
@@ -538,61 +539,38 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
-    
-    // const [fireStartTime, setFireStartTime] = useState(0)
-    // useEffect(() => {
-    //   system.current = new System();
-    //   const renderer = new SpriteRenderer(scene, THREE);
-    //   system.current.addRenderer(renderer)
 
-    //   emitter.current = new Emitter();
-    //   emitter.current
-    //     .setRate(new Rate(new Span(4, 8), new Span(0.2, 0.5)))
-    //     .setInitializers([
-    //       new Position(zone),
-    //       new Mass(1, 3),
-    //       new Radius(0.1),
-    //       new Life(1, 1.7),
-    //       new Body(sprite),
-    //       new RadialVelocity(new Span(2, 2.3), new Vector3D(0, 3, 0), 180),
-    //     ])
-    //     .setBehaviours([
-    //       new Alpha(5, 0), 
-    //       new Scale(1, 1.3), 
-    //       new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-    //     ])
-    //   system.current.addEmitter(emitter.current)
-    // }, [fireStartTime])
+    function Fireworks() {
 
-    // measure start time
-    // after 14 seconds
-    // fire fireworks
-    // after 2 seconds
-    // stop
-    // on component delete
-      // setParticleSettings(null)
-
-      function Fireworks() {
-
-        const [fireTimeout, setFireTimeout] = useState(null)
-        const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
-    
-        useEffect(() => {
-          console.log('page 2')
-          setFireTimeout(setTimeout(() => {
-            setParticleSetting({
-              texturePath: './textures/dot.png',
-              color: "#00FFFF",
-              randomizePosition: true
-            })
-          }, 9000))
-          return () => {
-            console.log('page 2 unmount') // triggers on page switch
-            setParticleSetting(null)
-            clearTimeout(fireTimeout)
-          }
-        }, [])
-      }
+      const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  
+      useEffect(() => {
+        console.log('page 2')
+        const fireTimeoutId = setTimeout(() => {
+          console.log('execute set timeout')
+          setParticleSetting({
+            texturePath: './textures/dot.png',
+            color: "#00FFFF",
+            position: {
+              x: layout[device].howToPlay.page2.fireworks.positionX,
+              y: layout[device].howToPlay.page2.fireworks.positionY,
+              z: layout[device].howToPlay.page2.fireworks.positionZ,
+              xRange: layout[device].howToPlay.page2.fireworks.xRange,
+              yRange: layout[device].howToPlay.page2.fireworks.yRange,
+              zRange: layout[device].howToPlay.page2.fireworks.zRange,
+              randomize: true
+            }
+          })
+        }, 9000)
+        console.log(fireTimeoutId)
+        return () => {
+          console.log('page 2 unmount') // triggers on page switch
+          setParticleSetting(null)
+          console.log(`fireTimeoutId ${fireTimeoutId}`) // triggers on page switch
+          clearTimeout(fireTimeoutId)
+        }
+      }, [device])
+    }
 
     // place on top of tiles with .map
     // adjust neptune particle size
@@ -1324,9 +1302,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tiles.push(
             <group 
               position={position}
+              key={i}
             >
               <Star
-                key={i}
                 scale={springs.legalTile0Scale}
                 device={device}
               />
@@ -1336,9 +1314,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         } else if (i === 4) {
           tiles.push(
             <group
-            position={position}>
+            position={position}
+            key={i}>
               <Mars
-                key={i}
                 scale={springs.legalTile1Scale}
                 device={device}
               />

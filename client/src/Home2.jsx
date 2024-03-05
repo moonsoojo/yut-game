@@ -23,7 +23,6 @@ import About from './About';
 import Stars from './particles/Stars';
 
 export default function Home2({ device }) {
-  console.log(`[App] ${device}`)
 
   const [display, setDisplay] = useState('howToPlay')
   
