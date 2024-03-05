@@ -4,13 +4,14 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket } from "./SocketManager.jsx";
+import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, particleSettingAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { getCurrentPlayerSocketId, isMyTurn } from "./helpers/helpers.js";
+import { getCurrentPlayerSocketId, getRandomNumber, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import HtmlElement from "./HtmlElement.jsx";
+import { Alpha, Body, Color, Life, Mass, PointZone, Position, RadialVelocity, Radius, Rate, Scale, Span, Vector3D } from "three-nebula";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -64,16 +65,199 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     }
   }, [yootThrowValues]);
 
+  function createSprite(texturePath) {
+    var map = new THREE.TextureLoader().load(texturePath);
+    var material = new THREE.SpriteMaterial({
+      map: map,
+      color: 0xfffff,
+      blending: THREE.AdditiveBlending,
+      fog: true,
+    });
+    return new THREE.Sprite(material);
+  }
+  const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
       for (let i = 0; i < yootMeshes.length; i++) {
         yootMeshes[i].current.material.visible = false
       }
+      
+      let move = observeThrow();
+      move = 4;
+
+      const zone = new PointZone(0, 0);
+      if (move === 4 || move === 5) {
+        setParticleSetting({
+          texturePath: './textures/dot.png',
+          emitters: [
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(2, 3),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-5, -4),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(4, 5),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-4, -3),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(6, 7),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-3, -2),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(8, 9),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-2, -1),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(10, 11),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-1, 0),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(12, 13),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(0, 1),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            },
+            {
+              initialPosition: [            
+                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(14, 15),
+                layout[device].howToPlay.page2.fireworks.positionY,
+                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(1, 2),
+              ],
+              speedX: getRandomNumber(3.5, 4.5),
+              speedZ: getRandomNumber(1.5, 2.5),
+              rate: new Rate(new Span(1, 2), new Span(0.02)),
+              initializers: [
+                new Position(zone),
+                new Mass(0.1),
+                new Radius(1.5, 1.7),
+                new Life(1.5, 2),
+                new Body(createSprite('./textures/dot.png'))
+              ],
+              behaviours: [
+                new Alpha(0.7, 0),
+                new Scale(0.5, 0.2),
+                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+              ],
+              numEmit: 8,
+            }
+          ]
+        })
+      }
       socket.emit("yootsAsleep", ({response}) => {
         // console.log("[yootsAsleep] response", response)
         if (response === "record") {
-          let move = observeThrow();
           socket.emit("recordThrow", {move})
         } else if (response === "noRecord") {
           // don't record throw

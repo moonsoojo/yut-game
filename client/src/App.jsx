@@ -17,6 +17,7 @@ import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
 import layout from './layout';
 import ParticleSystem from './particles/ParticleSystem';
+import ParticleSystemMeteors from './particles/ParticleSystemMeteors';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -84,11 +85,12 @@ export default function App () {
       } }
       onCreated={ created }
       >
-      {/* <Perf/> */}
+      <Perf/>
       
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
-      <ParticleSystem/>
+      <ParticleSystemMeteors/>
+      {/* <ParticleSystem/> */}
       <Route path="/">
         <Home2 device={device}/>
         {/* <Meteors/> */}
@@ -97,7 +99,7 @@ export default function App () {
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
-        <group rotation={[-Math.PI/2 + Math.PI/32, -Math.PI/8, 0]} position={[-1, -3, 0]} scale={0.5}>
+        <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
           <MilkyWay scale={9}
             brightness={0.5}
             colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}

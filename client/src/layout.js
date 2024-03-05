@@ -774,12 +774,12 @@ export default {
           }
         },
         fireworks: {
-          positionX: -2,
-          positionY: 0,
-          positionZ: -3.5,
+          positionX: 0,
+          positionY: 3,
+          positionZ: 0,
           xRange: 1,
           yRange: 0,
-          zRange: 0.5
+          zRange: 1
         }
       },
       page3: {
@@ -1198,6 +1198,9 @@ export default {
     scoreDetailsButton: {
       position: [0, -2, 0],
     },
+    meteors: {
+      
+    }
   },
   landscapeMobile: {
     center: [-5.3, 0, -2.5],

@@ -20,6 +20,7 @@ import System, {
   ColorSpan,
   ease,
   Gravity,
+  Force,
 } from "three-nebula";
 import { useAtom, atom } from 'jotai';
 import { particleSettingAtom } from "../SocketManager";
@@ -39,7 +40,6 @@ export default function ParticleSystem() {
   const [particleSetting] = useAtom(particleSettingAtom)
   const { scene } = useThree();
 
-  const emitter = useRef();
   const system = useRef();
 
   const zone = new PointZone(0, 0);
@@ -49,7 +49,6 @@ export default function ParticleSystem() {
 
   useEffect(() => {
     system.current = new System();
-    emitter.current = new Emitter();
     const renderer = new SpriteRenderer(scene, THREE);
     emitter.current.setRate(new Rate(0, 0)).emit();
 
@@ -62,25 +61,34 @@ export default function ParticleSystem() {
 
   useEffect(() => {
     if (particleSetting) {
-      let rate = new Rate(100, new Span(1.5, 2.5))
-      if (particleSetting.delay) {
-      }
-        emitter.current
-        .setRate(rate)
-        .setInitializers([
+      const emitters = []
+      for (let i = 0; i < particleSetting.numEmitters; i++) {
+        const emitter = useRef();
+        emitter.current = new Emitter();
+        const initializers = [
           new Position(zone),
           new Mass(1),
           new Radius(1, 2),
           new Life(4),
           new Body(createSprite(particleSetting.texturePath)),
-          new RadialVelocity(2, new Vector3D(0, 5, 0), 180),
-        ])
-        .setBehaviours([
+        ]
+        if (particleSetting.radialVelocity) {
+          initializers.push(new RadialVelocity(2, new Vector3D(0, 5, 0), 180))
+        }
+        const behaviours = [
           new Alpha(20, 0),
           new Scale(0.2, 0),
           new Color(new THREE.Color(particleSetting.color), new THREE.Color(colors.getValue())),
-          new Gravity(0.02, 3, ease.easeOutQuart)
-        ]).emit()
+        ]
+  
+          emitter.current
+          .setRate(new Rate(100, new Span(0.1, 0.2)))
+          .setInitializers(initializers)
+          .setBehaviours(behaviours)
+          system.current.addEmitter(emitter.current)
+          emitter.current.emit()
+        emitters.push(emitter)
+      }
     } else {
       emitter.current.setRate(new Rate(0, 0)).emit();
     }

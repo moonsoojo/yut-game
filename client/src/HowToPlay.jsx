@@ -559,6 +559,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               yRange: layout[device].howToPlay.page2.fireworks.yRange,
               zRange: layout[device].howToPlay.page2.fireworks.zRange,
               randomize: true
+            },
+            radialVelocity: {
+              radius: 2,
+              vector3d: new Vector3D(0, 5, 0),
+              theta: 180
             }
           })
         }, 9000)

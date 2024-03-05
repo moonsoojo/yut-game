@@ -71,3 +71,8 @@ export function makeId(length) {
   }
   return result;
 }
+
+export function getRandomNumber(min, max) {
+  let randomNumber = (max - min) * Math.random() + min
+  return randomNumber;
+}
