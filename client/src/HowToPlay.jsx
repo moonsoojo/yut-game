@@ -44,7 +44,7 @@ import { particleSettingAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 
 
-const PAGE_2_PLAY_TIME = 12400 // scene loops, but it ends more quickly 
+const PAGE_2_PLAY_TIME = 14400 // scene loops, but it ends more quickly 
 export default function HowToPlay({ device, position, rotation, scale }) {
   const [page, setPage] = useState(2)
 
@@ -572,39 +572,27 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     // on component delete
       // setParticleSettings(null)
 
-    const [startTime, setStartTime] = useState(null)
-    const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+      function Fireworks() {
 
-    useEffect(() => {
-      console.log('page 2 mount')
-      return () => {
-        console.log('page 2 unmount') // triggers on page switch
-        setParticleSetting(null)
-      }
-    }, [])
+        const [fireTimeout, setFireTimeout] = useState(null)
+        const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
     
-    const fireworksTime = 10500
-    const [fired, setFired] = useState(false)
-    useFrame((state, delta) => {
-      console.log('[Page 2] run time', state.clock.elapsedTime - startTime)
-      if (!startTime) {
-        setStartTime(state.clock.elapsedTime)
-      } else if (startTime + (fireworksTime / 1000) < state.clock.elapsedTime && !fired) {
-        console.log(`[Page2] fire`)
-        setParticleSetting({
-          texturePath: './textures/dot.png',
-          color: "#FF0000"
-        })
-        setFired(true)
-      } else if (startTime + (PAGE_2_PLAY_TIME / 1000) < state.clock.elapsedTime && fired) {
-        console.log(`[Page2] reset particle system and time`)
-        // reset start time
-        // reset emitter
-        setParticleSetting(null)
-        setStartTime(null)
-        setFired(false)
+        useEffect(() => {
+          console.log('page 2')
+          setFireTimeout(setTimeout(() => {
+            setParticleSetting({
+              texturePath: './textures/dot.png',
+              color: "#00FFFF",
+              randomizePosition: true
+            })
+          }, 9000))
+          return () => {
+            console.log('page 2 unmount') // triggers on page switch
+            setParticleSetting(null)
+            clearTimeout(fireTimeout)
+          }
+        }, [])
       }
-    })
 
     // place on top of tiles with .map
     // adjust neptune particle size
@@ -918,6 +906,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         fontSize={22}
       />      
       <Tiles device={device}/>
+      <Fireworks/>
     </group>
   }
 
