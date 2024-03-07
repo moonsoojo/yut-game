@@ -537,6 +537,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     </group>
   }
 
+  function createSprite(texturePath) {
+    var map = new THREE.TextureLoader().load(texturePath);
+    var material = new THREE.SpriteMaterial({
+      map: map,
+      color: 0xfffff,
+      blending: THREE.AdditiveBlending,
+      fog: true,
+    });
+    return new THREE.Sprite(material);
+  }
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
@@ -544,27 +554,40 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
       const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   
+      const zone = new PointZone(0, 0);
       useEffect(() => {
-        console.log('page 2')
         const fireTimeoutId = setTimeout(() => {
-          console.log('execute set timeout')
           setParticleSetting({
-            texturePath: './textures/dot.png',
-            color: "#00FFFF",
-            position: {
-              x: layout[device].howToPlay.page2.fireworks.positionX,
-              y: layout[device].howToPlay.page2.fireworks.positionY,
-              z: layout[device].howToPlay.page2.fireworks.positionZ,
-              xRange: layout[device].howToPlay.page2.fireworks.xRange,
-              yRange: layout[device].howToPlay.page2.fireworks.yRange,
-              zRange: layout[device].howToPlay.page2.fireworks.zRange,
-              randomize: true
-            },
-            radialVelocity: {
-              radius: 2,
-              vector3d: new Vector3D(0, 5, 0),
-              theta: 180
-            }
+            emitters: [
+              {
+                initialPosition: {
+                  x: layout[device].howToPlay.page2.fireworks.initialPosition.x,
+                  y: layout[device].howToPlay.page2.fireworks.initialPosition.y,
+                  z: layout[device].howToPlay.page2.fireworks.initialPosition.z,
+                },
+                positionRange: {
+                  x: layout[device].howToPlay.page2.fireworks.positionRange.x,
+                  y: layout[device].howToPlay.page2.fireworks.positionRange.y,
+                  z: layout[device].howToPlay.page2.fireworks.positionRange.z,
+                },
+                randomizePosition: true,
+                rate: new Rate(10, 1),
+                initializers: [
+                  new Position(zone),
+                  new Mass(0.1),
+                  new Radius(1.5, 1.7),
+                  new Life(1.5, 2),
+                  new Body(createSprite('./textures/dot.png')),
+                  new RadialVelocity(2, new Vector3D(0, 5, 0), 180)
+                ],
+                behaviours: [
+                  new Alpha(0.7, 0),
+                  new Scale(0.5, 0.2),
+                  new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000"))
+                ],
+                numEmit: 'infinite'
+              }
+            ]
           })
         }, 9000)
         console.log(fireTimeoutId)

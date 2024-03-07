@@ -67,21 +67,24 @@ export default function ParticleSystemMeteors() {
           .setRate(particleSetting.emitters[i].rate)
           .setInitializers(particleSetting.emitters[i].initializers)
           .setBehaviours(particleSetting.emitters[i].behaviours)
-        emitter.position.x = particleSetting.emitters[i].initialPosition[0]
-        emitter.position.y = particleSetting.emitters[i].initialPosition[1]
-        emitter.position.z = particleSetting.emitters[i].initialPosition[2]
+        emitter.position.x = particleSetting.emitters[i].initialPosition.x
+        emitter.position.y = particleSetting.emitters[i].initialPosition.y
+        emitter.position.z = particleSetting.emitters[i].initialPosition.z
 
         system.current.addEmitter(emitter)
 
         emitters.current.push(emitter)
-        emitters.current[i].emit(particleSetting.numEmit)
+        if (particleSetting.emitters[i].numEmit === 'infinite') {
+          emitters.current[i].emit()
+        } else {
+          emitters.current[i].emit(particleSetting.emitters[i].numEmit)
+        }
       }
     } else {
         for (let i = 0; i < emitters.current.length; i++) {
-            // emitters[i].current.setRate(new Rate(0, 0)).emit();
-            system.current.removeEmitter(emitters[i].current)
-            emitters.current = []
+            emitters.current[i].setRate(new Rate(0, 0)).emit();
         }
+        emitters.current = []
     }
   }, [particleSetting])
 
@@ -89,20 +92,23 @@ export default function ParticleSystemMeteors() {
     if (system.current !== undefined) {
       system.current.update();
       if (particleSetting) {
-        if (particleSetting.emitters.length == 1 && particleSetting.position.randomize) {
-          emitter.current.position.x =
-            particleSetting.position.x +
-            (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.xRange;
-          emitter.current.position.y =
-            particleSetting.position.y +
-            (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.yRange;
-          emitter.current.position.z =
-            particleSetting.position.z +
-            (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.zRange;
+        if (particleSetting.emitters.length == 1 && particleSetting.emitters[0].randomizePosition) {
+          console.log('single emitter with random position')
+          emitters.current[0].position.x =
+            particleSetting.emitters[0].initialPosition.x +
+            (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[0].positionRange.x
+          emitters.current[0].position.y =
+            particleSetting.emitters[0].initialPosition.y +
+            (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[0].positionRange.y
+          emitters.current[0].position.z =
+            particleSetting.emitters[0].initialPosition.z +
+            (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[0].positionRange.z
         } else if (particleSetting.emitters.length > 1) { // meteors
             for (let i = 0; i < particleSetting.emitters.length; i++) {
+              if (particleSetting.emitters[i].moving) {
                 emitters.current[i].position.x += (-delta * particleSetting.emitters[i].speedX)
                 emitters.current[i].position.z += (delta * particleSetting.emitters[i].speedZ)
+              }
             }
         }
       }

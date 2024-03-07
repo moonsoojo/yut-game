@@ -171,12 +171,16 @@ export default {
           }
         },
         fireworks: {
-          positionX: -0.5,
-          positionY: 0,
-          positionZ: -2,
-          xRange: 0.5,
-          yRange: 0,
-          zRange: 0.5
+          initialPosition: {
+            x: -0.5,
+            y: 0,
+            z: -2,
+          },
+          positionRange: {
+            x: 0.5,
+            y: 0,
+            z: 0.5
+          }
         }
       },
       page3: {
@@ -298,6 +302,11 @@ export default {
         pageRadius: 0.3,
         arrowRadius: 0.4
       }
+    },
+    meteors: {
+      positionX: 0,
+      positionY: 3,
+      positionZ: 0,
     },
     about: {
       position: [-2.5, 0, -4],
@@ -774,12 +783,16 @@ export default {
           }
         },
         fireworks: {
-          positionX: 0,
-          positionY: 3,
-          positionZ: 0,
-          xRange: 1,
-          yRange: 0,
-          zRange: 1
+          initialPosition: {
+            x: -0.5,
+            y: 0,
+            z: -2,
+          },
+          positionRange: {
+            x: 0.5,
+            y: 0,
+            z: 0.5
+          }
         }
       },
       page3: {
@@ -900,6 +913,13 @@ export default {
       pagination: {
         pageRadius: 0.2,
         arrowRadius: 0.4
+      }
+    },
+    meteors: {
+      initialPosition: {
+        x: 0,
+        y: 3,
+        z: 0,
       }
     },
     team0: {
@@ -1199,8 +1219,12 @@ export default {
       position: [0, -2, 0],
     },
     meteors: {
-      
-    }
+      initialPosition: {
+        x: 0,
+        y: 3,
+        z: 0,
+      }
+    },
   },
   landscapeMobile: {
     center: [-5.3, 0, -2.5],

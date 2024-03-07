@@ -89,14 +89,13 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       const zone = new PointZone(0, 0);
       if (move === 4 || move === 5) {
         setParticleSetting({
-          texturePath: './textures/dot.png',
           emitters: [
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(2, 3),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-5, -4),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(2, 3),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-5, -4),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -113,13 +112,14 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(4, 5),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-4, -3),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(4, 5),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-4, -3),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -136,13 +136,14 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(6, 7),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-3, -2),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(6, 7),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-3, -2),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -159,13 +160,14 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(8, 9),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-2, -1),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(8, 9),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-2, -1),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -182,13 +184,14 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(10, 11),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(-1, 0),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(10, 11),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-1, 0),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -205,13 +208,14 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(12, 13),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(0, 1),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(12, 13),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(0, 1),
+              },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
@@ -228,13 +232,15 @@ export default function Yoots({ device = "portrait", buttonPos }) {
                 new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
               ],
               numEmit: 8,
+              moving: true
             },
             {
-              initialPosition: [            
-                layout[device].howToPlay.page2.fireworks.positionX + getRandomNumber(14, 15),
-                layout[device].howToPlay.page2.fireworks.positionY,
-                layout[device].howToPlay.page2.fireworks.positionZ + getRandomNumber(1, 2),
-              ],
+              initialPosition: {
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(14, 15),
+                y: layout[device].meteors.initialPosition.y,
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(1, 2),
+              },
+              moving: true,
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
               rate: new Rate(new Span(1, 2), new Span(0.02)),
