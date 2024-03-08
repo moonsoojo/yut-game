@@ -4,7 +4,7 @@ import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, particleSettingAtom } from "./SocketManager.jsx";
+import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, particleSettingAtom, boomTextAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId, getRandomNumber, isMyTurn } from "./helpers/helpers.js";
 import layout from "./layout.js";
@@ -76,6 +76,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     return new THREE.Sprite(material);
   }
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  const [boomText, setBoomText] = useAtom(boomTextAtom)
   const colors = new ColorSpan()
   colors.shouldRandomize = true
   useEffect(() => {
@@ -89,14 +90,17 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       move = 4;
 
       const zone = new PointZone(0, 0);
-      if (move === 4 || move === 5) {
-        setParticleSetting({
-          emitters: [
+      if ((move === 4 || move === 5) && gamePhase === "game") {
+        setBoomText('bonus turn')
+        const emitters = [];
+        const numEmitters = 7
+        for (let i = 0; i < numEmitters; i++) {
+          emitters.push(
             {
               initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(2, 3),
+                x: layout[device].meteors.initialPosition.x + getRandomNumber(2+2*i, 3+2*i),
                 y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-5, -4),
+                z: layout[device].meteors.initialPosition.z + getRandomNumber(-5+i, -4+i),
               },
               speedX: getRandomNumber(3.5, 4.5),
               speedZ: getRandomNumber(1.5, 2.5),
@@ -104,164 +108,21 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               initializers: [
                 new Position(zone),
                 new Mass(0.1),
-                new Radius(1.5, 1.7),
+                new Radius(1.5, 2),
                 new Life(1.5, 2),
                 new Body(createSprite('./textures/dot.png'))
               ],
               behaviours: [
                 new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
+                new Scale(0.6, 0.4),
                 new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(4, 5),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-4, -3),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(6, 7),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-3, -2),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(8, 9),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-2, -1),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(10, 11),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-1, 0),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(12, 13),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(0, 1),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            },
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(14, 15),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(1, 2),
-              },
-              moving: true,
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 1.7),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.5, 0.2),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
             }
-          ]
-        })
+          )
+        }
+        setParticleSetting({emitters})
       }
       socket.emit("yootsAsleep", ({response}) => {
         // console.log("[yootsAsleep] response", response)

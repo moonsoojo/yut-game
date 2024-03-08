@@ -24,7 +24,7 @@ import Stars from './particles/Stars';
 
 export default function Home2({ device }) {
 
-  const [display, setDisplay] = useState('howToPlay')
+  const [display, setDisplay] = useState('board')
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"

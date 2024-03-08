@@ -70,8 +70,7 @@ import DisconnectModal from "./DisconnectModal.jsx";
 import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
-import Alert from "./Yell.jsx";
-import Yell from "./Yell.jsx";
+import BoomText from "./BoomText.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -892,6 +891,7 @@ export default function Experience() {
       />}
       <Stars count={7000} size={5}/>
     </group> }
+    <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/>
     { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart}/> }
     {/* <Celebration/> */}

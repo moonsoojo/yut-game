@@ -46,7 +46,7 @@ export const thrownAtom = atom(false)
 export const hostNameAtom = atom('')
 export const roomIdAtom = atom('')
 // possible values: ['bonus turn', 'out of bounds', 'your turn!', 'who goes first?']
-export const yellAtom = atom('')
+export const boomTextAtom = atom('')
 export const particleSettingAtom = atom(null)
 
 export const SocketManager = () => {
@@ -71,7 +71,7 @@ export const SocketManager = () => {
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [displayDisconnect] = useAtom(displayDisconnectAtom)
   const [_thrown, setThrown] = useAtom(thrownAtom)
-  const [_yell, setYell] = useAtom(yellAtom);
+  const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
   const params = useParams();
 

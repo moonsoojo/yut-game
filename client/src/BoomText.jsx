@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Float, Text3D, useGLTF } from '@react-three/drei';
 import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { yellAtom } from './SocketManager';
+import { boomTextAtom } from './SocketManager';
 
 // show yoots for bonus turn
 // show team for "your turn"
@@ -13,9 +13,9 @@ import { yellAtom } from './SocketManager';
   // click piece
   // throw the yoot
   // button click - start game
-export default function Yell(props) {
+export default function BoomText(props) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
-  const [text] = useAtom(yellAtom)
+  const [text] = useAtom(boomTextAtom)
   const [plays, setPlays] = useState(0)
 
   useEffect(() => {
@@ -26,16 +26,16 @@ export default function Yell(props) {
 
     const { scale } = useSpring({
       from: {
-        scale: 0
+        scale: [0,0,0]
       },
       to: [
         {
-          scale: 3
+          scale: props.scale,
         },
         {
-          scale: 0,
-          delay: 2000
-        }
+          scale: [0,0,0],
+          delay: 3000
+        },
       ],
       loop: false
     })
