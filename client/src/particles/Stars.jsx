@@ -64,7 +64,7 @@ export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
           sizeAttenuation
           transparent
           blending={THREE.AdditiveBlending}
-          depthTest={false}
+          depthWrite={false}
           map={pointsMap}
           vertexColors={true}
         />

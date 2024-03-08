@@ -8,7 +8,7 @@ import RocketsWin from './RocketsWin';
 import UfosWin from './UfosWin';
 import Stars from './particles/Stars';
 import Showroom from './Showroom';
-import Meteors from './particles/Meteors';
+import Meteors from './particles/MeteorsBackup';
 import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import Celebration from './Celebration';
 import Interface from './Interface';
@@ -17,7 +17,6 @@ import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
 import layout from './layout';
 import ParticleSystem from './particles/ParticleSystem';
-import ParticleSystemMeteors from './particles/ParticleSystemMeteors';
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -89,8 +88,7 @@ export default function App () {
       
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
-      <ParticleSystemMeteors/>
-      {/* <ParticleSystem/> */}
+      <ParticleSystem/>
       <Route path="/">
         <Home2 device={device}/>
         {/* <Meteors/> */}
@@ -99,16 +97,7 @@ export default function App () {
       <Route path="/:id">
         <SocketManager/>
         <Experience/>
-        <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-          <MilkyWay scale={9}
-            brightness={0.5}
-            colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-            colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-            colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-            zOffset={-5.0}
-          />
-        </group>
-        {/* <RocketsWin/> */}
+        {/* <RocketsWin device={device}/> */}
         {/* <UfosWin/> */}
       </Route>
     </Canvas>

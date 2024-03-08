@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 import { PresentationControls, Text3D } from '@react-three/drei'
 import Rocket from './meshes/Rocket'
-import Fireworks from './particles/Fireworks'
+// import Fireworks from './particles/FireworksBackup'
+import fireworksSettings from './particles/Fireworks';
 import Earth from './meshes/Earth'
 import Stars from './particles/Stars'
 import * as THREE from 'three'
 import EarthModified from './meshes/EarthModified';
 import RocketWinMesh from './meshes/RocketWinMesh';
 import TextButton from './components/TextButton';
+import { useAtom } from 'jotai';
+import { particleSettingAtom } from './SocketManager';
 
-export default function RocketsWin({handleRestart}) {
+export default function RocketsWin({handleRestart, device}) {
 
   const rockets = useRef();
 
@@ -24,6 +27,12 @@ export default function RocketsWin({handleRestart}) {
     fog: true,
   });
   let sprite = new THREE.Sprite(material);
+  
+  const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  useEffect(() =>{
+    console.log(fireworksSettings(device))
+    setParticleSetting({emitters: fireworksSettings(device)})
+  }, [])
 
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 
@@ -67,41 +76,5 @@ export default function RocketsWin({handleRestart}) {
       <RocketWinMesh position={[1.6,-0.7,3.5]}/>
     </group>
     <Stars/>
-    {/* fireworks left side */}
-    <group>    
-      <Fireworks 
-        sprite={sprite} 
-        delay={0.3} 
-        position={{x: -5, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-      <Fireworks 
-        sprite={sprite} 
-        delay={0.6} 
-        position={{x: -8, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-      <Fireworks 
-        sprite={sprite} 
-        delay={0.9} 
-        position={{x: -11, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-    </group>
-    {/* fireworks right side */}
-    <group>    
-      <Fireworks
-        sprite={sprite} 
-        delay={0.3} 
-        position={{x: 5, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-      <Fireworks 
-        sprite={sprite} 
-        delay={0.6} 
-        position={{x: 8, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-      <Fireworks 
-        sprite={sprite} 
-        delay={0.9} 
-        position={{x: 11, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-      />
-    </group>
   </PresentationControls>
 }

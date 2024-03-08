@@ -4,7 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 
 import { Float, PresentationControls, Text3D } from '@react-three/drei'
 import Rocket from './meshes/Rocket'
-import Fireworks from './particles/Fireworks'
+import Fireworks from './particles/FireworksBackup'
 import Earth from './meshes/Earth'
 import UfoAnimated from './meshes/UfoAnimated';
 import UfoBeamDust from './particles/Dust';

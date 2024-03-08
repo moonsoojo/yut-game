@@ -25,24 +25,14 @@ import System, {
 import { useAtom, atom } from 'jotai';
 import { particleSettingAtom } from "../SocketManager";
 
-
-function createSprite(texturePath) {
-    var map = new THREE.TextureLoader().load(texturePath);
-    var material = new THREE.SpriteMaterial({
-      map: map,
-      color: 0xfffff,
-      blending: THREE.AdditiveBlending,
-      fog: true,
-    });
-    return new THREE.Sprite(material);
-}
 export default function ParticleSystem() {
   const [particleSetting] = useAtom(particleSettingAtom)
   const { scene } = useThree();
 
   const system = useRef();
+  const emitters = useRef([]);
 
-  const zone = new PointZone(0, 0);
+  // const zone = new PointZone(0, 0);
   
   const colors = new ColorSpan()
   colors.shouldRandomize = true
@@ -50,64 +40,70 @@ export default function ParticleSystem() {
   useEffect(() => {
     system.current = new System();
     const renderer = new SpriteRenderer(scene, THREE);
-    emitter.current.setRate(new Rate(0, 0)).emit();
+    // emitter.current.setRate(new Rate(0, 0)).emit();
 
-    system.current.addEmitter(emitter.current).addRenderer(renderer);
+    system.current.addRenderer(renderer);
     return () => {
-      emitter.current.destroy();
       system.current.destroy();
     };
   }, [scene]);
 
   useEffect(() => {
     if (particleSetting) {
-      const emitters = []
-      for (let i = 0; i < particleSetting.numEmitters; i++) {
-        const emitter = useRef();
-        emitter.current = new Emitter();
-        const initializers = [
-          new Position(zone),
-          new Mass(1),
-          new Radius(1, 2),
-          new Life(4),
-          new Body(createSprite(particleSetting.texturePath)),
-        ]
-        if (particleSetting.radialVelocity) {
-          initializers.push(new RadialVelocity(2, new Vector3D(0, 5, 0), 180))
+      emitters.current = []
+      console.log(particleSetting)
+      for (let i = 0; i < particleSetting.emitters.length; i++) {
+        const emitter = new Emitter();
+        emitter
+          .setRate(particleSetting.emitters[i].rate)
+          .setInitializers(particleSetting.emitters[i].initializers)
+          .setBehaviours(particleSetting.emitters[i].behaviours)
+        emitter.position.x = particleSetting.emitters[i].initialPosition.x
+        emitter.position.y = particleSetting.emitters[i].initialPosition.y
+        emitter.position.z = particleSetting.emitters[i].initialPosition.z
+
+        system.current.addEmitter(emitter)
+
+        emitters.current.push(emitter)
+        if (particleSetting.emitters[i].numEmit === 'infinite') {
+          emitters.current[i].emit()
+        } else {
+          emitters.current[i].emit(particleSetting.emitters[i].numEmit)
         }
-        const behaviours = [
-          new Alpha(20, 0),
-          new Scale(0.2, 0),
-          new Color(new THREE.Color(particleSetting.color), new THREE.Color(colors.getValue())),
-        ]
-  
-          emitter.current
-          .setRate(new Rate(100, new Span(0.1, 0.2)))
-          .setInitializers(initializers)
-          .setBehaviours(behaviours)
-          system.current.addEmitter(emitter.current)
-          emitter.current.emit()
-        emitters.push(emitter)
       }
     } else {
-      emitter.current.setRate(new Rate(0, 0)).emit();
+        for (let i = 0; i < emitters.current.length; i++) {
+            emitters.current[i].setRate(new Rate(0, 0)).emit();
+        }
+        emitters.current = []
     }
   }, [particleSetting])
-
 
   useFrame((state, delta) => {
     if (system.current !== undefined) {
       system.current.update();
-      if (particleSetting?.position.randomize) {
-        emitter.current.position.x =
-          particleSetting.position.x +
-          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.xRange;
-        emitter.current.position.y =
-          particleSetting.position.y +
-          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.yRange;
-        emitter.current.position.z =
-          particleSetting.position.z +
-          (Math.random() < 0.5 ? 1 : -1) * particleSetting.position.zRange;
+      if (particleSetting) {
+        // for each emitter
+        // if moving
+          // do something
+        // else if randomize position
+          // do something else
+        for (let i = 0; i < particleSetting.emitters.length; i++) {
+          if (particleSetting.emitters[i].moving) {
+            emitters.current[i].position.x += (-delta * particleSetting.emitters[i].speedX)
+            emitters.current[i].position.z += (delta * particleSetting.emitters[i].speedZ)
+          } else if (particleSetting.emitters[i].randomizePosition) {
+            emitters.current[i].position.x =
+              particleSetting.emitters[i].initialPosition.x +
+              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.x
+            emitters.current[i].position.y =
+              particleSetting.emitters[i].initialPosition.y +
+              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.y
+            emitters.current[i].position.z =
+              particleSetting.emitters[i].initialPosition.z +
+              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.z
+          }
+        }
       }
     }
   });

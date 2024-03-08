@@ -6,12 +6,12 @@ import * as THREE from "three";
 import React, {ref} from "react";
 import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, particleSettingAtom, boomTextAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { getCurrentPlayerSocketId, getRandomNumber, isMyTurn } from "./helpers/helpers.js";
+import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import HtmlElement from "./HtmlElement.jsx";
-import { Alpha, Body, Color, ColorSpan, Life, Mass, PointZone, Position, RadialVelocity, Radius, Rate, Scale, Span, Vector3D } from "three-nebula";
+import meteorSettings from "./particles/Meteors";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -65,20 +65,8 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     }
   }, [yootThrowValues]);
 
-  function createSprite(texturePath) {
-    var map = new THREE.TextureLoader().load(texturePath);
-    var material = new THREE.SpriteMaterial({
-      map: map,
-      color: 0xfffff,
-      blending: THREE.AdditiveBlending,
-      fog: true,
-    });
-    return new THREE.Sprite(material);
-  }
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   const [boomText, setBoomText] = useAtom(boomTextAtom)
-  const colors = new ColorSpan()
-  colors.shouldRandomize = true
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
@@ -87,41 +75,10 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       }
       
       let move = observeThrow();
-
-      const zone = new PointZone(0, 0);
-      if ((move === 4 || move === 5) && gamePhase === "game") {
+      move = 4
+      if ((move === 4 || move === 5)) {
         setBoomText('bonus turn')
-        const emitters = [];
-        const numEmitters = 7
-        for (let i = 0; i < numEmitters; i++) {
-          emitters.push(
-            {
-              initialPosition: {
-                x: layout[device].meteors.initialPosition.x + getRandomNumber(2+2*i, 3+2*i),
-                y: layout[device].meteors.initialPosition.y,
-                z: layout[device].meteors.initialPosition.z + getRandomNumber(-5+i, -4+i),
-              },
-              speedX: getRandomNumber(3.5, 4.5),
-              speedZ: getRandomNumber(1.5, 2.5),
-              rate: new Rate(new Span(1, 2), new Span(0.02)),
-              initializers: [
-                new Position(zone),
-                new Mass(0.1),
-                new Radius(1.5, 2),
-                new Life(1.5, 2),
-                new Body(createSprite('./textures/dot.png'))
-              ],
-              behaviours: [
-                new Alpha(0.7, 0),
-                new Scale(0.6, 0.4),
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
-              ],
-              numEmit: 8,
-              moving: true
-            }
-          )
-        }
-        setParticleSetting({emitters})
+        setParticleSetting({emitters: meteorSettings(device)})
       }
       socket.emit("yootsAsleep", ({response}) => {
         // console.log("[yootsAsleep] response", response)

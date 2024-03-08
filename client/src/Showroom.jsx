@@ -1,6 +1,6 @@
 import { OrbitControls, OrthographicCamera } from '@react-three/drei';
 import React from 'react';
-import Meteors from './particles/Meteors';
+import Meteors from './particles/MeteorsBackup';
 import { Perf } from 'r3f-perf';
 
 export default function Showroom() {

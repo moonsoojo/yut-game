@@ -61,11 +61,11 @@ import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
 import RocketsWin from "./RocketsWin.jsx";
-import Celebration from "./particles/Meteors.jsx";
+import Celebration from "./particles/MeteorsBackup.jsx";
 import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
-import Meteors from "./particles/Meteors.jsx";
+import Meteors from "./particles/MeteorsBackup.jsx";
 import DisconnectModal from "./DisconnectModal.jsx";
 import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
@@ -891,9 +891,18 @@ export default function Experience() {
       />}
       <Stars count={7000} size={5}/>
     </group> }
+        <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
+          <MilkyWay scale={9}
+            brightness={0.5}
+            colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+            zOffset={-5.0}
+          />
+        </group>
     <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/>
-    { winner == 0 && <RocketsWin handleRestart={handleRestart}/> }
-    { winner == 1 && <UfosWin handleRestart={handleRestart}/> }
+    { winner == 0 && <RocketsWin handleRestart={handleRestart} device={device}/> }
+    { winner == 1 && <UfosWin handleRestart={handleRestart} device={device}/> }
     {/* <Celebration/> */}
     {/* <Meteors/> */}
     </>

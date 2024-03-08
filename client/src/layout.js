@@ -303,11 +303,6 @@ export default {
         arrowRadius: 0.4
       }
     },
-    meteors: {
-      positionX: 0,
-      positionY: 3,
-      positionZ: 0,
-    },
     about: {
       position: [-2.5, 0, -4],
       rotation: [-Math.PI/4,0,0],
@@ -623,6 +618,89 @@ export default {
       scale: [1,1,1],
       fontSize: 15
     },
+    meteors: {
+      initialPosition: {
+        x: 0,
+        y: 3,
+        z: 0,
+      }
+    },
+    winScreen: {
+      fireworks: [
+        { // left
+          initialPosition: {
+            x: -8,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // left
+          initialPosition: {
+            x: -11,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // left
+          initialPosition: {
+            x: -5,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // right
+          initialPosition: {
+            x: 8,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // right
+          initialPosition: {
+            x: 11,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // right
+          initialPosition: {
+            x: 5,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        }
+      ]
+    }
   },
   landscapeDesktop: {
     center: [0,0,0],
@@ -913,13 +991,6 @@ export default {
       pagination: {
         pageRadius: 0.2,
         arrowRadius: 0.4
-      }
-    },
-    meteors: {
-      initialPosition: {
-        x: 0,
-        y: 3,
-        z: 0,
       }
     },
     team0: {
@@ -1225,6 +1296,59 @@ export default {
         z: 0,
       }
     },
+    
+    winScreen: {
+      fireworks: [
+        { // left
+          initialPosition: {
+            x: -8,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // left
+          initialPosition: {
+            x: -11,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // right
+          initialPosition: {
+            x: 8,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        },
+        { // right
+          initialPosition: {
+            x: 11,
+            y: 0,
+            z: 0
+          },
+          positionRange: {
+            x: 2,
+            y: 2,
+            z: 2
+          }
+        }
+      ]
+    }
   },
   landscapeMobile: {
     center: [-5.3, 0, -2.5],
