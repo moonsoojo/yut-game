@@ -11,7 +11,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import HtmlElement from "./HtmlElement.jsx";
-import { Alpha, Body, Color, Life, Mass, PointZone, Position, RadialVelocity, Radius, Rate, Scale, Span, Vector3D } from "three-nebula";
+import { Alpha, Body, Color, ColorSpan, Life, Mass, PointZone, Position, RadialVelocity, Radius, Rate, Scale, Span, Vector3D } from "three-nebula";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -76,6 +76,8 @@ export default function Yoots({ device = "portrait", buttonPos }) {
     return new THREE.Sprite(material);
   }
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  const colors = new ColorSpan()
+  colors.shouldRandomize = true
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
@@ -109,7 +111,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -133,7 +135,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -157,7 +159,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -181,7 +183,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -205,7 +207,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -229,7 +231,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
               moving: true
@@ -254,7 +256,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
               behaviours: [
                 new Alpha(0.7, 0),
                 new Scale(0.5, 0.2),
-                new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000")),
+                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
               ],
               numEmit: 8,
             }

@@ -61,6 +61,8 @@ export default function ParticleSystemMeteors() {
 
   useEffect(() => {
     if (particleSetting) {
+      emitters.current = []
+      console.log(particleSetting)
       for (let i = 0; i < particleSetting.emitters.length; i++) {
         const emitter = new Emitter();
         emitter
