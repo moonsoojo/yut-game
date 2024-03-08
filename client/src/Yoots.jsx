@@ -87,7 +87,6 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       }
       
       let move = observeThrow();
-      move = 4;
 
       const zone = new PointZone(0, 0);
       if ((move === 4 || move === 5) && gamePhase === "game") {

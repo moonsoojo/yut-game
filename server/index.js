@@ -37,9 +37,9 @@ app.use(cors());
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 // have to wait for the server create the room first
-let test = false;
+let test = true;
 if (test) {
-  const roomId = 'aaa'
+  const roomId = 'AAA'
   addRoom({ id: roomId })
 
   let teams = JSON.parse(JSON.stringify(initialState.teams))
@@ -58,37 +58,17 @@ if (test) {
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
-  teams[0].pieces[0] = null;
+  teams[0].pieces[0] = 'scored';
   teams[0].pieces[1] = 'scored';
+  teams[0].pieces[2] = 'scored';
+  teams[0].pieces[3] = null;
 
-  teams[1].pieces[0] = null;
-  teams[1].pieces[1] = null;
-  teams[1].pieces[2] = 'scored';
-  teams[1].pieces[3] = null;
   updateTeams(roomId, teams)
   
-  // addThrow(roomId, turn.team)
-  tiles[12] = [
-    { tile: 12, team: 0, id: 0,  history: [9,10,11]},
-  ]
-  tiles[16] = [
-    { tile: 16, team: 1, id: 0,  history: [11,12,13,14,15]},
-  ]
   tiles[18] = [
-    { tile: 18, team: 1, id: 0,  history: [11,12,13,14,15,16,17]},
-  ]
-  tiles[21] = [
-    { tile: 21, team: 1, id: 0,  history: [3,4,5,20]},
+    { tile: 18, team: 0, id: 3,  history: [11,12,13,14,15,16,17]},
   ]
   updateTiles(roomId, tiles)
-  // tiles[10] = [
-  //   { tile: 10, team: 1, id: 0,  history: [8,9]},
-  // ]
-  // tiles[17] = [
-  //   { tile: 17, team: 0, id: 2,  history: [15,16]},
-  // ]
-  // displayPiecesOnTiles(0);
-  // displayPiecesOnTiles(1);
 }
 
 function displayPiecesOnTiles(team) {
