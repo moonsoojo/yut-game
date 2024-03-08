@@ -98,7 +98,7 @@ export default function App () {
         <SocketManager/>
         <Experience/>
         {/* <RocketsWin device={device}/> */}
-        {/* <UfosWin/> */}
+        {/* <UfosWin device={device}/> */}
       </Route>
     </Canvas>
     {/* <Interface/> */}

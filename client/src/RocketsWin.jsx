@@ -18,19 +18,9 @@ import { particleSettingAtom } from './SocketManager';
 export default function RocketsWin({handleRestart, device}) {
 
   const rockets = useRef();
-
-  var map = new THREE.TextureLoader().load("textures/dot.png");
-  var material = new THREE.SpriteMaterial({
-    map: map,
-    color: new THREE.Color("#FF2727"),
-    blending: THREE.AdditiveBlending,
-    fog: true,
-  });
-  let sprite = new THREE.Sprite(material);
   
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
-    console.log(fireworksSettings(device))
     setParticleSetting({emitters: fireworksSettings(device)})
   }, [])
 

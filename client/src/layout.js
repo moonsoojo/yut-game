@@ -1296,7 +1296,6 @@ export default {
         z: 0,
       }
     },
-    
     winScreen: {
       fireworks: [
         { // left

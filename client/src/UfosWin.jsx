@@ -3,8 +3,6 @@ import { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 
 import { Float, PresentationControls, Text3D } from '@react-three/drei'
-import Rocket from './meshes/Rocket'
-import Fireworks from './particles/FireworksBackup'
 import Earth from './meshes/Earth'
 import UfoAnimated from './meshes/UfoAnimated';
 import UfoBeamDust from './particles/Dust';
@@ -14,13 +12,13 @@ import VertexShader from './shader/vertexDust.glsl'
 import Stars from './particles/Stars';
 
 import * as THREE from 'three';
-import System, {
-  SpriteRenderer,
-} from "three-nebula";
 import Dust from './particles/Dust';
 import TextButton from './components/TextButton';
+import { useAtom } from 'jotai';
+import { particleSettingAtom } from './SocketManager';
+import fireworksSettings from './particles/Fireworks';
 
-export default function UfosWin() {
+export default function UfosWin({ handleRestart, device }) {
 
   var map = new THREE.TextureLoader().load("./textures/dot.png");
   var material = new THREE.SpriteMaterial({
@@ -30,6 +28,11 @@ export default function UfosWin() {
     fog: true,
   });
   let sprite = new THREE.Sprite(material);
+
+  const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  useEffect(() =>{
+    setParticleSetting({emitters: fireworksSettings(device)})
+  }, [])
   
   const beamShaderRef = useRef();
   const ufo0 = useRef();
@@ -128,41 +131,6 @@ export default function UfosWin() {
       boxHeight={1}
       size={0.8}
     />
-    {/* fireworks left side */}
-    <group>    <Fireworks 
-    sprite={sprite} 
-    delay={0.3} 
-    position={{x: -5, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    <Fireworks 
-    sprite={sprite} 
-    delay={0.6} 
-    position={{x: -8, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    <Fireworks 
-    sprite={sprite} 
-    delay={0.9} 
-    position={{x: -11, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    </group>
-    {/* fireworks right side */}
-    <group>    
-    <Fireworks 
-    sprite={sprite} 
-    delay={0.3} 
-    position={{x: 5, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    <Fireworks 
-    sprite={sprite} 
-    delay={0.6} 
-    position={{x: 8, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    <Fireworks 
-    sprite={sprite} 
-    delay={0.9} 
-    position={{x: 11, xRange: 2, y: 0, yRange: 2, z: 0, zRange: 2}} 
-    />
-    </group>
     </PresentationControls>
   </>
 }

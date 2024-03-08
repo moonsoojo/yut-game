@@ -36,7 +36,7 @@ export default function fireworksSettings(device) {
                 },
                 moving: false,
                 randomizePosition: true,
-                rate: new Rate(new Span(100, 200), new Span(1)),
+                rate: new Rate(new Span(50, 100), new Span(1)),
                 initializers: [
                     new Position(zone),
                     new Mass(1, 3),
