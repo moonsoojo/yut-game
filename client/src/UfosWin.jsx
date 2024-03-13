@@ -14,7 +14,6 @@ import * as THREE from 'three';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
 import { particleSettingAtom } from './SocketManager';
-import fireworksSettings from './particles/UfosWinParticles';
 import UfosWinParticles from './particles/UfosWinParticles';
 
 export default function UfosWin({ handleRestart, device }) {
@@ -44,10 +43,10 @@ export default function UfosWin({ handleRestart, device }) {
   const radius = 1.7
   const offset = 2 * Math.PI / 4
   const floatHeight = 3
-  const beamBrightness = 0.4
+  const beamBrightness = 0.25
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 
-    beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 4) * 0.1 + beamBrightness
+    beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 3) * 0.1 + beamBrightness
     ufo0.current.position.x = Math.sin(time + offset * 0) * radius
     ufo0.current.position.z = Math.cos(time + offset * 0) * radius
     ufo0.current.position.y = Math.cos(time + offset * 0) * 0.1 + floatHeight
@@ -105,8 +104,6 @@ export default function UfosWin({ handleRestart, device }) {
     </group>
     <Stars/>
 
-    {/* <Dust sprite={sprite} count={300} spawnDelay={0.05}/> */}
-
     {/* beam */}
     <mesh position={[0, -1, 0]}>
       <cylinderGeometry args={[1.5, 4, 7, 32]}/>
@@ -115,7 +112,7 @@ export default function UfosWin({ handleRestart, device }) {
         fragmentShader={FragmentShader}
         transparent={true}
         uniforms={{
-          uOpacity: { value: 0.1 }
+          uOpacity: { value: 0.2 }
         }}
         ref={beamShaderRef}
       />
