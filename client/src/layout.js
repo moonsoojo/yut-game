@@ -699,7 +699,19 @@ export default {
             z: 2
           }
         }
-      ]
+      ],
+      dust: {          
+        initialPosition: {
+          x: 0,
+          y: -5,
+          z: 0
+        },
+        positionRange: {
+          x: 2,
+          y: 1,
+          z: 2
+        }
+      }
     }
   },
   landscapeDesktop: {
@@ -1346,7 +1358,19 @@ export default {
             z: 2
           }
         }
-      ]
+      ],
+      dust: {          
+        initialPosition: {
+          x: 0,
+          y: -4,
+          z: 0
+        },
+        positionRange: {
+          x: 3,
+          y: 1,
+          z: 3
+        }
+      }
     }
   },
   landscapeMobile: {

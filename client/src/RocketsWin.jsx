@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { PresentationControls, Text3D } from '@react-three/drei'
 import Rocket from './meshes/Rocket'
 // import Fireworks from './particles/FireworksBackup'
-import fireworksSettings from './particles/Fireworks';
+import fireworksSettings from './particles/RocketsWinFireworks';
 import Earth from './meshes/Earth'
 import Stars from './particles/Stars'
 import * as THREE from 'three'
@@ -50,8 +50,8 @@ export default function RocketsWin({handleRestart, device}) {
       rotation={[0, 0, 0]}
       // can't pass a function received from props
       handlePointerClick={handleRestart}
-      boxWidth={6}
-      boxHeight={1}
+      boxWidth={5.85}
+      boxHeight={0.8}
       size={0.8}
     />
     {/* <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.8} height={0.01} position={[2, -5, 0]}>

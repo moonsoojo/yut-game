@@ -5,18 +5,17 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { Float, PresentationControls, Text3D } from '@react-three/drei'
 import Earth from './meshes/Earth'
 import UfoAnimated from './meshes/UfoAnimated';
-import UfoBeamDust from './particles/Dust';
 
 import FragmentShader from './shader/fragmentDust.glsl'
 import VertexShader from './shader/vertexDust.glsl'
 import Stars from './particles/Stars';
 
 import * as THREE from 'three';
-import Dust from './particles/Dust';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
 import { particleSettingAtom } from './SocketManager';
-import fireworksSettings from './particles/Fireworks';
+import fireworksSettings from './particles/UfosWinParticles';
+import UfosWinParticles from './particles/UfosWinParticles';
 
 export default function UfosWin({ handleRestart, device }) {
 
@@ -31,7 +30,7 @@ export default function UfosWin({ handleRestart, device }) {
 
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
-    setParticleSetting({emitters: fireworksSettings(device)})
+    setParticleSetting({emitters: UfosWinParticles(device)})
   }, [])
   
   const beamShaderRef = useRef();
@@ -45,7 +44,7 @@ export default function UfosWin({ handleRestart, device }) {
   const radius = 1.7
   const offset = 2 * Math.PI / 4
   const floatHeight = 3
-  const beamBrightness = 0.2
+  const beamBrightness = 0.4
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 
     beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 4) * 0.1 + beamBrightness
@@ -77,10 +76,10 @@ export default function UfosWin({ handleRestart, device }) {
       config={{ mass: 2, tension: 400 }}
       snap={{ mass: 4, tension: 400 }}>
     <Text3D 
-    font="/fonts/Luckiest Guy_Regular.json" 
-    size={1} 
-    height={0.01} 
-    position={[-3.5, 5.5, 0]}>
+      font="/fonts/Luckiest Guy_Regular.json" 
+      size={1} 
+      height={0.01} 
+      position={[-3.5, 5.5, 0]}>
       UFOS WIN!
       <meshStandardMaterial color="yellow"/>
     </Text3D>
@@ -106,7 +105,7 @@ export default function UfosWin({ handleRestart, device }) {
     </group>
     <Stars/>
 
-    <Dust sprite={sprite} count={300} spawnDelay={0.05}/>
+    {/* <Dust sprite={sprite} count={300} spawnDelay={0.05}/> */}
 
     {/* beam */}
     <mesh position={[0, -1, 0]}>
@@ -127,8 +126,8 @@ export default function UfosWin({ handleRestart, device }) {
       rotation={[0, 0, 0]}
       // can't pass a function received from props
       handlePointerClick={handleRestart}
-      boxWidth={6}
-      boxHeight={1}
+      boxWidth={5.9}
+      boxHeight={0.8}
       size={0.8}
     />
     </PresentationControls>

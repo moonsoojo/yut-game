@@ -75,7 +75,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       }
       
       let move = observeThrow();
-      move = 4
+      // move = 4
       if ((move === 4 || move === 5)) {
         setBoomText('bonus turn')
         setParticleSetting({emitters: meteorSettings(device)})

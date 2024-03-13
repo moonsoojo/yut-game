@@ -47,26 +47,26 @@ if (test) {
   
   updateGamePhase(roomId, 'game')
   let turn = {
-    team: 0,
+    team: 1,
     players: [0,0]
   }
   updateTurn(roomId, turn)
 
-  teams[0].moves['5'] = 1
-  teams[0].moves['4'] = 1
-  teams[0].moves['3'] = 1
+  teams[1].moves['5'] = 1
+  teams[1].moves['4'] = 1
+  teams[1].moves['3'] = 1
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
-  teams[0].pieces[0] = 'scored';
-  teams[0].pieces[1] = 'scored';
-  teams[0].pieces[2] = 'scored';
-  teams[0].pieces[3] = null;
+  teams[1].pieces[0] = 'scored';
+  teams[1].pieces[1] = 'scored';
+  teams[1].pieces[2] = 'scored';
+  teams[1].pieces[3] = null;
 
   updateTeams(roomId, teams)
   
   tiles[18] = [
-    { tile: 18, team: 0, id: 3,  history: [11,12,13,14,15,16,17]},
+    { tile: 18, team: 1, id: 3,  history: [11,12,13,14,15,16,17]},
   ]
   updateTiles(roomId, tiles)
 }

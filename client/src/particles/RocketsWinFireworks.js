@@ -2,7 +2,7 @@ import { Alpha, Body, Color, ColorSpan, Life, Mass, PointZone, Position, RadialV
 import layout from "../layout"
 import * as THREE from 'three';
 
-export default function fireworksSettings(device) {
+export default function RocketsWinFireworks(device) {
     const fireworks = [];
     const numEmitters = 4; // one emitter on each side of Earth
 

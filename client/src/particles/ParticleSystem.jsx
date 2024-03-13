@@ -24,6 +24,7 @@ import System, {
 } from "three-nebula";
 import { useAtom, atom } from 'jotai';
 import { particleSettingAtom } from "../SocketManager";
+import { getRandomNumber } from "../helpers/helpers";
 
 export default function ParticleSystem() {
   const [particleSetting] = useAtom(particleSettingAtom)
@@ -95,13 +96,13 @@ export default function ParticleSystem() {
           } else if (particleSetting.emitters[i].randomizePosition) {
             emitters.current[i].position.x =
               particleSetting.emitters[i].initialPosition.x +
-              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.x
+              getRandomNumber(-particleSetting.emitters[i].positionRange.x, particleSetting.emitters[i].positionRange.x)
             emitters.current[i].position.y =
               particleSetting.emitters[i].initialPosition.y +
-              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.y
+              getRandomNumber(-particleSetting.emitters[i].positionRange.y, particleSetting.emitters[i].positionRange.y)
             emitters.current[i].position.z =
               particleSetting.emitters[i].initialPosition.z +
-              (Math.random() < 0.5 ? 1 : -1) * particleSetting.emitters[i].positionRange.z
+              getRandomNumber(-particleSetting.emitters[i].positionRange.z, particleSetting.emitters[i].positionRange.z)
           }
         }
       }
