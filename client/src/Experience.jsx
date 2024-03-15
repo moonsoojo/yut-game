@@ -56,6 +56,7 @@ import {
   winnerAtom,
   hostNameAtom,
   roomIdAtom,
+  particleSettingAtom,
 } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
@@ -99,9 +100,10 @@ export default function Experience() {
     }
   }
 
-  console.log(`[Experience] render`)
+  const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
+    setParticleSetting(null)
   }, []);
 
   const [zoom, setZoom] = useState(50);
@@ -900,7 +902,7 @@ export default function Experience() {
         zOffset={-5.0}
       />
     </group> }
-    <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/>
+    {/* <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/> */}
     { winner == 0 && <RocketsWin handleRestart={handleRestart} device={device}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart} device={device}/> }
     {/* <Celebration/> */}

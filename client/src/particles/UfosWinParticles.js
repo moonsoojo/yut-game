@@ -25,18 +25,18 @@ export default function UfosWinParticles(device) {
         emitters.push(
             {
                 initialPosition: {
-                  x: layout[device].winScreen.fireworks[i].initialPosition.x,
-                  y: layout[device].winScreen.fireworks[i].initialPosition.y,
-                  z: layout[device].winScreen.fireworks[i].initialPosition.z,
+                  x: layout[device].winScreen.fireworks.emitters[i].initialPosition.x,
+                  y: layout[device].winScreen.fireworks.emitters[i].initialPosition.y,
+                  z: layout[device].winScreen.fireworks.emitters[i].initialPosition.z,
                 },
                 positionRange: {
-                  x: layout[device].winScreen.fireworks[i].positionRange.x,
-                  y: layout[device].winScreen.fireworks[i].positionRange.y,
-                  z: layout[device].winScreen.fireworks[i].positionRange.z,
+                  x: layout[device].winScreen.fireworks.emitters[i].positionRange.x,
+                  y: layout[device].winScreen.fireworks.emitters[i].positionRange.y,
+                  z: layout[device].winScreen.fireworks.emitters[i].positionRange.z,
                 },
                 moving: false,
                 randomizePosition: true,
-                rate: new Rate(new Span(50, 100), new Span(1)),
+                rate: new Rate(new Span(50, 100), new Span(layout[device].winScreen.fireworks.timePanA)),
                 initializers: [
                     new Position(zone),
                     new Mass(1, 3),
@@ -81,7 +81,7 @@ export default function UfosWinParticles(device) {
             behaviours: [
                 new Alpha(5, 0), 
                 new Scale(1, 1.5), 
-                new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
+                new Color(new THREE.Color('#40E0D0'), new THREE.Color('#FFFFFF')),
                 new Force(0, 0.05, 0)
             ],
             numEmit: 'infinite'

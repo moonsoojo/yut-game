@@ -30,7 +30,7 @@ export default function UfosWin({ handleRestart, device }) {
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
     setParticleSetting({emitters: UfosWinParticles(device)})
-  }, [])
+  }, [device])
   
   const beamShaderRef = useRef();
   const ufo0 = useRef();

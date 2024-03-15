@@ -51,6 +51,10 @@ export default function ParticleSystem() {
 
   useEffect(() => {
     if (particleSetting) {
+      // clear first in case it was already populated
+      for (let i = 0; i < emitters.current.length; i++) {
+          emitters.current[i].setRate(new Rate(0, 0)).emit();
+      }
       emitters.current = []
       console.log(particleSetting)
       for (let i = 0; i < particleSetting.emitters.length; i++) {

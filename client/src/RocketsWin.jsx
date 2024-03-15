@@ -22,7 +22,7 @@ export default function RocketsWin({handleRestart, device}) {
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
     setParticleSetting({emitters: fireworksSettings(device)})
-  }, [])
+  }, [device])
 
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 

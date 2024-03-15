@@ -37,7 +37,7 @@ app.use(cors());
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 // have to wait for the server create the room first
-let test = true;
+let test = false;
 if (test) {
   const roomId = 'AAA'
   addRoom({ id: roomId })

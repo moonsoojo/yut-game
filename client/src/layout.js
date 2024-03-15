@@ -626,80 +626,59 @@ export default {
       }
     },
     winScreen: {
-      fireworks: [
-        { // left
-          initialPosition: {
-            x: -8,
-            y: 0,
-            z: 0
+      fireworks: {
+        emitters: [
+          { // left
+            initialPosition: {
+              x: -4,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // left
-          initialPosition: {
-            x: -11,
-            y: 0,
-            z: 0
+          { // left
+            initialPosition: {
+              x: -1,
+              y: 2,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // left
-          initialPosition: {
-            x: -5,
-            y: 0,
-            z: 0
+          { // left
+            initialPosition: {
+              x: 1,
+              y: 4,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
+          { // right
+            initialPosition: {
+              x: 4,
+              y: 4,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           }
-        },
-        { // right
-          initialPosition: {
-            x: 8,
-            y: 0,
-            z: 0
-          },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // right
-          initialPosition: {
-            x: 11,
-            y: 0,
-            z: 0
-          },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // right
-          initialPosition: {
-            x: 5,
-            y: 0,
-            z: 0
-          },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        }
-      ],
+        ],
+        timePanA: 1
+      },
       dust: {          
         initialPosition: {
           x: 0,
@@ -1309,56 +1288,59 @@ export default {
       }
     },
     winScreen: {
-      fireworks: [
-        { // left
-          initialPosition: {
-            x: -8,
-            y: 0,
-            z: 0
+      fireworks: {
+        emitters: [
+          { // left
+            initialPosition: {
+              x: -8,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // left
-          initialPosition: {
-            x: -11,
-            y: 0,
-            z: 0
+          { // left
+            initialPosition: {
+              x: -11,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        },
-        { // right
-          initialPosition: {
-            x: 8,
-            y: 0,
-            z: 0
+          { // right
+            initialPosition: {
+              x: 8,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
+          { // right
+            initialPosition: {
+              x: 11,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
           }
-        },
-        { // right
-          initialPosition: {
-            x: 11,
-            y: 0,
-            z: 0
-          },
-          positionRange: {
-            x: 2,
-            y: 2,
-            z: 2
-          }
-        }
-      ],
+        ],
+        timePanA: 1,
+      },
       dust: {          
         initialPosition: {
           x: 0,
