@@ -21,6 +21,7 @@ import HowToPlay from './HowToPlay';
 import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
+import TipsModal from './TipsModal';
 
 export default function Home2({ device }) {
 

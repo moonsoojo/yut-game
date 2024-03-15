@@ -19,6 +19,7 @@ export default function TipsModal({ position, rotation, scale, fontSize, height,
     document.body.style.cursor = "default";
   }
   function handleNoClick() {
+    console.log('no click')
     setAskTips(false);
     setTips(false);
     document.body.style.cursor = "default";

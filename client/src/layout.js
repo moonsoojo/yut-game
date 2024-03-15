@@ -1157,11 +1157,11 @@ export default {
       rotation: [-Math.PI/2,0,0],
     },
     tipsModal: {
-      position: [-2.5,0,-0.9],
+      position: [-4,0,-1.5],
       rotation: [-Math.PI/2,0,0],
       height: 60,
       padding: 10,
-      scale: [1,1,1],
+      scale: [1.5,1.5,1.5],
       fontSize: 15
     },
     actionButtons: {

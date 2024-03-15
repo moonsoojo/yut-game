@@ -72,6 +72,8 @@ import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
+import Game from "./Game.jsx";
+import Guide from "./Guide.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -124,6 +126,7 @@ export default function Experience() {
   const [hostName] = useAtom(hostNameAtom);
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
+  const [tips] = useAtom(tipsAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
@@ -603,10 +606,8 @@ export default function Experience() {
     }
   }
 
-  return (<>
-    { winner == null && <group>
-      {/* <Perf/> */}
-      <OrbitControls/>
+  return <group>
+    <OrbitControls/>
       <OrthographicCamera
         makeDefault
         zoom={zoom}
@@ -619,294 +620,18 @@ export default function Experience() {
         position={layout[device].camera.position}
         ref={camera}
       />
-      {/* <Leva hidden /> */}
-      <group scale={layout[device].scale}>
-      { <group>
-          {/* team 0 */}
-          <group
-            position={layout[device].team0.position}
-            scale={layout[device].team0.scale}
-          >
-            {/* team name */}
-            <HtmlElement
-              text="Rockets"
-              position={layout[device].team0.title.position}
-              rotation={layout[device].team0.title.rotation}
-              color="red"
-            />
-            {/* join button */}
-            { client.team !== 0 && showJoinTeam0Button && <HtmlElement
-              text="JOIN"
-              position={layout[device].team0.join.position}
-              rotation={layout[device].team0.join.rotation}
-              fontSize={layout[device].team0.join.fontSize}
-              handleClick={handleJoinTeam0}
-            /> }
-            {/* pieces */}
-            <group position={layout[device].team0.pieces.position}>
-              <HomePieces team={0} scale={0.5}/>
-            </group>
-            {/* player ids */}
-            <Html
-              position={layout[device].team0.names.position}
-              rotation={layout[device].team0.names.rotation}
-              transform
-            >
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                position: 'absolute',
-                width: `${layout[device].team0.names.divWidth}px`
-              }}>
-                {teams[0].players.map((value, index) => (
-                  <div
-                    style={{
-                      color: (turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby")
-                      ? "white"
-                      : "yellow",
-                      fontFamily: 'Luckiest Guy',
-                      fontSize: '15px',
-                      padding: layout[device].team0.names.padding
-                    }}
-                    key={index}
-                  >
-                    {value.name}
-                  </div>
-                ))}
-              </div>
-            </Html>
-          </group>
-          {/* team 1 */}
-          <group
-          position={layout[device].team1.position}
-          scale={layout[device].team1.scale}>
-            {/* team name */}
-            <HtmlElement
-              text="UFOs"
-              position={layout[device].team1.title.position}
-              rotation={layout[device].team1.title.rotation}
-              color="turquoise"
-            />
-            {/* join button */}
-            { client.team !== 1 && showJoinTeam1Button && <HtmlElement
-              text="JOIN"
-              position={layout[device].team1.join.position}
-              rotation={layout[device].team1.join.rotation}
-              fontSize={layout[device].team1.join.fontSize}
-              handleClick={handleJoinTeam1}
-            /> }
-            {/* pieces */}
-            <group position={layout[device].team1.pieces.position}>
-              <HomePieces team={1} scale={0.5}/>
-            </group>
-            {/* player ids */}
-            <Html
-              position={layout[device].team1.names.position}
-              rotation={layout[device].team1.names.rotation}
-              transform
-            >
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                width: '200px',
-                position: 'absolute',
-                width: `${layout[device].team0.names.divWidth}px`,
-              }}>
-                {teams[1].players.map((value, index) => (
-                  <div
-                    style={{
-                      color: (turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby")
-                      ? "white"
-                      : "yellow",
-                      fontFamily: 'Luckiest Guy',
-                      fontSize: '15px',
-                      padding: layout[device].team1.names.padding,
-                    }}
-                    key={index}
-                  >
-                    {value.name}
-                  </div>
-                ))}
-              </div>
-            </Html>
-          </group>
-          {/* join modal */}
-          { (joinTeam !== null) && <JoinTeamModal
-            position={layout[device].joinTeamModal.position}
-            rotation={layout[device].joinTeamModal.rotation}
-            scale={layout[device].joinTeamModal.scale}
-            team={joinTeam}
-            setJoinTeam={setJoinTeam}
-            /> }
-          {/* board */}
-          <group position={layout[device].center} scale={layout[device].tiles.scale}>
-            <Tiles />
-          </group>
-          <HtmlElement
-            text="Start"
-            position={layout[device].startEarth.position}
-            rotation={layout[device].startEarth.rotation}
-            fontSize={layout[device].startEarth.fontSize}
-            color='limegreen'
-          />
-          <CurvedArrow
-            position={layout[device].startEarth.helperArrow.position}
-            rotation={layout[device].startEarth.helperArrow.rotation}
-            color={layout[device].startEarth.helperArrow.color}
-            scale={layout[device].startEarth.helperArrow.scale}
-          />
-          {/* yoot section */}
-          <group>
-            {/* START GAME text */}
-            { readyToStart 
-            && gamePhase === "lobby" 
-            && <HtmlElement 
-              text={'lets play!'}
-              position={layout[device].letsPlayButton.position}
-              rotation={layout[device].letsPlayButton.rotation}
-              fontSize={layout[device].letsPlayButton.fontSize}
-              handleClick={handleLetsPlay}
-            />}
-            {/* { gamePhase === "lobby" && <StartTip/> } */}
-            <HtmlElement
-              text={`Phase: ${
-                gamePhase === "pregame" ? 'who first' : gamePhase
-              }`}
-              position={layout[device].gamePhase.position}
-              rotation={layout[device].gamePhase.rotation}
-              fontSize={layout[device].gamePhase.fontSize}
-              handlePointerClick={() => socket.emit("startGame")}
-            />
-            <HtmlElement
-              text='Rules'
-              position={layout[device].rulebookButton.position}
-              rotation={layout[device].rulebookButton.rotation}
-              fontSize={layout[device].rulebookButton.fontSize}
-              handleClick={handleRulebook}
-            />
-            <HtmlElement
-              text='Settings'
-              position={layout[device].settings.position}
-              rotation={layout[device].settings.rotation}
-              fontSize={layout[device].settings.fontSize}
-              handleClick={handleSettings}
-            />
-            <HtmlElement
-              text={`ROOM: ${roomId}`}
-              position={layout[device].roomId.position}
-              rotation={layout[device].roomId.rotation}
-              fontSize={layout[device].roomId.fontSize}
-            />
-            <HtmlElement
-              text={`HOST: ${hostName}`}
-              position={layout[device].hostName.position}
-              rotation={layout[device].hostName.rotation}
-              fontSize={layout[device].hostName.fontSize}
-            />
-            <Physics>
-              <Yoots 
-                device={device} 
-                buttonPos={layout[device].yootButton.position}
-              />
-            </Physics>
-            {/* throw count */}
-            {(
-              <HtmlElement
-                text={`Throw: ${
-                  teams[turn.team].throws
-                }`}
-                position={layout[device].throwCount.position}
-                rotation={layout[device].throwCount.rotation}
-                fontSize={layout[device].throwCount.fontSize}
-              />
-            )}
-            {/* turn */}
-            {(gamePhase === "pregame" || gamePhase === "game") 
-            && getCurrentPlayerSocketId(turn, teams) !== client.id
-            && <HtmlElement
-              text={`TURN: ${
-                teams[turn.team].players[turn.players[turn.team]]?.name
-              }`}
-              position={layout[device].turn.position}
-              rotation={layout[device].turn.rotation}
-              fontSize={layout[device].turn.fontSize}
-              color={turn.team == 0 ? "red" : "turquoise"}
-            />}
-          </group>
-          {/* pieces section */}
-          <PiecesSection 
-            position={layout[device].piecesSection.position}
-            scale={layout[device].piecesSection.scale}
-          />
-          {/* chat section */}
-          { !displayDisconnect &&
-            <Chatbox
-              position={layout[device].chat.position}
-              rotation={layout[device].chat.rotation}
-              scale={layout[device].chat.scale}
-              device={device}
-            /> }
-          {/* menu */}
-          <HtmlElement
-            text={`Tips`}
-            position={layout[device].tips.button.position} 
-            rotation={layout[device].tips.button.rotation}
-            fontSize={layout[device].tips.button.fontSize}
-            handleClick={handleTips}
-          />
-          <HtmlElement
-            text={`Invite`}
-            position={layout[device].invite.position} 
-            rotation={layout[device].invite.rotation}
-            fontSize={layout[device].invite.fontSize}
-            handleClick={handleInvite}
-          />
-          <HtmlElement
-            text={`Discord`}
-            position={layout[device].discord.position} 
-            rotation={layout[device].discord.rotation}
-            fontSize={layout[device].discord.fontSize}
-            handleClick={handleDiscord}
-          />
-          {/* RULEBOOK */}
-          { device === "portrait" && <group>
-            { showRulebook  && <Rulebook2
-              position={layout[device].rulebook.position}
-              handleShow={handleShowRulebook}
-            />}
-          </group>}
-        </group>}
-      </group>
-      {displayDisconnect && <DisconnectModal
-        position={layout[device].disconnectModal.position}
-        rotation={layout[device].disconnectModal.rotation}
-      />}
-      {askTips && <TipsModal
-        position={layout[device].tipsModal.position}
-        rotation={layout[device].tipsModal.rotation}
-        scale={layout[device].tipsModal.scale}
-        fontSize={layout[device].tipsModal.fontSize}
-        height={layout[device].tipsModal.height}
-        padding={layout[device].tipsModal.padding}
-      />}
-      <Stars count={7000} size={5}/>
-    </group> }
-    { winner !== 1 && winner !== 2 && <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-      <MilkyWay scale={9}
-        brightness={0.5}
-        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-        zOffset={-5.0}
-      />
-    </group> }
-    {/* <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/> */}
-    { winner == 0 && <RocketsWin handleRestart={handleRestart} device={device}/> }
-    { winner == 1 && <UfosWin handleRestart={handleRestart} device={device}/> }
-    {/* <Celebration/> */}
-    {/* <Meteors/> */}
-    </>
-  );
+    { askTips && <TipsModal
+      position={layout[device].tipsModal.position}
+      rotation={layout[device].tipsModal.rotation}
+      scale={layout[device].tipsModal.scale}
+      fontSize={layout[device].tipsModal.fontSize}
+      height={layout[device].tipsModal.height}
+      padding={layout[device].tipsModal.padding}
+    /> }
+    {/* add game */}
+    { !tips && <Game/>}
+    { tips && <Guide/>}
+    {/* if user clicks 'yes', leave game and remove modal */}
+    {/* if 'no', load guide */}
+  </group>
 }
