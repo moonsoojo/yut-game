@@ -10,8 +10,8 @@ export default function YootButton({
   position, 
   rotation, 
   handlePointerDown,
-  throws,
-  scale
+  scale,
+  active=false
 }) {
   // yoots with material
   // get texture of yoot
@@ -34,7 +34,7 @@ export default function YootButton({
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
   useFrame((state, delta) => {
-    if (client.id === getCurrentPlayerSocketId(turn, teams) && throws > 0 && !thrown) {
+    if (active && !thrown) {
       buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
@@ -61,7 +61,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scaleOuter}
       >
-        <meshStandardMaterial color={ (throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ active ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -82,7 +82,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
         >
-          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -93,7 +93,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -104,7 +104,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -115,7 +115,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !(throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -126,7 +126,7 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ (throws > 0 && getCurrentPlayerSocketId(turn, teams) === client.id) ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ active ? "#963600" : "grey" }/>
       </Text3D>
       <mesh 
         position={[0, 0.1, 0]} 
@@ -140,3 +140,6 @@ export default function YootButton({
     </group>
   );
 }
+
+useGLTF.preload('/models/rounded-rectangle.glb')
+useGLTF.preload("/models/yoot-for-button.glb")

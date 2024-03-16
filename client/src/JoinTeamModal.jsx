@@ -4,14 +4,16 @@ import { socket } from './SocketManager';
 import { useParams } from "wouter";
 import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
+import { joinTeamAtom } from './GlobalState';
 
-export default function JoinTeamModal({ position, rotation, scale, team, setJoinTeam }) {
+export default function JoinTeamModal({ position, rotation, scale }) {
 
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
+  const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
 
   function handleJoinSubmit(e) {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function JoinTeamModal({ position, rotation, scale, team, setJoin
       setAlert('Must be shorter than 16 characters.')
     } else {
       setAlert("")
-      socket.emit("joinTeam", { team, name }, ({ error, player }) => {
+      socket.emit("joinTeam", { team: joinTeam, name }, ({ error, player }) => {
         if (error) {
           console.log("[JoinTeamModal] error", error)
           setDisconnect(true)
@@ -56,7 +58,7 @@ export default function JoinTeamModal({ position, rotation, scale, team, setJoin
     setCancelHover(false)
   }
 
-  return <group position={position}>
+  return joinTeam !== null && <group position={position}>
     <Html 
       transform
       position={position}

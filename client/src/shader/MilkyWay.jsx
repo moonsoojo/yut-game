@@ -159,17 +159,12 @@ function MilkyWay(props) {
         secondMeshRef.current.material.uniforms.time.value = state.clock.getElapsedTime() / 1.0;
         thirdMeshRef.current.material.uniforms.time.value = state.clock.getElapsedTime() / 1.3;
     });
-
-    const rotation = -35.0;
    
-
     return(
       <>
-            <mesh {...props}
-                ref={meshRef}
-                scale={props.scale}
-                rotation={[0.0, 0.0, rotation]}
-                position={[0.0,0.0,props.zOffset]}
+        <mesh 
+            {...props}
+            ref={meshRef}
         >
             <planeGeometry args={[5.5,5.5,32]}/>
             <shaderMaterial attach="material"{...MaterialMilkyWay} />

@@ -72,45 +72,14 @@ import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
+import { askTipsAtom } from "./GlobalState.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
-export const askTipsAtom = atom(true)
-export const tipsAtom = atom(false)
+export default function Game({ device = "landscapeDesktop"}) {
 
-export default function Game() {
-
-  function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
-    if (windowWidth < landscapeMobileCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
-
-  const handleResize = () => {
-    if (window.innerWidth < landscapeMobileCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-
-  const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-    setParticleSetting(null)
-  }, []);
-
-  const [zoom, setZoom] = useState(50);
-  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
-    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
-  }
-  
   // separate everything into components
   // should not put state here unless it's being used
   // one change makes everything re-render
@@ -154,26 +123,6 @@ export default function Game() {
     // camera.current.position.z = 3
     // camera.current.lookAt(new THREE.Vector3(0,0,0))
   })
-
-  useEffect(() => {
-    if (device !== "portrait") {
-      setZoom(calcScale(
-        layout[device].camera.zoomMin,
-        layout[device].camera.zoomMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
-    } else {
-      setZoom(calcScale(
-        layout[device].camera.zoomMin,
-        layout[device].camera.zoomMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-    }
-  }, [window.innerWidth, window.innerHeight, device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
@@ -284,11 +233,6 @@ export default function Game() {
     return tiles;
   }
 
-  // team group
-  // pieces
-  // moves
-  // throws
-  // names
   function HomePieces({team, scale=1}) {
     let space = layout[device].homePieces[team].space;
     let positionStartX = 0
@@ -606,19 +550,6 @@ export default function Game() {
   return (<>
     { winner == null && <group>
       {/* <Perf/> */}
-      <OrbitControls/>
-      <OrthographicCamera
-        makeDefault
-        zoom={zoom}
-        top={400}
-        bottom={-400}
-        left={400}
-        right={-400}
-        near={0.01}
-        far={2000}
-        position={layout[device].camera.position}
-        ref={camera}
-      />
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>
@@ -885,15 +816,15 @@ export default function Game() {
       />}
       <Stars count={7000} size={5}/>
     </group> }
-    { winner !== 1 && winner !== 2 && <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-      <MilkyWay scale={9}
-        brightness={0.5}
-        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-        zOffset={-5.0}
-      />
-    </group> }
+    { winner !== 1 && winner !== 2 && <MilkyWay 
+      rotation={[-Math.PI/2, 0, -35.0]} 
+      position={[0, -3, 0]} 
+      scale={5}
+      brightness={0.5}
+      colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+    /> }
     {/* <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/> */}
     { winner == 0 && <RocketsWin handleRestart={handleRestart} device={device}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart} device={device}/> }

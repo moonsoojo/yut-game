@@ -1183,7 +1183,7 @@ export default {
     },
     moves: {
       text: {
-        position: [0, 0, 1],
+        position: [0, 0, 1.5],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },

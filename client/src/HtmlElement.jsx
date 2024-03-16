@@ -8,8 +8,13 @@ export default function HtmlElement({
   text, 
   fontSize,
   handleClick,
+  width='fit-content',
   color='yellow',
-  colorHover='green'
+  colorHover='green',
+  backgroundColor=null,
+  border='',
+  padding='2px',
+  whiteSpace='nowrap'
 }) {
   const [currColor, setCurrColor] = useState(color);
   function handlePointerEnter() {
@@ -32,14 +37,16 @@ export default function HtmlElement({
   >
     <div
       style={{
-        border: handleClick ? `1px solid ${currColor}` : '',
-        padding: '2px',
+        border: (handleClick || border) ? `1px solid ${currColor}` : '',
+        padding: padding,
         fontFamily: 'Luckiest Guy',
         color: currColor,
         fontSize: `${fontSize}px`,
         position: 'absolute',
-        width: 'fit-content',
-        whiteSpace: 'nowrap'
+        width: width,
+        whiteSpace: whiteSpace,
+        WebkitUserSelect: 'none',
+        backgroundColor: backgroundColor
       }}  
       onPointerDown={handleClick}
       onPointerEnter={handlePointerEnter}

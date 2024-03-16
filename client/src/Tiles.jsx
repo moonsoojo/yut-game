@@ -7,8 +7,10 @@ import Moon from './meshes/Moon';
 import Star from './meshes/Star';
 import layout from './layout';
 import { animated } from '@react-spring/three';
+import HtmlElement from './HtmlElement';
+import CurvedArrow from './meshes/CurvedArrow';
 
-export default function Tiles({ device, position=[0,0,0], rotation=[0,0,0], scale=1 }) {
+export default function Tiles({ device, position=[0,0,0], rotation=[0,0,0], scale=1, showStart=false }) {
     const TILE_RADIUS = layout[device].tileRadius.ring
     const NUM_STARS = 20;
     let tiles = [];
@@ -113,6 +115,21 @@ export default function Tiles({ device, position=[0,0,0], rotation=[0,0,0], scal
       />
     );
     return <animated.group position={position} rotation={rotation} scale={scale}>
-        {tiles}
+      {tiles}
+      {showStart && <group position={[0, 0, 0]} scale={1.67}>
+        <HtmlElement
+          text="Start"
+          position={layout[device].startEarth.position}
+          rotation={layout[device].startEarth.rotation}
+          fontSize={layout[device].startEarth.fontSize}
+          color='limegreen'
+        />
+        <CurvedArrow
+          position={layout[device].startEarth.helperArrow.position}
+          rotation={layout[device].startEarth.helperArrow.rotation}
+          color={layout[device].startEarth.helperArrow.color}
+          scale={layout[device].startEarth.helperArrow.scale}
+        />
+      </group>}
     </animated.group>;
   }
