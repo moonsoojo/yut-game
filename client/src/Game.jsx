@@ -80,37 +80,8 @@ let landscapeDesktopCutoff = 1000;
 export const askTipsAtom = atom(true)
 export const tipsAtom = atom(false)
 
-export default function Game() {
+export default function Game({ device = "landscapeDesktop"}) {
 
-  function initializeDevice(windowWidth, landscapeMobileCutoff, landscapeDesktopCutoff) {
-    if (windowWidth < landscapeMobileCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
-
-  const handleResize = () => {
-    if (window.innerWidth < landscapeMobileCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-
-  const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-    setParticleSetting(null)
-  }, []);
-
-  const [zoom, setZoom] = useState(50);
-  function calcScale(minVal, maxVal, mediaMin, mediaMax, width) {
-    return minVal + (maxVal - minVal) * (width - mediaMin) / (mediaMax - mediaMin)
-  }
-  
   // separate everything into components
   // should not put state here unless it's being used
   // one change makes everything re-render
@@ -154,26 +125,6 @@ export default function Game() {
     // camera.current.position.z = 3
     // camera.current.lookAt(new THREE.Vector3(0,0,0))
   })
-
-  useEffect(() => {
-    if (device !== "portrait") {
-      setZoom(calcScale(
-        layout[device].camera.zoomMin,
-        layout[device].camera.zoomMax,
-        landscapeMobileCutoff,
-        mediaMax,
-        window.innerWidth
-      ))
-    } else {
-      setZoom(calcScale(
-        layout[device].camera.zoomMin,
-        layout[device].camera.zoomMax,
-        0,
-        landscapeMobileCutoff,
-        window.innerWidth
-      ))
-    }
-  }, [window.innerWidth, window.innerHeight, device])
 
   const TILE_RADIUS = layout[device].tileRadius.ring;
   const NUM_STARS = 20;
@@ -284,11 +235,6 @@ export default function Game() {
     return tiles;
   }
 
-  // team group
-  // pieces
-  // moves
-  // throws
-  // names
   function HomePieces({team, scale=1}) {
     let space = layout[device].homePieces[team].space;
     let positionStartX = 0
@@ -606,19 +552,6 @@ export default function Game() {
   return (<>
     { winner == null && <group>
       {/* <Perf/> */}
-      <OrbitControls/>
-      <OrthographicCamera
-        makeDefault
-        zoom={zoom}
-        top={400}
-        bottom={-400}
-        left={400}
-        right={-400}
-        near={0.01}
-        far={2000}
-        position={layout[device].camera.position}
-        ref={camera}
-      />
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
       { <group>

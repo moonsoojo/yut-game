@@ -96,7 +96,7 @@ export default function App () {
       </Route>
       <Route path="/:id">
         <SocketManager/>
-        <Experience/>
+        <Experience device={device}/>
         {/* <RocketsWin device={device}/> */}
         {/* <UfosWin device={device}/> */}
       </Route>
