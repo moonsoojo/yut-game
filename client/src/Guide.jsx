@@ -1,11 +1,12 @@
 import { useAtom } from 'jotai';
 import React, { useState } from 'react';
-import { clientAtom, teamsAtom } from './SocketManager';
+import { clientAtom, gamePhaseAtom, teamsAtom, turnAtom } from './SocketManager';
 import layout from './layout';
 import Piece from './components/Piece';
 import HtmlElement from './HtmlElement';
 import JoinTeamModal from './JoinTeamModal';
 import { joinTeamAtom } from './GlobalState';
+import { Html } from '@react-three/drei';
 
 // all "atoms" get state individually
 // clicking on one component should not rerender the parent
@@ -82,6 +83,42 @@ export default function Guide({ device }) {
         /> 
     }
 
+    function Team0Ids() {
+        const [teams] = useAtom(teamsAtom)
+        const [turn] = useAtom(turnAtom)
+        const [gamePhase] = useAtom(gamePhaseAtom)
+        return <Html
+            position={layout[device].team0.names.position}
+            rotation={layout[device].team0.names.rotation}
+            transform
+        >
+            <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                width: '200px',
+                position: 'absolute',
+                width: `${layout[device].team0.names.divWidth}px`,
+            }}>
+            {teams[0].players.map((value, index) => (
+                <div
+                    style={{
+                        color: (turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby")
+                        ? "white"
+                        : "yellow",
+                        fontFamily: 'Luckiest Guy',
+                        fontSize: '15px',
+                        padding: layout[device].team0.names.padding,
+                    }}
+                    key={index}
+                >
+                    {value.name}
+                </div>
+            ))}
+            </div>
+        </Html>
+    }
+
     function JoinTeam1() {
         const [client] = useAtom(clientAtom);
         const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
@@ -97,6 +134,42 @@ export default function Guide({ device }) {
         /> 
     }
 
+    function Team1Ids() {
+        const [teams] = useAtom(teamsAtom)
+        const [turn] = useAtom(turnAtom)
+        const [gamePhase] = useAtom(gamePhaseAtom)
+        return <Html
+            position={layout[device].team1.names.position}
+            rotation={layout[device].team1.names.rotation}
+            transform
+        >
+            <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                width: '200px',
+                position: 'absolute',
+                width: `${layout[device].team1.names.divWidth}px`,
+            }}>
+            {teams[1].players.map((value, index) => (
+                <div
+                    style={{
+                        color: (turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby")
+                        ? "white"
+                        : "yellow",
+                        fontFamily: 'Luckiest Guy',
+                        fontSize: '15px',
+                        padding: layout[device].team1.names.padding,
+                    }}
+                    key={index}
+                >
+                    {value.name}
+                </div>
+            ))}
+            </div>
+        </Html>
+    }
+
     return <group name='guide'>
         <group
             position={layout[device].team0.position}
@@ -110,6 +183,7 @@ export default function Guide({ device }) {
             />
             <HomePieces team={0} scale={0.5} position={layout[device].team0.pieces.position}/>
             <JoinTeam0/>
+            <Team0Ids/>
         </group>
         <group
             position={layout[device].team1.position}
@@ -123,6 +197,7 @@ export default function Guide({ device }) {
             />
             <HomePieces team={1} scale={0.5} position={layout[device].team1.pieces.position}/>
             <JoinTeam1/>
+            <Team1Ids/>
         </group>
         <JoinTeamModal
             position={layout[device].joinTeamModal.position}
