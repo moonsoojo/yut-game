@@ -7,6 +7,9 @@ import HtmlElement from './HtmlElement';
 import JoinTeamModal from './JoinTeamModal';
 import { joinTeamAtom } from './GlobalState';
 import { Html } from '@react-three/drei';
+import Stars from './particles/Stars';
+import MilkyWay from './shader/MilkyWay';
+import * as THREE from 'three';
 
 // all "atoms" get state individually
 // clicking on one component should not rerender the parent
@@ -203,6 +206,16 @@ export default function Guide({ device }) {
             position={layout[device].joinTeamModal.position}
             rotation={layout[device].joinTeamModal.rotation}
             scale={layout[device].joinTeamModal.scale}
+        />
+        <Stars/>
+        <MilkyWay 
+            rotation={[-Math.PI/2, 0, -35.0]} 
+            position={[0, -3, 0]}
+            scale={5}
+            brightness={0.5}
+            colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+            colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
         />
     </group>
 }

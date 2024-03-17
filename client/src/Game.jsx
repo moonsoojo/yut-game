@@ -818,15 +818,15 @@ export default function Game({ device = "landscapeDesktop"}) {
       />}
       <Stars count={7000} size={5}/>
     </group> }
-    { winner !== 1 && winner !== 2 && <group rotation={[-Math.PI/2, 0, 0]} position={[0, -3, 0]} scale={0.5}>
-      <MilkyWay scale={9}
-        brightness={0.5}
-        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-        zOffset={-5.0}
-      />
-    </group> }
+    { winner !== 1 && winner !== 2 && <MilkyWay 
+      rotation={[-Math.PI/2, 0, -35.0]} 
+      position={[0, -3, 0]} 
+      scale={5}
+      brightness={0.5}
+      colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+    /> }
     {/* <BoomText rotation={[0, Math.PI/2 + Math.PI/32, 0]} position={[0, 2, 0]} scale={[2.5, 0.3, 2.5]}/> */}
     { winner == 0 && <RocketsWin handleRestart={handleRestart} device={device}/> }
     { winner == 1 && <UfosWin handleRestart={handleRestart} device={device}/> }
