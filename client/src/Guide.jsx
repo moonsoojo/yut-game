@@ -10,6 +10,7 @@ import { Html } from '@react-three/drei';
 import Stars from './particles/Stars';
 import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
+import Tips from './Tips';
 
 // all "atoms" get state individually
 // clicking on one component should not rerender the parent
@@ -102,6 +103,7 @@ export default function Guide({ device }) {
                 width: '200px',
                 position: 'absolute',
                 width: `${layout[device].team0.names.divWidth}px`,
+                WebkitUserSelect: 'none'
             }}>
             {teams[0].players.map((value, index) => (
                 <div
@@ -153,6 +155,7 @@ export default function Guide({ device }) {
                 width: '200px',
                 position: 'absolute',
                 width: `${layout[device].team1.names.divWidth}px`,
+                WebkitUserSelect: 'none'
             }}>
             {teams[1].players.map((value, index) => (
                 <div
@@ -217,5 +220,6 @@ export default function Guide({ device }) {
             colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
             colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
         />
+        <Tips/>
     </group>
 }
