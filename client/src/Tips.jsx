@@ -20,12 +20,12 @@ export default function Tips() {
   function onNextClick() {
     setPage(page => page+1)
   }
-  function Tip({showPrevClick=true, showNextClick=true, position=[0,0,0]}) {
+  function Tip({showPrevClick=true, showNextClick=true, position=[0,0,0], text, width}) {
     return <group>
       <HtmlElement
         text={<div>
           <div>
-            Welcome to Yoot Game where two teams race their ships across the board!
+            {text}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             { showPrevClick ? <div 
@@ -38,7 +38,7 @@ export default function Tips() {
                 justifyContent: 'center'
               }}
             >
-              &lt;-
+              prev
             </div> : <div></div>}
             { showNextClick ? <div
               onPointerEnter={onPointerEnter}
@@ -50,7 +50,7 @@ export default function Tips() {
                 justifyContent: 'center'
               }}
             >
-              -&gt;
+              next
             </div> : <div></div>}
             {/* <div
               onPointerEnter={onPointerEnter}
@@ -61,17 +61,53 @@ export default function Tips() {
             </div> */}
           </div>
         </div>}
-        width="190px"
+        width={width}
         position={position}
         rotation={[-Math.PI/2, 0, 0]}
         backgroundColor='black'
         color='limegreen'
         border='1px solid limegreen'
         padding='5px 8px'
+        whiteSpace='initial'
       />
     </group>
   }
   return <>
-    { page == 0 && <Tip showPrevClick={false} position={[-4.5, 0, -3.4]}/>}
+    { page == 0 && <Tip 
+    showPrevClick={false} 
+    position={[-4.5, 0, -3.4]} 
+    text='Welcome to Yoot Game where two teams race their ships across the board!'
+    width="190px"
+    />}
+    { page == 1 && <Tip 
+    showPrevClick={true} 
+    position={[-4.5, 0, -3.4]} 
+    text='Click the "JOIN" button to choose a team.'
+    width="150px"
+    />}
+    { page == 2 && <Tip 
+    showPrevClick={true} 
+    position={[0.4, 0, -1]} 
+    text='These are your pieces.'
+    width="150px"
+    />}
+    { page == 3 && <Tip 
+    showPrevClick={true} 
+    position={[3.5, 0, -3.5]} 
+    text='You can move these across the stars and planets.'
+    width="150px"
+    />}
+    { page == 4 && <Tip 
+    showPrevClick={true} 
+    position={[3.5, 0, -3.5]} 
+    text='First, you need to get points by throwing the yoot (dice).'
+    width="170px"
+    />}
+    { page == 5 && <Tip 
+    showPrevClick={true} 
+    position={[0.5, 0.5, 1.7]} 
+    text='On your turn, the yoot button will appear.'
+    width="150px"
+    />}
   </>
 }

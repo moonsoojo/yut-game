@@ -11,10 +11,12 @@ import Stars from './particles/Stars';
 import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
 import Tips from './Tips';
+import Tiles from './Tiles';
+import YootButton from './YootButton';
 
 // all "atoms" get state individually
 // clicking on one component should not rerender the parent
-export default function Guide({ device }) {
+export default function Guide({ device="landscapeDesktop" }) {
     console.log('Guide')
     function HomePieces({team, scale=1, position}) {
         
@@ -176,6 +178,94 @@ export default function Guide({ device }) {
         </Html>
     }
 
+    function PiecesSection({position, scale}) {
+        const [client] = useAtom(clientAtom)
+        const [gamePhase] = useAtom(gamePhaseAtom)
+        const [teams] = useAtom(teamsAtom)
+
+        const newHomePiecePositions = [
+            [0.5, 0, 0],
+            [1.5, 0, 0],
+            [0.5, 0, 1],
+            [1.5, 0, 1]
+        ]
+        const ufoHomePositions = [
+            [0.5, 0, -0.5],
+            [1.5, 0, -0.5],
+            [0.5, 0, 0.5],
+            [1.5, 0, 0.5]
+        ]
+        const movesText = "Moves: 0"
+
+        if (client.team != undefined) {
+          return (
+            <group position={position} scale={scale}>
+              { (gamePhase === "game" && 29 in legalTiles) ?
+                <ScoreButton
+                  position={[0,0,0]}
+                  device={device}
+                /> :
+                teams[client.team].pieces.map((value, index) =>
+                  value == null ? (
+                    <mesh
+                      position={newHomePiecePositions[index]}
+                      key={index}
+                    >
+                      <sphereGeometry args={[0.2]} />
+                    </mesh>
+                  ) : value === "scored" ? (
+                    <mesh
+                      position={newHomePiecePositions[index]}
+                      key={index}
+                    >
+                      <sphereGeometry args={[0.2]} />
+                      <meshStandardMaterial color={client.team == 0 ? "red" : "green"} />
+                    </mesh>
+                  ) : (
+                    <Piece
+                      position={
+                        client.team == 0 
+                        ? newHomePiecePositions[index]
+                        : ufoHomePositions[index]
+                      }
+                      rotation={layout[device].homePieces[client.team].rotation}
+                      keyName={`count${index}`}
+                      tile={-1}
+                      team={client.team}
+                      id={value.id}
+                      key={index}
+                      scale={1}
+                    />
+                  )
+                )
+              }
+              {/* moves */}
+              <>
+                <HtmlElement
+                  text={movesText}
+                  position={layout[device].moves.text.position}
+                  rotation={layout[device].moves.text.rotation}
+                  fontSize={layout[device].moves.text.fontSize}
+                />
+              </>
+            </group>
+          )
+        } else {
+          return (      
+            <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+              {teams[0].pieces.map((value, index) =>
+                (<mesh
+                  position={newHomePiecePositions[index]}
+                  key={index}
+                >
+                  <boxGeometry args={[0.4, 0.4, 0.4]} />
+                  <meshStandardMaterial color="#505050"/>
+                </mesh>))}
+            </group>
+          )
+        }
+      }
+
     return <group name='guide'>
         <group
             position={layout[device].team0.position}
@@ -210,6 +300,12 @@ export default function Guide({ device }) {
             rotation={layout[device].joinTeamModal.rotation}
             scale={layout[device].joinTeamModal.scale}
         />
+        <PiecesSection 
+            position={layout[device].piecesSection.position}
+            scale={layout[device].piecesSection.scale}
+        />
+        <Tiles device={device} scale={0.6} showStart/>
+        <YootButton/>
         <Stars/>
         <MilkyWay 
             rotation={[-Math.PI/2, 0, -35.0]} 

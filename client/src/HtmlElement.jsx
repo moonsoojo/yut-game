@@ -13,7 +13,8 @@ export default function HtmlElement({
   colorHover='green',
   backgroundColor=null,
   border='',
-  padding='2px'
+  padding='2px',
+  whiteSpace='nowrap'
 }) {
   const [currColor, setCurrColor] = useState(color);
   function handlePointerEnter() {
@@ -43,7 +44,7 @@ export default function HtmlElement({
         fontSize: `${fontSize}px`,
         position: 'absolute',
         width: width,
-        whiteSpace: 'initial',
+        whiteSpace: whiteSpace,
         WebkitUserSelect: 'none',
         backgroundColor: backgroundColor
       }}  
