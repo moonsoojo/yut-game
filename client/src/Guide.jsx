@@ -305,7 +305,7 @@ export default function Guide({ device="landscapeDesktop" }) {
             scale={layout[device].piecesSection.scale}
         />
         <Tiles device={device} scale={0.6} showStart/>
-        <YootButton/>
+
         <Stars/>
         <MilkyWay 
             rotation={[-Math.PI/2, 0, -35.0]} 

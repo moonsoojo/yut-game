@@ -257,7 +257,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         position={buttonPos} 
         rotation={[0, Math.PI/2, 0]}
         handlePointerDown={handleYootThrow}
-        throws={teams[turn.team].throws}
+        active={teams[turn.team].throws && getCurrentPlayerSocketId(turn, teams) === client.id}
         scale={0.8}
       />}
     </group>

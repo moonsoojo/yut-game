@@ -1,6 +1,9 @@
-import { Text3D } from '@react-three/drei';
-import React, { useState } from 'react';
+import { Text3D, useGLTF } from '@react-three/drei';
+import React, { useRef, useState } from 'react';
 import HtmlElement from './HtmlElement';
+import YootButton from './YootButton';
+import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier';
+import layout from './layout';
 
 export default function Tips() {
   // multiple components with conditional renders like pages
@@ -72,6 +75,126 @@ export default function Tips() {
       />
     </group>
   }
+  function YootButtonTip() {
+    const nodes = useGLTF("models/yoot-highlight.glb").nodes;
+    const materials = useGLTF("models/yoot-highlight.glb").materials;
+    const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;
+    const materialsRhino = useGLTF("models/yoot-rhino-highlight.glb").materials;
+    const [yootButtonPressed, setYootButtonPressed] = useState(false)
+    const NUM_YOOTS = 4;
+    let yoots = [];
+    for (let i = 0; i < NUM_YOOTS; i++) {
+      yoots.push(useRef());
+    }
+
+    function handleYootButtonTipClick() {
+      setYootButtonPressed(true)
+      throwYoot()
+    }
+    function throwYoot() {
+      for (let i = 0; i < 4; i++) {
+        yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
+        yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
+        yoots[i].current.setTranslation({ x: -2 + 0.8*i, y: 1, z: -2});
+        yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
+        yoots[i].current.applyImpulse({
+          x: 0,
+          y: 2,
+          z: 0,
+        });
+        yoots[i].current.applyTorqueImpulse({
+          x: 0.95,
+          y: 0.1,
+          z: 0.03 + i * 0.05,
+        });
+      }
+    }
+    return <group name='yoot-set'>
+      <group position={[5.8, 0, 3.5]}>
+        <YootButton
+          rotation={[0, Math.PI/2, 0]}
+          active={!yootButtonPressed}
+        />
+        <mesh onPointerUp={handleYootButtonTipClick}>
+          <boxGeometry args={[2, 0.5, 2.7]}/>
+          <meshStandardMaterial color='grey' transparent opacity={0}/>
+        </mesh>
+      </group>
+      <Physics>
+        <RigidBody type="fixed">
+          <CuboidCollider args={[20, 0.3, 20]} restitution={0.2} friction={1}/>
+          <mesh>
+            <boxGeometry args={[40, 0.6, 40]} />
+            <meshStandardMaterial 
+              transparent 
+              color='yellow'
+              opacity={0}
+            />
+          </mesh>
+        </RigidBody>
+        {yoots.map((ref, index) => {
+          return (
+            <RigidBody
+              ref={ref}            
+              position={[1.2 - index * 0.6, 1, 0]}
+              rotation={[0, Math.PI/2, 0]}
+              colliders="hull"
+              restitution={0.3}
+              friction={0.6}
+              name={`yoot${index}`}
+              linearDamping={0.3}
+              angularDamping={0.1} // when this value is high, yoots spin more
+              scale={0.3}
+              gravityScale={2}
+              key={index}
+            >
+              {index != 0 ? (
+                <group>
+                  <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cylinder011.geometry}
+                    material={materials["Texture wrap.008"]}
+                    position={[0, 0.021, 0]}
+                    rotation={[0, 0, -Math.PI / 2]}
+                    scale={[1, 6.161, 1]}
+                  />
+                  <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Plane.geometry}
+                    material={nodes.Plane.material}
+                    rotation={[-Math.PI, 0, 0]}
+                    scale={[4.905, 1, 0.455]}
+                  />
+                </group>
+              ) : (
+                <group>
+                  <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodesRhino.Cylinder007.geometry}
+                    material={materialsRhino["Texture wrap.005"]}
+                    position={[0, 0.022, 0]}
+                    rotation={[0, 0, -Math.PI / 2]}
+                    scale={[1, 6.161, 1]}
+                  />
+                  <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodesRhino.Plane001.geometry}
+                    material={nodesRhino.Plane001.material}
+                    rotation={[-Math.PI, 0, 0]}
+                    scale={[4.892, 1, 0.443]}
+                  />
+                </group>
+              )}
+            </RigidBody>
+          );
+        })}
+      </Physics>
+    </group>
+  }
   return <>
     { page == 0 && <Tip 
     showPrevClick={false} 
@@ -104,10 +227,14 @@ export default function Tips() {
     width="170px"
     />}
     { page == 5 && <Tip 
-    showPrevClick={true} 
-    position={[0.5, 0.5, 1.7]} 
-    text='On your turn, the yoot button will appear.'
-    width="150px"
+      showPrevClick={true} 
+      position={[0.5, 0.5, 1.9]} 
+      text='On your turn, the yoot button will appear. Click it to throw them.'
+      width="150px"
     />}
+    { page > 4 && <YootButtonTip/>}
   </>
 }
+
+useGLTF.preload("models/yoot-highlight.glb")
+useGLTF.preload("models/yoot-rhino-highlight.glb")
