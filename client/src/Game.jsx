@@ -72,7 +72,7 @@ import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
-import { askTipsAtom } from "./GlobalState.jsx";
+import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -93,6 +93,7 @@ export default function Game({ device = "landscapeDesktop"}) {
   const [hostName] = useAtom(hostNameAtom);
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
+  const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
 
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
@@ -313,50 +314,40 @@ export default function Game({ device = "landscapeDesktop"}) {
     [1.5, 0, 0.5]
   ]
 
-  const [joinTeam, setJoinTeam] = useState(null);
-  const [showJoinTeam0Button, setShowJoinTeam0Button] = useState(true)
-  const [joinTeam0SubmitHover, setJoinTeam0SubmitHover] = useState(false)
-  const [joinTeam0CancelHover, setJoinTeam0CancelHover] = useState(false)
-  // show both buttons
-  // set the team you're joining
-  function handleJoinTeam0 () {
-    setJoinTeam(0);
-  }
-  function handleJoinTeam0SubmitMouseEnter () {
-    setJoinTeam0SubmitHover(true)
-  }
-  function handleJoinTeam0SubmitMouseLeave () {
-    setJoinTeam0SubmitHover(false)
-  }
-  function handleJoinTeam0CancelMouseEnter () {
-    setJoinTeam0CancelHover(true)
-  }
-  function handleJoinTeam0CancelMouseLeave () {
-    setJoinTeam0CancelHover(false)
-  }
-  const [showJoinTeam1Button, setShowJoinTeam1Button] = useState(true)
-  const [joinTeam1SubmitHover, setJoinTeam1SubmitHover] = useState(false)
-  const [joinTeam1CancelHover, setJoinTeam1CancelHover] = useState(false)
-  function handleJoinTeam1 () {
-    setJoinTeam(1)
-  }
-  function handleJoinTeam1SubmitMouseEnter () {
-    setJoinTeam1SubmitHover(true)
-  }
-  function handleJoinTeam1SubmitMouseLeave () {
-    setJoinTeam1SubmitHover(false)
-  }
-  function handleJoinTeam1CancelMouseEnter () {
-    setJoinTeam1CancelHover(true)
-  }
-  function handleJoinTeam1CancelMouseLeave () {
-    setJoinTeam1CancelHover(false)
-  }
-
   function handleStart() {
     socket.emit("startGame", ({ response }) => {
       console.log("[startGame] response", response)
     })
+  }
+
+  function JoinTeam0() {
+    const [client] = useAtom(clientAtom);
+    const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
+    function handleJoinTeam0 () {
+        setJoinTeam(0);
+    }
+    return client.team !== 0 && joinTeam !== 0 && <HtmlElement
+        text="JOIN"
+        position={layout[device].team0.join.position}
+        rotation={layout[device].team0.join.rotation}
+        fontSize={layout[device].team0.join.fontSize}
+        handleClick={handleJoinTeam0}
+    /> 
+  }
+
+  function JoinTeam1() {
+    const [client] = useAtom(clientAtom);
+    const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
+    function handleJoinTeam1 () {
+        setJoinTeam(1);
+    }
+    return client.team !== 1 && joinTeam !== 1 && <HtmlElement
+        text="JOIN"
+        position={layout[device].team1.join.position}
+        rotation={layout[device].team1.join.rotation}
+        fontSize={layout[device].team1.join.fontSize}
+        handleClick={handleJoinTeam1}
+    /> 
   }
 
   // pre-condition: 'client' from 'clientAtom'
@@ -566,13 +557,7 @@ export default function Game({ device = "landscapeDesktop"}) {
               color="red"
             />
             {/* join button */}
-            { client.team !== 0 && showJoinTeam0Button && <HtmlElement
-              text="JOIN"
-              position={layout[device].team0.join.position}
-              rotation={layout[device].team0.join.rotation}
-              fontSize={layout[device].team0.join.fontSize}
-              handleClick={handleJoinTeam0}
-            /> }
+            <JoinTeam0/>
             {/* pieces */}
             <group position={layout[device].team0.pieces.position}>
               <HomePieces team={0} scale={0.5}/>
@@ -620,13 +605,7 @@ export default function Game({ device = "landscapeDesktop"}) {
               color="turquoise"
             />
             {/* join button */}
-            { client.team !== 1 && showJoinTeam1Button && <HtmlElement
-              text="JOIN"
-              position={layout[device].team1.join.position}
-              rotation={layout[device].team1.join.rotation}
-              fontSize={layout[device].team1.join.fontSize}
-              handleClick={handleJoinTeam1}
-            /> }
+            <JoinTeam1/>
             {/* pieces */}
             <group position={layout[device].team1.pieces.position}>
               <HomePieces team={1} scale={0.5}/>
@@ -664,13 +643,11 @@ export default function Game({ device = "landscapeDesktop"}) {
             </Html>
           </group>
           {/* join modal */}
-          { (joinTeam !== null) && <JoinTeamModal
+          <JoinTeamModal
             position={layout[device].joinTeamModal.position}
             rotation={layout[device].joinTeamModal.rotation}
             scale={layout[device].joinTeamModal.scale}
-            team={joinTeam}
-            setJoinTeam={setJoinTeam}
-            /> }
+          />
           {/* board */}
           <group position={layout[device].center} scale={layout[device].tiles.scale}>
             <Tiles />

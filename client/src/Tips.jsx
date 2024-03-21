@@ -252,13 +252,13 @@ export default function Tips() {
     />}
     { page == 7 && <Tip
     showPrevClick={true}
-    position={[-7, 0, -1.5]}
+    position={[-7, 0.5, -1.5]}
     text="You can share the link to this game via 'invite'."
     width="150px"
     />}
     { page == 8 && <Tip
     showPrevClick={true}
-    position={[-7, 0, -1.5]}
+    position={[-7, 0.5, -1.5]}
     text="Give us feedback or find new players on our Discord!"
     width="160px"
     />}
