@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import Tips from './Tips';
 import Tiles from './Tiles';
 import YootButton from './YootButton';
+import Chatbox from './Chatbox';
 
 // all "atoms" get state individually
 // clicking on one component should not rerender the parent
@@ -179,92 +180,107 @@ export default function Guide({ device="landscapeDesktop" }) {
     }
 
     function PiecesSection({position, scale}) {
-        const [client] = useAtom(clientAtom)
-        const [gamePhase] = useAtom(gamePhaseAtom)
-        const [teams] = useAtom(teamsAtom)
+      const [client] = useAtom(clientAtom)
+      const [gamePhase] = useAtom(gamePhaseAtom)
+      const [teams] = useAtom(teamsAtom)
 
-        const newHomePiecePositions = [
-            [0.5, 0, 0],
-            [1.5, 0, 0],
-            [0.5, 0, 1],
-            [1.5, 0, 1]
-        ]
-        const ufoHomePositions = [
-            [0.5, 0, -0.5],
-            [1.5, 0, -0.5],
-            [0.5, 0, 0.5],
-            [1.5, 0, 0.5]
-        ]
-        const movesText = "Moves: 0"
+      const newHomePiecePositions = [
+          [0.5, 0, 0],
+          [1.5, 0, 0],
+          [0.5, 0, 1],
+          [1.5, 0, 1]
+      ]
+      const ufoHomePositions = [
+          [0.5, 0, -0.5],
+          [1.5, 0, -0.5],
+          [0.5, 0, 0.5],
+          [1.5, 0, 0.5]
+      ]
+      const movesText = `Moves: 2`
 
-        if (client.team != undefined) {
-          return (
-            <group position={position} scale={scale}>
-              { (gamePhase === "game" && 29 in legalTiles) ?
-                <ScoreButton
-                  position={[0,0,0]}
-                  device={device}
-                /> :
-                teams[client.team].pieces.map((value, index) =>
-                  value == null ? (
-                    <mesh
-                      position={newHomePiecePositions[index]}
-                      key={index}
-                    >
-                      <sphereGeometry args={[0.2]} />
-                    </mesh>
-                  ) : value === "scored" ? (
-                    <mesh
-                      position={newHomePiecePositions[index]}
-                      key={index}
-                    >
-                      <sphereGeometry args={[0.2]} />
-                      <meshStandardMaterial color={client.team == 0 ? "red" : "green"} />
-                    </mesh>
-                  ) : (
-                    <Piece
-                      position={
-                        client.team == 0 
-                        ? newHomePiecePositions[index]
-                        : ufoHomePositions[index]
-                      }
-                      rotation={layout[device].homePieces[client.team].rotation}
-                      keyName={`count${index}`}
-                      tile={-1}
-                      team={client.team}
-                      id={value.id}
-                      key={index}
-                      scale={1}
-                    />
-                  )
+      if (client.team != undefined) {
+        return (
+          <group position={position} scale={scale}>
+            { (gamePhase === "game" && 29 in legalTiles) ?
+              <ScoreButton
+                position={[0,0,0]}
+                device={device}
+              /> :
+              teams[client.team].pieces.map((value, index) =>
+                value == null ? (
+                  <mesh
+                    position={newHomePiecePositions[index]}
+                    key={index}
+                  >
+                    <sphereGeometry args={[0.2]} />
+                  </mesh>
+                ) : value === "scored" ? (
+                  <mesh
+                    position={newHomePiecePositions[index]}
+                    key={index}
+                  >
+                    <sphereGeometry args={[0.2]} />
+                    <meshStandardMaterial color={client.team == 0 ? "red" : "green"} />
+                  </mesh>
+                ) : (
+                  <Piece
+                    position={
+                      client.team == 0 
+                      ? newHomePiecePositions[index]
+                      : ufoHomePositions[index]
+                    }
+                    rotation={layout[device].homePieces[client.team].rotation}
+                    keyName={`count${index}`}
+                    tile={-1}
+                    team={client.team}
+                    id={value.id}
+                    key={index}
+                    scale={1}
+                  />
                 )
-              }
-              {/* moves */}
-              <>
-                <HtmlElement
-                  text={movesText}
-                  position={layout[device].moves.text.position}
-                  rotation={layout[device].moves.text.rotation}
-                  fontSize={layout[device].moves.text.fontSize}
-                />
-              </>
-            </group>
-          )
-        } else {
-          return (      
-            <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
-              {teams[0].pieces.map((value, index) =>
-                (<mesh
-                  position={newHomePiecePositions[index]}
-                  key={index}
-                >
-                  <boxGeometry args={[0.4, 0.4, 0.4]} />
-                  <meshStandardMaterial color="#505050"/>
-                </mesh>))}
-            </group>
-          )
-        }
+              )
+            }
+            {/* moves */}
+            <>
+              <HtmlElement
+                text={movesText}
+                position={layout[device].moves.text.position}
+                rotation={layout[device].moves.text.rotation}
+                fontSize={layout[device].moves.text.fontSize}
+              />
+            </>
+          </group>
+        )
+      } else {
+        return (      
+          <group position={layout[device].piecesSection.position} scale={layout[device].piecesSection.scale}>
+            {teams[0].pieces.map((value, index) =>
+              (<mesh
+                position={newHomePiecePositions[index]}
+                key={index}
+              >
+                <boxGeometry args={[0.4, 0.4, 0.4]} />
+                <meshStandardMaterial color="#505050"/>
+              </mesh>))}
+          </group>
+        )
       }
+    }
+    function handleTips() {
+      console.log('[Guide] tips')
+    }
+    function handleInvite() {
+      console.log('[Guide] invite')
+    }
+    function handleDiscord() {
+      console.log('[Guide] discord')
+    }
+    function handleRulebook() {
+      console.log('[Guide] rulebook')
+    }
+    function handleSettings() {
+      console.log('[Guide] settings')
+    }
 
     return <group name='guide'>
         <group
@@ -296,25 +312,65 @@ export default function Guide({ device="landscapeDesktop" }) {
             <Team1Ids/>
         </group>
         <JoinTeamModal
-            position={layout[device].joinTeamModal.position}
-            rotation={layout[device].joinTeamModal.rotation}
-            scale={layout[device].joinTeamModal.scale}
+          position={layout[device].joinTeamModal.position}
+          rotation={layout[device].joinTeamModal.rotation}
+          scale={layout[device].joinTeamModal.scale}
+        />
+        <HtmlElement
+          text='Rules'
+          position={layout[device].rulebookButton.position}
+          rotation={layout[device].rulebookButton.rotation}
+          fontSize={layout[device].rulebookButton.fontSize}
+          handleClick={handleRulebook}
+        />
+        <HtmlElement
+          text='Settings'
+          position={layout[device].settings.position}
+          rotation={layout[device].settings.rotation}
+          fontSize={layout[device].settings.fontSize}
+          handleClick={handleSettings}
         />
         <PiecesSection 
-            position={layout[device].piecesSection.position}
-            scale={layout[device].piecesSection.scale}
+          position={layout[device].piecesSection.position}
+          scale={layout[device].piecesSection.scale}
+        />
+        <HtmlElement
+          text={`Tips`}
+          position={layout[device].tips.button.position} 
+          rotation={layout[device].tips.button.rotation}
+          fontSize={layout[device].tips.button.fontSize}
+          handleClick={handleTips}
+        />
+        <HtmlElement
+          text={`Invite`}
+          position={layout[device].invite.position} 
+          rotation={layout[device].invite.rotation}
+          fontSize={layout[device].invite.fontSize}
+          handleClick={handleInvite}
+        />
+        <HtmlElement
+          text={`Discord`}
+          position={layout[device].discord.position} 
+          rotation={layout[device].discord.rotation}
+          fontSize={layout[device].discord.fontSize}
+          handleClick={handleDiscord}
+        />
+        <Chatbox
+          position={layout[device].chat.position}
+          rotation={layout[device].chat.rotation}
+          scale={layout[device].chat.scale}
+          device={device}
         />
         <Tiles device={device} scale={0.6} showStart/>
-
         <Stars/>
         <MilkyWay 
-            rotation={[-Math.PI/2, 0, -35.0]} 
-            position={[0, -3, 0]}
-            scale={5}
-            brightness={0.5}
-            colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-            colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-            colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+          rotation={[-Math.PI/2, 0, -35.0]} 
+          position={[0, -3, 0]}
+          scale={5}
+          brightness={0.5}
+          colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+          colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+          colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
         />
         <Tips/>
     </group>

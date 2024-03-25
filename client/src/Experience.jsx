@@ -76,8 +76,7 @@ import Game from "./Game.jsx";
 import Guide from "./Guide.jsx";
 import mediaValues from "./mediaValues";
 
-export const askTipsAtom = atom(true)
-export const tipsAtom = atom(false)
+export default function Experience({ device }) {
 
 function calcZoom() {
   if (window.innerWidth < mediaValues.landscapeCutoff) {

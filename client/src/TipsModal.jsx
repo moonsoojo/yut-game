@@ -1,6 +1,6 @@
 import React from 'react';
 import { Html } from '@react-three/drei';
-import { askTipsAtom, tipsAtom } from './Experience';
+import { askTipsAtom, tipsAtom } from './GlobalState';
 import { useAtom } from 'jotai';
 
 export default function TipsModal({ position, rotation, scale, fontSize, height, padding }) {

@@ -4,10 +4,13 @@ import HtmlElement from './HtmlElement';
 import YootButton from './YootButton';
 import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier';
 import layout from './layout';
+import { useAtom } from 'jotai';
+import { tipsAtom } from './GlobalState';
 
 export default function Tips() {
   // multiple components with conditional renders like pages
   const [page, setPage] = useState(0)
+  const [_tips, setTips] = useAtom(tipsAtom)
   function onPointerEnter() {
     document.body.style.cursor = "pointer";
   }
@@ -18,12 +21,13 @@ export default function Tips() {
     setPage(page => page-1)
   }
   function onFinishClick() {
-    // show game
+    setPage(0)
+    setTips(false)
   }
   function onNextClick() {
     setPage(page => page+1)
   }
-  function Tip({showPrevClick=true, showNextClick=true, position=[0,0,0], text, width}) {
+  function Tip({showPrevClick=true, showFinishClick=false, showNextClick=true, position=[0,0,0], text, width}) {
     return <group>
       <HtmlElement
         text={<div>
@@ -31,7 +35,7 @@ export default function Tips() {
             {text}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            { showPrevClick ? <div 
+            { showPrevClick && <div 
               onPointerEnter={onPointerEnter}
               onPointerLeave={onPointerLeave}
               onClick={onPrevClick}
@@ -42,8 +46,8 @@ export default function Tips() {
               }}
             >
               prev
-            </div> : <div></div>}
-            { showNextClick ? <div
+            </div>}
+            { showNextClick && <div
               onPointerEnter={onPointerEnter}
               onPointerLeave={onPointerLeave}
               onClick={onNextClick}
@@ -54,14 +58,19 @@ export default function Tips() {
               }}
             >
               next
-            </div> : <div></div>}
-            {/* <div
+            </div>}
+            { showFinishClick && <div
               onPointerEnter={onPointerEnter}
               onPointerLeave={onPointerLeave}
               onClick={onFinishClick}
+              style={{
+                border: '1px solid limegreen',
+                padding: '1px 5px',
+                justifyContent: 'center'
+              }}
             >
               Finish
-            </div> */}
+            </div>}
           </div>
         </div>}
         width={width}
@@ -226,13 +235,41 @@ export default function Tips() {
     text='First, you need to get points by throwing the yoot (dice).'
     width="170px"
     />}
-    { page == 5 && <Tip 
-      showPrevClick={true} 
-      position={[0.5, 0.5, 1.9]} 
-      text='On your turn, the yoot button will appear. Click it to throw them.'
-      width="150px"
+    { page == 5 && <group name='tip-5'>
+      <Tip 
+        showPrevClick={true} 
+        position={[0.5, 0.5, 1.9]} 
+        text='On your turn, the yoot button will appear. Click it to throw them.'
+        width="150px"
+      />
+      <YootButtonTip/>
+    </group>}
+    { page == 6 && <Tip
+    showPrevClick={true}
+    position={[0.5, 0, 0.5]}
+    text="depending on the roll, the move will show here."
+    width="150px"
     />}
-    { page > 4 && <YootButtonTip/>}
+    { page == 7 && <Tip
+    showPrevClick={true}
+    position={[-7, 0.5, -1.5]}
+    text="You can share the link to this game via 'invite'."
+    width="150px"
+    />}
+    { page == 8 && <Tip
+    showPrevClick={true}
+    position={[-7, 0.5, -1.5]}
+    text="Give us feedback or find new players on our Discord!"
+    width="160px"
+    />}
+    { page == 9 && <Tip
+    showPrevClick={true}
+    showFinishClick={true}
+    showNextClick={false}
+    position={[0, 0, -3.5]}
+    text="You can review the rules or change the settings here."
+    width="160px"
+    />}
   </>
 }
 
