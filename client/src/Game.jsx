@@ -757,13 +757,13 @@ export default function Game({ device = "landscapeDesktop"}) {
               device={device}
             /> }
           {/* menu */}
-          <HtmlElement
+          {/* <HtmlElement
             text={`Tips`}
             position={layout[device].tips.button.position} 
             rotation={layout[device].tips.button.rotation}
             fontSize={layout[device].tips.button.fontSize}
             handleClick={handleTips}
-          />
+          /> */}
           <HtmlElement
             text={`Invite`}
             position={layout[device].invite.position} 

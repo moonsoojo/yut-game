@@ -17,10 +17,7 @@ import MilkyWay from './shader/MilkyWay';
 import * as THREE from 'three';
 import layout from './layout';
 import ParticleSystem from './particles/ParticleSystem';
-
-let mediaMax = 2560;
-let landscapeMobileCutoff = 550;
-let landscapeDesktopCutoff = 1000;
+import mediaValues from './mediaValues';
 
 export default function App () {
   const created = ({ gl }) =>
@@ -28,41 +25,27 @@ export default function App () {
       gl.setClearColor('#000b18', 1)
   }
 
-  // asus monitor screen ratio: w / h 2560 / 1279
-  // first fov: 45
-  // let fovNormal = 35;
-  // let widthNormal = 2560
-  // let heightNormal = 1279
-  // let screenRatio = widthNormal / heightNormal
   const handleResize = () => {
-    // let widthRatio = window.innerWidth / widthNormal
-    // let heightRatio = window.innerHeight / heightNormal
-    // if (widthRatio > heightRatio) {
-    //   setFov(fovNormal / heightRatio)
-    // } else {
-    //   setFov(fovNormal / widthRatio)
-    // }
-    if (window.innerWidth < landscapeMobileCutoff) {
+    if (window.innerWidth < mediaValues.landscapeCutoff) {
       setDevice("portrait")
     } else {
       setDevice("landscapeDesktop")
     }
   }
 
-  function initializeDevice(windowWidth, landscapeMobileCutoff) {
-    if (windowWidth < landscapeMobileCutoff) {
+  function initializeDevice(windowWidth, landscapeCutoff) {
+    if (windowWidth < landscapeCutoff) {
       return "portrait"
     } else {
       return "landscapeDesktop"
     }
   }
   
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, landscapeMobileCutoff, landscapeDesktopCutoff))
-  // let [fov, setFov] = useState(0);
+  let [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-  }, []);
+  }, [window.innerWidth]);
 
   /*
     values for galaxy

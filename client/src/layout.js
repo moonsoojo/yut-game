@@ -1172,12 +1172,12 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-7, 0, 1.35],
+      position: [-8, 0, 1.35],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15
     },
     discord: {
-      position: [-5.65, 0, 1.35],
+      position: [-6.7, 0, 1.35],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15
     },

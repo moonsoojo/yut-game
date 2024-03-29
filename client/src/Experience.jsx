@@ -75,16 +75,16 @@ import BoomText from "./BoomText.jsx";
 import Game from "./Game.jsx";
 import Guide from "./Guide.jsx";
 import mediaValues from "./mediaValues";
-
-export default function Experience({ device }) {
+import { askTipsAtom, tipsAtom } from "./GlobalState.jsx";
 
 function calcZoom() {
   if (window.innerWidth < mediaValues.landscapeCutoff) {
-    // set width 1
+    const zoomMax = 50;
+    const newZoom = zoomMax * (window.innerWidth / mediaValues.landscapeCutoff)
+    return newZoom
   } else {
     const zoomMin = 30;
     const newZoom = window.innerWidth * (zoomMin / mediaValues.landscapeCutoff)
-    console.log(newZoom)
     return newZoom
   }
 }
@@ -136,19 +136,8 @@ export default function Experience({ device }) {
       position={layout[device].camera.position}
       ref={camera}
     />
-    { askTips && <TipsModal
-      position={layout[device].tipsModal.position}
-      rotation={layout[device].tipsModal.rotation}
-      scale={layout[device].tipsModal.scale}
-      fontSize={layout[device].tipsModal.fontSize}
-      height={layout[device].tipsModal.height}
-      padding={layout[device].tipsModal.padding}
-    /> }
     {/* add game */}
-    { !tips && <Game/>}
-    { tips && <Guide device={device}/>}
-    {/* if user clicks 'yes', leave game and remove modal */}
-    {/* if 'no', load guide */}
+    { !tips && <Game device={device}/>}
     { displayDisconnect && <DisconnectModal
       position={layout[device].disconnectModal.position}
       rotation={layout[device].disconnectModal.rotation}
