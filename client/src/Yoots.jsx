@@ -168,9 +168,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         position={layout.yoot.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[4, 0.25, 4]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[8, 1, 8]} />
+          <boxGeometry args={[8, 0.5, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'
@@ -244,7 +244,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
           position={layout.yoot.outOfBounds}
         />
       </>}
-      { gamePhase !== "lobby" 
+      {/* { gamePhase !== "lobby" 
       && getCurrentPlayerSocketId(turn, teams) === client.id 
       && <HtmlElement
         text='YOUR TURN!'
@@ -252,7 +252,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         rotation={layout[device].yourTurn.rotation}
         fontSize={layout[device].yourTurn.fontSize}
         color={client.team == 0 ? "red" : "turquoise"}
-      />}
+      />} */}
       { gamePhase !== "lobby" && <YootButton 
         position={buttonPos} 
         rotation={[0, Math.PI/2, 0]}

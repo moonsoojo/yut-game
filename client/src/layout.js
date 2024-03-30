@@ -392,7 +392,7 @@ export default {
       fontSize: 13
     },
     turn: {
-      position: [2, 0, 5.2],
+      position: [2, 0, 4.8],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 13
     },
@@ -488,7 +488,7 @@ export default {
     },
     moves: {
       text: {
-        position: [0, 0, 1.35],
+        position: [0, 0, 0.95],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
@@ -605,6 +605,11 @@ export default {
     },
     scoreDetailsButton: {
       position: [0, -2, 0],
+    },
+    tooltip: {
+      whoFirst: {
+        position: [1.3,1,3]
+      }
     },
     tiles: {
       position: [-8, 0, 0],
@@ -1065,7 +1070,7 @@ export default {
       fontSize: 15
     },
     turn: {
-      position: [5, 0, 1.5],
+      position: [5, 0, -2],
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 15
     },
@@ -1188,7 +1193,7 @@ export default {
         fontSize: 15
       },
       list: {
-        position: [1.4, 0, 1],
+        position: [1.4, 0, 1.5],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
@@ -1279,6 +1284,11 @@ export default {
     },
     scoreDetailsButton: {
       position: [0, -2, 0],
+    },
+    tooltip: {
+      whoFirst: {
+        position: [0.5,1.5,2.2]
+      }
     },
     meteors: {
       initialPosition: {

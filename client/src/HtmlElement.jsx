@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function HtmlElement({ 
   position, 
@@ -17,6 +17,9 @@ export default function HtmlElement({
   whiteSpace='nowrap'
 }) {
   const [currColor, setCurrColor] = useState(color);
+  useEffect(() => {
+    setCurrColor(color)
+  }, [color])
   function handlePointerEnter() {
     if (handleClick) {
       document.body.style.cursor = "pointer";

@@ -49,11 +49,11 @@ export default function Piece ({
     && isMyTurn(turn, teams, client.id) 
     && hasValidMove(teams[team].moves) && selection == null
     && !thrown) {
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + (0.1 / 2)
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
       // wrapperMatRef.current.color.g = (Math.cos(state.clock.elapsedTime * 2.5) - 1) // pass down wrapper ref 
-      wrapperMat.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.2
+      wrapperMat.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + 0.3
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale

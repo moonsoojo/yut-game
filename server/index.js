@@ -39,7 +39,7 @@ server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 // have to wait for the server create the room first
 let test = false;
 if (test) {
-  const roomId = 'AAA'
+  const roomId = 'JAS3V'
   addRoom({ id: roomId })
 
   let teams = JSON.parse(JSON.stringify(initialState.teams))
@@ -59,14 +59,20 @@ if (test) {
   // teams[0].pieces[2] = null;
 
   teams[1].pieces[0] = 'scored';
-  teams[1].pieces[1] = 'scored';
-  teams[1].pieces[2] = 'scored';
+  teams[1].pieces[1] = null;
+  teams[1].pieces[2] = null;
   teams[1].pieces[3] = null;
 
   updateTeams(roomId, teams)
   
+  tiles[19] = [
+    { tile: 19, team: 1, id: 3,  history: [11,12,13,14,15,16,17]},
+  ]
   tiles[18] = [
-    { tile: 18, team: 1, id: 3,  history: [11,12,13,14,15,16,17]},
+    { tile: 18, team: 1, id: 2,  history: [11,12,13,14,15,16,17]},
+  ]
+  tiles[17] = [
+    { tile: 17, team: 1, id: 1,  history: [11,12,13,14,15,16,17]},
   ]
   updateTiles(roomId, tiles)
 }

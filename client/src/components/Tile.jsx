@@ -1,12 +1,15 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom } from "../SocketManager";
+import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, turnAtom, clientAtom, gamePhaseAtom } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
 import { isMyTurn } from "../helpers/helpers";
 import layout from "../layout";
+import { useFrame } from "@react-three/fiber";
+import ScoreButton from "../ScoreButton";
 
+const SCALE = 4
 export default function Tile({ tile, wrapperRadius, device }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
@@ -15,25 +18,26 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom)
 
   function handlePointerEnter(event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
       document.body.style.cursor = "pointer";
-      wrapper.current.opacity += 0.2;
+      // wrapper.current.opacity += 0.2;
     }
   }
 
   function handlePointerLeave(event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
       document.body.style.cursor = "default";
-      wrapper.current.opacity -= 0.2;
+      // wrapper.current.opacity -= 0.2;
     }
   }
 
   function handlePointerDown(event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     if (selection != null) {
       if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
@@ -84,21 +88,28 @@ export default function Tile({ tile, wrapperRadius, device }) {
     return <></>
   }
 
+  useFrame((state, delta) => {
+    if (selection != null && tile in legalTiles) {
+      wrapper.current.scale.x = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
+      wrapper.current.scale.y = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
+      wrapper.current.scale.z = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
+    }
+  })
+
   return (
     <group>
       <mesh
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
         onPointerDown={(e) => handlePointerDown(e)}
-        scale={4}
+        scale={SCALE}
+        ref={wrapper}
       >
-        {/* wrapper */}
         <sphereGeometry args={[wrapperRadius]} />
         <meshStandardMaterial
           transparent
           opacity={selection != null && tile in legalTiles ? 0.5 : 0}
           color={selection != null && tile in legalTiles ? (selection.pieces[0].team == 0 ? "pink" : "turquoise") : ""}
-          ref={wrapper}
         />
       </mesh>
       {/* scale necessary because it's different from pieces at home or under team name */}
@@ -106,7 +117,10 @@ export default function Tile({ tile, wrapperRadius, device }) {
         <Pieces/>
       </group>
       { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
-      {/* { <Pointer tile={tile} color={"turquoise" } device={device} />} */}
+      {(gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
+        position={[-0.3,2.5,-2]}
+        scale={2}
+      />}
     </group>
   );
 }

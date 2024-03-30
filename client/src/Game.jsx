@@ -73,6 +73,7 @@ import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
 import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
+import DecideOrderTooltip from "./decideOrderTooltip.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -355,11 +356,7 @@ export default function Game({ device = "landscapeDesktop"}) {
     if (client.team != undefined) {
       return (
         <group position={position} scale={scale}>
-          { (gamePhase === "game" && 29 in legalTiles) ?
-            <ScoreButton
-              position={[0,0,0]}
-              device={device}
-            /> :
+          {
             teams[client.team].pieces.map((value, index) =>
               value == null ? (
                 <mesh
@@ -543,7 +540,7 @@ export default function Game({ device = "landscapeDesktop"}) {
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
       <group scale={layout[device].scale}>
-      { <group>
+      {<group>
           {/* team 0 */}
           <group
             position={layout[device].team0.position}
@@ -678,7 +675,7 @@ export default function Game({ device = "landscapeDesktop"}) {
               handleClick={handleLetsPlay}
             />}
             {/* { gamePhase === "lobby" && <StartTip/> } */}
-            <HtmlElement
+            {/* <HtmlElement
               text={`Phase: ${
                 gamePhase === "pregame" ? 'who first' : gamePhase
               }`}
@@ -686,7 +683,7 @@ export default function Game({ device = "landscapeDesktop"}) {
               rotation={layout[device].gamePhase.rotation}
               fontSize={layout[device].gamePhase.fontSize}
               handlePointerClick={() => socket.emit("startGame")}
-            />
+            /> */}
             <HtmlElement
               text='Rules'
               position={layout[device].rulebookButton.position}
@@ -732,7 +729,7 @@ export default function Game({ device = "landscapeDesktop"}) {
             )}
             {/* turn */}
             {(gamePhase === "pregame" || gamePhase === "game") 
-            && getCurrentPlayerSocketId(turn, teams) !== client.id
+            // && getCurrentPlayerSocketId(turn, teams) !== client.id
             && <HtmlElement
               text={`TURN: ${
                 teams[turn.team].players[turn.players[turn.team]]?.name
@@ -786,6 +783,10 @@ export default function Game({ device = "landscapeDesktop"}) {
             />}
           </group>}
         </group>}
+        { gamePhase === "pregame" && <DecideOrderTooltip
+          position={layout[device].tooltip.whoFirst.position}
+          rotation={[-Math.PI/2, 0, 0]}
+        />}
       </group>
       {displayDisconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
