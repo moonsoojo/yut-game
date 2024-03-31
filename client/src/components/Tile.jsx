@@ -21,7 +21,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
   const [gamePhase] = useAtom(gamePhaseAtom)
 
   function handlePointerEnter(event) {
-    // event.stopPropagation();
+    event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
       document.body.style.cursor = "pointer";
       // wrapper.current.opacity += 0.2;
@@ -29,7 +29,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
   }
 
   function handlePointerLeave(event) {
-    // event.stopPropagation();
+    event.stopPropagation();
     if (selection != null && isMyTurn(turn, teams, client.id)) {
       document.body.style.cursor = "default";
       // wrapper.current.opacity -= 0.2;
@@ -37,7 +37,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
   }
 
   function handlePointerDown(event) {
-    // event.stopPropagation();
+    event.stopPropagation();
     if (selection != null) {
       if (isMyTurn(turn, teams, client.id)) {
         if (selection.tile != tile && tile in legalTiles) {
