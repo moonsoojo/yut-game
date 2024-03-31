@@ -114,7 +114,7 @@ export default function ScoreButton({ position, scale }) {
         onPointerDown={e => clickScore(e)}
       >
         <boxGeometry args={[1, 0.3, 2.2]}/>
-        <meshStandardMaterial transparent opacity={0.6}/>
+        <meshStandardMaterial transparent opacity={0}/>
       </mesh>      
       { displayScoreOptions && <group position={[-1.3, 0, 1]} rotation={[0, Math.PI/2, 0]}>
         {legalTiles[29].map( (value, index) => ( // must use parentheses instead of brackets

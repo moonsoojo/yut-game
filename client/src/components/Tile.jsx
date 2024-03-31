@@ -90,9 +90,9 @@ export default function Tile({ tile, wrapperRadius, device }) {
 
   useFrame((state, delta) => {
     if (selection != null && tile in legalTiles) {
-      wrapper.current.scale.x = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
-      wrapper.current.scale.y = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
-      wrapper.current.scale.z = SCALE + Math.cos(state.clock.elapsedTime * 3) * 1 + (3 / 2)
+      wrapper.current.scale.x = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
+      wrapper.current.scale.y = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
+      wrapper.current.scale.z = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
     }
   })
 
@@ -118,7 +118,7 @@ export default function Tile({ tile, wrapperRadius, device }) {
       </group>
       { selection != null && tile in legalTiles && <Pointer tile={tile} color={selection.pieces[0].team == 0 ? "red" : "turquoise"}/>}
       {(gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
-        position={[-0.3,2.5,-2]}
+        position={[-0.3,6,-1.2]}
         scale={2}
       />}
     </group>

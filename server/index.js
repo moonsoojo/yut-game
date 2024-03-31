@@ -56,15 +56,20 @@ if (test) {
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
-  teams[0].pieces[0] = 'scored';
+  teams[0].pieces[0] = null;
   teams[0].pieces[1] = null;
-  teams[0].pieces[2] = 'scored';
-  teams[0].pieces[3] = 'scored';
+  teams[0].pieces[2] = null;
+  teams[0].pieces[3] = null;
 
   updateTeams(roomId, teams)
   
-  tiles[19] = [
-    { tile: 19, team: 0, id: 1,  history: [11,12,13,14,15,16,17]},
+  tiles[27] = [
+    { tile: 27, team: 0, id: 1,  history: [11,12,13,14,15,16,17]},
+  ]
+  tiles[22] = [
+    { tile: 22, team: 0, id: 0,  history: [11,12,13,14,15,16,17]},
+    { tile: 22, team: 0, id: 3,  history: [11,12,13,14,15,16,17]},
+    { tile: 22, team: 0, id: 2,  history: [11,12,13,14,15,16,17]},
   ]
   updateTiles(roomId, tiles)
 }
