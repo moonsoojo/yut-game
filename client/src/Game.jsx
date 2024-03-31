@@ -73,7 +73,7 @@ import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
 import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
-import DecideOrderTooltip from "./decideOrderTooltip.jsx";
+import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;

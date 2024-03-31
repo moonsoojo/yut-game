@@ -124,4 +124,4 @@ export default function ScoreButton({ position, scale }) {
   );
 }
 
-useGLTF.preload('/tooltip.glb')
+useGLTF.preload('models/tooltip.glb')
