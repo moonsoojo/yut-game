@@ -44,7 +44,7 @@ export default function Yoots({ device = "portrait", buttonPos }) {
       yootMeshes[i].current.material.visible = true
     }
     // client lags if you emit here
-    if (yootThrowValues !== null) {
+    if (yootThrowValues !== null && document.visibilityState === "visible") {
       for (let i = 0; i < 4; i++) {
         yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
         yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
