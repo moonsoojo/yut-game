@@ -168,9 +168,9 @@ export default function Yoots({ device = "portrait", buttonPos }) {
         position={layout.yoot.floor}
         friction={0.9}
       >
-        <CuboidCollider args={[4, 0.25, 4]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[8, 0.5, 8]} />
+          <boxGeometry args={[8, 1, 8]} />
           <meshStandardMaterial 
             transparent 
             color='yellow'

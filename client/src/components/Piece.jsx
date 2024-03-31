@@ -33,14 +33,13 @@ export default function Piece ({
   if (selection != null) {
     if (selection.tile == -1) {
       if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
-        scale *= 1.5
+        scale *= 1.3
       }
     } else {
       if (selection.tile == tile) {
-        scale *= 1.5
+        scale *= 1.3
       }
     }
-
   }
 
   useFrame((state, delta) => {
@@ -49,9 +48,9 @@ export default function Piece ({
     && isMyTurn(turn, teams, client.id) 
     && hasValidMove(teams[team].moves) && selection == null
     && !thrown) {
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.3 + (0.6 / 2)
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
       // wrapperMatRef.current.color.g = (Math.cos(state.clock.elapsedTime * 2.5) - 1) // pass down wrapper ref 
       wrapperMat.current.opacity = Math.cos(state.clock.elapsedTime * 2.5) * 0.1 + 0.3
     } else {
@@ -130,7 +129,7 @@ export default function Piece ({
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
       >
-        <sphereGeometry args={[0.6, 32, 16]} />
+        <sphereGeometry args={[0.55, 32, 16]} />
         <meshBasicMaterial
           transparent
           opacity={0}

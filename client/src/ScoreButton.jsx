@@ -17,17 +17,18 @@ export default function ScoreButton({ position, scale }) {
   const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
   const [displayScoreOptions, setDisplayScoreOptions] = useAtom(displayScoreOptionsAtom)
 
-  function scorePointerEnter() {
+  function scorePointerEnter(event) {
+    event.stopPropagation();
     document.body.style.cursor = "pointer";
   }
 
-  function scorePointerOut() {
+  function scorePointerOut(event) {
+    event.stopPropagation();
     document.body.style.cursor = "default";
   }
 
-  function clickScore() {
-    // event.stopPropagation();
-    console.log('score clicked')
+  function clickScore(event) {
+    event.stopPropagation();
     if (selection != null && !displayScoreOptions) {
       // precondition: legalTiles is already populated
       if (29 in legalTiles) {
@@ -108,9 +109,9 @@ export default function ScoreButton({ position, scale }) {
       </Text3D>
       <mesh
         position={[-0.6, 0, 0]}
-        onPointerEnter={scorePointerEnter}
-        onPointerOut={scorePointerOut}
-        onPointerUp={clickScore}
+        onPointerEnter={e => scorePointerEnter(e)}
+        onPointerOut={e => scorePointerOut(e)}
+        onPointerDown={e => clickScore(e)}
       >
         <boxGeometry args={[1, 0.3, 2.2]}/>
         <meshStandardMaterial transparent opacity={0.6}/>

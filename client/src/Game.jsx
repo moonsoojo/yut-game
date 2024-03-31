@@ -95,7 +95,6 @@ export default function Game({ device = "landscapeDesktop"}) {
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
-
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
   const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
@@ -110,6 +109,10 @@ export default function Game({ device = "landscapeDesktop"}) {
       setDisplayDisconnect(true);
     }
   }, [disconnect])
+
+  useEffect(() => {
+
+  }, [turn])
 
   const numTiles = 29;
 
@@ -303,16 +306,22 @@ export default function Game({ device = "landscapeDesktop"}) {
   }
 
   const newHomePiecePositions = [
-    [0.5, 0, 0],
-    [1.5, 0, 0],
-    [0.5, 0, 1],
-    [1.5, 0, 1]
+    [0.5, 0, -0.5],
+    [1.5, 0, -0.5],
+    [0.5, 0, 0.5],
+    [1.5, 0, 0.5]
   ]
   const ufoHomePositions = [
     [0.5, 0, -0.5],
     [1.5, 0, -0.5],
     [0.5, 0, 0.5],
     [1.5, 0, 0.5]
+  ]
+  const rocketHomePositions = [
+    [0.5, 0, -0.25],
+    [1.5, 0, -0.25],
+    [0.5, 0, 0.75],
+    [1.5, 0, 0.75]
   ]
 
   function handleStart() {
@@ -377,7 +386,7 @@ export default function Game({ device = "landscapeDesktop"}) {
                 <Piece
                   position={
                     client.team == 0 
-                    ? newHomePiecePositions[index]
+                    ? rocketHomePositions[index]
                     : ufoHomePositions[index]
                   }
                   rotation={layout[device].homePieces[client.team].rotation}
@@ -392,8 +401,7 @@ export default function Game({ device = "landscapeDesktop"}) {
             )
           }
           {/* moves */}
-          {/* {gamePhase === "pregame" && <> */}
-          {<>
+          {gamePhase === "pregame" && <>
             <HtmlElement
               text={`Moves:`}
               position={layout[device].moves.text.position}
@@ -408,7 +416,7 @@ export default function Game({ device = "landscapeDesktop"}) {
               color="red"
               // size={layout[device].moves.size}
             />
-            <TextButton
+            <HtmlElement
               text={`${prettifyMoves(teams[1].moves)}`}
               position={[
                 layout[device].moves.list[0] + 0.5,
@@ -419,20 +427,25 @@ export default function Game({ device = "landscapeDesktop"}) {
               // size={layout[device].moves.size}
             />
           </>}
-          {
-          // {gamePhase !== "lobby" && 
-            <>
-              <TextButton
-                text={`Moves:`}
-                position={layout[device].moves.text}
+          {gamePhase === "game" && 
+            <group>
+              <HtmlElement
+                text='moves:'
+                position={layout[device].moves.text.position}
+                rotation={layout[device].moves.text.rotation}
+                fontSize={layout[device].moves.text.fontSize}
+                color="yellow"
                 // size={layout[device].moves.size}
               />
-              <TextButton
+              <HtmlElement 
                 text={`${prettifyMoves(teams[turn.team].moves)}`}
-                position={layout[device].moves.list}
+                position={layout[device].moves.list.position}
+                rotation={layout[device].moves.list.rotation}
+                fontSize={layout[device].moves.list.fontSize}
+                color='yellow'
                 // size={layout[device].moves.size}
-              />
-            </>
+              /> 
+            </group>
           }
         </group>
       )

@@ -39,7 +39,7 @@ server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 // have to wait for the server create the room first
 let test = false;
 if (test) {
-  const roomId = 'JAS3V'
+  const roomId = 'QYPXT'
   addRoom({ id: roomId })
 
   let teams = JSON.parse(JSON.stringify(initialState.teams))
@@ -47,32 +47,24 @@ if (test) {
   
   updateGamePhase(roomId, 'game')
   let turn = {
-    team: 1,
+    team: 0,
     players: [0,0]
   }
   updateTurn(roomId, turn)
 
-  teams[1].moves['5'] = 1
-  teams[1].moves['4'] = 1
-  teams[1].moves['3'] = 1
+  teams[0].moves['3'] = 1
   // teams[0].pieces[1] = null;
   // teams[0].pieces[2] = null;
 
-  teams[1].pieces[0] = 'scored';
-  teams[1].pieces[1] = null;
-  teams[1].pieces[2] = null;
-  teams[1].pieces[3] = null;
+  teams[0].pieces[0] = 'scored';
+  teams[0].pieces[1] = null;
+  teams[0].pieces[2] = 'scored';
+  teams[0].pieces[3] = 'scored';
 
   updateTeams(roomId, teams)
   
   tiles[19] = [
-    { tile: 19, team: 1, id: 3,  history: [11,12,13,14,15,16,17]},
-  ]
-  tiles[18] = [
-    { tile: 18, team: 1, id: 2,  history: [11,12,13,14,15,16,17]},
-  ]
-  tiles[17] = [
-    { tile: 17, team: 1, id: 1,  history: [11,12,13,14,15,16,17]},
+    { tile: 19, team: 0, id: 1,  history: [11,12,13,14,15,16,17]},
   ]
   updateTiles(roomId, tiles)
 }
@@ -474,7 +466,7 @@ io.on("connect", (socket) => { // socket.handshake.query is data obj
         io.to(roomId).emit("turn", turn)
       } else if (move == 4 || move == 5) {
         addThrow(roomId, turn.team);
-        io.to(roomId).emit("yell", "bonus turn")
+        // io.to(roomId).emit("yell", "bonus turn")
       }
       io.to(roomId).emit("teams", getTeams(roomId))
     }

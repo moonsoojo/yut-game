@@ -488,12 +488,12 @@ export default {
     },
     moves: {
       text: {
-        position: [0, 0, 0.95],
+        position: [0, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
       list: {
-        position: [0, 0, 1.35],
+        position: [1.4, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
@@ -1188,12 +1188,12 @@ export default {
     },
     moves: {
       text: {
-        position: [0, 0, 1.5],
+        position: [0, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
       list: {
-        position: [1.4, 0, 1.5],
+        position: [1.4, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15
       },
