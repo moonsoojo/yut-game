@@ -3,7 +3,12 @@ import { Server } from 'socket.io';
 import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
-const { MongoClient, ServerApiVersion } = require('mongodb');
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { ObjectId } from 'bson';
+import mongoose from 'mongoose';
+
+import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById, assignHost } from './rooms.js';
+
 
 const app = express();
 const server = http.createServer(app);
@@ -17,7 +22,7 @@ const io = new Server(server, {
 });
 const uri = "mongodb+srv://beatrhino:databaseAdmin@yootgamedb.xgh59sn.mongodb.net/?retryWrites=true&w=majority&appName=YootGameDB";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
+const mongoClient = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
@@ -25,19 +30,17 @@ const client = new MongoClient(uri, {
     }
 });
 
-async function run() {
-    try {
-      // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await client.close();
-    }
-  }
-  run().catch(console.dir);
+// async function run() {
+//     try {
+//       // Connect the client to the server	(optional starting in v4.7)
+//       // Send a ping to confirm a successful connection
+//       await mongoClient.db("admin").command({ ping: 1 });
+//       console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//     } finally {
+//       // Ensures that the client will close when you finish/error
+//       await mongoClient.close();
+//     }
+//   }
 
 const PORT = process.env.PORT || 5000
 
@@ -46,11 +49,45 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-io.on("connect", (socket) => { // socket.handshake.query is data obj
 
+// run().catch(console.dir);
+
+async function connectMongo() {
+  await mongoose.connect("mongodb+srv://beatrhino:databaseAdmin@yootgamedb.xgh59sn.mongodb.net/yootGame")
+}
+
+const roomSchema = new mongoose.Schema(
+  {
+    id: String,
+    createdTime: Date
+  },
+  {
+    versionKey: false
+  }
+)
+const Room = mongoose.model('rooms', roomSchema)
+
+io.on("connect", async (socket) => { // socket.handshake.query is data obj
+
+    connectMongo().catch(err => console.log('mongo connect error', err))
+    
     let roomId = '';
     // console.log("[connect]", socket.handshake.query)
-    socket.on("createRoom", ({ id }, callback) => {
+    socket.on("createRoom", async ({ id }, callback) => {
+
+      // emit message from 'handleLetsPlay'
+      // create object id
+      // create room with it
+      // return it in callback
+      // setLocation with id
+      let objectId = new mongoose.Types.ObjectId()
+      console.log('objectId', objectId.valueOf())
+      const room = new Room({ 
+        _id: objectId,
+        createdTime: new Date()
+      })
+      await room.save();
+      
       console.log("[createRoom] id", id)
       const response = addRoom({ id })
       console.log("[createRoom] addRoom response", response)
