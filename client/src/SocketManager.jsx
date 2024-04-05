@@ -6,9 +6,9 @@ import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
 
-// const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'localhost:5000';
 
-const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
@@ -88,7 +88,6 @@ export const SocketManager = () => {
       // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
   
       socket.emit("createRoom", { id: (params.id).toUpperCase() }, ({ roomId, error }) => {
-        console.log("[SocketManager] roomId", roomId)
         if (error) {
           console.log('error in creating room', roomId, error)
         }

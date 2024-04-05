@@ -20,27 +20,6 @@ const io = new Server(server, {
     origin: "*"
   },
 });
-const uri = "mongodb+srv://beatrhino:databaseAdmin@yootgamedb.xgh59sn.mongodb.net/?retryWrites=true&w=majority&appName=YootGameDB";
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const mongoClient = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-});
-
-// async function run() {
-//     try {
-//       // Connect the client to the server	(optional starting in v4.7)
-//       // Send a ping to confirm a successful connection
-//       await mongoClient.db("admin").command({ ping: 1 });
-//       console.log("Pinged your deployment. You successfully connected to MongoDB!");
-//     } finally {
-//       // Ensures that the client will close when you finish/error
-//       await mongoClient.close();
-//     }
-//   }
 
 const PORT = process.env.PORT || 5000
 
@@ -49,16 +28,13 @@ app.use(cors());
 
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
-
-// run().catch(console.dir);
-
 async function connectMongo() {
   await mongoose.connect("mongodb+srv://beatrhino:databaseAdmin@yootgamedb.xgh59sn.mongodb.net/yootGame")
 }
 
 const roomSchema = new mongoose.Schema(
   {
-    id: String,
+    _id: String,
     createdTime: Date
   },
   {
@@ -74,83 +50,124 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     let roomId = '';
     // console.log("[connect]", socket.handshake.query)
     socket.on("createRoom", async ({ id }, callback) => {
-
-      // emit message from 'handleLetsPlay'
-      // create object id
-      // create room with it
-      // return it in callback
-      // setLocation with id
-      let objectId = new mongoose.Types.ObjectId()
-      console.log('objectId', objectId.valueOf())
-      const room = new Room({ 
-        _id: objectId,
-        createdTime: new Date()
-      })
-      await room.save();
-      
-      console.log("[createRoom] id", id)
-      const response = addRoom({ id })
-      console.log("[createRoom] addRoom response", response)
-      if (response.error) {
-        return callback({ roomId: id, error: response.error })
+      try {
+        const room = new Room({ 
+          _id: id,
+          createdTime: new Date()
+        })
+        await room.save();
+        return callback({ roomId: id })
+      } catch (err) {
+        console.log(`[createRoom] ${err.message}`)
+        return callback({ roomId: id, error: err.message })
       }
-      
-      return callback({ roomId: id })
+    })
+
+    socket.on("joinRoom", ({ id, savedClient }, callback) => {
+      console.log("[joinRoom] room id", id, "socket id", socket.id, "savedClient", savedClient)
+  
+      if (!savedClient) {
+        // get room from mongo by id
+        // add client as spectator
+        // announce that client joined
+        // if host is null, assign it to client
+        // update room in mongo
+        let name = makeId(5)
+        const { spectator } = addSpectator({ id: socket.id, name, room: roomId })
+  
+        socket.emit("client", spectator)
+  
+        // sends only to the socket's client
+        socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
+        socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
+        socket.join(spectator.room);
+  
+        try {
+          assignHost(roomId, socket.id)
+        } catch (err) {
+          console.log(`[joinRoom][no saved client] ${err}`)
+        }
+        
+        let { room, getRoomError } = getRoom(spectator.room)
+        if (getRoomError) {
+          console.log(`[connect] no saved client, error: ${getRoomError}`)
+          return callback({ error: getRoomError })
+        }
+        io.to(roomId).emit('room', room)
+  
+        callback('join room without savedClient success')
+    
+      } else {
+        // join team
+  
+        const savedPlayer = {
+          ...JSON.parse(socket.handshake.query.client),
+          id: socket.id,
+          room: roomId
+        }
+        // when bro and i joined another room, when bro joined, 
+        // we didn't see each other. when we refreshed the page, we did
+        const addedPlayer = addPlayer({ player: savedPlayer })
+        console.log(`addedPlayer ${JSON.stringify(addedPlayer)}`)
+        socket.emit("client", addedPlayer)
+  
+        socket.emit("message", { user: 'admin', text: `${addedPlayer.name}, welcome back to the room ${addedPlayer.room}`})
+        console.log("[joinRoom] addedPlayer", addedPlayer)
+        socket.join(addedPlayer.room);
+  
+        let { room, getRoomError } = getRoom(addedPlayer.room)
+        if (getRoomError) {
+          console.log(`[connect] with saved client, error: ${getRoomError}`)
+          return callback({ error })
+        }
+        socket.broadcast.to(addedPlayer.room).emit(
+          'message', 
+          { 
+            user: 'admin', 
+            text: `${addedPlayer.name} has joined ${addedPlayer.team === 0 ? "the Rockets" : "the UFOs"}!`
+          }
+        )
+  
+        // this is emitted by 'room'
+  
+        console.log("[joinRoom] hostId", getHostId(roomId))
+        if (getHostId(roomId) == null) { // if there's no host, there's only one player
+          try {
+            assignHost(roomId, socket.id)
+          } catch (err) {
+            console.log(`[joinRoom][no saved client] ${err}`)
+          }
+        } else {
+          let { readyToStart, isReadyToStartError } = isReadyToStart(roomId)
+          if (isReadyToStartError) {
+            return callback({ error: isReadyToStartError })
+          }
+          // updateReadyToStart(roomId, readyToStart)
+          // console.log("[joinRoom] host id", getHostId(roomId))
+          io.to(getHostId(roomId)).emit("readyToStart", readyToStart);
+        }
+        
+        try {
+          const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
+          const turn = getTurn(roomId)
+          if (socket.id === currentPlayerId 
+            && movesIsEmpty(roomId, turn.team) 
+            && getThrows(roomId, turn.team) == 0 
+            && getGamePhase(roomId) !== "lobby") {
+            addThrow(roomId, getTurn(roomId).team)
+          }
+        } catch (err) {
+          console.log(`[joinRoom] ${err}`)
+        }
+  
+        // doesn't update host Id
+        io.to(roomId).emit('room', room)
+        
+        callback('join room with savedClient success')
+      }
     })
 
     socket.on("disconnect", () => {
-
-        console.log("[disconnect] roomId", roomId, "socket id", socket.id)
-    
-        let { room, getRoomError } = getRoom(roomId)
-        if (room) {
-          const userFromRoom = removeUserFromRoom({ id: socket.id, roomId: room.id })
-          if (userFromRoom.error && userFromRoom.error === "room not found") {
-            // nothing happens
-          } else {
-            // emit the room to everyone in the room
-            // tell everyone in the room that user left
-            if (countPlayers(room.id) > 0) {
-              socket.broadcast.to(room.id).emit('message', { user: 'admin', text: `${userFromRoom.name} has left!`})
-              try {
-                assignHost(roomId, socket.id)
-              } catch (err) {
-                console.log(`[joinRoom][no saved client] ${err}`)
-              }
-    
-              if (userFromRoom.team && countPlayersTeam(roomId, userFromRoom.team) == 0)
-              {
-                // updateReadyToStart(roomId, false)
-                io.to(getHostId(roomId)).emit("readyToStart", false);
-              }
-    
-              // if there's no player in current turn indexes
-              try {
-                const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-                if (!currentPlayerId) {
-                  let turn = getTurn(roomId)
-                  turn.players[turn.team] = 0
-                  updateTurn(roomId, turn)
-                } else if (getThrown({roomId}) === true) {
-                  updateThrown({roomId, flag: false})
-                  addThrow(roomId, getTurn(roomId).team)
-                }
-              } catch (err) {
-                console.log(`[disconnect] ${err}`)
-              }
-    
-              io.to(room.id).emit('room', room)
-            } else {
-              console.log("[disconnect] room empty")
-              deleteRoom(room.id)
-              console.log("[disconnect] rooms[roomId]", getRoom(room.id))
-            }
-            // start button doesn't disappear when there's only one player left 
-            // in the team in my phone
-    
-          }
-        } else {
-          console.log(`[disconnect] ${getRoomError}`)
-        }
+      console.log(`${socket.id} disconnect`)
     });
 })

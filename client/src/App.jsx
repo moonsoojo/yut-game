@@ -74,8 +74,6 @@ export default function App () {
       <ParticleSystem/>
       <Route path="/">
         <Home2 device={device}/>
-        {/* <Meteors/> */}
-        {/* <Celebration/> */}
       </Route>
       <Route path="/:id">
         <SocketManager/>

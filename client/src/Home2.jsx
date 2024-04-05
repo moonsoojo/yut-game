@@ -22,6 +22,7 @@ import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
 import TipsModal from './TipsModal';
+import mongoose from 'mongoose';
 
 export default function Home2({ device }) {
 
@@ -232,7 +233,8 @@ export default function Home2({ device }) {
   const [location, setLocation] = useLocation();
 
   function handleLetsPlay() {
-    setLocation(`/${(makeId(5)).toUpperCase()}`)
+    let objectId = new mongoose.Types.ObjectId()
+    setLocation(`/${objectId.valueOf()}`)
   }
   function handleHowToPlay() {
     setDisplay('howToPlay');
