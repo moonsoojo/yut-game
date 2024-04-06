@@ -6,9 +6,8 @@ import cors from 'cors';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { ObjectId } from 'bson';
 import mongoose from 'mongoose';
-
+import { makeId } from '../client/src/helpers/helpers.js';
 import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById, assignHost } from './rooms.js';
-
 
 const app = express();
 const server = http.createServer(app);
@@ -29,19 +28,26 @@ app.use(cors());
 server.listen(PORT, () => console.log(`server has started on port ${PORT}`))
 
 async function connectMongo() {
-  await mongoose.connect("mongodb+srv://beatrhino:databaseAdmin@yootgamedb.xgh59sn.mongodb.net/yootGame")
+  await mongoose.connect("mongodb+srv://beatrhino:databaseAdmin@yootgamecluster.fgzfv9h.mongodb.net/yootGameDb")
 }
 
 const roomSchema = new mongoose.Schema(
   {
     _id: String,
-    createdTime: Date
+    createdTime: Date,
+    spectators: [{
+      _id: false,
+      socketId: String,
+      name: String,
+      roomId: String
+    }],
   },
   {
     versionKey: false
   }
 )
 const Room = mongoose.model('rooms', roomSchema)
+Room.watch().on('change', data => console.log(data))
 
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
@@ -63,39 +69,63 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
     })
 
-    socket.on("joinRoom", ({ id, savedClient }, callback) => {
-      console.log("[joinRoom] room id", id, "socket id", socket.id, "savedClient", savedClient)
-  
+    socket.on("joinRoom", async ({ roomId, savedClient }, callback) => {
+      console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
+      let room;
       if (!savedClient) {
-        // get room from mongo by id
-        // add client as spectator
-        // announce that client joined
         // if host is null, assign it to client
         // update room in mongo
         let name = makeId(5)
-        const { spectator } = addSpectator({ id: socket.id, name, room: roomId })
-  
+        // const { spectator } = addSpectator({ id: socket.id, name, room: roomId })
+
+        // get room from mongo by id
+        try {
+          room = await Room.findById(roomId).exec();
+        } catch (err) {
+          return callback({ error: err.message })
+        }
+
+        // add client as spectator
+        let spectator;
+        try {
+          spectator = {
+            socketId: socket.id,
+            name,
+            roomId
+          }
+          room.spectators.push(spectator)
+          await room.save();
+          console.log('[joinRoom] added spectator to room')
+        } catch (err) {
+          return callback({ error: err.message })
+        }
         socket.emit("client", spectator)
+        
+        // announce that client joined
+        // get messages
+        // add message
+        // send to mongo
+        // track state in client
   
         // sends only to the socket's client
         socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
         socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
         socket.join(spectator.room);
   
-        try {
-          assignHost(roomId, socket.id)
-        } catch (err) {
-          console.log(`[joinRoom][no saved client] ${err}`)
-        }
+        // try {
+        //   assignHost(roomId, socket.id)
+        // } catch (err) {
+        //   console.log(`[joinRoom][no saved client] ${err}`)
+        // }
         
-        let { room, getRoomError } = getRoom(spectator.room)
-        if (getRoomError) {
-          console.log(`[connect] no saved client, error: ${getRoomError}`)
-          return callback({ error: getRoomError })
-        }
-        io.to(roomId).emit('room', room)
+        // let { room, getRoomError } = getRoom(spectator.room)
+        // if (getRoomError) {
+        //   console.log(`[connect] no saved client, error: ${getRoomError}`)
+        //   return callback({ error: getRoomError })
+        // }
+        // io.to(roomId).emit('room', room)
   
-        callback('join room without savedClient success')
+        // callback('join room without savedClient success')
     
       } else {
         // join team

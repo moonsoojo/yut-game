@@ -89,14 +89,14 @@ export const SocketManager = () => {
   
       socket.emit("createRoom", { id: (params.id).toUpperCase() }, ({ roomId, error }) => {
         if (error) {
-          console.log('error in creating room', roomId, error)
+          console.log('[createRoom] error', roomId, error)
         }
   
         socket.emit('joinRoom', { 
-          id: roomId, 
+          roomId, 
           savedClient: localStorage.getItem('yootGame') 
-        }, (response) => {
-          console.log("[joinRoom callback]", response)
+        }, ({ error }) => {
+          console.log("[joinRoom] error", error)
         })
       })
   
@@ -114,6 +114,10 @@ export const SocketManager = () => {
       setMessages([...messages, message]);
     })
   }, [messages])
+
+  useEffect(() => {
+    console.log('[SocketManager] room', room)
+  }, [room])
 
   useEffect(() => {
     socket.on('room', (room) => {

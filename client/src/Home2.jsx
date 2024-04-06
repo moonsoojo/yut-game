@@ -234,7 +234,7 @@ export default function Home2({ device }) {
 
   function handleLetsPlay() {
     let objectId = new mongoose.Types.ObjectId()
-    setLocation(`/${objectId.valueOf()}`)
+    setLocation(`/${objectId.valueOf().toUpperCase()}`)
   }
   function handleHowToPlay() {
     setDisplay('howToPlay');
