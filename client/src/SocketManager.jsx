@@ -101,6 +101,7 @@ export const SocketManager = () => {
         if (error) {
           console.log('[createRoom] error', roomId, error)
         }
+        console.log('[createRoom] joinRoom')
         socket.emit('joinRoom', { 
           roomId, 
           savedClient: localStorage.getItem('yootGame') 

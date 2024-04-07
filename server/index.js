@@ -74,6 +74,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     connectMongo().catch(err => console.log('mongo connect error', err))
     
     socket.on("createRoom", async ({ id }, callback) => {
+      console.log('[createRoom]')
       try {
         const room = new Room({ 
           _id: id,
@@ -83,13 +84,16 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           host: socket.id
         })
         await room.save();
+        console.log('[createRoom] room saved', room)
+        return callback({ roomId: id })
       } catch (err) {
+        console.log('[createRoom] error', err)
         return callback({ roomId: id, error: err.message })
       }
     })
 
     socket.on("joinRoom", async ({ roomId, savedClient }, callback) => {
-      // console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
+      console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
       roomStream.on('change', data => {
         if (data.documentKey._id === roomId) {
           console.log('[joinRoom] room stream change detected', data)
@@ -104,10 +108,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         return callback({ error: err.message })
       }
       if (!savedClient) {
-        // if host is null, assign it to client
-        // update room in mongo
         let name = makeId(5)
-        // const { spectator } = addSpectator({ id: socket.id, name, room: roomId })
 
         // add client as spectator
         try {
@@ -173,11 +174,10 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
     })
 
-    // roomId is from client info in client
+    // roomId is from [client] in client
     socket.on("joinTeam", async({ team, name, roomId }, callback) => {
-      let room;
       try {
-        room = await Room.findById(roomId).exec();
+        let room = await Room.findById(roomId).exec();
         try {
           let player = {
             team,
@@ -188,21 +188,23 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           await room.users.set(socket.id, player);
           room.save();
         } catch (err) {
-          return callback({ error: err.message })
+          return callback({ joinRoomId: roomId, error: err.message })
         }
       } catch (err) {
-        return callback({ error: err.message })
+        return callback({ joinRoomId: roomId, error: err.message })
       }
   
       try {
+        let room = await Room.findById(roomId).exec();
         const message = {
           name: 'admin',
-          text: `${name} has joined ${team === 0 ? "the Rockets" : "the UFOs"}!`
+          text: `${name} (${room.users.get(socket.id).name}) has joined ${team === 0 ? "the Rockets" : "the UFOs"}!`
         }
         room.messages.push(message)
         await room.save();
+        return callback({ joinRoomId: roomId })
       } catch (err) {
-        return callback({ error: err.message })
+        return callback({ joinRoomId: roomId, error: err.message })
       }
     })
 
