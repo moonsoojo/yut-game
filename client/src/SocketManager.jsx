@@ -35,12 +35,6 @@ export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const messagesAtom = atom([]);
 export const nameAtom = atom('');
-export const clientAtom = atom({
-  _id: 'undefined',
-  name: 'undefined',
-  roomId: 'undefined',
-  team: -1
-})
 export const roomAtom = atom({})
 export const winnerAtom = atom(null)
 export const disconnectAtom = atom(false)
@@ -55,7 +49,13 @@ export const boomTextAtom = atom('')
 export const particleSettingAtom = atom(null)
 
 // new atoms
-export const spectatorsAtom = atom([])
+export const usersAtom = atom({})
+export const clientAtom = atom({
+  _id: 'undefined',
+  name: 'undefined',
+  roomId: 'undefined',
+  team: -1
+})
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -73,7 +73,6 @@ export const SocketManager = () => {
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
-  const [_client, setClient] = useAtom(clientAtom);
   const [room, setRoom] = useAtom(roomAtom);
   const [_winner, setWinner] = useAtom(winnerAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
@@ -82,7 +81,8 @@ export const SocketManager = () => {
   const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
   // new setters
-  const [_spectators, setSpectators] = useAtom(spectatorsAtom);
+  const [_users, setUsers] = useAtom(usersAtom);
+  const [_client, setClient] = useAtom(clientAtom);
   const params = useParams();
 
   useEffect(() => {
@@ -101,12 +101,13 @@ export const SocketManager = () => {
         if (error) {
           console.log('[createRoom] error', roomId, error)
         }
-  
         socket.emit('joinRoom', { 
           roomId, 
           savedClient: localStorage.getItem('yootGame') 
-        }, ({ error }) => {
-          console.log("[joinRoom] error", error)
+        }, ({ joinRoomId, error }) => {
+          if (error) {
+            console.log("[joinRoom] error", joinRoomId, error)
+          }
         })
       })
   
@@ -124,12 +125,9 @@ export const SocketManager = () => {
 
   useEffect(() => {
     socket.on('room', (room) => {
-      console.log("[SocketManager] room", room)
-      console.log("[SocketManager] socket id", socket.id)
-      setSpectators(room.spectators)
       setMessages(room.messages)
-      console.log("[SocketManager] client", room.users[socket.id])
       setClient(room.users[socket.id])
+      setUsers(room.users)
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);

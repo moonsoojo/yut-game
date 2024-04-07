@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
-import { socket } from './SocketManager';
+import { clientAtom, socket } from './SocketManager';
 import { useParams } from "wouter";
 import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
@@ -14,6 +14,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
   const [cancelHover, setCancelHover] = useState(false)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
+  const [client, setClient] = useAtom(clientAtom);
 
   function handleJoinSubmit(e) {
     e.preventDefault();
@@ -23,7 +24,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
       setAlert('Must be shorter than 16 characters.')
     } else {
       setAlert("")
-      socket.emit("joinTeam", { team: joinTeam, name }, ({ error, player }) => {
+      socket.emit("joinTeam", { team: joinTeam, name, roomId: client.roomId }, ({ error, player }) => {
         if (error) {
           console.log("[JoinTeamModal] error", error)
           setDisconnect(true)
