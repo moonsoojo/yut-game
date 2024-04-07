@@ -46,9 +46,9 @@ const roomSchema = new mongoose.Schema(
     versionKey: false
   }
 )
-const Room = mongoose.model('rooms', roomSchema)
-Room.watch().on('change', data => console.log(data))
 
+const Room = mongoose.model('rooms', roomSchema)
+const roomStream = Room.watch()
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
@@ -64,13 +64,23 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         await room.save();
         return callback({ roomId: id })
       } catch (err) {
-        console.log(`[createRoom] ${err.message}`)
         return callback({ roomId: id, error: err.message })
       }
     })
 
     socket.on("joinRoom", async ({ roomId, savedClient }, callback) => {
-      console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
+      // console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
+      roomStream.on('change', data => {
+        if (data.documentKey._id === roomId) {
+          console.log(`socket id ${socket.id} data change for room ${roomId}`, data)
+          // replace spectator as list to dictionary
+          // key: socket id
+          // look for update to the field
+          // if there's a match
+          // emit field
+        }
+      })
+      
       let room;
       if (!savedClient) {
         // if host is null, assign it to client
