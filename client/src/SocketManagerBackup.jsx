@@ -49,9 +49,6 @@ export const roomIdAtom = atom('')
 export const boomTextAtom = atom('')
 export const particleSettingAtom = atom(null)
 
-// new atoms
-export const spectatorsAtom = atom([])
-
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
@@ -76,8 +73,6 @@ export const SocketManager = () => {
   const [_thrown, setThrown] = useAtom(thrownAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
-  // new setters
-  const [_spectators, setSpectators] = useAtom(spectatorsAtom);
   const params = useParams();
 
   useEffect(() => {
@@ -113,27 +108,32 @@ export const SocketManager = () => {
     }
   }, []);
 
+  // without the dependency, it only shows the last message
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages([...messages, message]);
+    })
+  }, [messages])
+
   useEffect(() => {
     console.log('[SocketManager] room', room)
   }, [room])
 
   useEffect(() => {
     socket.on('room', (room) => {
-      console.log("[SocketManager] room", room)
-      setSpectators(room.spectators)
-      setMessages(room.messages)
-      // setTeams(room.teams);
-      // setGamePhase(room.gamePhase);
-      // setTiles(room.tiles);
-      // setTurn(room.turn);
-      // setLegalTiles(room.legalTiles);
-      // setSelection(room.selection);
-      // // setReadyToStart(room.readyToStart)
-      // setWinner(room.winner)
-      // console.log(`[SocketManager] ${room.hostName}`)
-      // setHostName(room.hostName)
-      // setRoomId(room.id)
-      // setThrown(room.thrown)
+      console.log("[SocketManager] room.teams", room.teams)
+      setTeams(room.teams);
+      setGamePhase(room.gamePhase);
+      setTiles(room.tiles);
+      setTurn(room.turn);
+      setLegalTiles(room.legalTiles);
+      setSelection(room.selection);
+      // setReadyToStart(room.readyToStart)
+      setWinner(room.winner)
+      console.log(`[SocketManager] ${room.hostName}`)
+      setHostName(room.hostName)
+      setRoomId(room.id)
+      setThrown(room.thrown)
     })
     socket.on('client', (client) => {
       setClient(client);

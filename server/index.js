@@ -41,6 +41,12 @@ const roomSchema = new mongoose.Schema(
       name: String,
       roomId: String
     }],
+    messages: [{
+      _id: false,
+      name: String,
+      text: String
+    }],
+    host: String
   },
   {
     versionKey: false
@@ -48,7 +54,7 @@ const roomSchema = new mongoose.Schema(
 )
 
 const Room = mongoose.model('rooms', roomSchema)
-const roomStream = Room.watch()
+const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
@@ -59,7 +65,10 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       try {
         const room = new Room({ 
           _id: id,
-          createdTime: new Date()
+          createdTime: new Date(),
+          spectators: [],
+          messages: [],
+          host: socket.id
         })
         await room.save();
         return callback({ roomId: id })
@@ -72,12 +81,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       // console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
       roomStream.on('change', data => {
         if (data.documentKey._id === roomId) {
-          console.log(`socket id ${socket.id} data change for room ${roomId}`, data)
-          // replace spectator as list to dictionary
-          // key: socket id
-          // look for update to the field
-          // if there's a match
-          // emit field
+          console.log('[joinRoom] room stream change detected', data)
+          socket.emit('room', data.fullDocument)
         }
       })
       
@@ -109,34 +114,19 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         } catch (err) {
           return callback({ error: err.message })
         }
-        socket.emit("client", spectator)
-        
-        // announce that client joined
-        // get messages
-        // add message
-        // send to mongo
-        // track state in client
-  
-        // sends only to the socket's client
-        socket.emit("message", { user: 'admin', text: `${spectator.name}, welcome to the room ${spectator.room}`})
-        socket.broadcast.to(spectator.room).emit('message', { user: 'admin', text: `${spectator.name} has joined!`})
-        socket.join(spectator.room);
-  
-        // try {
-        //   assignHost(roomId, socket.id)
-        // } catch (err) {
-        //   console.log(`[joinRoom][no saved client] ${err}`)
-        // }
-        
-        // let { room, getRoomError } = getRoom(spectator.room)
-        // if (getRoomError) {
-        //   console.log(`[connect] no saved client, error: ${getRoomError}`)
-        //   return callback({ error: getRoomError })
-        // }
-        // io.to(roomId).emit('room', room)
-  
-        // callback('join room without savedClient success')
-    
+        // socket.emit("client", spectator)
+
+        try {
+          const message = {
+            name: 'admin',
+            text: `${name} joined the room`
+          }
+          room.messages.push(message)
+          await room.save();
+          console.log('[joinRoom] added message to room')
+        } catch (err) {
+          return callback({ error: err.message })
+        }
       } else {
         // join team
   

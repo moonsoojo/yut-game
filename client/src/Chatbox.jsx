@@ -71,7 +71,7 @@ export default function Chatbox({ position, rotation, scale, device }) {
         <ScrollToBottom className="messages">
         {messages.map((value, index) => 
           <p style={{color: 'white', margin: 0}} key={index}>
-            <span style={{color: getColorByTeam(value.team)}}>{value.user}: </span> 
+            <span style={{color: getColorByTeam(value.team)}}>{value.name}: </span> 
             {value.text}
           </p>
         )}
