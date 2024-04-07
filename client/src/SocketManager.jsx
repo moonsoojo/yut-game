@@ -101,7 +101,6 @@ export const SocketManager = () => {
         if (error) {
           console.log('[createRoom] error', roomId, error)
         }
-        console.log('[createRoom] joinRoom')
         socket.emit('joinRoom', { 
           roomId, 
           savedClient: localStorage.getItem('yootGame') 
@@ -128,6 +127,27 @@ export const SocketManager = () => {
     socket.on('room', (room) => {
       setMessages(room.messages)
       setClient(room.users[socket.id])
+      // parse users into team 0, team 1, and spectators
+      // update corresponding states
+      // this prevents receiving components that don't
+      // have changes from re-rendeing
+      const users = room.users
+      let team0Players = []
+      let team1Players = []
+      let spectators = []
+      for (let id in users) {
+        const user = users[id]
+          if (user.team === 0) {
+              team0Players.push(user)
+          } else if (user.team === 1) {
+              team1Players.push(user)
+          } else if (user.team === -1) {
+              spectators.push(user)
+          }
+      }
+      // setTeam0Players(team0Players)
+      // setTeam1Players(team1Players)
+      // setSpectators(spectators)
       setUsers(room.users)
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
