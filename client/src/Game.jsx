@@ -362,7 +362,7 @@ export default function Game({ device = "landscapeDesktop"}) {
 
   // pre-condition: 'client' from 'clientAtom'
   function PiecesSection({position, scale}) {
-    if (client.team != undefined) {
+    if (client.team == 0 || client.team == 1) {
       return (
         <group position={position} scale={scale}>
           {

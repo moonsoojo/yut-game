@@ -31,16 +31,28 @@ async function connectMongo() {
   await mongoose.connect("mongodb+srv://beatrhino:databaseAdmin@yootgamecluster.fgzfv9h.mongodb.net/yootGameDb")
 }
 
+const userSchema = new mongoose.Schema(
+  {
+    _id: String, //socketId
+    name: String,
+    roomId: String,
+    team: Number
+  },
+  {
+    versionKey: false,
+  }
+)
 const roomSchema = new mongoose.Schema(
   {
     _id: String,
     createdTime: Date,
-    spectators: [{
-      _id: false,
-      socketId: String,
-      name: String,
-      roomId: String
-    }],
+    // spectators and players into 'users'
+    // display by section by filtering in UI
+    // spectator team: null
+    users: {
+      type: Map,
+      of: userSchema
+    },
     messages: [{
       _id: false,
       name: String,
@@ -49,7 +61,8 @@ const roomSchema = new mongoose.Schema(
     host: String
   },
   {
-    versionKey: false
+    versionKey: false,
+    minimize: false
   }
 )
 
@@ -59,14 +72,12 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
     
-    let roomId = '';
-    // console.log("[connect]", socket.handshake.query)
     socket.on("createRoom", async ({ id }, callback) => {
       try {
         const room = new Room({ 
           _id: id,
           createdTime: new Date(),
-          spectators: [],
+          users: {},
           messages: [],
           host: socket.id
         })
@@ -104,11 +115,12 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         let spectator;
         try {
           spectator = {
-            socketId: socket.id,
+            _id: socket.id,
             name,
-            roomId
+            roomId,
+            team: -1
           }
-          room.spectators.push(spectator)
+          room.users.set(socket.id, spectator)
           await room.save();
           console.log('[joinRoom] added spectator to room')
         } catch (err) {

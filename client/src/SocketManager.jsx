@@ -35,7 +35,12 @@ export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
 export const messagesAtom = atom([]);
 export const nameAtom = atom('');
-export const clientAtom = atom({})
+export const clientAtom = atom({
+  _id: 'undefined',
+  name: 'undefined',
+  roomId: 'undefined',
+  team: -1
+})
 export const roomAtom = atom({})
 export const winnerAtom = atom(null)
 export const disconnectAtom = atom(false)
@@ -120,8 +125,11 @@ export const SocketManager = () => {
   useEffect(() => {
     socket.on('room', (room) => {
       console.log("[SocketManager] room", room)
+      console.log("[SocketManager] socket id", socket.id)
       setSpectators(room.spectators)
       setMessages(room.messages)
+      console.log("[SocketManager] client", room.users[socket.id])
+      setClient(room.users[socket.id])
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);
