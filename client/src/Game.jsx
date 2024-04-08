@@ -75,6 +75,7 @@ import BoomText from "./BoomText.jsx";
 import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import Team0 from "./Team0.jsx";
+import Team1 from "./Team1.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
@@ -620,21 +621,7 @@ export default function Game({ device = "landscapeDesktop"}) {
                 position: 'absolute',
                 width: `${layout[device].team0.names.divWidth}px`,
               }}>
-                {teams[1].players.map((value, index) => (
-                  <div
-                    style={{
-                      color: (turn.team == 1 && turn.players[turn.team] == index && gamePhase !== "lobby")
-                      ? "white"
-                      : "yellow",
-                      fontFamily: 'Luckiest Guy',
-                      fontSize: '15px',
-                      padding: layout[device].team1.names.padding,
-                    }}
-                    key={index}
-                  >
-                    {value.name}
-                  </div>
-                ))}
+                <Team1 device={device}/>
               </div>
             </Html>
           </group>
