@@ -72,7 +72,8 @@ const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
-    
+    let roomIdSocket;
+
     socket.on("createRoom", async ({ id }, callback) => {
       console.log('[createRoom]')
       try {
@@ -87,13 +88,18 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         console.log('[createRoom] room saved', room)
         return callback({ roomId: id })
       } catch (err) {
-        console.log('[createRoom] error', err)
-        return callback({ roomId: id, error: err.message })
+        if (err.errorResponse.code === 11000) {
+          console.log(`[createRoom] room ${id} already exists`)
+          return callback({ roomId: id })
+        } else {
+          return callback({ roomId: id, error: err.message })
+        }
       }
     })
 
     socket.on("joinRoom", async ({ roomId, savedClient }, callback) => {
-      console.log("[joinRoom] room id", roomId, "socket id", socket.id, "savedClient", savedClient)
+      console.log("[joinRoom] room", roomId, "socket", socket.id, "savedClient", savedClient)
+      roomIdSocket = roomId;
       roomStream.on('change', data => {
         if (data.documentKey._id === roomId) {
           console.log('[joinRoom] room stream change detected', data)
@@ -118,6 +124,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
             roomId,
             team: -1
           }
+          console.log(`setting spectator`)
           room.users.set(socket.id, spectator)
           await room.save();
         } catch (err) {
@@ -175,9 +182,11 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     })
 
     // roomId is from [client] in client
-    socket.on("joinTeam", async({ team, name, roomId }, callback) => {
+    socket.on("joinTeam", async ({ team, name, roomId }, callback) => {
+      let userNameOld;
       try {
         let room = await Room.findById(roomId).exec();
+        userNameOld = room.users.get(socket.id).name
         try {
           let player = {
             team,
@@ -185,8 +194,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
             roomId,
             _id: socket.id
           }
-          await room.users.set(socket.id, player);
-          room.save();
+          room.users.set(socket.id, player);
+          await room.save();
         } catch (err) {
           return callback({ joinRoomId: roomId, error: err.message })
         }
@@ -198,7 +207,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         let room = await Room.findById(roomId).exec();
         const message = {
           name: 'admin',
-          text: `${name} (${room.users.get(socket.id).name}) has joined ${team === 0 ? "the Rockets" : "the UFOs"}!`
+          text: `${name} (${userNameOld}) has joined ${team === 0 ? "the Rockets" : "the UFOs"}!`
         }
         room.messages.push(message)
         await room.save();
@@ -208,7 +217,31 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
     })
 
-    socket.on("disconnect", () => {
-      console.log(`${socket.id} disconnect`)
+    // save roomId on connect
+    // use socket info from current connection
+    socket.on("disconnect", async () => {
+      console.log(`${socket.id} disconnect from room ${roomIdSocket}`)
+
+      let userName = '';
+      try {
+        let room = await Room.findById(roomIdSocket).exec();
+        userName = room.users.get(socket.id).name
+        room.users.set(socket.id, undefined)
+        await room.save();
+      } catch (err) {
+        console.log(`[disconnect] socket ${socket.id} disconnecting from room ${roomIdSocket} error`, err)
+      }
+
+      try {
+        let room = await Room.findById(roomIdSocket).exec();
+        const message = {
+          name: 'admin',
+          text: `${userName} left the room.`
+        }
+        room.messages.push(message)
+        await room.save();
+      } catch (err) {
+        console.log('[disconnect] error sending message', err)
+      }
     });
 })
