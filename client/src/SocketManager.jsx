@@ -49,13 +49,15 @@ export const boomTextAtom = atom('')
 export const particleSettingAtom = atom(null)
 
 // new atoms
-export const usersAtom = atom({})
 export const clientAtom = atom({
   _id: 'undefined',
   name: 'undefined',
   roomId: 'undefined',
   team: -1
 })
+export const team0PlayersAtom = atom([])
+export const team1PlayersAtom = atom([])
+export const spectatorsAtom = atom([])
 
 export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
@@ -81,8 +83,10 @@ export const SocketManager = () => {
   const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
   // new setters
-  const [_users, setUsers] = useAtom(usersAtom);
   const [_client, setClient] = useAtom(clientAtom);
+  const [_team0Players, setTeam0Players] = useAtom(team0PlayersAtom)
+  const [_team1Players, setTeam1Players] = useAtom(team1PlayersAtom)
+  const [_spectators, setSpectators] = useAtom(spectatorsAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -145,10 +149,9 @@ export const SocketManager = () => {
               spectators.push(user)
           }
       }
-      // setTeam0Players(team0Players)
-      // setTeam1Players(team1Players)
-      // setSpectators(spectators)
-      setUsers(room.users)
+      setTeam0Players(team0Players)
+      setTeam1Players(team1Players)
+      setSpectators(spectators)
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);

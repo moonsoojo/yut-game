@@ -74,13 +74,14 @@ import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
 import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
+import Team0 from "./Team0.jsx";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Game({ device = "landscapeDesktop"}) {
-
+  console.log('[Game]')
   // separate everything into components
   // should not put state here unless it's being used
   // one change makes everything re-render
@@ -94,7 +95,6 @@ export default function Game({ device = "landscapeDesktop"}) {
   const [hostName] = useAtom(hostNameAtom);
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
-  const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
   const [disconnect] = useAtom(disconnectAtom);
   const previousDisconnect = useRef();
   const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
@@ -585,21 +585,7 @@ export default function Game({ device = "landscapeDesktop"}) {
                 position: 'absolute',
                 width: `${layout[device].team0.names.divWidth}px`
               }}>
-                {teams[0].players.map((value, index) => (
-                  <div
-                    style={{
-                      color: (turn.team == 0 && turn.players[turn.team] == index && gamePhase !== "lobby")
-                      ? "white"
-                      : "yellow",
-                      fontFamily: 'Luckiest Guy',
-                      fontSize: '15px',
-                      padding: layout[device].team0.names.padding
-                    }}
-                    key={index}
-                  >
-                    {value.name}
-                  </div>
-                ))}
+                <Team0 device={device}/>
               </div>
             </Html>
           </group>

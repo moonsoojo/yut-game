@@ -1,15 +1,10 @@
 import React from 'react';
 import { useAtom, atom } from "jotai";
 import layout from './layout';
+import { team0PlayersAtom } from './SocketManager';
 
-export default function Team0() {
-    const [users] = useAtom(usersAtom)
-    let players = []
-    for (let id in users) {
-        if (users[id].team === 0) {
-            players.push(users[id])
-        }
-    }
+export default function Team0({ device }) {
+    const [players] = useAtom(team0PlayersAtom)
     return <>
         {players.map((value, index) => (
             <div

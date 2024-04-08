@@ -113,35 +113,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       } catch (err) {
         return callback({ error: err.message })
       }
-      if (!savedClient) {
-        let name = makeId(5)
-
-        // add client as spectator
-        try {
-          let spectator = {
-            _id: socket.id,
-            name,
-            roomId,
-            team: -1
-          }
-          console.log(`setting spectator`)
-          room.users.set(socket.id, spectator)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
-        }
-
-        try {
-          const message = {
-            name: 'admin',
-            text: `${name} joined the room`
-          }
-          room.messages.push(message)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
-        }
-      } else if (room._id === socket.handshake.query.client.room) { // join team
+      if (room._id === JSON.parse(socket.handshake.query.client).roomId) {
+        console.log('[joinRoom] client from local storage in room', room._id)
+         // join team
         let player;
         try {
           player = {
@@ -178,17 +152,46 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         // } catch (err) {
         //   console.log(`[joinRoom] ${err}`)
         // }
+      } else {
+        let name = makeId(5)
+
+        // add client as spectator
+        try {
+          let spectator = {
+            _id: socket.id,
+            name,
+            roomId,
+            team: -1
+          }
+          console.log(`setting spectator`)
+          room.users.set(socket.id, spectator)
+          await room.save();
+        } catch (err) {
+          return callback({ error: err.message })
+        }
+
+        try {
+          const message = {
+            name: 'admin',
+            text: `${name} joined the room`
+          }
+          room.messages.push(message)
+          await room.save();
+        } catch (err) {
+          return callback({ error: err.message })
+        }
       }
     })
 
     // roomId is from [client] in client
     socket.on("joinTeam", async ({ team, name, roomId }, callback) => {
       let userNameOld;
+      let player;
       try {
         let room = await Room.findById(roomId).exec();
         userNameOld = room.users.get(socket.id).name
         try {
-          let player = {
+          player = {
             team,
             name,
             roomId,
@@ -211,7 +214,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         }
         room.messages.push(message)
         await room.save();
-        return callback({ joinRoomId: roomId })
+        return callback({ joinRoomId: roomId, player })
       } catch (err) {
         return callback({ joinRoomId: roomId, error: err.message })
       }
