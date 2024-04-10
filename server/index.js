@@ -69,6 +69,24 @@ const roomSchema = new mongoose.Schema(
 
 const Room = mongoose.model('rooms', roomSchema)
 const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
+// assign host on create room
+// if host disconnects, assign it to another player in the room
+// if there's no one, don't assign it to anyone
+// on join, if there's no host, assign it to the player
+
+// in the client, if client's socket id is the host's id
+// if there is a player in team 0 and a player in team 1
+// show 'let's play' button
+
+// yoot throw
+// if thrown and client disconnects
+// display a button to claim turn for other players on his team
+// mark player's name as disconnected
+  // check for existing player by matching the name on rejoin
+// on return
+// if thrown
+  // add a throw
+  // reset flag on record result
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
@@ -113,7 +131,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       } catch (err) {
         return callback({ error: err.message })
       }
-      if (room._id === JSON.parse(socket.handshake.query.client).roomId) {
+      // console.log('[joinRoom] socket.handshake.query.client', socket.handshake.query.client)
+      if (savedClient !== null && room._id === JSON.parse(savedClient).roomId) {
         console.log('[joinRoom] client from local storage in room', room._id)
          // join team
         let player;
@@ -219,6 +238,22 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         return callback({ joinRoomId: roomId, error: err.message })
       }
     })
+
+    socket.on("sendMessage", async ({ message, roomId }, callback) => {
+      try {
+        let room = await Room.findById(roomId).exec();
+        message = {
+          name: room.users.get(socket.id).name,
+          text: message
+        }
+        room.messages.push(message)
+        await room.save();
+        return callback({ joinRoomId: roomId })
+      } catch (err) {
+        return callback({ joinRoomId: roomId, error: err.message })
+      }
+    })
+
 
     // save roomId on connect
     // use socket info from current connection
