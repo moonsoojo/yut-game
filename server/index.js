@@ -120,7 +120,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       roomIdSocket = roomId;
       roomStream.on('change', data => {
         if (data.documentKey._id === roomId) {
-          console.log('[joinRoom] room stream change detected', data)
+          // console.log('[joinRoom] room stream change detected', data)
           socket.emit('room', data.fullDocument)
         }
       })
@@ -147,6 +147,14 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         } catch (err) {
           return callback({ error: err.message })
         }
+
+        // assign host
+        try {
+          console.log(`[joinRoom] host`, room.host)
+        } catch (err) {
+          return callback({ error: err.message })
+        }
+        // add message announcing the new host
   
         try {
           const message = {
@@ -188,6 +196,14 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         } catch (err) {
           return callback({ error: err.message })
         }
+
+        // assign host
+        try {
+          console.log(`[joinRoom] host`, room.host)
+        } catch (err) {
+          return callback({ error: err.message })
+        }
+        // add message announcing the new host
 
         try {
           const message = {

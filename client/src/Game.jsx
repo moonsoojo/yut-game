@@ -97,19 +97,6 @@ export default function Game({ device = "landscapeDesktop"}) {
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
   const [disconnect] = useAtom(disconnectAtom);
-  const previousDisconnect = useRef();
-  const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
-
-  useEffect(() => {
-    console.log("[Experience] disconnect", disconnect)
-
-    if (disconnect) {
-      setDisplayDisconnect(true);
-      previousDisconnect.current = disconnect;
-    } else if (previousDisconnect.current == true) {
-      setDisplayDisconnect(true);
-    }
-  }, [disconnect])
 
   useEffect(() => {
 
@@ -732,7 +719,7 @@ export default function Game({ device = "landscapeDesktop"}) {
             scale={layout[device].piecesSection.scale}
           />
           {/* chat section */}
-          { !displayDisconnect &&
+          { !disconnect &&
             <Chatbox
               position={layout[device].chat.position}
               rotation={layout[device].chat.rotation}
@@ -774,7 +761,7 @@ export default function Game({ device = "landscapeDesktop"}) {
           rotation={[-Math.PI/2, 0, 0]}
         />}
       </group>
-      {displayDisconnect && <DisconnectModal
+      {disconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
         rotation={layout[device].disconnectModal.rotation}
       />}

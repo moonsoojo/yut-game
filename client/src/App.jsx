@@ -57,6 +57,12 @@ export default function App () {
       zOffset={-5.0}
     />
   */
+
+  // on click 'let's play'
+  // socket.emit('createRoom')
+  // socket.emit('joinRoom')
+  // return room id
+  // 
   return (<>
     <Canvas
       className='r3f'

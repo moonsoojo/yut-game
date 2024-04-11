@@ -52,7 +52,6 @@ import {
   legalTilesAtom,
   clientAtom,
   disconnectAtom,
-  displayDisconnectAtom,
   winnerAtom,
   hostNameAtom,
   roomIdAtom,
@@ -107,20 +106,8 @@ export default function Experience({ device }) {
   const [tips] = useAtom(tipsAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
-  const previousDisconnect = useRef();
-  const [displayDisconnect, setDisplayDisconnect] = useAtom(displayDisconnectAtom);
 
   const camera = useRef();
-  useEffect(() => {
-    console.log("[Experience] disconnect", disconnect)
-
-    if (disconnect) {
-      setDisplayDisconnect(true);
-      previousDisconnect.current = disconnect;
-    } else if (previousDisconnect.current == true) {
-      setDisplayDisconnect(true);
-    }
-  }, [disconnect])
 
   return <group>
     <OrbitControls/>
@@ -138,7 +125,7 @@ export default function Experience({ device }) {
     />
     {/* add game */}
     { !tips && <Game device={device}/>}
-    { displayDisconnect && <DisconnectModal
+    { disconnect && <DisconnectModal
       position={layout[device].disconnectModal.position}
       rotation={layout[device].disconnectModal.rotation}
     />}

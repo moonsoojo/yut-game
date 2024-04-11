@@ -72,13 +72,13 @@ export const SocketManager = () => {
   const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
   const [_hostName, setHostName] = useAtom(hostNameAtom)
   const [_roomId, setRoomId] = useAtom(roomIdAtom)
+  
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
   const [room, setRoom] = useAtom(roomAtom);
   const [_winner, setWinner] = useAtom(winnerAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
-  const [displayDisconnect] = useAtom(displayDisconnectAtom)
   const [_thrown, setThrown] = useAtom(thrownAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
@@ -93,34 +93,37 @@ export const SocketManager = () => {
 
     console.log("[SocketManager] connect")
 
-    if (!displayDisconnect) {
-
       socket.connect();
 
-      socket.on('connect', () => { console.log("[connect]"); setDisconnect(false) })
-      socket.on('connect_error', err => { console.log("[connect_error]", err); setDisconnect(true) })
-      // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
-  
-      socket.emit("createRoom", { id: (params.id).toUpperCase() }, ({ roomId, error }) => {
-        if (error) {
-          console.log('[createRoom] error', roomId, error)
-        }
-        socket.emit('joinRoom', { 
-          roomId, 
-          savedClient: localStorage.getItem('yootGame') 
-        }, ({ joinRoomId, error }) => {
+      socket.on('connect', () => { 
+        socket.emit("createRoom", { id: (params.id).toUpperCase() }, ({ roomId, error }) => {
           if (error) {
-            console.log("[joinRoom] error", joinRoomId, error)
+            console.log('[createRoom] error', roomId, error)
           }
+          console.log(`[SocketManager] joining room ${roomId}`)
+          socket.emit('joinRoom', { 
+            roomId, 
+            savedClient: localStorage.getItem('yootGame') 
+          }, ({ joinRoomId, error }) => {
+            if (error) {
+              console.log("[joinRoom] error", joinRoomId, error)
+            }
+          })
         })
+        setDisconnect(false) 
       })
+
+      socket.on('connect_error', err => { 
+        console.log("[connect_error]", err); 
+        setDisconnect(true) 
+      })
+      // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
   
       return () => {
         socket.disconnect()
   
         socket.off();
       }
-    }
   }, []);
 
   useEffect(() => {
