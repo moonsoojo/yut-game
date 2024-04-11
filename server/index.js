@@ -33,10 +33,19 @@ async function connectMongo() {
 
 const userSchema = new mongoose.Schema(
   {
-    _id: String, //socketId
+    _id: String, // socketId
     name: String,
     roomId: String,
     team: Number
+  },
+  {
+    versionKey: false,
+  }
+)
+const teamSchema = new mongoose.Schema(
+  {
+    _id: Number, // int between 0 and 1, possibly more
+    players: [userSchema]
   },
   {
     versionKey: false,
@@ -46,13 +55,13 @@ const roomSchema = new mongoose.Schema(
   {
     _id: String,
     createdTime: Date,
-    // spectators and players into 'users'
-    // display by section by filtering in UI
-    // spectator team: null
+    // delete after implementing spectators
     users: {
       type: Map,
       of: userSchema
     },
+    spectators: [userSchema],
+    teams: [teamSchema],
     messages: [{
       _id: false,
       name: String,
@@ -72,7 +81,6 @@ const roomSchema = new mongoose.Schema(
 
 const Room = mongoose.model('rooms', roomSchema)
 const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
-
 
 // in the client, if client's socket id is the host's id
 // if there is a player in team 0 and a player in team 1
@@ -98,7 +106,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         const room = new Room({ 
           _id: id,
           createdTime: new Date(),
-          users: {},
+          users: {}, // delete after implementing spectators array
+          spectators: [],
+          teams: [{ _id: 0, players: [] }, { _id: 1, players: [] }],
           messages: [],
           host: {
             id: '',
@@ -142,13 +152,13 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       if (savedClient !== null && room._id === savedClient.roomId) {
         user = {
           ...savedClient,
+          team: parseInt(savedClient.team),
           _id: socket.id,
           roomId,
         }
       } else {
-        let name = makeId(10)
         user = {
-          name,
+          name: makeId(10),
           _id: socket.id,
           roomId,
           team: -1
@@ -158,7 +168,12 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
       // set user
       try {
-        room.users.set(socket.id, user)
+        room.users.set(socket.id, user) // delete after implementing spectators and team players arrays
+        if (user.team === -1) {
+          room.spectators.push(user)
+        } else {
+          room.teams[parseInt(user.team)].players.push(user)
+        }
         await room.save();
       } catch (err) {
         return callback({ joinRoomId: roomId, error: err.message })
@@ -205,12 +220,14 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         userNameOld = room.users.get(socket.id).name
         try {
           player = {
-            team,
+            team: parseInt(team),
             name,
             roomId,
             _id: socket.id
           }
-          room.users.set(socket.id, player);
+          room.users.set(socket.id, player); // delete after implementing spectator array
+          console.log(`[joinTeam] teams`, room.teams)
+          room.teams.id(parseInt(team)).players.push(player)
           await room.save();
         } catch (err) {
           return callback({ joinRoomId: roomId, error: err.message })
@@ -233,7 +250,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         let room = await Room.findById(roomId).exec();
         const message = {
           name: 'admin',
-          text: `${name} (${userNameOld}) has joined ${team === 0 ? "the Rockets" : "the UFOs"}!`
+          text: `${name} (${userNameOld}) has joined ${parseInt(team) === 0 ? "the Rockets" : "the UFOs"}!`
         }
         room.messages.push(message)
         await room.save();
@@ -268,6 +285,20 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         let room = await Room.findById(roomIdSocket).exec();
         userName = room.users.get(socket.id).name
         room.users.set(socket.id, undefined)
+
+        let users = room.spectators;
+        for (const team of room.teams) {
+          users.concat(team.players)
+        }
+        for (const user of users) {
+          if (user._id === socket.id) {
+            if (user.team === -1) {
+              room.spectators.id(socket.id).deleteOne()
+            } else {
+              room.teams[user.team].players.id(socket.id).deleteOne()
+            }
+          }
+        }
         await room.save();
       } catch (err) {
         console.log(`[disconnect] socket ${socket.id} disconnecting from room ${roomIdSocket} error`, err)
