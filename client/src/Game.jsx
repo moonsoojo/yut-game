@@ -67,7 +67,6 @@ import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/MeteorsBackup.jsx";
-import DisconnectModal from "./DisconnectModal.jsx";
 import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
@@ -671,12 +670,12 @@ export default function Game({ device = "landscapeDesktop"}) {
               fontSize={layout[device].settings.fontSize}
               handleClick={handleSettings}
             />
-            <HtmlElement
+            {/* <HtmlElement
               text={`ROOM: ${roomId}`}
               position={layout[device].roomId.position}
               rotation={layout[device].roomId.rotation}
               fontSize={layout[device].roomId.fontSize}
-            />
+            /> */}
             <HtmlElement
               text={`HOST: ${hostName}`}
               position={layout[device].hostName.position}
@@ -761,10 +760,6 @@ export default function Game({ device = "landscapeDesktop"}) {
           rotation={[-Math.PI/2, 0, 0]}
         />}
       </group>
-      {disconnect && <DisconnectModal
-        position={layout[device].disconnectModal.position}
-        rotation={layout[device].disconnectModal.rotation}
-      />}
       <Stars count={7000} size={5}/>
     </group> }
     { winner !== 1 && winner !== 2 && <MilkyWay 

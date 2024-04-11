@@ -58,7 +58,10 @@ const roomSchema = new mongoose.Schema(
       name: String,
       text: String
     }],
-    host: String,
+    host: {
+      id: String,
+      name: String
+    },
     yootThrown: Boolean
   },
   {
@@ -69,10 +72,7 @@ const roomSchema = new mongoose.Schema(
 
 const Room = mongoose.model('rooms', roomSchema)
 const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
-// assign host on create room
-// if host disconnects, assign it to another player in the room
-// if there's no one, don't assign it to anyone
-// on join, if there's no host, assign it to the player
+
 
 // in the client, if client's socket id is the host's id
 // if there is a player in team 0 and a player in team 1
@@ -100,7 +100,10 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           createdTime: new Date(),
           users: {},
           messages: [],
-          host: socket.id
+          host: {
+            id: '',
+            name: ''
+          }
         })
         await room.save();
         console.log('[createRoom] room saved', room)
@@ -117,6 +120,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     socket.on("joinRoom", async ({ roomId, savedClient }, callback) => {
       console.log("[joinRoom] room", roomId, "socket", socket.id, "savedClient", savedClient)
+      if (savedClient !== null) {
+        savedClient = JSON.parse(savedClient)
+      }
       roomIdSocket = roomId;
       roomStream.on('change', data => {
         if (data.documentKey._id === roomId) {
@@ -129,93 +135,65 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       try {
         room = await Room.findById(roomId).exec();
       } catch (err) {
-        return callback({ error: err.message })
+        return callback({ joinRoomId: roomId, error: err.message })
       }
-      // console.log('[joinRoom] socket.handshake.query.client', socket.handshake.query.client)
-      if (savedClient !== null && room._id === JSON.parse(savedClient).roomId) {
-        console.log('[joinRoom] client from local storage in room', room._id)
-         // join team
-        let player;
-        try {
-          player = {
-            ...JSON.parse(socket.handshake.query.client),
-            _id: socket.id,
-            roomId,
-          }
-          room.users.set(socket.id, player)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
-        }
 
-        // assign host
-        try {
-          console.log(`[joinRoom] host`, room.host)
-        } catch (err) {
-          return callback({ error: err.message })
+      let user;
+      if (savedClient !== null && room._id === savedClient.roomId) {
+        user = {
+          ...savedClient,
+          _id: socket.id,
+          roomId,
         }
-        // add message announcing the new host
-  
-        try {
-          const message = {
-            name: 'admin',
-            text: `${player.name} returned to the room`
-          }
-          room.messages.push(message)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
-        }
-        
-        // try {
-        //   const { currentPlayerId, getCurrentPlayerIdError } = getCurrentPlayerId(roomId)
-        //   const turn = getTurn(roomId)
-        //   if (socket.id === currentPlayerId 
-        //     && movesIsEmpty(roomId, turn.team) 
-        //     && getThrows(roomId, turn.team) == 0 
-        //     && getGamePhase(roomId) !== "lobby") {
-        //     addThrow(roomId, getTurn(roomId).team)
-        //   }
-        // } catch (err) {
-        //   console.log(`[joinRoom] ${err}`)
-        // }
       } else {
-        let name = makeId(5)
-
-        // add client as spectator
-        try {
-          let spectator = {
-            _id: socket.id,
-            name,
-            roomId,
-            team: -1
-          }
-          console.log(`setting spectator`)
-          room.users.set(socket.id, spectator)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
-        }
-
-        // assign host
-        try {
-          console.log(`[joinRoom] host`, room.host)
-        } catch (err) {
-          return callback({ error: err.message })
-        }
-        // add message announcing the new host
-
-        try {
-          const message = {
-            name: 'admin',
-            text: `${name} joined the room`
-          }
-          room.messages.push(message)
-          await room.save();
-        } catch (err) {
-          return callback({ error: err.message })
+        let name = makeId(10)
+        user = {
+          name,
+          _id: socket.id,
+          roomId,
+          team: -1
         }
       }
+      console.log(`[joinRoom] user.name ${user.name}`)
+
+      // set user
+      try {
+        room.users.set(socket.id, user)
+        await room.save();
+      } catch (err) {
+        return callback({ joinRoomId: roomId, error: err.message })
+      }
+
+      // assign host
+      try {
+        console.log(`[joinRoom] host`, room.host)
+        console.log(`[joinRoom] user`, user)
+        // if host disconnects, assign it to another player in the room
+        // if there's no one, don't assign it to anyone
+        // on join, if there's no host, assign it to the player
+        if (room.host.id === '' && room.host.name === '') {
+          room.host.id = socket.id
+          room.host.name = user.name
+        } else if (savedClient !== null && room.host.name === savedClient.name) {
+          room.host.id = socket.id
+        }
+        await room.save();
+      } catch (err) {
+        return callback({ joinRoomId: roomId, error: err.message })
+      }
+
+      try {
+        const message = {
+          name: 'admin',
+          text: `${user.name} entered the room`
+        }
+        room.messages.push(message)
+        await room.save();
+      } catch (err) {
+        return callback({ joinRoomId: roomId, error: err.message })
+      }
+
+      return callback({ joinRoomId: roomId, user })
     })
 
     // roomId is from [client] in client
@@ -236,6 +214,16 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           await room.save();
         } catch (err) {
           return callback({ joinRoomId: roomId, error: err.message })
+        }
+
+        // change host name to new one
+        if (room.host.name === userNameOld) {
+          try {
+            room.host.name = name
+            await room.save();
+          } catch (err) {
+            return callback({ joinRoomId: roomId, error: `while saving new host name, error: ${err.message}`})
+          }
         }
       } catch (err) {
         return callback({ joinRoomId: roomId, error: err.message })
@@ -269,7 +257,6 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         return callback({ joinRoomId: roomId, error: err.message })
       }
     })
-
 
     // save roomId on connect
     // use socket info from current connection

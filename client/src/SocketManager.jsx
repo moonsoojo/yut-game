@@ -72,7 +72,7 @@ export const SocketManager = () => {
   const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
   const [_hostName, setHostName] = useAtom(hostNameAtom)
   const [_roomId, setRoomId] = useAtom(roomIdAtom)
-  
+
   // UI updates
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [messages, setMessages] = useAtom(messagesAtom);
@@ -104,9 +104,12 @@ export const SocketManager = () => {
           socket.emit('joinRoom', { 
             roomId, 
             savedClient: localStorage.getItem('yootGame') 
-          }, ({ joinRoomId, error }) => {
+          }, ({ joinRoomId, user, error }) => {
             if (error) {
               console.log("[joinRoom] error", joinRoomId, error)
+            } else {
+              console.log(`[joinRoom] success`, user)
+              localStorage.setItem('yootGame', JSON.stringify(user))
             }
           })
         })
@@ -155,6 +158,7 @@ export const SocketManager = () => {
       setTeam0Players(team0Players)
       setTeam1Players(team1Players)
       setSpectators(spectators)
+      setHostName(room.host.name)
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);
