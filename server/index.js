@@ -3,11 +3,8 @@ import { Server } from 'socket.io';
 import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import { ObjectId } from 'bson';
 import mongoose from 'mongoose';
 import { makeId } from '../client/src/helpers/helpers.js';
-import { addRoom, addSpectator, getUserFromRoom, getThrown, addPlayer, getRoom, removeUserFromRoom, countPlayers, deleteRoom, addThrow, getHostId, updateGamePhase, getCurrentPlayerId, getGamePhase, isReadyToStart, updateThrown, getTeams, getTurn, updateTeams, addMove, updateTurn, updateLegalTiles, getLegalTiles, movesIsEmpty, passTurnPregame, passTurn, clearMoves, updateSelection, getTiles, updateTiles, getSelection, getThrows, bothTeamsHavePlayers, makeMove, score, countPlayersTeam, joinTeam, won, resetGame, getNameById, assignHost } from './rooms.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -55,11 +52,6 @@ const roomSchema = new mongoose.Schema(
   {
     _id: String,
     createdTime: Date,
-    // delete after implementing spectators
-    users: {
-      type: Map,
-      of: userSchema
-    },
     spectators: [userSchema],
     teams: [teamSchema],
     messages: [{
@@ -80,7 +72,11 @@ const roomSchema = new mongoose.Schema(
 )
 
 const Room = mongoose.model('rooms', roomSchema)
+const User = mongoose.model('users', userSchema)
 const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
+
+// users collection
+// arrays with user documents
 
 // in the client, if client's socket id is the host's id
 // if there is a player in team 0 and a player in team 1
@@ -103,10 +99,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     socket.on("createRoom", async ({ id }, callback) => {
       console.log('[createRoom]')
       try {
-        const room = new Room({ 
+        const room = new Room({
           _id: id,
           createdTime: new Date(),
-          users: {}, // delete after implementing spectators array
           spectators: [],
           teams: [{ _id: 0, players: [] }, { _id: 1, players: [] }],
           messages: [],
@@ -156,24 +151,17 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           _id: socket.id,
           roomId,
         }
-      } else {
-        user = {
-          name: makeId(10),
-          _id: socket.id,
-          roomId,
-          team: -1
-        }
       }
       console.log(`[joinRoom] user.name ${user.name}`)
 
       // set user
       try {
-        room.users.set(socket.id, user) // delete after implementing spectators and team players arrays
         if (user.team === -1) {
           room.spectators.push(user)
         } else {
           room.teams[parseInt(user.team)].players.push(user)
         }
+        
         await room.save();
       } catch (err) {
         return callback({ joinRoomId: roomId, error: err.message })
@@ -211,23 +199,40 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       return callback({ joinRoomId: roomId, user })
     })
 
+    function deleteUser(room, socketId) {
+      let users = room.spectators;
+      for (const team of room.teams) {
+        users.concat(team.players)
+      }
+      for (const user of users) {
+        console.log(`[disconnect] user`, user)
+        if (user._id === socketId) {
+          if (user.team === -1) {
+            room.spectators.id(socketId).deleteOne()
+          } else {
+            room.teams[user.team].players.id(socketId).deleteOne()
+          }
+        }
+      }
+    }
+
     // roomId is from [client] in client
     socket.on("joinTeam", async ({ team, name, roomId }, callback) => {
       let userNameOld;
       let player;
       try {
         let room = await Room.findById(roomId).exec();
-        userNameOld = room.users.get(socket.id).name
         try {
           player = {
+            _id: socket.id,
             team: parseInt(team),
             name,
-            roomId,
-            _id: socket.id
+            roomId
           }
-          room.users.set(socket.id, player); // delete after implementing spectator array
           console.log(`[joinTeam] teams`, room.teams)
           room.teams.id(parseInt(team)).players.push(player)
+
+          deleteUser(room, socket.id)
           await room.save();
         } catch (err) {
           return callback({ joinRoomId: roomId, error: err.message })
@@ -260,6 +265,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
     })
 
+
+
     socket.on("sendMessage", async ({ message, roomId }, callback) => {
       try {
         let room = await Room.findById(roomId).exec();
@@ -283,22 +290,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       let userName = '';
       try {
         let room = await Room.findById(roomIdSocket).exec();
-        userName = room.users.get(socket.id).name
-        room.users.set(socket.id, undefined)
-
-        let users = room.spectators;
-        for (const team of room.teams) {
-          users.concat(team.players)
-        }
-        for (const user of users) {
-          if (user._id === socket.id) {
-            if (user.team === -1) {
-              room.spectators.id(socket.id).deleteOne()
-            } else {
-              room.teams[user.team].players.id(socket.id).deleteOne()
-            }
-          }
-        }
+        deleteUser(room, socket.id)
         await room.save();
       } catch (err) {
         console.log(`[disconnect] socket ${socket.id} disconnecting from room ${roomIdSocket} error`, err)

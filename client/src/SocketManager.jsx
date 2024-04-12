@@ -133,31 +133,30 @@ export const SocketManager = () => {
     console.log('[SocketManager] room', room)
   }, [room])
 
+  function getClient(room, socketId) {
+    let users = room.spectators;
+    for (const team of room.teams) {
+      users.concat(team.players)
+    }
+    for (const user of users) {
+      if (user._id === socketId) {
+        console.log(`[getClient] user`, user)
+        return user
+      }
+    }
+  }
+  
   useEffect(() => {
     socket.on('room', (room) => {
       setMessages(room.messages)
-      setClient(room.users[socket.id])
+      setClient(getClient(room, socket.id))
       // parse users into team 0, team 1, and spectators
       // update corresponding states
       // this prevents receiving components that don't
       // have changes from re-rendeing
-      const users = room.users
-      let team0Players = []
-      let team1Players = []
-      let spectators = []
-      for (let id in users) {
-        const user = users[id]
-          if (user.team === 0) {
-              team0Players.push(user)
-          } else if (user.team === 1) {
-              team1Players.push(user)
-          } else if (user.team === -1) {
-              spectators.push(user)
-          }
-      }
-      setTeam0Players(team0Players)
-      setTeam1Players(team1Players)
-      setSpectators(spectators)
+      setTeam0Players(room.teams[0].players)
+      setTeam1Players(room.teams[1].players)
+      setSpectators(room.spectators)
       setHostName(room.host.name)
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
