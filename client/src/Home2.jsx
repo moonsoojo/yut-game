@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Environment, Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
+import { useAtom, atom } from "jotai";
 
 import Earth from './meshes/Earth';
 import Moon from './meshes/Moon';
@@ -23,10 +24,12 @@ import About from './About';
 import Stars from './particles/Stars';
 import TipsModal from './TipsModal';
 import mongoose from 'mongoose';
+import { socket, clientAtom } from './SocketManager';
 
 export default function Home2({ device }) {
 
   const [display, setDisplay] = useState('board')
+  const [client] = useAtom(clientAtom)
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"
@@ -233,8 +236,9 @@ export default function Home2({ device }) {
   const [location, setLocation] = useLocation();
 
   function handleLetsPlay() {
-    let objectId = new mongoose.Types.ObjectId()
-    setLocation(`/${objectId.valueOf().toUpperCase()}`)
+    socket.emit('createRoom', { userId: client._id }, ({ roomId }) => {
+      setLocation(`/${roomId}`)
+    })
   }
   function handleHowToPlay() {
     setDisplay('howToPlay');

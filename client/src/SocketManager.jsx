@@ -49,12 +49,7 @@ export const boomTextAtom = atom('')
 export const particleSettingAtom = atom(null)
 
 // new atoms
-export const clientAtom = atom({
-  _id: 'undefined',
-  name: 'undefined',
-  roomId: 'undefined',
-  team: -1
-})
+export const clientAtom = atom({})
 export const team0PlayersAtom = atom([])
 export const team1PlayersAtom = atom([])
 export const spectatorsAtom = atom([])
@@ -83,7 +78,7 @@ export const SocketManager = () => {
   const [_boomText, setBoomText] = useAtom(boomTextAtom);
 
   // new setters
-  const [_client, setClient] = useAtom(clientAtom);
+  const [client, setClient] = useAtom(clientAtom);
   const [_team0Players, setTeam0Players] = useAtom(team0PlayersAtom)
   const [_team1Players, setTeam1Players] = useAtom(team1PlayersAtom)
   const [_spectators, setSpectators] = useAtom(spectatorsAtom)
@@ -93,41 +88,37 @@ export const SocketManager = () => {
 
     console.log("[SocketManager] connect")
 
-      socket.connect();
+    socket.connect();
 
-      socket.on('connect', () => { 
-        socket.emit("createRoom", { id: (params.id).toUpperCase() }, ({ roomId, error }) => {
-          if (error) {
-            console.log('[createRoom] error', roomId, error)
-          }
-          console.log(`[SocketManager] joining room ${roomId}`)
-          socket.emit('joinRoom', { 
-            roomId, 
-            savedClient: localStorage.getItem('yootGame') 
-          }, ({ joinRoomId, user, error }) => {
-            if (error) {
-              console.log("[joinRoom] error", joinRoomId, error)
-            } else {
-              console.log(`[joinRoom] success`, user)
-              localStorage.setItem('yootGame', JSON.stringify(user))
-            }
-          })
-        })
-        setDisconnect(false) 
-      })
+    socket.on('connect', () => { 
+      // create user
+      socket.emit('createUser')
+    })
 
-      socket.on('connect_error', err => { 
-        console.log("[connect_error]", err); 
-        setDisconnect(true) 
-      })
-      // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
-  
-      return () => {
-        socket.disconnect()
-  
-        socket.off();
-      }
+    socket.on('client', (data) => {
+      setClient(data)
+    })
+
+    socket.on('room', (data) => {
+      setRoom(data)
+    })
+
+    socket.on('connect_error', err => { 
+      console.log("[connect_error]", err); 
+      setDisconnect(true) 
+    })
+    // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
+
+    return () => {
+      socket.disconnect()
+
+      socket.off();
+    }
   }, []);
+
+  useEffect(() => {
+    console.log('[SocketManager] client', client)
+  }, [client])
 
   useEffect(() => {
     console.log('[SocketManager] room', room)
@@ -149,7 +140,7 @@ export const SocketManager = () => {
   useEffect(() => {
     socket.on('room', (room) => {
       setMessages(room.messages)
-      setClient(getClient(room, socket.id))
+      // setClient(getClient(room, socket.id))
       // parse users into team 0, team 1, and spectators
       // update corresponding states
       // this prevents receiving components that don't
@@ -170,9 +161,6 @@ export const SocketManager = () => {
       // setHostName(room.hostName)
       // setRoomId(room.id)
       // setThrown(room.thrown)
-    })
-    socket.on('client', (client) => {
-      setClient(client);
     })
     socket.on('teams', (teams) => {
       setTeams(teams);

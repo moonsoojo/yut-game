@@ -75,13 +75,13 @@ import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import Team0 from "./Team0.jsx";
 import Team1 from "./Team1.jsx";
+import { useParams } from "wouter";
 
 let mediaMax = 2560;
 let landscapeMobileCutoff = 550;
 let landscapeDesktopCutoff = 1000;
 
 export default function Game({ device = "landscapeDesktop"}) {
-  console.log('[Game]')
   // separate everything into components
   // should not put state here unless it's being used
   // one change makes everything re-render
@@ -96,6 +96,14 @@ export default function Game({ device = "landscapeDesktop"}) {
   const [roomId] = useAtom(roomIdAtom);
   const [askTips] = useAtom(askTipsAtom)
   const [disconnect] = useAtom(disconnectAtom);
+  const params = useParams();
+
+  useEffect(() => {
+    console.log('[Game][useEffect]')
+    socket.emit('joinRoom', { roomId: params.id }, () => {
+      console.log(`[Game][joinRoom] joined room`)
+    })
+  }, [])
 
   useEffect(() => {
 

@@ -78,11 +78,11 @@ export default function App () {
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <ParticleSystem/>
+      <SocketManager/>
       <Route path="/">
         <Home2 device={device}/>
       </Route>
       <Route path="/:id">
-        <SocketManager/>
         <Experience device={device}/>
         {/* <RocketsWin device={device}/> */}
         {/* <UfosWin device={device}/> */}
