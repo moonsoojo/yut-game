@@ -1,6 +1,13 @@
 import "./style.css";
 import React from "react";
 import App from './App';
-import { createRoot } from "react-dom/client"
+import ReactDOM from 'react-dom/client';
+import { GameEngineProvider } from "./hooks/useGameEngine";
 
-createRoot(document.querySelector("#root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <GameEngineProvider>
+      <App/>
+    </GameEngineProvider>
+  </React.StrictMode>
+)
