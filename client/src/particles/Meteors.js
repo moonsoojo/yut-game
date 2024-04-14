@@ -37,15 +37,16 @@ export default function meteorSettings(device) {
                     new Position(zone),
                     new Mass(0.1),
                     new Radius(1.5, 2),
-                    new Life(1.5, 2),
-                    new Body(createSprite('./textures/dot.png'))
+                    new Life(3, 4),
+                    new Body(createSprite('./textures/dot.png')),
+                    new RadialVelocity(0.2, new Vector3D(0, 10, 0), 500, true)
                 ],
                 behaviours: [
                     new Alpha(0.7, 0),
                     new Scale(0.6, 0.4),
                     new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
                 ],
-                numEmit: 8,
+                numEmit: 10,
                 moving: true
             }
         )
