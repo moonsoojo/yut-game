@@ -236,7 +236,7 @@ export default function Home2({ device }) {
   const [location, setLocation] = useLocation();
 
   function handleLetsPlay() {
-    socket.emit('createRoom', { userId: client._id }, ({ roomId }) => {
+    socket.emit('createRoom', { hostId: client._id }, ({ roomId }) => {
       setLocation(`/${roomId}`)
     })
   }

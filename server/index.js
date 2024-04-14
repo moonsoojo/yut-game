@@ -30,19 +30,10 @@ async function connectMongo() {
 
 const userSchema = new mongoose.Schema(
   {
-    _id: String, // socketId
+    // _id: String, // socketId
+    socketId: String,
     name: String,
-    roomId: String,
     team: Number
-  },
-  {
-    versionKey: false,
-  }
-)
-const teamSchema = new mongoose.Schema(
-  {
-    _id: Number, // int between 0 and 1, possibly more
-    players: [userSchema]
   },
   {
     versionKey: false,
@@ -50,16 +41,32 @@ const teamSchema = new mongoose.Schema(
 )
 const roomSchema = new mongoose.Schema(
   {
-    _id: String,
     createdTime: Date,
-    spectators: [userSchema],
-    teams: [teamSchema],
+    spectators: [{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'users'
+    }],
+    team0: {
+      players: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'users'
+      }]
+    },
+    team1: {
+      players: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'users'
+      }]
+    },
     messages: [{
       _id: false,
       name: String,
       text: String
     }],
-    host: userSchema,
+    host: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'users'
+    },
     yootThrown: Boolean
   },
   {
@@ -70,8 +77,6 @@ const roomSchema = new mongoose.Schema(
 
 const Room = mongoose.model('rooms', roomSchema)
 const User = mongoose.model('users', userSchema)
-const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
-const userStream = User.watch([], { fullDocument: 'updateLookup' })
 
 // users collection
 // arrays with user documents
@@ -93,9 +98,8 @@ const userStream = User.watch([], { fullDocument: 'updateLookup' })
 async function addUser(socketId, name) {
   try {
     const user = new User({
-      _id: socketId,
-      name: name,
-      roomId: '',
+      socketId,
+      name,
       team: -1
     })
     await user.save();
@@ -106,75 +110,70 @@ async function addUser(socketId, name) {
 }
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
+    console.log(`[connect]`)
     connectMongo().catch(err => console.log('mongo connect error', err))
 
-    socket.on('createUser', () => {      
-      userStream.on('change', data => {
-        if (data.documentKey._id === socket.id) {
-          console.log('[createUser] user stream change detected', data)
-          socket.emit('client', data.fullDocument)
-        }
-      })
-
-      let name = makeId(5)
-      addUser(socket.id, name)
+    let name = makeId(5)
+    addUser(socket.id, name)
+    console.log(`[connect] added user with socket ${socket.id}`)
+    User.watch([], { fullDocument: 'updateLookup' }).on('change', data => {
+      if (data.fullDocument && data.fullDocument.socketId === socket.id) {
+        console.log('[createUser] user stream change detected', data)
+        socket.emit('client', data.fullDocument)
+      }
     })
 
-    socket.on("createRoom", async ({ userId }, callback) => {
+    const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
+
+    socket.on("createRoom", async ({ hostId }, callback) => {
       // create room document
       // update user's room
       // add user as host
+      let objectId = new mongoose.Types.ObjectId()
       try {
-        let objectId = new mongoose.Types.ObjectId()
-        let user = await User.findById(userId).exec()
-        user.roomId = objectId
         const room = new Room({
           _id: objectId,
           createdTime: new Date(),
           spectators: [],
-          teams: [{ _id: 0, players: [] }, { _id: 1, players: [] }],
+          team0: {
+            players: []
+          },
+          team1: {
+            players: []
+          },
           messages: [],
-          host: user
+          host: hostId
         })
         await room.save();
-        await user.save();
-        console.log('[createRoom] room saved', room)
-        return callback({ roomId: objectId.valueOf() })
+        console.log('[createRoom] room', room)
+        return callback({ roomId: objectId })
       } catch (err) {
         return callback({ error: err.message })
       }
     })
 
-    socket.on("joinRoom", ({ roomId }, callback) => {
-      console.log('[joinRoom]', roomId)
-      // subscribe to updates
-      userStream.on('change', data => {
-        if (data.documentKey._id === roomId) {
-          console.log('[createUser] room stream change detected', data)
-          socket.emit('room', data.fullDocument)
+    socket.on("joinRoom", async ({ roomId }, callback) => {
+      console.log(`[joinRoom] roomId`, roomId)
+      roomStream.on('change', async (data) => {
+        console.log('[joinRoom][changeStream] data', data)
+        if (data.documentKey && data.documentKey._id.valueOf() === roomId) {
+          let room = await Room.findById(roomId).populate('spectators').populate('host').exec();
+          console.log(`[joinRoom] room`, room)
+          socket.emit('room', room)
         }
       })
-      // add to spectators
-      // fetch user using socket.id
+
+      try {
+        let user = await User.findOne({ 'socketId': socket.id }).exec()
+        console.log(`[joinRoom] user`, user)
+        let room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }})
+        await room.save();
+      } catch (err) {
+        return callback({ error: err.message })
+      }
+
       return callback()
     })
-
-    function deleteUser(room, socketId) {
-      let users = room.spectators;
-      for (const team of room.teams) {
-        users.concat(team.players)
-      }
-      for (const user of users) {
-        console.log(`[disconnect] user`, user)
-        if (user._id === socketId) {
-          if (user.team === -1) {
-            room.spectators.id(socketId).deleteOne()
-          } else {
-            room.teams[user.team].players.id(socketId).deleteOne()
-          }
-        }
-      }
-    }
 
     // roomId is from [client] in client
     socket.on("joinTeam", async ({ team, name, roomId }, callback) => {
@@ -244,26 +243,11 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     // use socket info from current connection
     socket.on("disconnect", async () => {
       console.log(`${socket.id} disconnect`)
-
-      // let userName = '';
-      // try {
-      //   let room = await Room.findById(roomIdSocket).exec();
-      //   deleteUser(room, socket.id)
-      //   await room.save();
-      // } catch (err) {
-      //   console.log(`[disconnect] socket ${socket.id} disconnecting from room ${roomIdSocket} error`, err)
-      // }
-
-      // try {
-      //   let room = await Room.findById(roomIdSocket).exec();
-      //   const message = {
-      //     name: 'admin',
-      //     text: `${userName} left the room.`
-      //   }
-      //   room.messages.push(message)
-      //   await room.save();
-      // } catch (err) {
-      //   console.log('[disconnect] error sending message', err)
-      // }
+      try {
+        await User.findOneAndDelete({ 'socketId': socket.id })
+      } catch (err) {
+        console.log(`[disconnect] error deleting user`, err)
+      }
+      
     });
 })
