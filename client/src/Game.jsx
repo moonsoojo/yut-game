@@ -100,7 +100,6 @@ export default function Game({ device = "landscapeDesktop"}) {
 
   useEffect(() => {
     console.log('[Game][useEffect]')
-    
     socket.emit('joinRoom', { roomId: params.id }, () => {
       console.log(`[Game][joinRoom] joined room`)
     })

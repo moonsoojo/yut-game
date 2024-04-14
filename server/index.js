@@ -108,6 +108,13 @@ async function addUser(socketId, name) {
     return null
   }
 }
+
+const userStream = User.watch([], { fullDocument: 'updateLookup' })
+const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
+
+// communicate via socket id
+// find user
+// save room
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     console.log(`[connect]`)
@@ -116,14 +123,12 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     let name = makeId(5)
     addUser(socket.id, name)
     console.log(`[connect] added user with socket ${socket.id}`)
-    User.watch([], { fullDocument: 'updateLookup' }).on('change', data => {
+    const userListener = userStream.on('change', data => {
       if (data.fullDocument && data.fullDocument.socketId === socket.id) {
-        console.log('[createUser] user stream change detected', data)
-        socket.emit('client', data.fullDocument)
+        console.log(`[userStream] change detected in user collection for socket id ${socket.id}`)
       }
+      socket.emit('client', data.fullDocument)
     })
-
-    const roomStream = Room.watch([], { fullDocument: 'updateLookup' })
 
     socket.on("createRoom", async ({ hostId }, callback) => {
       // create room document
@@ -155,10 +160,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     socket.on("joinRoom", async ({ roomId }, callback) => {
       console.log(`[joinRoom] roomId`, roomId)
       roomStream.on('change', async (data) => {
-        console.log('[joinRoom][changeStream] data', data)
         if (data.documentKey && data.documentKey._id.valueOf() === roomId) {
+          console.log(`[joinRoom][roomStream] change detected in room collection for socket id ${socket.id}`, data)
           let room = await Room.findById(roomId).populate('spectators').populate('host').exec();
-          console.log(`[joinRoom] room`, room)
           socket.emit('room', room)
         }
       })
@@ -245,6 +249,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       console.log(`${socket.id} disconnect`)
       try {
         await User.findOneAndDelete({ 'socketId': socket.id })
+        userListener.close()
       } catch (err) {
         console.log(`[disconnect] error deleting user`, err)
       }
