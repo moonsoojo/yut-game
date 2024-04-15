@@ -127,7 +127,18 @@ export const SocketManager = () => {
       setTeam1Players(room.team1.players)
       setSpectators(room.spectators)
       if (room.host !== null) {
-        setHostName(room.host.name)
+        if (room.host.socketId === socket.id) {
+          setHostName('you')
+        } else {
+          setHostName(room.host.name)
+        }
+      }
+      // Find client from users
+      let users = room.team0.players.concat(room.team1.players.concat(room.spectators))
+      for (const user of users) {
+        if (user.socketId === socket.id) {
+          setClient(user)
+        }
       }
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);

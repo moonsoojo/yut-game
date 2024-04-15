@@ -82,13 +82,6 @@ const roomSchema = new mongoose.Schema(
 const User = mongoose.model('users', userSchema)
 const Room = mongoose.model('rooms', roomSchema)
 
-// users collection
-// arrays with user documents
-
-// in the client, if client's socket id is the host's id
-// if there is a player in team 0 and a player in team 1
-// show 'let's play' button
-
 // yoot throw
 // if thrown and client disconnects
 // display a button to claim turn for other players on his team
@@ -114,12 +107,13 @@ async function addUser(socketId, name) {
   }
 }
 
-// room stream listener
+// Room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
-    for (const user of data.fullDocument.spectators) {
+    let users = data.fullDocument.spectators.concat(data.fullDocument.team0.players.concat(data.fullDocument.team1.players))
+    for (const user of users) {
       console.log(`[Room.watch] user`, user)
       try {
         let userFound = await User.findById(user, 'socketId').exec()
@@ -199,46 +193,62 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       return callback()
     })
 
-    // users: array of user IDs
-    // order doesn't change with update
-    // when player leaves, the id will be populated with null
-    // keep track with pointer and team until player on specified team is found
-    // if no one on the other team, game over
-    socket.on("joinTeam", async ({ team, name }, callback) => {
-
-      let player;
-      try {
-        player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name })
-        // Add to the team's players array
-        await Room.findOneAndUpdate({ _id: player.roomId }, { $addToSet: { [`team${team}.players`]: player._id }})
-        // Remove the user from the spectators array
-        await Room.updateOne({ 
-          _id: player.roomId
+    async function removeUser(user) {        
+      await Room.updateOne(
+        { 
+          _id: user.roomId
         }, 
         { 
           $pullAll: { 
             'spectators': [
-              { _id: player._id }
+              { _id: user._id }
             ]
           }
-        }).exec()
+        }
+      ).exec()
+      await Room.updateOne(
+        { 
+          _id: user.roomId 
+        }, 
+        { 
+          $pullAll: 
+            { 
+              'team0.players': [
+                { _id: user._id }
+              ]
+            }
+        }
+      ).exec()
+      await Room.updateOne(
+        { 
+          _id: user.roomId 
+        }, 
+        { 
+          $pullAll: 
+            { 
+              'team1.players': [
+                { _id: user._id }
+              ]
+            }
+          
+        }
+      ).exec()
+    }
+    socket.on("joinTeam", async ({ team, name }, callback) => {
+
+      let player;
+      try {
+        player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name }).exec()
+        // Remove the user from the room
+        await removeUser(player)
+        
+        // Add to the team's players array
+        await Room.findOneAndUpdate({ _id: player.roomId }, { $addToSet: { [`team${team}.players`]: player._id }}).exec()
       } catch (err) {
         console.log(`[joinTeam] error joining team`, err)
         return callback()
       }
-  
-      // try {
-      //   let room = await Room.findById(roomId).exec();
-      //   const message = {
-      //     name: 'admin',
-      //     text: `${name} (${userNameOld}) has joined ${parseInt(team) === 0 ? "the Rockets" : "the UFOs"}!`
-      //   }
-      //   room.messages.push(message)
-      //   await room.save();
-      // } catch (err) {
-      //   return callback({ error: err.message })
-      // }
-      
+
       return callback({ player })
     })
 
@@ -265,48 +275,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         console.log(`[disconnect] user to remove`, user._id)
         if (user.roomId) {
           console.log(`[disconnect] room not null`)
-          await Room.updateOne(
-            { 
-              _id: user.roomId 
-            }, 
-            { 
-              $pullAll: 
-                { 
-                  'spectators': [
-                    { _id: user._id }
-                  ]
-                }
-              
-            }
-          ).exec()
-          await Room.updateOne(
-            { 
-              _id: user.roomId 
-            }, 
-            { 
-              $pullAll: 
-                { 
-                  'team0.players': [
-                    { _id: user._id }
-                  ]
-                }
-              
-            }
-          ).exec()
-          await Room.updateOne(
-            { 
-              _id: user.roomId 
-            }, 
-            { 
-              $pullAll: 
-                { 
-                  'team1.players': [
-                    { _id: user._id }
-                  ]
-                }
-              
-            }
-          ).exec()
+          await removeUser(user)
   
           // Remove host if it was the user
           // Assign another user in the room
