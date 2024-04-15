@@ -117,25 +117,14 @@ async function addUser(socketId, name) {
 // room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   console.log(`[Room.watch] data`, data)
-  if (data.operationType === 'insert') {
+  if (data.operationType === 'insert' || data.operationType === 'update') {
+    // Emit document to all clients in the room
     for (const user of data.fullDocument.spectators) {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
         let roomPopulated = await Room.findById(data.documentKey._id).populate('spectators').populate('host').exec()
         io.to(userSocketId).emit('room', roomPopulated)
-      } catch (err) {
-        console.log(`[Room.watch] error getting user's socket id`, err)
-      }
-    }
-  } else if (data.operationType === 'update') {
-    for (const user of data.fullDocument.spectators) {
-      try {
-        let userFound = await User.findById(user, 'socketId').exec()
-        let userSocketId = userFound.socketId
-        let roomPopulated = await Room.findById(data.documentKey._id).populate('spectators').populate('host').exec()
-        io.to(userSocketId).emit('room', roomPopulated)
-
       } catch (err) {
         console.log(`[Room.watch] error getting user's socket id`, err)
       }
@@ -143,24 +132,19 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   }
 })
 
-// communicate via socket id
-// find user
-// save room
 io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     connectMongo().catch(err => console.log('mongo connect error', err))
 
+    // Create user
     let name = makeId(5)
     addUser(socket.id, name)
     console.log(`[connect] added user with socket ${socket.id}`)
 
     socket.on("createRoom", async ({}, callback) => {
-      // create room document
-      // update user's room
-      // add user as host
       let objectId = new mongoose.Types.ObjectId()
 
-      // get user
+      // Get user by socket id
       let user;
       try {
         user = await User.findOne({ socketId: socket.id }).exec()
@@ -168,6 +152,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         console.log(`[createRoom] user with socket id ${socket.id} not found`)
       }
 
+      // Create room with socket id owner as host
       try {
         const room = new Room({
           _id: objectId,
@@ -191,6 +176,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     })
 
     socket.on("joinRoom", async ({ roomId }, callback) => {
+
+      // Add user to room as a spectator
       try {
         let user = await User.findOne({ 'socketId': socket.id }).exec()
         let room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }})
@@ -199,6 +186,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         return callback({ error: err.message })
       }
 
+      // Update user's room id so user can be removed with socket id on disconnect
+      // This reduces the number of users to loop over in Room.watch
       try {
         let user = await User.findOneAndUpdate({ 'socketId': socket.id }, { roomId })
         await user.save()
@@ -273,18 +262,17 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
     })
 
-    // save roomId on connect
-    // use socket info from current connection
     socket.on("disconnect", async () => {
       console.log(`${socket.id} disconnect`)
       try {
+        // Remove user from room
         let user = await User.findOneAndDelete({ 'socketId': socket.id }).exec()
-        // if user is host of the room
-        // find new host for room
-        // announce it to the room
         let userId = user._id
         await Room.updateOne({ _id: user.roomId }, { $pullAll: { spectators: [{ _id: user._id }]}})
         let updatedRoom = await Room.findById(user.roomId).exec()
+
+        // Remove host if it was the user
+        // Assign another player in the room
         let hostId = updatedRoom.host
         if (userId.valueOf() === hostId.valueOf() && updatedRoom.spectators.length > 0) {
           updatedRoom.host = updatedRoom.spectators[0]
