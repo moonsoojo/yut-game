@@ -209,7 +209,9 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       let player;
       try {
         player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name })
+        // Add to the team's players array
         await Room.findOneAndUpdate({ _id: player.roomId }, { $addToSet: { [`team${team}.players`]: player._id }})
+        // Remove the user from the spectators array
         await Room.updateOne({ 
           _id: player.roomId
         }, 
@@ -305,14 +307,17 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
               
             }
           ).exec()
-          let updatedRoom = await Room.findById(user.roomId).exec()
   
           // Remove host if it was the user
-          // Assign another player in the room
+          // Assign another user in the room
+          let updatedRoom = await Room.findById(user.roomId).exec()
           let hostId = updatedRoom.host
           let users = updatedRoom.spectators.concat(updatedRoom.team0.players.concat(updatedRoom.team1.players))
           if (user._id.valueOf() === hostId.valueOf() && users.length > 0) {
             updatedRoom.host = users[0]
+            updatedRoom.save();
+          } else if (users.length === 0) { // Remove host
+            updatedRoom.host = null
             updatedRoom.save();
           }
         }
