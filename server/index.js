@@ -199,12 +199,27 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       return callback()
     })
 
+    // users: array of user IDs
+    // order doesn't change with update
+    // when player leaves, the id will be populated with null
+    // keep track with pointer and team until player on specified team is found
+    // if no one on the other team, game over
     socket.on("joinTeam", async ({ team, name }, callback) => {
 
       let player;
       try {
         player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name })
         await Room.findOneAndUpdate({ _id: player.roomId }, { $addToSet: { [`team${team}.players`]: player._id }})
+        await Room.updateOne({ 
+          _id: player.roomId
+        }, 
+        { 
+          $pullAll: { 
+            'spectators': [
+              { _id: player._id }
+            ]
+          }
+        }).exec()
       } catch (err) {
         console.log(`[joinTeam] error joining team`, err)
         return callback()
@@ -261,7 +276,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
                 }
               
             }
-          )
+          ).exec()
           await Room.updateOne(
             { 
               _id: user.roomId 
@@ -275,7 +290,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
                 }
               
             }
-          )
+          ).exec()
           await Room.updateOne(
             { 
               _id: user.roomId 
@@ -289,14 +304,15 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
                 }
               
             }
-          )
+          ).exec()
           let updatedRoom = await Room.findById(user.roomId).exec()
   
           // Remove host if it was the user
           // Assign another player in the room
           let hostId = updatedRoom.host
-          if (user._id.valueOf() === hostId.valueOf() && updatedRoom.spectators.length > 0) {
-            updatedRoom.host = updatedRoom.spectators[0]
+          let users = updatedRoom.spectators.concat(updatedRoom.team0.players.concat(updatedRoom.team1.players))
+          if (user._id.valueOf() === hostId.valueOf() && users.length > 0) {
+            updatedRoom.host = users[0]
             updatedRoom.save();
           }
         }
