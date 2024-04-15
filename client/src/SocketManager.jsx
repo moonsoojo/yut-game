@@ -123,8 +123,8 @@ export const SocketManager = () => {
       // update corresponding states
       // this prevents receiving components that don't
       // have changes from re-rendeing
-      // setTeam0Players(room.teams[0].players)
-      // setTeam1Players(room.teams[1].players)
+      setTeam0Players(room.team0.players)
+      setTeam1Players(room.team1.players)
       setSpectators(room.spectators)
       if (room.host !== null) {
         setHostName(room.host.name)

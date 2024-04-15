@@ -24,11 +24,8 @@ export default function JoinTeamModal({ position, rotation, scale }) {
       setAlert('Must be shorter than 16 characters.')
     } else {
       setAlert("")
-      socket.emit("joinTeam", { team: joinTeam, name, roomId: client.roomId }, ({ error, player }) => {
-        if (error) {
-          console.log("[JoinTeamModal] error", error)
-          setDisconnect(true)
-        } else if (player) {
+      socket.emit("joinTeam", { team: joinTeam, name }, ({ player }) => {
+        if (player) {
           localStorage.setItem('yootGame', JSON.stringify({
             ...player
           }))
