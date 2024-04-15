@@ -126,7 +126,9 @@ export const SocketManager = () => {
       // setTeam0Players(room.teams[0].players)
       // setTeam1Players(room.teams[1].players)
       setSpectators(room.spectators)
-      setHostName(room.host.name)
+      if (room.host !== null) {
+        setHostName(room.host.name)
+      }
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);
