@@ -184,17 +184,17 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     socket.on("joinRoom", async ({ roomId }, callback) => {
 
-      // Add user to room as a spectator
+      // Add user to room
       try {
         let user = await User.findOne({ 'socketId': socket.id }).exec()
         let room;
-        if (user.roomId.valueOf() === roomId) {
+        if (user.roomId.valueOf() === roomId) { // Use value saved in local storage
           if (user.team === -1) {
             room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
           } else {
             room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { [`team${user.team}.players`]: user._id }}).exec()
           }
-        } else {
+        } else { // Use default values (add as spectator)
           room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
           user.roomId = roomId
           user.team = -1
@@ -206,7 +206,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         return callback({ error: err.message })
       }
 
-      // If room is empty, add user as host
+      // Add user as host if room is empty
       try {
         let user = await User.findOne({ 'socketId': socket.id })
         let room = await Room.findById(roomId)
@@ -279,6 +279,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       let player;
       try {
         player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name }).exec()
+        
         // Remove the user from the room
         await removeUser(player)
         
