@@ -5,6 +5,8 @@ import { useParams } from "wouter";
 import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 import { joinTeamAtom } from './GlobalState';
+import layout from './layout';
+import { deviceAtom } from './App';
 
 export default function JoinTeamModal({ position, rotation, scale }) {
 
@@ -15,6 +17,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
   const [client, setClient] = useAtom(clientAtom);
+  const [device] = useAtom(deviceAtom);
 
   function handleJoinSubmit(e) {
     e.preventDefault();
@@ -56,11 +59,13 @@ export default function JoinTeamModal({ position, rotation, scale }) {
     setCancelHover(false)
   }
 
-  return joinTeam !== null && <group position={position}>
+  return joinTeam !== null && <group 
+    position={layout[device].joinTeamModal.position}
+    rotation={layout[device].joinTeamModal.rotation}
+    scale={layout[device].joinTeamModal.scale}
+  >
     <Html 
       transform
-      position={position}
-      rotation={rotation}
     >
       <div style={{
         position: 'absolute'

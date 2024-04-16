@@ -25,11 +25,13 @@ import Stars from './particles/Stars';
 import TipsModal from './TipsModal';
 import mongoose from 'mongoose';
 import { socket, clientAtom } from './SocketManager';
+import { deviceAtom } from './App';
 
-export default function Home2({ device }) {
+export default function Home2() {
 
   const [display, setDisplay] = useState('board')
   const [client] = useAtom(clientAtom)
+  const [device] = useAtom(deviceAtom);
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"
@@ -257,75 +259,75 @@ export default function Home2({ device }) {
     config={{ mass: 2, tension: 400 }}
     snap={{ mass: 4, tension: 400 }}
   >
-  <group
-    position={layout[device].title.position}
-    rotation={layout[device].title.rotation}
-    scale={1.4}
-  >
-    <Title 
-      position={layout[device].title.text.position}
-      rotation={layout[device].title.text.rotation}
-      scale={layout[device].title.text.scale}
-      setDisplay={setDisplay}
-    />
-    <Yoots 
-      position={layout[device].title.yoots.position}
-      rotation={layout[device].title.yoots.rotation}
-      scale={layout[device].title.yoots.scale} 
-    />
-    <HtmlElement 
-      position={layout[device].title.about.position}
-      rotation={layout[device].title.about.rotation}
-      fontSize={layout[device].title.about.fontSize} 
-      handleClick={handleAbout}
-      text='about'
-      color='yellow'
-    />
-    <HtmlElement
-      position={layout[device].title.howToPlay.position}
-      rotation={layout[device].title.howToPlay.rotation}
-      fontSize={layout[device].title.howToPlay.fontSize} 
-      handleClick={handleHowToPlay}
-      text='how to play'
-    />
-    <HtmlElement
-      position={layout[device].title.letsPlay.position}
-      rotation={layout[device].title.letsPlay.rotation}
-      fontSize={layout[device].title.letsPlay.fontSize}
-      text="LET'S PLAY!"
-      scale={layout[device].title.letsPlay.scale}
-      handleClick={handleLetsPlay}
-    />
-  </group>
-  <group>
     <group
-      position={layout[device].title.tiles.position}
-      rotation={layout[device].title.tiles.rotation}
-      scale={layout[device].title.tiles.scale}
+      position={layout[device].title.position}
+      rotation={layout[device].title.rotation}
+      scale={1.4}
     >
-      { display === 'board' && <group 
-      >
-        <Tiles/>
-        <Pieces/>
-      </group>}
+      <Title 
+        position={layout[device].title.text.position}
+        rotation={layout[device].title.text.rotation}
+        scale={layout[device].title.text.scale}
+        setDisplay={setDisplay}
+      />
+      <Yoots 
+        position={layout[device].title.yoots.position}
+        rotation={layout[device].title.yoots.rotation}
+        scale={layout[device].title.yoots.scale} 
+      />
+      <HtmlElement 
+        position={layout[device].title.about.position}
+        rotation={layout[device].title.about.rotation}
+        fontSize={layout[device].title.about.fontSize} 
+        handleClick={handleAbout}
+        text='about'
+        color='yellow'
+      />
+      <HtmlElement
+        position={layout[device].title.howToPlay.position}
+        rotation={layout[device].title.howToPlay.rotation}
+        fontSize={layout[device].title.howToPlay.fontSize} 
+        handleClick={handleHowToPlay}
+        text='how to play'
+      />
+      <HtmlElement
+        position={layout[device].title.letsPlay.position}
+        rotation={layout[device].title.letsPlay.rotation}
+        fontSize={layout[device].title.letsPlay.fontSize}
+        text="LET'S PLAY!"
+        scale={layout[device].title.letsPlay.scale}
+        handleClick={handleLetsPlay}
+      />
     </group>
     <group>
-      { display === 'about' && <About 
-        device={device}
-        position={layout[device].about.position}
-        rotation={layout[device].about.rotation}
-        scale={layout[device].about.scale}
-      />}
-      { display === 'howToPlay' && <HowToPlay 
-        device={device}
-        position={layout[device].howToPlay.position}
-        rotation={layout[device].howToPlay.rotation}
-        scale={layout[device].howToPlay.scale}
-      />}
-    </group>  
-  </group>
-  
-  <Stars count={1000} size={0.2}/>
-  
+      <group
+        position={layout[device].title.tiles.position}
+        rotation={layout[device].title.tiles.rotation}
+        scale={layout[device].title.tiles.scale}
+      >
+        { display === 'board' && <group 
+        >
+          <Tiles/>
+          <Pieces/>
+        </group>}
+      </group>
+      <group>
+        { display === 'about' && <About 
+          device={device}
+          position={layout[device].about.position}
+          rotation={layout[device].about.rotation}
+          scale={layout[device].about.scale}
+        />}
+        { display === 'howToPlay' && <HowToPlay 
+          device={device}
+          position={layout[device].howToPlay.position}
+          rotation={layout[device].howToPlay.rotation}
+          scale={layout[device].howToPlay.scale}
+        />}
+      </group>  
+    </group>
+    
+    <Stars count={1000} size={0.2}/>
+    
   </PresentationControls>
 }

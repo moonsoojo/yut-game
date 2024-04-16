@@ -77,6 +77,7 @@ import Team1 from "./Team1.jsx";
 import { useParams } from "wouter";
 import { deviceAtom } from "./App.jsx";
 import Team from "./Team.jsx";
+import GameCamera from "./GameCamera.jsx";
 
 // There should be no state
 // All components should have the state that it needs
@@ -92,10 +93,6 @@ export default function Game() {
   // separate everything into components
   // should not put state here unless it's being used
   // one change makes everything re-render
-  const [device] = useAtom(deviceAtom)
-  const [teams] = useAtom(teamsAtom);
-  console.log(`[Game] teams`, teams)
-  const [gamePhase] = useAtom(gamePhaseAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -105,32 +102,24 @@ export default function Game() {
     })
   }, [])
 
-
-
-
   console.log(`[Game]`)
   return (<>
     <group>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
-      <group scale={layout[device].scale}>
+      <GameCamera/>
       {<group>
           <Team team={0}/>
           <Team team={1}/>
           {/* join modal */}
-          <JoinTeamModal
-            position={layout[device].joinTeamModal.position}
-            rotation={layout[device].joinTeamModal.rotation}
-            scale={layout[device].joinTeamModal.scale}
-          />
+          <JoinTeamModal/>
         </group>}
-        { gamePhase === "pregame" && <DecideOrderTooltip
+        {/* { gamePhase === "pregame" && <DecideOrderTooltip
           position={layout[device].tooltip.whoFirst.position}
           rotation={[-Math.PI/2, 0, 0]}
-        />}
+        />} */}
       </group>
       <Stars count={7000} size={5}/>
-    </group>
     <MilkyWay 
       rotation={[-Math.PI/2, 0, -35.0]} 
       position={[0, -3, 0]} 
