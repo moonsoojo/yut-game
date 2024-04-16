@@ -77,10 +77,14 @@ import Team0 from "./Team0.jsx";
 import Team1 from "./Team1.jsx";
 import { useParams } from "wouter";
 
-let mediaMax = 2560;
-let landscapeMobileCutoff = 550;
-let landscapeDesktopCutoff = 1000;
+// There should be no state
+// All components should have the state that it needs
+// Galaxy should not stop spinning when other components update
+// Team0 and Team1 components should use the same code
+// Tile components should be the parent of all types of tiles (such as Earth or Mars)
+// Piece component should be the parent of all types of pieces
 
+// Step 1: Refactor teams, render them with galaxy, join and leave rooms, and see if the galaxy stops spinning
 export default function Game({ device = "landscapeDesktop"}) {
   // separate everything into components
   // should not put state here unless it's being used

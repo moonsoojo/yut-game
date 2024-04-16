@@ -95,7 +95,6 @@ const Room = mongoose.model('rooms', roomSchema)
 async function addUser(socket, name) {
   try {
     let user;
-    console.log(`[addUser] socket.handshake.query`, socket.handshake.query)
     if (socket.handshake.query.client === "null") { // Use saved client
       user = new User({
         socketId: socket.id,
@@ -126,7 +125,6 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.team0.players.concat(data.fullDocument.team1.players))
     for (const user of users) {
-      console.log(`[Room.watch] user`, user)
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
@@ -279,7 +277,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       let player;
       try {
         player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name }).exec()
-        
+
         // Remove the user from the room
         await removeUser(player)
         
