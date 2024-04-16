@@ -75,6 +75,7 @@ import Game from "./Game.jsx";
 import Guide from "./Guide.jsx";
 import mediaValues from "./mediaValues";
 import { askTipsAtom, tipsAtom } from "./GlobalState.jsx";
+import { deviceAtom } from "./App.jsx";
 
 function calcZoom() {
   if (window.innerWidth < mediaValues.landscapeCutoff) {
@@ -88,10 +89,10 @@ function calcZoom() {
   }
 }
 
-export default function Experience({ device }) {
+export default function Experience() {
 
-  // const [zoom, setZoom] = useState(11); // doesn't change 
   const [zoom, setZoom] = useState(calcZoom());
+  const [device] = useAtom(deviceAtom)
 
   function handleResize() {
     console.log('handle resize');
@@ -101,9 +102,6 @@ export default function Experience({ device }) {
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
   }, []);
-  
-  const [askTips] = useAtom(askTipsAtom)
-  const [tips] = useAtom(tipsAtom)
 
   const [disconnect] = useAtom(disconnectAtom);
 
@@ -124,7 +122,7 @@ export default function Experience({ device }) {
       ref={camera}
     />
     {/* add game */}
-    { !tips && <Game device={device}/>}
+    <Game/>
     { disconnect && <DisconnectModal
       position={layout[device].disconnectModal.position}
       rotation={layout[device].disconnectModal.rotation}

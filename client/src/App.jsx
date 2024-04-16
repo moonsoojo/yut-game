@@ -18,8 +18,19 @@ import * as THREE from 'three';
 import layout from './layout';
 import ParticleSystem from './particles/ParticleSystem';
 import mediaValues from './mediaValues';
+import { atom, useAtom } from 'jotai';
+
+function initializeDevice(windowWidth, landscapeCutoff) {
+  if (windowWidth < landscapeCutoff) {
+    return "portrait"
+  } else {
+    return "landscapeDesktop"
+  }
+}
+export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
 
 export default function App () {
+  const [_device, setDevice] = useAtom(deviceAtom)
   const created = ({ gl }) =>
   {
       gl.setClearColor('#000b18', 1)
@@ -32,16 +43,6 @@ export default function App () {
       setDevice("landscapeDesktop")
     }
   }
-
-  function initializeDevice(windowWidth, landscapeCutoff) {
-    if (windowWidth < landscapeCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-  
-  let [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
 
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
@@ -80,14 +81,11 @@ export default function App () {
       <ParticleSystem/>
       <SocketManager/>
       <Route path="/">
-        <Home2 device={device}/>
+        <Home2/>
       </Route>
       <Route path="/:id">
-        <Experience device={device}/>
-        {/* <RocketsWin device={device}/> */}
-        {/* <UfosWin device={device}/> */}
+        <Experience/>
       </Route>
     </Canvas>
-    {/* <Interface/> */}
   </>)
 }
