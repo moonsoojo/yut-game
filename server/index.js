@@ -92,14 +92,26 @@ const Room = mongoose.model('rooms', roomSchema)
   // add a throw
   // reset flag on record result
 
-async function addUser(socketId, name) {
+async function addUser(socket, name) {
   try {
-    const user = new User({
-      socketId,
-      name,
-      team: -1,
-      roomId: null
-    })
+    let user;
+    console.log(`[addUser] socket.handshake.query`, socket.handshake.query)
+    if (socket.handshake.query.client === "null") { // Use saved client
+      user = new User({
+        socketId: socket.id,
+        name,
+        team: -1,
+        roomId: null
+      })
+    } else {
+      const savedClient = JSON.parse(socket.handshake.query.client)
+      user = new User({
+        socketId: socket.id,
+        name: savedClient.name,
+        team: savedClient.team,
+        roomId: savedClient.roomId
+      })
+    }
     await user.save();
   } catch (err) {
     console.log('[addUser]', err)
@@ -133,7 +145,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
 
     // Create user
     let name = makeId(5)
-    addUser(socket.id, name)
+    addUser(socket, name)
     console.log(`[connect] added user with socket ${socket.id}`)
 
     socket.on("createRoom", async ({}, callback) => {
@@ -175,9 +187,36 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       // Add user to room as a spectator
       try {
         let user = await User.findOne({ 'socketId': socket.id }).exec()
-        let room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }})
+        let room;
+        if (user.roomId.valueOf() === roomId) {
+          if (user.team === -1) {
+            room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
+          } else {
+            room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { [`team${user.team}.players`]: user._id }}).exec()
+          }
+        } else {
+          room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
+          user.roomId = roomId
+          user.team = -1
+          user.save()
+        }
         await room.save();
       } catch (err) {
+        console.log(`[joinRoom] error adding user to room as spectator`, err)
+        return callback({ error: err.message })
+      }
+
+      // If room is empty, add user as host
+      try {
+        let user = await User.findOne({ 'socketId': socket.id })
+        let room = await Room.findById(roomId)
+        console.log(`[joinRoom] room`, room)
+        if (room.host === null) {
+          room.host = user._id
+          room.save()
+        }
+      } catch (err) {
+        console.log(`[joinRoom] error adding user as host`, err)
         return callback({ error: err.message })
       }
 
@@ -187,6 +226,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         let user = await User.findOneAndUpdate({ 'socketId': socket.id }, { roomId })
         await user.save()
       } catch (err) {
+        console.log(`[joinRoom] error updating user's room id`, err)
         return callback({ error: err.message })
       }
 

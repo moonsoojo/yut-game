@@ -133,11 +133,15 @@ export const SocketManager = () => {
           setHostName(room.host.name)
         }
       }
+
       // Find client from users
       let users = room.team0.players.concat(room.team1.players.concat(room.spectators))
       for (const user of users) {
         if (user.socketId === socket.id) {
           setClient(user)
+          localStorage.setItem('yootGame', JSON.stringify({
+            ...user
+          }))
         }
       }
       // setTeams(room.teams);
