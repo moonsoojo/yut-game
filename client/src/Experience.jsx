@@ -82,8 +82,6 @@ import { deviceAtom } from "./App.jsx";
 export default function Experience() {
 
   const [device] = useAtom(deviceAtom)
-
-
   const [disconnect] = useAtom(disconnectAtom);
 
   return <group>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Experience from './Experience';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { SocketManager } from './SocketManager';
 import { Route } from "wouter"
 import Home2 from './Home2';
@@ -28,9 +28,12 @@ function initializeDevice(windowWidth, landscapeCutoff) {
   }
 }
 export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
+export const pageAtom = atom('landingPage')
 
 export default function App () {
   const [_device, setDevice] = useAtom(deviceAtom)
+  const [page, setPage] = useAtom(pageAtom);
+
   const created = ({ gl }) =>
   {
       gl.setClearColor('#000b18', 1)
