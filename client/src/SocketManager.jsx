@@ -144,6 +144,12 @@ export const SocketManager = () => {
           }))
         }
       }
+
+      // Check if game is ready to start
+      // Check game phase is 'lobby'
+      // Check there's a player on each team
+      // Check the client is the host
+
       // setTeams(room.teams);
       // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);

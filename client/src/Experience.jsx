@@ -76,7 +76,6 @@ import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 
 export default function Experience() {
 
-  // const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
 
@@ -95,9 +94,5 @@ export default function Experience() {
         colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
       />
     </> }
-    {/* { disconnect && <DisconnectModal
-      position={layout[device].disconnectModal.position}
-      rotation={layout[device].disconnectModal.rotation}
-    /> } */}
   </group>
 }

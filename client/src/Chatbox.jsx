@@ -6,7 +6,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useParams } from "wouter";
 import layout from "./layout";
 
-export default function Chatbox() {
+export default function Chatbox({ device }) {
   const [messages] = useAtom(messagesAtom);
   const [message, setMessage] = useState('');
   const params = useParams();

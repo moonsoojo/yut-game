@@ -46,7 +46,6 @@ import {
   readyToStartAtom,
   teamsAtom,
   turnAtom,
-  gamePhaseAtom,
   socket,
   legalTilesAtom,
   clientAtom,
@@ -75,27 +74,21 @@ import Team1 from "./Team1.jsx";
 import { useParams } from "wouter";
 import Team from "./Team.jsx";
 import GameCamera from "./GameCamera.jsx";
-import { disconnectAtom } from "./GlobalState.jsx";
+import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 import mediaValues from "./mediaValues.js";
+import DisconnectModal from "./DisconnectModal.jsx";
+
 
 // There should be no state
 // All components should have the state that it needs
-// Galaxy should not stop spinning when other components update
-// Team0 and Team1 components should use the same code
 // Tile components should be the parent of all types of tiles (such as Earth or Mars)
 // Piece component should be the parent of all types of pieces
 // Receive device state individually in components
 
-// Step 1: Refactor teams, render them with galaxy, join and leave rooms, and see if the galaxy stops spinning
-
-
-
 export default function Game() {
-  // separate everything into components
-  // should not put state here unless it's being used
-  // one change makes everything re-render
   const params = useParams();
   const [disconnect] = useAtom(disconnectAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom);
 
   // Responsive UI
   const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
@@ -124,6 +117,10 @@ export default function Game() {
     })
   }, [])
 
+  function handleLetsPlay() {
+    socket.emit("startGame")
+  }
+
   console.log(`[Game]`)
   return (<>
       {/* <Perf/> */}
@@ -138,7 +135,19 @@ export default function Game() {
         rotation={[-Math.PI/2, 0, 0]}
       />} */}
       {/* chat section */}
-      {/* { !disconnect && <Chatbox/> } */}
+      { !disconnect && <Chatbox device={device}/> }
+      { disconnect && <DisconnectModal
+        position={layout[device].disconnectModal.position}
+        rotation={layout[device].disconnectModal.rotation}
+      /> }
+      { gamePhase === "lobby" 
+      && <HtmlElement 
+        text={'lets play!'}
+        position={layout[device].letsPlayButton.position}
+        rotation={layout[device].letsPlayButton.rotation}
+        fontSize={layout[device].letsPlayButton.fontSize}
+        handleClick={handleLetsPlay}
+      />}
     </>
   );
 }

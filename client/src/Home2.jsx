@@ -30,6 +30,8 @@ export default function Home2() {
 
   const [display, setDisplay] = useState('board')
   const [client] = useAtom(clientAtom)
+  
+  // Responsive UI
   const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
   const handleResize = () => {
     if (window.innerWidth < mediaValues.landscapeCutoff) {
