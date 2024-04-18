@@ -90,6 +90,6 @@ export default function Experience() {
     { disconnect && <DisconnectModal
       position={layout[device].disconnectModal.position}
       rotation={layout[device].disconnectModal.rotation}
-    />}
+    /> }
   </group>
 }

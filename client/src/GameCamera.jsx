@@ -23,9 +23,6 @@ export default function GameCamera() {
   
   const [zoom, setZoom] = useState(calcZoom());
   const [device] = useAtom(deviceAtom)
-  const camera = useRef();
-  const controls = useRef();
-  const state = useThree()
   
   function handleResize() {
     console.log('handle resize');
@@ -35,24 +32,14 @@ export default function GameCamera() {
   // Assign camera to renderer in different components
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
-    // console.log(`[GameCamera]`, camera.current.makeDefault())
-    console.log('use three state', state)
-    state.camera = camera.current
-    state.controls = controls.current
   }, []);
 
   return <>
-    <OrbitControls ref={controls}/>
+    <OrbitControls/>
     <OrthographicCamera
+      makeDefault
       zoom={zoom}
-      top={400}
-      bottom={-400}
-      left={400}
-      right={-400}
-      near={0.01}
-      far={2000}
       position={layout[device].camera.position}
-      ref={camera}
     />
     </>
 }
