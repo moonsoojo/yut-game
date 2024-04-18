@@ -47,7 +47,6 @@ import {
   readyToStartAtom,
   teamsAtom,
   turnAtom,
-  gamePhaseAtom,
   socket,
   legalTilesAtom,
   clientAtom,
@@ -71,22 +70,34 @@ import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
 import Game from "./Game.jsx";
 import mediaValues from "./mediaValues";
-import { deviceAtom } from "./App.jsx";
-import { disconnectAtom } from "./GlobalState.jsx";
+import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 
 
 
 export default function Experience() {
 
-  const [device] = useAtom(deviceAtom)
+  // const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
 
   return <group>
     {/* add game */}
-    <Game/>
-    { disconnect && <DisconnectModal
+    { (gamePhase === "lobby" || gamePhase === "pregame" || gamePhase === "game") && <>
+      <Game/>
+      <Stars count={7000} size={5}/>
+      <MilkyWay 
+        rotation={[-Math.PI/2, 0, -35.0]} 
+        position={[0, -3, 0]} 
+        scale={5}
+        brightness={0.5}
+        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+      />
+    </> }
+    {/* { disconnect && <DisconnectModal
       position={layout[device].disconnectModal.position}
       rotation={layout[device].disconnectModal.rotation}
-    /> }
+    /> } */}
   </group>
 }

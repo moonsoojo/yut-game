@@ -1,15 +1,13 @@
 import React from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
-import { deviceAtom } from './App';
 import { clientAtom, team0PlayersAtom, team1PlayersAtom, teamsAtom } from './SocketManager';
 import { joinTeamAtom } from './GlobalState';
 import { Html } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
 
-export default function Team({team}) {
-  const [device] = useAtom(deviceAtom)
+export default function Team({ team, device }) {
   const [players] = useAtom(team === 0 ? team0PlayersAtom : team1PlayersAtom)
   const [teams] = useAtom(teamsAtom)
 

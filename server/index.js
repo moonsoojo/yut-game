@@ -186,7 +186,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       try {
         let user = await User.findOne({ 'socketId': socket.id }).exec()
         let room;
-        if (user.roomId.valueOf() === roomId) { // Use value saved in local storage
+        if (user.roomId && user.roomId.valueOf() === roomId) { // Use value saved in local storage
           if (user.team === -1) {
             room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
           } else {

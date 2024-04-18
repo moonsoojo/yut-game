@@ -20,36 +20,13 @@ import ParticleSystem from './particles/ParticleSystem';
 import mediaValues from './mediaValues';
 import { atom, useAtom } from 'jotai';
 
-function initializeDevice(windowWidth, landscapeCutoff) {
-  if (windowWidth < landscapeCutoff) {
-    return "portrait"
-  } else {
-    return "landscapeDesktop"
-  }
-}
-export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
-export const pageAtom = atom('landingPage')
 
 export default function App () {
-  const [_device, setDevice] = useAtom(deviceAtom)
-  const [page, setPage] = useAtom(pageAtom);
 
   const created = ({ gl }) =>
   {
       gl.setClearColor('#000b18', 1)
   }
-
-  const handleResize = () => {
-    if (window.innerWidth < mediaValues.landscapeCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-  }, [window.innerWidth]);
 
   /*
     values for galaxy
@@ -78,7 +55,6 @@ export default function App () {
       onCreated={ created }
       >
       {/* <Perf/> */}
-      
       {/* when the device switches, the app rerenders and the game rerenders too */}
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />

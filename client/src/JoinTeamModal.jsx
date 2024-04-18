@@ -4,16 +4,14 @@ import { clientAtom, socket } from './SocketManager';
 import { useAtom } from 'jotai';
 import { disconnectAtom, joinTeamAtom } from './GlobalState';
 import layout from './layout';
-import { deviceAtom } from './App';
 
-export default function JoinTeamModal() {
+export default function JoinTeamModal({ device }) {
 
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
-  const [device] = useAtom(deviceAtom);
 
   function handleJoinSubmit(e) {
     e.preventDefault();

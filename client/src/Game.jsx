@@ -73,10 +73,10 @@ import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import Team0 from "./Team0.jsx";
 import Team1 from "./Team1.jsx";
 import { useParams } from "wouter";
-import { deviceAtom } from "./App.jsx";
 import Team from "./Team.jsx";
 import GameCamera from "./GameCamera.jsx";
 import { disconnectAtom } from "./GlobalState.jsx";
+import mediaValues from "./mediaValues.js";
 
 // There should be no state
 // All components should have the state that it needs
@@ -88,6 +88,8 @@ import { disconnectAtom } from "./GlobalState.jsx";
 
 // Step 1: Refactor teams, render them with galaxy, join and leave rooms, and see if the galaxy stops spinning
 
+
+
 export default function Game() {
   // separate everything into components
   // should not put state here unless it's being used
@@ -95,7 +97,25 @@ export default function Game() {
   const params = useParams();
   const [disconnect] = useAtom(disconnectAtom)
 
-  console.log(`[Game]`)
+  // Responsive UI
+  const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
+  const handleResize = () => {
+    if (window.innerWidth < mediaValues.landscapeCutoff) {
+      setDevice("portrait")
+    } else {
+      setDevice("landscapeDesktop")
+    }
+  }
+  function initializeDevice(windowWidth, landscapeCutoff) {
+    if (windowWidth < landscapeCutoff) {
+      return "portrait"
+    } else {
+      return "landscapeDesktop"
+    }
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleResize, false);
+  }, [window.innerWidth]);
 
   useEffect(() => {
     console.log('[Game][useEffect]')
@@ -108,27 +128,17 @@ export default function Game() {
   return (<>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
-      <GameCamera/>
-      <Team team={0}/>
-      <Team team={1}/>
+      <GameCamera device={device}/>
+      <Team team={0} device={device}/>
+      <Team team={1} device={device}/>
       {/* join modal */}
-      <JoinTeamModal/>
+      <JoinTeamModal device={device}/>
       {/* { gamePhase === "pregame" && <DecideOrderTooltip
         position={layout[device].tooltip.whoFirst.position}
         rotation={[-Math.PI/2, 0, 0]}
       />} */}
-      <Stars count={7000} size={5}/>
-      <MilkyWay 
-        rotation={[-Math.PI/2, 0, -35.0]} 
-        position={[0, -3, 0]} 
-        scale={5}
-        brightness={0.5}
-        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-      />
       {/* chat section */}
-      { !disconnect && <Chatbox/> }
+      {/* { !disconnect && <Chatbox/> } */}
     </>
   );
 }
