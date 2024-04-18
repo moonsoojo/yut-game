@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import layout from './layout';
 import mediaValues from './mediaValues';
 import { OrbitControls, OrthographicCamera } from '@react-three/drei';
 import { useAtom } from 'jotai';
 import { deviceAtom } from './App';
-import { useThree } from '@react-three/fiber';
 
 function calcZoom() {
   if (window.innerWidth < mediaValues.landscapeCutoff) {
@@ -19,13 +18,11 @@ function calcZoom() {
 }
 
 export default function GameCamera() {
-  console.log(`[GameCamera]`)
   
   const [zoom, setZoom] = useState(calcZoom());
   const [device] = useAtom(deviceAtom)
   
   function handleResize() {
-    console.log('handle resize');
     setZoom(calcZoom())
   }
 

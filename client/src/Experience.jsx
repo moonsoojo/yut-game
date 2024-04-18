@@ -51,7 +51,6 @@ import {
   socket,
   legalTilesAtom,
   clientAtom,
-  disconnectAtom,
   winnerAtom,
   hostNameAtom,
   roomIdAtom,
@@ -67,15 +66,13 @@ import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/MeteorsBackup.jsx";
 import DisconnectModal from "./DisconnectModal.jsx";
-import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
 import Game from "./Game.jsx";
-import Guide from "./Guide.jsx";
 import mediaValues from "./mediaValues";
-import { askTipsAtom, tipsAtom } from "./GlobalState.jsx";
 import { deviceAtom } from "./App.jsx";
+import { disconnectAtom } from "./GlobalState.jsx";
 
 
 

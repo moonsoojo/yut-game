@@ -1,12 +1,14 @@
 import { Html, Scroll } from "@react-three/drei";
-import { socket, messagesAtom, clientAtom, disconnectAtom } from "./SocketManager";
+import { socket, messagesAtom, clientAtom } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useParams } from "wouter";
 import layout from "./layout";
+import { deviceAtom } from "./App";
 
-export default function Chatbox({ position, rotation, scale, device }) {
+export default function Chatbox() {
+  const [device] = useAtom(deviceAtom)
   const [messages] = useAtom(messagesAtom);
   const [message, setMessage] = useState('');
   const params = useParams();
@@ -50,9 +52,9 @@ export default function Chatbox({ position, rotation, scale, device }) {
   }
 
   return <Html 
-    position={position}
-    rotation={rotation}
-    scale={scale}
+    position={layout[device].chat.position}
+    rotation={layout[device].chat.rotation}
+    scale={layout[device].chat.scale}
     transform
   >
     <div style={{

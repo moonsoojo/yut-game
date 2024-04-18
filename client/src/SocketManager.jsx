@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
+import { disconnectAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -37,7 +38,6 @@ export const messagesAtom = atom([]);
 export const nameAtom = atom('');
 export const roomAtom = atom({})
 export const winnerAtom = atom(null)
-export const disconnectAtom = atom(false)
 export const displayDisconnectAtom = atom(false)
 export const celebrateTextAtom = atom(null)
 export const celebrateMeteorsAtom = atom(false)

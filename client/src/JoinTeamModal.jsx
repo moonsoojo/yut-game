@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
 import { clientAtom, socket } from './SocketManager';
-import { useParams } from "wouter";
-import { disconnectAtom } from './SocketManager';
 import { useAtom } from 'jotai';
-import { joinTeamAtom } from './GlobalState';
+import { disconnectAtom, joinTeamAtom } from './GlobalState';
 import layout from './layout';
 import { deviceAtom } from './App';
 
-export default function JoinTeamModal({ position, rotation, scale }) {
+export default function JoinTeamModal() {
 
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
-  const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
-  const [client, setClient] = useAtom(clientAtom);
   const [device] = useAtom(deviceAtom);
 
   function handleJoinSubmit(e) {

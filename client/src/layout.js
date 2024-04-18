@@ -1154,7 +1154,7 @@ export default {
       }
     },
     joinTeamModal: {
-      position: [-1, 0, -0.7],
+      position: [-2.5, 0, -1.5],
       rotation: [-Math.PI/2, 0, 0],
     },
     disconnectModal: {

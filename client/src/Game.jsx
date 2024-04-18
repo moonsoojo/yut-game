@@ -50,7 +50,6 @@ import {
   socket,
   legalTilesAtom,
   clientAtom,
-  disconnectAtom,
   displayDisconnectAtom,
   winnerAtom,
   hostNameAtom,
@@ -66,11 +65,10 @@ import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
 import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/MeteorsBackup.jsx";
-import TipsModal from "./TipsModal.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 import BoomText from "./BoomText.jsx";
-import { askTipsAtom, joinTeamAtom } from "./GlobalState.jsx";
+import { joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import Team0 from "./Team0.jsx";
 import Team1 from "./Team1.jsx";
@@ -78,6 +76,7 @@ import { useParams } from "wouter";
 import { deviceAtom } from "./App.jsx";
 import Team from "./Team.jsx";
 import GameCamera from "./GameCamera.jsx";
+import { disconnectAtom } from "./GlobalState.jsx";
 
 // There should be no state
 // All components should have the state that it needs
@@ -94,6 +93,9 @@ export default function Game() {
   // should not put state here unless it's being used
   // one change makes everything re-render
   const params = useParams();
+  const [disconnect] = useAtom(disconnectAtom)
+
+  console.log(`[Game]`)
 
   useEffect(() => {
     console.log('[Game][useEffect]')
@@ -104,31 +106,29 @@ export default function Game() {
 
   console.log(`[Game]`)
   return (<>
-    <group>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
       <GameCamera/>
-      {<group>
-          <Team team={0}/>
-          <Team team={1}/>
-          {/* join modal */}
-          <JoinTeamModal/>
-        </group>}
-        {/* { gamePhase === "pregame" && <DecideOrderTooltip
-          position={layout[device].tooltip.whoFirst.position}
-          rotation={[-Math.PI/2, 0, 0]}
-        />} */}
-      </group>
+      <Team team={0}/>
+      <Team team={1}/>
+      {/* join modal */}
+      <JoinTeamModal/>
+      {/* { gamePhase === "pregame" && <DecideOrderTooltip
+        position={layout[device].tooltip.whoFirst.position}
+        rotation={[-Math.PI/2, 0, 0]}
+      />} */}
       <Stars count={7000} size={5}/>
-    <MilkyWay 
-      rotation={[-Math.PI/2, 0, -35.0]} 
-      position={[0, -3, 0]} 
-      scale={5}
-      brightness={0.5}
-      colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
-      colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
-      colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-    />
+      <MilkyWay 
+        rotation={[-Math.PI/2, 0, -35.0]} 
+        position={[0, -3, 0]} 
+        scale={5}
+        brightness={0.5}
+        colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+        colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+        colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+      />
+      {/* chat section */}
+      { !disconnect && <Chatbox/> }
     </>
   );
 }

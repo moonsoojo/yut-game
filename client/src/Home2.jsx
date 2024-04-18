@@ -22,7 +22,6 @@ import HowToPlay from './HowToPlay';
 import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
-import TipsModal from './TipsModal';
 import mongoose from 'mongoose';
 import { socket, clientAtom } from './SocketManager';
 import { deviceAtom } from './App';
