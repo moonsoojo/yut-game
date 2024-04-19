@@ -92,12 +92,12 @@ export const SocketManager = () => {
           console.log('[createRoom] error', roomId, error)
         }
   
-        socket.emit('joinRoom', { 
-          roomId, 
-          savedClient: localStorage.getItem('yootGame') 
-        }, ({ error }) => {
-          console.log("[joinRoom] error", error)
-        })
+        // socket.emit('joinRoom', { 
+        //   roomId, 
+        //   savedClient: localStorage.getItem('yootGame') 
+        // }, ({ error }) => {
+        //   console.log("[joinRoom] error", error)
+        // })
       })
   
       return () => {
