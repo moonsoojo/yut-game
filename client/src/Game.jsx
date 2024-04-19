@@ -44,7 +44,6 @@ import Stars from './particles/Stars'
 // server
 import {
   teamsAtom,
-  turnAtom,
   socket,
   legalTilesAtom,
   clientAtom,
@@ -76,9 +75,8 @@ import GameCamera from "./GameCamera.jsx";
 import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 import mediaValues from "./mediaValues.js";
 import DisconnectModal from "./DisconnectModal.jsx";
-import { readyToStartAtom } from "./GlobalState.jsx";
+import { readyToStartAtom, turnAtom } from "./GlobalState.jsx";
 import Yoot from "./Yoot.jsx";
-
 
 // There should be no state
 // All components should have the state that it needs
@@ -169,7 +167,7 @@ export default function Game() {
       /> }
       <LetsPlayButton device={device}/>
       <Host device={device}/>
-      {/* <Yoot device={device}/> */}
+      <Yoot device={device}/>
     </>
   );
 }

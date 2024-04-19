@@ -1,5 +1,5 @@
 
-import { selectionAtom, teamsAtom, turnAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, thrownAtom } from "../SocketManager";
+import { selectionAtom, teamsAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, thrownAtom } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -7,6 +7,7 @@ import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
 import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
+import { turnAtom } from "../GlobalState.jsx";
 
 export default function Piece ({
   position,

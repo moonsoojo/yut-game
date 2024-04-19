@@ -8,7 +8,6 @@ import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
 
 export default function Team({ team, device }) {
-  const [players] = useAtom(team === 0 ? team0PlayersAtom : team1PlayersAtom)
   const [teams] = useAtom(teamsAtom)
 
   function JoinTeam() {
@@ -107,7 +106,7 @@ export default function Team({ team, device }) {
         position: 'absolute',
         width: `${layout[device][`team${team}`].names.divWidth}px`
       }}>
-      {players.map((value, index) => (
+      {teams[team].players.map((value, index) => (
         <div
           style={{
               color: "yellow",

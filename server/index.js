@@ -56,11 +56,17 @@ const roomSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'users'
       }],
+      pieces: [{
+        tile: Number,
+        team: Number,
+        id: Number,
+        path: [Number]
+      }],
       throws: Number
     }],
     turn: {
       team: Number,
-      player: [Number]
+      players: [Number]
     },
     messages: [{
       _id: false,
@@ -172,11 +178,23 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
             {
               _id: 0,
               players: [],
+              pieces: [
+                { tile: -1, team: 0, id: 0, path: [] },
+                { tile: -1, team: 0, id: 1, path: [] },
+                { tile: -1, team: 0, id: 2, path: [] },
+                { tile: -1, team: 0, id: 3, path: [] },
+              ],
               throws: 0
             },
             {
               _id: 1,
               players: [],
+              pieces: [
+                { tile: -1, team: 1, id: 0, path: [] },
+                { tile: -1, team: 1, id: 1, path: [] },
+                { tile: -1, team: 1, id: 2, path: [] },
+                { tile: -1, team: 1, id: 3, path: [] },
+              ],
               throws: 0
             }
           ],
@@ -185,7 +203,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           gamePhase: 'lobby',
           turn: {
             team: 0,
-            player: [0, 0]
+            players: [0, 0]
           }
         })
         await room.save();
@@ -314,7 +332,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       let randomTeam = Math.floor(Math.random() * 2)
       let turn = {
         team: randomTeam,
-        player: [0, 0]
+        players: [0, 0]
       }
       try {
         await Room.findOneAndUpdate({ _id: roomId }, {

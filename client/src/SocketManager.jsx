@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
-import { disconnectAtom, isCurrentPlayerAtom, readyToStartAtom } from "./GlobalState.jsx";
+import { currentPlayerAtom, disconnectAtom, readyToStartAtom, turnAtom, yootActiveAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -29,7 +29,6 @@ export const selectionAtom = atom(null);
 export const charactersAtom = atom([]);
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
-export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
 export const gamePhaseAtom = atom("lobby");
 export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
@@ -57,9 +56,8 @@ export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom);
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
-  const [teams, setTeams] = useAtom(teamsAtom);
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom);
-  const [_turn, setTurn] = useAtom(turnAtom);
+  const [turn, setTurn] = useAtom(turnAtom);
   const [celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
   const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
   const [_hostName, setHostName] = useAtom(hostNameAtom)
@@ -76,12 +74,14 @@ export const SocketManager = () => {
 
   // new setters
   const [client, setClient] = useAtom(clientAtom);
+  const [teams, setTeams] = useAtom(teamsAtom)
   const [_team0Players, setTeam0Players] = useAtom(team0PlayersAtom)
   const [_team1Players, setTeam1Players] = useAtom(team1PlayersAtom)
   const [_spectators, setSpectators] = useAtom(spectatorsAtom)
   const [readyToStart, setReadyToStart] = useAtom(readyToStartAtom)
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
-  const [isCurrentPlayer, setIsCurrentPlayer] = useAtom(isCurrentPlayerAtom)
+  const [currentPlayer, setCurrentPlayer] = useAtom(currentPlayerAtom)
+  const [yootActive, setYootActive] = useAtom(yootActiveAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -119,8 +119,7 @@ export const SocketManager = () => {
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
       setMessages(room.messages)
-      setTeam0Players(room.teams[0].players)
-      setTeam1Players(room.teams[1].players)
+      setTeams(room.teams)
       setSpectators(room.spectators)
       if (room.host !== null) {
         if (room.host.socketId === socket.id) {
@@ -152,12 +151,7 @@ export const SocketManager = () => {
         setReadyToStart(false)
       }
 
-      // if ((room.gamePhase === 'pregame' || room.gamePhase === 'game') && 
-      // room[`team${room.turn.team}`].players[room.turn.player[room.turn.team]].socketId === socket.id) {
-      //   setIsCurrentPlayer(true)
-      // } else {
-      //   setIsCurrentPlayer(false)
-      // }
+      setTurn(room.turn)
 
       // setTeams(room.teams);
       // setTiles(room.tiles);
@@ -224,6 +218,23 @@ export const SocketManager = () => {
       setDisconnect(true);
     })
   }, [])
+
+  // updating on teams change might cause issues
+  // if players leave and player index from turn
+  // is out of range
+  useEffect(() => {
+    console.log(`[SocketManager] turn`, turn)
+    const currentTeam = turn.team
+    const currentPlayer = turn.players[turn.team]
+    if (teams[currentTeam].players.length > 0 && 
+      teams[currentTeam].players[currentPlayer].socketId === client.socketId &&
+      teams[currentTeam].throws > 0
+    ) {
+      setYootActive(true)
+    } else {
+      setYootActive(false)
+    }
+  }, [client, turn])
 
   useEffect(() => {
     function onConnect() {

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import { RigidBody, CuboidCollider, Physics } from "@react-three/rapier";
 import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import React, {ref} from "react";
-import { yootThrowValuesAtom, clientAtom, gamePhaseAtom, turnAtom, teamsAtom, socket, particleSettingAtom, boomTextAtom } from "./SocketManager.jsx";
+import { yootThrowValuesAtom, gamePhaseAtom, socket, particleSettingAtom, boomTextAtom } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import layout from "./layout.js";
@@ -15,15 +15,15 @@ import meteorSettings from "./particles/Meteors.js";
 
 THREE.ColorManagement.legacyMode = false;
 
-export default function Yoot({ device, buttonPos }) {
+export default function Yoot({ device }) {
   const nodes = useGLTF("/models/yoot.glb").nodes;
   const materials = useGLTF("/models/yoot.glb").materials;
   const nodesRhino = useGLTF("/models/yoot-rhino.glb").nodes;
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [gamePhase] = useAtom(gamePhaseAtom)
   const [outOfBounds, setOutOfBounds] = useState(false);
 
   const NUM_YOOTS = 4;
@@ -150,7 +150,7 @@ export default function Yoot({ device, buttonPos }) {
   }
 
   return (
-    <group dispose={null}>
+    <Physics>
       <RigidBody
         type="fixed"
         restitution={0.01}
@@ -231,12 +231,11 @@ export default function Yoot({ device, buttonPos }) {
           position={[-1, 1.5, 0]}
         />
       </> }
-      { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
-        position={buttonPos} 
+      {(gamePhase === "pregame" || gamePhase === "game") && <YootButton 
+        position={layout[device].throwButton.position}
         rotation={[0, Math.PI/2, 0]}
-        handlePointerDown={handleYootThrow}
         scale={0.8}
       />}
-    </group>
+    </Physics>
   );
 }
