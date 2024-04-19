@@ -204,7 +204,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           turn: {
             team: 0,
             players: [0, 0]
-          }
+          },
+          yootThrown: false
         })
         await room.save();
         console.log('[createRoom] room', room)

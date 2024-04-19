@@ -3,15 +3,14 @@ import { RigidBody, CuboidCollider, Physics } from "@react-three/rapier";
 import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import React, {ref} from "react";
-import { yootThrowValuesAtom, gamePhaseAtom, socket, particleSettingAtom, boomTextAtom } from "./SocketManager.jsx";
+import React from "react";
+import { socket } from "./SocketManager.jsx";
 import { useAtom } from "jotai";
-import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
-import HtmlElement from "./HtmlElement.jsx";
 import meteorSettings from "./particles/Meteors.js";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom } from "./GlobalState.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -62,7 +61,7 @@ export default function Yoot({ device }) {
   }, [yootThrowValues]);
 
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
-  const [boomText, setBoomText] = useAtom(boomTextAtom)
+  // const [boomText, setBoomText] = useAtom(boomTextAtom)
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
@@ -73,7 +72,7 @@ export default function Yoot({ device }) {
       let move = observeThrow();
       // move = 4
       if ((move === 4 || move === 5)) {
-        setBoomText('bonus turn')
+        // setBoomText('bonus turn')
         setParticleSetting({emitters: meteorSettings(device)})
       }
       socket.emit("yootsAsleep", ({response}) => {

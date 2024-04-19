@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
-import { clientAtom, socket } from './SocketManager';
+import { socket } from './SocketManager';
 import { useAtom } from 'jotai';
-import { disconnectAtom, joinTeamAtom } from './GlobalState';
+import { joinTeamAtom } from './GlobalState';
 import layout from './layout';
 
 export default function JoinTeamModal({ device }) {

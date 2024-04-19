@@ -1,5 +1,5 @@
 
-import { selectionAtom, teamsAtom, socket, gamePhaseAtom, legalTilesAtom, tilesAtom, clientAtom, thrownAtom } from "../SocketManager";
+import { socket } from "../SocketManager";
 import { useAtom } from "jotai";
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -7,7 +7,7 @@ import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
 import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
-import { turnAtom } from "../GlobalState.jsx";
+import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom } from "../GlobalState.jsx";
 
 export default function Piece ({
   position,
@@ -19,12 +19,12 @@ export default function Piece ({
 }) {
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
-  const [tiles] = useAtom(tilesAtom)
+  // const [tiles] = useAtom(tilesAtom)
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [legalTiles] = useAtom(legalTilesAtom);
+  // const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom)
-  const [thrown] = useAtom(thrownAtom)
+  const [thrown] = useAtom(yootThrownAtom)
 
   const group = useRef();
   const wrapperMat = useRef();

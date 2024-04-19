@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
-import { teamsAtom, selectionAtom, tilesAtom, socket, legalTilesAtom, clientAtom, gamePhaseAtom } from "../SocketManager";
+import { socket } from "../SocketManager";
 import Pointer from "../meshes/Pointer"
 import React from "react";
 import Piece from "./Piece";
@@ -8,14 +8,14 @@ import { isMyTurn } from "../helpers/helpers";
 import layout from "../layout";
 import { useFrame } from "@react-three/fiber";
 import ScoreButton from "../ScoreButton";
-import { turnAtom } from "../GlobalState";
+import { teamsAtom, clientAtom, gamePhaseAtom, turnAtom, tilesAtom, selectionAtom } from "../GlobalState";
 
 const SCALE = 4
 export default function Tile({ tile, wrapperRadius, device }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
   const [tiles] = useAtom(tilesAtom);
-  const [legalTiles] = useAtom(legalTilesAtom)
+  // const [legalTiles] = useAtom(legalTilesAtom)
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)

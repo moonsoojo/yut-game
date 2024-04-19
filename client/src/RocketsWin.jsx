@@ -3,17 +3,13 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 import { PresentationControls, Text3D } from '@react-three/drei'
-import Rocket from './meshes/Rocket'
-// import Fireworks from './particles/FireworksBackup'
 import fireworksSettings from './particles/RocketsWinFireworks';
-import Earth from './meshes/Earth'
 import Stars from './particles/Stars'
-import * as THREE from 'three'
 import EarthModified from './meshes/EarthModified';
 import RocketWinMesh from './meshes/RocketWinMesh';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
-import { particleSettingAtom } from './SocketManager';
+import { particleSettingAtom } from './GlobalState';
 
 export default function RocketsWin({handleRestart, device}) {
 

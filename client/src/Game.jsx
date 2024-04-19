@@ -42,17 +42,7 @@ import Stars from './particles/Stars'
 // import { Perf } from 'r3f-perf'
 
 // server
-import {
-  teamsAtom,
-  socket,
-  legalTilesAtom,
-  clientAtom,
-  displayDisconnectAtom,
-  winnerAtom,
-  hostNameAtom,
-  roomIdAtom,
-  particleSettingAtom,
-} from "./SocketManager";
+import { socket } from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
@@ -64,18 +54,16 @@ import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/MeteorsBackup.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
-import BoomText from "./BoomText.jsx";
+// import BoomText from "./BoomText.jsx";
 import { joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
-import Team0 from "./Team0.jsx";
-import Team1 from "./Team1.jsx";
 import { useParams } from "wouter";
 import Team from "./Team.jsx";
 import GameCamera from "./GameCamera.jsx";
 import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 import mediaValues from "./mediaValues.js";
 import DisconnectModal from "./DisconnectModal.jsx";
-import { readyToStartAtom, turnAtom } from "./GlobalState.jsx";
+import { readyToStartAtom, turnAtom, hostNameAtom, clientAtom } from "./GlobalState.jsx";
 import Yoot from "./Yoot.jsx";
 
 // There should be no state

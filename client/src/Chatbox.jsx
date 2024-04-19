@@ -1,10 +1,11 @@
 import { Html, Scroll } from "@react-three/drei";
-import { socket, messagesAtom, clientAtom } from "./SocketManager";
+import { socket } from "./SocketManager";
 import { useAtom } from "jotai";
 import React, { useState, useRef, useEffect } from "react";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useParams } from "wouter";
 import layout from "./layout";
+import { messagesAtom } from "./GlobalState"
 
 export default function Chatbox({ device }) {
   const [messages] = useAtom(messagesAtom);

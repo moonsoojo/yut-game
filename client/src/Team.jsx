@@ -1,8 +1,7 @@
 import React from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
-import { clientAtom, team0PlayersAtom, team1PlayersAtom, teamsAtom } from './SocketManager';
-import { joinTeamAtom } from './GlobalState';
+import { joinTeamAtom, clientAtom, teamsAtom } from './GlobalState';
 import { Html } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';

@@ -23,7 +23,7 @@ import System, {
   Force,
 } from "three-nebula";
 import { useAtom, atom } from 'jotai';
-import { particleSettingAtom } from "../SocketManager";
+import { particleSettingAtom } from "../GlobalState";
 import { getRandomNumber } from "../helpers/helpers";
 
 export default function ParticleSystem() {

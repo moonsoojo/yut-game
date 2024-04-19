@@ -40,7 +40,7 @@ import Ufo from './meshes/Ufo';
 import BonusTurn from './meshes/BonusTurn';
 import ArrowBlender from './meshes/ArrowBlender';
 import YootSet from './meshes/YootSet';
-import { particleSettingAtom } from './SocketManager';
+import { particleSettingAtom } from './GlobalState';
 import { useAtom } from 'jotai';
 
 

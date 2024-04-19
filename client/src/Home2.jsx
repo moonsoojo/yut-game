@@ -16,14 +16,13 @@ import { useFrame } from '@react-three/fiber';
 import { Euler } from 'three';
 import Yoot from './meshes/Yoot';
 import { useLocation } from 'wouter';
-import { makeId } from './helpers/helpers';
 import HtmlElement from './HtmlElement';
 import HowToPlay from './HowToPlay';
 import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
-import mongoose from 'mongoose';
-import { socket, clientAtom } from './SocketManager';
+import { socket } from './SocketManager';
+import { clientAtom } from './GlobalState';
 import mediaValues from './mediaValues';
 
 export default function Home2() {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 
 import { Float, PresentationControls, Text3D } from '@react-three/drei'
 import Earth from './meshes/Earth'
@@ -13,8 +13,8 @@ import Stars from './particles/Stars';
 import * as THREE from 'three';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
-import { particleSettingAtom } from './SocketManager';
 import UfosWinParticles from './particles/UfosWinParticles';
+import { particleSettingAtom } from './GlobalState';
 
 export default function UfosWin({ handleRestart, device }) {
 

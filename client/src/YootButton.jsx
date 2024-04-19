@@ -2,11 +2,8 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import { clientAtom, teamsAtom, thrownAtom } from './SocketManager';
 import { useAtom } from 'jotai';
-import { getCurrentPlayerSocketId } from './helpers/helpers';
-import { gamePhaseAtom, yootActiveAtom } from './GlobalState';
-import { turnAtom } from './GlobalState';
+import { yootThrownAtom, gamePhaseAtom, yootActiveAtom, turnAtom } from './GlobalState';
 
 export default function YootButton({ 
   position, 
@@ -23,7 +20,7 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [thrown] = useAtom(thrownAtom)
+  const [thrown] = useAtom(yootThrownAtom)
   const [yootActive] = useAtom(yootActiveAtom);
 
   const scaleOuter = [1.4, -0.079, 1]

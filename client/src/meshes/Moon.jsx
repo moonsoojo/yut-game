@@ -1,11 +1,8 @@
-import { selectionAtom, tilesAtom, socket } from "../SocketManager";
 import { useTexture } from "@react-three/drei";
 import React from "react";
 import Tile from '../components/Tile';
 import HelperArrow from "./HelperArrow";
-import { useRef, useEffect } from "react";
-import { useAtom } from "jotai";
-import layout from "../layout";
+import { useRef } from "react";
 import { animated } from "@react-spring/three";
 
 export default function Moon({ position, tile, scale = 0.4, device }) {

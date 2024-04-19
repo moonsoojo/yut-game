@@ -1,13 +1,8 @@
-import React, { useRef, useState } from "react";
-// import { useRocketStore } from "./state/zstore";
-// import { useRocketStore } from "./state/zstore2";
+import React, { useState } from "react";
 import { Text3D, useGLTF } from "@react-three/drei";
-import { selectionAtom, legalTilesAtom, displayScoreOptionsAtom, socket } from "./SocketManager";
+import { socket } from "./SocketManager";
 import { useAtom } from "jotai";
-import Pointer from "./meshes/Pointer";
-import TextButton from "./components/TextButton";
-import layout from "./layout";
-import HtmlElement from "./HtmlElement";
+import { displayScoreOptionsAtom } from "./GlobalState";
 
 const SCORE_TILE = 29
 export default function ScoreButton({ position, scale }) {
