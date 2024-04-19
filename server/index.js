@@ -54,13 +54,19 @@ const roomSchema = new mongoose.Schema(
       players: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'users'
-      }]
+      }],
+      throws: Number
     },
     team1: {
       players: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'users'
-      }]
+      }],
+      throws: Number
+    },
+    turn: {
+      team: Number,
+      player: [Number]
     },
     messages: [{
       _id: false,
@@ -165,14 +171,20 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           createdTime: new Date(),
           spectators: [],
           team0: {
-            players: []
+            players: [],
+            throws: 0
           },
           team1: {
-            players: []
+            players: [],
+            throws: 0
           },
           messages: [],
           host: user._id,
-          gamePhase: 'lobby'
+          gamePhase: 'lobby',
+          turn: {
+            team: 0,
+            player: [0, 0]
+          }
         })
         await room.save();
         console.log('[createRoom] room', room)
@@ -293,11 +305,21 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       return callback({ player })
     })
 
-    socket.on("startGame", async () => {
-      // Set Turn
-      // Add Throw
-      // Update Team with Turn
-      // Update game phase
+    socket.on("startGame", async ({ roomId }) => {
+      let randomTeam = Math.floor(Math.random() * 2)
+      let turn = {
+        team: randomTeam,
+        player: [0, 0]
+      }
+      try {
+        await Room.findOneAndUpdate({ _id: roomId }, {
+          gamePhase: "pregame",
+          turn,
+          [`team${turn.team}.throws`]: 1
+        })
+      } catch (err) {
+        console.log(`[startGame] error starting game`, err)
+      }
     })
 
     socket.on("sendMessage", async ({ message, roomId }, callback) => {

@@ -122,7 +122,7 @@ export default function Game() {
     const [gamePhase] = useAtom(gamePhaseAtom)
 
     function handleLetsPlay() {
-      socket.emit("startGame")
+      socket.emit("startGame", { roomId: params.id })
     }
 
     return <>

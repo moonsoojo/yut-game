@@ -116,6 +116,7 @@ export const SocketManager = () => {
 
   useEffect(() => {
     socket.on('room', (room) => {
+      console.log(`[SocketManager] room`, room)
       setMessages(room.messages)
       setTeam0Players(room.team0.players)
       setTeam1Players(room.team1.players)
