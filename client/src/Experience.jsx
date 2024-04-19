@@ -1,12 +1,10 @@
 // js
 import React from "react";
-import { useAtom } from "jotai";
 import * as THREE from "three";
 import Stars from './particles/Stars'
 
 // server
 import MilkyWay from "./shader/MilkyWay.jsx";
-// import BoomText from "./BoomText.jsx";
 import Game from "./Game.jsx";
 
 export default function Experience() {

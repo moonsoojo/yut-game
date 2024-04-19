@@ -3,7 +3,9 @@ import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
-import { yootThrownAtom, gamePhaseAtom, yootActiveAtom, turnAtom } from './GlobalState';
+import { socket } from './SocketManager';
+import { yootThrownAtom, yootActiveAtom, clientAtom } from './GlobalState';
+import { useParams } from 'wouter';
 
 export default function YootButton({ 
   position, 
@@ -22,6 +24,11 @@ export default function YootButton({
 
   const [thrown] = useAtom(yootThrownAtom)
   const [yootActive] = useAtom(yootActiveAtom);
+  // To get the team number on yoot throw
+  const [client] = useAtom(clientAtom)
+  // To get the room ID on yoot throw
+  // Pass client info on emit or fetch it from server with socket id?
+  const params = useParams();
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
@@ -47,7 +54,7 @@ export default function YootButton({
     document.body.style.cursor = "default";
   }
   function handleYootThrow() {
-    socket.emit("throwYoots"); // removed payload and callback
+    socket.emit("throwYoot", { roomId: params.id }); // removed payload and callback
   }
 
   return <group 
