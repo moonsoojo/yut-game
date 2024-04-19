@@ -79,7 +79,14 @@ const roomSchema = new mongoose.Schema(
       ref: 'users'
     },
     gamePhase: String,
-    yootThrown: Boolean
+    yootThrown: Boolean,
+    yootThrowValues: [{
+      _id: Number,
+      positionInHand: { x: Number, y: Number, z: Number },
+      rotation: { x: Number, y: Number, z: Number, w: Number},
+      yImpulse: Number,
+      torqueImpulse: { x: Number, y: Number, z: Number }
+    }]
   },
   {
     versionKey: false,
@@ -206,7 +213,8 @@ io.on("connect", async (socket) => {
           team: 0,
           players: [0, 0]
         },
-        yootThrown: false
+        yootThrown: false,
+        yootThrowValues: null
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -350,6 +358,32 @@ io.on("connect", async (socket) => {
     }
   })
 
+  function generateRandomNumberInRange(num, plusMinus) {
+    return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+  };
+
+  function generateForveVectors() {
+    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
+    let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+
+    const yootForceVectors = [];
+    for (let i = 0; i < 4; i++) {
+      yootForceVectors.push({
+        _id: i,
+        positionInHand: initialYootPositions[i],
+        rotation: initialYootRotations[i],
+        yImpulse: generateRandomNumberInRange(0.7, 0.2),
+        torqueImpulse: {
+          x: generateRandomNumberInRange(0.03, 0.004),
+          y: generateRandomNumberInRange(0.003, 0.001),
+          z: generateRandomNumberInRange(0.003, 0.001),
+        },
+      });
+    }
+    
+    return yootForceVectors
+  }
+
   socket.on("sendMessage", async ({ message, roomId }, callback) => {
     try {
       let room = await Room.findById(roomId).exec();
@@ -366,25 +400,46 @@ io.on("connect", async (socket) => {
   })
 
   socket.on("throwYoot", async ({ roomId }) => {
-    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
-    let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
     let user;
+    
+    // Find user who made the request
     try {
       user = await User.findOne({ socketId: socket.id })
     } catch (err) {
       console.log(`[throwYoot] error getting user with socket id ${socket.id}`, err)
     }
-    // Decrement throws for throwing team
-    // Client can send multiple signals before state is updated.
-    // Check condition here to make sure criteria is met in the database.
+
     try {
-      // let room = await Room.findOneAndUpdate({ _id: roomId, 'teams._id': user.team }, { $inc: { [`teams.$.throws`]: -1 } })
       let room = await Room.findOne({ _id: roomId })
+      
+      // Check condition here to make sure criteria is met in the database
       if (room.teams[user.team].throws > 0) {
-        await Room.findOneAndUpdate({ _id: roomId, 'teams._id': user.team }, { $inc: { [`teams.$.throws`]: -1 } })
+        // Update throw values
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId
+          }, 
+          { 
+            $set: { 
+              yootThrowValues: generateForveVectors(),
+              yootThrown: true
+            },
+          }
+        )
+
+        // Decrement throws for throwing team
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId, 
+            'teams._id': user.team 
+          }, 
+          { 
+            $inc: { [`teams.$.throws`]: -1 } 
+          }
+        )
       }
     } catch (err) {
-      console.log(`[throwYoot] error decrementing throws`, err)
+      console.log(`[throwYoot] error updating throw values and decrementing throws`, err)
     }
   })
 

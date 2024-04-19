@@ -38,6 +38,7 @@ export default function Yoot({ device }) {
     for (let i = 0; i < yootMeshes.length; i++) {
       yootMeshes[i].current.material.visible = true
     }
+
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
       for (let i = 0; i < 4; i++) {
@@ -60,7 +61,7 @@ export default function Yoot({ device }) {
     }
   }, [yootThrowValues]);
 
-  const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   // const [boomText, setBoomText] = useAtom(boomTextAtom)
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
@@ -75,6 +76,8 @@ export default function Yoot({ device }) {
         // setBoomText('bonus turn')
         setParticleSetting({emitters: meteorSettings(device)})
       }
+      // pass observed result, turn off 'thrown' flag, check if
+      // client has turn, and record throw all at once
       socket.emit("yootsAsleep", ({response}) => {
         // console.log("[yootsAsleep] response", response)
         if (response === "record") {

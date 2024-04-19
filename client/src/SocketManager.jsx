@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -34,6 +34,7 @@ export const SocketManager = () => {
   const [_yootActive, setYootActive] = useAtom(yootActiveAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
+  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
 
   useEffect(() => {
 
@@ -108,6 +109,8 @@ export const SocketManager = () => {
 
       setTurn(room.turn)
       setYootThrown(room.yootThrown)
+      console.log(`[SocketManager] yoot throw values`, room.yootThrowValues)
+      setYootThrowValues(room.yootThrowValues)
 
     })
 
