@@ -50,20 +50,14 @@ const roomSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'users'
     }],
-    team0: {
+    teams: [{
+      _id: Number,
       players: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'users'
       }],
       throws: Number
-    },
-    team1: {
-      players: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'users'
-      }],
-      throws: Number
-    },
+    }],
     turn: {
       team: Number,
       player: [Number]
@@ -130,12 +124,16 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
-    let users = data.fullDocument.spectators.concat(data.fullDocument.team0.players.concat(data.fullDocument.team1.players))
+    let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
     for (const user of users) {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
-        let roomPopulated = await Room.findById(data.documentKey._id).populate('spectators').populate('host').populate('team0.players').populate('team1.players').exec()
+        let roomPopulated = await Room.findById(data.documentKey._id)
+        .populate('spectators')
+        .populate('host')
+        .populate('teams.players')
+        .exec()
         io.to(userSocketId).emit('room', roomPopulated)
       } catch (err) {
         console.log(`[Room.watch] error getting user's socket id`, err)
@@ -170,14 +168,18 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           _id: objectId,
           createdTime: new Date(),
           spectators: [],
-          team0: {
-            players: [],
-            throws: 0
-          },
-          team1: {
-            players: [],
-            throws: 0
-          },
+          teams: [
+            {
+              _id: 0,
+              players: [],
+              throws: 0
+            },
+            {
+              _id: 1,
+              players: [],
+              throws: 0
+            }
+          ],
           messages: [],
           host: user._id,
           gamePhase: 'lobby',
@@ -203,7 +205,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
           if (user.team === -1) {
             room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
           } else {
-            room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { [`team${user.team}.players`]: user._id }}).exec()
+            room = await Room.findOneAndUpdate({ _id: roomId, "teams._id": user.team }, { $addToSet: { [`teams.$.players`]: user._id }}).exec()
           }
         } else { // Use default values (add as spectator)
           room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
@@ -259,12 +261,13 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       ).exec()
       await Room.updateOne(
         { 
-          _id: user.roomId 
+          _id: user.roomId,
+          'teams._id': 0
         }, 
         { 
           $pullAll: 
             { 
-              'team0.players': [
+              'teams.$.players': [
                 { _id: user._id }
               ]
             }
@@ -272,12 +275,13 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       ).exec()
       await Room.updateOne(
         { 
-          _id: user.roomId 
+          _id: user.roomId,
+          'teams._id': 1
         }, 
         { 
           $pullAll: 
             { 
-              'team1.players': [
+              'teams.$.players': [
                 { _id: user._id }
               ]
             }
@@ -287,16 +291,16 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     }
 
     socket.on("joinTeam", async ({ team, name }, callback) => {
-
+      console.log(`[joinTeam]`)
       let player;
       try {
         player = await User.findOneAndUpdate({ 'socketId': socket.id }, { team, name }).exec()
-
+        player.save()
         // Remove the user from the room
         await removeUser(player)
         
         // Add to the team's players array
-        await Room.findOneAndUpdate({ _id: player.roomId }, { $addToSet: { [`team${team}.players`]: player._id }}).exec()
+        await Room.findOneAndUpdate({ _id: player.roomId, "teams._id": team }, { $addToSet: { [`teams.$.players`]: player._id }}).exec()
       } catch (err) {
         console.log(`[joinTeam] error joining team`, err)
         return callback()
@@ -314,9 +318,12 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       try {
         await Room.findOneAndUpdate({ _id: roomId }, {
           gamePhase: "pregame",
-          turn,
-          [`team${turn.team}.throws`]: 1
+          turn
         })
+        await Room.findOneAndUpdate({ _id: roomId, 'teams._id': randomTeam }, {
+          'teams.$.throws': 1
+        })
+        
       } catch (err) {
         console.log(`[startGame] error starting game`, err)
       }
@@ -342,22 +349,26 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       try {
         // Remove user from room
         let user = await User.findOneAndDelete({ 'socketId': socket.id }).exec()
-        console.log(`[disconnect] user to remove`, user._id)
+        console.log(`[disconnect] user to remove`, user)
         if (user.roomId) {
-          console.log(`[disconnect] room not null`)
+          console.log(`[disconnect] room not null`, user.roomId)
+          let roomId = user.roomId
           await removeUser(user)
   
           // Remove host if it was the user
           // Assign another user in the room
-          let updatedRoom = await Room.findById(user.roomId).exec()
+          let updatedRoom = await Room.findById(roomId).exec()
           let hostId = updatedRoom.host
-          let users = updatedRoom.spectators.concat(updatedRoom.team0.players.concat(updatedRoom.team1.players))
-          if (user._id.valueOf() === hostId.valueOf() && users.length > 0) {
-            updatedRoom.host = users[0]
-            updatedRoom.save();
-          } else if (users.length === 0) { // Remove host
-            updatedRoom.host = null
-            updatedRoom.save();
+          console.log(`[disconnect] hostId`, hostId)
+          let userCount = updatedRoom.spectators.length + updatedRoom.teams[0].players.length + updatedRoom.teams[1].players.length
+          if (hostId) {
+            if (user._id.valueOf() === hostId.valueOf() && userCount > 0) {
+              updatedRoom.host = await User.findOne({ 'roomId': roomId })
+              updatedRoom.save();
+            } else if (userCount === 0) { // Remove host
+              updatedRoom.host = null
+              updatedRoom.save();
+            }
           }
         }
       } catch (err) {

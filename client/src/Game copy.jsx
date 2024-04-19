@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import layout from "./layout.js";
 
 // meshes
-import Yoots from "./Yoots.jsx";
+import Yoots from "./Yoot.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";

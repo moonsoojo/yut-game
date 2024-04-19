@@ -5,13 +5,12 @@ import { SkeletonUtils } from 'three-stdlib';
 import { clientAtom, teamsAtom, thrownAtom, turnAtom } from './SocketManager';
 import { useAtom } from 'jotai';
 import { getCurrentPlayerSocketId } from './helpers/helpers';
+import { isCurrentPlayerAtom } from './GlobalState';
 
 export default function YootButton({ 
   position, 
   rotation, 
-  handlePointerDown,
-  scale,
-  active=false
+  scale
 }) {
   // yoots with material
   // get texture of yoot
@@ -23,7 +22,7 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [client] = useAtom(clientAtom)
+  const [isCurrentPlayer] = useAtom(isCurrentPlayerAtom)
   const [turn] = useAtom(turnAtom)
   const [teams] = useAtom(teamsAtom)
   const [thrown] = useAtom(thrownAtom)
@@ -32,6 +31,11 @@ export default function YootButton({
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
   const scaleYoot = 0.15
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
+
+  function isActive() {
+    const [isCurrentPlayer] = useAtom(isCurrentPlayerAtom)
+    const [client] = useAtom(clientAtom);
+  }
 
   useFrame((state, delta) => {
     if (active && !thrown) {
@@ -50,6 +54,9 @@ export default function YootButton({
   }
   function handlePointerLeave() {
     document.body.style.cursor = "default";
+  }
+  function handleYootThrow() {
+    socket.emit("throwYoots"); // removed payload and callback
   }
 
   return (
@@ -132,7 +139,7 @@ export default function YootButton({
         position={[0, 0.1, 0]} 
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        onPointerDown={handlePointerDown}
+        onPointerDown={handleYootThrow}
       >
         <boxGeometry args={[3, 0.3, 2]}/>
         <meshStandardMaterial transparent opacity={0}/>

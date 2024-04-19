@@ -4,7 +4,7 @@ import { useAtom, atom } from "jotai";
 import layout from "./layout.js";
 
 // meshes
-import Yoots from "./Yoots.jsx";
+import Yoots from "./Yoot.jsx";
 import Star from "./meshes/Star.jsx";
 import Neptune from "./meshes/Neptune.jsx";
 import Earth from "./meshes/Earth.jsx";
@@ -77,6 +77,7 @@ import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 import mediaValues from "./mediaValues.js";
 import DisconnectModal from "./DisconnectModal.jsx";
 import { readyToStartAtom } from "./GlobalState.jsx";
+import Yoot from "./Yoot.jsx";
 
 
 // There should be no state
@@ -88,7 +89,6 @@ import { readyToStartAtom } from "./GlobalState.jsx";
 export default function Game() {
   const params = useParams();
   const [disconnect] = useAtom(disconnectAtom)
-  const [gamePhase] = useAtom(gamePhaseAtom);
 
   // Responsive UI
   const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
@@ -99,6 +99,7 @@ export default function Game() {
       setDevice("landscapeDesktop")
     }
   }
+
   function initializeDevice(windowWidth, landscapeCutoff) {
     if (windowWidth < landscapeCutoff) {
       return "portrait"
@@ -106,6 +107,7 @@ export default function Game() {
       return "landscapeDesktop"
     }
   }
+
   useEffect(() => {
     window.addEventListener("resize", handleResize, false);
   }, [window.innerWidth]);
@@ -117,7 +119,7 @@ export default function Game() {
     })
   }, [])
 
-  function LetsPlayButton() {
+  function LetsPlayButton({ device }) {
     const [readyToStart] = useAtom(readyToStartAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
 
@@ -126,7 +128,7 @@ export default function Game() {
     }
 
     return <>
-    { readyToStart && gamePhase === 'lobby' && <HtmlElement 
+      { readyToStart && gamePhase === 'lobby' && <HtmlElement 
         text={'lets play!'}
         position={layout[device].letsPlayButton.position}
         rotation={layout[device].letsPlayButton.rotation}
@@ -136,7 +138,7 @@ export default function Game() {
     </>
   }
 
-  function Host() {
+  function Host({ device }) {
     const [hostName] = useAtom(hostNameAtom)
     return <HtmlElement
       text={`HOST: ${hostName}`}
@@ -158,15 +160,16 @@ export default function Game() {
       {/* { gamePhase === "pregame" && <DecideOrderTooltip
         position={layout[device].tooltip.whoFirst.position}
         rotation={[-Math.PI/2, 0, 0]}
-      />} */}
+      /> } */}
       {/* chat section */}
       { !disconnect && <Chatbox device={device}/> }
       { disconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
         rotation={layout[device].disconnectModal.rotation}
       /> }
-      <LetsPlayButton/>
-      <Host/>
+      <LetsPlayButton device={device}/>
+      <Host device={device}/>
+      {/* <Yoot device={device}/> */}
     </>
   );
 }

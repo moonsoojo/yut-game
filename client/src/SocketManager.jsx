@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
-import { disconnectAtom, readyToStartAtom } from "./GlobalState.jsx";
+import { disconnectAtom, isCurrentPlayerAtom, readyToStartAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -81,6 +81,7 @@ export const SocketManager = () => {
   const [_spectators, setSpectators] = useAtom(spectatorsAtom)
   const [readyToStart, setReadyToStart] = useAtom(readyToStartAtom)
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [isCurrentPlayer, setIsCurrentPlayer] = useAtom(isCurrentPlayerAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -118,8 +119,8 @@ export const SocketManager = () => {
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
       setMessages(room.messages)
-      setTeam0Players(room.team0.players)
-      setTeam1Players(room.team1.players)
+      setTeam0Players(room.teams[0].players)
+      setTeam1Players(room.teams[1].players)
       setSpectators(room.spectators)
       if (room.host !== null) {
         if (room.host.socketId === socket.id) {
@@ -130,7 +131,7 @@ export const SocketManager = () => {
       }
 
       // Find client from users
-      let users = room.team0.players.concat(room.team1.players.concat(room.spectators))
+      let users = room.teams[0].players.concat(room.teams[1].players.concat(room.spectators))
       for (const user of users) {
         if (user.socketId === socket.id) {
           setClient(user)
@@ -143,13 +144,20 @@ export const SocketManager = () => {
       setGamePhase(room.gamePhase);
 
       if (room.gamePhase === 'lobby' && 
-      room.team0.players.length > 0 && 
-      room.team1.players.length > 0 &&
+      room.teams[0].players.length > 0 && 
+      room.teams[1].players.length > 0 &&
       room.host.socketId === socket.id) {
         setReadyToStart(true)
       } else {
         setReadyToStart(false)
       }
+
+      // if ((room.gamePhase === 'pregame' || room.gamePhase === 'game') && 
+      // room[`team${room.turn.team}`].players[room.turn.player[room.turn.team]].socketId === socket.id) {
+      //   setIsCurrentPlayer(true)
+      // } else {
+      //   setIsCurrentPlayer(false)
+      // }
 
       // setTeams(room.teams);
       // setTiles(room.tiles);

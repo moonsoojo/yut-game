@@ -23,9 +23,9 @@ export default function JoinTeamModal({ device }) {
       setAlert("")
       socket.emit("joinTeam", { team: joinTeam, name }, ({ player }) => {
         if (player) {
-          localStorage.setItem('yootGame', JSON.stringify({
-            ...player
-          }))
+          // localStorage.setItem('yootGame', JSON.stringify({
+          //   ...player
+          // }))
           setName('')
           setJoinTeam(null);
         }
