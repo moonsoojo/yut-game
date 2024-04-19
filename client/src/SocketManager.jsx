@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { useParams } from "wouter";
 
 import initialState from "../initialState.js"; 
-import { disconnectAtom } from "./GlobalState.jsx";
+import { disconnectAtom, readyToStartAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -30,7 +30,6 @@ export const charactersAtom = atom([]);
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)));
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)));
 export const turnAtom = atom(JSON.parse(JSON.stringify(initialState.turn)));
-export const readyToStartAtom = atom(false);
 export const gamePhaseAtom = atom("lobby");
 export const displayScoreOptionsAtom = atom(false);
 export const legalTilesAtom = atom({});
@@ -59,10 +58,8 @@ export const SocketManager = () => {
   const [_characters, setCharacters] = useAtom(charactersAtom);
   const [_tiles, setTiles] = useAtom(tilesAtom);
   const [teams, setTeams] = useAtom(teamsAtom);
-  const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom);
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom);
   const [_turn, setTurn] = useAtom(turnAtom);
-  const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [celebrateText, setCelebrateText] = useAtom(celebrateTextAtom)
   const [celebrateMeteors, setCelebrateMeteors] = useAtom(celebrateMeteorsAtom)
   const [_hostName, setHostName] = useAtom(hostNameAtom)
@@ -82,6 +79,8 @@ export const SocketManager = () => {
   const [_team0Players, setTeam0Players] = useAtom(team0PlayersAtom)
   const [_team1Players, setTeam1Players] = useAtom(team1PlayersAtom)
   const [_spectators, setSpectators] = useAtom(spectatorsAtom)
+  const [readyToStart, setReadyToStart] = useAtom(readyToStartAtom)
+  const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -118,11 +117,6 @@ export const SocketManager = () => {
   useEffect(() => {
     socket.on('room', (room) => {
       setMessages(room.messages)
-      // setClient(getClient(room, socket.id))
-      // parse users into team 0, team 1, and spectators
-      // update corresponding states
-      // this prevents receiving components that don't
-      // have changes from re-rendeing
       setTeam0Players(room.team0.players)
       setTeam1Players(room.team1.players)
       setSpectators(room.spectators)
@@ -145,21 +139,24 @@ export const SocketManager = () => {
         }
       }
 
-      // Check if game is ready to start
-      // Check game phase is 'lobby'
-      // Check there's a player on each team
-      // Check the client is the host
+      setGamePhase(room.gamePhase);
+
+      if (room.gamePhase === 'lobby' && 
+      room.team0.players.length > 0 && 
+      room.team1.players.length > 0 &&
+      room.host.socketId === socket.id) {
+        setReadyToStart(true)
+      } else {
+        setReadyToStart(false)
+      }
 
       // setTeams(room.teams);
-      // setGamePhase(room.gamePhase);
       // setTiles(room.tiles);
       // setTurn(room.turn);
       // setLegalTiles(room.legalTiles);
       // setSelection(room.selection);
-      // // setReadyToStart(room.readyToStart)
       // setWinner(room.winner)
       // console.log(`[SocketManager] ${room.hostName}`)
-      // setHostName(room.hostName)
       // setRoomId(room.id)
       // setThrown(room.thrown)
     })

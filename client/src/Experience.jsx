@@ -43,18 +43,6 @@ import Stars from './particles/Stars'
 
 
 // server
-import {
-  readyToStartAtom,
-  teamsAtom,
-  turnAtom,
-  socket,
-  legalTilesAtom,
-  clientAtom,
-  winnerAtom,
-  hostNameAtom,
-  roomIdAtom,
-  particleSettingAtom,
-} from "./SocketManager";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
 import UfosWin from "./UfosWin.jsx";
@@ -71,8 +59,6 @@ import BoomText from "./BoomText.jsx";
 import Game from "./Game.jsx";
 import mediaValues from "./mediaValues";
 import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
-
-
 
 export default function Experience() {
 

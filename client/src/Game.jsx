@@ -43,7 +43,6 @@ import Stars from './particles/Stars'
 
 // server
 import {
-  readyToStartAtom,
   teamsAtom,
   turnAtom,
   socket,
@@ -77,6 +76,7 @@ import GameCamera from "./GameCamera.jsx";
 import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
 import mediaValues from "./mediaValues.js";
 import DisconnectModal from "./DisconnectModal.jsx";
+import { readyToStartAtom } from "./GlobalState.jsx";
 
 
 // There should be no state
@@ -117,8 +117,33 @@ export default function Game() {
     })
   }, [])
 
-  function handleLetsPlay() {
-    socket.emit("startGame")
+  function LetsPlayButton() {
+    const [readyToStart] = useAtom(readyToStartAtom)
+    const [gamePhase] = useAtom(gamePhaseAtom)
+
+    function handleLetsPlay() {
+      socket.emit("startGame")
+    }
+
+    return <>
+    { readyToStart && gamePhase === 'lobby' && <HtmlElement 
+        text={'lets play!'}
+        position={layout[device].letsPlayButton.position}
+        rotation={layout[device].letsPlayButton.rotation}
+        fontSize={layout[device].letsPlayButton.fontSize}
+        handleClick={handleLetsPlay}
+      /> }
+    </>
+  }
+
+  function Host() {
+    const [hostName] = useAtom(hostNameAtom)
+    return <HtmlElement
+      text={`HOST: ${hostName}`}
+      position={layout[device].hostName.position}
+      rotation={layout[device].hostName.rotation}
+      fontSize={layout[device].hostName.fontSize}
+    />
   }
 
   console.log(`[Game]`)
@@ -140,14 +165,8 @@ export default function Game() {
         position={layout[device].disconnectModal.position}
         rotation={layout[device].disconnectModal.rotation}
       /> }
-      { gamePhase === "lobby" 
-      && <HtmlElement 
-        text={'lets play!'}
-        position={layout[device].letsPlayButton.position}
-        rotation={layout[device].letsPlayButton.rotation}
-        fontSize={layout[device].letsPlayButton.fontSize}
-        handleClick={handleLetsPlay}
-      />}
+      <LetsPlayButton/>
+      <Host/>
     </>
   );
 }

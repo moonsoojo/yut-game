@@ -71,6 +71,7 @@ const roomSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'users'
     },
+    gamePhase: String,
     yootThrown: Boolean
   },
   {
@@ -170,7 +171,8 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
             players: []
           },
           messages: [],
-          host: user._id
+          host: user._id,
+          gamePhase: 'lobby'
         })
         await room.save();
         console.log('[createRoom] room', room)
@@ -181,7 +183,6 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
     })
 
     socket.on("joinRoom", async ({ roomId }, callback) => {
-
       // Add user to room
       try {
         let user = await User.findOne({ 'socketId': socket.id }).exec()
@@ -272,6 +273,7 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
         }
       ).exec()
     }
+
     socket.on("joinTeam", async ({ team, name }, callback) => {
 
       let player;
@@ -289,6 +291,13 @@ io.on("connect", async (socket) => { // socket.handshake.query is data obj
       }
 
       return callback({ player })
+    })
+
+    socket.on("startGame", async () => {
+      // Set Turn
+      // Add Throw
+      // Update Team with Turn
+      // Update game phase
     })
 
     socket.on("sendMessage", async ({ message, roomId }, callback) => {
