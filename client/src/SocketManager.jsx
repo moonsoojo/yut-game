@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -33,8 +33,8 @@ export const SocketManager = () => {
   const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_yootActive, setYootActive] = useAtom(yootActiveAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
-  const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
+  const [_initialYootThrow, setInitialYootThrow] = useAtom(initialYootThrowAtom)
 
   useEffect(() => {
 
@@ -107,7 +107,6 @@ export const SocketManager = () => {
       room.teams[currentTeam].throws > 0 &&
       !room.yootThrown ) {
         setYootActive(true)
-        // setYootThrown(false)
       } else {
         setYootActive(false)
       }
@@ -125,10 +124,14 @@ export const SocketManager = () => {
       setTurn(room.turn)
     })
 
+    // hybrid: yoot thrown should not be set in room update.
+    // it should only be updated on throw yoot (from the server).
     socket.on('throwYoot', ({ yootThrowValues }) => {
       setYootThrowValues(yootThrowValues)
       // Disable the yoot button
       setYootActive(false)
+      // Enable meteors
+      setInitialYootThrow(false)
     })
 
     socket.on('disconnect', () => {

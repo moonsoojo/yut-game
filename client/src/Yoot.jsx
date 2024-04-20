@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 
 THREE.ColorManagement.legacyMode = false;
@@ -22,7 +22,7 @@ export default function Yoot({ device }) {
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
-  // const [yootThrown, setYootThrown] = useAtom(yootThrownAtom);
+  const [initialYootThrow] = useAtom(initialYootThrowAtom);
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
@@ -73,21 +73,19 @@ export default function Yoot({ device }) {
         yootMeshes[i].current.material.visible = false
       }
       
-      // pass observed result, turn off 'thrown' flag, check if
-      // client has turn, and record throw all at once in the server
       if (gamePhase === 'pregame' || gamePhase === 'game') {  
         let move = observeThrow();
+        // Uncomment to test what happens on Yoot or Mo
         // move = 4
-        if ((move === 4 || move === 5)) {
-        // if ((move === 4 || move === 5) && yootThrown) {
-          // setBoomText('bonus turn')
-          setParticleSetting({emitters: meteorSettings(device)})
+        if (!initialYootThrow) {
+          if (move === 4 || move === 5) {
+            // setBoomText('bonus turn')
+            setParticleSetting({emitters: meteorSettings(device)})
+          }
+
+          socket.emit("recordThrow", { move, roomId: params.id })
         }
-
-        socket.emit("recordThrow", { move, roomId: params.id })
       }
-
-      // setYootThrown(false)
     }
   }, [sleepCount])
 

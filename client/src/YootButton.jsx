@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { yootActiveAtom, yootThrownAtom } from './GlobalState';
+import { yootActiveAtom } from './GlobalState';
 import { useParams } from 'wouter';
 
 export default function YootButton({ 
@@ -23,8 +23,6 @@ export default function YootButton({
   let buttonRef = useRef();
 
   const [yootActive] = useAtom(yootActiveAtom);
-  // To not trigger meteors when client connects and yoot drops
-  // const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
   // To tell the server which room to throw the yoot in
   const params = useParams();
 

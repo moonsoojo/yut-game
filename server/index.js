@@ -246,7 +246,7 @@ io.on("connect", async (socket) => {
           team: 0,
           players: [0, 0]
         },
-        yootThrown: false,
+        yootThrown: false, // To not trigger the throw twice in the server
         yootThrowValues: null
       })
       await room.save();
