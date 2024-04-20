@@ -216,7 +216,7 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 3
+            throws: 0
           },
           {
             _id: 1,
@@ -236,7 +236,7 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 3
+            throws: 0
           }
         ],
         messages: [],
@@ -384,7 +384,7 @@ io.on("connect", async (socket) => {
         turn
       })
       await Room.findOneAndUpdate({ _id: roomId, 'teams._id': randomTeam }, {
-        'teams.$.throws': 3
+        'teams.$.throws': 1
       })
     } catch (err) {
       console.log(`[startGame] error starting game`, err)
@@ -445,9 +445,10 @@ io.on("connect", async (socket) => {
     try {
       let room = await Room.findOne({ _id: roomId })
 
-      // Check condition here to make sure criteria is met in the database
-      if (room.teams[user.team].throws > 0) {
+      // Check thrown flag again because client takes time to update its state
+      if (room.teams[user.team].throws > 0 && !room.yootThrown) {
         // Update throw values
+        // Update thrown flag so subsequent requests don't trigger a throw
         await Room.findOneAndUpdate(
           { 
             _id: roomId
@@ -472,7 +473,7 @@ io.on("connect", async (socket) => {
         )
       }
     } catch (err) {
-      console.log(`[throwYoot] error updating throw values and decrementing throws`, err)
+      console.log(`[throwYoot] error updating throw values and thrown flag, and decrementing throws`, err)
     }
   })
 
@@ -494,41 +495,37 @@ io.on("connect", async (socket) => {
     }
 
     try {
-      let room = await Room.findOne({ _id: roomId })
-      if (room.gamePhase === 'pregame' || room.gamePhase === 'game') {      
-        // Check if user has the turn
-        let currentPlayerObjectId = currentPlayerId(room)
-        console.log(`[recordThrow] user id`, user._id.valueOf(), `current player id`, currentPlayerObjectId.valueOf())
-        console.log(`[recordThrow] game phase`, room.gamePhase)
-        if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
-          console.log(`[recordThrow] user is current player`)
-          await Room.findOneAndUpdate(
-            { 
-              _id: roomId
-            }, 
-            { 
-              $set: { 
-                yootThrown: false
-              },
-            }
-          )
-  
-          // Add move to team
-          await Room.findOneAndUpdate(
-            { 
-              _id: roomId, 
-              'teams._id': user.team,
-            }, 
-            { 
-              $inc: { [`teams.$.moves.${move}`]: 1 } 
-            }
-          )
-          console.log(`[recordThrow] added move to team`)
-        }
+      let room = await Room.findOne({ _id: roomId })  
+
+      // Check if user has the turn
+      if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+
+        // Reset flag so client can activate the throw button again
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId
+          }, 
+          { 
+            $set: { 
+              yootThrown: false
+            },
+          }
+        )
+
+        // Add move to team
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId, 
+            'teams._id': user.team,
+          }, 
+          { 
+            $inc: { [`teams.$.moves.${move}`]: 1 } 
+          }
+        )
+        console.log(`[recordThrow] added move to team`)
       }
     } catch (err) {
       console.log(`[recordThrow] error recording throw`, err)
-      // console.log(`[recordThrow] error turning of thrown flag and recording throw`, err)
     }
 
     // if (getGamePhase(roomId) === "pregame") {

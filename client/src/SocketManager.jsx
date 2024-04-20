@@ -99,6 +99,7 @@ export const SocketManager = () => {
 
       // Enable yoot button if client has the turn and his team 
       // has at least one throw and there is a player on the team
+      // and the thrown flag is off
       const currentTeam = room.turn.team
       const currentPlayer = room.turn.players[turn.team]
       if (room.teams[currentTeam].players.length > 0 && 
@@ -106,6 +107,7 @@ export const SocketManager = () => {
       room.teams[currentTeam].throws > 0 &&
       !room.yootThrown ) {
         setYootActive(true)
+        // setYootThrown(false)
       } else {
         setYootActive(false)
       }
@@ -125,6 +127,8 @@ export const SocketManager = () => {
 
     socket.on('throwYoot', ({ yootThrowValues }) => {
       setYootThrowValues(yootThrowValues)
+      // Disable the yoot button
+      setYootActive(false)
     })
 
     socket.on('disconnect', () => {

@@ -22,7 +22,7 @@ export default function Yoot({ device }) {
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
-  const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom);
+  // const [yootThrown, setYootThrown] = useAtom(yootThrownAtom);
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
@@ -73,16 +73,21 @@ export default function Yoot({ device }) {
         yootMeshes[i].current.material.visible = false
       }
       
-      let move = observeThrow();
-      // move = 4
-      if ((move === 4 || move === 5)) {
-        // setBoomText('bonus turn')
-        setParticleSetting({emitters: meteorSettings(device)})
-      }
       // pass observed result, turn off 'thrown' flag, check if
       // client has turn, and record throw all at once in the server
-      socket.emit("recordThrow", { move, roomId: params.id })
-      setYootThrown(false)
+      if (gamePhase === 'pregame' || gamePhase === 'game') {  
+        let move = observeThrow();
+        // move = 4
+        if ((move === 4 || move === 5)) {
+        // if ((move === 4 || move === 5) && yootThrown) {
+          // setBoomText('bonus turn')
+          setParticleSetting({emitters: meteorSettings(device)})
+        }
+
+        socket.emit("recordThrow", { move, roomId: params.id })
+      }
+
+      // setYootThrown(false)
     }
   }, [sleepCount])
 

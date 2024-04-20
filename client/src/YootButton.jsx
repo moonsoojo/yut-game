@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { yootThrownAtom, yootActiveAtom, clientAtom, turnAtom } from './GlobalState';
+import { yootActiveAtom, yootThrownAtom } from './GlobalState';
 import { useParams } from 'wouter';
 
 export default function YootButton({ 
@@ -22,10 +22,10 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [yootActive, setYootActive] = useAtom(yootActiveAtom);
-  // To get the team number on yoot throw
-  const [client] = useAtom(clientAtom)
-  // To get the room ID on yoot throw
+  const [yootActive] = useAtom(yootActiveAtom);
+  // To not trigger meteors when client connects and yoot drops
+  // const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
+  // To tell the server which room to throw the yoot in
   const params = useParams();
 
   const scaleOuter = [1.4, -0.079, 1]
@@ -54,7 +54,6 @@ export default function YootButton({
   function handleYootThrow() {
     if (yootActive) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
-      setYootActive(false)
     }
   }
 
