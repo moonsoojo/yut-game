@@ -77,9 +77,8 @@ export default function Yoot({ device }) {
         setParticleSetting({emitters: meteorSettings(device)})
       }
       // pass observed result, turn off 'thrown' flag, check if
-      // client has turn, and record throw all at once
+      // client has turn, and record throw all at once in the server
       socket.emit("yootsAsleep", ({response}) => {
-        // console.log("[yootsAsleep] response", response)
         if (response === "record") {
           socket.emit("recordThrow", {move})
         } else if (response === "noRecord") {
@@ -209,7 +208,7 @@ export default function Yoot({ device }) {
                 geometry={nodes.Cylinder007.geometry}
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
-                scale={[1, 6.161, 1]}
+                scale={[1.5, 9, 1.51]}
                 ref={yootMeshes[index]}
               />
             ) : (
@@ -220,7 +219,7 @@ export default function Yoot({ device }) {
                 material={materialsRhino["Texture wrap.005"]}
                 ref={yootMeshes[index]}
                 rotation={[0, 0, -Math.PI / 2]} 
-                scale={[1, 6.161, 1]}
+                scale={[1.5, 9, 1.51]}
               />
             )}
           </RigidBody>

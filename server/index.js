@@ -372,11 +372,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(0.7, 0.2),
+        yImpulse: generateRandomNumberInRange(1.5, 0.2),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.03, 0.004),
-          y: generateRandomNumberInRange(0.003, 0.001),
-          z: generateRandomNumberInRange(0.003, 0.001),
+          x: generateRandomNumberInRange(0.1, 0.05),
+          y: generateRandomNumberInRange(0.02, 0.05), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.012, 0.03), // Spins through the middle axis
         },
       });
     }
@@ -411,9 +411,9 @@ io.on("connect", async (socket) => {
 
     try {
       let room = await Room.findOne({ _id: roomId })
-      
+
       // Check condition here to make sure criteria is met in the database
-      if (room.teams[user.team].throws > 0) {
+      // if (room.teams[user.team].throws > 0) {
         // Update throw values
         await Room.findOneAndUpdate(
           { 
@@ -437,7 +437,7 @@ io.on("connect", async (socket) => {
             $inc: { [`teams.$.throws`]: -1 } 
           }
         )
-      }
+      // }
     } catch (err) {
       console.log(`[throwYoot] error updating throw values and decrementing throws`, err)
     }
