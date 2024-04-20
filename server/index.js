@@ -413,7 +413,7 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })
 
       // Check condition here to make sure criteria is met in the database
-      // if (room.teams[user.team].throws > 0) {
+      if (room.teams[user.team].throws > 0) {
         // Update throw values
         await Room.findOneAndUpdate(
           { 
@@ -437,7 +437,7 @@ io.on("connect", async (socket) => {
             $inc: { [`teams.$.throws`]: -1 } 
           }
         )
-      // }
+      }
     } catch (err) {
       console.log(`[throwYoot] error updating throw values and decrementing throws`, err)
     }
