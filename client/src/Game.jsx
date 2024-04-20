@@ -50,7 +50,6 @@ import RocketsWin from "./RocketsWin.jsx";
 import Celebration from "./particles/MeteorsBackup.jsx";
 import { Perf } from "r3f-perf";
 import CurvedArrow from "./meshes/CurvedArrow.jsx";
-import LetsPlayButton from "./LetsPlayButton.jsx";
 import Meteors from "./particles/MeteorsBackup.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";

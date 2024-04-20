@@ -34,7 +34,7 @@ export const SocketManager = () => {
   const [_yootActive, setYootActive] = useAtom(yootActiveAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
-  const [yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
+  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
 
   useEffect(() => {
 
@@ -92,23 +92,23 @@ export const SocketManager = () => {
           localStorage.setItem('yootGame', JSON.stringify({
             ...user
           }))
-
-          // Enable yoot button if client has the turn and his team has at least one throw
-          // and there is a player on the team
-          const currentTeam = room.turn.team
-          const currentPlayer = room.turn.players[turn.team]
-          if (room.teams[currentTeam].players.length > 0 && 
-            room.teams[currentTeam].players[currentPlayer].socketId === user.socketId &&
-            room.teams[currentTeam].throws > 0
-          ) {
-            setYootActive(true)
-          } else {
-            setYootActive(false)
-          }
         }
       }
 
       setGamePhase(room.gamePhase);
+
+      // Enable yoot button if client has the turn and his team 
+      // has at least one throw and there is a player on the team
+      const currentTeam = room.turn.team
+      const currentPlayer = room.turn.players[turn.team]
+      if (room.teams[currentTeam].players.length > 0 && 
+      room.teams[currentTeam].players[currentPlayer].socketId === socket.id &&
+      room.teams[currentTeam].throws > 0 &&
+      !room.yootThrown ) {
+        setYootActive(true)
+      } else {
+        setYootActive(false)
+      }
 
       // Enable 'Let's play' button
       if (room.gamePhase === 'lobby' && 
@@ -123,9 +123,8 @@ export const SocketManager = () => {
       setTurn(room.turn)
     })
 
-    socket.on('throwYoot', ({ yootThrowValues, yootThrown }) => {
+    socket.on('throwYoot', ({ yootThrowValues }) => {
       setYootThrowValues(yootThrowValues)
-      setYootThrown(yootThrown)
     })
 
     socket.on('disconnect', () => {
@@ -133,10 +132,6 @@ export const SocketManager = () => {
       setDisconnect(true);
     })
   }, [])
-
-  useEffect(() => {
-    console.log(`[SocketManager] yoot throw values changed`, yootThrowValues)
-  }, [yootThrowValues])
 
   // updating on teams change might cause issues
   // if players leave and player index from turn

@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 
 THREE.ColorManagement.legacyMode = false;
@@ -22,6 +22,7 @@ export default function Yoot({ device }) {
   const materialsRhino = useGLTF("/models/yoot-rhino.glb").materials;
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
+  const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom);
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
@@ -81,6 +82,7 @@ export default function Yoot({ device }) {
       // pass observed result, turn off 'thrown' flag, check if
       // client has turn, and record throw all at once in the server
       socket.emit("recordThrow", { move, roomId: params.id })
+      setYootThrown(false)
     }
   }, [sleepCount])
 

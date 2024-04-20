@@ -22,13 +22,10 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [yootThrown, setYootThrown] = useAtom(yootThrownAtom)
-  const [yootActive] = useAtom(yootActiveAtom);
+  const [yootActive, setYootActive] = useAtom(yootActiveAtom);
   // To get the team number on yoot throw
   const [client] = useAtom(clientAtom)
-  const [turn] = useAtom(turnAtom)
   // To get the room ID on yoot throw
-  // Pass client info on emit or fetch it from server with socket id?
   const params = useParams();
 
   const scaleOuter = [1.4, -0.079, 1]
@@ -37,7 +34,7 @@ export default function YootButton({
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
   useFrame((state, delta) => {
-    if (yootActive && !yootThrown) {
+    if (yootActive) {
       buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
@@ -55,9 +52,9 @@ export default function YootButton({
     document.body.style.cursor = "default";
   }
   function handleYootThrow() {
-    if (!yootThrown && yootActive) {
-      setYootThrown(true)
+    if (yootActive) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
+      setYootActive(false)
     }
   }
 

@@ -155,8 +155,7 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         let userSocketId = userFound.socketId
         if ('yootThrowValues' in data.updateDescription.updatedFields) {
           let yootThrowValues = data.fullDocument.yootThrowValues
-          let yootThrown = data.fullDocument.yootThrown // if it's only for UI use, set it in useState
-          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown })
+          io.to(userSocketId).emit('throwYoot', { yootThrowValues })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')
@@ -217,7 +216,7 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 0
+            throws: 3
           },
           {
             _id: 1,
@@ -237,7 +236,7 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 0
+            throws: 3
           }
         ],
         messages: [],
@@ -385,7 +384,7 @@ io.on("connect", async (socket) => {
         turn
       })
       await Room.findOneAndUpdate({ _id: roomId, 'teams._id': randomTeam }, {
-        'teams.$.throws': 1
+        'teams.$.throws': 3
       })
     } catch (err) {
       console.log(`[startGame] error starting game`, err)
@@ -514,7 +513,6 @@ io.on("connect", async (socket) => {
             }
           )
   
-  
           // Add move to team
           await Room.findOneAndUpdate(
             { 
@@ -529,7 +527,8 @@ io.on("connect", async (socket) => {
         }
       }
     } catch (err) {
-      console.log(`[recordThrow] error turning of thrown flag and adding move`, err)
+      console.log(`[recordThrow] error recording throw`, err)
+      // console.log(`[recordThrow] error turning of thrown flag and recording throw`, err)
     }
 
     // if (getGamePhase(roomId) === "pregame") {
