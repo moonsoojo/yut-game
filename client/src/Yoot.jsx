@@ -11,6 +11,7 @@ import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
 import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom } from "./GlobalState.jsx";
+import { useParams } from "wouter";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -24,6 +25,7 @@ export default function Yoot({ device }) {
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
+  const params = useParams()
 
   const NUM_YOOTS = 4;
   let yoots = [];
@@ -78,13 +80,7 @@ export default function Yoot({ device }) {
       }
       // pass observed result, turn off 'thrown' flag, check if
       // client has turn, and record throw all at once in the server
-      socket.emit("yootsAsleep", ({response}) => {
-        if (response === "record") {
-          socket.emit("recordThrow", {move})
-        } else if (response === "noRecord") {
-          // don't record throw
-        }
-      })
+      socket.emit("recordThrow", { move, roomId: params.id })
     }
   }, [sleepCount])
 

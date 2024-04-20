@@ -61,9 +61,19 @@ const roomSchema = new mongoose.Schema(
         tile: Number,
         team: Number,
         id: Number,
-        path: [Number]
+        path: [Number],
+        _id: false
       }],
-      throws: Number
+      throws: Number,
+      moves: {
+        '0': Number,
+        '1': Number,
+        '2': Number,
+        '3': Number,
+        '4': Number,
+        '5': Number,
+        '-1': Number
+      }
     }],
     turn: {
       team: Number,
@@ -143,12 +153,18 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
-        let roomPopulated = await Room.findById(data.documentKey._id)
-        .populate('spectators')
-        .populate('host')
-        .populate('teams.players')
-        .exec()
-        io.to(userSocketId).emit('room', roomPopulated)
+        if ('yootThrowValues' in data.updateDescription.updatedFields) {
+          let yootThrowValues = data.fullDocument.yootThrowValues
+          let yootThrown = data.fullDocument.yootThrown // if it's only for UI use, set it in useState
+          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown })
+        } else {
+          let roomPopulated = await Room.findById(data.documentKey._id)
+          .populate('spectators')
+          .populate('host')
+          .populate('teams.players')
+          .exec()
+          io.to(userSocketId).emit('room', roomPopulated)
+        }
       } catch (err) {
         console.log(`[Room.watch] error getting user's socket id`, err)
       }
@@ -192,6 +208,15 @@ io.on("connect", async (socket) => {
               { tile: -1, team: 0, id: 2, path: [] },
               { tile: -1, team: 0, id: 3, path: [] },
             ],
+            moves: {
+              '0': 0,
+              '1': 0,
+              '2': 0,
+              '3': 0,
+              '4': 0,
+              '5': 0,
+              '-1': 0
+            },
             throws: 0
           },
           {
@@ -203,6 +228,15 @@ io.on("connect", async (socket) => {
               { tile: -1, team: 1, id: 2, path: [] },
               { tile: -1, team: 1, id: 3, path: [] },
             ],
+            moves: {
+              '0': 0,
+              '1': 0,
+              '2': 0,
+              '3': 0,
+              '4': 0,
+              '5': 0,
+              '-1': 0
+            },
             throws: 0
           }
         ],
@@ -441,6 +475,84 @@ io.on("connect", async (socket) => {
     } catch (err) {
       console.log(`[throwYoot] error updating throw values and decrementing throws`, err)
     }
+  })
+
+  function currentPlayerId(room) {
+    const turn = room.turn
+    const currentTeam = turn.team
+    const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
+    return currentPlayer._id
+  }
+
+  socket.on("recordThrow", async ({ move, roomId }) => {
+    console.log("[recordThrow] move", move)
+
+    let user;
+    try {
+      user = await User.findOne({ socketId: socket.id })
+    } catch (err) {
+      console.log(`[recordThrow] error getting user with socket id ${socket.id}`, err)
+    }
+
+    try {
+      let room = await Room.findOne({ _id: roomId })
+      if (room.gamePhase === 'pregame' || room.gamePhase === 'game') {      
+        // Check if user has the turn
+        let currentPlayerObjectId = currentPlayerId(room)
+        console.log(`[recordThrow] user id`, user._id.valueOf(), `current player id`, currentPlayerObjectId.valueOf())
+        console.log(`[recordThrow] game phase`, room.gamePhase)
+        if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+          console.log(`[recordThrow] user is current player`)
+          await Room.findOneAndUpdate(
+            { 
+              _id: roomId
+            }, 
+            { 
+              $set: { 
+                yootThrown: false
+              },
+            }
+          )
+  
+  
+          // Add move to team
+          await Room.findOneAndUpdate(
+            { 
+              _id: roomId, 
+              'teams._id': user.team,
+            }, 
+            { 
+              $inc: { [`teams.$.moves.${move}`]: 1 } 
+            }
+          )
+          console.log(`[recordThrow] added move to team`)
+        }
+      }
+    } catch (err) {
+      console.log(`[recordThrow] error turning of thrown flag and adding move`, err)
+    }
+
+    // if (getGamePhase(roomId) === "pregame") {
+    //   addMove(roomId, getTurn(roomId).team, move.toString())
+    //   passTurnPregame(roomId)
+    //   addThrow(roomId, getTurn(roomId).team)
+    //   io.to(roomId).emit("turn", getTurn(roomId))
+    //   io.to(roomId).emit("teams", getTeams(roomId))
+    //   io.to(roomId).emit("gamePhase", getGamePhase(roomId))
+    // } else if (getGamePhase(roomId) === "game") {
+    //   let turn = getTurn(roomId)
+    //   addMove(roomId, turn.team, move.toString())
+    //   if (movesIsEmpty(roomId, turn.team)) {
+    //     clearMoves(roomId, turn.team)
+    //     turn = passTurn(roomId)
+    //     addThrow(roomId, turn.team)
+    //     io.to(roomId).emit("turn", turn)
+    //   } else if (move == 4 || move == 5) {
+    //     addThrow(roomId, turn.team);
+    //     // io.to(roomId).emit("yell", "bonus turn")
+    //   }
+    //   io.to(roomId).emit("teams", getTeams(roomId))
+    // }
   })
 
   socket.on("disconnect", async () => {

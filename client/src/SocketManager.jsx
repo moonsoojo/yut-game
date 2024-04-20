@@ -34,7 +34,7 @@ export const SocketManager = () => {
   const [_yootActive, setYootActive] = useAtom(yootActiveAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
-  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
+  const [yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
 
   useEffect(() => {
 
@@ -92,6 +92,19 @@ export const SocketManager = () => {
           localStorage.setItem('yootGame', JSON.stringify({
             ...user
           }))
+
+          // Enable yoot button if client has the turn and his team has at least one throw
+          // and there is a player on the team
+          const currentTeam = room.turn.team
+          const currentPlayer = room.turn.players[turn.team]
+          if (room.teams[currentTeam].players.length > 0 && 
+            room.teams[currentTeam].players[currentPlayer].socketId === user.socketId &&
+            room.teams[currentTeam].throws > 0
+          ) {
+            setYootActive(true)
+          } else {
+            setYootActive(false)
+          }
         }
       }
 
@@ -108,10 +121,11 @@ export const SocketManager = () => {
       }
 
       setTurn(room.turn)
-      setYootThrown(room.yootThrown)
-      console.log(`[SocketManager] yoot throw values`, room.yootThrowValues)
-      setYootThrowValues(room.yootThrowValues)
+    })
 
+    socket.on('throwYoot', ({ yootThrowValues, yootThrown }) => {
+      setYootThrowValues(yootThrowValues)
+      setYootThrown(yootThrown)
     })
 
     socket.on('disconnect', () => {
@@ -120,20 +134,14 @@ export const SocketManager = () => {
     })
   }, [])
 
+  useEffect(() => {
+    console.log(`[SocketManager] yoot throw values changed`, yootThrowValues)
+  }, [yootThrowValues])
+
   // updating on teams change might cause issues
   // if players leave and player index from turn
   // is out of range
   useEffect(() => {
-    // Enable yoot button if client has the turn and his team has at least one throw
-    const currentTeam = turn.team
-    const currentPlayer = turn.players[turn.team]
-    if (teams[currentTeam].players.length > 0 && 
-      teams[currentTeam].players[currentPlayer].socketId === client.socketId &&
-      teams[currentTeam].throws > 0
-    ) {
-      setYootActive(true)
-    } else {
-      setYootActive(false)
-    }
+
   }, [client, turn])
 };

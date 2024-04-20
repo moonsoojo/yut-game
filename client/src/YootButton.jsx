@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { yootThrownAtom, yootActiveAtom, clientAtom } from './GlobalState';
+import { yootThrownAtom, yootActiveAtom, clientAtom, turnAtom } from './GlobalState';
 import { useParams } from 'wouter';
 
 export default function YootButton({ 
@@ -22,10 +22,11 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [thrown] = useAtom(yootThrownAtom)
+  const [yootThrown, setYootThrown] = useAtom(yootThrownAtom)
   const [yootActive] = useAtom(yootActiveAtom);
   // To get the team number on yoot throw
   const [client] = useAtom(clientAtom)
+  const [turn] = useAtom(turnAtom)
   // To get the room ID on yoot throw
   // Pass client info on emit or fetch it from server with socket id?
   const params = useParams();
@@ -36,7 +37,7 @@ export default function YootButton({
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
   useFrame((state, delta) => {
-    if (yootActive && !thrown) {
+    if (yootActive && !yootThrown) {
       buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
       buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
@@ -54,7 +55,10 @@ export default function YootButton({
     document.body.style.cursor = "default";
   }
   function handleYootThrow() {
-    socket.emit("throwYoot", { roomId: params.id }); // removed payload and callback
+    if (!yootThrown && yootActive) {
+      setYootThrown(true)
+      socket.emit("throwYoot", { roomId: params.id });
+    }
   }
 
   return <group 
