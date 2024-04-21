@@ -1,14 +1,11 @@
+import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
-import React from "react";
-import { TextureLoader } from "three/src/loaders/TextureLoader";
-import { useLoader } from "@react-three/fiber";
-import HelperArrow from "./HelperArrow";
-import Tile from "../components/Tile";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
+import { TextureLoader } from "three/src/loaders/TextureLoader";
+// import HelperArrow from "./HelperArrow";
 
-export default function Saturn({ position, scale=0.4, tile, device }) {
+export default function Saturn({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   const { nodes, materials } = useGLTF("models/Saturn 3.glb");
   const satelliteTexture1 = useLoader(
     TextureLoader,
@@ -41,12 +38,12 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
 
   const satellitesRef = useRef();
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     satellitesRef.current.rotation.z = state.clock.elapsedTime * 0.5;
   });
   
   return (
-    <animated.group position={position} scale={scale}>
+    <animated.group position={position} rotation={rotation} scale={scale}>
       <group scale={0.9}>
         <mesh
           castShadow
@@ -106,7 +103,6 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
                 Math.cos((7 * Math.PI) / 16) * 0.5,
                 Math.sin((7 * Math.PI) / 16) * 0.5,
                 0,
-
               ]}
             >
               <sphereGeometry args={[0.03, 32, 32]} />
@@ -117,8 +113,6 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
                 Math.cos((16 * Math.PI) / 16) * 0.5,
                 Math.sin((16 * Math.PI) / 16) * 0.5,
                 0,
-                
-                
               ]}
             >
               <sphereGeometry args={[0.03, 32, 32]} />
@@ -139,7 +133,6 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
                 Math.cos((22 * Math.PI) / 16) * 0.5,
                 Math.sin((22 * Math.PI) / 16) * 0.5,
                 0,
-
               ]}
             >
               <sphereGeometry args={[0.02, 32, 32]} />
@@ -150,7 +143,6 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
                 Math.cos((24 * Math.PI) / 16) * 0.5,
                 Math.sin((24 * Math.PI) / 16) * 0.5,
                 0,
-
               ]}
             >
               <sphereGeometry args={[0.015, 32, 32]} />
@@ -159,8 +151,7 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
           </group>
         </mesh>
       </group>
-      { tile != undefined && <Tile tile={tile} wrapperRadius={0.5} device={device}/> }
-      <HelperArrow
+      {/* <HelperArrow
         position={[0, 0, 0.9]}
         rotation={[Math.PI/2, 0, 0]}
         scale={0.9}
@@ -169,7 +160,7 @@ export default function Saturn({ position, scale=0.4, tile, device }) {
         position={[-1, 0, 0]}
         rotation={[0, 0, Math.PI/2]}
         scale={0.9}
-      />
+      /> */}
     </animated.group>
   );
 }

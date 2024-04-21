@@ -1,22 +1,20 @@
-import { useGLTF } from "@react-three/drei";
-import { useRef } from "react";
-import HelperArrow from "./HelperArrow";
-import React from "react";
+import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import Tile from "../components/Tile";
+import { useGLTF } from "@react-three/drei";
+import { animated } from "@react-spring/three";
 
-export default function Earth({ position, tile, device, scale=0.4 }) {
+export default function Earth({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   const { nodes, materials } = useGLTF("models/earth-round.glb");
 
   const earth = useRef();
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     earth.current.rotation.y = state.clock.elapsedTime * 0.5;
   });
 
   return (
-    <group position={position} scale={scale} dispose={null}>
-      <group ref={earth} scale={1} rotation={[Math.PI / 16, Math.PI / 4, 0]}>
+    <animated.group position={position} rotation={rotation} scale={scale}>
+      <group ref={earth} rotation={[Math.PI / 16, Math.PI / 4, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -56,13 +54,7 @@ export default function Earth({ position, tile, device, scale=0.4 }) {
           />
         </mesh>
       </group>
-      { tile != undefined && <Tile tile={tile} wrapperRadius={0.5} device={device}/> }
-      <HelperArrow
-        position={[1, 0, 0]}
-        rotation={[0, 0, 0]}
-        scale={0.9}
-      />
-    </group>
+    </animated.group>
   );
 }
 

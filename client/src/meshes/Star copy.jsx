@@ -6,9 +6,8 @@ import { useGraph } from "@react-three/fiber";
 import React from "react";
 import { animated } from "@react-spring/three";
 
-export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
-  console.log(`[Star]`)
-  const { scene } = useGLTF(
+export default function Star({ position, tile, device, scale }) {
+  const { scene, materials } = useGLTF(
     "models/star.glb"
   );
 
@@ -16,15 +15,15 @@ export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   const { nodes } = useGraph(clone);
 
   return (
-    <animated.group position={position} rotation={rotation} scale={scale}>
+    <animated.group position={position} scale={scale} dispose={null}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.star.geometry}
-        rotation={[0, Math.PI, 0]} // Upside down by default
       >
         <meshStandardMaterial color={"yellow"} />
       </mesh>
+      { tile != undefined && <Tile tile={tile} wrapperRadius={0.4} device={device}/> }
     </animated.group>
   );
 }

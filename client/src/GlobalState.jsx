@@ -24,6 +24,7 @@ export const selectionAtom = atom(null)
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)))
 export const initialYootThrowAtom = atom(true)
 
+// Set device
 function initializeDevice(windowWidth, landscapeCutoff) {
   if (windowWidth < landscapeCutoff) {
     return "portrait"
@@ -31,4 +32,5 @@ function initializeDevice(windowWidth, landscapeCutoff) {
     return "landscapeDesktop"
   }
 }
+// window.innerWidth captured even though this component doesn't render anything visible
 export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))

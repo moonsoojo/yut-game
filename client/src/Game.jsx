@@ -64,6 +64,7 @@ import mediaValues from "./mediaValues.js";
 import DisconnectModal from "./DisconnectModal.jsx";
 import { readyToStartAtom, turnAtom, hostNameAtom, clientAtom } from "./GlobalState.jsx";
 import Yoot from "./Yoot.jsx";
+import Board from "./Board.jsx";
 
 // There should be no state
 // All components should have the state that it needs
@@ -120,13 +121,7 @@ export default function Game() {
       <GameCamera device={device}/>
       <Team team={0} device={device}/>
       <Team team={1} device={device}/>
-      {/* join modal */}
       <JoinTeamModal device={device}/>
-      {/* { gamePhase === "pregame" && <DecideOrderTooltip
-        position={layout[device].tooltip.whoFirst.position}
-        rotation={[-Math.PI/2, 0, 0]}
-      /> } */}
-      {/* chat section */}
       { !disconnect && <Chatbox device={device}/> }
       { disconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
@@ -135,6 +130,7 @@ export default function Game() {
       <LetsPlayButton device={device}/>
       <Host device={device}/>
       <Yoot device={device}/>
+      <Board scale={0.6}/>
     </>
   );
 }

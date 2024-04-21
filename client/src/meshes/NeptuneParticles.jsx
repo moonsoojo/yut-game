@@ -8,10 +8,10 @@ function randomNumberBetween(min, max) {
 }
 
 const countNeptune1 = 261;
-const countNeptune2 = 327;
+const countNeptune2 = 0;
 const sizeNeptune = 0.07;
 const radius1MinNeptune = 1.74;
-const radius1MaxNeptune = 2.72;
+const radius1MaxNeptune = 3;
 const countSparkles1 = 7;
 const radius2MinNeptune = 3.09;
 const radius2MaxNeptune = 4.27;
