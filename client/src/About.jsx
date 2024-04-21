@@ -1,6 +1,6 @@
 import React from 'react';
 import HtmlElement from './HtmlElement';
-import Tiles from './Tiles';
+import Board from './Board';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
 import Yoot from './meshes/Yoot';
@@ -67,7 +67,7 @@ export default function About(props) {
             text='Board'
         />
         <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
-          <Tiles device={props.device} rotation={[Math.PI/2, 0, 0]} scale={0.5} position={[5, -5, 0]}/>
+          <Board device={props.device} rotation={[Math.PI/2, 0, 0]} scale={0.5} position={[5, -5, 0]}/>
         </Float>
         
         <HtmlElement
