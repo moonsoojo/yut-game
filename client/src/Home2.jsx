@@ -22,33 +22,14 @@ import Title from './Title';
 import About from './About';
 import Stars from './particles/Stars';
 import { socket } from './SocketManager';
-import { clientAtom } from './GlobalState';
+import { clientAtom, deviceAtom } from './GlobalState';
 import mediaValues from './mediaValues';
 
 export default function Home2() {
 
+  const [device] = useAtom(deviceAtom)
   const [display, setDisplay] = useState('board')
   const [client] = useAtom(clientAtom)
-  
-  // Responsive UI
-  const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
-  const handleResize = () => {
-    if (window.innerWidth < mediaValues.landscapeCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-  function initializeDevice(windowWidth, landscapeCutoff) {
-    if (windowWidth < landscapeCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-  }, [window.innerWidth]);
   
   const { scene, materials } = useGLTF(
     "models/yoot.glb"

@@ -54,7 +54,7 @@ import Meteors from "./particles/MeteorsBackup.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 // import BoomText from "./BoomText.jsx";
-import { joinTeamAtom } from "./GlobalState.jsx";
+import { deviceAtom, joinTeamAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import { useParams } from "wouter";
 import Team from "./Team.jsx";
@@ -72,30 +72,10 @@ import Yoot from "./Yoot.jsx";
 // Receive device state individually in components
 
 export default function Game() {
-  const params = useParams();
+  
+  const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
-
-  // Responsive UI
-  const [device, setDevice] = useState(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))
-  const handleResize = () => {
-    if (window.innerWidth < mediaValues.landscapeCutoff) {
-      setDevice("portrait")
-    } else {
-      setDevice("landscapeDesktop")
-    }
-  }
-
-  function initializeDevice(windowWidth, landscapeCutoff) {
-    if (windowWidth < landscapeCutoff) {
-      return "portrait"
-    } else {
-      return "landscapeDesktop"
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize, false);
-  }, [window.innerWidth]);
+  const params = useParams();
 
   useEffect(() => {
     console.log('[Game][useEffect]')

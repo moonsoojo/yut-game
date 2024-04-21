@@ -1,10 +1,5 @@
 import React from 'react';
-import Earth from './meshes/Earth';
-import Mars from './meshes/Mars';
-import Saturn from './meshes/Saturn';
-import Neptune from './meshes/Neptune';
-import Moon from './meshes/Moon';
-import Star from './meshes/Star';
+import Tile from './components/Tile'
 import layout from './layout';
 import { animated } from '@react-spring/three';
 import HtmlElement from './HtmlElement';
@@ -26,32 +21,15 @@ export default function Board({ device, position=[0,0,0], rotation=[0,0,0], scal
         0,
         Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
       ];
-      if (i == 0) {
-        tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
-      } else if (i == 5) {
-        tiles.push(
-          <Mars
-            position={position}
-            tile={i}
-            key={i}
-            device={device}
-          />
-        );
-      } else if (i == 10) {
-        tiles.push(<Saturn position={position} tile={i} key={i} device={device}/>);
-      } else if (i == 15) {
-        tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
-      } else {
-        tiles.push(
-          <Star
-            position={position}
-            tile={i}
-            key={i}
-            scale={layout[device].star.scale}
-            device={device}
-          />
-        );
-      }
+      tiles.push(
+        <Tile
+          position={position}
+          tile={i}
+          key={i}
+          scale={layout[device].star.scale}
+          device={device}
+        />
+      );
     }
 
     //shortcuts

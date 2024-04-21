@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import initialState from "../initialState";
+import mediaValues from "./mediaValues";
 
 export const joinTeamAtom = atom(null)
 export const disconnectAtom = atom(false)
@@ -22,3 +23,12 @@ export const displayScoreOptionsAtom = atom(false)
 export const selectionAtom = atom(null)
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)))
 export const initialYootThrowAtom = atom(true)
+
+function initializeDevice(windowWidth, landscapeCutoff) {
+  if (windowWidth < landscapeCutoff) {
+    return "portrait"
+  } else {
+    return "landscapeDesktop"
+  }
+}
+export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))

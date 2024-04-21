@@ -8,10 +8,21 @@ import { isMyTurn } from "../helpers/helpers";
 import layout from "../layout";
 import { useFrame } from "@react-three/fiber";
 import ScoreButton from "../ScoreButton";
-import { teamsAtom, clientAtom, gamePhaseAtom, turnAtom, tilesAtom, selectionAtom } from "../GlobalState";
+import { 
+  teamsAtom, 
+  clientAtom, 
+  gamePhaseAtom, 
+  turnAtom, 
+  tilesAtom, 
+  selectionAtom 
+} from "../GlobalState";
 
+// Pass pieces as children of mesh (like Earth)
+// Score button, Legal tiles and Piece selection are server events
+// Set client has turn in Socket Manager
+// Use this to prevent click in the components
 const SCALE = 4
-export default function Tile({ tile, wrapperRadius, device }) {
+export default function Tile({ tile, wrapperRadius, device, children }) {
   const wrapper = useRef();
   const [selection] = useAtom(selectionAtom);
   const [tiles] = useAtom(tilesAtom);
