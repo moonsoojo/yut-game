@@ -571,7 +571,7 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
-      position: [-4, 0, 11],
+      position: [2.2, 0, 6.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButtonOrder: {
@@ -1258,7 +1258,7 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
-      position: [6, 0, 4.5],
+      position: [6, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButtonOrder: {
