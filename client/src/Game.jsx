@@ -67,6 +67,7 @@ import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
 import MoveDisplay from "./MoveDisplay.jsx";
 import MoveAnimation from "./MoveAnimation.jsx";
+import PiecesSection from "./PiecesSection.jsx";
 
 // There should be no state
 // All components should have the state that it needs
@@ -134,6 +135,7 @@ export default function Game() {
       <LetsPlayButton device={device}/>
       <Host device={device}/>
       <Yoot device={device}/>
+      {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
         move={lastMove}
         initialScale={1}
@@ -142,6 +144,10 @@ export default function Game() {
       /> }
       <MoveDisplay/>
       {/* pieces */}
+      <PiecesSection 
+        device={device}
+        position={layout[device].piecesSection.position}
+      />
       <Board scale={0.6}/>
     </>
   );

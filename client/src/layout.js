@@ -1080,7 +1080,7 @@ export default {
       fontSize: 15
     },
     piecesSection: {
-      position: [5, 0, 0],
+      position: [4.5, 0, 0],
       scale: 1
     },
     startEarth: {

@@ -26,6 +26,7 @@ export default function YootButton({
 
   const [yootActive] = useAtom(yootActiveAtom);
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
+  
   const [gamePhase] = useAtom(gamePhaseAtom)
   // To tell the server which room to throw the yoot in
   const params = useParams();
@@ -55,8 +56,7 @@ export default function YootButton({
   }
 
   function handleYootThrow() {
-    if (gamePhase === "lobby") { // Only throw for the client
-    } else if (yootActive) { // Prevent multiple emits
+    if (yootActive) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
     }
   }
@@ -91,8 +91,10 @@ export default function YootButton({
     }
 
     function handlePracticeThrow() {
+      // Only throws for the client
       setYootThrowValues(generateForveVectors())
     }
+
     return <HtmlElement
       text={`Practice Throw`}
       position={position}

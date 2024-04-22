@@ -88,11 +88,11 @@ export default function Yoot({ device }) {
       }
       
       let move = observeThrow();
+      // Uncomment to test what happens on Yoot or Mo
+      // move = 4
       setLastMove(getMoveText(move))
       
       if (gamePhase === 'pregame' || gamePhase === 'game') {  
-        // Uncomment to test what happens on Yoot or Mo
-        // move = 4
 
         // Don't emit meteors when client renders for the first time
         if (!initialYootThrow) {

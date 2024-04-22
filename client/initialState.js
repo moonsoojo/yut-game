@@ -7,10 +7,10 @@ export default {
       // name: "",
       players: [], // list of objects
       pieces: [
-        { tile: -1, team: 0, id: 0, path: [] }, // null, {values} or "scored"
-        { tile: -1, team: 0, id: 1, path: [] },
-        { tile: -1, team: 0, id: 2, path: [] },
-        { tile: -1, team: 0, id: 3, path: [] },
+        { tile: -1, team: 0, id: 0, path: [], status: "home" }, // null, {values} or "scored"
+        { tile: -1, team: 0, id: 1, path: [], status: "home" },
+        { tile: -1, team: 0, id: 2, path: [], status: "home" },
+        { tile: -1, team: 0, id: 3, path: [], status: "home" },
       ],
       moves: {
         "1": 0,

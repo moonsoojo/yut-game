@@ -43,7 +43,6 @@ export default function App () {
       onCreated={ created }
       >
       {/* <Perf/> */}
-      {/* when the device switches, the app rerenders and the game rerenders too */}
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <ParticleSystem/>

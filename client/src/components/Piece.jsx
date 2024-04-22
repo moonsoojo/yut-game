@@ -80,6 +80,8 @@ export default function Piece ({
   }
 
   function handlePointerDown(event) {
+    // use piece.status instead of tile == -1
+    // fixed in server room.teams.$.pieces schema
     if (gamePhase === "game" && 
     client.team == team && 
     hasValidMove(teams[team].moves) && 

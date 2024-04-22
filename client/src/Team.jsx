@@ -42,7 +42,7 @@ export default function Team({ team, device }) {
               ]}
               key={index}
             >
-              <sphereGeometry args={[0.2]} />
+              <sphereGeometry args={[0.2, 32, 16]} />
             </mesh>
           ) : value === "scored" ? (
             <mesh
