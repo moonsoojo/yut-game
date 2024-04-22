@@ -4,8 +4,9 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { yootActiveAtom } from './GlobalState';
+import { gamePhaseAtom, yootActiveAtom, yootThrowValuesAtom } from './GlobalState';
 import { useParams } from 'wouter';
+import initialState from '../initialState';
 
 export default function YootButton({ 
   position, 
@@ -23,6 +24,8 @@ export default function YootButton({
   let buttonRef = useRef();
 
   const [yootActive] = useAtom(yootActiveAtom);
+  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom)
   // To tell the server which room to throw the yoot in
   const params = useParams();
 
@@ -49,8 +52,38 @@ export default function YootButton({
   function handlePointerLeave() {
     document.body.style.cursor = "default";
   }
+
+  // need to have this function in both client and server
+  // because their codes are uploaded in different places
+  function generateForveVectors() {
+    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
+    let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+
+    function generateRandomNumberInRange(num, plusMinus) {
+      return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+    };
+
+    const yootForceVectors = [];
+    for (let i = 0; i < 4; i++) {
+      yootForceVectors.push({
+        _id: i,
+        positionInHand: initialYootPositions[i],
+        rotation: initialYootRotations[i],
+        yImpulse: generateRandomNumberInRange(1.5, 0.2),
+        torqueImpulse: {
+          x: generateRandomNumberInRange(0.1, 0.05),
+          y: generateRandomNumberInRange(0.02, 0.05), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.012, 0.03), // Spins through the middle axis
+        },
+      });
+    }
+    
+    return yootForceVectors
+  }
   function handleYootThrow() {
-    if (yootActive) { // Prevent multiple emits
+    if (gamePhase === "lobby") { // Only throw for the client
+      setYootThrowValues(generateForveVectors())
+    } else if (yootActive) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
     }
   }

@@ -54,7 +54,7 @@ import Meteors from "./particles/MeteorsBackup.jsx";
 import HtmlElement from "./HtmlElement.jsx";
 import MilkyWay from "./shader/MilkyWay.jsx";
 // import BoomText from "./BoomText.jsx";
-import { deviceAtom, joinTeamAtom } from "./GlobalState.jsx";
+import { deviceAtom, joinTeamAtom, lastMoveAtom } from "./GlobalState.jsx";
 import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
 import { useParams } from "wouter";
 import Team from "./Team.jsx";
@@ -65,6 +65,8 @@ import DisconnectModal from "./DisconnectModal.jsx";
 import { readyToStartAtom, turnAtom, hostNameAtom, clientAtom } from "./GlobalState.jsx";
 import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
+import MoveDisplay from "./MoveDisplay.jsx";
+import MoveAnimation from "./MoveAnimation.jsx";
 
 // There should be no state
 // All components should have the state that it needs
@@ -76,6 +78,8 @@ export default function Game() {
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
+  // To render the animation
+  const [lastMove] = useAtom(lastMoveAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -130,6 +134,14 @@ export default function Game() {
       <LetsPlayButton device={device}/>
       <Host device={device}/>
       <Yoot device={device}/>
+      {/* move display */}
+      { lastMove && <MoveAnimation 
+        move={lastMove}
+        initialScale={1}
+        initialPosition={[2.5, 0, -3]}
+        endingPosition={[6, 0, -1]}
+      /> }
+      <MoveDisplay/>
       <Board scale={0.6}/>
     </>
   );

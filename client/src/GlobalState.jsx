@@ -23,6 +23,7 @@ export const displayScoreOptionsAtom = atom(false)
 export const selectionAtom = atom(null)
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)))
 export const initialYootThrowAtom = atom(true)
+export const lastMoveAtom = atom(null)
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

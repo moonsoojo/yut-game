@@ -391,13 +391,13 @@ io.on("connect", async (socket) => {
     }
   })
 
-  function generateRandomNumberInRange(num, plusMinus) {
-    return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-  };
-
   function generateForveVectors() {
     let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
     let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+
+    function generateRandomNumberInRange(num, plusMinus) {
+      return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+    };
 
     const yootForceVectors = [];
     for (let i = 0; i < 4; i++) {

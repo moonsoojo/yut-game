@@ -23,7 +23,6 @@ import About from './About';
 import Stars from './particles/Stars';
 import { socket } from './SocketManager';
 import { clientAtom, deviceAtom } from './GlobalState';
-import mediaValues from './mediaValues';
 import Board from './Board';
 
 export default function Home2() {

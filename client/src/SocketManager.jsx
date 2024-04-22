@@ -102,10 +102,10 @@ export const SocketManager = () => {
       // and the thrown flag is off
       const currentTeam = room.turn.team
       const currentPlayer = room.turn.players[turn.team]
-      if (room.teams[currentTeam].players.length > 0 && 
+      if (room.gamePhase === "lobby" || (room.teams[currentTeam].players.length > 0 && 
       room.teams[currentTeam].players[currentPlayer].socketId === socket.id &&
       room.teams[currentTeam].throws > 0 &&
-      !room.yootThrown ) {
+      !room.yootThrown)) {
         setYootActive(true)
       } else {
         setYootActive(false)

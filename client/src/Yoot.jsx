@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 
 THREE.ColorManagement.legacyMode = false;
@@ -26,6 +26,7 @@ export default function Yoot({ device }) {
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
+  const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
   const params = useParams()
 
   const NUM_YOOTS = 4;
@@ -36,7 +37,6 @@ export default function Yoot({ device }) {
     yootMeshes.push(useRef());
   }
 
-  let RESET_TIME = 10000
   useEffect(() => {
     for (let i = 0; i < yootMeshes.length; i++) {
       yootMeshes[i].current.material.visible = true
@@ -64,6 +64,19 @@ export default function Yoot({ device }) {
     }
   }, [yootThrowValues]);
 
+  function getMoveText(move) {
+    const moveToText = {
+      "0": "Out of bounds",
+      "1": "1-STEP",
+      "2": "2-STEPS",
+      "3": "3-STEPS",
+      "4": "4-STEPS",
+      "5": "5-STEPS",
+      "-1": "BACK-1-STEP"
+    }
+    return moveToText[move]
+  }
+
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   // const [boomText, setBoomText] = useAtom(boomTextAtom)
   useEffect(() => {
@@ -73,10 +86,25 @@ export default function Yoot({ device }) {
         yootMeshes[i].current.material.visible = false
       }
       
-      if (gamePhase === 'pregame' || gamePhase === 'game') {  
-        let move = observeThrow();
+      let move = observeThrow();
+      if (gamePhase === "lobby") {
+        // display "Move: 3-steps"
+        // text zooms into the move token
+        // move tokens are coins with a constellation and stars
+        // indicating the number of steps
+        // until that's designed, use the text
+        // spring into end position by setting
+        // the z-coordinate as the index of the move element
+        // keep max 3, and then pop off the top one
+        // for the game, display up to the first four
+        // and keep them saved in the variable
+        // for now, display text before animation finishes
+        setLastMove(getMoveText(move))
+      } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
         // Uncomment to test what happens on Yoot or Mo
         // move = 4
+
+        // Don't emit meteors when client renders for the first time
         if (!initialYootThrow) {
           if (move === 4 || move === 5) {
             // setBoomText('bonus turn')
@@ -233,11 +261,11 @@ export default function Yoot({ device }) {
           position={[-1, 1.5, 0]}
         />
       </> }
-      {(gamePhase === "pregame" || gamePhase === "game") && <YootButton 
+      <YootButton 
         position={layout[device].throwButton.position}
         rotation={[0, Math.PI/2, 0]}
         scale={0.8}
-      />}
+      />
     </Physics>
   );
 }
