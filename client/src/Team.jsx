@@ -6,15 +6,17 @@ import { Html } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
 
-export default function Team({ team, device }) {
+export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
 
-  function JoinTeam() {
+  function JoinTeamButton() {
     const [client] = useAtom(clientAtom);
     const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
+
     function handleJoinTeam () {
         setJoinTeam(team);
     }
+
     return client.team !== team && joinTeam !== team && <HtmlElement
       text="JOIN"
       position={layout[device][`team${team}`].join.position}
@@ -78,8 +80,8 @@ export default function Team({ team, device }) {
   }
 
   return <group
-    position={layout[device][`team${team}`].position}
-    scale={layout[device][`team${team}`].scale}
+    position={position}
+    scale={scale}
   >
     {/* team name */}
     <HtmlElement
@@ -89,7 +91,7 @@ export default function Team({ team, device }) {
       color={ team === 0 ? "red" : "turquoise" }
     />
     {/* join button */}
-    <JoinTeam/>
+    <JoinTeamButton/>
     {/* pieces */}
     <HomePieces position={layout[device][`team${team}`].pieces.position} team={team} scale={0.5}/>
     {/* player ids */}

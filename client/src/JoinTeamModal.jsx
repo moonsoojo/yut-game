@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { joinTeamAtom } from './GlobalState';
 import layout from './layout';
 
-export default function JoinTeamModal({ device }) {
+export default function JoinTeamModal({ position, rotation, scale }) {
 
   const [name, setName] = useState('')
   const [alert, setAlert] = useState('')
@@ -54,9 +54,9 @@ export default function JoinTeamModal({ device }) {
   }
 
   return joinTeam !== null && <group 
-    position={layout[device].joinTeamModal.position}
-    rotation={layout[device].joinTeamModal.rotation}
-    scale={layout[device].joinTeamModal.scale}
+    position={position}
+    rotation={rotation}
+    scale={scale}
   >
     <Html 
       transform

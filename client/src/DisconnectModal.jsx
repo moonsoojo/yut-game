@@ -1,7 +1,7 @@
 import React from 'react';
 import { Html } from '@react-three/drei';
 
-export default function DisconnectModal({ position, rotation, scale }) {
+export default function DisconnectModal({ position=[0,0,0], rotation=[0,0,0] }) {
 
   function handleDisconnectPointerDown(e) {
     e.stopPropagation()
@@ -21,6 +21,7 @@ export default function DisconnectModal({ position, rotation, scale }) {
 
   return <group>
     <mesh 
+      name='block-ui'
       position={[0, 4, 0]} 
       onPointerDown={e => handleDisconnectPointerDown(e)} 
       onPointerUp={e => handleDisconnectPointerUp(e)}

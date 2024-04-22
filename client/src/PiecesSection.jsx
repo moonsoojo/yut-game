@@ -39,7 +39,7 @@ export default function PiecesSection({
     const team = client.team  
 
     // Need to accept "key" to use it in an map
-    function EmptyPiece({ position, key }) {
+    function EmptyPiece({ position }) {
       return <mesh
         position={position}
       >
@@ -47,10 +47,9 @@ export default function PiecesSection({
       </mesh>
     }
 
-    function ScoredPiece({ position, key }) {
+    function ScoredPiece({ position }) {
       return <mesh
         position={position}
-        key={key}
       >
         <sphereGeometry args={[0.2]} />
         <meshStandardMaterial color={team == 0 ? "red" : "green"} />

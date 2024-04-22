@@ -7,7 +7,7 @@ import { useParams } from "wouter";
 import layout from "./layout";
 import { messagesAtom } from "./GlobalState"
 
-export default function Chatbox({ device }) {
+export default function Chatbox({ position=[0,0,0], rotation=[0,0,0], scale=1, device }) {
   const [messages] = useAtom(messagesAtom);
   const [message, setMessage] = useState('');
   const params = useParams();
@@ -51,9 +51,9 @@ export default function Chatbox({ device }) {
   }
 
   return <Html 
-    position={layout[device].chat.position}
-    rotation={layout[device].chat.rotation}
-    scale={layout[device].chat.scale}
+    position={position}
+    rotation={rotation}
+    scale={scale}
     transform
   >
     <div style={{

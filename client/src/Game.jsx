@@ -90,7 +90,7 @@ export default function Game() {
     })
   }, [])
 
-  function LetsPlayButton({ device }) {
+  function LetsPlayButton({ position, rotation, device }) {
     const [readyToStart] = useAtom(readyToStartAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
 
@@ -101,40 +101,83 @@ export default function Game() {
     return <>
       { readyToStart && gamePhase === 'lobby' && <HtmlElement 
         text={'lets play!'}
-        position={layout[device].letsPlayButton.position}
-        rotation={layout[device].letsPlayButton.rotation}
+        position={position}
+        rotation={rotation}
         fontSize={layout[device].letsPlayButton.fontSize}
         handleClick={handleLetsPlay}
       /> }
     </>
   }
 
-  function Host({ device }) {
+  function Host({ position, rotation }) {
     const [hostName] = useAtom(hostNameAtom)
     return <HtmlElement
       text={`HOST: ${hostName}`}
-      position={layout[device].hostName.position}
-      rotation={layout[device].hostName.rotation}
+      position={position}
+      rotation={rotation}
       fontSize={layout[device].hostName.fontSize}
     />
   }
 
   console.log(`[Game]`)
+  // UI prop guideline
+  // Pass position, rotation and scale
+  // pass device if component has another responsive attribute
+  // such as HtmlElement fontsize or team display
+  // children positions
+  // If state is contained globally, don't pass it as a prop
+  // example: <Host/> is in this component. 'device' is
+  // declared at the top. don't pass it in as a prop
   return (<>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
-      <GameCamera device={device}/>
-      <Team team={0} device={device}/>
-      <Team team={1} device={device}/>
-      <JoinTeamModal device={device}/>
-      { !disconnect && <Chatbox device={device}/> }
+      <GameCamera position={layout[device].camera.position}/>
+      <Team 
+        position={layout[device].team0.position}
+        scale={layout[device].team0.scale}
+        device={device}
+        team={0} 
+      />
+      <Team 
+        position={layout[device].team1.position}
+        scale={layout[device].team1.scale}
+        device={device}
+        team={1} 
+      />
+      <JoinTeamModal 
+        position={layout[device].joinTeamModal.position}
+        rotation={layout[device].joinTeamModal.rotation}
+        scale={layout[device].joinTeamModal.scale}
+      />
+      { !disconnect && <Chatbox 
+        position={layout[device].chat.position}
+        rotation={layout[device].chat.rotation}
+        scale={layout[device].chat.scale}
+        device={device}
+      /> }
       { disconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
         rotation={layout[device].disconnectModal.rotation}
       /> }
-      <LetsPlayButton device={device}/>
-      <Host device={device}/>
+      <LetsPlayButton
+        position={layout[device].letsPlayButton.position}
+        rotation={layout[device].letsPlayButton.rotation}
+        device={device}
+      />
+      <Host
+        position={layout[device].hostName.position}
+        rotation={layout[device].hostName.rotation}
+      />
       <Yoot device={device}/>
+      <PiecesSection 
+        position={layout[device].piecesSection.position}
+        device={device}
+      />
+      <Board 
+        position={[0,0,0]}
+        rotation={[0,0,0]}
+        scale={0.6}
+      />
       {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
         move={lastMove}
@@ -143,12 +186,6 @@ export default function Game() {
         endingPosition={[6, 0, -1]}
       /> }
       <MoveDisplay/>
-      {/* pieces */}
-      <PiecesSection 
-        device={device}
-        position={layout[device].piecesSection.position}
-      />
-      <Board scale={0.6}/>
     </>
   );
 }

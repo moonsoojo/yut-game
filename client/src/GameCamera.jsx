@@ -16,7 +16,7 @@ function calcZoom() {
   }
 }
 
-export default function GameCamera({ device }) {
+export default function GameCamera({ position }) {
   
   const [zoom, setZoom] = useState(calcZoom());
   
@@ -34,7 +34,7 @@ export default function GameCamera({ device }) {
     <OrthographicCamera
       makeDefault
       zoom={zoom}
-      position={layout[device].camera.position}
+      position={position}
     />
   </>
 }
