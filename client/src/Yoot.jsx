@@ -12,6 +12,7 @@ import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
 import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
+import HtmlElement from "./HtmlElement.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -87,20 +88,9 @@ export default function Yoot({ device }) {
       }
       
       let move = observeThrow();
-      if (gamePhase === "lobby") {
-        // display "Move: 3-steps"
-        // text zooms into the move token
-        // move tokens are coins with a constellation and stars
-        // indicating the number of steps
-        // until that's designed, use the text
-        // spring into end position by setting
-        // the z-coordinate as the index of the move element
-        // keep max 3, and then pop off the top one
-        // for the game, display up to the first four
-        // and keep them saved in the variable
-        // for now, display text before animation finishes
-        setLastMove(getMoveText(move))
-      } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
+      setLastMove(getMoveText(move))
+      
+      if (gamePhase === 'pregame' || gamePhase === 'game') {  
         // Uncomment to test what happens on Yoot or Mo
         // move = 4
 

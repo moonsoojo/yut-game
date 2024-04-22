@@ -75,8 +75,8 @@ export default {
           position: [-1, 0, -1]
         },
         moveText: {
-          text: "MOVE: 4",
-          position: [-3.2, 0.2, -0.2]
+          text: "MOVE: 4-STEPS",
+          position: [-3.2, 0.7, -0.2]
         },
         yoot: {
           initialPos: [
@@ -703,7 +703,7 @@ export default {
     camera: {
       zoomMin: 30,
       zoomMax: 150,
-      position: [0,20,3],
+      position: [0,17,7],
       lookAtOffset: [0, 0, 0]
     },
     title: {
@@ -761,8 +761,8 @@ export default {
           position: [0, 0, -1]
         },
         moveText: {
-          text: "MOVE: 3",
-          position: [-5, 0.2, 0]
+          text: "MOVE: 3-STEPS",
+          position: [-5, 0.7, 0]
         },
         yoot: {
           initialPos: [

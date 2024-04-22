@@ -134,7 +134,6 @@ export default function Game() {
       <LetsPlayButton device={device}/>
       <Host device={device}/>
       <Yoot device={device}/>
-      {/* move display */}
       { lastMove && <MoveAnimation 
         move={lastMove}
         initialScale={1}
@@ -142,6 +141,7 @@ export default function Game() {
         endingPosition={[6, 0, -1]}
       /> }
       <MoveDisplay/>
+      {/* pieces */}
       <Board scale={0.6}/>
     </>
   );

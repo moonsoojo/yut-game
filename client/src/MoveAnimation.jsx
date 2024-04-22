@@ -12,6 +12,7 @@ export default function MoveAnimation({ move, initialPosition, endingPosition, i
   console.log(`[MoveAnimation] move`, move)
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
 
+  const displayTime = 3000
   const springs = useSpring({
     from: {
       position: initialPosition,
@@ -24,7 +25,7 @@ export default function MoveAnimation({ move, initialPosition, endingPosition, i
       }
     ],
     loop: false,
-    delay: 2000,
+    delay: displayTime,
     reset: true,
     onRest: () => setLastMove(null)
   })

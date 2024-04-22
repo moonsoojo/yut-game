@@ -55,7 +55,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     if (page === 0) {
       const page1Timeout = setTimeout(() => {
         setPage(1)
-      }, 9000)
+      }, 11000)
       setPageTimeout(page1Timeout)
     } else if (page === 1) {
       const page2Timeout = setTimeout(() => {
@@ -110,7 +110,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     const yoot3Mat = useRef()
     const textRef = useRef()
     const yootMats = [yoot0Mat, yoot1Mat, yoot2Mat, yoot3Mat]
-    const loopTime = 10
+    const loopTime = 12
     const [yootButtonTurnedOn, setYootButtonTurnedOn] = useState(true)
     const throwTime = 2
     const [thrown, setThrown] = useState(false)
@@ -511,7 +511,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         size={0.5} 
         height={0.01}
       >
-        MOVE: 3
+        MOVE: 3-STEPS
         <meshStandardMaterial color={ "limegreen" }/>
       </Text3D>
     }
@@ -1098,7 +1098,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.5} 
           height={0.01}
         >
-          MOVE: 3
+          MOVE: 3-STEPS
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
       </animated.group>
@@ -1412,7 +1412,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.5} 
           height={0.01}
         >
-          MOVE: 3, 2
+          MOVE: 3-STEPS, 2-STEPS
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
       </animated.group>

@@ -7,6 +7,7 @@ import { socket } from './SocketManager';
 import { gamePhaseAtom, yootActiveAtom, yootThrowValuesAtom } from './GlobalState';
 import { useParams } from 'wouter';
 import initialState from '../initialState';
+import HtmlElement from './HtmlElement';
 
 export default function YootButton({ 
   position, 
@@ -53,40 +54,56 @@ export default function YootButton({
     document.body.style.cursor = "default";
   }
 
-  // need to have this function in both client and server
-  // because their codes are uploaded in different places
-  function generateForveVectors() {
-    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
-    let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-
-    function generateRandomNumberInRange(num, plusMinus) {
-      return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-    };
-
-    const yootForceVectors = [];
-    for (let i = 0; i < 4; i++) {
-      yootForceVectors.push({
-        _id: i,
-        positionInHand: initialYootPositions[i],
-        rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(1.5, 0.2),
-        torqueImpulse: {
-          x: generateRandomNumberInRange(0.1, 0.05),
-          y: generateRandomNumberInRange(0.02, 0.05), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.012, 0.03), // Spins through the middle axis
-        },
-      });
-    }
-    
-    return yootForceVectors
-  }
   function handleYootThrow() {
     if (gamePhase === "lobby") { // Only throw for the client
-      setYootThrowValues(generateForveVectors())
     } else if (yootActive) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
     }
   }
+
+  function PracticeThrowButton({ position }) {
+    // need to have this function in both client and server
+    // because their codes are uploaded in different places
+    function generateForveVectors() {
+      let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
+      let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
+
+      function generateRandomNumberInRange(num, plusMinus) {
+        return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+      };
+
+      const yootForceVectors = [];
+      for (let i = 0; i < 4; i++) {
+        yootForceVectors.push({
+          _id: i,
+          positionInHand: initialYootPositions[i],
+          rotation: initialYootRotations[i],
+          yImpulse: generateRandomNumberInRange(2, 0.4),
+          torqueImpulse: {
+            x: generateRandomNumberInRange(0.1, 0.05),
+            y: generateRandomNumberInRange(0.3, 0.1), // Spins vertically through the center
+            z: generateRandomNumberInRange(0.035, 0.02), // Spins through the middle axis
+          },
+        });
+      }
+      
+      return yootForceVectors
+    }
+
+    function handlePracticeThrow() {
+      setYootThrowValues(generateForveVectors())
+    }
+    return <HtmlElement
+      text={`Practice Throw`}
+      position={position}
+      rotation={[-Math.PI/2, 0, -Math.PI/2]}
+      fontSize={25}
+      whiteSpace='normal'
+      handleClick={handlePracticeThrow}
+    />
+  }
+
+  console.log(`[YootButton] gamephase`, gamePhase)
 
   return <group 
     position={position} 
@@ -94,89 +111,94 @@ export default function YootButton({
     scale={scale} 
     ref={buttonRef}
   >
-    <mesh
-      castShadow
-      receiveShadow
-      geometry={nodes.Cube.geometry}
-      rotation={[-Math.PI, 0, -Math.PI]}
-      scale={scaleOuter}
-    >
-      <meshStandardMaterial color={ yootActive ? "yellow" : "grey" }/>
-    </mesh>
-    <mesh
-      castShadow
-      receiveShadow
-      geometry={nodes.Cube.geometry}
-      rotation={[-Math.PI, 0, -Math.PI]}
-      scale={scaleInner}
-    >
-      <meshStandardMaterial color="#000B18"/>
-    </mesh>
-    <group position={[0.3, 0.1, 0]}>
+    { gamePhase === "lobby" && <PracticeThrowButton
+      position={[0, 2, -2.5]}
+    /> }
+    { (gamePhase === "pregame" || gamePhase === "game") && <group>
       <mesh
         castShadow
         receiveShadow
-        geometry={yootNodes.Cylinder007.geometry}
-        position={[0,0,-0.45]}
-        material={yootMaterials["Texture wrap.005"]}
-        rotation={[0,0,-Math.PI/2]}
-        scale={scaleYootArray}
+        geometry={nodes.Cube.geometry}
+        rotation={[-Math.PI, 0, -Math.PI]}
+        scale={scaleOuter}
       >
-        { !yootActive && <meshStandardMaterial color="grey"/>}
+        <meshStandardMaterial color={ yootActive ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
         receiveShadow
-        geometry={yootNodes.Cylinder007.geometry}
-        position={[0,0,-0.15]}
-        material={yootMaterials["Texture wrap.005"]}
-        rotation={[0,0,-Math.PI/2]}
-        scale={scaleYootArray}
-        >
-        { !yootActive && <meshStandardMaterial color="grey"/>}
+        geometry={nodes.Cube.geometry}
+        rotation={[-Math.PI, 0, -Math.PI]}
+        scale={scaleInner}
+      >
+        <meshStandardMaterial color="#000B18"/>
       </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={yootNodes.Cylinder007.geometry}
-        position={[0,0,0.15]}
-        material={yootMaterials["Texture wrap.005"]}
-        rotation={[0,0,-Math.PI/2]}
-        scale={scaleYootArray}
+      <group position={[0.3, 0.1, 0]}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={yootNodes.Cylinder007.geometry}
+          position={[0,0,-0.45]}
+          material={yootMaterials["Texture wrap.005"]}
+          rotation={[0,0,-Math.PI/2]}
+          scale={scaleYootArray}
         >
-        { !yootActive && <meshStandardMaterial color="grey"/>}
-      </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={yootNodes.Cylinder007.geometry}
-        position={[0,0,0.45]}
-        material={yootMaterials["Texture wrap.005"]}
-        rotation={[0,0,-Math.PI/2]}
-        scale={scaleYootArray}
-        >
-        { !yootActive && <meshStandardMaterial color="grey"/>}
-      </mesh>
-    </group>
-    <Text3D 
-      font="/fonts/Luckiest Guy_Regular.json" 
-      size={0.3} 
-      height={0.01} 
-      position={[-1.1, 0.2, -0.7]}
-      rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
-    >
-      THROW
-      <meshStandardMaterial color={ yootActive ? "#963600" : "grey" }/>
-    </Text3D>
-    <mesh 
-      position={[0, 0.1, 0]} 
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onPointerDown={handleYootThrow}
-    >
-      <boxGeometry args={[3, 0.3, 2]}/>
-      <meshStandardMaterial transparent opacity={0}/>
-    </mesh>
+          { !yootActive && <meshStandardMaterial color="grey"/>}
+        </mesh>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={yootNodes.Cylinder007.geometry}
+          position={[0,0,-0.15]}
+          material={yootMaterials["Texture wrap.005"]}
+          rotation={[0,0,-Math.PI/2]}
+          scale={scaleYootArray}
+          >
+          { !yootActive && <meshStandardMaterial color="grey"/>}
+        </mesh>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={yootNodes.Cylinder007.geometry}
+          position={[0,0,0.15]}
+          material={yootMaterials["Texture wrap.005"]}
+          rotation={[0,0,-Math.PI/2]}
+          scale={scaleYootArray}
+          >
+          { !yootActive && <meshStandardMaterial color="grey"/>}
+        </mesh>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={yootNodes.Cylinder007.geometry}
+          position={[0,0,0.45]}
+          material={yootMaterials["Texture wrap.005"]}
+          rotation={[0,0,-Math.PI/2]}
+          scale={scaleYootArray}
+          >
+          { !yootActive && <meshStandardMaterial color="grey"/>}
+        </mesh>
+      </group>
+      <Text3D 
+        font="/fonts/Luckiest Guy_Regular.json" 
+        size={0.3} 
+        height={0.01} 
+        position={[-1.1, 0.2, -0.7]}
+        rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
+      >
+        THROW
+        <meshStandardMaterial color={ yootActive ? "#963600" : "grey" }/>
+      </Text3D>
+      <mesh 
+        position={[0, 0.1, 0]} 
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onPointerDown={handleYootThrow}
+      >
+        <boxGeometry args={[3, 0.3, 2]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh> 
+    </group> }
   </group>
 }
 
