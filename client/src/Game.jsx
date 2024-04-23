@@ -119,6 +119,22 @@ export default function Game() {
     />
   }
 
+  function handleInvite() {
+
+  }
+
+  function handleDiscord() {
+
+  }
+
+  function handleRules() {
+
+  }
+
+  function handleSettings() {
+
+  }
+
   console.log(`[Game]`)
   // UI prop guideline
   // Pass position, rotation and scale
@@ -155,6 +171,20 @@ export default function Game() {
         scale={layout[device].chat.scale}
         device={device}
       /> }
+      <HtmlElement
+        text={`Invite`}
+        position={layout[device].invite.position} 
+        rotation={layout[device].invite.rotation}
+        fontSize={layout[device].invite.fontSize}
+        handleClick={handleInvite}
+      />
+      <HtmlElement
+        text={`Discord`}
+        position={layout[device].discord.position} 
+        rotation={layout[device].discord.rotation}
+        fontSize={layout[device].discord.fontSize}
+        handleClick={handleDiscord}
+      />
       { disconnect && <DisconnectModal
         position={layout[device].disconnectModal.position}
         rotation={layout[device].disconnectModal.rotation}
@@ -186,6 +216,20 @@ export default function Game() {
         endingPosition={[6, 0, 3.5]}
       /> }
       <MoveDisplay/>
+      <HtmlElement
+        text='Rules'
+        position={layout[device].rulebookButton.position}
+        rotation={layout[device].rulebookButton.rotation}
+        fontSize={layout[device].rulebookButton.fontSize}
+        handleClick={handleRules}
+      />
+      <HtmlElement
+        text='Settings'
+        position={layout[device].settings.position}
+        rotation={layout[device].settings.rotation}
+        fontSize={layout[device].settings.fontSize}
+        handleClick={handleSettings}
+      />
     </>
   );
 }

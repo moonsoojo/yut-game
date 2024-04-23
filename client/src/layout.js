@@ -1055,12 +1055,12 @@ export default {
       fontSize: 13,
     },
     rulebookButton: {
-      position: [5, 0, -3.5],
+      position: [5, 0, -2.8],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15,
     },
     settings: {
-      position: [5, 0, -2.8],
+      position: [5, 0, -3.5],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15,
     },
@@ -1080,8 +1080,12 @@ export default {
       fontSize: 15
     },
     piecesSection: {
-      position: [4.5, 0, 0],
+      position: [4.7, 0, 0.5],
       scale: 1
+    },
+    practiceThrowButton: {
+      position: [5, 0, 1.7],
+      rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ']
     },
     startEarth: {
       position: [0.6, 0, 3.6],
@@ -1095,7 +1099,7 @@ export default {
       fontSize: 15,
     },
     letsPlayButton: {
-      position: [4.5,0,3],
+      position: [5,0,3],
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 15,
     },
@@ -1258,7 +1262,7 @@ export default {
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButton: {
-      position: [6, 0, 3],
+      position: [5.8, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
     throwButtonOrder: {
@@ -1491,7 +1495,7 @@ export default {
       position: [-1.2, 0, -1]
     },
     piecesSection: {
-      position: [-0.8, 0, -4],
+      position: [1, 0, -2],
       scale: 0.8
     },
     actionButtons: {

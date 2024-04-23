@@ -253,8 +253,8 @@ export default function Yoot({ device }) {
         />
       </> }
       { gamePhase === 'lobby' && <PracticeYootButton
-        position={[4.5, 0, 1.5]}
-        rotation={[-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ']}
+        position={layout[device].practiceThrowButton.position}
+        rotation={layout[device].practiceThrowButton.rotation}
         scale={0.8}
       />}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 

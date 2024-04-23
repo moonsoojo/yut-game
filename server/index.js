@@ -205,10 +205,10 @@ io.on("connect", async (socket) => {
             _id: 0,
             players: [],
             pieces: [
-              { tile: -1, team: 0, id: 0, path: [], status: "scored" },
+              { tile: -1, team: 0, id: 0, path: [], status: "home" },
               { tile: -1, team: 0, id: 1, path: [], status: "home" },
-              { tile: -1, team: 0, id: 2, path: [], status: "onBoard" },
-              { tile: -1, team: 0, id: 3, path: [], status: "onBoard" },
+              { tile: -1, team: 0, id: 2, path: [], status: "home" },
+              { tile: -1, team: 0, id: 3, path: [], status: "home" },
             ],
             moves: {
               '0': 0,
@@ -225,9 +225,9 @@ io.on("connect", async (socket) => {
             _id: 1,
             players: [],
             pieces: [
-              { tile: -1, team: 1, id: 0, path: [], status: "onBoard" },
+              { tile: -1, team: 1, id: 0, path: [], status: "home" },
               { tile: -1, team: 1, id: 1, path: [], status: "home" },
-              { tile: -1, team: 1, id: 2, path: [], status: "scored" },
+              { tile: -1, team: 1, id: 2, path: [], status: "home" },
               { tile: -1, team: 1, id: 3, path: [], status: "home" },
             ],
             moves: {
