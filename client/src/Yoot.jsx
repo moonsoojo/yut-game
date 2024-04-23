@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
@@ -25,6 +25,7 @@ export default function Yoot({ device }) {
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [initialYootThrow] = useAtom(initialYootThrowAtom);
+  const [yootThrown] = useAtom(yootThrownAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
@@ -40,9 +41,9 @@ export default function Yoot({ device }) {
   }
 
   useEffect(() => {
-    for (let i = 0; i < yootMeshes.length; i++) {
-      yootMeshes[i].current.material.visible = true
-    }
+    // for (let i = 0; i < yootMeshes.length; i++) {
+    //   yootMeshes[i].current.material.visible = true
+    // }
 
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
@@ -84,9 +85,11 @@ export default function Yoot({ device }) {
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
-      for (let i = 0; i < yootMeshes.length; i++) {
-        yootMeshes[i].current.material.visible = false
-      }
+      // Do this by 'thrown'
+      // Easier to reveal by gamePhase in useFrame
+      // for (let i = 0; i < yootMeshes.length; i++) {
+      //   yootMeshes[i].current.material.visible = false
+      // }
       
       let move = observeThrow();
       // Uncomment to test what happens on Yoot or Mo
@@ -118,6 +121,11 @@ export default function Yoot({ device }) {
     }
     if (allYootsOnFloor) {
       setOutOfBounds(false);
+    }
+
+    // Show or hide yoot
+    for (let i = 0; i < yootMeshes.length; i++) {
+      yootMeshes[i].current.material.visible = (gamePhase === "lobby" || gamePhase === "pregame" || yootThrown)
     }
   })
 
@@ -178,9 +186,9 @@ export default function Yoot({ device }) {
         position={[0, 1.5, 0]}
         friction={0.9}
       >
-        <CuboidCollider args={[4, 0.5, 4]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[6, 0.5, 6]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[8, 1, 8]} />
+          <boxGeometry args={[12, 1, 12]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
@@ -207,7 +215,7 @@ export default function Yoot({ device }) {
         return (
           <RigidBody
             ref={ref}            
-            position={[-1.5 + 1*index, 10, 0]} // if not set by socketManager
+            position={[-1.5 + 1*index, 10, 1.5]} // if not set by socketManager
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}

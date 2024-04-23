@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom } from "./GlobalState.jsx";
+import { clientAtom, disconnectAtom, gamePhaseAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -35,6 +35,7 @@ export const SocketManager = () => {
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
   const [_initialYootThrow, setInitialYootThrow] = useAtom(initialYootThrowAtom)
+  const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
 
   useEffect(() => {
 
@@ -110,6 +111,8 @@ export const SocketManager = () => {
       } else {
         setYootActive(false)
       }
+
+      setYootThrown(room.yootThrown)
 
       // Enable 'Let's play' button
       if (room.gamePhase === 'lobby' && 

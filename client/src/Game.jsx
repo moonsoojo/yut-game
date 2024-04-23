@@ -1,86 +1,47 @@
 // js
-import React, { useRef, useEffect, useState } from "react";
-import { useAtom, atom } from "jotai";
+import React, { useEffect } from "react";
+import { useAtom } from "jotai";
 import layout from "./layout.js";
-
-// meshes
-import Yoots from "./Yoot.jsx";
-import Star from "./meshes/Star.jsx";
-import Neptune from "./meshes/Neptune.jsx";
-import Earth from "./meshes/Earth.jsx";
-import Mars from "./meshes/Mars.jsx";
-import Saturn from "./meshes/Saturn.jsx";
-import Moon from "./meshes/Moon.jsx";
+import { useSpring, animated } from '@react-spring/three';
 
 // custom components
-import Chatbox from "./Chatbox.jsx";
-import Rulebook2 from "./Rulebook2.jsx";
-import TextButton from "./components/TextButton";
-import ScoreButton from "./ScoreButton.jsx";
-import Piece from "./components/Piece.jsx";
-
-// three js
-import { Physics } from "@react-three/rapier";
-import { Leva, useControls } from "leva";
-import {
-  Environment,
-  Sky,
-  ContactShadows,
-  RandomizedLight,
-  AccumulativeShadows,
-  SoftShadows,
-  Html,
-  Text3D,
-  OrthographicCamera,
-  OrbitControls,
-  Text,
-  PresentationControls
-} from "@react-three/drei";
-import { useThree, useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import Stars from './particles/Stars'
-// import { Perf } from 'r3f-perf'
-
-// server
-import { socket } from "./SocketManager";
-import JoinTeamModal from "./JoinTeamModal.jsx";
-import { getCurrentPlayerSocketId } from "./helpers/helpers.js";
-import UfosWin from "./UfosWin.jsx";
-import RocketsWin from "./RocketsWin.jsx";
-import Celebration from "./particles/MeteorsBackup.jsx";
-import { Perf } from "r3f-perf";
-import CurvedArrow from "./meshes/CurvedArrow.jsx";
-import Meteors from "./particles/MeteorsBackup.jsx";
 import HtmlElement from "./HtmlElement.jsx";
-import MilkyWay from "./shader/MilkyWay.jsx";
-// import BoomText from "./BoomText.jsx";
-import { deviceAtom, joinTeamAtom, lastMoveAtom } from "./GlobalState.jsx";
-import DecideOrderTooltip from "./DecideOrderTooltip.jsx";
-import { useParams } from "wouter";
-import Team from "./Team.jsx";
-import GameCamera from "./GameCamera.jsx";
-import { disconnectAtom, gamePhaseAtom } from "./GlobalState.jsx";
-import mediaValues from "./mediaValues.js";
-import DisconnectModal from "./DisconnectModal.jsx";
-import { readyToStartAtom, turnAtom, hostNameAtom, clientAtom } from "./GlobalState.jsx";
+import Chatbox from "./Chatbox.jsx";
 import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
 import MoveDisplay from "./MoveDisplay.jsx";
 import MoveAnimation from "./MoveAnimation.jsx";
 import PiecesSection from "./PiecesSection.jsx";
+import Team from "./Team.jsx";
+import GameCamera from "./GameCamera.jsx";
+import DisconnectModal from "./DisconnectModal.jsx";
+import JoinTeamModal from "./JoinTeamModal.jsx";
+
+// three js
+import { Leva, useControls } from "leva"
+// import { Perf } from 'r3f-perf'
+
+// server
+import { socket } from "./SocketManager";
+import { useParams } from "wouter";
+import { 
+  deviceAtom, 
+  lastMoveAtom, 
+  readyToStartAtom, 
+  hostNameAtom, 
+  disconnectAtom, 
+  gamePhaseAtom 
+} from "./GlobalState.jsx";
 
 // There should be no state
-// All components should have the state that it needs
-// Tile components should be the parent of all types of tiles (such as Earth or Mars)
-// Piece component should be the parent of all types of pieces
-// Receive device state individually in components
-
 export default function Game() {
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
   // To render the animation
   const [lastMove] = useAtom(lastMoveAtom)
+  // To adjust board size
+  const [gamePhase] = useAtom(gamePhaseAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -135,15 +96,20 @@ export default function Game() {
 
   }
 
-  console.log(`[Game]`)
+  // Animations
+  const { boardScale, boardPosition } = useSpring({
+    boardScale: gamePhase === "pregame" ? 0.2 : 1,
+    boardPosition: gamePhase === "pregame" ? [4, 0, -2.9] : [0, 0, 0]
+  })
+
   // UI prop guideline
   // Pass position, rotation and scale
   // pass device if component has another responsive attribute
-  // such as HtmlElement fontsize or team display
-  // children positions
+    // such as HtmlElement fontsize or team display
+    // children positions
   // If state is contained globally, don't pass it as a prop
-  // example: <Host/> is in this component. 'device' is
-  // declared at the top. don't pass it in as a prop
+    // example: <Host/> is in this component. 'device' is
+    // declared at the top. don't pass it in as a prop
   return (<>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
@@ -198,15 +164,36 @@ export default function Game() {
         position={layout[device].hostName.position}
         rotation={layout[device].hostName.rotation}
       />
+      <animated.group position={boardPosition} scale={boardScale}>
+        <Board 
+          position={[0,0,0]}
+          rotation={[0,0,0]}
+          scale={0.6}
+        />
+      </animated.group>
+      {/* Who Goes First components */}
+      { gamePhase === "pregame" && <group>
+        <HtmlElement
+          text={`Who goes first?`}
+          position={[-3, 0, -3.5]}
+          rotation={[-Math.PI/2,0,0]}
+          fontSize={25}
+        />
+        <HtmlElement
+          text={`One player from each team throws the yoot.
+          Whoever rolls more steps goes first.`}
+          position={[-3, 0, -2.5]}
+          rotation={[-Math.PI/2,0,0]}
+          fontSize={15}
+          width={250}
+          whiteSpace="normal"
+          color='limegreen'
+        />
+      </group>}
       <Yoot device={device}/>
       <PiecesSection 
         position={layout[device].piecesSection.position}
         device={device}
-      />
-      <Board 
-        position={[0,0,0]}
-        rotation={[0,0,0]}
-        scale={0.6}
       />
       {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
@@ -217,18 +204,18 @@ export default function Game() {
       /> }
       <MoveDisplay/>
       <HtmlElement
-        text='Rules'
-        position={layout[device].rulebookButton.position}
-        rotation={layout[device].rulebookButton.rotation}
-        fontSize={layout[device].rulebookButton.fontSize}
-        handleClick={handleRules}
-      />
-      <HtmlElement
         text='Settings'
         position={layout[device].settings.position}
         rotation={layout[device].settings.rotation}
         fontSize={layout[device].settings.fontSize}
         handleClick={handleSettings}
+      />
+      <HtmlElement
+        text='Rules'
+        position={layout[device].rulebookButton.position}
+        rotation={layout[device].rulebookButton.rotation}
+        fontSize={layout[device].rulebookButton.fontSize}
+        handleClick={handleRules}
       />
     </>
   );

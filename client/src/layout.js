@@ -1050,20 +1050,20 @@ export default {
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 13,
     },
-    hostName: {
-      position: [-4.5, 0, -3.5],
+    settings: {
+      position: [5, 0, -3.5],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
+      fontSize: 15,
     },
     rulebookButton: {
       position: [5, 0, -2.8],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15,
     },
-    settings: {
-      position: [5, 0, -3.5],
+    hostName: {
+      position: [5, 0, -2.1],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 15,
+      fontSize: 13,
     },
     throwCount: {
       position: [5, 0, -1.5],

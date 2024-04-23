@@ -394,8 +394,8 @@ io.on("connect", async (socket) => {
     }
   })
 
-  function generateForveVectors() {
-    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
+  function generateForveVectors(gamePhase) {
+    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions[gamePhase]))
     let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
 
     function generateRandomNumberInRange(num, plusMinus) {
@@ -408,11 +408,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(1.5, 0.2),
+        yImpulse: generateRandomNumberInRange(2, 0.4),
         torqueImpulse: {
           x: generateRandomNumberInRange(0.1, 0.05),
-          y: generateRandomNumberInRange(0.02, 0.05), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.012, 0.03), // Spins through the middle axis
+          y: generateRandomNumberInRange(0.3, 0.1), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.035, 0.02), // Spins through the middle axis
         },
       });
     }
@@ -458,7 +458,7 @@ io.on("connect", async (socket) => {
           }, 
           { 
             $set: { 
-              yootThrowValues: generateForveVectors(),
+              yootThrowValues: generateForveVectors(room.gamePhase),
               yootThrown: true
             },
           }
