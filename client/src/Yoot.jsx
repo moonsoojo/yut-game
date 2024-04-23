@@ -13,6 +13,7 @@ import meteorSettings from "./particles/Meteors.js";
 import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
+import PracticeYootButton from "./PracticeYootButton.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -251,11 +252,16 @@ export default function Yoot({ device }) {
           position={[-1, 1.5, 0]}
         />
       </> }
-      <YootButton 
+      { gamePhase === 'lobby' && <PracticeYootButton
+        position={[4.5, 0, 1.5]}
+        rotation={[-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ']}
+        scale={0.8}
+      />}
+      { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
         position={layout[device].throwButton.position}
         rotation={[0, Math.PI/2, 0]}
         scale={0.8}
-      />
+      />}
     </Physics>
   );
 }

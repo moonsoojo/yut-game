@@ -183,7 +183,7 @@ export default function Game() {
         move={lastMove}
         initialScale={1}
         initialPosition={[2.5, 0, -3]}
-        endingPosition={[6, 0, -1]}
+        endingPosition={[6, 0, 3.5]}
       /> }
       <MoveDisplay/>
     </>

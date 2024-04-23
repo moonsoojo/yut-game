@@ -4,10 +4,8 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { gamePhaseAtom, yootActiveAtom, yootThrowValuesAtom } from './GlobalState';
+import { yootActiveAtom } from './GlobalState';
 import { useParams } from 'wouter';
-import initialState from '../initialState';
-import HtmlElement from './HtmlElement';
 
 export default function YootButton({ 
   position, 
@@ -25,9 +23,7 @@ export default function YootButton({
   let buttonRef = useRef();
 
   const [yootActive] = useAtom(yootActiveAtom);
-  const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
-  
-  const [gamePhase] = useAtom(gamePhaseAtom)
+
   // To tell the server which room to throw the yoot in
   const params = useParams();
 
@@ -61,62 +57,13 @@ export default function YootButton({
     }
   }
 
-  function PracticeThrowButton({ position }) {
-    // need to have this function in both client and server
-    // because their codes are uploaded in different places
-    function generateForveVectors() {
-      let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions))
-      let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-
-      function generateRandomNumberInRange(num, plusMinus) {
-        return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-      };
-
-      const yootForceVectors = [];
-      for (let i = 0; i < 4; i++) {
-        yootForceVectors.push({
-          _id: i,
-          positionInHand: initialYootPositions[i],
-          rotation: initialYootRotations[i],
-          yImpulse: generateRandomNumberInRange(2, 0.4),
-          torqueImpulse: {
-            x: generateRandomNumberInRange(0.1, 0.05),
-            y: generateRandomNumberInRange(0.3, 0.1), // Spins vertically through the center
-            z: generateRandomNumberInRange(0.035, 0.02), // Spins through the middle axis
-          },
-        });
-      }
-      
-      return yootForceVectors
-    }
-
-    function handlePracticeThrow() {
-      // Only throws for the client
-      setYootThrowValues(generateForveVectors())
-    }
-
-    return <HtmlElement
-      text={`Practice Throw`}
-      position={position}
-      rotation={[-Math.PI/2, 0, -Math.PI/2]}
-      fontSize={25}
-      whiteSpace='normal'
-      handleClick={handlePracticeThrow}
-    />
-  }
-
-  console.log(`[YootButton] gamephase`, gamePhase)
-
   return <group 
     position={position} 
     rotation={rotation} 
     scale={scale} 
     ref={buttonRef}
   >
-    { gamePhase === "lobby" && <PracticeThrowButton
-      position={[0, 2, -2.5]}
-    /> }
-    { (gamePhase === "pregame" || gamePhase === "game") && <group>
+    <group>
       <mesh
         castShadow
         receiveShadow
@@ -200,7 +147,7 @@ export default function YootButton({
         <boxGeometry args={[3, 0.3, 2]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh> 
-    </group> }
+    </group>
   </group>
 }
 
