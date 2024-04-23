@@ -211,9 +211,9 @@ export default function Game() {
       {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
         move={lastMove}
-        initialScale={1}
-        initialPosition={[2.5, 0, -3]}
-        endingPosition={[6, 0, 3.5]}
+        initialScale={0.3}
+        initialPosition={[2, 0, 3.5]}
+        endingPosition={[6, 0, 2.5]}
       /> }
       <MoveDisplay/>
       <HtmlElement

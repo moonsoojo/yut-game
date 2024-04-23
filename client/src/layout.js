@@ -43,12 +43,13 @@ export default {
       tiles: {
         position: [0, 0, -1.8],
         rotation: [0, -Math.PI/16, 0],
-        scale: 0.5
+        scale: 0.4
       },
       about: {
         show: false,
         position: [-0.4, 0, 0.5],
         rotation: [-Math.PI/4,0,0],
+        scale: 0.7,
         fontSize: 10
       },
       howToPlay: {
@@ -304,9 +305,9 @@ export default {
       }
     },
     about: {
-      position: [-2.5, 0, -4],
+      position: [-2.1, 0, -3.3],
       rotation: [-Math.PI/4,0,0],
-      scale: 0.35
+      scale: 0.28
     },
     team0: {
       scale: 1,
