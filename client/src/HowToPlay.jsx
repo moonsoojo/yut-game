@@ -447,7 +447,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
         ];
         if (i == 0) {
-          tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
+          tiles.push(<Earth position={position} key={i} scale={0.4}/>);
         } else {
           if (i === 3) {
             tiles.push(
@@ -552,7 +552,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
     function Fireworks() {
 
-      const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+      const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   
       const zone = new PointZone(0, 0);
       useEffect(() => {
@@ -616,19 +616,19 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
           ];
           if (i == 0) {
-            tiles.push(<Earth position={position} key={i} device={device}/>);
+            tiles.push(<Earth position={position} scale={0.4} key={i}/>);
           } else if (i == 5) {
             tiles.push(
               <Mars
                 position={position}
+                scale={0.4}
                 key={i}
-                device={device}
               />
             );
           } else if (i == 10) {
-            tiles.push(<Saturn position={position} key={i} device={device}/>);
+            tiles.push(<Saturn position={position} scale={0.4} key={i}/>);
           } else if (i == 15) {
-            tiles.push(<Neptune position={position} key={i} device={device}/>);
+            tiles.push(<Neptune position={position} scale={0.4} key={i}/>);
           } else {
             tiles.push(
               <Star
@@ -822,9 +822,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       tiles.push(
         <Moon
           position={[0,0,0]}
-          intensity={3}
+          scale={0.4}
           key={100}
-          device={device}
         />
       );
       // shoot fireworks
@@ -839,7 +838,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </group>
         <animated.group scale={springs.moveScale}>
           <HtmlElement
-            text='Move: 1'
+            text='MOVE: 1-STEP'
             position={layout[device].howToPlay.page2.moveText.position}
             rotation={layout[device].howToPlay.page2.moveText.rotation}
             fontSize={layout[device].howToPlay.page2.moveText.fontSize}
@@ -1332,21 +1331,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position}
               key={i}
             >
-              <Star
-                scale={springs.legalTile0Scale}
-                device={device}
-              />
+              <Star scale={springs.legalTile0Scale}/>
               <Pointer color='red' position={layout[device].howToPlay.page4.pointer0.position} scale={2} opacity={springs.pointer0Opacity}/>
             </group>
           )
         } else if (i === 4) {
           tiles.push(
             <group
-            position={position}
-            key={i}>
+              position={position}
+              key={i}
+            >
               <Mars
                 scale={springs.legalTile1Scale}
-                device={device}
               />
               <Pointer color='red' position={layout[device].howToPlay.page4.pointer1.position} scale={2.3} opacity={springs.pointer1Opacity}/>
             </group>
@@ -1355,9 +1351,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tiles.push(
             <Star
               position={position}
-              key={i}
               scale={layout[device].star.scale}
-              device={device}
+              key={i}
             />
           )
         }
@@ -1406,25 +1401,35 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <FirstCornerTiles position={[-1, 0, -1]}/>
       <animated.group scale={springs.moveText0Scale}>
         <Text3D
-          position={[-2, 0, 1]}
+          position={[-3, 0, 0]}
           rotation={[-Math.PI/2,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
-          MOVE: 3-STEPS, 2-STEPS
+          MOVES: 3-STEPS,
+          <meshStandardMaterial color={ "limegreen" }/>
+        </Text3D>
+        <Text3D
+          position={[-0.6, 0, 0.7]}
+          rotation={[-Math.PI/2,0,0]}
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.5} 
+          height={0.01}
+        >
+          2-STEPS
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
       </animated.group>
       <animated.group scale={springs.moveText1Scale}>
         <Text3D
-          position={[-2, 0, 1]}
+          position={[-3, 0, 0]}
           rotation={[-Math.PI/2,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
-          MOVE: 2
+          MOVES: 2-STEPS
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
       </animated.group>
@@ -1837,7 +1842,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
         ];
         if (i == 0) {
-          tiles.push(<Earth position={position} tile={i} key={i} device={device}/>);
+          tiles.push(<Earth position={position} scale={0.4} key={i}/>);
         } else if (i == 3) {
           tiles.push(
             <Star
@@ -1854,9 +1859,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             key={i}>
               <Star
                 position={position}
-                tile={i}
                 scale={springs.legalTile3Scale}
-                device={device}
               />
               <Pointer color='red' position={[position[0], position[1] + 2, position[2]]} scale={springs.pointer4Scale}/>
             </group>
@@ -1865,17 +1868,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tiles.push(
             <Mars
               position={position}
-              tile={i}
+              scale={0.4}
               key={i}
-              device={device}
             />
           );
         } else if (i == 10) {
           tiles.push(
-            <Saturn position={position} scale={springs.legalTile1Scale} tile={i} key={i} device={device}/>
+            <Saturn position={position} scale={springs.legalTile1Scale} key={i}/>
           );
         } else if (i == 15) {
-          tiles.push(<Neptune position={position} tile={i} key={i} device={device}/>);
+          tiles.push(<Neptune position={position} scale={0.4} key={i}/>);
         } else {
           tiles.push(
             <Star
@@ -2213,7 +2215,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           position={[-0.2,0,-2.6]}
           rotation={[-Math.PI/4, 0, 0]}
           fontSize={26}
-          color='limegreen'
+          color='red'
         />
         <Float rotationIntensity={0.1}>
           <YootSet points="backdo" scale={0.4}/>

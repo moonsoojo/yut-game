@@ -106,7 +106,7 @@ export default {
           position: [-2, 0, -2]
         },
         moveDisplay: {
-          position: [-2.8, 0, 1.7]
+          position: [-3.3, 0, 1.7]
         },
         cursorPos0: [1, 0.3, 1],
         cursorPos1: [-0.5, 0.3, -0.4],
@@ -241,7 +241,7 @@ export default {
           position: [1.5, 0, 0.5]
         },
         moveText: {
-          position: [-2,0,1]
+          position: [-3,0,1]
         }
       },
       page4: {
@@ -792,7 +792,7 @@ export default {
           position: [-1, 0, -2]
         },
         moveDisplay: {
-          position: [-1.8, 0, 1.7]
+          position: [-2.3, 0, 1.7]
         },
         cursorPos0: [1, 0.3, 1],
         cursorPos1: [0.4, 0.3, -0.5],
@@ -927,7 +927,7 @@ export default {
           position: [0.5, 0, 0.5]
         },
         moveText: {
-          position: [-2, 0, 1]
+          position: [-3, 0, 1]
         }
       },
       page4: {
