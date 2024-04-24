@@ -32,6 +32,7 @@ import {
   disconnectAtom, 
   gamePhaseAtom 
 } from "./GlobalState.jsx";
+import FloorDotted from "./meshes/FloorDotted.jsx";
 
 // There should be no state
 export default function Game() {
@@ -181,7 +182,7 @@ export default function Game() {
         />
         <HtmlElement
           text={`One player from each team throws the yoot.
-          Whoever rolls more steps goes first.`}
+          Whichever team rolls more goes first.`}
           position={[-3, 0, -2.5]}
           rotation={[-Math.PI/2,0,0]}
           fontSize={15}
@@ -189,6 +190,7 @@ export default function Game() {
           whiteSpace="normal"
           color='limegreen'
         />
+        {/* <FloorDotted position={[0,0,0]} rotation={[0,0,0]} scale={1}/> */}
       </group>}
       <Yoot device={device}/>
       <PiecesSection 

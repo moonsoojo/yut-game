@@ -69,13 +69,13 @@ export default function Yoot({ device }) {
 
   function getMoveText(move) {
     const moveToText = {
-      "0": "Out of bounds",
+      "0": "OUT",
       "1": "1-STEP",
       "2": "2-STEPS",
       "3": "3-STEPS",
       "4": "4-STEPS",
       "5": "5-STEPS",
-      "-1": "BACK-1-STEP"
+      "-1": "BACK-1"
     }
     return moveToText[move]
   }
@@ -215,7 +215,7 @@ export default function Yoot({ device }) {
         return (
           <RigidBody
             ref={ref}            
-            position={[-1.5 + 1*index, 10, 1.5]} // if not set by socketManager
+            position={[-1.5 + 1*index, 10, 2]} // if not set by socketManager
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}
