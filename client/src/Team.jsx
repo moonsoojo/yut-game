@@ -92,7 +92,8 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function playerNameDisplay(team, playerIndex, name) {
-    if (team === turn.team && playerIndex === turn.players[team]) {
+    if (team === turn.team && playerIndex === turn.players[turn.team] && 
+      (gamePhase === "pregame" || gamePhase === "game")) {
       return <div>{name}<span style={{'color': 'red'}}> &#9679;</span></div>
     } else {
       return name
