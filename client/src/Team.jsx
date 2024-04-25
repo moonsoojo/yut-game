@@ -1,13 +1,15 @@
 import React from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
-import { joinTeamAtom, clientAtom, teamsAtom } from './GlobalState';
+import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, turnAtom } from './GlobalState';
 import { Html } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
 
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom);
+  const [turn] = useAtom(turnAtom)
 
   function JoinTeamButton() {
     const [client] = useAtom(clientAtom);
@@ -79,23 +81,26 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     );
   }
 
-  return <group
-    position={position}
-    scale={scale}
-  >
-    {/* team name */}
-    <HtmlElement
-      text={ team === 0 ? "Rockets" : "UFOs" }
-      position={layout[device][`team${team}`].title.position}
-      rotation={layout[device][`team${team}`].title.rotation}
-      color={ team === 0 ? "red" : "turquoise" }
+  function RollDisplay() {
+    const rollText = teams[team].pregameRoll === null ? '' : teams[team].pregameRoll
+    return <HtmlElement
+      text={`Roll: ${rollText}`}
+      position={layout[device][`team${team}`].pregameRoll.position}
+      rotation={layout[device][`team${team}`].pregameRoll.rotation}
+      fontSize={layout[device][`team${team}`].pregameRoll.fontSize}
     />
-    {/* join button */}
-    <JoinTeamButton/>
-    {/* pieces */}
-    <HomePieces position={layout[device][`team${team}`].pieces.position} team={team} scale={0.5}/>
-    {/* player ids */}
-    <Html
+  }
+
+  function playerNameDisplay(team, playerIndex, name) {
+    if (team === turn.team && playerIndex === turn.players[team]) {
+      return <div>{name}<span style={{'color': 'red'}}> &#9679;</span></div>
+    } else {
+      return name
+    }
+  }
+
+  function PlayerIds() {
+    return <Html
       position={layout[device][`team${team}`].names.position}
       rotation={layout[device][`team${team}`].names.rotation}
       transform
@@ -117,10 +122,30 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
           }}
           key={index}
         >
-          {value.name}
+          {playerNameDisplay(team, index, value.name)}
         </div>
       ))}
       </div>
     </Html>
+  }
+
+  return <group
+    position={position}
+    scale={scale}
+  >
+    {/* team name */}
+    <HtmlElement
+      text={ team === 0 ? "Rockets" : "UFOs" }
+      position={layout[device][`team${team}`].title.position}
+      rotation={layout[device][`team${team}`].title.rotation}
+      color={ team === 0 ? "red" : "turquoise" }
+    />
+    {/* join button */}
+    { gamePhase === "lobby" && <JoinTeamButton/> }
+    { gamePhase === "pregame" && <RollDisplay/> }
+    {/* pieces */}
+    <HomePieces position={layout[device][`team${team}`].pieces.position} team={team} scale={0.5}/>
+    {/* player ids */}
+    <PlayerIds/>
   </group>
 }

@@ -76,7 +76,8 @@ const roomSchema = new mongoose.Schema(
         '4': Number,
         '5': Number,
         '-1': Number
-      }
+      },
+      pregameRoll: Number
     }],
     turn: {
       team: Number,
@@ -219,7 +220,8 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 0
+            throws: 0,
+            pregameRoll: null
           },
           {
             _id: 1,
@@ -239,7 +241,8 @@ io.on("connect", async (socket) => {
               '5': 0,
               '-1': 0
             },
-            throws: 0
+            throws: 0,
+            pregameRoll: null
           }
         ],
         messages: [],

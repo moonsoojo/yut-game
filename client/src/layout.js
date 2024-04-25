@@ -330,8 +330,10 @@ export default {
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
-      joinInput: {
-        position: [2, 0, -0.42]
+      pregameRoll: {
+        position: [1.8, 0, 0.5],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       }
     },
     team1: {
@@ -356,8 +358,10 @@ export default {
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
-      joinInput: {
-        position: [2, 0, -0.42]
+      pregameRoll: {
+        position: [1.8, 0, 0.5],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       }
     },
     joinTeamModal: {
@@ -1011,6 +1015,11 @@ export default {
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
+      pregameRoll: {
+        position: [1.8, 0, 0.5],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
+      }
     },
     team1: {
       scale: 1,
@@ -1033,8 +1042,10 @@ export default {
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
-      joinInput: {
-        position: [2, 0, -0.42]
+      pregameRoll: {
+        position: [1.8, 0, 0.5],
+        rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 15
       }
     },
     yootButton: {

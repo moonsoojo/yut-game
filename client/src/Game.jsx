@@ -176,14 +176,14 @@ export default function Game() {
       { gamePhase === "pregame" && <group>
         <HtmlElement
           text={`Who goes first?`}
-          position={[-3, 0, -3.5]}
+          position={[-2.5, 0, -3.5]}
           rotation={[-Math.PI/2,0,0]}
           fontSize={25}
         />
         <HtmlElement
           text={`One player from each team throws the yoot.
           Whichever team rolls more goes first.`}
-          position={[-3, 0, -2.5]}
+          position={[-2.5, 0, -2.5]}
           rotation={[-Math.PI/2,0,0]}
           fontSize={15}
           width={250}
