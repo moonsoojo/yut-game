@@ -30,7 +30,8 @@ import {
   readyToStartAtom, 
   hostNameAtom, 
   disconnectAtom, 
-  gamePhaseAtom 
+  gamePhaseAtom, 
+  turnAtom
 } from "./GlobalState.jsx";
 import FloorDotted from "./meshes/FloorDotted.jsx";
 
@@ -43,6 +44,7 @@ export default function Game() {
   const [lastMove] = useAtom(lastMoveAtom)
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
+  const [turn] = useAtom(turnAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -182,14 +184,24 @@ export default function Game() {
         />
         <HtmlElement
           text={`One player from each team throws the yoot.
-          Whichever team rolls more goes first.`}
+          The team with a higher number goes first.`}
           position={[-2.5, 0, -2.5]}
           rotation={[-Math.PI/2,0,0]}
           fontSize={15}
-          width={250}
+          width={240}
           whiteSpace="normal"
           color='limegreen'
         />
+        
+        {/* <HtmlElement
+          text={`${teams[turn.team].players[turn.players[turn.team]].name} is throwing the yoot.`}
+          position={[-2.5, 0, -2.5]}
+          rotation={[-Math.PI/2,0,0]}
+          fontSize={15}
+          width={240}
+          whiteSpace="normal"
+          color='limegreen'
+        /> */}
         {/* <FloorDotted position={[0,0,0]} rotation={[0,0,0]} scale={1}/> */}
       </group>}
       <Yoot device={device}/>
