@@ -5,11 +5,7 @@ import { lastMoveAtom } from './GlobalState';
 import { Text3D } from '@react-three/drei';
 
 export default function MoveAnimation({ move, initialPosition, endingPosition, initialScale }) {
-  // MoveDisplay contains moves
-  // Move is merely for animation
-  // pass it last move from list of moves of the current team
-  // animate it on start and set the scale to 0 on finish
-  console.log(`[MoveAnimation] move`, move)
+  
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
 
   const displayTime = 3000

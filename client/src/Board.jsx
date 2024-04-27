@@ -32,7 +32,6 @@ function getMeshByTile(tile) {
 }
 
 export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, showStart=false, interactive=false }) {
-  console.log(`[Board]`)
   const [tiles] = useAtom(tilesAtom)
   const tileRadius = 5
   const NUM_STARS = 20;

@@ -7,7 +7,6 @@ import React from "react";
 import { animated } from "@react-spring/three";
 
 export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
-  console.log(`[Star]`)
   const { scene } = useGLTF(
     "models/star.glb"
   );

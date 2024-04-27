@@ -82,9 +82,9 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function RollDisplay() {
-    const rollText = teams[team].pregameRoll === null ? '' : teams[team].pregameRoll
+    const rollText = teams[team].pregameRoll ? teams[team].pregameRoll : ""
     return <HtmlElement
-      text={`Roll: ${rollText}`}
+      text={<div>Roll: <span style={{ "color": team === 0 ? "red" : "turquoise" }}>{rollText}</span></div>}
       position={layout[device][`team${team}`].pregameRoll.position}
       rotation={layout[device][`team${team}`].pregameRoll.rotation}
       fontSize={layout[device][`team${team}`].pregameRoll.fontSize}

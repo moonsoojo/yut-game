@@ -490,6 +490,54 @@ io.on("connect", async (socket) => {
     return currentPlayer._id
   }
 
+  function passTurn(currentTurn, teams) {
+    const currentTeam = currentTurn.team
+
+    if (currentTurn.team == teams.length - 1) {
+      currentTurn.team = 0
+    } else {
+      currentTurn.team++
+    }
+  
+    if (currentTurn.players[currentTeam] == teams[currentTeam].players.length - 1) {
+      currentTurn.players[currentTeam] = 0
+    } else {
+      currentTurn.players[currentTeam]++
+    }
+
+    return currentTurn
+  }
+
+  function setTurn(currentTurn, team) {
+    return {
+      team: team,
+      players: currentTurn.players
+    }
+  }
+
+  // Return the result
+  function comparePregameRolls(team0Roll, team1Roll) {
+    console.log(`[passTurnPregame] team 0 roll`, team0Roll, 'team 1 roll', team1Roll)
+    if (team0Roll && team1Roll) {
+      if (team0Roll === team1Roll) {
+        // Clear pregame rolls
+        // return passTurn(currentTurn, teams)
+        return "tie"
+      } else if (team0Roll > team1Roll) {
+        // Proceed to the game phase
+        // return setTurn(currentTurn, 0)
+        return 0
+      } else if (team1Roll > team0Roll) {
+        // Proceed to the game phase
+        // return setTurn(currentTurn, 1)
+        return 1
+      }
+    } else {
+      // return passTurn(currentTurn, teams)
+      return "pass"
+    }
+  }
+
   socket.on("recordThrow", async ({ move, roomId }) => {
     console.log("[recordThrow] move", move)
 
@@ -519,20 +567,93 @@ io.on("connect", async (socket) => {
         )
 
         // Add move to team
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-            'teams._id': user.team,
-          }, 
-          { 
-            $inc: { [`teams.$.moves.${move}`]: 1 } 
-          }
-        )
+        if (room.gamePhase === "pregame") {
+          await Room.findOneAndUpdate(
+            { 
+              _id: roomId, 
+              'teams._id': user.team,
+            }, 
+            { 
+              $set: { [`teams.$.pregameRoll`]: move } 
+            }
+          )
+        } else if (room.gamePhase === "game") {
+          await Room.findOneAndUpdate(
+            { 
+              _id: roomId, 
+              'teams._id': user.team,
+            }, 
+            { 
+              $inc: { [`teams.$.moves.${move}`]: 1 } 
+            }
+          )
+        }
         console.log(`[recordThrow] added move to team`)
       }
     } catch (err) {
       console.log(`[recordThrow] error recording throw`, err)
     }
+
+    // Pass turn
+    try {
+      // Fetch up-to-date room to calculate the next turn
+      let room = await Room.findOne({ _id: roomId })  
+
+      // Check if user has the turn
+      if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+
+        if (room.gamePhase === "pregame") {
+          const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)
+          console.log(`[recordThrow] outcome`, outcome)
+          if (outcome === "pass") {
+            const newTurn = passTurn(room.turn, room.teams)
+            await Room.findOneAndUpdate(
+              { 
+                _id: roomId, 
+              }, 
+              { 
+                $set: { turn: newTurn },
+                $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
+              }
+            )
+          } else if (outcome === "tie") {
+            const newTurn = passTurn(room.turn, room.teams)
+            await Room.findOneAndUpdate(
+              { 
+                _id: roomId, 
+              }, 
+              { 
+                $set: { 
+                  'teams.0.pregameRoll': null,
+                  'teams.1.pregameRoll': null,
+                  'turn': newTurn 
+                },
+                $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
+              }
+            )
+          } else {
+            // 'outcome' is the winning team index
+            const newTurn = setTurn(room.turn, outcome)
+            console.log(`[recordThrow] newTurn`, newTurn)
+            await Room.findOneAndUpdate(
+              { 
+                _id: roomId, 
+              }, 
+              {
+                $set: { 
+                  turn: newTurn,
+                  gamePhase: 'game'
+                },
+                $inc: { [`teams.${outcome}.throws`]: 1 },
+              }
+            )
+          }
+        }
+      }
+    } catch (err) {
+      console.log(`[recordThrow] error passing turn;`, err)
+    }
+    
 
     // if (getGamePhase(roomId) === "pregame") {
     //   addMove(roomId, getTurn(roomId).team, move.toString())
