@@ -31,9 +31,12 @@ import {
   hostNameAtom, 
   disconnectAtom, 
   gamePhaseAtom, 
-  turnAtom
+  turnAtom,
+  teamsAtom
 } from "./GlobalState.jsx";
 import FloorDotted from "./meshes/FloorDotted.jsx";
+import Rocket from "./meshes/Rocket.jsx";
+import Ufo from "./meshes/Ufo.jsx";
 
 // There should be no state
 export default function Game() {
@@ -81,6 +84,34 @@ export default function Game() {
       rotation={rotation}
       fontSize={layout[device].hostName.fontSize}
     />
+  }
+
+  function CurrentPlayer({ position, rotation }) {
+    const [teams] = useAtom(teamsAtom)
+    const name = teams[turn.team].players[turn.players[turn.team]].name
+    return <group position={position} rotation={rotation}>
+      { turn.team === 0 && <Rocket
+        position={[0, 0, 0]}
+        rotation={[0, 0, 0]}
+        scale={0.7}
+      />}
+      { turn.team === 1 && <Ufo
+        position={[0, 0, 0.2]}
+        rotation={[0, 0, 0]}
+        scale={0.7}
+      />}
+      <HtmlElement
+        text={`${name}`}
+        position={[0.5, 0, 0]}
+        rotation={[-Math.PI/2,0,0]}
+        fontSize={15}
+        width={120}
+        whiteSpace="nowrap"
+        color='yellow'
+        textOverflow='ellipsis'
+        overflow='hidden'
+      />
+    </group>
   }
 
   function handleInvite() {
@@ -192,31 +223,8 @@ export default function Game() {
           whiteSpace="normal"
           color='limegreen'
         />
-        
-        {/* <HtmlElement
-          text={`${teams[turn.team].players[turn.players[turn.team]].name} is throwing the yoot.`}
-          position={[-2.5, 0, -2.5]}
-          rotation={[-Math.PI/2,0,0]}
-          fontSize={15}
-          width={240}
-          whiteSpace="normal"
-          color='limegreen'
-        /> */}
-        {/* <FloorDotted position={[0,0,0]} rotation={[0,0,0]} scale={1}/> */}
       </group>}
       <Yoot device={device}/>
-      <PiecesSection 
-        position={layout[device].piecesSection.position}
-        device={device}
-      />
-      {/* Conditionally render to activate animation on state change */}
-      { lastMove && <MoveAnimation 
-        move={lastMove}
-        initialScale={0.3}
-        initialPosition={[2, 0, 3.5]}
-        endingPosition={[6, 0, 2.5]}
-      /> }
-      <MoveDisplay/>
       <HtmlElement
         text='Settings'
         position={layout[device].settings.position}
@@ -231,6 +239,22 @@ export default function Game() {
         fontSize={layout[device].rulebookButton.fontSize}
         handleClick={handleRules}
       />
+      <PiecesSection 
+        position={layout[device].piecesSection.position}
+        device={device}
+      />
+      {/* Conditionally render to activate animation on state change */}
+      { lastMove && <MoveAnimation 
+        move={lastMove}
+        initialScale={0.3}
+        initialPosition={[2, 0, 3.2]}
+        endingPosition={[6, 0, 2.5]}
+      /> }
+      <MoveDisplay/>
+      { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
+        position={[2, 0, 3.7]} 
+        rotation={[0,0,0]}
+      /> }
     </>
   );
 }

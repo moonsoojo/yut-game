@@ -14,7 +14,9 @@ export default function HtmlElement({
   backgroundColor=null,
   border='',
   padding='2px',
-  whiteSpace='nowrap'
+  whiteSpace='nowrap',
+  textOverflow='clip',
+  overflow='hidden'
 }) {
   const [currColor, setCurrColor] = useState(color);
   useEffect(() => {
@@ -49,7 +51,9 @@ export default function HtmlElement({
         width: width,
         whiteSpace: whiteSpace,
         WebkitUserSelect: 'none',
-        backgroundColor: backgroundColor
+        backgroundColor: backgroundColor,
+        textOverflow: textOverflow,
+        overflow: overflow
       }}  
       onPointerDown={handleClick}
       onPointerEnter={handlePointerEnter}

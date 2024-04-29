@@ -7,7 +7,6 @@ import React from "react";
 import { animated } from "@react-spring/three";
 
 export default function Rocket({
-  // tile,
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1
