@@ -37,6 +37,7 @@ import {
 import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
+import BoomText from "./BoomText.jsx";
 
 // There should be no state
 export default function Game() {
@@ -47,6 +48,7 @@ export default function Game() {
   const [lastMove] = useAtom(lastMoveAtom)
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
+  console.log(`[Game] gamePhase`, gamePhase)
   const [turn] = useAtom(turnAtom)
   const params = useParams();
 
@@ -205,6 +207,7 @@ export default function Game() {
           scale={0.6}
         />
       </animated.group>
+      <BoomText rotation={[0, Math.PI/2, 0]} scale={0.5}/>
       {/* Who Goes First components */}
       { gamePhase === "pregame" && <group>
         <HtmlElement

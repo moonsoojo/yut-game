@@ -25,6 +25,7 @@ export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.tiles)))
 export const initialYootThrowAtom = atom(true)
 export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
+export const boomTextAtom = atom('')
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

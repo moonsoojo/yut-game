@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { clientAtom, disconnectAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -30,13 +30,15 @@ export const SocketManager = () => {
   const [_hostName, setHostName] = useAtom(hostNameAtom)
   const [_spectators, setSpectators] = useAtom(spectatorsAtom)
   const [_readyToStart, setReadyToStart] = useAtom(readyToStartAtom)
-  const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_yootActive, setYootActive] = useAtom(yootActiveAtom)
   const [_disconnect, setDisconnect] = useAtom(disconnectAtom)
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
   const [_initialYootThrow, setInitialYootThrow] = useAtom(initialYootThrowAtom)
   const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
+  const [_boomText, setBoomText] = useAtom(boomTextAtom)
+  // Use state to check if the game phase changed
+  const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
 
   useEffect(() => {
 
@@ -94,7 +96,9 @@ export const SocketManager = () => {
           localStorage.setItem('yootGame', JSON.stringify({
             ...user
           }))
-          if (room.teams[room.turn.team].players[room.turn.players[room.turn.team]].socketId === socket.id) {
+          // Only check if the game is in play
+          if ((room.gamePhase === "pregame" || room.gamePhase === "game") && 
+          room.teams[room.turn.team].players[room.turn.players[room.turn.team]].socketId === socket.id) {
             setHasTurn(true)
           } else {
             setHasTurn(false)
@@ -102,7 +106,12 @@ export const SocketManager = () => {
         }
       }
 
-      setGamePhase(room.gamePhase);
+      setGamePhase((lastPhase) => {
+        if (lastPhase === 'pregame' && room.gamePhase === 'game') {
+          setBoomText('game start')
+        }
+        return room.gamePhase
+      });
 
       // Enable yoot button if client has the turn and his team 
       // has at least one throw and there is a player on the team
