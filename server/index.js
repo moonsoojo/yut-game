@@ -93,7 +93,10 @@ const roomSchema = new mongoose.Schema(
       ref: 'users'
     },
     gamePhase: String,
-    yootThrown: Boolean,
+    yootThrown: {
+      flag: Boolean,
+      player: String // User ID
+    },
     yootThrowValues: [{
       _id: Number,
       positionInHand: { x: Number, y: Number, z: Number },
@@ -252,7 +255,10 @@ io.on("connect", async (socket) => {
           team: 0,
           players: [0, 0]
         },
-        yootThrown: false, // To not trigger the throw twice in the server
+        yootThrown: {
+          flag: false,
+          player: ''
+        }, // To not trigger the throw twice in the server
         yootThrowValues: null
       })
       await room.save();
@@ -439,6 +445,7 @@ io.on("connect", async (socket) => {
   })
 
   socket.on("throwYoot", async ({ roomId }) => {
+    console.log(`[throwYoot]`)
     let user;
     
     // Find user who made the request
@@ -452,7 +459,7 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })
 
       // Check thrown flag again because client takes time to update its state
-      if (room.teams[user.team].throws > 0 && !room.yootThrown) {
+      if (room.teams[user.team].throws > 0 && !room.yootThrown.flag) {
         // Update throw values
         // Update thrown flag so subsequent requests don't trigger a throw
         await Room.findOneAndUpdate(
@@ -462,7 +469,10 @@ io.on("connect", async (socket) => {
           { 
             $set: { 
               yootThrowValues: generateForveVectors(room.gamePhase),
-              yootThrown: true
+              yootThrown: {
+                flag: true,
+                player: user._id
+              }
             },
           }
         )
@@ -552,7 +562,8 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })  
 
       // Check if user has the turn
-      if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+      if (user._id.valueOf() === room.yootThrown.player.valueOf()) {
+      // if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
 
         // Reset flag so client can activate the throw button again
         await Room.findOneAndUpdate(
@@ -561,7 +572,7 @@ io.on("connect", async (socket) => {
           }, 
           { 
             $set: { 
-              yootThrown: false
+              [`yootThrown.flag`]: false
             },
           }
         )
@@ -600,7 +611,7 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })  
 
       // Check if user has the turn
-      if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+      if (user._id.valueOf() === room.yootThrown.player.valueOf()) {
 
         if (room.gamePhase === "pregame") {
           const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)

@@ -93,7 +93,7 @@ export default function Yoot({ device }) {
       
       let move = observeThrow();
       // Uncomment to test what happens on Yoot or Mo
-      // move = 4
+      // move = 0
       setLastMove(getMoveText(move))
       
       if (gamePhase === 'pregame' || gamePhase === 'game') {  
@@ -125,7 +125,7 @@ export default function Yoot({ device }) {
 
     // Show or hide yoot
     for (let i = 0; i < yootMeshes.length; i++) {
-      yootMeshes[i].current.material.visible = (gamePhase === "lobby" || gamePhase === "pregame" || yootThrown)
+      yootMeshes[i].current.material.visible = (gamePhase === "lobby" || gamePhase === "pregame" || yootThrown.flag)
     }
   })
 

@@ -82,7 +82,14 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function RollDisplay() {
-    const rollText = teams[team].pregameRoll ? teams[team].pregameRoll : ""
+    // Handle 0 because it is coerced to 'null' as a string
+    let rollText;
+    if (teams[team].pregameRoll === null) {
+      rollText = '';
+    } else {
+      rollText = teams[team].pregameRoll.toString()
+    }
+
     return <HtmlElement
       text={<div>Roll: <span style={{ "color": team === 0 ? "red" : "turquoise" }}>{rollText}</span></div>}
       position={layout[device][`team${team}`].pregameRoll.position}

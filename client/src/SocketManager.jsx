@@ -74,6 +74,7 @@ export const SocketManager = () => {
   useEffect(() => {
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
+      console.log(`[SocketManager] socket id`, socket.id)
 
       setMessages(room.messages)
       setTeams(room.teams)
@@ -96,6 +97,7 @@ export const SocketManager = () => {
           localStorage.setItem('yootGame', JSON.stringify({
             ...user
           }))
+
           // Only check if the game is in play
           if ((room.gamePhase === "pregame" || room.gamePhase === "game") && 
           room.teams[room.turn.team].players[room.turn.players[room.turn.team]].socketId === socket.id) {
@@ -121,7 +123,7 @@ export const SocketManager = () => {
       if (room.gamePhase === "lobby" || (room.teams[currentTeam].players.length > 0 && 
       room.teams[currentTeam].players[currentPlayer].socketId === socket.id &&
       room.teams[currentTeam].throws > 0 &&
-      !room.yootThrown)) {
+      !room.yootThrown.flag)) {
         setYootActive(true)
       } else {
         setYootActive(false)
