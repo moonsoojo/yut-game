@@ -32,7 +32,8 @@ import {
   disconnectAtom, 
   gamePhaseAtom, 
   turnAtom,
-  teamsAtom
+  teamsAtom,
+  boomTextAtom
 } from "./GlobalState.jsx";
 import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
@@ -46,6 +47,7 @@ export default function Game() {
   const [disconnect] = useAtom(disconnectAtom)
   // To render the animation
   const [lastMove] = useAtom(lastMoveAtom)
+  const [boomText] = useAtom(boomTextAtom)
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
   console.log(`[Game] gamePhase`, gamePhase)
@@ -207,7 +209,7 @@ export default function Game() {
           scale={0.6}
         />
       </animated.group>
-      <BoomText rotation={[0, Math.PI/2, 0]} scale={0.5}/>
+      { boomText && <BoomText rotation={[0, Math.PI/2, 0]} initialScale={2}/> }
       {/* Who Goes First components */}
       { gamePhase === "pregame" && <group>
         <HtmlElement

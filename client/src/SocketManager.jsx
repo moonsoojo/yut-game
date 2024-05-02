@@ -110,6 +110,7 @@ export const SocketManager = () => {
 
       setGamePhase((lastPhase) => {
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
+          console.log(`[SocketManager] setting boom text`)
           setBoomText('game start')
         }
         return room.gamePhase

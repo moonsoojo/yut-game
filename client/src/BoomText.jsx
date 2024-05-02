@@ -13,39 +13,164 @@ import { boomTextAtom } from './GlobalState';
   // click piece
   // throw the yoot
   // button click - start game
-export default function BoomText(props) {
+export default function BoomText({ rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
-  const [text] = useAtom(boomTextAtom)
-  const [plays, setPlays] = useState(0) // use 'reset' in springs
+  const [text, setText] = useAtom(boomTextAtom)
 
-  useEffect(() => {
-    setPlays(plays => plays+1)
-  }, [text])
-
-  function BonusTurn({props}) {
-    const { scale } = useSpring({
-      from: {
-        scale: [0,0,0]
+  const displayTime = 3000
+  const springs = useSpring({
+    from: {
+      scale: 0
+    },
+    to: [
+      {
+        scale: initialScale
       },
-      to: [
-        {
-          scale: props.scale,
-        },
-        {
-          scale: [0,0,0],
-          delay: 3000
-        },
-      ],
-      loop: false
-    })
-    return <Float>
-    <animated.group {...props} scale={scale} dispose={null}>
+      {
+        scale: 0,
+        delay: displayTime,
+        config: {
+          tension: 170,
+          friction: 26
+        }
+      }
+    ],
+    loop: false,
+    reset: true,
+    onRest: () => setText(null)
+  })
+
+  // function BonusTurn({props}) {
+  //   const { scale } = useSpring({
+  //     from: {
+  //       scale: [0,0,0]
+  //     },
+  //     to: [
+  //       {
+  //         scale: props.scale,
+  //       },
+  //       {
+  //         scale: [0,0,0],
+  //         delay: 3000
+  //       },
+  //     ],
+  //     loop: false
+  //   })
+  //   return <Float>
+  //   <animated.group {...props} scale={scale} dispose={null}>
+  //     <mesh
+  //       castShadow
+  //       receiveShadow
+  //       geometry={nodes.Circle002.geometry}
+  //       material={nodes.Circle002.material}
+  //       scale={[1, 1, 1]}
+  //     >
+  //       <meshStandardMaterial color='yellow'/>
+  //     </mesh>
+  //     <mesh
+  //       castShadow
+  //       receiveShadow
+  //       geometry={nodes.Circle002.geometry}
+  //       material={nodes.Circle002.material}
+  //       scale={[0.9, 1.1, 0.9]}
+  //       position={[0, 0.02, 0]}
+  //     >
+  //     <meshStandardMaterial color='green'/>
+  //     </mesh>
+  //     <group name="text" position={[0, -0.15, -0.36]} scale={1.2}>
+  //       <Text3D
+  //         font="fonts/Luckiest Guy_Regular.json"
+  //         rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+  //         position={[0, 0, 0]}
+  //         size={0.15}
+  //       >
+  //         BONUS
+  //         <meshStandardMaterial color="yellow"/>
+  //       </Text3D>
+  //       <Text3D
+  //         font="fonts/Luckiest Guy_Regular.json"
+  //         rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+  //         position={[-0.2, 0,0]}
+  //         size={0.15}
+  //       >
+  //         TURN!
+  //         <meshStandardMaterial color="yellow"/>
+  //       </Text3D>
+  //     </group>
+  //   </animated.group>
+  // </Float>
+  // }
+
+  // function OutOfBounds() {
+  //   const { scale } = useSpring({
+  //     from: {
+  //       scale: 0
+  //     },
+  //     to: [
+  //       {
+  //         scale: 5
+  //       },
+  //       {
+  //         scale: 0,
+  //         delay: 2000
+  //       }
+  //     ],
+  //     loop: false
+  //   })
+  //   return <Float>
+  //     <animated.group {...props} scale={scale} dispose={null}>
+  //       <mesh
+  //         castShadow
+  //         receiveShadow
+  //         geometry={nodes.Circle002.geometry}
+  //         material={nodes.Circle002.material}
+  //         scale={[1.2, 1.2, 1.2]}
+  //       >
+  //         <meshStandardMaterial color='yellow'/>
+  //       </mesh>
+  //       <mesh
+  //         castShadow
+  //         receiveShadow
+  //         geometry={nodes.Circle002.geometry}
+  //         material={nodes.Circle002.material}
+  //         scale={[1.1, 1.3, 1.1]}
+  //         position={[0, 0.02, 0]}
+  //       >
+  //       <meshStandardMaterial color='green'/>
+  //       </mesh>
+  //       <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
+  //         <Text3D
+  //           font="fonts/Luckiest Guy_Regular.json"
+  //           rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+  //           position={[0, 0, 0]}
+  //           size={0.15}
+  //         >
+  //           Out of
+  //           <meshStandardMaterial color="yellow"/>
+  //         </Text3D>
+  //         <Text3D
+  //           font="fonts/Luckiest Guy_Regular.json"
+  //           rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+  //           position={[-0.2, 0,0]}
+  //           size={0.15}
+  //         >
+  //           bounds!
+  //           <meshStandardMaterial color="yellow"/>
+  //         </Text3D>
+  //       </group>
+  //     </animated.group>
+  //   </Float>
+  // }
+  function GameStart({ position }) {
+    console.log(`[BoomText][GameStart]`)
+
+    return <group position={position}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Circle002.geometry}
         material={nodes.Circle002.material}
-        scale={[1, 1, 1]}
+        scale={[1.2, 1.2, 1.2]}
       >
         <meshStandardMaterial color='yellow'/>
       </mesh>
@@ -54,153 +179,28 @@ export default function BoomText(props) {
         receiveShadow
         geometry={nodes.Circle002.geometry}
         material={nodes.Circle002.material}
-        scale={[0.9, 1.1, 0.9]}
+        scale={[1.1, 1.3, 1.1]}
         position={[0, 0.02, 0]}
       >
-      <meshStandardMaterial color='green'/>
+        <meshStandardMaterial color='green'/>
       </mesh>
-      <group name="text" position={[0, -0.15, -0.36]} scale={1.2}>
+      <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           rotation={[Math.PI/2, Math.PI, Math.PI/2]}
           position={[0, 0, 0]}
           size={0.15}
         >
-          BONUS
-          <meshStandardMaterial color="yellow"/>
-        </Text3D>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          position={[-0.2, 0,0]}
-          size={0.15}
-        >
-          TURN!
+          GAME START!
           <meshStandardMaterial color="yellow"/>
         </Text3D>
       </group>
+    </group>
+  }
+
+  return <Float>
+    <animated.group rotation={rotation} scale={springs.scale}>
+      { text === 'game start' && <GameStart position={[0, 1, 0]}/> }
     </animated.group>
   </Float>
-  }
-
-  function OutOfBounds() {
-    const { scale } = useSpring({
-      from: {
-        scale: 0
-      },
-      to: [
-        {
-          scale: 5
-        },
-        {
-          scale: 0,
-          delay: 2000
-        }
-      ],
-      loop: false
-    })
-    return <Float>
-      <animated.group {...props} scale={scale} dispose={null}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002.geometry}
-          material={nodes.Circle002.material}
-          scale={[1.2, 1.2, 1.2]}
-        >
-          <meshStandardMaterial color='yellow'/>
-        </mesh>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002.geometry}
-          material={nodes.Circle002.material}
-          scale={[1.1, 1.3, 1.1]}
-          position={[0, 0.02, 0]}
-        >
-        <meshStandardMaterial color='green'/>
-        </mesh>
-        <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
-          <Text3D
-            font="fonts/Luckiest Guy_Regular.json"
-            rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-            position={[0, 0, 0]}
-            size={0.15}
-          >
-            Out of
-            <meshStandardMaterial color="yellow"/>
-          </Text3D>
-          <Text3D
-            font="fonts/Luckiest Guy_Regular.json"
-            rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-            position={[-0.2, 0,0]}
-            size={0.15}
-          >
-            bounds!
-            <meshStandardMaterial color="yellow"/>
-          </Text3D>
-        </group>
-      </animated.group>
-    </Float>
-  }
-  function GameStart({scale}) {
-    console.log(`[BoomText][GameStart]`)
-    const springs = useSpring({
-      from: {
-        scale: 0
-      },
-      to: [
-        {
-          scale: scale
-        },
-        {
-          scale: 0,
-          delay: 2000
-        }
-      ],
-      loop: false
-    })
-    return <Float>
-      <animated.group {...props} scale={springs.scale} dispose={null}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002.geometry}
-          material={nodes.Circle002.material}
-          scale={[1.2, 1.2, 1.2]}
-        >
-          <meshStandardMaterial color='yellow'/>
-        </mesh>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Circle002.geometry}
-          material={nodes.Circle002.material}
-          scale={[1.1, 1.3, 1.1]}
-          position={[0, 0.02, 0]}
-        >
-        <meshStandardMaterial color='green'/>
-        </mesh>
-        <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
-          <Text3D
-            font="fonts/Luckiest Guy_Regular.json"
-            rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-            position={[0, 0, 0]}
-            size={0.15}
-          >
-            GAME START!
-            <meshStandardMaterial color="yellow"/>
-          </Text3D>
-        </group>
-      </animated.group>
-    </Float>
-  }
-
-  return (
-    <group>
-      { text === 'bonus turn' && <BonusTurn props={props}/> }
-      { text === 'out of bounds' && <OutOfBounds props={props}/> }
-      { text === 'game start' && <GameStart props={props}/> }
-    </group>
-  );
 }
