@@ -17,7 +17,7 @@ export default function MoveAnimation({ move, initialPosition, endingPosition, i
     to: [
       {
         position: endingPosition,
-        scale: 0,          
+        scale: 0,
         config: {
           tension: 170,
           friction: 26

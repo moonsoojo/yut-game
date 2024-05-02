@@ -13,9 +13,9 @@ import { boomTextAtom } from './GlobalState';
   // click piece
   // throw the yoot
   // button click - start game
-export default function BoomText({ rotation, initialScale }) {
+export default function BoomText({ text, rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
-  const [text, setText] = useAtom(boomTextAtom)
+  const [_text, setText] = useAtom(boomTextAtom)
 
   const displayTime = 3000
   const springs = useSpring({
