@@ -598,6 +598,12 @@ io.on("connect", async (socket) => {
               $inc: { [`teams.$.moves.${move}`]: 1 } 
             }
           )
+
+          // if the move was a yoot or a mo
+            // add another throw
+          // else if the move was out of bounds
+            // if current player has no throw and has no move
+              // pass turn
         }
         console.log(`[recordThrow] added move to team`)
       }

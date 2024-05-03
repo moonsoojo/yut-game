@@ -211,9 +211,9 @@ export default function BoomText({ text, rotation, initialScale }) {
     </group>
   }
 
-  return <Float>
+  return <Float floatIntensity={0.5} rotationIntensity={0.5}>
     <animated.group rotation={rotation} scale={springs.scale}>
-      { text === 'game start' && <GameStart position={[-0.4, 1, 0]}/> }
+      { text === 'game start' && <GameStart position={[-0.3, 1, 0]}/> }
     </animated.group>
   </Float>
 }

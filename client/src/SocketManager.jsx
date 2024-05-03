@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -39,6 +39,7 @@ export const SocketManager = () => {
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   // Use state to check if the game phase changed
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
 
   useEffect(() => {
 
@@ -143,6 +144,8 @@ export const SocketManager = () => {
       }
 
       setTurn(room.turn)
+
+      setDisplayMoves(room.teams[room.turn.team].moves)
     })
 
     // hybrid: yoot thrown should not be set in room update.

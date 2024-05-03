@@ -26,6 +26,7 @@ export const initialYootThrowAtom = atom(true)
 export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
+export const displayMovesAtom = atom({})
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

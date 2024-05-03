@@ -39,6 +39,7 @@ import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
 import BoomText from "./BoomText.jsx";
+import MoveList from "./MoveList.jsx";
 
 // There should be no state
 export default function Game() {
@@ -201,6 +202,10 @@ export default function Game() {
       <Host
         position={layout[device].hostName.position}
         rotation={layout[device].hostName.rotation}
+      />
+      <MoveList
+        position={[5, 0, -1.7]}
+        rotation={[-Math.PI/2, 0, 0]}
       />
       <animated.group position={boardPosition} scale={boardScale}>
         <Board 
