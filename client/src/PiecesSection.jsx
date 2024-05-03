@@ -56,6 +56,41 @@ export default function PiecesSection({
       </mesh>
     }
 
+    function hasValidMoveHome() {
+      // if no pieces are on the board
+      // -1 is a valid move
+      // else
+      // only 1-5 are valid moves
+      // 0 is not a valid move
+      let pieceOnBoard = false
+      for (const piece of teams[team].pieces) {
+        if (piece.status === 'onBoard') {
+          pieceOnBoard = true
+        }
+      }
+      console.log(`[PiecesSection][hasValidMoveHome] pieceOnBoard`, pieceOnBoard)
+
+      const moves = teams[team].moves
+      if (!pieceOnBoard) {
+        for (const move in moves) {
+          console.log(`[PiecesSection][hasValidMoveHome] move`, move)
+          if (parseInt(move) !== 0 && moves[move] > 0) {
+            return true;
+          }
+        }
+        return false;
+      } else {
+        for (const move in moves) {
+          console.log(`[PiecesSection][hasValidMoveHome] move`, move)
+          if (parseInt(move) !== 0 && parseInt(move) !== -1 && moves[move] > 0) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
+
+    // pass down 'animate' flag to Piece, and pass it down to mesh (rocket or ufo)
     return (
       <group>
         {
@@ -75,6 +110,7 @@ export default function PiecesSection({
               team={team}
               id={value.id}
               key={index}
+              animate={hasValidMoveHome()}
             />
           )
         }

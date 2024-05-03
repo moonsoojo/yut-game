@@ -5,33 +5,44 @@ import { useGraph } from "@react-three/fiber";
 import { useFrame } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import React from "react";
+import * as THREE from 'three';
 
 export default function Ufo({
-  //tile,
   position=[0,0,0],
   rotation=[0,0,0],
-  scale=1
+  scale=1,
+  animate=false
 }) {
   const { scene, materials } = useGLTF("models/ufo.glb");
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
 
-  const ufoGlassRef = useRef();
-  const ballsRef = useRef();
+  const ufoGlass = useRef();
+  const balls = useRef();
+  const ufo = useRef();
+  const frontBackPanelCircleMat = useRef();
+  const leftRightPanelCircleMat = useRef();
 
   useEffect(() => {
-    ufoGlassRef.current.material.opacity = 0.2;
+    ufoGlass.current.material.opacity = 0.2;
   }, []);
 
   useFrame((state, delta) => {
-    // if (tile >= 0) {
-    //   ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
-    // }
+    if (animate) {
+      balls.current.rotation.y = state.clock.elapsedTime * 0.7;
+      if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
+        frontBackPanelCircleMat.current.color = new THREE.Color('white')
+        leftRightPanelCircleMat.current.color = new THREE.Color('purple')
+      } else {
+        frontBackPanelCircleMat.current.color = new THREE.Color('purple')
+        leftRightPanelCircleMat.current.color = new THREE.Color('white')
+      }
+    }
   });
 
   return (
-    <animated.group position={position} rotation={rotation} scale={scale}>
+    <animated.group position={position} rotation={rotation} scale={scale} ref={ufo}>
       <animated.group
         dispose={null}
         scale={0.5}
@@ -75,6 +86,7 @@ export default function Ufo({
             position={[-0.164, -0.051, 0.411]}
             scale={[0.015, 0.047, 0.015]}
           />
+          {/* front and back panel circle */}
           <mesh
             castShadow
             receiveShadow
@@ -82,7 +94,9 @@ export default function Ufo({
             material={materials.Blue}
             position={[0, 0, 0.765]}
             scale={0.087}
-          />
+          >
+            <meshBasicMaterial color='turquoise' ref={frontBackPanelCircleMat}/>
+          </mesh>
           <mesh
             castShadow
             receiveShadow
@@ -90,6 +104,7 @@ export default function Ufo({
             material={materials["Inside Grey"]}
             position={[0, -0.051, 0]}
           />
+          {/* left and right panel circle */}
           <mesh
             castShadow
             receiveShadow
@@ -98,7 +113,9 @@ export default function Ufo({
             position={[0.765, 0, 0]}
             rotation={[0, 1.571, 0]}
             scale={0.087}
-          />
+          >
+            <meshBasicMaterial color='turquoise' ref={leftRightPanelCircleMat}/>
+          </mesh>
           <group position={[0, -0.051, 0]} rotation={[0, -0.365, 0]}>
             <mesh
               castShadow
@@ -128,7 +145,7 @@ export default function Ufo({
             scale={0.37}
           />
           {/* ball front right */}
-          <group ref={ballsRef}>
+          <group ref={balls}>
             <mesh
               castShadow
               receiveShadow
@@ -278,7 +295,7 @@ export default function Ufo({
             material={materials.Glass}
             position={[0, 0.33, 0]}
             scale={0.404}
-            ref={ufoGlassRef}
+            ref={ufoGlass}
           />
         </group>
       </animated.group>

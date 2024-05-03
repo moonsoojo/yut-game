@@ -593,7 +593,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = 0;
+          move = -1;
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }

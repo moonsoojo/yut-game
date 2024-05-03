@@ -8,6 +8,7 @@ import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
 import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
 import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom } from "../GlobalState.jsx";
+import * as THREE from 'three';
 
 export default function Piece ({
   position,
@@ -30,7 +31,6 @@ export default function Piece ({
   const [thrown] = useAtom(yootThrownAtom)
 
   const group = useRef();
-  const scaleGroup = useRef();
   const wrapperMat = useRef();
 
   // if tile == -1, scale = 1
@@ -49,12 +49,9 @@ export default function Piece ({
 
   useFrame((state, delta) => {
     if (animate) {
-      // Bulging
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
-      // Up and down movement
-      group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale
@@ -64,14 +61,18 @@ export default function Piece ({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity += 0.2;
-    document.body.style.cursor = "pointer";
+    if (isMyTurn(turn, teams, client.id)) {
+      wrapperMat.current.opacity += 0.2;
+      document.body.style.cursor = "pointer";
+    }
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity -= 0.2;
-    document.body.style.cursor = "default";
+    if (isMyTurn(turn, teams, client.id)) {
+      wrapperMat.current.opacity -= 0.2;
+      document.body.style.cursor = "default";
+    }
   }
 
   function handlePointerDown(event) {
@@ -115,6 +116,7 @@ export default function Piece ({
       position={position}
       rotation={rotation}
       ref={group}
+      dispose={null}
       scale={scale}
     >
       <mesh
@@ -133,7 +135,7 @@ export default function Piece ({
           ref={wrapperMat}
         />
       </mesh>
-      { team == 0 ? <Rocket animate={animate}/> : <Ufo animate={animate}/>}
+      { team == 0 ? <Rocket animate={animate}/> : <Ufo/>}
     </group>
   )      
 };
