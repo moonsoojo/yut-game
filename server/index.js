@@ -178,6 +178,16 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   }
 })
 
+const initialMoves = {
+  '0': 0,
+  '1': 0,
+  '2': 0,
+  '3': 0,
+  '4': 0,
+  '5': 0,
+  '-1': 0
+}
+
 io.on("connect", async (socket) => {
 
   connectMongo().catch(err => console.log('mongo connect error', err))
@@ -214,15 +224,7 @@ io.on("connect", async (socket) => {
               { tile: -1, team: 0, id: 2, path: [], status: "home" },
               { tile: -1, team: 0, id: 3, path: [], status: "home" },
             ],
-            moves: {
-              '0': 0,
-              '1': 0,
-              '2': 0,
-              '3': 0,
-              '4': 0,
-              '5': 0,
-              '-1': 0
-            },
+            moves: JSON.parse(JSON.stringify(initialMoves)),
             throws: 0,
             pregameRoll: null
           },
@@ -235,15 +237,7 @@ io.on("connect", async (socket) => {
               { tile: -1, team: 1, id: 2, path: [], status: "home" },
               { tile: -1, team: 1, id: 3, path: [], status: "home" },
             ],
-            moves: {
-              '0': 0,
-              '1': 0,
-              '2': 0,
-              '3': 0,
-              '4': 0,
-              '5': 0,
-              '-1': 0
-            },
+            moves: JSON.parse(JSON.stringify(initialMoves)),
             throws: 0,
             pregameRoll: null
           }
@@ -548,6 +542,15 @@ io.on("connect", async (socket) => {
     }
   }
 
+  function isEmptyMoves(moves) {
+    for (const move in moves) {
+      if (parseInt(move) !== 0 && moves[move] > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   socket.on("recordThrow", async ({ move, roomId }) => {
     console.log("[recordThrow] move", move)
 
@@ -589,27 +592,33 @@ io.on("connect", async (socket) => {
             }
           )
         } else if (room.gamePhase === "game") {
+          // Test code using different throw outcome
+          // move = 0;
+          let operation = { 
+            $inc: { [`teams.$.moves.${move}`]: 1 } 
+          }
+          // Add bonus throw on Yoot and Mo
+          if (move === 4 || move === 5) {
+            operation['$inc'][`teams.$.throws`] = 1
+          }
           await Room.findOneAndUpdate(
             { 
               _id: roomId, 
               'teams._id': user.team,
             }, 
-            { 
-              $inc: { [`teams.$.moves.${move}`]: 1 } 
-            }
+            operation
           )
-
-          // if the move was a yoot or a mo
-            // add another throw
-          // else if the move was out of bounds
-            // if current player has no throw and has no move
-              // pass turn
+          // console.log(`[recordThrow] awaited value`, awaitedValue) // undefined
         }
+
+
         console.log(`[recordThrow] added move to team`)
       }
     } catch (err) {
       console.log(`[recordThrow] error recording throw`, err)
     }
+
+
 
     // Pass turn
     try {
@@ -662,6 +671,28 @@ io.on("connect", async (socket) => {
                   gamePhase: 'game'
                 },
                 $inc: { [`teams.${outcome}.throws`]: 1 },
+              }
+            )
+          }
+        } else if (room.gamePhase === "game") {
+
+          // If there's no valid move and no throw,
+          // Pass turn
+          // call .toObject() on moves to leave out the mongoose methods
+          if (room.teams[user.team].throws === 0 && 
+          isEmptyMoves(room.teams[user.team].moves.toObject())) {
+            const newTurn = passTurn(room.turn, room.teams)
+            await Room.findOneAndUpdate(
+              { 
+                _id: roomId, 
+              }, 
+              { 
+                $set: { 
+                  turn: newTurn,
+                  // Empty the team's moves
+                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialMoves))
+                },
+                $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
               }
             )
           }

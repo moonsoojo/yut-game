@@ -93,7 +93,7 @@ export default function Yoot({ device }) {
       
       let move = observeThrow();
       // Uncomment to test what happens on Yoot or Mo
-      // move = 0
+      // move = 4
       setLastMove(getMoveText(move))
       
       if (gamePhase === 'pregame' || gamePhase === 'game') {  
@@ -253,13 +253,6 @@ export default function Yoot({ device }) {
           </RigidBody>
         );
       })}
-      {/* out of bounds message */}
-      { outOfBounds && <>
-        <TextButton
-          text='out of bounds'
-          position={[-1, 1.5, 0]}
-        />
-      </> }
       { gamePhase === 'lobby' && <PracticeYootButton
         position={layout[device].practiceThrowButton.position}
         rotation={layout[device].practiceThrowButton.rotation}
