@@ -214,7 +214,6 @@ export default function Game() {
           scale={0.6}
         />
       </animated.group>
-      { boomText && <BoomText text={boomText} rotation={[0, Math.PI/2, 0]} initialScale={2}/> }
       {/* Who Goes First components */}
       { gamePhase === "pregame" && <group>
         <HtmlElement

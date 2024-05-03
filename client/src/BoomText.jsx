@@ -13,10 +13,11 @@ import { boomTextAtom } from './GlobalState';
   // click piece
   // throw the yoot
   // button click - start game
-export default function BoomText({ text, rotation, initialScale }) {
+export default function BoomText({ rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
   const [_text, setText] = useAtom(boomTextAtom)
 
+  // Prevent text from re-appearing on re-render
   const springs = useSpring({
     from: {
       scale: 0
@@ -165,10 +166,10 @@ export default function BoomText({ text, rotation, initialScale }) {
   //     </animated.group>
   //   </Float>
   // }
-  function GameStart({ position }) {
+  function GameStart({ position, rotation, scale }) {
     console.log(`[BoomText][GameStart]`)
 
-    return <group position={position}>
+    return <animated.group position={position} rotation={rotation} scale={scale}>
       <mesh
         castShadow
         receiveShadow
@@ -208,12 +209,11 @@ export default function BoomText({ text, rotation, initialScale }) {
           <meshStandardMaterial color="yellow"/>
         </Text3D>
       </group>
-    </group>
+    </animated.group>
   }
 
+  const [text] = useAtom(boomTextAtom)
   return <Float floatIntensity={0.5} rotationIntensity={0.5}>
-    <animated.group rotation={rotation} scale={springs.scale}>
-      { text === 'game start' && <GameStart position={[-0.3, 1, 0]}/> }
-    </animated.group>
+    { text === 'game start' && <GameStart position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
   </Float>
 }

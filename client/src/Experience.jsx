@@ -6,6 +6,7 @@ import Stars from './particles/Stars'
 // server
 import MilkyWay from "./shader/MilkyWay.jsx";
 import Game from "./Game.jsx";
+import BoomText from "./BoomText.jsx";
 
 export default function Experience() {
 
@@ -22,5 +23,6 @@ export default function Experience() {
       colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
       colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
     />
+    <BoomText rotation={[0, Math.PI/2, 0]} initialScale={2}/> 
   </group>
 }
