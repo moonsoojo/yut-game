@@ -571,9 +571,7 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })  
 
       // Check if user has the turn
-      console.log(`[recordThrow] user._id`, user._id, `room.yootThrown.player`, room.yootThrown.player)
-      if (user._id.valueOf() === room.yootThrown.player.valueOf()) {
-      // if (user._id.valueOf() === room.yootThrown.player) { // fix bug in later commit
+      if (user._id.valueOf() === room.yootThrown.player) { // room.yootThrown.player is a string
 
         // Reset flag so client can activate the throw button again
         await Room.findOneAndUpdate(
