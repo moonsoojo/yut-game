@@ -204,7 +204,7 @@ export default function Game() {
         rotation={layout[device].hostName.rotation}
       />
       <MoveList
-        position={[5, 0, -1.7]}
+        position={[2, 0, 3.3]}
         rotation={[-Math.PI/2, 0, 0]}
       />
       <animated.group position={boardPosition} scale={boardScale}>
@@ -261,7 +261,7 @@ export default function Game() {
       /> }
       <MoveDisplay/>
       { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-        position={[2, 0, 3.7]} 
+        position={[1.5, 0, 3.7]} 
         rotation={[0,0,0]}
       /> }
     </>

@@ -19,7 +19,7 @@ export default function Piece ({
   scale,
   animate=false
 }) {
-  console.log(`[Piece] animate`, animate) // true
+  // console.log(`[Piece] animate`, animate) // true
 
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);

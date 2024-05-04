@@ -109,10 +109,13 @@ export const SocketManager = () => {
         }
       }
 
+      if (room.gamePhase === 'pregame' && room.yootThrown.player && !room.yootThrown.flag && !room.teams[0].pregameRoll && !room.teams[1].pregameRoll) {
+        setBoomText('pregameTie')
+      }
+
       setGamePhase((lastPhase) => {
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
-          console.log(`[SocketManager] setting boom text`)
-          setBoomText('game start')
+          setBoomText('startGame')
         }
         return room.gamePhase
       });

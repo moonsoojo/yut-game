@@ -103,7 +103,8 @@ const roomSchema = new mongoose.Schema(
       rotation: { x: Number, y: Number, z: Number, w: Number},
       yImpulse: Number,
       torqueImpulse: { x: Number, y: Number, z: Number }
-    }]
+    }],
+    pregameOutcome: String
   },
   {
     versionKey: false,
@@ -253,7 +254,8 @@ io.on("connect", async (socket) => {
           flag: false,
           player: ''
         }, // To not trigger the throw twice in the server
-        yootThrowValues: null
+        yootThrowValues: null,
+        pregameOutcome: null
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -389,15 +391,19 @@ io.on("connect", async (socket) => {
         gamePhase: "pregame",
         turn
       })
-      await Room.findOneAndUpdate({ _id: roomId, 'teams._id': randomTeam }, {
-        'teams.$.throws': 1
+      // get Host
+      // get team
+      await Room.findOneAndUpdate({ _id: roomId }, {
+        $set: {
+          [`teams.${randomTeam}.throws`]: 1,
+        }
       })
     } catch (err) {
       console.log(`[startGame] error starting game`, err)
     }
   })
 
-  function generateForveVectors(gamePhase) {
+  function generateForceVectors(gamePhase) {
     let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions[gamePhase]))
     let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
 
@@ -462,7 +468,7 @@ io.on("connect", async (socket) => {
           }, 
           { 
             $set: { 
-              yootThrowValues: generateForveVectors(room.gamePhase),
+              yootThrowValues: generateForceVectors(room.gamePhase),
               yootThrown: {
                 flag: true,
                 player: user._id
@@ -565,8 +571,9 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })  
 
       // Check if user has the turn
+      console.log(`[recordThrow] user._id`, user._id, `room.yootThrown.player`, room.yootThrown.player)
       if (user._id.valueOf() === room.yootThrown.player.valueOf()) {
-      // if (user._id.valueOf() === currentPlayerId(room).valueOf()) {
+      // if (user._id.valueOf() === room.yootThrown.player) { // fix bug in later commit
 
         // Reset flag so client can activate the throw button again
         await Room.findOneAndUpdate(
@@ -575,13 +582,15 @@ io.on("connect", async (socket) => {
           }, 
           { 
             $set: { 
-              [`yootThrown.flag`]: false
+              'yootThrown.flag': false
             },
           }
         )
 
         // Add move to team
         if (room.gamePhase === "pregame") {
+          // Test code using different throw outcome
+          // move = 2;
           await Room.findOneAndUpdate(
             { 
               _id: roomId, 
@@ -593,7 +602,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = -1;
+          // move = -1;
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }
@@ -618,8 +627,6 @@ io.on("connect", async (socket) => {
       console.log(`[recordThrow] error recording throw`, err)
     }
 
-
-
     // Pass turn
     try {
       // Fetch up-to-date room to calculate the next turn
@@ -638,7 +645,10 @@ io.on("connect", async (socket) => {
                 _id: roomId, 
               }, 
               { 
-                $set: { turn: newTurn },
+                $set: { 
+                  turn: newTurn,
+                  pregameOutcome: outcome
+                },
                 $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
               }
             )
@@ -652,7 +662,8 @@ io.on("connect", async (socket) => {
                 $set: { 
                   'teams.0.pregameRoll': null,
                   'teams.1.pregameRoll': null,
-                  'turn': newTurn 
+                  'turn': newTurn,
+                  'pregameOutcome': outcome
                 },
                 $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
               }
@@ -668,7 +679,8 @@ io.on("connect", async (socket) => {
               {
                 $set: { 
                   turn: newTurn,
-                  gamePhase: 'game'
+                  gamePhase: 'game',
+                  pregameOutcome: outcome.toString()
                 },
                 $inc: { [`teams.${outcome}.throws`]: 1 },
               }
@@ -690,7 +702,7 @@ io.on("connect", async (socket) => {
                 $set: { 
                   turn: newTurn,
                   // Empty the team's moves
-                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialMoves))
+                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialMoves)),
                 },
                 $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
               }

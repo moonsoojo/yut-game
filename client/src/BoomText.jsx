@@ -37,7 +37,7 @@ export default function BoomText({ rotation, initialScale }) {
           tension: 170,
           friction: 26
         },
-        delay: 2000
+        delay: 3000
       }
     ],
     loop: false,
@@ -211,9 +211,45 @@ export default function BoomText({ rotation, initialScale }) {
       </group>
     </animated.group>
   }
+  function PregameTie({ position, rotation, scale }) {
+
+    return <animated.group position={position} rotation={rotation} scale={scale}>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Circle002.geometry}
+        material={nodes.Circle002.material}
+        scale={[1.2, 0.2, 1.2]}
+      >
+        <meshStandardMaterial color='yellow'/>
+      </mesh>
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Circle002.geometry}
+        material={nodes.Circle002.material}
+        scale={[1.1, 0.3, 1.1]}
+        position={[0, 0.02, 0]}
+      >
+        <meshStandardMaterial color='green'/>
+      </mesh>
+      <group name="text" position={[-0.15, -0.2, -0.35]} scale={1.2}>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+          position={[0, 0, 0]}
+          size={0.3}
+        >
+          TIE!
+          <meshStandardMaterial color="yellow"/>
+        </Text3D>
+      </group>
+    </animated.group>
+  }
 
   const [text] = useAtom(boomTextAtom)
   return <Float floatIntensity={0.5} rotationIntensity={0.5}>
-    { text === 'game start' && <GameStart position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
+    { text === 'startGame' && <GameStart position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
+    { text === 'pregameTie' && <PregameTie position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
   </Float>
 }
