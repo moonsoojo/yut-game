@@ -33,7 +33,8 @@ import {
   gamePhaseAtom, 
   turnAtom,
   teamsAtom,
-  boomTextAtom
+  boomTextAtom,
+  initialYootThrowAtom
 } from "./GlobalState.jsx";
 import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
@@ -51,15 +52,11 @@ export default function Game() {
   const [boomText] = useAtom(boomTextAtom)
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
-  console.log(`[Game] gamePhase`, gamePhase)
   const [turn] = useAtom(turnAtom)
   const params = useParams();
 
   useEffect(() => {
-    console.log('[Game][useEffect]')
-    socket.emit('joinRoom', { roomId: params.id }, () => {
-      console.log(`[Game][joinRoom] joined room`)
-    })
+    socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
   function LetsPlayButton({ position, rotation, device }) {
@@ -257,9 +254,9 @@ export default function Game() {
         move={lastMove}
         initialScale={0.3}
         initialPosition={[2, 0, 3.2]}
-        endingPosition={[6, 0, 2.5]}
+        endingPosition={[3, 0, 3.7]}
       /> }
-      <MoveDisplay/>
+      { gamePhase === "game" && <MoveDisplay/> }
       { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
         position={[1.5, 0, 3.7]} 
         rotation={[0,0,0]}

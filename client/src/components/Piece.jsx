@@ -18,19 +18,15 @@ export default function Piece ({
   scale,
   animate=false
 }) {
-  // console.log(`[Piece] animate`, animate) // true
 
   const [selection] = useAtom(selectionAtom);
   const [teams] = useAtom(teamsAtom);
-  // const [tiles] = useAtom(tilesAtom)
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
-  // const [legalTiles] = useAtom(legalTilesAtom);
   const [client] = useAtom(clientAtom)
   const [thrown] = useAtom(yootThrownAtom)
 
   const group = useRef();
-  const scaleGroup = useRef();
   const wrapperMat = useRef();
 
   // if tile == -1, scale = 1

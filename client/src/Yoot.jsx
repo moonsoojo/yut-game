@@ -94,9 +94,10 @@ export default function Yoot({ device }) {
       let move = observeThrow();
       // Uncomment to test what happens on Yoot or Mo
       // move = 4
-      setLastMove(getMoveText(move))
       
-      if (gamePhase === 'pregame' || gamePhase === 'game') {  
+      if (gamePhase === 'lobby') {
+        setLastMove(getMoveText(move))
+      } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
 
         // Don't emit meteors when client renders for the first time
         if (!initialYootThrow) {
@@ -105,7 +106,11 @@ export default function Yoot({ device }) {
             setParticleSetting({emitters: meteorSettings(device)})
           }
 
+          setLastMove(getMoveText(move))
+          
           socket.emit("recordThrow", { move, roomId: params.id })
+        } else {
+          setLastMove(null)
         }
       }
     }

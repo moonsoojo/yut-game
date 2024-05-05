@@ -265,7 +265,7 @@ io.on("connect", async (socket) => {
     }
   })
 
-  socket.on("joinRoom", async ({ roomId }, callback) => {
+  socket.on("joinRoom", async ({ roomId }) => {
     // Add user to room
     try {
       let user = await User.findOne({ 'socketId': socket.id }).exec()
@@ -286,7 +286,6 @@ io.on("connect", async (socket) => {
       await room.save();
     } catch (err) {
       console.log(`[joinRoom] error adding user to room as spectator`, err)
-      return callback({ error: err.message })
     }
 
     // Add user as host if room is empty
@@ -300,7 +299,6 @@ io.on("connect", async (socket) => {
       }
     } catch (err) {
       console.log(`[joinRoom] error adding user as host`, err)
-      return callback({ error: err.message })
     }
 
     // Update user's room id so user can be removed with socket id on disconnect
@@ -310,10 +308,7 @@ io.on("connect", async (socket) => {
       await user.save()
     } catch (err) {
       console.log(`[joinRoom] error updating user's room id`, err)
-      return callback({ error: err.message })
     }
-
-    return callback()
   })
 
   async function removeUser(user) {        

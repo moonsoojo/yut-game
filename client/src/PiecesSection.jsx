@@ -68,12 +68,10 @@ export default function PiecesSection({
           pieceOnBoard = true
         }
       }
-      // console.log(`[PiecesSection][hasValidMoveHome] pieceOnBoard`, pieceOnBoard)
 
       const moves = teams[team].moves
       if (!pieceOnBoard) {
         for (const move in moves) {
-          // console.log(`[PiecesSection][hasValidMoveHome] move`, move)
           if (parseInt(move) !== 0 && moves[move] > 0) {
             return true;
           }
@@ -81,7 +79,6 @@ export default function PiecesSection({
         return false;
       } else {
         for (const move in moves) {
-          // console.log(`[PiecesSection][hasValidMoveHome] move`, move)
           if (parseInt(move) !== 0 && parseInt(move) !== -1 && moves[move] > 0) {
             return true;
           }
@@ -90,7 +87,6 @@ export default function PiecesSection({
       }
     }
 
-    // pass down 'animate' flag to Piece, and pass it down to mesh (rocket or ufo)
     return (
       <group>
         {
