@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, messagesAtom, readyToStartAtom, roomAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -40,6 +40,8 @@ export const SocketManager = () => {
   // Use state to check if the game phase changed
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
+  const [_selection, setSelection] = useAtom(selectionAtom)
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
 
   useEffect(() => {
 
@@ -149,6 +151,14 @@ export const SocketManager = () => {
       setTurn(room.turn)
 
       setDisplayMoves(room.teams[room.turn.team].moves)
+
+      // Selection, Legal tiles
+      // If you have the turn, update the selection within client.
+      // If you don't, update it via the server
+      if (room.teams[currentTeam].players[currentPlayer].socketId !== socket.id) {
+        setSelection(room.selection)
+        setLegalTiles(room.legalTiles)
+      }
     })
 
     // hybrid: yoot thrown should not be set in room update.

@@ -5,6 +5,7 @@ import React from "react";
 import { isMyTurn } from "../helpers/helpers";
 import { useFrame } from "@react-three/fiber";
 import { 
+  legalTilesAtom,
   selectionAtom 
 } from "../GlobalState";
 
@@ -25,21 +26,21 @@ export default function Tile({
 }) {
 
   const [selection] = useAtom(selectionAtom);
+  const [legalTiles] = useAtom(legalTilesAtom)
 
-  const wrapper = useRef();
+  const group = useRef()
+  const wrapperMat = useRef();
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, client.id)) {
-      document.body.style.cursor = "pointer";
-    }
+    wrapperMat.current.opacity += 0.2;
+    document.body.style.cursor = "pointer";
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (selection != null && isMyTurn(turn, teams, client.id)) {
-      document.body.style.cursor = "default";
-    }
+    wrapperMat.current.opacity -= 0.2;
+    document.body.style.cursor = "default";
   }
 
   function handlePointerDown(event) {
@@ -60,20 +61,23 @@ export default function Tile({
   }
 
   useFrame((state) => {
-    if (selection != null && tile in legalTiles) {
-      wrapper.current.scale.x = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
-      wrapper.current.scale.y = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
-      wrapper.current.scale.z = SCALE + Math.cos(state.clock.elapsedTime * 3) * 0.5 + (1 / 2)
+    if (selection != null && legal) {
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 3) * 0.5 + 0.75
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 3) * 0.5 + 0.75
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 3) * 0.5 + 0.75
+    } else {
+      group.current.scale.x = scale
+      group.current.scale.y = scale
+      group.current.scale.z = scale
     }
   })
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
+    <group position={position} rotation={rotation} scale={scale} ref={group}>
       <mesh
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
         onPointerDown={(e) => handlePointerDown(e)}
-        ref={wrapper}
       >
         <sphereGeometry args={[0.8, 32, 16]} />
         <meshStandardMaterial
@@ -81,6 +85,7 @@ export default function Tile({
           // opacity={selection != null && tile in legalTiles ? 0.5 : 0}
           opacity={0}
           color={selection != null && tile in legalTiles ? (selection.pieces[0].team == 0 ? "pink" : "turquoise") : ""}
+          ref={wrapperMat}
         />
       </mesh>
       {mesh}

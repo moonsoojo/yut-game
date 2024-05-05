@@ -31,7 +31,6 @@ async function connectMongo() {
 
 const userSchema = new mongoose.Schema(
   {
-    _id: String,
     socketId: String,
     roomId: {
       type: mongoose.Schema.Types.ObjectId, 
@@ -61,7 +60,7 @@ const roomSchema = new mongoose.Schema(
         tile: Number,
         team: Number,
         id: Number,
-        path: [Number],
+        history: [Number],
         // Schema validation prevents assigning "scored" as a piece
         // (item in array)
         status: String, // Possible values: "home", "onBoard", "scored"
@@ -104,7 +103,19 @@ const roomSchema = new mongoose.Schema(
       yImpulse: Number,
       torqueImpulse: { x: Number, y: Number, z: Number }
     }],
-    pregameOutcome: String
+    pregameOutcome: String,
+    selection: {
+      tile: Number,
+      pieces: [{
+        tile: Number,
+        team: Number,
+        id: Number,
+        history: [Number],
+        status: String,
+        _id: false
+      }],
+    },
+    legalTiles: Object
   },
   {
     versionKey: false,
@@ -220,10 +231,10 @@ io.on("connect", async (socket) => {
             _id: 0,
             players: [],
             pieces: [
-              { tile: -1, team: 0, id: 0, path: [], status: "home" },
-              { tile: -1, team: 0, id: 1, path: [], status: "home" },
-              { tile: -1, team: 0, id: 2, path: [], status: "home" },
-              { tile: -1, team: 0, id: 3, path: [], status: "home" },
+              { tile: -1, team: 0, id: 0, history: [], status: "home" },
+              { tile: -1, team: 0, id: 1, history: [], status: "home" },
+              { tile: -1, team: 0, id: 2, history: [], status: "home" },
+              { tile: -1, team: 0, id: 3, history: [], status: "home" },
             ],
             moves: JSON.parse(JSON.stringify(initialMoves)),
             throws: 0,
@@ -233,10 +244,10 @@ io.on("connect", async (socket) => {
             _id: 1,
             players: [],
             pieces: [
-              { tile: -1, team: 1, id: 0, path: [], status: "home" },
-              { tile: -1, team: 1, id: 1, path: [], status: "home" },
-              { tile: -1, team: 1, id: 2, path: [], status: "home" },
-              { tile: -1, team: 1, id: 3, path: [], status: "home" },
+              { tile: -1, team: 1, id: 0, history: [], status: "home" },
+              { tile: -1, team: 1, id: 1, history: [], status: "home" },
+              { tile: -1, team: 1, id: 2, history: [], status: "home" },
+              { tile: -1, team: 1, id: 3, history: [], status: "home" },
             ],
             moves: JSON.parse(JSON.stringify(initialMoves)),
             throws: 0,
@@ -255,7 +266,9 @@ io.on("connect", async (socket) => {
           player: ''
         }, // To not trigger the throw twice in the server
         yootThrowValues: null,
-        pregameOutcome: null
+        pregameOutcome: null,
+        selection: null,
+        legalTiles: {},
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -488,12 +501,12 @@ io.on("connect", async (socket) => {
     }
   })
 
-  // function currentPlayerId(room) {
-  //   const turn = room.turn
-  //   const currentTeam = turn.team
-  //   const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
-  //   return currentPlayer._id
-  // }
+  function currentPlayer(room) {
+    const turn = room.turn
+    const currentTeam = turn.team
+    const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
+    return currentPlayer
+  }
 
   function passTurn(currentTurn, teams) {
     const currentTeam = currentTurn.team
@@ -565,7 +578,7 @@ io.on("connect", async (socket) => {
     try {
       let room = await Room.findOne({ _id: roomId })  
 
-      // Check if user has the turn
+      // Check if user threw the yoot
       if (user._id.valueOf() === room.yootThrown.player) { // room.yootThrown.player is a string
 
         // Reset flag so client can activate the throw button again
@@ -708,10 +721,50 @@ io.on("connect", async (socket) => {
     }
   })
 
-  socket.on("select", (payload) => {
-    updateSelection(roomId, payload)
-    console.log("[select] updated selection", getSelection(roomId))
-    io.to(roomId).emit("select", payload);
+  // Client only emits this event if it has the turn
+  socket.on("select", async ({ roomId, payload }) => {
+    try {
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        { 
+          $set: { 
+            'selection': payload
+          }
+        }
+      )
+      // await Room.findOneAndUpdate(
+      //   { 
+      //     _id: roomId, 
+      //   }, 
+      //   { 
+      //     $set: { 
+      //       'selection': payload
+      //     }
+      //   }
+      // )
+    } catch (err) {
+      console.log(`[select] error making selection`, err)
+    }
+  });
+
+  // Client only emits this event if it has the turn
+  socket.on("legalTiles", async ({ roomId, legalTiles }) => {
+    try {
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        { 
+          $set: { 
+            'legalTiles': legalTiles
+          }
+        }
+      )
+    } catch (err) {
+      console.log(`[select] error making selection`, err)
+    }
   });
 
   socket.on("disconnect", async () => {

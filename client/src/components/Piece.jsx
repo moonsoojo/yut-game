@@ -6,7 +6,8 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom, tilesAtom } from "../GlobalState.jsx";
+import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom } from "../GlobalState.jsx";
+import { useParams } from "wouter";
 
 export default function Piece ({
   position,
@@ -19,13 +20,15 @@ export default function Piece ({
   status
 }) {
 
-  const [selection] = useAtom(selectionAtom);
+  const [selection, setSelection] = useAtom(selectionAtom);
+  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
   const [teams] = useAtom(teamsAtom);
   const [turn] = useAtom(turnAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [client] = useAtom(clientAtom)
-  const [thrown] = useAtom(yootThrownAtom)
+  const [yootThrown] = useAtom(yootThrownAtom)
   const [tiles] = useAtom(tilesAtom)
+  const params = useParams()
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -35,11 +38,11 @@ export default function Piece ({
   if (selection != null) {
     if (selection.tile == -1) {
       if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
-        scale *= 1.3
+        scale *= 1.5
       }
     } else {
       if (selection.tile == tile) {
-        scale *= 1.3
+        scale *= 1.5
       }
     }
   }
@@ -72,6 +75,7 @@ export default function Piece ({
   }
 
   function clientIsCurrentPlayer(clientSocketId, teams, turn) {
+    console.log(`[clientIsCurrentPlayer] client socket id`, clientSocketId, `teams`, teams, `turn`, turn)
     const currentTeam = turn.team
     const currentPlayer = turn.players[turn.team]
     if (teams[currentTeam].players[currentPlayer].socketId === clientSocketId) {
@@ -83,9 +87,11 @@ export default function Piece ({
 
   function handlePointerDown(event) {
     if (gamePhase === "game" && client.team == team &&
-    clientIsCurrentPlayer(client.socketId, teams, turn) && !thrown) {
+    clientIsCurrentPlayer(client.socketId, teams, turn) && !yootThrown.flag) {
+      console.log(`[Piece] click`)
       event.stopPropagation();
       if (selection === null) {
+        console.log(`[Piece] selection is null`)
         let pieces;
         let history;
         if (status === 'home') {
@@ -98,14 +104,31 @@ export default function Piece ({
         let legalTiles = getLegalTiles(tile, status, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
           socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
-          socket.emit("select", { tile, pieces })
+          // Set within client for faster response
+          setLegalTiles(legalTiles)
+
+          socket.emit("select", { 
+            roomId: params.id, 
+            payload: { tile, pieces } 
+          })
+          // Set within client for faster response
+          setSelection({ tile, pieces })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", ({ destination: tile }))
         }
+        
         socket.emit("legalTiles", { legalTiles: {} })
-        socket.emit("select", null);
+        // Set within client for faster response
+        setLegalTiles({})
+
+        socket.emit("select", { 
+          roomId: params.id, 
+          payload: null
+        });
+        // Set within client for faster response
+        setSelection(null)
       }
     }
   }

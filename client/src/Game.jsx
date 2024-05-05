@@ -200,10 +200,10 @@ export default function Game() {
         position={layout[device].hostName.position}
         rotation={layout[device].hostName.rotation}
       />
-      <MoveList
+      { gamePhase === 'game' && <MoveList
         position={[2, 0, 3.3]}
         rotation={[-Math.PI/2, 0, 0]}
-      />
+      /> }
       <animated.group position={boardPosition} scale={boardScale}>
         <Board 
           position={[0,0,0]}
