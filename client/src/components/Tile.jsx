@@ -54,13 +54,8 @@ export default function Tile({
     event.stopPropagation();
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
-        // remove 'destination'
         // remove callback
-        socket.emit("move", { destination: tile, moveInfo: legalTileInfo }, ({ error }) => {
-          if (error) {
-            console.log("move error", error)
-          }
-        });
+        socket.emit("move", { roomId: params.id, moveInfo: legalTileInfo });
       }
 
       socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
@@ -78,12 +73,10 @@ export default function Tile({
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
-      // wrapperMat.current.opacity = 0.2
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale
       group.current.scale.z = scale
-      // wrapperMat.current.opacity = 0
     }
   })
 

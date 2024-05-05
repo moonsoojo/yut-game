@@ -567,9 +567,7 @@ export const makeMove = (roomId, destination) => {
     let from = selection.tile
     let to = destination
     let legalTiles = getLegalTiles(roomId)
-    console.log("[makeMove] legalTiles", legalTiles)
     let moveUsed = legalTiles[destination].move
-    console.log("[makeMove] moveUsed", moveUsed)
     let history = legalTiles[destination].history
     let pieces = selection.pieces
   

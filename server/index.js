@@ -757,6 +757,47 @@ io.on("connect", async (socket) => {
     }
   });
 
+  socket.on('move', async ({ roomId, moveInfo }) => {
+    try {
+      // copy states
+      // operate on them
+      // set them to room
+      const room = await Room.findById(roomId)
+      let tiles = room.tiles
+      let teams = room.teams
+      let from = selection.tile
+      let to = moveInfo.tile
+      let moveUsed = moveInfo.move // not scoring
+      let history = moveInfo.history
+      let pieces = room.selection.pieces
+      let starting = pieces[0].status === "home"
+      let movingTeam = pieces[0].team;
+
+      let operation = {};
+      // logic
+      if (tiles[to].length > 0) {
+        let occupyingTeam = tiles[to][0].team
+        if (occupyingTeam != movingTeam) {
+          // build operation
+          // execute in one step
+          operation['$set'] = {}
+          for (let piece of tiles[to]) {
+            piece.tile = -1
+            piece.history = []
+            piece.status = "home"
+            teams[occupyingTeam].pieces[piece.id] = piece
+            operation['$set'][`teams.${occupyingTeam}.pieces.${piece.id}`] = piece
+          }
+          tiles[to] = []
+          operation['$inc'] = {}
+          operation['$inc'][`teams.${movingTeam}.throws`] = 1
+        }
+      }
+    } catch (err) {
+      console.log(`[move] error making move`, err)
+    }
+  })
+
   socket.on("disconnect", async () => {
     console.log(`${socket.id} disconnect`)
     try {
