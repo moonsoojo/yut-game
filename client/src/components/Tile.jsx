@@ -54,13 +54,15 @@ export default function Tile({
     event.stopPropagation();
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
+        // remove 'destination'
+        // remove callback
         socket.emit("move", { destination: tile, moveInfo: legalTileInfo }, ({ error }) => {
           if (error) {
             console.log("move error", error)
           }
         });
       }
-      
+
       socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
       // Set within client for faster response
       setLegalTiles({})
@@ -85,8 +87,14 @@ export default function Tile({
     }
   })
 
-  return (
-    <group position={position} rotation={rotation} scale={scale} ref={group}>
+  return <group position={position} rotation={rotation} scale={scale}>
+    { selection != null && legalTileInfo && <Pointer 
+      scale={2}
+      position={[0, 2, 0]}
+      tile={tile} 
+      color={selection.pieces[0].team === 0 ? "red" : "turquoise"}
+    />}
+    <group ref={group}>
       <mesh
         onPointerEnter={(e) => handlePointerEnter(e)}
         onPointerLeave={(e) => handlePointerLeave(e)}
@@ -100,17 +108,10 @@ export default function Tile({
         />
       </mesh>
       {mesh}
-      { selection != null && legalTileInfo && <Pointer 
-        scale={1.8}
-        position={[0, 1.2, 0]}
-        tile={tile} 
-        color={selection.pieces[0].team === 0 ? "red" : "turquoise"}
-      />}
-      {/* 
-      {(gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
+      {/* (gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
         position={[-0.3,6,-1.2]}
         scale={2}
-      />} */}
+      />*/} 
     </group>
-  );
+  </group>
 }
