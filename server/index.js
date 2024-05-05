@@ -734,16 +734,6 @@ io.on("connect", async (socket) => {
           }
         }
       )
-      // await Room.findOneAndUpdate(
-      //   { 
-      //     _id: roomId, 
-      //   }, 
-      //   { 
-      //     $set: { 
-      //       'selection': payload
-      //     }
-      //   }
-      // )
     } catch (err) {
       console.log(`[select] error making selection`, err)
     }

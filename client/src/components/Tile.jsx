@@ -3,9 +3,10 @@ import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import { hasTurnAtom, selectionAtom } from "../GlobalState";
+import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
 import * as THREE from 'three';
 import Pointer from "../meshes/Pointer";
+import { useParams } from "wouter";
 
 // Pass pieces as children of mesh (like Earth)
 // Score button, Legal tiles and Piece selection are server events
@@ -23,8 +24,10 @@ export default function Tile({
   legalTileInfo // If key is not in the object, it's undefined
 }) {
 
-  const [selection] = useAtom(selectionAtom);
+  const [selection, setSelection] = useAtom(selectionAtom);
+  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
   const [hasTurn] = useAtom(hasTurnAtom)
+  const params = useParams()
 
   const group = useRef()
   const wrapperMat = useRef();
@@ -46,6 +49,8 @@ export default function Tile({
   }
 
   function handlePointerDown(event) {
+    console.log(`[Tile] click`)
+    console.log(`[Tile] selection`, selection, `hasTurn`, hasTurn)
     event.stopPropagation();
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
@@ -55,8 +60,14 @@ export default function Tile({
           }
         });
       }
-      socket.emit("legalTiles", {legalTiles: {}})
-      socket.emit("select", null);
+      
+      socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+      // Set within client for faster response
+      setLegalTiles({})
+
+      socket.emit("select", { roomId: params.id, payload: null });
+      // Set within client for faster response
+      setSelection(null)
     }
   }
 
