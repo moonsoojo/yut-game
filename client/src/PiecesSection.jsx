@@ -107,6 +107,7 @@ export default function PiecesSection({
               id={value.id}
               key={index}
               animate={hasValidMoveHome()}
+              status={value.status}
             />
           )
         }

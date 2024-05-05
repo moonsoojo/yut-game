@@ -6,8 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
-import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom } from "../GlobalState.jsx";
+import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom, tilesAtom } from "../GlobalState.jsx";
 
 export default function Piece ({
   position,
@@ -16,7 +15,8 @@ export default function Piece ({
   team,
   id,
   scale,
-  animate=false
+  animate=false,
+  status
 }) {
 
   const [selection] = useAtom(selectionAtom);
@@ -25,6 +25,7 @@ export default function Piece ({
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [client] = useAtom(clientAtom)
   const [thrown] = useAtom(yootThrownAtom)
+  const [tiles] = useAtom(tilesAtom)
 
   const group = useRef();
   const wrapperMat = useRef();
@@ -70,34 +71,40 @@ export default function Piece ({
     document.body.style.cursor = "default";
   }
 
+  function clientIsCurrentPlayer(clientSocketId, teams, turn) {
+    const currentTeam = turn.team
+    const currentPlayer = turn.players[turn.team]
+    if (teams[currentTeam].players[currentPlayer].socketId === clientSocketId) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   function handlePointerDown(event) {
-    // use piece.status instead of tile == -1
-    // fixed in server room.teams.$.pieces schema
-    if (gamePhase === "game" && 
-    client.team == team && 
-    hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, client.id) &&
-    !thrown) {
+    if (gamePhase === "game" && client.team == team &&
+    clientIsCurrentPlayer(client.socketId, teams, turn) && !thrown) {
       event.stopPropagation();
-      if (selection == null) {
-        let starting = tile == -1 ? true : false;
+      if (selection === null) {
         let pieces;
-        if (starting) {
-          pieces = [{tile, team, id, history: []}]
+        let history;
+        if (status === 'home') {
+          history = []
+          pieces = [{tile, team, id, history, status}]
         } else {
+          history = tiles[tile][0].history
           pieces = tiles[tile];
         }
-        let history = tile == -1 ? [] : tiles[tile][0].history
-        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
+        let legalTiles = getLegalTiles(tile, status, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
-          socket.emit("legalTiles", { legalTiles })
+          socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
           socket.emit("select", { tile, pieces })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", ({ destination: tile }))
         }
-        socket.emit("legalTiles", {legalTiles: {}})
+        socket.emit("legalTiles", { legalTiles: {} })
         socket.emit("select", null);
       }
     }

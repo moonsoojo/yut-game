@@ -27,6 +27,7 @@ export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
 export const displayMovesAtom = atom({})
+export const legalTilesAtom = atom({})
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

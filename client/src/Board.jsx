@@ -5,7 +5,7 @@ import { animated } from '@react-spring/three';
 import HtmlElement from './HtmlElement';
 import CurvedArrow from './meshes/CurvedArrow';
 import { useAtom } from 'jotai';
-import { tilesAtom } from './GlobalState';
+import { legalTilesAtom, tilesAtom } from './GlobalState';
 import Star from './meshes/Star';
 import Earth from './meshes/Earth';
 import Mars from './meshes/Mars';
@@ -33,6 +33,7 @@ function getMeshByTile(tile) {
 
 export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, showStart=false, interactive=false }) {
   const [tiles] = useAtom(tilesAtom)
+  const [legalTiles] = useAtom(legalTilesAtom)
   const tileRadius = 5
   const NUM_STARS = 20;
   let tileComponents = [];
@@ -48,6 +49,8 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
       <Tile 
         position={position} 
         tile={i} 
+        pieces={tiles[i]}
+        legal={i in legalTiles}
         key={i} 
         mesh={getMeshByTile(i)}
       />
@@ -86,6 +89,8 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           position={position1} 
           scale={1} 
           tile={indexShortcut1} 
+          pieces={tiles[indexShortcut1]}
+          legal={indexShortcut1 in legalTiles}
           key={indexShortcut1} 
           mesh={getMeshByTile(indexShortcut1)}
         />
@@ -102,6 +107,8 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           position={position2} 
           scale={1} 
           tile={indexShortcut2} 
+          pieces={tiles[indexShortcut2]}
+          legal={indexShortcut2 in legalTiles}
           key={indexShortcut2} 
           mesh={getMeshByTile(indexShortcut2)}
         />
@@ -110,13 +117,16 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
   }
 
   // center piece
+  const centerTile = 22
   tileComponents.push(
     <Tile 
       position={[0,0,0]} 
       scale={1} 
-      tile={22} 
-      key={22} 
-      mesh={getMeshByTile(22)}
+      tile={centerTile} 
+      pieces={tiles[centerTile]}
+      legal={centerTile in legalTiles}
+      key={centerTile} 
+      mesh={getMeshByTile(centerTile)}
     />
   );
 

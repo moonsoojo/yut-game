@@ -1,10 +1,5 @@
 import edgeList from "./edgeList.js";
 
-/* todo */
-// path history by piece // append it on 'move'
-// [original tile, ... destination tile]
-// make backdo use path history // implement once 'move' is implemented
-
 // schema
 // legalTiles: {
 //   "1": { destination: 1, move: 1, path: [1, 2, 3]},
@@ -13,37 +8,45 @@ import edgeList from "./edgeList.js";
 //     { destination: 29, "move": 2, "path": [28, 29]}
 //   ]
 // }
-export function getLegalTiles(tile, moves, pieces, history) { // parameters are optional
-  let legalTiles = {} // add key '29' with empty list
-  let starting = tile == -1 ? true : false;
+export function getLegalTiles(tile, status, moves, pieces, history) {
+  let legalTiles = {}
 
   for (let move in moves) {
     if (parseInt(move) == 0) {
       continue;
-    }
-    if (moves[move] > 0) {
-      let forward = parseInt(move) > 0 ? true: false
-      // disabled; should be able to place piece on tile 0 first
+    } else if (moves[move] > 0) {
+
+      // Special Rule: If you don't have a piece on the board, you can place one on Earth immediately
       if (checkBackdoRule(moves, pieces)) {
         legalTiles[0] = { tile: 0, move: "-1", history: [] }
       }
+
+      let forward = parseInt(move) > 0 ? true: false
       let forks = getNextTiles(tile, forward)
       if (forward) {
-        forks = checkFinishRule(forks)
+        // If you're on Earth, there's a path to score and path to tile 1. Eliminate the path to tile 1
+        forks = checkFinishRule(forks) 
       } else {
+        // If you have no history, present both paths. If you do, take the last tile from the history
         forks = checkBackdoFork(forks, history)
       }
+
       for (let i = 0; i < forks.length; i++) {
-        let path = starting ? [] : [tile]
+        
+        // Initialize path
+        let path = status === 'home' ? [] : [tile]
         let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-        let fullHistory = getFullHistory(history, destination.path, forward)
+        history = makeNewHistory(history, destination.path, forward)
+
+        // If piece can score
         if (destination.tile == 29) {
           if (!(29 in legalTiles)) {
+            // Initialize array because multiple moves can be used to finish
             legalTiles[29] = []
           }
-          legalTiles[29].push({ tile: destination.tile, move, history: fullHistory })
+          legalTiles[29].push({ tile: destination.tile, move, history })
         } else {
-          legalTiles[destination.tile] = { tile: destination.tile, move, history: fullHistory }
+          legalTiles[destination.tile] = { tile: destination.tile, move, history }
         }
       }
     }
@@ -52,11 +55,11 @@ export function getLegalTiles(tile, moves, pieces, history) { // parameters are 
   return legalTiles
 }
 
-function getFullHistory(history, path, forward) {
+function makeNewHistory(history, path, forward) {
   if (forward) {
     return history.concat(path)
   } else {
-    if (path.length == 0) {
+    if (path.length == 0) { // Starting from home
       return []
     } else {
       return history.slice(0, history.length-1)
@@ -66,14 +69,14 @@ function getFullHistory(history, path, forward) {
 
 function checkFinishRule(forks) {
   for (let i = 0; i < forks.length; i++) {
-    if (forks[i] == 29) {
+    if (forks[i] === 29) {
       return [29]
     }
   }
   return forks
 }
 
-// precondition: history is an array
+// Precondition: history is an array
 function checkBackdoFork(forks, history) {
   if (history.length == 0) {
     return forks
@@ -82,9 +85,7 @@ function checkBackdoFork(forks, history) {
   }
 }
 
-// recursion
-// if first step, keep forks
-// else, go straight
+// if first step, keep forks; else, go straight
 function getNextTiles(tile, forward) {
   let nextTiles = [];
   if (tile == -1 && (forward)) {
@@ -111,7 +112,6 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
-  // path.push(tile)
   if (steps == 0 || tile == 29) {
     return { tile, path }
   }
@@ -119,17 +119,15 @@ function getDestination(tile, steps, forward, path) {
   path.push(tile)
   let [start, end] = getStartAndEndVertices(forward);
   for (const edge of edgeList) {
-    if (edge[start] == tile) {
+    if (edge[start] === tile) {
       let nextTile;
       let forks = getNextTiles(tile, forward);
       if (forks.length > 1) {
-        // choose next tile
-        // recursively call getDestination with
         nextTile = chooseTileFromFork(path, forks)
       } else {
         nextTile = edge[end]
       }
-      steps--; // updates value after reading
+      steps--; // Update value AFTER reading
       return getDestination(nextTile, steps, forward, path)
     }
   }
@@ -149,21 +147,6 @@ function chooseTileFromFork(path, forks) {
 }
 
 function checkBackdoRule(moves, pieces) {
-  // check if player only has 'backdo'
-  /*
-  let hasBackdo = false;
-  let hasAnotherMove = false;
-  for (let move in moves) {
-    if (move === "-1" && moves[move] > 0) {
-      hasBackdo = true;
-    } else if (move !== "-1" && moves[move] > 0) {
-      hasAnotherMove = true;
-    }
-  }
-  if (!(hasBackdo && !hasAnotherMove)) {
-    return false;
-  }
-  */
 
   let hasBackdo = false;
   for (let move in moves) {

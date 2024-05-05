@@ -18,8 +18,10 @@ export default function Tile({
   position=[0,0,0], 
   rotation=[0,0,0], 
   scale=1, 
-  tile, 
-  mesh
+  tile,
+  pieces, 
+  mesh,
+  legal
 }) {
 
   const [selection] = useAtom(selectionAtom);

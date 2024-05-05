@@ -31,7 +31,7 @@ async function connectMongo() {
 
 const userSchema = new mongoose.Schema(
   {
-    // _id: String, // socketId
+    _id: String,
     socketId: String,
     roomId: {
       type: mongoose.Schema.Types.ObjectId, 
@@ -64,7 +64,7 @@ const roomSchema = new mongoose.Schema(
         path: [Number],
         // Schema validation prevents assigning "scored" as a piece
         // (item in array)
-        status: String, 
+        status: String, // Possible values: "home", "onBoard", "scored"
         _id: false
       }],
       throws: Number,
@@ -488,12 +488,12 @@ io.on("connect", async (socket) => {
     }
   })
 
-  function currentPlayerId(room) {
-    const turn = room.turn
-    const currentTeam = turn.team
-    const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
-    return currentPlayer._id
-  }
+  // function currentPlayerId(room) {
+  //   const turn = room.turn
+  //   const currentTeam = turn.team
+  //   const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
+  //   return currentPlayer._id
+  // }
 
   function passTurn(currentTurn, teams) {
     const currentTeam = currentTurn.team
@@ -706,30 +706,13 @@ io.on("connect", async (socket) => {
     } catch (err) {
       console.log(`[recordThrow] error passing turn;`, err)
     }
-    
-
-    // if (getGamePhase(roomId) === "pregame") {
-    //   addMove(roomId, getTurn(roomId).team, move.toString())
-    //   passTurnPregame(roomId)
-    //   addThrow(roomId, getTurn(roomId).team)
-    //   io.to(roomId).emit("turn", getTurn(roomId))
-    //   io.to(roomId).emit("teams", getTeams(roomId))
-    //   io.to(roomId).emit("gamePhase", getGamePhase(roomId))
-    // } else if (getGamePhase(roomId) === "game") {
-    //   let turn = getTurn(roomId)
-    //   addMove(roomId, turn.team, move.toString())
-    //   if (movesIsEmpty(roomId, turn.team)) {
-    //     clearMoves(roomId, turn.team)
-    //     turn = passTurn(roomId)
-    //     addThrow(roomId, turn.team)
-    //     io.to(roomId).emit("turn", turn)
-    //   } else if (move == 4 || move == 5) {
-    //     addThrow(roomId, turn.team);
-    //     // io.to(roomId).emit("yell", "bonus turn")
-    //   }
-    //   io.to(roomId).emit("teams", getTeams(roomId))
-    // }
   })
+
+  socket.on("select", (payload) => {
+    updateSelection(roomId, payload)
+    console.log("[select] updated selection", getSelection(roomId))
+    io.to(roomId).emit("select", payload);
+  });
 
   socket.on("disconnect", async () => {
     console.log(`${socket.id} disconnect`)

@@ -28,7 +28,7 @@ export default function Yoot({ device }) {
   const [yootThrown] = useAtom(yootThrownAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [outOfBounds, setOutOfBounds] = useState(false);
+  const [_outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
   const params = useParams()
 
