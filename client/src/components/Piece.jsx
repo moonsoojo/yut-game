@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom } from "../GlobalState.jsx";
+import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom } from "../GlobalState.jsx";
 import { useParams } from "wouter";
 
 export default function Piece ({
@@ -22,12 +22,12 @@ export default function Piece ({
 
   const [selection, setSelection] = useAtom(selectionAtom);
   const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
-  const [teams] = useAtom(teamsAtom);
-  const [turn] = useAtom(turnAtom);
-  const [gamePhase] = useAtom(gamePhaseAtom)
   const [client] = useAtom(clientAtom)
+  const [teams] = useAtom(teamsAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
   const [yootThrown] = useAtom(yootThrownAtom)
   const [tiles] = useAtom(tilesAtom)
+  const [hasTurn] = useAtom(hasTurnAtom)
   const params = useParams()
 
   const group = useRef();
@@ -74,20 +74,8 @@ export default function Piece ({
     document.body.style.cursor = "default";
   }
 
-  function clientIsCurrentPlayer(clientSocketId, teams, turn) {
-    console.log(`[clientIsCurrentPlayer] client socket id`, clientSocketId, `teams`, teams, `turn`, turn)
-    const currentTeam = turn.team
-    const currentPlayer = turn.players[turn.team]
-    if (teams[currentTeam].players[currentPlayer].socketId === clientSocketId) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   function handlePointerDown(event) {
-    if (gamePhase === "game" && client.team == team &&
-    clientIsCurrentPlayer(client.socketId, teams, turn) && !yootThrown.flag) {
+    if (gamePhase === "game" && client.team == team && hasTurn && !yootThrown.flag) {
       console.log(`[Piece] click`)
       event.stopPropagation();
       if (selection === null) {
@@ -118,7 +106,7 @@ export default function Piece ({
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", ({ destination: tile }))
         }
-        
+
         socket.emit("legalTiles", { legalTiles: {} })
         // Set within client for faster response
         setLegalTiles({})

@@ -38,7 +38,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
   const NUM_STARS = 20;
   let tileComponents = [];
 
-  //circle
+  // Circle
   for (let i = 0; i < NUM_STARS; i++) {
     let position = [
       -Math.cos(((i + 5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
@@ -50,7 +50,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
         position={position} 
         tile={i} 
         pieces={tiles[i]}
-        legal={i in legalTiles}
+        legalTileInfo={legalTiles[i]}
         key={i} 
         mesh={getMeshByTile(i)}
       />
@@ -90,7 +90,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           scale={1} 
           tile={indexShortcut1} 
           pieces={tiles[indexShortcut1]}
-          legal={indexShortcut1 in legalTiles}
+          legalTileInfo={legalTiles[indexShortcut1]}
           key={indexShortcut1} 
           mesh={getMeshByTile(indexShortcut1)}
         />
@@ -108,7 +108,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           scale={1} 
           tile={indexShortcut2} 
           pieces={tiles[indexShortcut2]}
-          legal={indexShortcut2 in legalTiles}
+          legalTileInfo={legalTiles[indexShortcut2]}
           key={indexShortcut2} 
           mesh={getMeshByTile(indexShortcut2)}
         />
@@ -124,7 +124,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
       scale={1} 
       tile={centerTile} 
       pieces={tiles[centerTile]}
-      legal={centerTile in legalTiles}
+      legalTileInfo={legalTiles[centerTile]}
       key={centerTile} 
       mesh={getMeshByTile(centerTile)}
     />

@@ -90,7 +90,12 @@ export default function Game() {
 
   function CurrentPlayer({ position, rotation }) {
     const [teams] = useAtom(teamsAtom)
-    const name = teams[turn.team].players[turn.players[turn.team]].name
+    
+    // If player disconnects, and there's no player remaining in the team,
+    // don't display a name
+    const player = teams[turn.team].players[turn.players[turn.team]]
+    const name = player ? player.name : ''
+
     return <group position={position} rotation={rotation}>
       { turn.team === 0 && <Rocket
         position={[0, 0, 0]}

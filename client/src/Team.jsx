@@ -61,19 +61,20 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
               <meshStandardMaterial color={team == 0 ? "red" : "green"} />
             </mesh>
           ) : (
-              <Piece
-                position={[
+            <Piece
+              position={[
                 positionStartX + index * space,
                 positionStartY,
                 positionStartZ,
               ]}
               rotation={layout[device].homePieces[team].rotation}
+              scale={1}
               keyName={`count${index}`}
               tile={-1}
               team={team}
               id={value.id}
               key={index}
-              scale={1}
+              status={value.status}
             />
           )
         )}

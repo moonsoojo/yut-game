@@ -6,7 +6,7 @@ import { MeshDistortMaterial } from "@react-three/drei";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
-export default function Pointer({ color, scale=4, position=[0, 1.5, 0], opacity=1 }) {
+export default function Pointer({ position=[0,0,0], rotation=[0,0,0], scale=1, color, opacity=1 }) {
   const ref = useRef(null);
 
   useFrame((state, delta) => {

@@ -49,6 +49,20 @@ export function isMyTurn (turn, teams, socketId) {
   }
 }
 
+export function clientHasTurn(clientSocketId, teams, turn) {
+  console.log(`[clientHasTurn] client socket id`, clientSocketId, `teams`, teams, `turn`, turn)
+  const currentTeam = turn.team
+  const currentPlayer = turn.players[turn.team]
+  // Check if a player is at the index
+  // He/she could have dropped
+  if (teams[currentTeam].players[currentPlayer] &&
+  teams[currentTeam].players[currentPlayer].socketId === clientSocketId) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function getPlayerBySocketId(teams, socketId) {
   for (let i = 0; i < teams.length; i++) {
     for (let j = 0; j < teams[i].players.length; j++) {

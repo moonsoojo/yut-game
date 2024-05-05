@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { io } from "socket.io-client";
 
 import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -100,14 +101,6 @@ export const SocketManager = () => {
           localStorage.setItem('yootGame', JSON.stringify({
             ...user
           }))
-
-          // Only check if the game is in play
-          if ((room.gamePhase === "pregame" || room.gamePhase === "game") && 
-          room.teams[room.turn.team].players[room.turn.players[room.turn.team]].socketId === socket.id) {
-            setHasTurn(true)
-          } else {
-            setHasTurn(false)
-          }
         }
       }
 
@@ -122,15 +115,14 @@ export const SocketManager = () => {
         return room.gamePhase
       });
 
+      const currentTeam = room.turn.team
+
       // Enable yoot button if client has the turn and his team 
       // has at least one throw and there is a player on the team
       // and the thrown flag is off
-      const currentTeam = room.turn.team
-      const currentPlayer = room.turn.players[turn.team]
       if (room.gamePhase === "lobby" || (room.teams[currentTeam].players.length > 0 && 
-      room.teams[currentTeam].players[currentPlayer].socketId === socket.id &&
-      room.teams[currentTeam].throws > 0 &&
-      !room.yootThrown.flag)) {
+      clientHasTurn(socket.id, room.teams, room.turn) &&
+      room.teams[currentTeam].throws > 0 && !room.yootThrown.flag)) {
         setYootActive(true)
       } else {
         setYootActive(false)
@@ -152,10 +144,18 @@ export const SocketManager = () => {
 
       setDisplayMoves(room.teams[room.turn.team].moves)
 
-      // Selection, Legal tiles
-      // If you have the turn, update the selection within client.
-      // If you don't, update it via the server
-      if (room.teams[currentTeam].players[currentPlayer].socketId !== socket.id) {
+      if ((room.gamePhase === "pregame" || room.gamePhase === "game") && 
+      clientHasTurn(socket.id, room.teams, room.turn)) {
+
+        setHasTurn(true)
+
+      } else {
+
+        setHasTurn(false)
+
+        // Selection, Legal tiles
+        // If you have the turn, update the selection within client.
+        // If you don't, update it via the server
         setSelection(room.selection)
         setLegalTiles(room.legalTiles)
       }

@@ -185,22 +185,25 @@ export default function Yoot({ device }) {
 
   return (
     <Physics>
+      {/* Floor */}
       <RigidBody
         type="fixed"
         restitution={0.01}
         position={[0, 1.5, 0]}
         friction={0.9}
       >
+        {/* Height has to be thick enough for Yoot to not fall through the collider */}
         <CuboidCollider args={[6, 0.5, 6]} restitution={0.2} friction={1} />
         <mesh>
           <boxGeometry args={[12, 1, 12]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
+            depthWrite={false}
           />
         </mesh>
       </RigidBody>
-      {/* nak catcher */}
+      {/* Nak catcher */}
       <RigidBody
         type="fixed"
         restitution={0.01}

@@ -23,6 +23,10 @@ export default function Ufo({
   const ufo = useRef();
   const frontBackPanelCircleMat = useRef();
   const leftRightPanelCircleMat = useRef();
+  const ballFrontRightMatRef = useRef();
+  const ballFrontLeftMatRef = useRef();
+  const ballBackRightMatRef = useRef();
+  const ballBackLeftMatRef = useRef();
 
   useEffect(() => {
     ufoGlass.current.material.opacity = 0.2;
@@ -34,9 +38,17 @@ export default function Ufo({
       if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
         frontBackPanelCircleMat.current.color = new THREE.Color('white')
         leftRightPanelCircleMat.current.color = new THREE.Color('purple')
+        ballFrontRightMatRef.current.color = new THREE.Color('purple')
+        ballFrontLeftMatRef.current.color = new THREE.Color('white')
+        ballBackRightMatRef.current.color = new THREE.Color('white')
+        ballBackLeftMatRef.current.color = new THREE.Color('purple')
       } else {
         frontBackPanelCircleMat.current.color = new THREE.Color('purple')
         leftRightPanelCircleMat.current.color = new THREE.Color('white')
+        ballFrontRightMatRef.current.color = new THREE.Color('white')
+        ballFrontLeftMatRef.current.color = new THREE.Color('purple')
+        ballBackRightMatRef.current.color = new THREE.Color('purple')
+        ballBackLeftMatRef.current.color = new THREE.Color('white')
       }
     }
   });
@@ -144,8 +156,8 @@ export default function Ufo({
             position={[0.001, 0.182, 0.375]}
             scale={0.37}
           />
-          {/* ball front right */}
           <group ref={balls}>
+            {/* ball front right */}
             <mesh
               castShadow
               receiveShadow
@@ -153,7 +165,9 @@ export default function Ufo({
               material={materials.Blue}
               position={[0.252, -0.592, 0.252]}
               scale={0.128}
-            />
+            >
+              <meshBasicMaterial color='turquoise' ref={ballFrontRightMatRef}/>
+            </mesh>
             {/* ball front left */}
             <mesh
               castShadow
@@ -162,7 +176,9 @@ export default function Ufo({
               material={materials.Blue}
               position={[-0.252, -0.592, 0.252]}
               scale={0.128}
-            />
+            >
+              <meshBasicMaterial color='turquoise' ref={ballFrontLeftMatRef}/>
+            </mesh>
             {/* ball back right */}
             <mesh
               castShadow
@@ -171,7 +187,9 @@ export default function Ufo({
               material={materials.Blue}
               position={[0.252, -0.592, -0.252]}
               scale={0.128}
-            />
+            >
+              <meshBasicMaterial color='turquoise' ref={ballBackRightMatRef}/>
+            </mesh>
             {/* ball back left */}
             <mesh
               castShadow
@@ -180,7 +198,9 @@ export default function Ufo({
               material={materials.Blue}
               position={[-0.252, -0.592, -0.252]}
               scale={0.128}
-            />
+            >
+              <meshBasicMaterial color='turquoise' ref={ballBackLeftMatRef}/>
+            </mesh>
           </group>
           <mesh
             castShadow
