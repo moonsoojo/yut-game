@@ -7,13 +7,14 @@ import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
 import * as THREE from 'three';
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
+import Rocket from "../meshes/Rocket";
+import Ufo from "../meshes/Ufo";
+import Piece from "./Piece";
 
 // Pass pieces as children of mesh (like Earth)
 // Score button, Legal tiles and Piece selection are server events
 // Set client has turn in Socket Manager
 // Use this to prevent click in the components
-
-// wrapperScale: meshes are different sizes. One wrapper size doesn't fit all
 export default function Tile({ 
   position=[0,0,0], 
   rotation=[0,0,0], 
@@ -55,7 +56,7 @@ export default function Tile({
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
         // remove callback
-        socket.emit("move", { roomId: params.id, moveInfo: legalTileInfo });
+        socket.emit("move", { roomId: params.id, moveInfo: legalTileInfo, selection });
       }
 
       socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
@@ -65,6 +66,33 @@ export default function Tile({
       socket.emit("select", { roomId: params.id, payload: null });
       // Set within client for faster response
       setSelection(null)
+    }
+  }
+
+  function ArrangedPieces({ position, pieces }) {
+
+    if (pieces.length === 1) {
+      return <group position={position}>
+        <Piece position={[0,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 2) {
+      return <group position={position}>
+        <Piece position={[-0.3,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[0.3,0,0]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 3) {
+      return <group position={position}>
+        <Piece position={[0,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 4) {
+      return <group position={position}>
+        <Piece position={[-0.3,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[0.3,0,-0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[3].team} id={pieces[3].id} scale={1.2}/>
+      </group>
     }
   }
 
@@ -101,6 +129,7 @@ export default function Tile({
         />
       </mesh>
       {mesh}
+      { pieces && <ArrangedPieces position={[0, 1, 0]} pieces={pieces}/> }
       {/* (gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
         position={[-0.3,6,-1.2]}
         scale={2}

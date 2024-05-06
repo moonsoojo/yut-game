@@ -57,13 +57,12 @@ const roomSchema = new mongoose.Schema(
         ref: 'users'
       }],
       pieces: [{
-        tile: Number,
+        tile: Number, // Home: -1, Scored: 29
         team: Number,
         id: Number,
         history: [Number],
         // Schema validation prevents assigning "scored" as a piece
         // (item in array)
-        status: String, // Possible values: "home", "onBoard", "scored"
         _id: false
       }],
       throws: Number,
@@ -111,11 +110,21 @@ const roomSchema = new mongoose.Schema(
         team: Number,
         id: Number,
         history: [Number],
-        status: String,
         _id: false
       }],
     },
-    legalTiles: Object
+    legalTiles: Object,
+    tiles: [
+      [
+        {
+          tile: Number,
+          team: Number,
+          id: Number,
+          history: [Number],
+          _id: false
+        }
+      ]
+    ]
   },
   {
     versionKey: false,
@@ -190,15 +199,7 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   }
 })
 
-const initialMoves = {
-  '0': 0,
-  '1': 0,
-  '2': 0,
-  '3': 0,
-  '4': 0,
-  '5': 0,
-  '-1': 0
-}
+
 
 io.on("connect", async (socket) => {
 
@@ -231,12 +232,12 @@ io.on("connect", async (socket) => {
             _id: 0,
             players: [],
             pieces: [
-              { tile: -1, team: 0, id: 0, history: [], status: "home" },
-              { tile: -1, team: 0, id: 1, history: [], status: "home" },
-              { tile: -1, team: 0, id: 2, history: [], status: "home" },
-              { tile: -1, team: 0, id: 3, history: [], status: "home" },
+              { tile: -1, team: 0, id: 0, history: [] },
+              { tile: -1, team: 0, id: 1, history: [] },
+              { tile: -1, team: 0, id: 2, history: [] },
+              { tile: -1, team: 0, id: 3, history: [] },
             ],
-            moves: JSON.parse(JSON.stringify(initialMoves)),
+            moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
             pregameRoll: null
           },
@@ -244,12 +245,12 @@ io.on("connect", async (socket) => {
             _id: 1,
             players: [],
             pieces: [
-              { tile: -1, team: 1, id: 0, history: [], status: "home" },
-              { tile: -1, team: 1, id: 1, history: [], status: "home" },
-              { tile: -1, team: 1, id: 2, history: [], status: "home" },
-              { tile: -1, team: 1, id: 3, history: [], status: "home" },
+              { tile: -1, team: 1, id: 0, history: [] },
+              { tile: -1, team: 1, id: 1, history: [] },
+              { tile: -1, team: 1, id: 2, history: [] },
+              { tile: -1, team: 1, id: 3, history: [] },
             ],
-            moves: JSON.parse(JSON.stringify(initialMoves)),
+            moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
             pregameRoll: null
           }
@@ -269,6 +270,7 @@ io.on("connect", async (socket) => {
         pregameOutcome: null,
         selection: null,
         legalTiles: {},
+        tiles: JSON.parse(JSON.stringify(initialState.initialTiles))
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -757,42 +759,64 @@ io.on("connect", async (socket) => {
     }
   });
 
-  socket.on('move', async ({ roomId, moveInfo }) => {
+  socket.on("move", async ({ roomId, moveInfo, selection }) => {
     try {
       // copy states
       // operate on them
       // set them to room
       const room = await Room.findById(roomId)
+      console.log(`[move] selection`, selection)
       let tiles = room.tiles
       let teams = room.teams
       let from = selection.tile
       let to = moveInfo.tile
       let moveUsed = moveInfo.move // not scoring
       let history = moveInfo.history
-      let pieces = room.selection.pieces
-      let starting = pieces[0].status === "home"
+      let pieces = selection.pieces
+      let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
 
-      let operation = {};
       // logic
+      // build operation
+      // execute in one step
+      let operation = {};
+      operation['$set'] = {}
+      operation['$inc'] = {}
+      operation['$push'] = {}
+
       if (tiles[to].length > 0) {
         let occupyingTeam = tiles[to][0].team
         if (occupyingTeam != movingTeam) {
-          // build operation
-          // execute in one step
-          operation['$set'] = {}
           for (let piece of tiles[to]) {
             piece.tile = -1
             piece.history = []
-            piece.status = "home"
-            teams[occupyingTeam].pieces[piece.id] = piece
             operation['$set'][`teams.${occupyingTeam}.pieces.${piece.id}`] = piece
           }
-          tiles[to] = []
-          operation['$inc'] = {}
+          
+          // Clear the pieces on the tile
+          operation['$set'][`tiles.${to}`] = []
           operation['$inc'][`teams.${movingTeam}.throws`] = 1
         }
       }
+
+      if (starting) {
+        let piece = pieces[0]
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
+      }
+
+      // Add pieces to the tile
+      operation['$push'][`tiles.${to}`] = { '$each': pieces }
+
+      // Remove move
+      operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
+
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        operation
+      )
+      
     } catch (err) {
       console.log(`[move] error making move`, err)
     }
@@ -801,6 +825,7 @@ io.on("connect", async (socket) => {
   socket.on("disconnect", async () => {
     console.log(`${socket.id} disconnect`)
     try {
+
       // Remove user from room
       let user = await User.findOneAndDelete({ 'socketId': socket.id }).exec()
       console.log(`[disconnect] user to remove`, user)

@@ -74,7 +74,6 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
               team={team}
               id={value.id}
               key={index}
-              status={value.status}
             />
           )
         )}

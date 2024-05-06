@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -43,6 +43,14 @@ export const SocketManager = () => {
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
+  const [_tiles, setTiles] = useAtom(tilesAtom)
+
+  useEffect(() => {
+
+
+
+
+  }, []);
 
   useEffect(() => {
 
@@ -51,31 +59,14 @@ export const SocketManager = () => {
     socket.connect();
 
     socket.on('connect', () => {})
-
-    socket.on('client', (data) => {
-      console.log(`[SocketManager] client`, data)
-      setClient(data)
-    })
-
-    socket.on('room', (data) => {
-      console.log(`[SocketManager] room`, data)
-      setRoom(data)
-    })
-
+    
     socket.on('connect_error', err => { 
       console.log("[connect_error]", err); 
       setDisconnect(true) 
     })
+    
     // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
 
-    return () => {
-      socket.disconnect()
-
-      socket.off();
-    }
-  }, []);
-
-  useEffect(() => {
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
       console.log(`[SocketManager] socket id`, socket.id)
@@ -159,6 +150,8 @@ export const SocketManager = () => {
         setSelection(room.selection)
         setLegalTiles(room.legalTiles)
       }
+
+      setTiles(room.tiles)
     })
 
     // hybrid: yoot thrown should not be set in room update.
@@ -175,12 +168,11 @@ export const SocketManager = () => {
       console.log("[disconnect]")
       setDisconnect(true);
     })
+
+    return () => {
+      socket.disconnect()
+
+      socket.off();
+    }
   }, [])
-
-  // updating on teams change might cause issues
-  // if players leave and player index from turn
-  // is out of range
-  useEffect(() => {
-
-  }, [client, turn])
 };

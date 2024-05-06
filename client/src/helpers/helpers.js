@@ -49,6 +49,16 @@ export function isMyTurn (turn, teams, socketId) {
   }
 }
 
+export function pieceStatus(tile) {
+  if (tile === -1) {
+    return 'home'
+  } else if (tile === 29) {
+    return 'scored'
+  } else {
+    return 'onBoard'
+  }
+}
+
 export function clientHasTurn(clientSocketId, teams, turn) {
   const currentTeam = turn.team
   const currentPlayer = turn.players[turn.team]

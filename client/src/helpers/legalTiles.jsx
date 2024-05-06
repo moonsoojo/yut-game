@@ -1,4 +1,5 @@
 import edgeList from "./edgeList.js";
+import { pieceStatus } from "./helpers.js";
 
 // schema
 // legalTiles: {
@@ -8,7 +9,7 @@ import edgeList from "./edgeList.js";
 //     { destination: 29, "move": 2, "path": [28, 29]}
 //   ]
 // }
-export function getLegalTiles(tile, status, moves, pieces, history) {
+export function getLegalTiles(tile, moves, pieces, history) {
   let legalTiles = {}
 
   for (let move in moves) {
@@ -34,7 +35,7 @@ export function getLegalTiles(tile, status, moves, pieces, history) {
       for (let i = 0; i < forks.length; i++) {
         
         // Initialize path
-        let path = status === 'home' ? [] : [tile]
+        let path = pieceStatus(tile) === 'home' ? [] : [tile]
         let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
         history = makeNewHistory(history, destination.path, forward)
 

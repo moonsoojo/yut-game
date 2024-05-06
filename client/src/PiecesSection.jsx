@@ -3,6 +3,7 @@ import { useAtom } from 'jotai';
 import { clientAtom, teamsAtom } from './GlobalState';
 import layout from './layout';
 import Piece from './components/Piece';
+import { pieceStatus } from './helpers/helpers';
 
 export default function PiecesSection({ 
   position=[0,0,0], 
@@ -64,7 +65,7 @@ export default function PiecesSection({
       // 0 is not a valid move
       let pieceOnBoard = false
       for (const piece of teams[team].pieces) {
-        if (piece.status === 'onBoard') {
+        if (pieceStatus(piece.tile) === 'onBoard') {
           pieceOnBoard = true
         }
       }
@@ -91,11 +92,11 @@ export default function PiecesSection({
       <group>
         {
           teams[team].pieces.map((value, index) =>
-            value.status === "onBoard" ? <EmptyPiece 
+            pieceStatus(value.tile) === "onBoard" ? <EmptyPiece 
               position={piecePositions[index]}
               key={index}
             /> : 
-            value.status === "scored" ? <ScoredPiece
+            pieceStatus(value.tile) === "scored" ? <ScoredPiece
               position={piecePositions[index]}
               key={index}
             /> : <Piece
@@ -107,7 +108,6 @@ export default function PiecesSection({
               id={value.id}
               key={index}
               animate={hasValidMoveHome()}
-              status={value.status}
             />
           )
         }

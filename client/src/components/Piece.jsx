@@ -8,16 +8,16 @@ import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
 import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom } from "../GlobalState.jsx";
 import { useParams } from "wouter";
+import { pieceStatus } from "../helpers/helpers.js";
 
 export default function Piece ({
-  position,
-  rotation,
+  position=[0,0,0],
+  rotation=[0,0,0],
   tile,
   team,
   id,
-  scale,
-  animate=false,
-  status
+  scale=1,
+  animate=false
 }) {
 
   const [selection, setSelection] = useAtom(selectionAtom);
@@ -82,14 +82,14 @@ export default function Piece ({
         console.log(`[Piece] selection is null`)
         let pieces;
         let history;
-        if (status === 'home') {
+        if (pieceStatus(tile) === 'home') {
           history = []
-          pieces = [{tile, team, id, history, status}]
+          pieces = [{tile, team, id, history}]
         } else {
           history = tiles[tile][0].history
           pieces = tiles[tile];
         }
-        let legalTiles = getLegalTiles(tile, status, teams[team].moves, teams[team].pieces, history)
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
           socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
           // Set within client for faster response

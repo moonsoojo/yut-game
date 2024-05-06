@@ -1,6 +1,5 @@
 import React from 'react';
 import Tile from './components/Tile'
-import layout from './layout';
 import { animated } from '@react-spring/three';
 import HtmlElement from './HtmlElement';
 import CurvedArrow from './meshes/CurvedArrow';
