@@ -34,7 +34,9 @@ import {
   turnAtom,
   teamsAtom,
   boomTextAtom,
-  initialYootThrowAtom
+  initialYootThrowAtom,
+  legalTilesAtom,
+  tilesAtom
 } from "./GlobalState.jsx";
 import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
@@ -53,6 +55,9 @@ export default function Game() {
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [turn] = useAtom(turnAtom)
+  // To pass to Board
+  const [legalTiles] = useAtom(legalTilesAtom)
+  const [tiles] = useAtom(tilesAtom)
   const params = useParams();
 
   useEffect(() => {
@@ -90,7 +95,7 @@ export default function Game() {
 
   function CurrentPlayer({ position, rotation }) {
     const [teams] = useAtom(teamsAtom)
-    
+
     // If player disconnects, and there's no player remaining in the team,
     // don't display a name
     const player = teams[turn.team].players[turn.players[turn.team]]
@@ -214,6 +219,8 @@ export default function Game() {
           position={[0,0,0]}
           rotation={[0,0,0]}
           scale={0.6}
+          tiles={tiles}
+          legalTiles={legalTiles}
         />
       </animated.group>
       {/* Who Goes First components */}

@@ -66,7 +66,7 @@ export default {
     team: 0,
     players: [0, 0] // list of ints
   },
-  tiles: [
+  initialTiles: [
     [], // { [ { team: int, id: int, tile: int, history: int[] } ] }
     [],
     [],

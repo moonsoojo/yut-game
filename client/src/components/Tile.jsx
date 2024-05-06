@@ -20,9 +20,10 @@ export default function Tile({
   rotation=[0,0,0], 
   scale=1, 
   tile,
-  pieces, 
+  pieces=undefined, 
   mesh,
-  legalTileInfo // If key is not in the object, it's undefined
+  legalTileInfo, // If key is not in the object, it's undefined
+  interactive=false
 }) {
 
   const [selection, setSelection] = useAtom(selectionAtom);
@@ -117,9 +118,9 @@ export default function Tile({
     />}
     <group ref={group}>
       <mesh
-        onPointerEnter={(e) => handlePointerEnter(e)}
-        onPointerLeave={(e) => handlePointerLeave(e)}
-        onPointerDown={(e) => handlePointerDown(e)}
+        onPointerEnter={(e) => { interactive && handlePointerEnter(e) }}
+        onPointerLeave={(e) => { interactive && handlePointerLeave(e) }}
+        onPointerDown={(e) => { interactive && handlePointerDown(e) }}
       >
         <sphereGeometry args={[0.8, 32, 16]} />
         <meshStandardMaterial

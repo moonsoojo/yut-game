@@ -24,6 +24,7 @@ import Stars from './particles/Stars';
 import { socket } from './SocketManager';
 import { clientAtom, deviceAtom } from './GlobalState';
 import Board from './Board';
+import initialState from '../initialState';
 
 export default function Home2() {
 
@@ -198,7 +199,7 @@ export default function Home2() {
       >
         { display === 'board' && <group 
         >
-          <Board/>
+          <Board interactive={false} tiles={initialState.initialTiles} legalTiles={{}}/>
           <Pieces/>
         </group>}
       </group>

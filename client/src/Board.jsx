@@ -30,9 +30,15 @@ function getMeshByTile(tile) {
   }
 }
 
-export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, showStart=false, interactive=false }) {
-  const [tiles] = useAtom(tilesAtom)
-  const [legalTiles] = useAtom(legalTilesAtom)
+export default function Board({ 
+  position=[0,0,0], 
+  rotation=[0,0,0], 
+  scale=1, 
+  tiles, // Must be defined
+  legalTiles, // Must be defined
+  showStart=false, 
+  interactive=false 
+}) {
   const tileRadius = 5
   const NUM_STARS = 20;
   let tileComponents = [];
@@ -52,6 +58,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
         legalTileInfo={legalTiles[i]}
         key={i} 
         mesh={getMeshByTile(i)}
+        interactive={interactive}
       />
     );
   }
@@ -92,6 +99,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           legalTileInfo={legalTiles[indexShortcut1]}
           key={indexShortcut1} 
           mesh={getMeshByTile(indexShortcut1)}
+          interactive={interactive}
         />
       );
       let position2 = [
@@ -110,6 +118,7 @@ export default function Board({ position=[0,0,0], rotation=[0,0,0], scale=1, sho
           legalTileInfo={legalTiles[indexShortcut2]}
           key={indexShortcut2} 
           mesh={getMeshByTile(indexShortcut2)}
+          interactive={interactive}
         />
       );
     }
