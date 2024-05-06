@@ -216,6 +216,7 @@ export default function Yoot({ device }) {
           <meshStandardMaterial 
             transparent 
             opacity={0}
+            depthWrite={false}
           />
         </mesh>
       </RigidBody>

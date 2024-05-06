@@ -12,6 +12,7 @@ import Saturn from './meshes/Saturn';
 import Neptune from './meshes/Neptune';
 import Moon from './meshes/Moon';
 import layout from './layout';
+import Pointer from './meshes/Pointer';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -150,12 +151,16 @@ export default function Board({
         fontSize={layout[device].startEarth.fontSize}
         color='limegreen'
       />
-      <CurvedArrow
+      <mesh
         position={layout[device].startEarth.helperArrow.position}
         rotation={layout[device].startEarth.helperArrow.rotation}
-        color={layout[device].startEarth.helperArrow.color}
         scale={layout[device].startEarth.helperArrow.scale}
-      />
+      >
+        <Pointer
+          color={layout[device].startEarth.helperArrow.color}
+          animate={false}
+        />
+      </mesh>
     </group>}
   </animated.group>;
 }

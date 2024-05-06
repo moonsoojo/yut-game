@@ -6,20 +6,29 @@ import { MeshDistortMaterial } from "@react-three/drei";
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
-export default function Pointer({ position=[0,0,0], rotation=[0,0,0], scale=1, color, opacity=1 }) {
+export default function Pointer({ 
+  position=[0,0,0], 
+  rotation=[0,0,0], 
+  scale=1, 
+  color, 
+  opacity=1,
+  animate=true
+}) {
   const ref = useRef(null);
 
   useFrame((state, delta) => {
-    ref.current.rotation.y = state.clock.elapsedTime
+    if (animate) {
+      ref.current.rotation.y = state.clock.elapsedTime
+    }
   })
 
-  return <animated.mesh 
+  return <mesh 
     ref={ref} 
     receiveShadow 
     position={position} 
     rotation={[Math.PI, 0, 0]}
     scale={scale}>
     <coneGeometry args={[0.1, 0.3, 3]}/>
-    <AnimatedMeshDistortMaterial color={color} transparent opacity={opacity}/>
-  </animated.mesh >
+    <meshBasicMaterial color={color} transparent opacity={opacity}/>
+  </mesh>
 }
