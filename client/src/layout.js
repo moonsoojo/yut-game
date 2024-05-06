@@ -1100,13 +1100,13 @@ export default {
       rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ']
     },
     startEarth: {
-      position: [0.6, 0, 3.6],
+      position: [0.4, 0, 3.6],
       rotation: [-Math.PI/2, 0, 0],
       helperArrow: {
-        position: [1.6,0,3.1],
-        rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/12,0],
+        position: [1, 0, 3.4],
+        rotation: [Math.PI, Math.PI + Math.PI/4 + Math.PI/5, 0],
         color: 'limegreen',
-        scale: [0.2, 0.2, 0.6]
+        scale: [0.15, 0.1, 0.3]
       },
       fontSize: 15,
     },

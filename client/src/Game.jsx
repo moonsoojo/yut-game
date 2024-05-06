@@ -221,6 +221,9 @@ export default function Game() {
           scale={0.6}
           tiles={tiles}
           legalTiles={legalTiles}
+          interactive={true}
+          showStart={true}
+          device={device}
         />
       </animated.group>
       {/* Who Goes First components */}

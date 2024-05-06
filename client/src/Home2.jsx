@@ -197,9 +197,8 @@ export default function Home2() {
         rotation={layout[device].title.tiles.rotation}
         scale={layout[device].title.tiles.scale}
       >
-        { display === 'board' && <group 
-        >
-          <Board interactive={false} tiles={initialState.initialTiles} legalTiles={{}}/>
+        { display === 'board' && <group>
+          <Board showStart={false} interactive={false} tiles={initialState.initialTiles} legalTiles={{}}/>
           <Pieces/>
         </group>}
       </group>

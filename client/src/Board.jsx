@@ -11,6 +11,7 @@ import Mars from './meshes/Mars';
 import Saturn from './meshes/Saturn';
 import Neptune from './meshes/Neptune';
 import Moon from './meshes/Moon';
+import layout from './layout';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -37,7 +38,8 @@ export default function Board({
   tiles, // Must be defined
   legalTiles, // Must be defined
   showStart=false, 
-  interactive=false 
+  interactive=false,
+  device="landscapeDesktop"
 }) {
   const tileRadius = 5
   const NUM_STARS = 20;
@@ -140,7 +142,7 @@ export default function Board({
 
   return <animated.group position={position} rotation={rotation} scale={scale}>
     {tileComponents}
-    {/* {showStart && <group position={[0, 0, 0]} scale={1.67}>
+    {showStart && <group position={[0, 0, 0]} scale={1.67}>
       <HtmlElement
         text="Start"
         position={layout[device].startEarth.position}
@@ -154,6 +156,6 @@ export default function Board({
         color={layout[device].startEarth.helperArrow.color}
         scale={layout[device].startEarth.helperArrow.scale}
       />
-    </group>} */}
+    </group>}
   </animated.group>;
 }
