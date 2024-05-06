@@ -71,7 +71,6 @@ export default function Tile({
   }
 
   function ArrangedPieces({ position, pieces }) {
-
     if (pieces.length === 1) {
       return <group position={position}>
         <Piece position={[0,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
@@ -127,6 +126,7 @@ export default function Tile({
           transparent
           opacity={0}
           ref={wrapperMat}
+          depthWrite={false}
         />
       </mesh>
       {mesh}

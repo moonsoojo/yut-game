@@ -117,9 +117,9 @@ export default function Game() {
         position={[0.5, 0, 0]}
         rotation={[-Math.PI/2,0,0]}
         fontSize={15}
+        color='yellow'
         width={120}
         whiteSpace="nowrap"
-        color='yellow'
         textOverflow='ellipsis'
         overflow='hidden'
       />
@@ -210,10 +210,6 @@ export default function Game() {
         position={layout[device].hostName.position}
         rotation={layout[device].hostName.rotation}
       />
-      { gamePhase === 'game' && <MoveList
-        position={[2, 0, 3.3]}
-        rotation={[-Math.PI/2, 0, 0]}
-      /> }
       <animated.group position={boardPosition} scale={boardScale}>
         <Board 
           position={[0,0,0]}
@@ -271,9 +267,12 @@ export default function Game() {
         initialPosition={[2, 0, 3.2]}
         endingPosition={[3, 0, 3.7]}
       /> }
-      { gamePhase === "game" && <MoveDisplay/> }
+      { gamePhase === 'game' && <MoveList
+        position={[2.5, 0, 3.3]}
+        rotation={[-Math.PI/2, 0, 0]}
+      /> }
       { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-        position={[1.5, 0, 3.7]} 
+        position={[2, 0, 3.7]} 
         rotation={[0,0,0]}
       /> }
     </>

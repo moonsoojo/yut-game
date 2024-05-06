@@ -18,9 +18,13 @@ export default function MoveList({ position, rotation }) {
     }
 
     return <HtmlElement
-        text={'MOVES: ' + prettifiedMoves}
-        position={position}
-        rotation={rotation}
-        fontSize={13}
+      text={'MOVES: ' + prettifiedMoves}
+      position={position}
+      rotation={rotation}
+      fontSize={13}        
+      width={120}
+      whiteSpace="nowrap"
+      textOverflow='ellipsis'
+      overflow='hidden'
     />
 }

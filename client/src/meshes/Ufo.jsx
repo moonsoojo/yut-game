@@ -15,6 +15,19 @@ export default function Ufo({
 }) {
   const { scene, materials } = useGLTF("models/ufo.glb");
 
+  // on load: blip, scale/fade in
+  // blip with particle - check if it cancels meteors
+  // useEffect(() => {
+    // api.start({
+    //   from: {
+    //     x: 0,
+    //   },
+    //   to: {
+    //     x: 100,
+    //   },
+    // })
+  // }, [])
+
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
 
