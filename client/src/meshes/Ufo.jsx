@@ -55,6 +55,7 @@ export default function Ufo({
         ballFrontLeftMatRef.current.color = new THREE.Color('white')
         ballBackRightMatRef.current.color = new THREE.Color('white')
         ballBackLeftMatRef.current.color = new THREE.Color('purple')
+        ufoGlass.current.material.opacity = 0.6
       } else {
         frontBackPanelCircleMat.current.color = new THREE.Color('purple')
         leftRightPanelCircleMat.current.color = new THREE.Color('white')
@@ -62,6 +63,7 @@ export default function Ufo({
         ballFrontLeftMatRef.current.color = new THREE.Color('purple')
         ballBackRightMatRef.current.color = new THREE.Color('purple')
         ballBackLeftMatRef.current.color = new THREE.Color('white')
+        ufoGlass.current.material.opacity = 0.2
       }
     }
   });

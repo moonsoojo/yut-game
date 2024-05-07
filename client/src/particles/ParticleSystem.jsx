@@ -32,8 +32,6 @@ export default function ParticleSystem() {
 
   const system = useRef();
   const emitters = useRef([]);
-
-  // const zone = new PointZone(0, 0);
   
   const colors = new ColorSpan()
   colors.shouldRandomize = true
@@ -41,7 +39,6 @@ export default function ParticleSystem() {
   useEffect(() => {
     system.current = new System();
     const renderer = new SpriteRenderer(scene, THREE);
-    // emitter.current.setRate(new Rate(0, 0)).emit();
 
     system.current.addRenderer(renderer);
     return () => {
@@ -51,7 +48,7 @@ export default function ParticleSystem() {
 
   useEffect(() => {
     if (particleSetting) {
-      // clear first in case it was already populated
+      // Clear the emitters first in case they was already populated
       for (let i = 0; i < emitters.current.length; i++) {
           emitters.current[i].setRate(new Rate(0, 0)).emit();
       }
