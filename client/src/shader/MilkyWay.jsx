@@ -167,14 +167,14 @@ function MilkyWay(props) {
             ref={meshRef}
         >
             <planeGeometry args={[5.5,5.5,32]}/>
-            <shaderMaterial attach="material"{...MaterialMilkyWay} />
+            <shaderMaterial attach="material"{...MaterialMilkyWay} depthWrite={false}/>
                 <mesh
                     ref={secondMeshRef}
                     scale={[3.0, 2.5, 2.5]}
                     position={[0.0, 0.0, -0.3 ]}
                 >
                     <planeGeometry args={[5.5, 5.5, 32]} />
-                    <shaderMaterial attach="material"{...MaterialMilkyWaySecondLayer} />
+                    <shaderMaterial attach="material"{...MaterialMilkyWaySecondLayer} depthWrite={false}/>
                 </mesh>
                 <mesh
                     ref={thirdMeshRef}
@@ -182,7 +182,7 @@ function MilkyWay(props) {
                     position={[0.0, 0.0, -0.1 ]}
                 >
                     <planeGeometry args={[5.5, 5.5, 32]} />
-                    <shaderMaterial attach="material"{...MaterialMilkyWayThirdLayer} />
+                    <shaderMaterial attach="material"{...MaterialMilkyWayThirdLayer} depthWrite={false}/>
                 </mesh>
         </mesh>
       </>

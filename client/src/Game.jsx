@@ -9,7 +9,6 @@ import HtmlElement from "./HtmlElement.jsx";
 import Chatbox from "./Chatbox.jsx";
 import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
-import MoveDisplay from "./MoveDisplay.jsx";
 import MoveAnimation from "./MoveAnimation.jsx";
 import PiecesSection from "./PiecesSection.jsx";
 import Team from "./Team.jsx";
@@ -34,11 +33,9 @@ import {
   turnAtom,
   teamsAtom,
   boomTextAtom,
-  initialYootThrowAtom,
   legalTilesAtom,
   tilesAtom
 } from "./GlobalState.jsx";
-import FloorDotted from "./meshes/FloorDotted.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
 import BoomText from "./BoomText.jsx";

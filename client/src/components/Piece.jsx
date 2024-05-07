@@ -145,9 +145,10 @@ export default function Piece ({
           transparent
           opacity={0}
           ref={wrapperMat}
+          depthWrite={false}
         />
       </mesh>
-      { team == 0 ? <Rocket animate={animate}/> : <Ufo animate={animate}/>}
+      { team === 0 ? <Rocket animate={animate}/> : <Ufo animate={animate}/>}
     </group>
   )      
 };

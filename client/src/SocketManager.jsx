@@ -47,13 +47,6 @@ export const SocketManager = () => {
 
   useEffect(() => {
 
-
-
-
-  }, []);
-
-  useEffect(() => {
-
     console.log("[SocketManager] connect")
 
     socket.connect();
