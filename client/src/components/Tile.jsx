@@ -1,15 +1,18 @@
-import { useRef } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
-import * as THREE from 'three';
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import Rocket from "../meshes/Rocket";
 import Ufo from "../meshes/Ufo";
 import Piece from "./Piece";
+import { animated, useSpring } from '@react-spring/three';
+import * as THREE from 'three';
+import System, { Alpha, Body, Color, Emitter, Life, Mass, PointZone, Position, RadialVelocity, Radius, Rate, Scale, Span, SpriteRenderer, Vector3D } from 'three-nebula';
+
 
 // Pass pieces as children of mesh (like Earth)
 // Score button, Legal tiles and Piece selection are server events
@@ -34,6 +37,44 @@ export default function Tile({
   const group = useRef()
   const wrapperMat = useRef();
 
+  // add spring
+  // add click handler on wrapper
+  // emit particle
+  // use 'api' to animate piece
+  // add emitter to each tile
+
+  // useMemo to re-render when the pieces updates
+  // on render, use 'api' to animate and emit particles on click
+  // pieces should disappear when the animation is triggered again
+
+  const arrangedPieces = useMemo(() => {
+    if (!pieces) {
+      return <></>
+    } else if (pieces.length === 1) {
+      return <group>
+        <Piece position={[0,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 2) {
+      return <group>
+        <Piece position={[-0.3,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[0.3,0,0]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 3) {
+      return <group>
+        <Piece position={[0,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
+      </group>
+    } else if (pieces.length === 4) {
+      return <group>
+        <Piece position={[-0.3,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
+        <Piece position={[0.3,0,-0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[3].team} id={pieces[3].id} scale={1.2}/>
+      </group>
+    }
+  }, [pieces])
+
   function handlePointerEnter(event) {
     event.stopPropagation();
     if (wrapperMat.current) {
@@ -49,6 +90,62 @@ export default function Tile({
     }
     document.body.style.cursor = "default";
   }
+
+  const ufoScale = 1
+  const [springs, api] = useSpring(() => ({
+    from: { 
+      scale: 0
+    },
+  }))
+
+  // Particle Emitter
+  const { scene } = useThree();
+
+  const system = useRef();
+  const emitter = useRef();
+    
+  const col = useRef(new THREE.Color("#4cd3c2"));
+
+  useEffect(() => {
+    function createSprite() {
+      var map = new THREE.TextureLoader().load("./textures/dot.png");
+      var material = new THREE.SpriteMaterial({
+        map: map,
+        color: 0xfffff,
+        blending: THREE.AdditiveBlending,
+        fog: true,
+      });
+      return new THREE.Sprite(material);
+    }
+  
+    system.current = new System();
+    emitter.current = new Emitter();
+    const renderer = new SpriteRenderer(scene, THREE);
+    const zone = new PointZone(0, 0);
+  
+    emitter.current
+    .setRate(new Rate(new Span(4, 4), new Span(0.5)))
+    .setInitializers([
+      new Position(zone),
+      new Mass(1),
+      new Radius(5, 5),
+      new Life(1),
+      new Body(createSprite()),
+    ])
+    .setBehaviours([
+      new Alpha(0.9, 0), 
+      new Scale(0.4, 0.6), 
+      new Color(col.current)
+    ])
+
+    // scale by board scale
+    // fix board scale to 1
+    emitter.current.position.x = position[0] * 0.6
+    emitter.current.position.y = (position[1] + 1) * 0.6
+    emitter.current.position.z = position[2] * 0.6
+  
+    system.current.addEmitter(emitter.current).addRenderer(renderer);
+  }, []);
 
   function handlePointerDown(event) {
     console.log(`[Tile] click`)
@@ -68,32 +165,17 @@ export default function Tile({
       // Set within client for faster response
       setSelection(null)
     }
-  }
 
-  function ArrangedPieces({ position, pieces }) {
-    if (pieces.length === 1) {
-      return <group position={position}>
-        <Piece position={[0,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
-      </group>
-    } else if (pieces.length === 2) {
-      return <group position={position}>
-        <Piece position={[-0.3,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
-        <Piece position={[0.3,0,0]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
-      </group>
-    } else if (pieces.length === 3) {
-      return <group position={position}>
-        <Piece position={[0,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
-        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
-        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
-      </group>
-    } else if (pieces.length === 4) {
-      return <group position={position}>
-        <Piece position={[-0.3,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2}/>
-        <Piece position={[0.3,0,-0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2}/>
-        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2}/>
-        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[3].team} id={pieces[3].id} scale={1.2}/>
-      </group>
-    }
+    emitter.current.emit(2.5);
+    api.start({
+      from: {
+        scale: 0,
+      },
+      to: {
+        scale: ufoScale,
+      },
+      delay: 1000
+    })
   }
 
   useFrame((state) => {
@@ -106,6 +188,8 @@ export default function Tile({
       group.current.scale.y = scale
       group.current.scale.z = scale
     }
+
+    system.current.update();
   })
 
   return <group position={position} rotation={rotation} scale={scale}>
@@ -130,11 +214,14 @@ export default function Tile({
         />
       </mesh>
       {mesh}
-      { pieces && <ArrangedPieces position={[0, 1, 0]} pieces={pieces}/> }
+      {/* { pieces && <ArrangedPieces position={[0, 1, 0]} pieces={pieces}/> } */}
       {/* (gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
         position={[-0.3,6,-1.2]}
         scale={2}
       />*/} 
+      <animated.group position={[0, 1, 0]} scale={springs.scale}>
+        {arrangedPieces}
+      </animated.group>
     </group>
   </group>
 }
