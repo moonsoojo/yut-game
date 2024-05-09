@@ -90,7 +90,6 @@ export default function PiecesSection({
     }
 
     function pieceSelected(pieceId) {
-      console.log(pieceId, selection)
       return selection && selection.pieces[0].tile === -1 && selection.pieces[0].id === pieceId
     }
 

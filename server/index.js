@@ -810,6 +810,10 @@ io.on("connect", async (socket) => {
       }
 
       // Add pieces to the tile
+      pieces.forEach(function(_item, index, array) {
+        array[index].tile = to
+        array[index].history = history
+      })
       operation['$push'][`tiles.${to}`] = { '$each': pieces }
 
       // Remove move
