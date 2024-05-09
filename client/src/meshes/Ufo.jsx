@@ -18,7 +18,7 @@ export default function Ufo({
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
 
-  const ufoGlass = useRef();
+  const glassMat = (new THREE.MeshStandardMaterial({ 'opacity': 0.3, transparent: true, color: 'gray' })).clone()
   const balls = useRef();
   const ufo = useRef();
   const frontBackPanelCircleMat = useRef();
@@ -27,10 +27,6 @@ export default function Ufo({
   const ballFrontLeftMatRef = useRef();
   const ballBackRightMatRef = useRef();
   const ballBackLeftMatRef = useRef();
-
-  useEffect(() => {
-    ufoGlass.current.material.opacity = 0.2;
-  }, []);
 
   useFrame((state, delta) => {
     if (animation === 'selectable') {
@@ -42,7 +38,7 @@ export default function Ufo({
         ballFrontLeftMatRef.current.color = new THREE.Color('white')
         ballBackRightMatRef.current.color = new THREE.Color('white')
         ballBackLeftMatRef.current.color = new THREE.Color('purple')
-        ufoGlass.current.material.opacity = 0.6
+        glassMat.opacity = 0.6
       } else {
         frontBackPanelCircleMat.current.color = new THREE.Color('purple')
         leftRightPanelCircleMat.current.color = new THREE.Color('white')
@@ -50,7 +46,7 @@ export default function Ufo({
         ballFrontLeftMatRef.current.color = new THREE.Color('purple')
         ballBackRightMatRef.current.color = new THREE.Color('purple')
         ballBackLeftMatRef.current.color = new THREE.Color('white')
-        ufoGlass.current.material.opacity = 0.2
+        glassMat.opacity = 0.3
       }
     } else if (animation === 'onBoard') {
       balls.current.rotation.y = state.clock.elapsedTime * 0.7;
@@ -316,10 +312,9 @@ export default function Ufo({
             castShadow
             receiveShadow
             geometry={nodes.Sphere008.geometry}
-            material={materials.Glass}
+            material={glassMat}
             position={[0, 0.33, 0]}
             scale={0.404}
-            ref={ufoGlass}
           />
         </group>
       </animated.group>

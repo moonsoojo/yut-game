@@ -72,12 +72,6 @@ export default function Tile({
     }
   }
 
-  // very lightly animate them
-  // possible values: 'onBoard', 'selectable'
-  // pass animation state to piece
-  // handle each state in its useFrame
-  // rocket: hovering, flame shortly
-  // ufo: hovering, balls spinning slowly
   function ArrangedPieces({ position, pieces }) {
     if (pieces.length === 1) {
       return <group position={position}>

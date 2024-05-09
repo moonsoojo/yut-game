@@ -103,11 +103,13 @@ export default function Game() {
         position={[0, 0, 0]}
         rotation={[0, 0, 0]}
         scale={0.7}
+        animation={null}
       />}
       { turn.team === 1 && <Ufo
         position={[0, 0, 0.2]}
         rotation={[0, 0, 0]}
         scale={0.7}
+        animation={null}
       />}
       <HtmlElement
         text={`${name}`}

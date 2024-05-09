@@ -695,7 +695,7 @@ io.on("connect", async (socket) => {
                   gamePhase: 'game',
                   pregameOutcome: outcome.toString()
                 },
-                $inc: { [`teams.${outcome}.throws`]: 10 },
+                $inc: { [`teams.${outcome}.throws`]: 1 },
               }
             )
           }
