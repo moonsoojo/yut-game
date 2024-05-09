@@ -137,12 +137,10 @@ export const SocketManager = () => {
 
         setHasTurn(false)
 
-        // Selection, Legal tiles
-        // If you have the turn, update the selection within client.
-        // If you don't, update it via the server
-        setSelection(room.selection)
-        setLegalTiles(room.legalTiles)
       }
+
+      setSelection(room.selection)
+      setLegalTiles(room.legalTiles)
 
       setTiles(room.tiles)
     })

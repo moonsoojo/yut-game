@@ -8,7 +8,7 @@ import ParticleSystem from './particles/ParticleSystem';
 import mediaValues from './mediaValues';
 import { useSetAtom } from 'jotai';
 import { deviceAtom } from './GlobalState';
-
+import { Perf } from 'r3f-perf';
 
 export default function App () {
 
@@ -42,7 +42,7 @@ export default function App () {
       } }
       onCreated={ created }
       >
-      {/* <Perf/> */}
+      <Perf/>
       <directionalLight position={ [ 1, 3, 3 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <ParticleSystem/>

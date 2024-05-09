@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAtom } from 'jotai';
-import { clientAtom, teamsAtom } from './GlobalState';
+import { clientAtom, selectionAtom, teamsAtom } from './GlobalState';
 import layout from './layout';
 import Piece from './components/Piece';
 import { pieceStatus } from './helpers/helpers';
@@ -13,6 +13,7 @@ export default function PiecesSection({
 }) {
   const [client] = useAtom(clientAtom)
   const [teams] = useAtom(teamsAtom)
+  const [selection] = useAtom(selectionAtom)
 
   const piecePositions = [
     [0.5, 0, -0.5],
@@ -88,6 +89,11 @@ export default function PiecesSection({
       }
     }
 
+    function pieceSelected(pieceId) {
+      console.log(pieceId, selection)
+      return selection && selection.pieces[0].tile === -1 && selection.pieces[0].id === pieceId
+    }
+
     return (
       <group>
         {
@@ -107,7 +113,8 @@ export default function PiecesSection({
               team={team}
               id={value.id}
               key={index}
-              animate={hasValidMoveHome()}
+              animation={hasValidMoveHome() ? 'selectable' : null}
+              selected={pieceSelected(value.id)}
             />
           )
         }

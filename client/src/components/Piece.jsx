@@ -17,7 +17,8 @@ export default function Piece ({
   team,
   id,
   scale=1,
-  animate=false
+  animation=null,
+  selected=false
 }) {
 
   const [selection, setSelection] = useAtom(selectionAtom);
@@ -33,26 +34,19 @@ export default function Piece ({
   const group = useRef();
   const wrapperMat = useRef();
 
-  // if tile == -1, scale = 1
-  // else, scale = 0.5
-  if (selection != null) {
-    if (selection.tile == -1) {
-      if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
-        scale *= 1.5
-      }
-    } else {
-      if (selection.tile == tile) {
-        scale *= 1.5
-      }
-    }
-  }
-
   useFrame((state, delta) => {
-    if (animate) {
+    if (selected) {
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+    } else if (animation === 'selectable') {
       // Bulging
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.05
+      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+      // Up and down movement
+      group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+    } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
       // Up and down movement
       group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     } else {
@@ -74,6 +68,8 @@ export default function Piece ({
     document.body.style.cursor = "default";
   }
 
+  // Piece selected: bulge
+  // rocket shaking on selected
   function handlePointerDown(event) {
     if (gamePhase === "game" && client.team == team && hasTurn && !yootThrown.flag) {
       console.log(`[Piece] click`)
@@ -121,9 +117,6 @@ export default function Piece ({
     }
   }
 
-  let wrapPosition = team == 0 ? [0, -0.4, 0.4] : [0, 0, 0]
-  position = team == 0 ? [position[0], position[1] + 0.2, position[2]-0.5] : position;
-
   return (
     <group
       position={position}
@@ -133,7 +126,6 @@ export default function Piece ({
     >
       <mesh
         castShadow
-        position={wrapPosition}
         visible={true}
         rotation={[-Math.PI / 4, 0, 0]}
         onPointerDown={(event) => handlePointerDown(event)}
@@ -148,7 +140,7 @@ export default function Piece ({
           depthWrite={false}
         />
       </mesh>
-      { team === 0 ? <Rocket animate={animate}/> : <Ufo animate={animate}/>}
+      { team === 0 ? <Rocket animation={animation}/> : <Ufo animation={animation}/>}
     </group>
   )      
 };

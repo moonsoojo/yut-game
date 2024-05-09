@@ -11,22 +11,9 @@ export default function Ufo({
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1,
-  animate=false
+  animation=null
 }) {
   const { scene, materials } = useGLTF("models/ufo.glb");
-
-  // on load: blip, scale/fade in
-  // blip with particle - check if it cancels meteors
-  // useEffect(() => {
-    // api.start({
-    //   from: {
-    //     x: 0,
-    //   },
-    //   to: {
-    //     x: 100,
-    //   },
-    // })
-  // }, [])
 
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
@@ -46,7 +33,7 @@ export default function Ufo({
   }, []);
 
   useFrame((state, delta) => {
-    if (animate) {
+    if (animation === 'selectable') {
       balls.current.rotation.y = state.clock.elapsedTime * 0.7;
       if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
         frontBackPanelCircleMat.current.color = new THREE.Color('white')
@@ -65,6 +52,8 @@ export default function Ufo({
         ballBackLeftMatRef.current.color = new THREE.Color('white')
         ufoGlass.current.material.opacity = 0.2
       }
+    } else if (animation === 'onBoard') {
+      balls.current.rotation.y = state.clock.elapsedTime * 0.7;
     }
   });
 

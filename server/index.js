@@ -599,6 +599,11 @@ io.on("connect", async (socket) => {
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
           // move = 2;
+          // if (user.team === 0) {
+          //   move = 5;
+          // } else {
+          //   move = 1;
+          // }
           await Room.findOneAndUpdate(
             { 
               _id: roomId, 
@@ -690,7 +695,7 @@ io.on("connect", async (socket) => {
                   gamePhase: 'game',
                   pregameOutcome: outcome.toString()
                 },
-                $inc: { [`teams.${outcome}.throws`]: 1 },
+                $inc: { [`teams.${outcome}.throws`]: 10 },
               }
             )
           }
@@ -759,20 +764,20 @@ io.on("connect", async (socket) => {
     }
   });
 
-  socket.on("move", async ({ roomId, moveInfo, selection }) => {
+  socket.on("move", async ({ roomId, tile }) => {
     try {
       // copy states
       // operate on them
       // set them to room
       const room = await Room.findById(roomId)
-      console.log(`[move] selection`, selection)
+      let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
       let teams = room.teams
-      let from = selection.tile
-      let to = moveInfo.tile
+      let from = room.selection.tile
+      let to = tile
       let moveUsed = moveInfo.move // not scoring
       let history = moveInfo.history
-      let pieces = selection.pieces
+      let pieces = room.selection.pieces
       let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
 
@@ -809,6 +814,10 @@ io.on("connect", async (socket) => {
 
       // Remove move
       operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
+
+      // Clear legal tiles and selection
+      operation['$set']['legalTiles'] = {}
+      operation['$set']['selection'] = null
 
       await Room.findOneAndUpdate(
         { 
