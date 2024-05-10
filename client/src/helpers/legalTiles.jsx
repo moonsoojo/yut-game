@@ -36,6 +36,7 @@ export function getLegalTiles(tile, moves, pieces, history) {
         
         // Initialize path
         let path = pieceStatus(tile) === 'home' ? [] : [tile]
+        // fix path to add tile when you land there, not from when you start
         let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
         history = makeNewHistory(history, destination.path, forward)
 
@@ -45,9 +46,9 @@ export function getLegalTiles(tile, moves, pieces, history) {
             // Initialize array because multiple moves can be used to finish
             legalTiles[29] = []
           }
-          legalTiles[29].push({ tile: destination.tile, move, history })
+          legalTiles[29].push({ tile: destination.tile, move, history, path: destination.path })
         } else {
-          legalTiles[destination.tile] = { tile: destination.tile, move, history }
+          legalTiles[destination.tile] = { tile: destination.tile, move, history, path: destination.path }
         }
       }
     }

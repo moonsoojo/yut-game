@@ -40,6 +40,7 @@ import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
 import BoomText from "./BoomText.jsx";
 import MoveList from "./MoveList.jsx";
+import PiecesOnBoard from "./PiecesOnBoard.jsx";
 
 // There should be no state
 export default function Game() {
@@ -213,7 +214,8 @@ export default function Game() {
         <Board 
           position={[0,0,0]}
           rotation={[0,0,0]}
-          scale={0.6}
+          scale={1}
+          // scale={0.6}
           tiles={tiles}
           legalTiles={legalTiles}
           interactive={true}
@@ -259,6 +261,7 @@ export default function Game() {
         position={layout[device].piecesSection.position}
         device={device}
       />
+      <PiecesOnBoard/>
       {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
         move={lastMove}

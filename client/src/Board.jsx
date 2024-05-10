@@ -66,7 +66,7 @@ export default function Board({
     );
   }
 
-  //shortcuts
+  // Shortcuts
   const radiusShortcut1 = 3.5;
   const radiusShortcut2 = 1.7;
   for (let i = 0; i < NUM_STARS; i++) {

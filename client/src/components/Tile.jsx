@@ -51,8 +51,6 @@ export default function Tile({
   }
 
   function handlePointerDown(event) {
-    console.log(`[Tile] click`)
-    console.log(`[Tile] selection`, selection, `hasTurn`, hasTurn)
     event.stopPropagation();
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
@@ -132,7 +130,7 @@ export default function Tile({
         />
       </mesh>
       {mesh}
-      { pieces && <ArrangedPieces position={[0, 1, 0]} pieces={pieces}/> }
+      {/* { pieces && <ArrangedPieces position={[0, 1, 0]} pieces={pieces}/> } */}
       {/* (gamePhase === "game" && 29 in legalTiles && selection !== null && selection.tile == tile) && <ScoreButton
         position={[-0.3,6,-1.2]}
         scale={2}
