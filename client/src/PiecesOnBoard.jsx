@@ -1,12 +1,13 @@
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo } from 'react';
-import { teamsAtom } from './GlobalState';
+import { pieceTeam0Id1Atom, teamsAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
 
 export default function PiecesOnBoard() {
     const [teams] = useAtom(teamsAtom)
+    const [pieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
 
     const [springs, api] = useSpring(() => {
         from: {
@@ -26,9 +27,9 @@ export default function PiecesOnBoard() {
 
     // state individual to each piece on board
     // memoize piece information and cache it between render
-    const team0Piece1 = useMemo(() => {
+    useEffect(() => {
         // clear path on capture
-        const path = teams[0].pieces[1].lastPath
+        const path = pieceTeam0Id1.lastPath
         // save last move's path in piece
         const toAnimations = path.map((value) => {
             // on score, move to Earth and add an additional animation
@@ -47,7 +48,7 @@ export default function PiecesOnBoard() {
             loop: false
         })
         return toAnimations
-    }, [teams[0].pieces[1].lastPath])
+    }, [pieceTeam0Id1])
 
     useEffect(() => {
 
@@ -77,7 +78,8 @@ export default function PiecesOnBoard() {
             <Piece team={0} id={0}/>
         </animated.group> }
         { teams[0].pieces[1].tile !== -1 && <animated.group position={springs.posTeam0Id1}>
-            <Piece team={0} id={1}/>
+            {/* <Piece team={0} id={1}/> */}
+            {pieceTeam0Id1}
         </animated.group> }
         { teams[0].pieces[2].tile !== -1 && <animated.group position={springs.posTeam0Id2}>
             <Piece team={0} id={2}/>

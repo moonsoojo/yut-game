@@ -28,6 +28,14 @@ export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
+export const pieceTeam0Id0Atom = atom(JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])))
+export const pieceTeam0Id1Atom = atom(JSON.parse(JSON.stringify(initialState.teams[0].pieces[1])))
+export const pieceTeam0Id2Atom = atom(JSON.parse(JSON.stringify(initialState.teams[0].pieces[2])))
+export const pieceTeam0Id3Atom = atom(JSON.parse(JSON.stringify(initialState.teams[0].pieces[3])))
+export const pieceTeam1Id0Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[0])))
+export const pieceTeam1Id1Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[1])))
+export const pieceTeam1Id2Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[2])))
+export const pieceTeam1Id3Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[3])))
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

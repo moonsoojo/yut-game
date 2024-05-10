@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id1Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -44,6 +44,8 @@ export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
   const [_tiles, setTiles] = useAtom(tilesAtom)
+  // Pieces on the board
+  const [_pieceTeam0Id1, setPieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
 
   useEffect(() => {
 
@@ -67,6 +69,15 @@ export const SocketManager = () => {
       setMessages(room.messages)
       setTeams(room.teams)
       setSpectators(room.spectators)
+
+      // Update state of piece on the board
+      setPieceTeam0Id1((oldValue) => {
+        if (oldValue.tile !== room.teams[0].pieces[1].tile) {
+          return room.teams[0].pieces[1]
+        } else {
+          // don't even return a new value
+        }
+      })
 
       // Set host name for display
       if (room.host !== null) {
