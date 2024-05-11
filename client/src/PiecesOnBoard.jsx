@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo } from 'react';
-import { pieceTeam0Id1Atom, teamsAtom } from './GlobalState';
+import { pieceTeam0Id1Atom, pieceTeam0Id2Atom, teamsAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
@@ -8,6 +8,7 @@ import Piece from './components/Piece';
 export default function PiecesOnBoard() {
     const [teams] = useAtom(teamsAtom)
     const [pieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
+    const [pieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
 
     const [springs, api] = useSpring(() => {
         from: {
@@ -28,6 +29,7 @@ export default function PiecesOnBoard() {
     // state individual to each piece on board
     // memoize piece information and cache it between render
     useEffect(() => {
+        console.log(`[PiecesOnBoard] piece team 0 id 1 updated to`, pieceTeam0Id1)
         // clear path on capture
         const path = pieceTeam0Id1.lastPath
         // save last move's path in piece
@@ -41,18 +43,33 @@ export default function PiecesOnBoard() {
                 ]
             }
         })
-        console.log(`[PiecesOnBoard] to animations`, toAnimations)
         api.start({
             from: toAnimations[0],
             to: toAnimations,
             loop: false
         })
-        return toAnimations
     }, [pieceTeam0Id1])
 
     useEffect(() => {
-
-    }, [teams[0].pieces[2]])
+        // clear path on capture
+        const path = pieceTeam0Id2.lastPath
+        // save last move's path in piece
+        const toAnimations = path.map((value) => {
+            // on score, move to Earth and add an additional animation
+            return {
+                posTeam0Id2: [
+                    tilePositions[value][0],
+                    tilePositions[value][1] + 1,
+                    tilePositions[value][2],
+                ]
+            }
+        })
+        api.start({
+            from: toAnimations[0],
+            to: toAnimations,
+            loop: false
+        })
+    }, [pieceTeam0Id2])
 
     useEffect(() => {
 
@@ -78,8 +95,7 @@ export default function PiecesOnBoard() {
             <Piece team={0} id={0}/>
         </animated.group> }
         { teams[0].pieces[1].tile !== -1 && <animated.group position={springs.posTeam0Id1}>
-            {/* <Piece team={0} id={1}/> */}
-            {pieceTeam0Id1}
+            <Piece team={0} id={1}/>
         </animated.group> }
         { teams[0].pieces[2].tile !== -1 && <animated.group position={springs.posTeam0Id2}>
             <Piece team={0} id={2}/>
