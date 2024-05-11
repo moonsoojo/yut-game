@@ -9,6 +9,7 @@ import Ufo from "../meshes/Ufo.jsx";
 import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom } from "../GlobalState.jsx";
 import { useParams } from "wouter";
 import { pieceStatus } from "../helpers/helpers.js";
+import { animated } from "@react-spring/three";
 
 export default function Piece ({
   position=[0,0,0],
@@ -118,7 +119,7 @@ export default function Piece ({
   }
 
   return (
-    <group
+    <animated.group
       position={position}
       rotation={rotation}
       ref={group}
@@ -141,6 +142,6 @@ export default function Piece ({
         />
       </mesh>
       { team === 0 ? <Rocket animation={animation}/> : <Ufo animation={animation}/>}
-    </group>
+    </animated.group>
   )      
 };
