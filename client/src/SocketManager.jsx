@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -44,6 +44,10 @@ export const SocketManager = () => {
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
   const [_tiles, setTiles] = useAtom(tilesAtom)
+  // Pieces on the board
+  const [pieceTeam0Id0, setPieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
+  const [pieceTeam0Id1, setPieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
+  const [pieceTeam0Id2, setPieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
 
   useEffect(() => {
 
@@ -67,6 +71,12 @@ export const SocketManager = () => {
       setMessages(room.messages)
       setTeams(room.teams)
       setSpectators(room.spectators)
+
+      setPieceTeam0Id0(room.teams[0].pieces[0])
+
+      setPieceTeam0Id1(room.teams[0].pieces[1])
+
+      setPieceTeam0Id2(room.teams[0].pieces[2])
 
       // Set host name for display
       if (room.host !== null) {
@@ -137,12 +147,10 @@ export const SocketManager = () => {
 
         setHasTurn(false)
 
-        // Selection, Legal tiles
-        // If you have the turn, update the selection within client.
-        // If you don't, update it via the server
-        setSelection(room.selection)
-        setLegalTiles(room.legalTiles)
       }
+
+      setSelection(room.selection)
+      setLegalTiles(room.legalTiles)
 
       setTiles(room.tiles)
     })

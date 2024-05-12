@@ -61,8 +61,7 @@ const roomSchema = new mongoose.Schema(
         team: Number,
         id: Number,
         history: [Number],
-        // Schema validation prevents assigning "scored" as a piece
-        // (item in array)
+        lastPath: [Number],
         _id: false
       }],
       throws: Number,
@@ -110,6 +109,7 @@ const roomSchema = new mongoose.Schema(
         team: Number,
         id: Number,
         history: [Number],
+        lastPath: [Number],
         _id: false
       }],
     },
@@ -121,6 +121,7 @@ const roomSchema = new mongoose.Schema(
           team: Number,
           id: Number,
           history: [Number],
+          lastPath: [Number],
           _id: false
         }
       ]
@@ -232,10 +233,10 @@ io.on("connect", async (socket) => {
             _id: 0,
             players: [],
             pieces: [
-              { tile: -1, team: 0, id: 0, history: [] },
-              { tile: -1, team: 0, id: 1, history: [] },
-              { tile: -1, team: 0, id: 2, history: [] },
-              { tile: -1, team: 0, id: 3, history: [] },
+              { tile: -1, team: 0, id: 0, history: [], lastPath: [] },
+              { tile: -1, team: 0, id: 1, history: [], lastPath: [] },
+              { tile: -1, team: 0, id: 2, history: [], lastPath: [] },
+              { tile: -1, team: 0, id: 3, history: [], lastPath: [] },
             ],
             moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
@@ -245,10 +246,10 @@ io.on("connect", async (socket) => {
             _id: 1,
             players: [],
             pieces: [
-              { tile: -1, team: 1, id: 0, history: [] },
-              { tile: -1, team: 1, id: 1, history: [] },
-              { tile: -1, team: 1, id: 2, history: [] },
-              { tile: -1, team: 1, id: 3, history: [] },
+              { tile: -1, team: 1, id: 0, history: [], lastPath: [] },
+              { tile: -1, team: 1, id: 1, history: [], lastPath: [] },
+              { tile: -1, team: 1, id: 2, history: [], lastPath: [] },
+              { tile: -1, team: 1, id: 3, history: [], lastPath: [] },
             ],
             moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
@@ -604,6 +605,11 @@ io.on("connect", async (socket) => {
             move = 1
           }
           // move = 2;
+          if (user.team === 0) {
+            move = 5;
+          } else {
+            move = 1;
+          }
           await Room.findOneAndUpdate(
             { 
               _id: roomId, 
@@ -615,7 +621,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = -1;
+          move = 5;
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }
@@ -764,20 +770,21 @@ io.on("connect", async (socket) => {
     }
   });
 
-  socket.on("move", async ({ roomId, moveInfo, selection }) => {
+  socket.on("move", async ({ roomId, tile }) => {
     try {
       // copy states
       // operate on them
       // set them to room
       const room = await Room.findById(roomId)
-      console.log(`[move] selection`, selection)
+      let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
       let teams = room.teams
-      let from = selection.tile
-      let to = moveInfo.tile
+      let from = room.selection.tile
+      let to = tile
       let moveUsed = moveInfo.move // not scoring
+      let path = moveInfo.path
       let history = moveInfo.history
-      let pieces = selection.pieces
+      let pieces = room.selection.pieces
       let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
 
@@ -807,13 +814,24 @@ io.on("connect", async (socket) => {
       if (starting) {
         let piece = pieces[0]
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
       }
 
       // Add pieces to the tile
+      pieces.forEach(function(_item, index, array) {
+        array[index].tile = to
+        array[index].history = history
+        array[index].lastPath = path
+      })
       operation['$push'][`tiles.${to}`] = { '$each': pieces }
 
       // Remove move
       operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
+
+      // Clear legal tiles and selection
+      operation['$set']['legalTiles'] = {}
+      operation['$set']['selection'] = null
 
       await Room.findOneAndUpdate(
         { 

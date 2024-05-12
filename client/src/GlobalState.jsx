@@ -2,6 +2,18 @@ import { atom } from "jotai";
 import initialState from "../initialState";
 import mediaValues from "./mediaValues";
 
+import { atomWithReducer } from 'jotai/utils'
+
+function atomWithCompare(initialValue, areEqual) {
+  return atomWithReducer(initialValue, (prev, next) => {
+    if (areEqual(prev, next)) {
+      return prev
+    }
+
+    return next
+  })
+}
+
 export const joinTeamAtom = atom(null)
 export const disconnectAtom = atom(false)
 export const gamePhaseAtom = atom('lobby'); // lobby, pregame, game, winner
@@ -28,6 +40,44 @@ export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
+export const pieceTeam0Id0Atom = atomWithCompare(
+  JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
+  (prev, next) => {
+    console.log(`[AtomWithCompare] team 0 id 0 prev`, prev, `next`, next)
+    if (prev.tile === next.tile) {
+      return true
+    } else {
+      return false
+    }
+  }
+)
+export const pieceTeam0Id1Atom = atomWithCompare(
+  JSON.parse(JSON.stringify(initialState.teams[0].pieces[1])),
+  (prev, next) => {
+    console.log(`[AtomWithCompare] team 0 id 1 prev`, prev, `next`, next)
+    if (prev.tile === next.tile) {
+      return true
+    } else {
+      return false
+    }
+  }
+)
+export const pieceTeam0Id2Atom = atomWithCompare(
+  JSON.parse(JSON.stringify(initialState.teams[0].pieces[2])),
+  (prev, next) => {
+    console.log(`[AtomWithCompare] team 0 id 2 prev`, prev, `next`, next)
+    if (prev.tile === next.tile) {
+      return true
+    } else {
+      return false
+    }
+  }
+)
+export const pieceTeam0Id3Atom = atom(JSON.parse(JSON.stringify(initialState.teams[0].pieces[3])))
+export const pieceTeam1Id0Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[0])))
+export const pieceTeam1Id1Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[1])))
+export const pieceTeam1Id2Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[2])))
+export const pieceTeam1Id3Atom = atom(JSON.parse(JSON.stringify(initialState.teams[1].pieces[3])))
 
 // Set device
 function initializeDevice(windowWidth, landscapeCutoff) {

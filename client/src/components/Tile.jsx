@@ -148,34 +148,48 @@ export default function Tile({
   }, []);
 
   function handlePointerDown(event) {
-    console.log(`[Tile] click`)
-    console.log(`[Tile] selection`, selection, `hasTurn`, hasTurn)
     event.stopPropagation();
     if (selection && hasTurn) {
       if (selection.tile != tile && legalTileInfo) {
-        // remove callback
-        socket.emit("move", { roomId: params.id, moveInfo: legalTileInfo, selection });
+        // Server clears legalTiles and selection
+        // When they're called separately, the order of operation is not kept
+        socket.emit("move", { roomId: params.id, tile });
+      } else {
+
+        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+        // Set within client for faster response
+        // setLegalTiles({})
+  
+        socket.emit("select", { roomId: params.id, payload: null });
+        // Set within client for faster response
+        // setSelection(null)
       }
-
-      socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-      // Set within client for faster response
-      setLegalTiles({})
-
-      socket.emit("select", { roomId: params.id, payload: null });
-      // Set within client for faster response
-      setSelection(null)
     }
 
-    emitter.current.emit(2.5);
-    api.start({
-      from: {
-        scale: 0,
-      },
-      to: {
-        scale: ufoScale,
-      },
-      delay: 1000
-    })
+  function ArrangedPieces({ position, pieces }) {
+    if (pieces.length === 1) {
+      return <group position={position}>
+        <Piece position={[0,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2} animation={'onBoard'}/>
+      </group>
+    } else if (pieces.length === 2) {
+      return <group position={position}>
+        <Piece position={[-0.3,0,0]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[0.3,0,0]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2} animation={'onBoard'}/>
+      </group>
+    } else if (pieces.length === 3) {
+      return <group position={position}>
+        <Piece position={[0,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2} animation={'onBoard'}/>
+      </group>
+    } else if (pieces.length === 4) {
+      return <group position={position}>
+        <Piece position={[-0.3,0,-0.3]} tile={tile} team={pieces[0].team} id={pieces[0].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[0.3,0,-0.3]} tile={tile} team={pieces[1].team} id={pieces[1].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[-0.3,0,0.3]} tile={tile} team={pieces[2].team} id={pieces[2].id} scale={1.2} animation={'onBoard'}/>
+        <Piece position={[0.3,0,0.3]} tile={tile} team={pieces[3].team} id={pieces[3].id} scale={1.2} animation={'onBoard'}/>
+      </group>
+    }
   }
 
   useFrame((state) => {
