@@ -10,21 +10,21 @@ export default function PiecesOnBoard() {
     const [pieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
     const [pieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
 
-    const [springs0_0, api0_0] = useSpring(() => {
+    const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
-            position: [1,1,0] // Filler values
+            position: [0,0,0] // Filler values
         }
-    })
-    const [springs0_1, api0_1] = useSpring(() => {
+    }))
+    const [springs0_1, api0_1] = useSpring(() => ({        
         from: {
-            position: [2,1,0] // Filler values
+            position: [0,0,0] // Filler values
         }
-    })
-    const [springs0_2, api0_2] = useSpring(() => {
+    }))
+    const [springs0_2, api0_2] = useSpring(() => ({        
         from: {
-            position: [3,1,0] // Filler values
+            position: [0,0,0] // Filler values
         }
-    })
+    }))
 
     useEffect(() => {
     }, [teams[0].pieces[0]])
@@ -35,55 +35,59 @@ export default function PiecesOnBoard() {
         console.log(`[PiecesOnBoard] piece team 0 id 1 updated to`, pieceTeam0Id1)
         // clear path on capture
         const path = pieceTeam0Id1.lastPath
-        // save last move's path in piece
-        const toAnimations = path.map((value) => {
-            // on score, move to Earth and add an additional animation
-            return {
-                position: [
-                    tilePositions[value][0],
-                    tilePositions[value][1] + 1,
-                    tilePositions[value][2],
-                ],
-                config: {
-                    tension: 170,
-                    friction: 26
+        if (path.length > 0) {
+            // save last move's path in piece
+            const toAnimations = path.map((value) => {
+                // on score, move to Earth and add an additional animation
+                return {
+                    position: [
+                        tilePositions[value][0],
+                        tilePositions[value][1] + 1,
+                        tilePositions[value][2],
+                    ],
+                    config: {
+                        tension: 170,
+                        friction: 26
+                    }
                 }
-            }
-        })
-        api0_1.start({
-            from: {
-                position: [0,1,0],
-            },
-            to: toAnimations,
-            loop: false
-        })
+            })
+            api0_1.start({
+                from: {
+                    position: toAnimations[0].position,
+                },
+                to: toAnimations,
+                loop: false
+            })
+        }
     }, [pieceTeam0Id1])
 
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam0Id2.lastPath
-        // save last move's path in piece
-        const toAnimations = path.map((value) => {
-            // on score, move to Earth and add an additional animation
-            return {
-                position: [
-                    tilePositions[value][0],
-                    tilePositions[value][1] + 1,
-                    tilePositions[value][2],
-                ],
-                config: {
-                    tension: 170,
-                    friction: 26
+        if (path.length > 0) {
+            // save last move's path in piece
+            const toAnimations = path.map((value) => {
+                // on score, move to Earth and add an additional animation
+                return {
+                    position: [
+                        tilePositions[value][0],
+                        tilePositions[value][1] + 1,
+                        tilePositions[value][2],
+                    ],
+                    config: {
+                        tension: 170,
+                        friction: 26
+                    }
                 }
-            }
-        })
-        api0_2.start({
-            from: {
-                position: [0,1,0],
-            },
-            to: toAnimations,
-            loop: false
-        })
+            })
+            api0_2.start({
+                from: {
+                    position: toAnimations[0].position,
+                },
+                to: toAnimations,
+                loop: false
+            })
+        }
     }, [pieceTeam0Id2])
 
     useEffect(() => {

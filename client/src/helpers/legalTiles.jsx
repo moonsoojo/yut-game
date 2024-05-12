@@ -114,11 +114,12 @@ function getStartAndEndVertices(forward) {
 }
 
 function getDestination(tile, steps, forward, path) {
+  
+  path.push(tile)
   if (steps == 0 || tile == 29) {
     return { tile, path }
   }
   
-  path.push(tile)
   let [start, end] = getStartAndEndVertices(forward);
   for (const edge of edgeList) {
     if (edge[start] === tile) {

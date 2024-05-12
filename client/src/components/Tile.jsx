@@ -165,6 +165,7 @@ export default function Tile({
         // setSelection(null)
       }
     }
+  }
 
   function ArrangedPieces({ position, pieces }) {
     if (pieces.length === 1) {
