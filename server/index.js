@@ -430,9 +430,9 @@ io.on("connect", async (socket) => {
         rotation: initialYootRotations[i],
         yImpulse: generateRandomNumberInRange(2, 0.4),
         torqueImpulse: {
-          x: generateRandomNumberInRange(0.1, 0.05),
-          y: generateRandomNumberInRange(0.3, 0.1), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.035, 0.02), // Spins through the middle axis
+          x: generateRandomNumberInRange(1, 0.5),
+          y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.3, 0.2), // Spins through the middle axis
         },
       });
     }

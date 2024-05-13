@@ -23,9 +23,6 @@ export default {
       zoomMax: 55,
       position: [0,20,3],
     },
-    yootButton: {
-      position: [2.8,0,6.9]
-    },
     title: {
       position: [0,0,0],
       rotation: [0,0,0],
@@ -331,7 +328,7 @@ export default {
         fontSize: 15
       },
       pregameRoll: {
-        position: [1.8, 0, 0.5],
+        position: [2, 0, 0.5],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       }
@@ -362,6 +359,19 @@ export default {
         position: [1.8, 0, 0.5],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
+      }
+    },
+    whoGoesFirst: {
+      title: {
+        position: [-4.5, 0, -5.8],
+        rotation: [-Math.PI/2,0,0],
+        fontSize: 35
+      },
+      description: {
+        position: [-4.5, 0, -4.5],
+        rotation: [-Math.PI/2,0,0],
+        fontSize: 20,
+        width: 330
       }
     },
     joinTeamModal: {
@@ -578,6 +588,7 @@ export default {
     throwButton: {
       position: [2.2, 0, 6.5],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      scale: 0.8
     },
     throwButtonOrder: {
       position: [-4, 0, 11.5],
@@ -719,8 +730,6 @@ export default {
         rotation: [0,0,0],
         fontSize: 20,
         scale: 3.6,
-      },
-      board: {
       },
       tiles: {
         position: [0, 0, -4],
@@ -996,60 +1005,100 @@ export default {
     },
     team0: {
       scale: 1,
-      position: [-8, 0, -3.5],
+      position: [-11, 0, -5.7],
       title: {
         position: [0,0,0],
         rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 20
       },
       pieces: {
-        position: [0.23, 0, 0.6]
+        position: [0.23, 0, 0.6],
+        positionStartX: 0,
+        positionStartY: 0,
+        positionStartZ: 0.8,
+        rotation: [0, 0, 0],
+        scale: 1.2,
+        space: 1,
       },
       names: {
-        position: [0, 0, 1],
+        position: [0, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
+        fontSize: 20,
         padding: '0px 15px 0px 0px',
         divWidth: 200
       },
       join: {
-        position: [2, 0, 0.15],
+        position: [2.3, 0, 0.65],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
       pregameRoll: {
-        position: [1.8, 0, 0.5],
+        position: [2.1, 0, 0.5],
         rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
+        fontSize: 20
       }
     },
     team1: {
       scale: 1,
-      position: [-8, 0, -1],
+      position: [-11, 0, -1],
       title: {
         position: [0,0,0],
         rotation: [-Math.PI / 2, 0, 0],
+        fontSize: 20
       },
       pieces: {
-        position: [0.3, 0, 0.5]
+        position: [0.23, 0, 0.6],
+        positionStartX: 0,
+        positionStartY: 0,
+        positionStartZ: 0.8,
+        rotation: [0, 0, 0],
+        scale: 1.2,
+        space: 1.2,
       },
       names: {
-        position: [0, 0, 1],
+        position: [0, 0, 1.2],
         rotation: [-Math.PI/2, 0, 0],
+        fontSize: 20,
         padding: '0px 15px 0px 0px',
         divWidth: 200
       },
       join: {
-        position: [2, 0, 0.15],
+        position: [2.5, 0, 0.7],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
       pregameRoll: {
-        position: [1.8, 0, 0.5],
+        position: [2.5, 0, 0.6],
         rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
+        fontSize: 20
       }
     },
-    yootButton: {
-      position: [5.8,0,3.2]
+    whoGoesFirst: {
+      title: {
+        position: [-4.5, 0, -5.8],
+        rotation: [-Math.PI/2,0,0],
+        fontSize: 35
+      },
+      description: {
+        position: [-4.5, 0, -4.5],
+        rotation: [-Math.PI/2,0,0],
+        fontSize: 20,
+        width: 330
+      }
+    },
+    board: {
+      lobby: {
+        scale: 1,
+        position: [0, 0, 0]
+      },
+      pregame: {
+        scale: 0.2,
+        position: [5.5, 0, -3.4]
+      },
+      game: {
+        scale: 1,
+        position: [0, 0, 0]
+      }
     },
     gamePhase: {
       position: [5, 0, -2],
@@ -1062,19 +1111,32 @@ export default {
       fontSize: 13,
     },
     settings: {
-      position: [5, 0, -3.5],
+      position: [8, 0, -5.5],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 15,
+      fontSize: 20,
     },
     rulebookButton: {
-      position: [5, 0, -2.8],
+      position: [8, 0, -4.6],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 15,
+      fontSize: 20,
     },
     hostName: {
-      position: [5, 0, -2.1],
+      position: [8, 0, -3.8],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
+      fontSize: 20,
+    },
+    piecesSection: {
+      position: [8, 0, -0.5],
+      pieces: {
+        rotation: [0, 0, 0],
+        positions: [
+          [0.5, 0, -0.5],
+          [1.8, 0, -0.5],
+          [0.5, 0, 0.7],
+          [1.8, 0, 0.7]
+        ],
+        scale: 1.4
+      }
     },
     throwCount: {
       position: [5, 0, -1.5],
@@ -1091,13 +1153,10 @@ export default {
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 15
     },
-    piecesSection: {
-      position: [4.7, 0, 0.5],
-      scale: 1
-    },
     practiceThrowButton: {
-      position: [5, 0, 1.7],
-      rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ']
+      position: [8, 0, 1.2],
+      rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ'],
+      fontSize: 20
     },
     startEarth: {
       position: [0.4, 0, 3.2],
@@ -1111,9 +1170,9 @@ export default {
       fontSize: 15,
     },
     letsPlayButton: {
-      position: [5,0,3],
+      position: [8,0,2.8],
       rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15,
+      fontSize: 20,
     },
     startTip: {
       position: [5, 0, 2],
@@ -1151,24 +1210,6 @@ export default {
     },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
-    chat: {
-      position: [-8,0,2],
-      rotation: [-Math.PI/2, 0, 0],
-      scale: [0.5, 0.5, 0.5],
-      box: {
-        borderRadius: '5px',
-        height: '110px',
-        width: '350px',
-        padding: '10px',
-        fontSize: '20px',
-      },
-      input: {
-        height: '10px',
-        borderRadius: '5px',
-        padding: '10px',
-        border: 0,
-      }
-    },
     joinTeamModal: {
       position: [-2.5, 0, -1.5],
       rotation: [-Math.PI/2, 0, 0],
@@ -1193,14 +1234,32 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-8, 0, 1.35],
+      position: [-11, 0, 3],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15
     },
     discord: {
-      position: [-6.7, 0, 1.35],
+      position: [-9.7, 0, 3],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 15
+    },
+    chat: {
+      position: [-11,0,3.7],
+      rotation: [-Math.PI/2, 0, 0],
+      scale: [0.5, 0.5, 0.5],
+      box: {
+        borderRadius: '5px',
+        height: '130px',
+        width: '380px',
+        padding: '10px',
+        fontSize: '20px',
+      },
+      input: {
+        height: '10px',
+        borderRadius: '5px',
+        padding: '10px',
+        border: 0,
+      }
     },
     moves: {
       text: {
@@ -1245,22 +1304,6 @@ export default {
       rocketScale: 0.4,
       ufoScale: 0.2,
     },
-    homePieces: {
-      0: {
-        positionStartX: -11.5,
-        positionStartY: 0,
-        positionStartZ: 6,
-        space: 0.8,
-        rotation: [0, 0, 0],
-      },
-      1: {
-        positionStartX: -8,
-        positionStartY: 0,
-        positionStartZ: 6,
-        space: 0.8,
-        rotation: [0, 0, 0],
-      },
-    },
     startGameBanner: {
       position: [6, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -1273,9 +1316,28 @@ export default {
       position: [6, 0, 4],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
+    moveAnimation: {
+      initialScale: 0.3,
+      initialPosition: [4.5, 0, 3.8],
+      endingPosition: [6.2, 0, 6],
+      fontSize: 1
+    },
+    moveList: {
+      position: [4.5, 0, 5.5],
+      rotation: [-Math.PI/2, 0, 0],
+      fontSize: 20,
+      width: 180
+    },
+    currentPlayer: {
+      position: [5, 0, 5],
+      rotation: [0,0,0],
+      fontSize: 20,
+      width: 120
+    },
     throwButton: {
-      position: [5.8, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      position: [9, 0, 3],
+      rotation: [0, Math.PI/2, 0],
+      scale: 1
     },
     throwButtonOrder: {
       position: [6, 0, 5],
@@ -1389,9 +1451,6 @@ export default {
       zoomMax: 40,
       position: [-5.3, 25, 1.5],
       lookAtOffset: [0, 0, 0]
-    },
-    yootButton: {
-      position: [5,0,2.5]
     },
     title: {
       position1: [-13.5, 0, -5.5],
@@ -1507,8 +1566,11 @@ export default {
       position: [-1.2, 0, -1]
     },
     piecesSection: {
-      position: [1, 0, -2],
-      scale: 0.8
+      position: [1.2, 0, -2],
+      scale: 0.8,
+      pieces: {
+        rotation: [-Math.PI / 2, 0, 0, "XZY"],
+      }
     },
     actionButtons: {
       position: [1.5, 0, 0],

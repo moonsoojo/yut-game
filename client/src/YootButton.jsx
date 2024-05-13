@@ -34,13 +34,13 @@ export default function YootButton({
 
   useFrame((state, delta) => {
     if (yootActive) {
-      buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
-      buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
-      buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + 0.8
+      buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
+      buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
+      buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
     } else {
-      buttonRef.current.scale.x = 0.8
-      buttonRef.current.scale.y = 0.8
-      buttonRef.current.scale.z = 0.8
+      buttonRef.current.scale.x = scale
+      buttonRef.current.scale.y = scale
+      buttonRef.current.scale.z = scale
     }
   })
 
@@ -60,7 +60,7 @@ export default function YootButton({
   return <group 
     position={position} 
     rotation={rotation} 
-    scale={scale} 
+    // scale={scale} 
     ref={buttonRef}
   >
     <group>

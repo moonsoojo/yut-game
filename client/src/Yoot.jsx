@@ -189,13 +189,13 @@ export default function Yoot({ device }) {
       <RigidBody
         type="fixed"
         restitution={0.01}
-        position={[0, 1.5, 0]}
+        position={[0, 1.5, 2]}
         friction={0.9}
       >
         {/* Height has to be thick enough for Yoot to not fall through the collider */}
-        <CuboidCollider args={[6, 0.5, 6]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[8, 0.5, 8]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[12, 1, 12]} />
+          <boxGeometry args={[16, 1, 16]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
@@ -233,7 +233,7 @@ export default function Yoot({ device }) {
             linearDamping={0.3}
             angularDamping={0.1} // when this value is high, yoots spin more
             scale={0.15}
-            gravityScale={3.5}
+            gravityScale={7}
             key={index}
             onSleep={onSleepHandler}
             userData={index != 0 ? "regular" : "backdo"} // tried setting this as an object. it woke up the object when it fell asleep
@@ -245,7 +245,7 @@ export default function Yoot({ device }) {
                 geometry={nodes.Cylinder007.geometry}
                 material={materials["Texture wrap.005"]}
                 rotation={[0, 0, -Math.PI / 2]}
-                scale={[1.5, 9, 1.51]}
+                scale={[2.5, 14, 2.5]}
                 ref={yootMeshes[index]}
               />
             ) : (
@@ -256,7 +256,7 @@ export default function Yoot({ device }) {
                 material={materialsRhino["Texture wrap.005"]}
                 ref={yootMeshes[index]}
                 rotation={[0, 0, -Math.PI / 2]} 
-                scale={[1.5, 9, 1.51]}
+                scale={[2.5, 14, 2.5]}
               />
             )}
           </RigidBody>
@@ -265,12 +265,13 @@ export default function Yoot({ device }) {
       { gamePhase === 'lobby' && <PracticeYootButton
         position={layout[device].practiceThrowButton.position}
         rotation={layout[device].practiceThrowButton.rotation}
-        scale={0.8}
+        fontSize={layout[device].practiceThrowButton.fontSize}
+        scale={1}
       />}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
         position={layout[device].throwButton.position}
-        rotation={[0, Math.PI/2, 0]}
-        scale={0.8}
+        rotation={layout[device].throwButton.rotation}
+        scale={layout[device].throwButton.scale}
       />}
     </Physics>
   );

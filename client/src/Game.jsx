@@ -62,7 +62,7 @@ export default function Game() {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
-  function LetsPlayButton({ position, rotation, device }) {
+  function LetsPlayButton({ position, rotation, fontSize, device }) {
     const [readyToStart] = useAtom(readyToStartAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
 
@@ -75,7 +75,7 @@ export default function Game() {
         text={'lets play!'}
         position={position}
         rotation={rotation}
-        fontSize={layout[device].letsPlayButton.fontSize}
+        fontSize={fontSize}
         handleClick={handleLetsPlay}
       /> }
     </>
@@ -91,7 +91,7 @@ export default function Game() {
     />
   }
 
-  function CurrentPlayer({ position, rotation }) {
+  function CurrentPlayer({ position, rotation, fontSize, width, pieceScale }) {
     const [teams] = useAtom(teamsAtom)
 
     // If player disconnects, and there's no player remaining in the team,
@@ -103,22 +103,22 @@ export default function Game() {
       { turn.team === 0 && <Rocket
         position={[0, 0, 0]}
         rotation={[0, 0, 0]}
-        scale={0.7}
+        scale={pieceScale}
         animation={null}
       />}
       { turn.team === 1 && <Ufo
         position={[0, 0, 0.2]}
         rotation={[0, 0, 0]}
-        scale={0.7}
+        scale={pieceScale}
         animation={null}
       />}
       <HtmlElement
         text={`${name}`}
-        position={[0.5, 0, 0]}
+        position={[0.6, 0, -0.2]}
         rotation={[-Math.PI/2,0,0]}
-        fontSize={15}
+        fontSize={fontSize}
         color='yellow'
-        width={120}
+        width={width}
         whiteSpace="nowrap"
         textOverflow='ellipsis'
         overflow='hidden'
@@ -144,8 +144,8 @@ export default function Game() {
 
   // Animations
   const { boardScale, boardPosition } = useSpring({
-    boardScale: gamePhase === "pregame" ? 0.2 : 1,
-    boardPosition: gamePhase === "pregame" ? [4, 0, -2.9] : [0, 0, 0]
+    boardScale: layout[device].board[gamePhase].scale,
+    boardPosition: layout[device].board[gamePhase].position
   })
 
   // UI prop guideline
@@ -204,6 +204,7 @@ export default function Game() {
       <LetsPlayButton
         position={layout[device].letsPlayButton.position}
         rotation={layout[device].letsPlayButton.rotation}
+        fontSize={layout[device].letsPlayButton.fontSize}
         device={device}
       />
       <Host
@@ -227,17 +228,17 @@ export default function Game() {
       { gamePhase === "pregame" && <group>
         <HtmlElement
           text={`Who goes first?`}
-          position={[-2.5, 0, -3.5]}
-          rotation={[-Math.PI/2,0,0]}
-          fontSize={25}
+          position={layout[device].whoGoesFirst.title.position}
+          rotation={layout[device].whoGoesFirst.title.rotation}
+          fontSize={layout[device].whoGoesFirst.title.fontSize}
         />
         <HtmlElement
           text={`One player from each team throws the yoot.
           The team with a higher number goes first.`}
-          position={[-2.5, 0, -2.5]}
-          rotation={[-Math.PI/2,0,0]}
-          fontSize={15}
-          width={240}
+          position={layout[device].whoGoesFirst.description.position}
+          rotation={layout[device].whoGoesFirst.description.rotation}
+          fontSize={layout[device].whoGoesFirst.description.fontSize}
+          width={layout[device].whoGoesFirst.description.width}
           whiteSpace="normal"
           color='limegreen'
         />
@@ -265,17 +266,21 @@ export default function Game() {
       {/* Conditionally render to activate animation on state change */}
       { lastMove && <MoveAnimation 
         move={lastMove}
-        initialScale={0.3}
-        initialPosition={[2, 0, 3.2]}
-        endingPosition={[3, 0, 3.7]}
+        initialScale={layout[device].moveAnimation.initialScale}
+        initialPosition={layout[device].moveAnimation.initialPosition}
+        endingPosition={layout[device].moveAnimation.endingPosition}
+        fontSize={layout[device].moveAnimation.fontSize}
       /> }
       { gamePhase === 'game' && <MoveList
-        position={[2.5, 0, 3.3]}
-        rotation={[-Math.PI/2, 0, 0]}
+        position={layout[device].moveList.position}
+        rotation={layout[device].moveList.rotation}
+        fontSize={layout[device].moveList.fontSize}
+        width={layout[device].moveList.width}
       /> }
       { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-        position={[2, 0, 3.7]} 
-        rotation={[0,0,0]}
+        position={layout[device].currentPlayer.position} 
+        rotation={layout[device].currentPlayer.rotation}
+        fontSize={layout[device].currentPlayer.fontSize}
       /> }
     </>
   );

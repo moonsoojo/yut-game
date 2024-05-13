@@ -4,10 +4,17 @@ import { useSpring, animated } from '@react-spring/three';
 import { lastMoveAtom } from './GlobalState';
 import { Text3D } from '@react-three/drei';
 
-export default function MoveAnimation({ move, initialPosition, endingPosition, initialScale }) {
+export default function MoveAnimation({ 
+  move, 
+  initialPosition, 
+  endingPosition, 
+  initialScale,
+  fontSize
+}) {
   
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
 
+  // const displayTime = 100000
   const displayTime = 3000
   const springs = useSpring({
     from: {
@@ -37,7 +44,7 @@ export default function MoveAnimation({ move, initialPosition, endingPosition, i
     <Text3D
       rotation={[-Math.PI/2,0,0]}
       font="/fonts/Luckiest Guy_Regular.json"
-      size={1}
+      size={fontSize}
       height={0.01}
     >
       Move: {move}

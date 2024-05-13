@@ -29,10 +29,10 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function HomePieces({position, scale=1}) {
-    let space = layout[device].homePieces[team].space;
-    let positionStartX = 0
-    let positionStartY = 0
-    let positionStartZ = 0.5
+    let space = layout[device][`team${team}`].pieces.space;
+    let positionStartX = layout[device][`team${team}`].pieces.positionStartX;
+    let positionStartY = layout[device][`team${team}`].pieces.positionStartY;
+    let positionStartZ = layout[device][`team${team}`].pieces.positionStartZ;
 
     return (
       <group position={position} scale={scale}>
@@ -67,8 +67,8 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
                 positionStartY,
                 positionStartZ,
               ]}
-              rotation={layout[device].homePieces[team].rotation}
-              scale={1}
+              rotation={layout[device][`team${team}`].pieces.rotation}
+              scale={layout[device][`team${team}`].pieces.scale}
               keyName={`count${index}`}
               tile={-1}
               team={team}
@@ -126,7 +126,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
           style={{
               color: "yellow",
               fontFamily: 'Luckiest Guy',
-              fontSize: '15px',
+              fontSize: layout[device][`team${team}`].names.fontSize,
               padding: layout[device][`team${team}`].names.padding
           }}
           key={index}
@@ -144,9 +144,10 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   >
     {/* team name */}
     <HtmlElement
-      text={ team === 0 ? "Rockets" : "UFOs" }
+      text={ team === 0 ? "Team Rockets" : "Team UFOs" }
       position={layout[device][`team${team}`].title.position}
       rotation={layout[device][`team${team}`].title.rotation}
+      fontSize={layout[device][`team${team}`].title.fontSize}
       color={ team === 0 ? "red" : "turquoise" }
     />
     {/* join button */}

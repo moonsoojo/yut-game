@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { displayMovesAtom } from './GlobalState';
 // import moveToText from './moveToText';
 
-export default function MoveList({ position, rotation }) {
+export default function MoveList({ position, rotation, fontSize, width }) {
     const [moves] = useAtom(displayMovesAtom)
     let prettifiedMoves = ""
     for (let move in moves) {
@@ -21,8 +21,8 @@ export default function MoveList({ position, rotation }) {
       text={'MOVES: ' + prettifiedMoves}
       position={position}
       rotation={rotation}
-      fontSize={13}        
-      width={120}
+      fontSize={fontSize}        
+      width={width}
       whiteSpace="nowrap"
       textOverflow='ellipsis'
       overflow='hidden'

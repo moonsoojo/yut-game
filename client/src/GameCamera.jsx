@@ -10,7 +10,7 @@ function calcZoom() {
     const newZoom = zoomMax * (window.innerWidth / mediaValues.landscapeCutoff)
     return newZoom
   } else {
-    const zoomMin = 30;
+    const zoomMin = 23;
     const newZoom = window.innerWidth * (zoomMin / mediaValues.landscapeCutoff)
     return newZoom
   }
