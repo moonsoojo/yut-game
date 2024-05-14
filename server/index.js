@@ -406,7 +406,7 @@ io.on("connect", async (socket) => {
       // get team
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
-          [`teams.${randomTeam}.throws`]: 10,
+          [`teams.${randomTeam}.throws`]: 1,
         }
       })
     } catch (err) {
@@ -701,7 +701,7 @@ io.on("connect", async (socket) => {
                   gamePhase: 'game',
                   pregameOutcome: outcome.toString()
                 },
-                $inc: { [`teams.${outcome}.throws`]: 1 },
+                $inc: { [`teams.${outcome}.throws`]: 10 },
               }
             )
           }

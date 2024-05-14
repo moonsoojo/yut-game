@@ -1234,17 +1234,17 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-11, 0, 3],
+      position: [-11, 0, 2.7],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 15
+      fontSize: 20
     },
     discord: {
-      position: [-9.7, 0, 3],
+      position: [-9.3, 0, 2.7],
       rotation: [-Math.PI/2, 0, 0],
-      fontSize: 15
+      fontSize: 20
     },
     chat: {
-      position: [-11,0,3.7],
+      position: [-11,0,3.5],
       rotation: [-Math.PI/2, 0, 0],
       scale: [0.5, 0.5, 0.5],
       box: {
@@ -1255,7 +1255,8 @@ export default {
         fontSize: '20px',
       },
       input: {
-        height: '10px',
+        height: '15px',
+        fontSize: '20px',
         borderRadius: '5px',
         padding: '10px',
         border: 0,

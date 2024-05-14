@@ -36,6 +36,33 @@ export default function PiecesOnBoard() {
             position: [0,0,0] // Filler values
         }
     }))
+    const [springs1_0, api1_0] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
+    const [springs1_1, api1_1] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
+    const [springs1_2, api1_2] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
+    const [springs1_3, api1_3] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
+
+    const idOffsets = [
+        [-0.3, 0, -0.3],
+        [0.3, 0, -0.3],
+        [-0.3, 0, 0.3],
+        [0.3, 0, 0.3],
+    ]
 
     useEffect(() => {
         // clear path on capture
@@ -46,9 +73,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[0][0],
+                        tilePositions[value][1] + 1 + idOffsets[0][1],
+                        tilePositions[value][2] + idOffsets[0][2],
                     ],
                     config: {
                         tension: 170,
@@ -64,7 +91,7 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[0].pieces[0]])
+    }, [pieceTeam0Id0])
 
     useEffect(() => {
         // clear path on capture
@@ -75,9 +102,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[1][0],
+                        tilePositions[value][1] + 1 + idOffsets[1][1],
+                        tilePositions[value][2] + idOffsets[1][2],
                     ],
                     config: {
                         tension: 170,
@@ -104,9 +131,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[2][0],
+                        tilePositions[value][1] + 1 + idOffsets[2][1],
+                        tilePositions[value][2] + idOffsets[2][2],
                     ],
                     config: {
                         tension: 170,
@@ -124,6 +151,8 @@ export default function PiecesOnBoard() {
         }
     }, [pieceTeam0Id2])
 
+    // stuck in the moon
+    // all other pieces move into their locations on the tiles
     useEffect(() => {        
         // clear path on capture
         const path = pieceTeam0Id3.lastPath
@@ -133,9 +162,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[3][0],
+                        tilePositions[value][1] + 1 + idOffsets[3][1],
+                        tilePositions[value][2] + idOffsets[3][2],
                     ],
                     config: {
                         tension: 170,
@@ -151,7 +180,7 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[0].pieces[3]])
+    }, [pieceTeam0Id3])
 
     useEffect(() => {        
         // clear path on capture
@@ -162,9 +191,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[0][0],
+                        tilePositions[value][1] + 1 + idOffsets[0][1],
+                        tilePositions[value][2] + idOffsets[0][2],
                     ],
                     config: {
                         tension: 170,
@@ -180,7 +209,7 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[1].pieces[0]])
+    }, [pieceTeam1Id0])
 
     useEffect(() => {
         // clear path on capture
@@ -191,9 +220,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[1][0],
+                        tilePositions[value][1] + 1 + idOffsets[1][1],
+                        tilePositions[value][2] + idOffsets[1][2],
                     ],
                     config: {
                         tension: 170,
@@ -209,7 +238,7 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[1].pieces[1]])
+    }, [pieceTeam1Id1])
 
     useEffect(() => {
         // clear path on capture
@@ -220,9 +249,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[2][0],
+                        tilePositions[value][1] + 1 + idOffsets[2][1],
+                        tilePositions[value][2] + idOffsets[2][2],
                     ],
                     config: {
                         tension: 170,
@@ -238,7 +267,7 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[1].pieces[2]])
+    }, [pieceTeam1Id2])
 
     useEffect(() => {
         // clear path on capture
@@ -249,9 +278,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0],
-                        tilePositions[value][1] + 1,
-                        tilePositions[value][2],
+                        tilePositions[value][0] + idOffsets[3][0],
+                        tilePositions[value][1] + 1 + idOffsets[3][1],
+                        tilePositions[value][2] + idOffsets[3][2],
                     ],
                     config: {
                         tension: 170,
@@ -267,23 +296,16 @@ export default function PiecesOnBoard() {
                 loop: false
             })
         }
-    }, [teams[1].pieces[3]])
+    }, [pieceTeam1Id3])
+
     return <>
         { teams[0].pieces[0].tile !== -1 && <Piece team={0} id={0} position={springs0_0.position}/> }
         { teams[0].pieces[1].tile !== -1 && <Piece team={0} id={1} position={springs0_1.position}/> }
         { teams[0].pieces[2].tile !== -1 && <Piece team={0} id={2} position={springs0_2.position}/> }
         { teams[0].pieces[3].tile !== -1 && <Piece team={0} id={3} position={springs0_3.position}/> }
-        { teams[1].pieces[0].tile !== -1 && <animated.group position={springs.posTeam1Id0}>
-            <Piece team={1} id={0}/>
-        </animated.group> }
-        { teams[1].pieces[1].tile !== -1 && <animated.group position={springs.posTeam1Id1}>
-            <Piece team={1} id={1}/>
-        </animated.group> }
-        { teams[1].pieces[2].tile !== -1 && <animated.group position={springs.posTeam1Id2}>
-            <Piece team={1} id={2}/>
-        </animated.group> }
-        { teams[1].pieces[3].tile !== -1 && <animated.group position={springs.posTeam1Id3}>
-            <Piece team={1} id={3}/>
-        </animated.group> }
+        { teams[1].pieces[0].tile !== -1 && <Piece team={1} id={0} position={springs1_0.position}/> }
+        { teams[1].pieces[1].tile !== -1 && <Piece team={1} id={1} position={springs1_1.position}/> }
+        { teams[1].pieces[2].tile !== -1 && <Piece team={1} id={2} position={springs1_2.position}/> }
+        { teams[1].pieces[3].tile !== -1 && <Piece team={1} id={3} position={springs1_3.position}/> }
     </>
 }
