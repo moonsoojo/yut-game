@@ -36,7 +36,7 @@ export default function Rocket({
         redMat.color = new THREE.Color('red')
         whiteMat.color = new THREE.Color('white')
       } else {
-        redMat.color = new THREE.Color(0xec5813)
+        redMat.color = new THREE.Color(0xFFB067)
         whiteMat.color = new THREE.Color(0xffbabc)
       }
     } else if (animation === 'onBoard') {

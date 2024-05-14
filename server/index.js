@@ -428,7 +428,7 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(2, 0.4),
+        yImpulse: generateRandomNumberInRange(20, 3),
         torqueImpulse: {
           x: generateRandomNumberInRange(1, 0.5),
           y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
@@ -599,11 +599,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          if (user.team === 1) {
-            move = 5;
-          } else {
-            move = 1
-          }
+          // if (user.team === 1) {
+          //   move = 5;
+          // } else {
+          //   move = 1
+          // }
           // move = 2;
           if (user.team === 0) {
             move = 5;
@@ -621,7 +621,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = 5;
+          // move = 3
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }

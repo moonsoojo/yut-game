@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import layout from './layout';
 import mediaValues from './mediaValues';
 import { OrbitControls, OrthographicCamera } from '@react-three/drei';
-import { useAtom } from 'jotai';
 
 function calcZoom() {
   if (window.innerWidth < mediaValues.landscapeCutoff) {
@@ -10,7 +8,7 @@ function calcZoom() {
     const newZoom = zoomMax * (window.innerWidth / mediaValues.landscapeCutoff)
     return newZoom
   } else {
-    const zoomMin = 23;
+    const zoomMin = 21;
     const newZoom = window.innerWidth * (zoomMin / mediaValues.landscapeCutoff)
     return newZoom
   }

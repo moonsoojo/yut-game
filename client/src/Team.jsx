@@ -5,6 +5,7 @@ import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, turnAtom } from './
 import { Html } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
+import { pieceStatus } from './helpers/helpers';
 
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
@@ -28,6 +29,24 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     /> 
   }
 
+  // Need to accept "key" to use it in an map
+  function EmptyPiece({ position }) {
+    return <mesh
+      position={position}
+    >
+      <sphereGeometry args={[0.2, 32, 16]} />
+    </mesh>
+  }
+
+  function ScoredPiece({ position }) {
+    return <mesh
+      position={position}
+    >
+      <sphereGeometry args={[0.2]} />
+      <meshStandardMaterial color={team == 0 ? "red" : "green"} />
+    </mesh>
+  }
+
   function HomePieces({position, scale=1}) {
     let space = layout[device][`team${team}`].pieces.space;
     let positionStartX = layout[device][`team${team}`].pieces.positionStartX;
@@ -36,32 +55,20 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
 
     return (
       <group position={position} scale={scale}>
-        {teams[team].pieces.map((value, index) =>
-          value == null ? (
-            <mesh
+        {
+          teams[team].pieces.map((value, index) =>
+            pieceStatus(value.tile) === "onBoard" ? <EmptyPiece 
               position={[
                 positionStartX + index * space,
                 positionStartY,
                 positionStartZ,
               ]}
               key={index}
-            >
-              <sphereGeometry args={[0.2, 32, 16]} />
-            </mesh>
-          ) : value === "scored" ? (
-            <mesh
-              position={[
-                positionStartX + index * space,
-                positionStartY,
-                positionStartZ,
-              ]}
+            /> : 
+            pieceStatus(value.tile) === "scored" ? <ScoredPiece
+              position={piecePositions[index]}
               key={index}
-            >
-              <sphereGeometry args={[0.2]} />
-              <meshStandardMaterial color={team == 0 ? "red" : "green"} />
-            </mesh>
-          ) : (
-            <Piece
+            /> : <Piece
               position={[
                 positionStartX + index * space,
                 positionStartY,
@@ -69,7 +76,6 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
               ]}
               rotation={layout[device][`team${team}`].pieces.rotation}
               scale={layout[device][`team${team}`].pieces.scale}
-              keyName={`count${index}`}
               tile={-1}
               team={team}
               id={value.id}
@@ -77,7 +83,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
               animation={null}
             />
           )
-        )}
+        }
       </group>
     );
   }

@@ -19,36 +19,39 @@ export function getLegalTiles(tile, moves, pieces, history) {
 
       // Special Rule: If you don't have a piece on the board, you can place one on Earth immediately
       if (checkBackdoRule(moves, pieces)) {
-        legalTiles[0] = { tile: 0, move: "-1", history: [] }
-      }
 
-      let forward = parseInt(move) > 0 ? true: false
-      let forks = getNextTiles(tile, forward)
-      if (forward) {
-        // If you're on Earth, there's a path to score and path to tile 1. Eliminate the path to tile 1
-        forks = checkFinishRule(forks) 
+        legalTiles[0] = { tile: 0, move: "-1", history: [], path: [1, 0] }
+
       } else {
-        // If you have no history, present both paths. If you do, take the last tile from the history
-        forks = checkBackdoFork(forks, history)
-      }
 
-      for (let i = 0; i < forks.length; i++) {
-        
-        // Initialize path
-        let path = pieceStatus(tile) === 'home' ? [] : [tile]
-        // fix path to add tile when you land there, not from when you start
-        let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-        history = makeNewHistory(history, destination.path, forward)
-
-        // If piece can score
-        if (destination.tile == 29) {
-          if (!(29 in legalTiles)) {
-            // Initialize array because multiple moves can be used to finish
-            legalTiles[29] = []
-          }
-          legalTiles[29].push({ tile: destination.tile, move, history, path: destination.path })
+        let forward = parseInt(move) > 0 ? true: false
+        let forks = getNextTiles(tile, forward)
+        if (forward) {
+          // If you're on Earth, there's a path to score and path to tile 1. Eliminate the path to tile 1
+          forks = checkFinishRule(forks) 
         } else {
-          legalTiles[destination.tile] = { tile: destination.tile, move, history, path: destination.path }
+          // If you have no history, present both paths. If you do, take the last tile from the history
+          forks = checkBackdoFork(forks, history)
+        }
+  
+        for (let i = 0; i < forks.length; i++) {
+          
+          // Initialize path
+          let path = pieceStatus(tile) === 'home' ? [0] : [tile]
+          // fix path to add tile when you land there, not from when you start
+          let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
+          history = makeNewHistory(history, destination.path, forward)
+  
+          // If piece can score
+          if (destination.tile == 29) {
+            if (!(29 in legalTiles)) {
+              // Initialize array because multiple moves can be used to finish
+              legalTiles[29] = []
+            }
+            legalTiles[29].push({ tile: destination.tile, move, history, path: destination.path })
+          } else {
+            legalTiles[destination.tile] = { tile: destination.tile, move, history, path: destination.path }
+          }
         }
       }
     }
