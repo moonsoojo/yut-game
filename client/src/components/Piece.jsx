@@ -49,7 +49,8 @@ export default function Piece ({
       group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
       // Up and down movement
-      group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      // moved to meshes because there's already animation applied on it in PiecesOnBoard
+      // group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale
