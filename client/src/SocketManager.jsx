@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -45,9 +45,14 @@ export const SocketManager = () => {
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
   const [_tiles, setTiles] = useAtom(tilesAtom)
   // Pieces on the board
-  const [pieceTeam0Id0, setPieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
-  const [pieceTeam0Id1, setPieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
-  const [pieceTeam0Id2, setPieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
+  const [_pieceTeam0Id0, setPieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
+  const [_pieceTeam0Id1, setPieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
+  const [_pieceTeam0Id2, setPieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
+  const [_pieceTeam0Id3, setPieceTeam0Id3] = useAtom(pieceTeam0Id3Atom)
+  const [_pieceTeam1Id0, setPieceTeam1Id0] = useAtom(pieceTeam1Id0Atom)
+  const [_pieceTeam1Id1, setPieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
+  const [_pieceTeam1Id2, setPieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
+  const [_pieceTeam1Id3, setPieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
 
   useEffect(() => {
 
@@ -73,10 +78,13 @@ export const SocketManager = () => {
       setSpectators(room.spectators)
 
       setPieceTeam0Id0(room.teams[0].pieces[0])
-
       setPieceTeam0Id1(room.teams[0].pieces[1])
-
       setPieceTeam0Id2(room.teams[0].pieces[2])
+      setPieceTeam0Id3(room.teams[0].pieces[3])
+      setPieceTeam1Id0(room.teams[1].pieces[0])
+      setPieceTeam1Id1(room.teams[1].pieces[1])
+      setPieceTeam1Id2(room.teams[1].pieces[2])
+      setPieceTeam1Id3(room.teams[1].pieces[3])
 
       // Set host name for display
       if (room.host !== null) {

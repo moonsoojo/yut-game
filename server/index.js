@@ -599,17 +599,12 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          // if (user.team === 1) {
-          //   move = 5;
-          // } else {
-          //   move = 1
-          // }
-          // move = 2;
-          if (user.team === 0) {
+          if (user.team === 1) {
             move = 5;
           } else {
-            move = 1;
+            move = 1
           }
+          // move = 2;
           await Room.findOneAndUpdate(
             { 
               _id: roomId, 

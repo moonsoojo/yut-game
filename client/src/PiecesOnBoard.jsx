@@ -58,11 +58,13 @@ export default function PiecesOnBoard() {
     }))
 
     const idOffsets = [
-        [-0.3, 0, -0.3],
-        [0.3, 0, -0.3],
-        [-0.3, 0, 0.3],
-        [0.3, 0, 0.3],
+        [-0.3, 0, -0.1],
+        [0.3, 0, -0.1],
+        [-0.3, 0, 0.5],
+        [0.3, 0, 0.5],
     ]
+
+    const heightOffset = 0.9
 
     useEffect(() => {
         // clear path on capture
@@ -74,7 +76,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[0][0],
-                        tilePositions[value][1] + 1 + idOffsets[0][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[0][1],
                         tilePositions[value][2] + idOffsets[0][2],
                     ],
                     config: {
@@ -103,7 +105,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[1][0],
-                        tilePositions[value][1] + 1 + idOffsets[1][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[1][1],
                         tilePositions[value][2] + idOffsets[1][2],
                     ],
                     config: {
@@ -125,6 +127,7 @@ export default function PiecesOnBoard() {
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam0Id2.lastPath
+        console.log(`[PiecesOnBoard] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             const toAnimations = path.map((value) => {
@@ -132,7 +135,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[2][0],
-                        tilePositions[value][1] + 1 + idOffsets[2][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[2][1],
                         tilePositions[value][2] + idOffsets[2][2],
                     ],
                     config: {
@@ -156,6 +159,7 @@ export default function PiecesOnBoard() {
     useEffect(() => {        
         // clear path on capture
         const path = pieceTeam0Id3.lastPath
+        console.log(`[PiecesOnBoard] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             const toAnimations = path.map((value) => {
@@ -163,7 +167,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[3][0],
-                        tilePositions[value][1] + 1 + idOffsets[3][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[3][1],
                         tilePositions[value][2] + idOffsets[3][2],
                     ],
                     config: {
@@ -192,7 +196,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[0][0],
-                        tilePositions[value][1] + 1 + idOffsets[0][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[0][1],
                         tilePositions[value][2] + idOffsets[0][2],
                     ],
                     config: {
@@ -221,7 +225,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[1][0],
-                        tilePositions[value][1] + 1 + idOffsets[1][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[1][1],
                         tilePositions[value][2] + idOffsets[1][2],
                     ],
                     config: {
@@ -250,7 +254,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[2][0],
-                        tilePositions[value][1] + 1 + idOffsets[2][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[2][1],
                         tilePositions[value][2] + idOffsets[2][2],
                     ],
                     config: {
@@ -279,7 +283,7 @@ export default function PiecesOnBoard() {
                 return {
                     position: [
                         tilePositions[value][0] + idOffsets[3][0],
-                        tilePositions[value][1] + 1 + idOffsets[3][1],
+                        tilePositions[value][1] + heightOffset + idOffsets[3][1],
                         tilePositions[value][2] + idOffsets[3][2],
                     ],
                     config: {
@@ -299,6 +303,7 @@ export default function PiecesOnBoard() {
     }, [pieceTeam1Id3])
 
     return <>
+        {/* adding animation prop makes it disappear */}
         { teams[0].pieces[0].tile !== -1 && <Piece team={0} id={0} position={springs0_0.position}/> }
         { teams[0].pieces[1].tile !== -1 && <Piece team={0} id={1} position={springs0_1.position}/> }
         { teams[0].pieces[2].tile !== -1 && <Piece team={0} id={2} position={springs0_2.position}/> }
