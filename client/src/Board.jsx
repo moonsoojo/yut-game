@@ -2,9 +2,6 @@ import React from 'react';
 import Tile from './components/Tile'
 import { animated } from '@react-spring/three';
 import HtmlElement from './HtmlElement';
-import CurvedArrow from './meshes/CurvedArrow';
-import { useAtom } from 'jotai';
-import { legalTilesAtom, tilesAtom } from './GlobalState';
 import Star from './meshes/Star';
 import Earth from './meshes/Earth';
 import Mars from './meshes/Mars';

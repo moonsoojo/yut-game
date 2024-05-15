@@ -91,61 +91,7 @@ export default function Tile({
     document.body.style.cursor = "default";
   }
 
-  const ufoScale = 1
-  const [springs, api] = useSpring(() => ({
-    from: { 
-      scale: 0
-    },
-  }))
 
-  // Particle Emitter
-  const { scene } = useThree();
-
-  const system = useRef();
-  const emitter = useRef();
-    
-  const col = useRef(new THREE.Color("#4cd3c2"));
-
-  useEffect(() => {
-    function createSprite() {
-      var map = new THREE.TextureLoader().load("./textures/dot.png");
-      var material = new THREE.SpriteMaterial({
-        map: map,
-        color: 0xfffff,
-        blending: THREE.AdditiveBlending,
-        fog: true,
-      });
-      return new THREE.Sprite(material);
-    }
-  
-    system.current = new System();
-    emitter.current = new Emitter();
-    const renderer = new SpriteRenderer(scene, THREE);
-    const zone = new PointZone(0, 0);
-  
-    emitter.current
-    .setRate(new Rate(new Span(4, 4), new Span(0.5)))
-    .setInitializers([
-      new Position(zone),
-      new Mass(1),
-      new Radius(5, 5),
-      new Life(1),
-      new Body(createSprite()),
-    ])
-    .setBehaviours([
-      new Alpha(0.9, 0), 
-      new Scale(0.4, 0.6), 
-      new Color(col.current)
-    ])
-
-    // scale by board scale
-    // fix board scale to 1
-    emitter.current.position.x = position[0] * 0.6
-    emitter.current.position.y = (position[1] + 1) * 0.6
-    emitter.current.position.z = position[2] * 0.6
-  
-    system.current.addEmitter(emitter.current).addRenderer(renderer);
-  }, []);
 
   function handlePointerDown(event) {
     event.stopPropagation();
@@ -203,8 +149,6 @@ export default function Tile({
       group.current.scale.y = scale
       group.current.scale.z = scale
     }
-
-    system.current.update();
   })
 
   return <group position={position} rotation={rotation} scale={scale}>
@@ -234,9 +178,9 @@ export default function Tile({
         position={[-0.3,6,-1.2]}
         scale={2}
       />*/} 
-      <animated.group position={[0, 1, 0]} scale={springs.scale}>
+      {/* <animated.group position={[0, 1, 0]}>
         {arrangedPieces}
-      </animated.group>
+      </animated.group> */}
     </group>
   </group>
 }

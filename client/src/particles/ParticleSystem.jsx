@@ -53,7 +53,6 @@ export default function ParticleSystem() {
           emitters.current[i].setRate(new Rate(0, 0)).emit();
       }
       emitters.current = []
-      console.log(particleSetting)
       for (let i = 0; i < particleSetting.emitters.length; i++) {
         const emitter = new Emitter();
         emitter
@@ -74,22 +73,17 @@ export default function ParticleSystem() {
         }
       }
     } else {
-        for (let i = 0; i < emitters.current.length; i++) {
-            emitters.current[i].setRate(new Rate(0, 0)).emit();
-        }
-        emitters.current = []
+      for (let i = 0; i < emitters.current.length; i++) {
+          emitters.current[i].setRate(new Rate(0, 0)).emit();
+      }
+      emitters.current = []
     }
   }, [particleSetting])
 
   useFrame((state, delta) => {
     if (system.current !== undefined) {
       system.current.update();
-      if (particleSetting) {
-        // for each emitter
-        // if moving
-          // do something
-        // else if randomize position
-          // do something else
+      if (particleSetting && emitters.current.length > 0) {
         for (let i = 0; i < particleSetting.emitters.length; i++) {
           if (particleSetting.emitters[i].moving) {
             emitters.current[i].position.x += (-delta * particleSetting.emitters[i].speedX)

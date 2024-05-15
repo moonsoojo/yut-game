@@ -58,10 +58,10 @@ export default function PiecesOnBoard() {
     }))
 
     const idOffsets = [
-        [-0.3, 0, -0.1],
-        [0.3, 0, -0.1],
-        [-0.3, 0, 0.5],
-        [0.3, 0, 0.5],
+        [-0.3, 0, 0],
+        [0.3, 0, 0],
+        [-0.3, 0, 0.4],
+        [0.3, 0, 0.4],
     ]
 
     const heightOffset = 0.9
