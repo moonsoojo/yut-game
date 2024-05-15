@@ -631,9 +631,7 @@ io.on("connect", async (socket) => {
             }, 
             operation
           )
-          // console.log(`[recordThrow] awaited value`, awaitedValue) // undefined
         }
-
 
         console.log(`[recordThrow] added move to team`)
       }
@@ -696,15 +694,14 @@ io.on("connect", async (socket) => {
                   gamePhase: 'game',
                   pregameOutcome: outcome.toString()
                 },
-                $inc: { [`teams.${outcome}.throws`]: 10 },
+                $inc: { [`teams.${outcome}.throws`]: 1 },
               }
             )
           }
         } else if (room.gamePhase === "game") {
 
-          // If there's no valid move and no throw,
-          // Pass turn
-          // call .toObject() on moves to leave out the mongoose methods
+          // If user threw out of bounds, pass turn
+          // Call .toObject() on moves to leave out the mongoose methods
           if (room.teams[user.team].throws === 0 && 
           isEmptyMoves(room.teams[user.team].moves.toObject())) {
             const newTurn = passTurn(room.turn, room.teams)
@@ -716,7 +713,7 @@ io.on("connect", async (socket) => {
                 $set: { 
                   turn: newTurn,
                   // Empty the team's moves
-                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialMoves)),
+                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
                 },
                 $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
               }
@@ -765,27 +762,33 @@ io.on("connect", async (socket) => {
     }
   });
 
+  function movesIsEmpty (moves) {
+    for (const move in moves) {
+      if (parseInt(move) != 0 && moves[move] > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   socket.on("move", async ({ roomId, tile }) => {
     try {
-      // copy states
-      // operate on them
-      // set them to room
       const room = await Room.findById(roomId)
       let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
-      let teams = room.teams
-      let from = room.selection.tile
+      // let teams = room.teams
+      // let from = room.selection.tile
       let to = tile
-      let moveUsed = moveInfo.move // not scoring
+      let moveUsed = moveInfo.move
       let path = moveInfo.path
       let history = moveInfo.history
       let pieces = room.selection.pieces
       let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
 
-      // logic
-      // build operation
-      // execute in one step
+      let moves = room.teams[movingTeam].moves;
+      let throws = room.teams[movingTeam].throws;
+
       let operation = {};
       operation['$set'] = {}
       operation['$inc'] = {}
@@ -793,6 +796,8 @@ io.on("connect", async (socket) => {
 
       if (tiles[to].length > 0) {
         let occupyingTeam = tiles[to][0].team
+
+        // Capture
         if (occupyingTeam != movingTeam) {
           for (let piece of tiles[to]) {
             piece.tile = -1
@@ -802,7 +807,8 @@ io.on("connect", async (socket) => {
           
           // Clear the pieces on the tile
           operation['$set'][`tiles.${to}`] = []
-          operation['$inc'][`teams.${movingTeam}.throws`] = 1
+          // operation['$inc'][`teams.${movingTeam}.throws`] = 1
+          throws++;
         }
       }
 
@@ -814,6 +820,7 @@ io.on("connect", async (socket) => {
       }
 
       // Add pieces to the tile
+      // Could be Combine
       pieces.forEach(function(_item, index, array) {
         array[index].tile = to
         array[index].history = history
@@ -822,11 +829,33 @@ io.on("connect", async (socket) => {
       operation['$push'][`tiles.${to}`] = { '$each': pieces }
 
       // Remove move
-      operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
+      // operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
 
       // Clear legal tiles and selection
       operation['$set']['legalTiles'] = {}
       operation['$set']['selection'] = null
+
+      moves[moveUsed]--;
+
+      if (throws === 0 && isEmptyMoves(moves.toObject())) {
+        const newTurn = passTurn(room.turn, room.teams)
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId, 
+          }, 
+          { 
+            $set: { 
+              turn: newTurn,
+              // Empty the team's moves
+              [`teams.${movingTeam}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
+            },
+            $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
+          }
+        )
+      }
+
+      operation['$set'][`teams.${movingTeam}.throws`] = throws
+      operation['$set'][`teams.${movingTeam}.moves`] = moves
 
       await Room.findOneAndUpdate(
         { 
