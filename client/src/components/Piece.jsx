@@ -34,6 +34,7 @@ export default function Piece ({
 
   const group = useRef();
   const wrapperMat = useRef();
+  const wrapper = useRef();
 
   useFrame((state, delta) => {
     if (selected) {
@@ -47,10 +48,11 @@ export default function Piece ({
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
       // Up and down movement
       group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      wrapperMat.current.opacity = 0.2
     } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
       // Up and down movement
       // moved to meshes because there's already animation applied on it in PiecesOnBoard
-      // group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      wrapper.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale
@@ -60,13 +62,13 @@ export default function Piece ({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity += 0.2;
+    // wrapperMat.current.opacity += 0.2;
     document.body.style.cursor = "pointer";
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    wrapperMat.current.opacity -= 0.2;
+    // wrapperMat.current.opacity -= 0.2;
     document.body.style.cursor = "default";
   }
 
@@ -133,6 +135,7 @@ export default function Piece ({
         onPointerDown={(event) => handlePointerDown(event)}
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
+        ref={wrapper}
       >
         <sphereGeometry args={[0.55, 32, 16]} />
         <meshStandardMaterial
