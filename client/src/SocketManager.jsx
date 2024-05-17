@@ -169,8 +169,8 @@ export const SocketManager = () => {
         for (let i = 1; i < path.length; i++) {
           const pathTile = path[i]
           let helperText = ''
-          if (parseInt(legalTile.move) < 0) {
-            helperText += -i
+          if (parseInt(legalTiles[legalTile].move) < 0) {
+            helperText = (i * -1)
           } else {
             helperText = i
           }

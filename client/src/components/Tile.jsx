@@ -8,6 +8,7 @@ import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import Piece from "./Piece";
 import HtmlElement from "../HtmlElement";
+import { Text3D } from "@react-three/drei";
 
 export default function Tile({ 
   position=[0,0,0], 
@@ -91,12 +92,22 @@ export default function Tile({
       </mesh>
       {mesh}
       {/* path num */}
-      <HtmlElement
+      <group name='pathNum'>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0.3, 1, -0.3]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.2}
+          height={0.01}
+        >
+          {pathNum}
+          <meshStandardMaterial color="#b3b10f"/>
+        </Text3D>
+      </group>
+      {/* <HtmlElement
         text={pathNum}
-        position={[-0.5, 0, -1]}
-        rotation={[-Math.PI/2, 0, 0]}
         fontSize={15}
-      />
+      /> */}
     </group>
   </group>
 }

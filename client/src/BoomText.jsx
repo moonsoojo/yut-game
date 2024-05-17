@@ -192,8 +192,8 @@ export default function BoomText({ rotation, initialScale }) {
       <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
           position={[0, 0, 0]}
+          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
           size={0.2}
         >
           GAME
@@ -201,8 +201,8 @@ export default function BoomText({ rotation, initialScale }) {
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
           position={[-0.25, 0, 0]}
+          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
           size={0.2}
         >
           START!
