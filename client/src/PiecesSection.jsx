@@ -90,7 +90,10 @@ export default function PiecesSection({
     }
 
     function pieceSelected(pieceId) {
-      return selection && selection.pieces[0].tile === -1 && selection.pieces[0].id === pieceId
+      return selection && 
+      selection.pieces[0].tile === -1 && 
+      selection.pieces[0].team === team &&
+      selection.pieces[0].id === pieceId
     }
 
     return (

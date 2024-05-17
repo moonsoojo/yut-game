@@ -37,6 +37,7 @@ export default function Piece ({
   const wrapper = useRef();
 
   useFrame((state, delta) => {
+    wrapperMat.current.opacity = 0.2
     if (selected) {
       group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
       group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
@@ -48,7 +49,7 @@ export default function Piece ({
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
       // Up and down movement
       group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
-      wrapperMat.current.opacity = 0.2
+      // wrapperMat.current.opacity = 0.2
     } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
       // Up and down movement
       // moved to meshes because there's already animation applied on it in PiecesOnBoard
@@ -140,7 +141,7 @@ export default function Piece ({
         <sphereGeometry args={[0.55, 32, 16]} />
         <meshStandardMaterial
           transparent
-          opacity={0}
+          opacity={0.3}
           ref={wrapperMat}
           depthWrite={false}
         />

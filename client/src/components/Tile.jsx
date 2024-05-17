@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
@@ -6,8 +6,6 @@ import { useFrame } from "@react-three/fiber";
 import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
-import Piece from "./Piece";
-import HtmlElement from "../HtmlElement";
 import { Text3D } from "@react-three/drei";
 
 export default function Tile({ 
@@ -31,6 +29,8 @@ export default function Tile({
 
   function handlePointerEnter(event) {
     event.stopPropagation();
+    // Doesn't change in Chrome
+    // Browser runs on compatibility mode in prod
     document.body.style.cursor = "pointer";
   }
 
@@ -51,6 +51,7 @@ export default function Tile({
         socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
   
         socket.emit("select", { roomId: params.id, payload: null });
+
       }
     }
   }
@@ -65,7 +66,7 @@ export default function Tile({
       group.current.scale.x = scale
       group.current.scale.y = scale
       group.current.scale.z = scale
-      wrapperMat.current.opacity = 0;
+      wrapperMat.current.opacity = 0.3;
     }
   })
 
