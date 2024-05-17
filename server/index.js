@@ -794,6 +794,19 @@ io.on("connect", async (socket) => {
       operation['$inc'] = {}
       operation['$push'] = {}
 
+      if (starting) {
+        let piece = pieces[0]
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
+      }
+
+      pieces.forEach(function(_item, index, array) {
+        array[index].tile = to
+        array[index].history = history
+        array[index].lastPath = path
+      })
+
       if (tiles[to].length > 0) {
         let occupyingTeam = tiles[to][0].team
 
@@ -805,31 +818,14 @@ io.on("connect", async (socket) => {
             operation['$set'][`teams.${occupyingTeam}.pieces.${piece.id}`] = piece
           }
           
-          // Clear the pieces on the tile
           operation['$set'][`tiles.${to}`] = []
-          // operation['$inc'][`teams.${movingTeam}.throws`] = 1
           throws++;
+        } else { // Join
+          operation['$push'][`tiles.${to}`] = { '$each': pieces }
         }
+      } else {
+        operation['$push'][`tiles.${to}`] = { '$each': pieces }
       }
-
-      if (starting) {
-        let piece = pieces[0]
-        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
-        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
-        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
-      }
-
-      // Add pieces to the tile
-      // Could be Combine
-      pieces.forEach(function(_item, index, array) {
-        array[index].tile = to
-        array[index].history = history
-        array[index].lastPath = path
-      })
-      operation['$push'][`tiles.${to}`] = { '$each': pieces }
-
-      // Remove move
-      // operation['$inc'][`teams.${movingTeam}.moves.${moveUsed}`] = -1
 
       // Clear legal tiles and selection
       operation['$set']['legalTiles'] = {}
