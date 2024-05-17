@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -43,6 +43,7 @@ export const SocketManager = () => {
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
+  const [_helperTiles, setHelperTiles] = useAtom(helperTilesAtom)
   const [_tiles, setTiles] = useAtom(tilesAtom)
   // Pieces on the board
   const [_pieceTeam0Id0, setPieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
@@ -159,6 +160,36 @@ export const SocketManager = () => {
 
       setSelection(room.selection)
       setLegalTiles(room.legalTiles)
+      let helperTiles = {}
+      let legalTiles = room.legalTiles
+      let tiles = room.tiles
+      let selection = room.selection
+      for (const legalTile of Object.keys(legalTiles)) {
+        const path = legalTiles[legalTile].path
+        for (let i = 1; i < path.length; i++) {
+          const pathTile = path[i]
+          let helperText = ''
+          if (parseInt(legalTile.move) < 0) {
+            helperText += -i
+          } else {
+            helperText = i
+          }
+          if (pathTile === parseInt(legalTile)) {
+            if (tiles[pathTile].length === 0) {
+              // pass
+            } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
+              helperText += ', kick'
+            } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
+              helperText += ', combine'
+            }
+          }
+          if (!helperTiles[pathTile] || helperTiles[pathTile].length < helperText) {
+            helperTiles[pathTile] = helperText
+          }
+        }
+      }
+      setHelperTiles(helperTiles)
+
       setTiles(room.tiles)
     })
 

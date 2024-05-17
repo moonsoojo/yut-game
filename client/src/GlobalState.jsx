@@ -40,6 +40,7 @@ export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
+export const helperTilesAtom = atom({})
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
   (prev, next) => {

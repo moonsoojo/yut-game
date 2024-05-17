@@ -34,7 +34,8 @@ import {
   teamsAtom,
   boomTextAtom,
   legalTilesAtom,
-  tilesAtom
+  tilesAtom,
+  helperTilesAtom
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -55,6 +56,7 @@ export default function Game() {
   const [turn] = useAtom(turnAtom)
   // To pass to Board
   const [legalTiles] = useAtom(legalTilesAtom)
+  const [helperTiles] = useAtom(helperTilesAtom)
   const [tiles] = useAtom(tilesAtom)
   const params = useParams();
 
@@ -219,6 +221,7 @@ export default function Game() {
           // scale={0.6}
           tiles={tiles}
           legalTiles={legalTiles}
+          helperTiles={helperTiles}
           interactive={true}
           showStart={true}
           device={device}

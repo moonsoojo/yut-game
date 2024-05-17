@@ -37,6 +37,7 @@ export default function Board({
   scale=1, 
   tiles, // Must be defined
   legalTiles={},
+  helperTiles={},
   showStart=false, 
   interactive=false,
   device="landscapeDesktop"
@@ -44,32 +45,9 @@ export default function Board({
   const tileRadius = 5
   const NUM_STARS = 20;
   let tileComponents = [];
-  const [selection] = useAtom(selectionAtom);
 
   // On refactor, component doesn't re-render when legalTiles changes
-  let helperTiles = {}
-  for (const legalTile of Object.keys(legalTiles)) {
-    const path = legalTiles[legalTile].path
-    for (let i = 1; i < path.length; i++) {
-      const pathTile = path[i]
-      let helperText = ''
-      if (parseInt(legalTile.move) < 0) {
-        helperText += -i
-      } else {
-        helperText = i
-      }
-      if (pathTile === parseInt(legalTile)) {
-        if (tiles[pathTile].length === 0) {
-          // pass
-        } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
-          helperText += ', kick'
-        } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
-          helperText += ', join'
-        }
-      }
-      helperTiles[pathTile] = helperText
-    }
-  }
+
 
   // Circle
   for (let i = 0; i < NUM_STARS; i++) {
