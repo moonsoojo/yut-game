@@ -7,6 +7,7 @@ import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import Piece from "./Piece";
+import HtmlElement from "../HtmlElement";
 
 export default function Tile({ 
   position=[0,0,0], 
@@ -15,11 +16,12 @@ export default function Tile({
   tile,
   mesh,
   legalTileInfo, // If key is not in the object, it's undefined
+  pathNum,
   interactive=false
 }) {
 
-  const [selection, setSelection] = useAtom(selectionAtom);
-  const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom);
+  const [selection] = useAtom(selectionAtom);
+  const [_legalTiles] = useAtom(legalTilesAtom);
   const [hasTurn] = useAtom(hasTurnAtom)
   const params = useParams()
 
@@ -67,12 +69,12 @@ export default function Tile({
   })
 
   return <group position={position} rotation={rotation} scale={scale}>
-    { selection != null && legalTileInfo && <Pointer 
+    {/* { selection != null && legalTileInfo && <Pointer 
       scale={2}
       position={[0, 2, 0]}
       tile={tile} 
       color={selection.pieces[0].team === 0 ? "red" : "turquoise"}
-    />}
+    />} */}
     <group ref={group}>
       <mesh
         onPointerEnter={(e) => { interactive && handlePointerEnter(e) }}
@@ -88,6 +90,13 @@ export default function Tile({
         />
       </mesh>
       {mesh}
+      {/* path num */}
+      <HtmlElement
+        text={pathNum}
+        position={[-0.5, 0, -1]}
+        rotation={[-Math.PI/2, 0, 0]}
+        fontSize={15}
+      />
     </group>
   </group>
 }

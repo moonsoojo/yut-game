@@ -10,6 +10,8 @@ import Neptune from './meshes/Neptune';
 import Moon from './meshes/Moon';
 import layout from './layout';
 import Pointer from './meshes/Pointer';
+import { selectionAtom } from './GlobalState';
+import { useAtom } from 'jotai';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -34,7 +36,7 @@ export default function Board({
   rotation=[0,0,0], 
   scale=1, 
   tiles, // Must be defined
-  legalTiles, // Must be defined
+  legalTiles={},
   showStart=false, 
   interactive=false,
   device="landscapeDesktop"
@@ -42,6 +44,32 @@ export default function Board({
   const tileRadius = 5
   const NUM_STARS = 20;
   let tileComponents = [];
+  const [selection] = useAtom(selectionAtom);
+
+  // On refactor, component doesn't re-render when legalTiles changes
+  let helperTiles = {}
+  for (const legalTile of Object.keys(legalTiles)) {
+    const path = legalTiles[legalTile].path
+    for (let i = 1; i < path.length; i++) {
+      const pathTile = path[i]
+      let helperText = ''
+      if (parseInt(legalTile.move) < 0) {
+        helperText += -i
+      } else {
+        helperText = i
+      }
+      if (pathTile === parseInt(legalTile)) {
+        if (tiles[pathTile].length === 0) {
+          // pass
+        } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
+          helperText += ', kick'
+        } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
+          helperText += ', join'
+        }
+      }
+      helperTiles[pathTile] = helperText
+    }
+  }
 
   // Circle
   for (let i = 0; i < NUM_STARS; i++) {
@@ -56,6 +84,7 @@ export default function Board({
         tile={i} 
         pieces={tiles[i]}
         legalTileInfo={legalTiles[i]}
+        pathNum={helperTiles[i]}
         key={i} 
         mesh={getMeshByTile(i)}
         interactive={interactive}
@@ -97,6 +126,7 @@ export default function Board({
           tile={indexShortcut1} 
           pieces={tiles[indexShortcut1]}
           legalTileInfo={legalTiles[indexShortcut1]}
+          pathNum={helperTiles[indexShortcut1]}
           key={indexShortcut1} 
           mesh={getMeshByTile(indexShortcut1)}
           interactive={interactive}
@@ -116,6 +146,7 @@ export default function Board({
           tile={indexShortcut2} 
           pieces={tiles[indexShortcut2]}
           legalTileInfo={legalTiles[indexShortcut2]}
+          pathNum={helperTiles[indexShortcut2]}
           key={indexShortcut2} 
           mesh={getMeshByTile(indexShortcut2)}
           interactive={interactive}
@@ -133,6 +164,7 @@ export default function Board({
       tile={centerTile} 
       pieces={tiles[centerTile]}
       legalTileInfo={legalTiles[centerTile]}
+      pathNum={helperTiles[centerTile]}
       key={centerTile} 
       mesh={getMeshByTile(centerTile)}
     />

@@ -818,7 +818,7 @@ io.on("connect", async (socket) => {
             operation['$set'][`teams.${occupyingTeam}.pieces.${piece.id}`] = piece
           }
           
-          operation['$set'][`tiles.${to}`] = []
+          operation['$set'][`tiles.${to}`] = pieces
           throws++;
         } else { // Join
           operation['$push'][`tiles.${to}`] = { '$each': pieces }

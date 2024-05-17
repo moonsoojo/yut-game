@@ -127,7 +127,6 @@ export default function PiecesOnBoard() {
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam0Id2.lastPath
-        console.log(`[PiecesOnBoard] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             const toAnimations = path.map((value) => {

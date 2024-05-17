@@ -107,9 +107,9 @@ export default function Piece ({
           socket.emit("move", ({ destination: tile }))
         }
 
-        socket.emit("legalTiles", { legalTiles: {} })
+        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
         // Set within client for faster response
-        setLegalTiles({})
+        // setLegalTiles({})
 
         socket.emit("select", { 
           roomId: params.id, 

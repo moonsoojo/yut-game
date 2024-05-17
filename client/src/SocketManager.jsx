@@ -159,7 +159,6 @@ export const SocketManager = () => {
 
       setSelection(room.selection)
       setLegalTiles(room.legalTiles)
-
       setTiles(room.tiles)
     })
 

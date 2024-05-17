@@ -1,14 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Environment, Float, Html, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
+import React, { useState } from 'react';
+import { Float, PresentationControls, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
-import { useAtom, atom } from "jotai";
-
-import Earth from './meshes/Earth';
-import Moon from './meshes/Moon';
-import Mars from './meshes/Mars';
-import Star from './meshes/Star';
-import Saturn from './meshes/Saturn';
-import Neptune from './meshes/Neptune';
+import { useAtom } from "jotai";
 import layout from './layout';
 import RocketAnimated from './meshes/RocketAnimated';
 import UfoAnimated from './meshes/UfoAnimated';
@@ -198,7 +191,7 @@ export default function Home2() {
         scale={layout[device].title.tiles.scale}
       >
         { display === 'board' && <group>
-          <Board showStart={false} interactive={false} tiles={initialState.initialTiles} legalTiles={{}}/>
+          <Board showStart={false} interactive={false} tiles={initialState.initialTiles}/>
           <Pieces/>
         </group>}
       </group>
