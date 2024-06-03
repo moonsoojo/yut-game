@@ -223,7 +223,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           fontSize={26}
         />
         <HtmlElement
-          text='They way they lie determines'
+          text='The way they lie determines'
           position={[-3.5,0,-2.4]}
           rotation={[-Math.PI/2, 0, 0]}
           fontSize={26}
@@ -490,16 +490,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     function HomePieces({ position }) {
       return <group position={position}>
         <group name='rocket-0' ref={rocket0}>
-          <Rocket position={[-0.4,0,-0.7]} scale={1.5}/>
+          <Rocket position={[-0.4,-0.5,-0.5]} scale={1.5}/>
         </group>
         <group name='rocket-1' ref={rocket1}>
-          <Rocket position={[0.8,0,-0.7]} scale={1.5}/>
+          <Rocket position={[0.8,-0.5,-0.5]} scale={1.5}/>
         </group>
         <group name='rocket-2' ref={rocket2}>
-          <Rocket position={[-0.4,0,0.5]} scale={1.5}/>
+          <Rocket position={[-0.4,-0.5,0.7]} scale={1.5}/>
         </group>
         <animated.group name='rocket-3' ref={rocket3} position={springs.rocket3Pos}>
-          <Rocket position={[0.8,0,0.5]} scale={springs.rocket3Scale} />
+          <Rocket position={[0.8,-0.5,0.7]} scale={springs.rocket3Scale} />
         </animated.group>
       </group>
     }
@@ -602,7 +602,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
     // place on top of tiles with .map
     // adjust neptune particle size
-    function Tiles({ device, position, rotation }) {
+    function Tiles({ device, rotation }) {
       const TILE_RADIUS = layout[device].tileRadius.ring
       const NUM_STARS = 20;
       let tiles = [];
@@ -643,7 +643,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             {
               rocket3Pos: [
                 position[0]-0.2,
-                position[1]+1.5,
+                position[1]+1,
                 position[2]
               ],
               delay: 100,
@@ -1058,7 +1058,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       return <animated.group position={position}>
         { tiles }
         <animated.group name='rocket' position={springs.rocketPos}>
-          <Rocket position={[0.8,0,0.5]} scale={springs.rocketScale} />
+          <Rocket position={[0.8,-0.5,0.5]} scale={springs.rocketScale} />
         </animated.group>
         <animated.group name='ufo' position={springs.ufoPos}>
           <Ufo position={[0.8,0,0.5]} scale={springs.ufoScale} />
@@ -1133,13 +1133,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         pointer1Opacity: 0,
         rocket0Pos: [
           -Math.cos(((-1+5) * (Math.PI * 2)) / 20) * 5 -1,
-          0 + 1.5,
-          Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5 -1,
+          0 + 1,
+          Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5 -0.7,
         ],
         rocket1Pos: [
           -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
-          0 + 1.5,
-          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+          0 + 1,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
         ],
         moveText0Scale: 1,
         moveText1Scale: 0,
@@ -1191,8 +1191,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           rocket0Pos: [
             -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 -1,
-            0 + 1.5,
-            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           config: {
             tension: 170,
@@ -1202,8 +1202,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           rocket0Pos: [
             -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 -1,
-            0 + 1.5,
-            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           config: {
             tension: 170,
@@ -1213,13 +1213,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           rocket0Pos: [
             -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1.5,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           rocket1Pos: [
             -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1.5,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           cursorPos: layout[device].howToPlay.page4.cursorPos[3],
           config: {
@@ -1276,13 +1276,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           rocket0Pos: [
             -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           rocket1Pos: [
             -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           config: {
             tension: 170,
@@ -1292,13 +1292,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           rocket0Pos: [
             -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1.5,
-            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1.1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           rocket1Pos: [
             -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1.5,
-            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 1.1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
           ],
           config: {
             tension: 170,
@@ -1454,7 +1454,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         pointer4Scale: 0,
         rocket0Pos: [
           -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
-          0 + 1.5,
+          0 + 2,
           Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
         ],
         scoreScale: 0,
@@ -1468,11 +1468,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       to: [
         {
           rocket0Pos: [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
           ],
           delay: 1000,
           config: {
@@ -1481,22 +1479,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           rocket0Pos: [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
-          ],
-          delay: 500,
-          config: {
-            tension: 0,
-          }
-        },
-        {
-          rocket0Pos: [
-            0 - 1,
-            1.5,
-            0 - 1,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
           ],
           delay: 500,
           config: {
@@ -1507,6 +1492,17 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           rocket0Pos: [
             0 - 1,
             2.5,
+            0 - 1,
+          ],
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          rocket0Pos: [
+            0 - 1,
+            3,
             0 - 1,
           ],
           rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[1],
@@ -1550,7 +1546,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           rocket0Pos: [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
-            1.5,
+            2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
           ],
@@ -1667,7 +1663,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: [-1,1.5,-1,],
+          rocket0Pos: [-1,2,-1,],
           delay: 500,
           config: {
             tension: 0,
@@ -1703,7 +1699,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           rocket0Pos: [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
-            1.5,
+            2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
           ],
@@ -1961,7 +1957,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           {tiles}
         </group>
         <animated.group name='rocket-0' position={springs.rocket0Pos}>
-          <Rocket position={[0.8,0,0.5]} scale={springs.rocket0Scale} />
+          <Rocket position={[0.8,-0.7,0.5]} scale={springs.rocket0Scale} />
         </animated.group>
         <animated.group name='moon-arrow' scale={springs.pointer0Scale}>
           <ArrowBlender

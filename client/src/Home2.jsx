@@ -191,7 +191,7 @@ export default function Home2() {
         scale={layout[device].title.tiles.scale}
       >
         { display === 'board' && <group>
-          <Board showStart={false} interactive={false} tiles={initialState.initialTiles}/>
+          <Board showStart={false} interactive={false}/>
           <Pieces/>
         </group>}
       </group>

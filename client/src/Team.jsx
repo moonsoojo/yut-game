@@ -17,7 +17,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
 
     function handleJoinTeam () {
-        setJoinTeam(team);
+      setJoinTeam(team);
     }
 
     return client.team !== team && joinTeam !== team && <HtmlElement
@@ -31,17 +31,13 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
 
   // Need to accept "key" to use it in an map
   function EmptyPiece({ position }) {
-    return <mesh
-      position={position}
-    >
+    return <mesh position={position}>
       <sphereGeometry args={[0.2, 32, 16]} />
     </mesh>
   }
 
   function ScoredPiece({ position }) {
-    return <mesh
-      position={position}
-    >
+    return <mesh position={position}>
       <sphereGeometry args={[0.2]} />
       <meshStandardMaterial color={team == 0 ? "red" : "green"} />
     </mesh>
@@ -98,7 +94,9 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     }
 
     return <HtmlElement
-      text={<div>Roll: <span style={{ "color": team === 0 ? "red" : "turquoise" }}>{rollText}</span></div>}
+      text={<div>
+        Roll: <span style={{ "color": team === 0 ? "red" : "turquoise" }}>{rollText}</span>
+      </div>}
       position={layout[device][`team${team}`].pregameRoll.position}
       rotation={layout[device][`team${team}`].pregameRoll.rotation}
       fontSize={layout[device][`team${team}`].pregameRoll.fontSize}

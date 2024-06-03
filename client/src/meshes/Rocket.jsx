@@ -47,7 +47,7 @@ export default function Rocket({
 
   return (
     <animated.group position={position} rotation={rotation} scale={scale} ref={rocket}>
-      <group scale={0.02} position={[0.5, 0.2, -0.5]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/4, "YZX"]}>
+      <group scale={0.02} position={[0.5, 0.2, -0.3]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/4, "YZX"]}>
         {/* Body */}
         <mesh
           castShadow

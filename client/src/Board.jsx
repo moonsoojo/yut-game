@@ -10,8 +10,6 @@ import Neptune from './meshes/Neptune';
 import Moon from './meshes/Moon';
 import layout from './layout';
 import Pointer from './meshes/Pointer';
-import { selectionAtom } from './GlobalState';
-import { useAtom } from 'jotai';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -35,7 +33,7 @@ export default function Board({
   position=[0,0,0], 
   rotation=[0,0,0], 
   scale=1, 
-  tiles, // Must be defined
+  tiles=[], // Must be defined
   legalTiles={},
   helperTiles={},
   showStart=false, 
@@ -45,9 +43,6 @@ export default function Board({
   const tileRadius = 5
   const NUM_STARS = 20;
   let tileComponents = [];
-
-  // On refactor, component doesn't re-render when legalTiles changes
-
 
   // Circle
   for (let i = 0; i < NUM_STARS; i++) {

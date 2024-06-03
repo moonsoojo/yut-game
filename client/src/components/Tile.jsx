@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import { hasTurnAtom, legalTilesAtom, selectionAtom } from "../GlobalState";
+import { hasTurnAtom, selectionAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import { Text3D } from "@react-three/drei";
@@ -12,7 +12,7 @@ export default function Tile({
   position=[0,0,0], 
   rotation=[0,0,0], 
   scale=1, 
-  tile,
+  tile=null,
   mesh,
   legalTileInfo, // If key is not in the object, it's undefined
   pathNum,
@@ -20,7 +20,6 @@ export default function Tile({
 }) {
 
   const [selection] = useAtom(selectionAtom);
-  const [_legalTiles] = useAtom(legalTilesAtom);
   const [hasTurn] = useAtom(hasTurnAtom)
   const params = useParams()
 
@@ -66,7 +65,7 @@ export default function Tile({
       group.current.scale.x = scale
       group.current.scale.y = scale
       group.current.scale.z = scale
-      wrapperMat.current.opacity = 0.3;
+      wrapperMat.current.opacity = 0;
     }
   })
 

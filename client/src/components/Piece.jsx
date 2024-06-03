@@ -49,11 +49,10 @@ export default function Piece ({
       group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
       // Up and down movement
       group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
-      // wrapperMat.current.opacity = 0.2
+      wrapperMat.current.opacity = 0.2
     } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
       // Up and down movement
-      // moved to meshes because there's already animation applied on it in PiecesOnBoard
-      wrapper.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      // wrapper.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     } else {
       group.current.scale.x = scale
       group.current.scale.y = scale
@@ -76,6 +75,7 @@ export default function Piece ({
   // Piece selected: bulge
   // rocket shaking on selected
   function handlePointerDown(event) {
+    console.log(`[Piece] click`)
     if (gamePhase === "game" && client.team == team && hasTurn && !yootThrown.flag) {
       console.log(`[Piece] click`)
       event.stopPropagation();
@@ -131,7 +131,6 @@ export default function Piece ({
     >
       <mesh
         castShadow
-        visible={true}
         rotation={[-Math.PI / 4, 0, 0]}
         onPointerDown={(event) => handlePointerDown(event)}
         onPointerOver={(event) => handlePointerEnter(event)}
@@ -139,9 +138,9 @@ export default function Piece ({
         ref={wrapper}
       >
         <sphereGeometry args={[0.55, 32, 16]} />
-        <meshStandardMaterial
+        <meshBasicMaterial
           transparent
-          opacity={0.3}
+          opacity={0}
           ref={wrapperMat}
           depthWrite={false}
         />
