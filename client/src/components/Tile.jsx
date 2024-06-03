@@ -25,6 +25,7 @@ export default function Tile({
 
   const group = useRef()
   const wrapperMat = useRef();
+  const wrapper = useRef();
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -57,14 +58,17 @@ export default function Tile({
 
   useFrame((state) => {
     if (selection != null && legalTileInfo) {
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
+      // group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
+      // group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
+      // group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4 + 0.5
+      // wrapper.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4
+      // wrapper.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4
+      // wrapper.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 3) * 0.4
       wrapperMat.current.opacity = 0.2;
     } else {
-      group.current.scale.x = scale
-      group.current.scale.y = scale
-      group.current.scale.z = scale
+      // group.current.scale.x = scale
+      // group.current.scale.y = scale
+      // group.current.scale.z = scale
       wrapperMat.current.opacity = 0;
     }
   })
@@ -81,6 +85,7 @@ export default function Tile({
         onPointerEnter={(e) => { interactive && handlePointerEnter(e) }}
         onPointerLeave={(e) => { interactive && handlePointerLeave(e) }}
         onPointerDown={(e) => { interactive && handlePointerDown(e) }}
+        ref={wrapper}
       >
         <sphereGeometry args={[0.8, 32, 16]} />
         <meshStandardMaterial
