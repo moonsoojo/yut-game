@@ -10,6 +10,7 @@ import { pieceStatus } from "./helpers.js";
 //   ]
 // }
 export function getLegalTiles(tile, moves, pieces, history) {
+  console.log(`[getLegalTiles]`)
   let legalTiles = {}
 
   for (let move in moves) {
@@ -31,7 +32,9 @@ export function getLegalTiles(tile, moves, pieces, history) {
           forks = checkFinishRule(forks) 
         } else {
           // If you have no history, present both paths. If you do, take the last tile from the history
+          console.log(`[getLegalTiles] forks backdo`, forks, `history`, history)
           forks = checkBackdoFork(forks, history)
+          console.log(`[getLegalTiles] forks backdo after check`, forks)
         }
   
         for (let i = 0; i < forks.length; i++) {
@@ -39,7 +42,13 @@ export function getLegalTiles(tile, moves, pieces, history) {
           // Initialize path
           let path = pieceStatus(tile) === 'home' ? [0] : [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
-          history = makeNewHistory(history, destination.path, forward)
+          console.log(`[getLegalTiles] destination`, destination)
+          // Exclude last tile in the path
+          history = makeNewHistory(
+            history, 
+            destination.path.slice(0, destination.path.length-1), 
+            forward
+          )
   
           // If piece can score
           if (destination.tile == 29) {
@@ -60,12 +69,9 @@ export function getLegalTiles(tile, moves, pieces, history) {
 }
 
 function makeNewHistory(history, path, forward) {
+  console.log(`[makeNewHistory] history`, history, `path`, path, `forward`, forward)
   if (forward) {
-    if (path[0] === 0) { // Starting
-      return history.concat(path)
-    } else {
-      return history.concat(path.slice(1))
-    }
+    return history.concat(path)
   } else {
     if (path.length == 0) { // Backdo and starting from home
       return []
@@ -87,6 +93,8 @@ function checkFinishRule(forks) {
 // Precondition: history is an array
 function checkBackdoFork(forks, history) {
   if (history.length == 0) {
+    return forks
+  } else if (forks.length == 1) {
     return forks
   } else {
     return [history[history.length-1]]
