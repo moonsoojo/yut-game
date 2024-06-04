@@ -44,6 +44,7 @@ export const helperTilesAtom = atom({})
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
   (prev, next) => {
+    console.log(`[atomWithCompare] pieceTeam0Id0Atom`)
     if (prev.tile === next.tile) {
       return true
     } else {
@@ -64,6 +65,7 @@ export const pieceTeam0Id1Atom = atomWithCompare(
 export const pieceTeam0Id2Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[2])),
   (prev, next) => {
+    console.log(`[atomWithCompare] pieceTeam0Id2Atom prev`, prev, `next`, next)
     if (prev.tile === next.tile) {
       return true
     } else {

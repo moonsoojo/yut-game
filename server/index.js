@@ -776,7 +776,7 @@ io.on("connect", async (socket) => {
       let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
       // let teams = room.teams
-      // let from = room.selection.tile
+      let from = room.selection.tile
       let to = tile
       let moveUsed = moveInfo.move
       let path = moveInfo.path
@@ -793,11 +793,15 @@ io.on("connect", async (socket) => {
       operation['$inc'] = {}
       operation['$push'] = {}
 
-      if (starting) {
-        let piece = pieces[0]
+      for (const piece of pieces) {
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
+      }
+
+      // Clear pieces from the 'from' tile if they were on the board
+      if (!starting) {
+        operation['$set'][`tiles.${from}`] = []
       }
 
       pieces.forEach(function(_item, index, array) {

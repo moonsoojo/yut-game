@@ -93,31 +93,19 @@ export default function Piece ({
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
           socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
-          // Set within client for faster response
-          setLegalTiles(legalTiles)
 
-          socket.emit("select", { 
-            roomId: params.id, 
-            payload: { tile, pieces } 
-          })
-          // Set within client for faster response
-          setSelection({ tile, pieces })
+          socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
         }
       } else {
+        console.log(`[Piece] selection is not null`)
         if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", ({ destination: tile }))
+          console.log(`[Piece] moving piece`)
+          socket.emit("move", ({ roomId: params.id, tile }))
         }
 
         socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-        // Set within client for faster response
-        // setLegalTiles({})
 
-        socket.emit("select", { 
-          roomId: params.id, 
-          payload: null
-        });
-        // Set within client for faster response
-        setSelection(null)
+        socket.emit("select", { roomId: params.id, payload: null });
       }
     }
   }
