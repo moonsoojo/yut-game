@@ -43,8 +43,8 @@ export function getLegalTiles(tile, moves, pieces, history) {
           let path = pieceStatus(tile) === 'home' ? [0] : [tile]
           let destination = getDestination(forks[i], Math.abs(parseInt(move))-1, forward, path)
           console.log(`[getLegalTiles] destination`, destination)
-          // Exclude last tile in the path
-          history = makeNewHistory(
+          
+          let forkHistory = makeNewHistory(
             history, 
             destination.path.slice(0, destination.path.length-1), 
             forward
@@ -56,9 +56,9 @@ export function getLegalTiles(tile, moves, pieces, history) {
               // Initialize array because multiple moves can be used to finish
               legalTiles[29] = []
             }
-            legalTiles[29].push({ tile: destination.tile, move, history, path: destination.path })
+            legalTiles[29].push({ tile: destination.tile, move, history: forkHistory, path: destination.path })
           } else {
-            legalTiles[destination.tile] = { tile: destination.tile, move, history, path: destination.path }
+            legalTiles[destination.tile] = { tile: destination.tile, move, history: forkHistory, path: destination.path }
           }
         }
       }

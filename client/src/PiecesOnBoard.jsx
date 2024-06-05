@@ -86,6 +86,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam0Id0 toAnimations`, toAnimations)
             api0_0.start({
                 from: {
                     position: toAnimations[0].position,
@@ -115,6 +116,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam0Id1 toAnimations`, toAnimations)
             api0_1.start({
                 from: {
                     position: toAnimations[0].position,
@@ -145,6 +147,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam0Id2 toAnimations`, toAnimations)
             api0_2.start({
                 from: {
                     position: toAnimations[0].position,
@@ -175,6 +178,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam0Id3 toAnimations`, toAnimations)
             api0_3.start({
                 from: {
                     position: toAnimations[0].position,
@@ -204,6 +208,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam1Id0 toAnimations`, toAnimations)
             api1_0.start({
                 from: {
                     position: toAnimations[0].position,
@@ -233,6 +238,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam1Id1 toAnimations`, toAnimations)
             api1_1.start({
                 from: {
                     position: toAnimations[0].position,
@@ -262,6 +268,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam1Id2 toAnimations`, toAnimations)
             api1_2.start({
                 from: {
                     position: toAnimations[0].position,
@@ -291,6 +298,7 @@ export default function PiecesOnBoard() {
                     }
                 }
             })
+            console.log(`[PiecesOnBoard] pieceTeam1Id3 toAnimations`, toAnimations)
             api1_3.start({
                 from: {
                     position: toAnimations[0].position,
