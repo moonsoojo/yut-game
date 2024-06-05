@@ -68,65 +68,47 @@ export default function Board({
   // Shortcuts
   const radiusShortcut1 = 3.5;
   const radiusShortcut2 = 1.7;
-  for (let i = 0; i < NUM_STARS; i++) {
-    let indexShortcut1;
-    let indexShortcut2;
-    if (i == 0) {
-      indexShortcut1 = 24;
-      indexShortcut2 = 23;
-    } else if (i == 5) {
-      indexShortcut1 = 28;
-      indexShortcut2 = 27;
-    } else if (i == 10) {
-      indexShortcut1 = 20;
-      indexShortcut2 = 21;
-    } else if (i == 15) {
-      indexShortcut1 = 25;
-      indexShortcut2 = 26;
-    }
-    if (i == 0 || i == 5 || i == 10 || i == 15) {
-      let position1 = [
-        Math.sin(((i - 5) * (Math.PI * 2)) / NUM_STARS) *
-          radiusShortcut1,
-        0,
-        Math.cos(((i - 5) * (Math.PI * 2)) / NUM_STARS) *
-          radiusShortcut1,
-      ]
-      tileComponents.push(
-        <Tile 
-          position={position1} 
-          scale={1} 
-          tile={indexShortcut1} 
-          pieces={tiles[indexShortcut1]}
-          legalTileInfo={legalTiles[indexShortcut1]}
-          pathNum={helperTiles[indexShortcut1]}
-          key={indexShortcut1} 
-          mesh={getMeshByTile(indexShortcut1)}
-          interactive={interactive}
-        />
-      );
-      let position2 = [
-        Math.sin(((i - 5) * (Math.PI * 2)) / NUM_STARS) *
-          radiusShortcut2,
-        0,
-        Math.cos(((i - 5) * (Math.PI * 2)) / NUM_STARS) *
-          radiusShortcut2,
-      ]
-      tileComponents.push(
-        <Tile 
-          position={position2} 
-          scale={1} 
-          tile={indexShortcut2} 
-          pieces={tiles[indexShortcut2]}
-          legalTileInfo={legalTiles[indexShortcut2]}
-          pathNum={helperTiles[indexShortcut2]}
-          key={indexShortcut2} 
-          mesh={getMeshByTile(indexShortcut2)}
-          interactive={interactive}
-        />
-      );
-    }
-  }
+
+  let position20 = [
+    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+    0,
+    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position20} 
+      scale={1} 
+      tile={20} 
+      pieces={tiles[20]}
+      legalTileInfo={legalTiles[20]}
+      pathNum={helperTiles[20]}
+      key={20} 
+      mesh={getMeshByTile(20)}
+      interactive={interactive}
+    />
+  );
+  let position21 = [
+    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+    0,
+    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position21} 
+      scale={1} 
+      tile={21} 
+      pieces={tiles[21]}
+      legalTileInfo={legalTiles[21]}
+      pathNum={helperTiles[21]}
+      key={21} 
+      mesh={getMeshByTile(21)}
+      interactive={interactive}
+    />
+  );
 
   // center piece
   const centerTile = 22
@@ -140,6 +122,128 @@ export default function Board({
       pathNum={helperTiles[centerTile]}
       key={centerTile} 
       mesh={getMeshByTile(centerTile)}
+      interactive={interactive}
+    />
+  );
+
+  let position23 = [
+    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+    0,
+    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position23} 
+      scale={1} 
+      tile={23} 
+      pieces={tiles[23]}
+      legalTileInfo={legalTiles[23]}
+      pathNum={helperTiles[23]}
+      key={23} 
+      mesh={getMeshByTile(23)}
+      interactive={interactive}
+    />
+  );
+  let position24 = [
+    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+    0,
+    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position24} 
+      scale={1} 
+      tile={24} 
+      pieces={tiles[24]}
+      legalTileInfo={legalTiles[24]}
+      pathNum={helperTiles[24]}
+      key={24} 
+      mesh={getMeshByTile(24)}
+      interactive={interactive}
+    />
+  );
+  let position25 = [
+    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+    0,
+    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position25} 
+      scale={1} 
+      tile={25} 
+      pieces={tiles[25]}
+      legalTileInfo={legalTiles[25]}
+      pathNum={helperTiles[25]}
+      key={25} 
+      mesh={getMeshByTile(25)}
+      interactive={interactive}
+    />
+  );
+  let position26 = [
+    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+    0,
+    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position26} 
+      scale={1} 
+      tile={26} 
+      pieces={tiles[26]}
+      legalTileInfo={legalTiles[26]}
+      pathNum={helperTiles[26]}
+      key={26} 
+      mesh={getMeshByTile(26)}
+      interactive={interactive}
+    />
+  );
+  let position27 = [
+    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+    0,
+    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut2,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position27} 
+      scale={1} 
+      tile={27} 
+      pieces={tiles[27]}
+      legalTileInfo={legalTiles[27]}
+      pathNum={helperTiles[27]}
+      key={27} 
+      mesh={getMeshByTile(27)}
+      interactive={interactive}
+    />
+  );
+  let position28 = [
+    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+    0,
+    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+      radiusShortcut1,
+  ]
+  tileComponents.push(
+    <Tile 
+      position={position28} 
+      scale={1} 
+      tile={28} 
+      pieces={tiles[28]}
+      legalTileInfo={legalTiles[28]}
+      pathNum={helperTiles[28]}
+      key={28} 
+      mesh={getMeshByTile(28)}
+      interactive={interactive}
     />
   );
 

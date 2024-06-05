@@ -22,8 +22,8 @@ export default function Piece ({
   selected=false
 }) {
 
-  const [selection, setSelection] = useAtom(selectionAtom);
-  const [legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
+  const [selection] = useAtom(selectionAtom);
+  const [legalTiles] = useAtom(legalTilesAtom)
   const [client] = useAtom(clientAtom)
   const [teams] = useAtom(teamsAtom);
   const [gamePhase] = useAtom(gamePhaseAtom)
@@ -77,7 +77,6 @@ export default function Piece ({
   function handlePointerDown(event) {
     console.log(`[Piece] click`)
     if (gamePhase === "game" && client.team == team && hasTurn && !yootThrown.flag) {
-      console.log(`[Piece] click`)
       event.stopPropagation();
       if (selection === null) {
         console.log(`[Piece] selection is null`)

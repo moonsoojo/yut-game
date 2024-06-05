@@ -3,10 +3,11 @@ import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import { hasTurnAtom, selectionAtom } from "../GlobalState";
+import { clientAtom, gamePhaseAtom, hasTurnAtom, selectionAtom, teamsAtom, tilesAtom, yootThrownAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import { Text3D } from "@react-three/drei";
+import { getLegalTiles } from "../helpers/legalTiles";
 
 export default function Tile({ 
   position=[0,0,0], 
@@ -21,6 +22,11 @@ export default function Tile({
 
   const [selection] = useAtom(selectionAtom);
   const [hasTurn] = useAtom(hasTurnAtom)
+  const [yootThrown] = useAtom(yootThrownAtom)
+  const [tiles] = useAtom(tilesAtom)
+  const [teams] = useAtom(teamsAtom)
+  const [client] = useAtom(clientAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom)
   const params = useParams()
 
   const group = useRef()
@@ -40,18 +46,31 @@ export default function Tile({
   }
 
   function handlePointerDown(event) {
+    console.log(`[Tile] click`)
     event.stopPropagation();
-    if (selection && hasTurn) {
-      if (selection.tile != tile && legalTileInfo) {
-        // Server clears legalTiles and selection
-        // When they're called separately, the order of operation is not kept
-        socket.emit("move", { roomId: params.id, tile });
+    const team = client.team
+    if (gamePhase === "game" && hasTurn && !yootThrown.flag) {
+      if (selection === null) {
+        let pieces = tiles[tile]
+        let history = tiles[tile][0].history
+        let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
+        if (!(Object.keys(legalTiles).length == 0)) {
+          socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
+
+          socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
+        }
       } else {
-
-        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+        if (selection.tile != tile && legalTileInfo) {
+          // Server clears legalTiles and selection
+          // When they're called separately, the order of operation is not kept
+          socket.emit("move", { roomId: params.id, tile });
+        } else {
   
-        socket.emit("select", { roomId: params.id, payload: null });
-
+          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+    
+          socket.emit("select", { roomId: params.id, payload: null });
+  
+        }
       }
     }
   }

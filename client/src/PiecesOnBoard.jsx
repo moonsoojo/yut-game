@@ -4,6 +4,7 @@ import { pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3A
 import tilePositions from './tilePositions';
 import { useSpring } from '@react-spring/three';
 import Piece from './components/Piece';
+import { roundNum } from './helpers/helpers';
 
 export default function PiecesOnBoard() {
     const [teams] = useAtom(teamsAtom)
@@ -15,7 +16,16 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
-
+    const [springs1_2, api1_2] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
+    const [springs1_3, api1_3] = useSpring(() => ({        
+        from: {
+            position: [0,0,0] // Filler values
+        }
+    }))
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
             position: [0,0,0] // Filler values
@@ -46,16 +56,6 @@ export default function PiecesOnBoard() {
             position: [0,0,0] // Filler values
         }
     }))
-    const [springs1_2, api1_2] = useSpring(() => ({        
-        from: {
-            position: [0,0,0] // Filler values
-        }
-    }))
-    const [springs1_3, api1_3] = useSpring(() => ({        
-        from: {
-            position: [0,0,0] // Filler values
-        }
-    }))
 
     const idOffsets = [
         [-0.3, 0, 0],
@@ -67,7 +67,6 @@ export default function PiecesOnBoard() {
     const heightOffset = 0.9
 
     useEffect(() => {
-        console.log(`[PiecesOnBoard] pieceTeam0Id0`)
         // clear path on capture
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
@@ -76,9 +75,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[0][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[0][1],
-                        tilePositions[value][2] + idOffsets[0][2],
+                        roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -105,9 +104,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[1][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[1][1],
-                        tilePositions[value][2] + idOffsets[1][2],
+                        roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -126,25 +125,24 @@ export default function PiecesOnBoard() {
     }, [pieceTeam0Id1])
 
     useEffect(() => {
-        console.log(`[PiecesOnBoard] pieceTeam0Id2`)
         // clear path on capture
         const path = pieceTeam0Id2.lastPath
         if (path.length > 0) {
             // save last move's path in piece
-            const toAnimations = path.map((value) => {
+            const toAnimations = path.map((value) => (
                 // on score, move to Earth and add an additional animation
-                return {
+                {
                     position: [
-                        tilePositions[value][0] + idOffsets[2][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[2][1],
-                        tilePositions[value][2] + idOffsets[2][2],
+                        roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
                     ],
                     config: {
                         tension: 170,
                         friction: 26
                     }
                 }
-            })
+            ))
             api0_2.start({
                 from: {
                     position: toAnimations[0].position,
@@ -158,16 +156,15 @@ export default function PiecesOnBoard() {
     useEffect(() => {        
         // clear path on capture
         const path = pieceTeam0Id3.lastPath
-        console.log(`[PiecesOnBoard] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             const toAnimations = path.map((value) => {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[3][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[3][1],
-                        tilePositions[value][2] + idOffsets[3][2],
+                        roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -194,9 +191,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[0][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[0][1],
-                        tilePositions[value][2] + idOffsets[0][2],
+                        roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -223,9 +220,9 @@ export default function PiecesOnBoard() {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[1][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[1][1],
-                        tilePositions[value][2] + idOffsets[1][2],
+                        roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -243,18 +240,19 @@ export default function PiecesOnBoard() {
         }
     }, [pieceTeam1Id1])
 
+
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam1Id2.lastPath
         if (path.length > 0) {
             // save last move's path in piece
-            const toAnimations = path.map((value) => {
+            const toAnimations12 = path.map((value) => {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[2][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[2][1],
-                        tilePositions[value][2] + idOffsets[2][2],
+                        roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -264,9 +262,9 @@ export default function PiecesOnBoard() {
             })
             api1_2.start({
                 from: {
-                    position: toAnimations[0].position,
+                    position: toAnimations12[0].position,
                 },
-                to: toAnimations,
+                to: toAnimations12,
                 loop: false
             })
         }
@@ -277,13 +275,13 @@ export default function PiecesOnBoard() {
         const path = pieceTeam1Id3.lastPath
         if (path.length > 0) {
             // save last move's path in piece
-            const toAnimations = path.map((value) => {
+            const toAnimations13 = path.map((value) => {
                 // on score, move to Earth and add an additional animation
                 return {
                     position: [
-                        tilePositions[value][0] + idOffsets[3][0],
-                        tilePositions[value][1] + heightOffset + idOffsets[3][1],
-                        tilePositions[value][2] + idOffsets[3][2],
+                        roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                        roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
+                        roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
                     ],
                     config: {
                         tension: 170,
@@ -293,9 +291,9 @@ export default function PiecesOnBoard() {
             })
             api1_3.start({
                 from: {
-                    position: toAnimations[0].position,
+                    position: toAnimations13[0].position,
                 },
-                to: toAnimations,
+                to: toAnimations13,
                 loop: false
             })
         }
