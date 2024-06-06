@@ -99,3 +99,7 @@ export function getRandomNumber(min, max) {
   let randomNumber = (max - min) * Math.random() + min
   return randomNumber;
 }
+
+export function roundNum(num, place) {
+  return Math.round(num * Math.pow(10, place)) / Math.pow(10, place)
+}
