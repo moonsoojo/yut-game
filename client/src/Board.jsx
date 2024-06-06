@@ -47,9 +47,9 @@ export default function Board({
   // Circle
   for (let i = 0; i < NUM_STARS; i++) {
     let position = [
-      -Math.cos(((i + 5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
+      -Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
       0,
-      Math.sin(((i + 5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
+      Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
     ];
     tileComponents.push(
       <Tile 
@@ -70,10 +70,10 @@ export default function Board({
   const radiusShortcut2 = 1.7;
 
   let position20 = [
-    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -90,10 +90,10 @@ export default function Board({
     />
   );
   let position21 = [
-    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -127,10 +127,10 @@ export default function Board({
   );
 
   let position23 = [
-    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -147,10 +147,10 @@ export default function Board({
     />
   );
   let position24 = [
-    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -167,10 +167,10 @@ export default function Board({
     />
   );
   let position25 = [
-    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -187,10 +187,10 @@ export default function Board({
     />
   );
   let position26 = [
-    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -207,10 +207,10 @@ export default function Board({
     />
   );
   let position27 = [
-    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -227,10 +227,10 @@ export default function Board({
     />
   );
   let position28 = [
-    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -249,12 +249,14 @@ export default function Board({
 
   return <animated.group position={position} rotation={rotation} scale={scale}>
     {tileComponents}
-    {showStart && <group position={[0, 0, 0]} scale={1.67}>
+    {showStart && <group 
+      position={layout[device].startEarth.position} 
+      scale={1.67}>
       <HtmlElement
         text="Start"
-        position={layout[device].startEarth.position}
-        rotation={layout[device].startEarth.rotation}
-        fontSize={layout[device].startEarth.fontSize}
+        position={layout[device].startEarth.text.position}
+        rotation={layout[device].startEarth.text.rotation}
+        fontSize={layout[device].startEarth.text.fontSize}
         color='limegreen'
       />
       <mesh

@@ -1126,7 +1126,7 @@ export default {
       fontSize: 20,
     },
     piecesSection: {
-      position: [8, 0, -0.5],
+      position: [8, 0, 1],
       pieces: {
         rotation: [0, 0, 0],
         positions: [
@@ -1159,15 +1159,18 @@ export default {
       fontSize: 20
     },
     startEarth: {
-      position: [0.4, 0, 3.2],
-      rotation: [-Math.PI/2, 0, 0],
+      position: [5.2, 0, 1.8],
+      text: {
+        position: [0,0,0],
+        rotation: [-Math.PI/2, 0, 0],
+        fontSize: 15,
+      },
       helperArrow: {
-        position: [1.6, 0, 3.1],
-        rotation: [0,Math.PI/4,Math.PI/2],
+        position: [0.3,0,-0.2],
+        rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
         color: 'limegreen',
         scale: [0.9,0.9,0.9]
       },
-      fontSize: 15,
     },
     letsPlayButton: {
       position: [8,0,2.8],
@@ -1324,19 +1327,19 @@ export default {
       fontSize: 1
     },
     moveList: {
-      position: [4.5, 0, 5.5],
+      position: [8, 0, -1],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
       width: 180
     },
     currentPlayer: {
-      position: [5, 0, 5],
+      position: [8.4, 0, -1.7],
       rotation: [0,0,0],
       fontSize: 20,
       width: 120
     },
     throwButton: {
-      position: [9, 0, 3],
+      position: [9, 0, 4.2],
       rotation: [0, Math.PI/2, 0],
       scale: 1
     },
@@ -1567,7 +1570,7 @@ export default {
       position: [-1.2, 0, -1]
     },
     piecesSection: {
-      position: [1.2, 0, -2],
+      position: [1.2, 0, -1.5],
       scale: 0.8,
       pieces: {
         rotation: [-Math.PI / 2, 0, 0, "XZY"],
