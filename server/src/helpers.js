@@ -47,3 +47,7 @@ export function getPlayerBySocketId(teams, socketId) {
   }
   return {} // not found
 }
+
+export function roundNum(num, place) {
+  return Math.round(num * Math.pow(10, place)) / Math.pow(10, place)
+}

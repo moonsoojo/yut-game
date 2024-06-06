@@ -42,6 +42,7 @@ import Ufo from "./meshes/Ufo.jsx";
 import BoomText from "./BoomText.jsx";
 import MoveList from "./MoveList.jsx";
 import PiecesOnBoard from "./PiecesOnBoard.jsx";
+import ScoreButtons from "./ScoreButtons.jsx";
 
 // There should be no state
 export default function Game() {
@@ -284,6 +285,10 @@ export default function Game() {
         position={layout[device].currentPlayer.position} 
         rotation={layout[device].currentPlayer.rotation}
         fontSize={layout[device].currentPlayer.fontSize}
+      /> }
+      { (29 in legalTiles) && <ScoreButtons
+        position={[4.5, 0, 3.5]}
+        legalTiles={legalTiles}
       /> }
     </>
   );

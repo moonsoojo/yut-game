@@ -299,14 +299,22 @@ export default function PiecesOnBoard() {
         }
     }, [pieceTeam1Id3])
 
+    function onBoardCheck(tile) {
+        if (tile === -1 || tile === 29) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     return <>
-        { teams[0].pieces[0].tile !== -1 && <Piece team={0} id={0} tile={teams[0].pieces[0].tile} position={springs0_0.position} animation='onBoard'/> }
-        { teams[0].pieces[1].tile !== -1 && <Piece team={0} id={1} tile={teams[0].pieces[1].tile} position={springs0_1.position} animation='onBoard'/> }
-        { teams[0].pieces[2].tile !== -1 && <Piece team={0} id={2} tile={teams[0].pieces[2].tile} position={springs0_2.position} animation='onBoard'/> }
-        { teams[0].pieces[3].tile !== -1 && <Piece team={0} id={3} tile={teams[0].pieces[3].tile} position={springs0_3.position} animation='onBoard'/> }
-        { teams[1].pieces[0].tile !== -1 && <Piece team={1} id={0} tile={teams[1].pieces[0].tile} position={springs1_0.position} animation='onBoard'/> }
-        { teams[1].pieces[1].tile !== -1 && <Piece team={1} id={1} tile={teams[1].pieces[1].tile} position={springs1_1.position} animation='onBoard'/> }
-        { teams[1].pieces[2].tile !== -1 && <Piece team={1} id={2} tile={teams[1].pieces[2].tile} position={springs1_2.position} animation='onBoard'/> }
-        { teams[1].pieces[3].tile !== -1 && <Piece team={1} id={3} tile={teams[1].pieces[3].tile} position={springs1_3.position} animation='onBoard'/> }
+        { onBoardCheck(teams[0].pieces[0].tile) && <Piece team={0} id={0} tile={teams[0].pieces[0].tile} position={springs0_0.position} animation='onBoard'/> }
+        { onBoardCheck(teams[0].pieces[1].tile) && <Piece team={0} id={1} tile={teams[0].pieces[1].tile} position={springs0_1.position} animation='onBoard'/> }
+        { onBoardCheck(teams[0].pieces[2].tile) && <Piece team={0} id={2} tile={teams[0].pieces[2].tile} position={springs0_2.position} animation='onBoard'/> }
+        { onBoardCheck(teams[0].pieces[3].tile) && <Piece team={0} id={3} tile={teams[0].pieces[3].tile} position={springs0_3.position} animation='onBoard'/> }
+        { onBoardCheck(teams[1].pieces[0].tile) && <Piece team={1} id={0} tile={teams[1].pieces[0].tile} position={springs1_0.position} animation='onBoard'/> }
+        { onBoardCheck(teams[1].pieces[1].tile) && <Piece team={1} id={1} tile={teams[1].pieces[1].tile} position={springs1_1.position} animation='onBoard'/> }
+        { onBoardCheck(teams[1].pieces[2].tile) && <Piece team={1} id={2} tile={teams[1].pieces[2].tile} position={springs1_2.position} animation='onBoard'/> }
+        { onBoardCheck(teams[1].pieces[3].tile) && <Piece team={1} id={3} tile={teams[1].pieces[3].tile} position={springs1_3.position} animation='onBoard'/> }
     </>
 }

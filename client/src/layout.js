@@ -1154,7 +1154,7 @@ export default {
       fontSize: 15
     },
     practiceThrowButton: {
-      position: [8, 0, 1.2],
+      position: [8, 0, 3],
       rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ'],
       fontSize: 20
     },
@@ -1173,7 +1173,7 @@ export default {
       },
     },
     letsPlayButton: {
-      position: [8,0,2.8],
+      position: [8,0,4.5],
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 20,
     },
@@ -1322,8 +1322,8 @@ export default {
     },
     moveAnimation: {
       initialScale: 0.3,
-      initialPosition: [4.5, 0, 3.8],
-      endingPosition: [6.2, 0, 6],
+      initialPosition: [8, 0, 6.5],
+      endingPosition: [9, 0, 4.5],
       fontSize: 1
     },
     moveList: {

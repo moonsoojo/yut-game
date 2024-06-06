@@ -164,18 +164,28 @@ export const SocketManager = () => {
       let legalTiles = room.legalTiles
       let tiles = room.tiles
       let selection = room.selection
+
+      // helper tiles
       for (const legalTile of Object.keys(legalTiles)) {
-        const path = legalTiles[legalTile].path
+        let moveInfo;
+        if (legalTile !== '29') {
+          moveInfo = legalTiles[legalTile]
+        } else {
+          moveInfo = legalTiles[legalTile][0]
+        }
+        const path = moveInfo.path
         for (let i = 1; i < path.length; i++) {
           const pathTile = path[i]
           let helperText = ''
-          if (parseInt(legalTiles[legalTile].move) < 0) {
+          if (parseInt(moveInfo.move) < 0) {
             helperText = (i * -1)
           } else {
             helperText = i
           }
           if (pathTile === parseInt(legalTile)) {
-            if (tiles[pathTile].length === 0) {
+            if (legalTile === '29') {
+              // pass
+            } else if (tiles[pathTile].length === 0) {
               // pass
             } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
               helperText += ', kick'
@@ -188,6 +198,7 @@ export const SocketManager = () => {
           }
         }
       }
+      
       setHelperTiles(helperTiles)
 
       setTiles(room.tiles)

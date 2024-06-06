@@ -62,7 +62,11 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
               key={index}
             /> : 
             pieceStatus(value.tile) === "scored" ? <ScoredPiece
-              position={piecePositions[index]}
+              position={[
+                positionStartX + index * space,
+                positionStartY,
+                positionStartZ,
+              ]}
               key={index}
             /> : <Piece
               position={[

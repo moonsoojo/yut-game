@@ -6,6 +6,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { makeId } from '../client/src/helpers/helpers.js';
 import initialState from './initialState.js';
+import { roundNum } from './src/helpers.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -406,7 +407,7 @@ io.on("connect", async (socket) => {
       // get team
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
-          [`teams.${randomTeam}.throws`]: 1,
+          [`teams.${randomTeam}.throws`]: 20,
         }
       })
     } catch (err) {
@@ -414,13 +415,13 @@ io.on("connect", async (socket) => {
     }
   })
 
+  function generateRandomNumberInRange(num, plusMinus) {
+    return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+  };
+
   function generateForceVectors(gamePhase) {
     let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions[gamePhase]))
     let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-
-    function generateRandomNumberInRange(num, plusMinus) {
-      return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-    };
 
     const yootForceVectors = [];
     for (let i = 0; i < 4; i++) {
@@ -428,11 +429,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(20, 3),
+        yImpulse: roundNum(generateRandomNumberInRange(20, 3), 5),
         torqueImpulse: {
-          x: generateRandomNumberInRange(1, 0.5),
-          y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.3, 0.2), // Spins through the middle axis
+          x: roundNum(generateRandomNumberInRange(1, 0.5), 5),
+          y: roundNum(generateRandomNumberInRange(1.3, 0.7), 5), // Spins vertically through the center
+          z: roundNum(generateRandomNumberInRange(0.3, 0.2), 5) // Spins through the middle axis
         },
       });
     }
@@ -616,7 +617,6 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = 5;
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }
@@ -866,6 +866,63 @@ io.on("connect", async (socket) => {
       
     } catch (err) {
       console.log(`[move] error making move`, err)
+    }
+  })
+
+  socket.on("score", async ({ roomId, selectedMove }) => {
+    // score
+    try {
+      const room = await Room.findById(roomId)
+
+      let operation = {};
+      operation['$set'] = {}
+      operation['$inc'] = {}
+
+      const pieces = room.selection.pieces
+      console.log(`[score] selection`, room.selection)
+      const movingTeam = pieces[0].team;
+      for (const piece of room.selection.pieces) {
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = 29
+      }
+
+      const from = room.selection.tile
+      operation['$set'][`tiles.${from}`] = []
+
+      // pass check
+      let moves = room.teams[movingTeam].moves;
+      let throws = room.teams[movingTeam].throws;
+      moves[selectedMove]--;
+      if (throws === 0 && isEmptyMoves(moves.toObject())) {
+        const newTurn = passTurn(room.turn, room.teams)
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId, 
+          }, 
+          { 
+            $set: { 
+              turn: newTurn,
+              // Empty the team's moves
+              [`teams.${movingTeam}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
+            },
+            $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
+          }
+        )
+      }
+
+      operation['$set'][`teams.${movingTeam}.moves`] = moves
+      
+      // Clear legal tiles and selection
+      operation['$set']['legalTiles'] = {}
+      operation['$set']['selection'] = null
+
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        operation
+      )
+    } catch (err) {
+      console.log(`[move] error scoring piece`, err)
     }
   })
 

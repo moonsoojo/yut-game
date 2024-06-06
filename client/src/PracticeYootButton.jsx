@@ -3,6 +3,7 @@ import initialState from '../initialState';
 import { useAtom } from 'jotai';
 import { yootThrowValuesAtom } from './GlobalState';
 import HtmlElement from './HtmlElement';
+import { roundNum } from './helpers/helpers';
 
 export default function PracticeYootButton({ 
   position=[0,0,0], 
@@ -29,11 +30,11 @@ export default function PracticeYootButton({
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(20, 3),
+        yImpulse: roundNum(generateRandomNumberInRange(20, 3), 5),
         torqueImpulse: {
-          x: generateRandomNumberInRange(1, 0.5),
-          y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.3, 0.2), // Spins through the middle axis
+          x: roundNum(generateRandomNumberInRange(1, 0.5), 5),
+          y: roundNum(generateRandomNumberInRange(1.3, 0.7), 5), // Spins vertically through the center
+          z: roundNum(generateRandomNumberInRange(0.3, 0.2), 5)// Spins through the middle axis
         },
       });
     }
