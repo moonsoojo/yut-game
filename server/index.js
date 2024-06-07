@@ -403,8 +403,7 @@ io.on("connect", async (socket) => {
         gamePhase: "pregame",
         turn
       })
-      // get Host
-      // get team
+      
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
           [`teams.${randomTeam}.throws`]: 20,
@@ -879,10 +878,13 @@ io.on("connect", async (socket) => {
       operation['$inc'] = {}
 
       const pieces = room.selection.pieces
-      console.log(`[score] selection`, room.selection)
       const movingTeam = pieces[0].team;
+      const history = selectedMove.history
+      const path = selectedMove.path
       for (const piece of room.selection.pieces) {
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = 29
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
+        operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
       }
 
       const from = room.selection.tile

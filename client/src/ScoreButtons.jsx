@@ -48,8 +48,6 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
         onPointerLeave={scorePointerOut}
         onPointerDown={() => {
           socket.emit("score", { roomId: params.id, selectedMove: moveInfo });
-          socket.emit("select", { roomId: params.id, payload: null });
-          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
         }}
       >
         <cylinderGeometry args={[0.5, 0.5, 0.15]}/>
