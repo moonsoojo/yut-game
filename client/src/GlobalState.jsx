@@ -41,6 +41,7 @@ export const boomTextAtom = atom('')
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
+export const winnerAtom = atom(-1)
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
   (prev, next) => {
@@ -130,5 +131,6 @@ function initializeDevice(windowWidth, landscapeCutoff) {
     return "landscapeDesktop"
   }
 }
+
 // window.innerWidth captured even though this component doesn't render anything visible
 export const deviceAtom = atom(initializeDevice(window.innerWidth, mediaValues.landscapeCutoff))

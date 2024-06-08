@@ -14,9 +14,11 @@ import * as THREE from 'three';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
 import UfosWinParticles from './particles/UfosWinParticles';
-import { particleSettingAtom } from './GlobalState';
+import { deviceAtom, particleSettingAtom } from './GlobalState';
 
-export default function UfosWin({ handleRestart, device }) {
+export default function UfosWin({ handleRestart }) {
+
+  const [device] = useAtom(deviceAtom)
 
   var map = new THREE.TextureLoader().load("./textures/dot.png");
   var material = new THREE.SpriteMaterial({
@@ -43,10 +45,10 @@ export default function UfosWin({ handleRestart, device }) {
   const radius = 1.7
   const offset = 2 * Math.PI / 4
   const floatHeight = 3
-  const beamBrightness = 0.25
+  const beamBrightness = 0.3
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 
-    beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 3) * 0.1 + beamBrightness
+    beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 3) * 0.3 + beamBrightness
     ufo0.current.position.x = Math.sin(time + offset * 0) * radius
     ufo0.current.position.z = Math.cos(time + offset * 0) * radius
     ufo0.current.position.y = Math.cos(time + offset * 0) * 0.1 + floatHeight
@@ -78,7 +80,7 @@ export default function UfosWin({ handleRestart, device }) {
       font="/fonts/Luckiest Guy_Regular.json" 
       size={1} 
       height={0.01} 
-      position={[-3.5, 5.5, 0]}>
+      position={[-3.5, 4.5, 0]}>
       UFOS WIN!
       <meshStandardMaterial color="yellow"/>
     </Text3D>
@@ -105,21 +107,21 @@ export default function UfosWin({ handleRestart, device }) {
     <Stars/>
 
     {/* beam */}
-    <mesh position={[0, -1, 0]}>
+    <mesh position={[0, -1, 0.5]} rotation={[Math.PI/32, 0, 0]}>
       <cylinderGeometry args={[1.5, 4, 7, 32]}/>
-      <rawShaderMaterial 
+      <shaderMaterial 
         vertexShader={VertexShader}
         fragmentShader={FragmentShader}
         transparent={true}
         uniforms={{
-          uOpacity: { value: 0.2 }
+          uOpacity: { value: 1 }
         }}
         ref={beamShaderRef}
       />
     </mesh>
     <TextButton
       text="Play again"
-      position={[-3, -7, 0]}
+      position={[-3, -6, 0]}
       rotation={[0, 0, 0]}
       // can't pass a function received from props
       handlePointerClick={handleRestart}

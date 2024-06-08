@@ -126,7 +126,8 @@ const roomSchema = new mongoose.Schema(
           _id: false
         }
       ]
-    ]
+    ],
+    results: [Number]
   },
   {
     versionKey: false,
@@ -272,7 +273,8 @@ io.on("connect", async (socket) => {
         pregameOutcome: null,
         selection: null,
         legalTiles: {},
-        tiles: JSON.parse(JSON.stringify(initialState.initialTiles))
+        tiles: JSON.parse(JSON.stringify(initialState.initialTiles)),
+        results: []
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -876,7 +878,9 @@ io.on("connect", async (socket) => {
       let operation = {};
       operation['$set'] = {}
       operation['$inc'] = {}
-
+      operation['$push'] = {}
+      
+      // update pieces
       const pieces = room.selection.pieces
       const movingTeam = pieces[0].team;
       const history = selectedMove.history
@@ -885,38 +889,57 @@ io.on("connect", async (socket) => {
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = 29
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.history`] = history
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.lastPath`] = path
+
+        // set state within the scope of this function for win check
+        room.teams[movingTeam].pieces[piece.id].tile = 29
       }
 
+      // update tiles
       const from = room.selection.tile
       operation['$set'][`tiles.${from}`] = []
-
-      // pass check
-      let moves = room.teams[movingTeam].moves;
-      let throws = room.teams[movingTeam].throws;
-      moves[selectedMove.move]--;
-      console.log(`[score] throws`, throws, `moves`, moves)
-      if (throws === 0 && isEmptyMoves(moves.toObject())) {
-        const newTurn = passTurn(room.turn, room.teams)
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-          }, 
-          { 
-            $set: { 
-              turn: newTurn,
-              // Empty the team's moves
-              [`teams.${movingTeam}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
-            },
-            $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
-          }
-        )
-      }
-
-      operation['$set'][`teams.${movingTeam}.moves`] = moves
       
-      // Clear legal tiles and selection
+      // update moves
+      let moves = room.teams[movingTeam].moves;
+      operation['$set'][`teams.${movingTeam}.moves`] = moves
+
+      // update selection and legal tiles
       operation['$set']['legalTiles'] = {}
       operation['$set']['selection'] = null
+
+      function winCheck(team) {
+        for (const piece of team.pieces) {
+          if (piece.tile !== 29) {
+            return false
+          }
+        }
+        return true;
+      }
+
+      if (winCheck(room.teams[movingTeam])) {
+        operation['$push'][`results`] = movingTeam
+        operation['$set']['gamePhase'] = 'finished'
+      } else {
+        // pass check
+        let throws = room.teams[movingTeam].throws;
+        moves[selectedMove.move]--;
+        console.log(`[score] throws`, throws, `moves`, moves)
+        if (throws === 0 && isEmptyMoves(moves.toObject())) {
+          const newTurn = passTurn(room.turn, room.teams)
+          await Room.findOneAndUpdate(
+            { 
+              _id: roomId, 
+            }, 
+            { 
+              $set: { 
+                turn: newTurn,
+                // Empty the team's moves
+                [`teams.${movingTeam}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
+              },
+              $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
+            }
+          )
+        }
+      }
 
       await Room.findOneAndUpdate(
         { 

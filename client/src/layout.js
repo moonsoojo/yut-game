@@ -1098,6 +1098,10 @@ export default {
       game: {
         scale: 1,
         position: [0, 0, 0]
+      },
+      finished: {
+        scale: 0.2,
+        position: [5, 0, 1]
       }
     },
     gamePhase: {

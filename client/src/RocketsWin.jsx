@@ -9,15 +9,17 @@ import EarthModified from './meshes/EarthModified';
 import RocketWinMesh from './meshes/RocketWinMesh';
 import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
-import { particleSettingAtom } from './GlobalState';
+import { deviceAtom, particleSettingAtom } from './GlobalState';
 
-export default function RocketsWin({handleRestart, device}) {
+export default function RocketsWin({handleRestart}) {
+
+  const [device] = useAtom(deviceAtom)
 
   const rockets = useRef();
   
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
-    setParticleSetting({emitters: fireworksSettings(device)})
+    setParticleSetting({ emitters: fireworksSettings(device) })
   }, [device])
 
   useFrame((state, delta) => {   
