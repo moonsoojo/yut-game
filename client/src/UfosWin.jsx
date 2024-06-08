@@ -40,15 +40,26 @@ export default function UfosWin({ handleRestart }) {
   const ufo2 = useRef();
   const ufo3 = useRef();
 
+  // Replaced <ShaderMaterial/> because it didn't flash
+  const shaderMaterial = new THREE.ShaderMaterial({
+    vertexShader: VertexShader,
+    fragmentShader: FragmentShader,
+    transparent: true,
+    uniforms:
+    {
+      uOpacity: { value: 0 }
+    }
+  })
+
   // earth shaking
   // particles dragged upward
   const radius = 1.7
   const offset = 2 * Math.PI / 4
   const floatHeight = 3
-  const beamBrightness = 0.3
+  const beamBrightness = 0.2
   useFrame((state, delta) => {   
     const time = state.clock.elapsedTime 
-    beamShaderRef.current.uniforms.uOpacity.value = Math.sin(time * 3) * 0.3 + beamBrightness
+    shaderMaterial.uniforms.uOpacity.value = Math.sin(time * 3) * 0.05 + beamBrightness
     ufo0.current.position.x = Math.sin(time + offset * 0) * radius
     ufo0.current.position.z = Math.cos(time + offset * 0) * radius
     ufo0.current.position.y = Math.cos(time + offset * 0) * 0.1 + floatHeight
@@ -107,9 +118,9 @@ export default function UfosWin({ handleRestart }) {
     <Stars/>
 
     {/* beam */}
-    <mesh position={[0, -1, 0.5]} rotation={[Math.PI/32, 0, 0]}>
+    <mesh position={[0, -1, 0.5]} rotation={[Math.PI/32, 0, 0]} material={shaderMaterial}>
       <cylinderGeometry args={[1.5, 4, 7, 32]}/>
-      <shaderMaterial 
+      {/* <shaderMaterial 
         vertexShader={VertexShader}
         fragmentShader={FragmentShader}
         transparent={true}
@@ -117,7 +128,7 @@ export default function UfosWin({ handleRestart }) {
           uOpacity: { value: 1 }
         }}
         ref={beamShaderRef}
-      />
+      /> */}
     </mesh>
     <TextButton
       text="Play again"
