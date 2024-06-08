@@ -406,7 +406,7 @@ io.on("connect", async (socket) => {
       
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
-          [`teams.${randomTeam}.throws`]: 20,
+          [`teams.${randomTeam}.throws`]: 1,
         }
       })
     } catch (err) {
@@ -538,7 +538,6 @@ io.on("connect", async (socket) => {
 
   // Return the result
   function comparePregameRolls(team0Roll, team1Roll) {
-    console.log(`[passTurnPregame] team 0 roll`, team0Roll, 'team 1 roll', team1Roll)
     if (team0Roll && team1Roll) {
       if (team0Roll === team1Roll) {
         // Clear pregame rolls
@@ -616,6 +615,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
+          // move = 3
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }
@@ -893,7 +893,8 @@ io.on("connect", async (socket) => {
       // pass check
       let moves = room.teams[movingTeam].moves;
       let throws = room.teams[movingTeam].throws;
-      moves[selectedMove]--;
+      moves[selectedMove.move]--;
+      console.log(`[score] throws`, throws, `moves`, moves)
       if (throws === 0 && isEmptyMoves(moves.toObject())) {
         const newTurn = passTurn(room.turn, room.teams)
         await Room.findOneAndUpdate(
