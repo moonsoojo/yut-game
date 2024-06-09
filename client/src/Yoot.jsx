@@ -41,9 +41,6 @@ export default function Yoot({ device }) {
   }
 
   useEffect(() => {
-    // for (let i = 0; i < yootMeshes.length; i++) {
-    //   yootMeshes[i].current.material.visible = true
-    // }
 
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
@@ -85,11 +82,6 @@ export default function Yoot({ device }) {
   useEffect(() => {
     // console.log("[Yoots] sleepCount", sleepCount)
     if (sleepCount == 4) {
-      // Do this by 'thrown'
-      // Easier to reveal by gamePhase in useFrame
-      // for (let i = 0; i < yootMeshes.length; i++) {
-      //   yootMeshes[i].current.material.visible = false
-      // }
       
       let move = observeThrow();
       // Uncomment to test what happens on Yoot or Mo
@@ -119,7 +111,7 @@ export default function Yoot({ device }) {
   useFrame((state, delta) => {
     let allYootsOnFloor = true;
     for (let i = 0; i < yoots.length; i++) {
-      if (yoots[i].current.translation().y < 0) {
+      if (yoots[i].current && yoots[i].current.translation().y < 0) {
         setOutOfBounds(true);
         allYootsOnFloor = false
       }
@@ -224,7 +216,7 @@ export default function Yoot({ device }) {
         return (
           <RigidBody
             ref={ref}            
-            position={[-1.5 + 1*index, 10, 2]} // if not set by socketManager
+            position={[-1.5 + 1*index, 30, 2]}
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
             restitution={0.3}

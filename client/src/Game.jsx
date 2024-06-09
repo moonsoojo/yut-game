@@ -69,9 +69,8 @@ export default function Game() {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
-  function LetsPlayButton({ position, rotation, fontSize, device }) {
+  function LetsPlayButton({ position, rotation, fontSize }) {
     const [readyToStart] = useAtom(readyToStartAtom)
-    const [gamePhase] = useAtom(gamePhaseAtom)
 
     function handleLetsPlay() {
       socket.emit("startGame", { roomId: params.id })
@@ -150,9 +149,11 @@ export default function Game() {
   }
 
   // Animations
-  const { boardScale, boardPosition } = useSpring({
+  const { boardScale, boardPosition, gameScale, winScreenScale } = useSpring({
     boardScale: layout[device].board[gamePhase].scale,
-    boardPosition: layout[device].board[gamePhase].position
+    boardPosition: layout[device].board[gamePhase].position,
+    gameScale: gamePhase !== 'finished' ? 1 : 1,
+    winScreenScale: gamePhase === 'finished' ? 1 : 1
   })
 
   // UI prop guideline
@@ -163,11 +164,12 @@ export default function Game() {
   // If state is contained globally, don't pass it as a prop
     // example: <Host/> is in this component. 'device' is
     // declared at the top. don't pass it in as a prop
+
   return (<>
       {/* <Perf/> */}
       {/* <Leva hidden /> */}
       <GameCamera position={layout[device].camera.position}/>
-      { (gamePhase === 'lobby' || gamePhase === 'pregame' || gamePhase === 'game') && <group>
+      { gamePhase !== 'finished' && <animated.group scale={gameScale}>
         <Team 
           position={layout[device].team0.position}
           scale={layout[device].team0.scale}
@@ -295,10 +297,12 @@ export default function Game() {
           position={[4.5, 0, 3.5]}
           legalTiles={legalTiles}
         /> }
-        </group>
+        </animated.group>
       }
-      { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
-      { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
+      { gamePhase === 'finished' && <animated.group scale={winScreenScale}>
+        { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
+        { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
+      </animated.group> }
     </>
   );
 }

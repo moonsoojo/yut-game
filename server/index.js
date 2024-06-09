@@ -234,12 +234,7 @@ io.on("connect", async (socket) => {
           {
             _id: 0,
             players: [],
-            pieces: [
-              { tile: -1, team: 0, id: 0, history: [], lastPath: [] },
-              { tile: -1, team: 0, id: 1, history: [], lastPath: [] },
-              { tile: -1, team: 0, id: 2, history: [], lastPath: [] },
-              { tile: -1, team: 0, id: 3, history: [], lastPath: [] },
-            ],
+            pieces: JSON.parse(JSON.stringify(initialState.initialPiecesTeam0)),
             moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
             pregameRoll: null
@@ -247,12 +242,7 @@ io.on("connect", async (socket) => {
           {
             _id: 1,
             players: [],
-            pieces: [
-              { tile: -1, team: 1, id: 0, history: [], lastPath: [] },
-              { tile: -1, team: 1, id: 1, history: [], lastPath: [] },
-              { tile: -1, team: 1, id: 2, history: [], lastPath: [] },
-              { tile: -1, team: 1, id: 3, history: [], lastPath: [] },
-            ],
+            pieces: JSON.parse(JSON.stringify(initialState.initialPiecesTeam1)),
             moves: JSON.parse(JSON.stringify(initialState.initialMoves)),
             throws: 0,
             pregameRoll: null
@@ -600,11 +590,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          // if (user.team === 0) {
-          //   move = 5;
-          // } else {
-          //   move = 1
-          // }
+          if (user.team === 0) {
+            move = 5;
+          } else {
+            move = 1
+          }
           // move = 2;
           await Room.findOneAndUpdate(
             { 
@@ -617,7 +607,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = 3
+          move = 3
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }
@@ -949,6 +939,51 @@ io.on("connect", async (socket) => {
       )
     } catch (err) {
       console.log(`[move] error scoring piece`, err)
+    }
+  })
+
+  socket.on("reset", async ({ roomId }) => {
+    // change gamePhase to lobby
+    // reset tiles
+    // reset teams except the player names (pieces, moves, throws)
+    // pregame outcome, legal tiles, selection
+    // set turn to someone random
+    // yoot thrown
+    try {
+      let operation = {};
+      operation['$set'] = {}
+      operation['$set']['gamePhase'] = 'lobby'
+      operation['$set']['tiles'] = JSON.parse(JSON.stringify(initialState.initialTiles)),
+      operation['$set']['legalTiles'] = {}
+      operation['$set']['selection'] = null
+      operation['$set']['pregameOutcome'] = null
+      operation['$set']['yootThrown'] = {
+        flag: false,
+        player: ''
+      }
+      operation['$set']['turn'] = {
+        team: generateRandomNumberInRange(1, 1) > 1 ? 0 : 1,
+        players: [0, 0]
+      }
+      operation['$set'][`teams.0.pieces`] = JSON.parse(JSON.stringify(initialState.initialPiecesTeam0))
+      operation['$set'][`teams.0.throws`] = 0
+      operation['$set'][`teams.0.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
+      operation['$set'][`teams.0.pregameRoll`] = null
+      operation['$set'][`teams.1.pieces`] = JSON.parse(JSON.stringify(initialState.initialPiecesTeam1))
+      operation['$set'][`teams.1.throws`] = 0
+      operation['$set'][`teams.1.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
+      operation['$set'][`teams.1.pregameRoll`] = null
+
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        operation
+      )
+
+      console.log(`[reset] success`)
+    } catch (err) {
+      console.log(`[reset] error resetting game`, err)
     }
   })
 

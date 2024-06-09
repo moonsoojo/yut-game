@@ -15,10 +15,13 @@ import TextButton from './components/TextButton';
 import { useAtom } from 'jotai';
 import UfosWinParticles from './particles/UfosWinParticles';
 import { deviceAtom, particleSettingAtom } from './GlobalState';
+import { useParams } from 'wouter';
+import { socket } from './SocketManager';
 
-export default function UfosWin({ handleRestart }) {
+export default function UfosWin({}) {
 
   const [device] = useAtom(deviceAtom)
+  const params = useParams()
 
   var map = new THREE.TextureLoader().load("./textures/dot.png");
   var material = new THREE.SpriteMaterial({
@@ -31,10 +34,11 @@ export default function UfosWin({ handleRestart }) {
 
   const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
   useEffect(() =>{
-    setParticleSetting({emitters: UfosWinParticles(device)})
+    setParticleSetting({ emitters: UfosWinParticles(device) })
   }, [device])
   
   const beamShaderRef = useRef();
+  const textMaterialRef = useRef();
   const ufo0 = useRef();
   const ufo1 = useRef();
   const ufo2 = useRef();
@@ -72,13 +76,23 @@ export default function UfosWin({ handleRestart }) {
     ufo3.current.position.x = Math.sin(time + offset * 3) * radius
     ufo3.current.position.z = Math.cos(time + offset * 3) * radius
     ufo3.current.position.y = Math.cos(time + offset * 3) * 0.1 + floatHeight
-
-    const camera = state.camera;
-    camera.position.x = 0
-    camera.position.y = 0
-    camera.position.z = 20
-    camera.quaternion.identity()
   });
+
+  function handlePointerEnter() {
+    textMaterialRef.current.color = new THREE.Color('green')
+    document.body.style.cursor = "pointer";
+  }
+
+  function handlePointerLeave() {
+    textMaterialRef.current.color = new THREE.Color('black')
+    document.body.style.cursor = "default";
+  }
+
+  function handlePointerDown() {
+    socket.emit('reset', { roomId: params.id })
+    // respawn yoots
+    // set camera upright - move scene
+  }
 
   return <>
     <PresentationControls
@@ -130,7 +144,37 @@ export default function UfosWin({ handleRestart }) {
         ref={beamShaderRef}
       /> */}
     </mesh>
-    <TextButton
+    <group name='play-again-button' position={[-3.5, -6.5, 0]}>
+      <Text3D
+        font="/fonts/Luckiest Guy_Regular.json"
+        rotation={[0, 0, 0]}
+      >
+        Play Again
+        <meshStandardMaterial color="yellow"/>
+      </Text3D>
+      <mesh name="play-again-button-background-outer" position={[3.7, 0.5, 0]}>
+        <boxGeometry args={[8.1, 1.6, 0.1]}/>
+        <meshStandardMaterial color="yellow"/>
+      </mesh>
+      <mesh 
+        name="play-again-button-background-inner" 
+        position={[3.7, 0.5, 0]}
+      >
+        <boxGeometry args={[8, 1.5, 0.11]}/>
+        <meshStandardMaterial color="black" ref={textMaterialRef}/>
+      </mesh>
+      <mesh 
+        name='play-again-button-wrapper' 
+        position={[3.7, 0.5, 0]}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onPointerDown={handlePointerDown}
+      >
+        <boxGeometry args={[8.1, 1.6, 0.5]}/>
+        <meshStandardMaterial color="grey" transparent opacity={0}/>
+      </mesh>
+    </group>
+    {/* <TextButton
       text="Play again"
       position={[-3, -6, 0]}
       rotation={[0, 0, 0]}
@@ -139,7 +183,7 @@ export default function UfosWin({ handleRestart }) {
       boxWidth={5.9}
       boxHeight={0.8}
       size={0.8}
-    />
+    /> */}
     </PresentationControls>
   </>
 }

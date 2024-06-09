@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -55,6 +55,8 @@ export const SocketManager = () => {
   const [_pieceTeam1Id2, setPieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
   const [_pieceTeam1Id3, setPieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
   const [_winner, setWinner] = useAtom(winnerAtom)
+  // UI
+  const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
 
   useEffect(() => {
 
@@ -113,8 +115,12 @@ export const SocketManager = () => {
       }
 
       setGamePhase((lastPhase) => {
+        console.log(room.gamePhase)
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
           setBoomText('startGame')
+        } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
+          // Reset fireworks from win screen
+          setParticleSetting(null)
         }
         return room.gamePhase
       });
@@ -210,6 +216,7 @@ export const SocketManager = () => {
       } else {
         setWinner(room.results[room.results.length-1])
       }
+
     })
 
     // hybrid: yoot thrown should not be set in room update.
