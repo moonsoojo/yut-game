@@ -6,7 +6,7 @@ import { useGraph } from "@react-three/fiber";
 import React from "react";
 import { animated } from "@react-spring/three";
 
-export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
+export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1, color='yellow' }) {
   const { scene } = useGLTF(
     "models/star.glb"
   );
@@ -22,7 +22,7 @@ export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
         geometry={nodes.star.geometry}
         rotation={[0, Math.PI, 0]} // Upside down by default
       >
-        <meshStandardMaterial color={"yellow"} />
+        <meshStandardMaterial color={color} />
       </mesh>
     </animated.group>
   );

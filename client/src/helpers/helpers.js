@@ -103,3 +103,7 @@ export function getRandomNumber(min, max) {
 export function roundNum(num, place) {
   return Math.round(num * Math.pow(10, place)) / Math.pow(10, place)
 }
+
+export function generateRandomNumberInRange(num, plusMinus) {
+  return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+};

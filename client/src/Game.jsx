@@ -153,7 +153,7 @@ export default function Game() {
     boardScale: layout[device].board[gamePhase].scale,
     boardPosition: layout[device].board[gamePhase].position,
     gameScale: gamePhase !== 'finished' ? 1 : 1,
-    winScreenScale: gamePhase === 'finished' ? 1 : 1
+    winScreenScale: gamePhase === 'finished' ? 1 : 0
   })
 
   // UI prop guideline
