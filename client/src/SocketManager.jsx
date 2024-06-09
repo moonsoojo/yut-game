@@ -110,7 +110,7 @@ export const SocketManager = () => {
         }
       }
 
-      if (room.gamePhase === 'pregame' && room.yootThrown.player && !room.yootThrown.flag && !room.teams[0].pregameRoll && !room.teams[1].pregameRoll) {
+      if (room.gamePhase === 'pregame' && room.yootThrown.player && !room.yootThrown.flag && (room.teams[0].pregameRoll === null) && (room.teams[1].pregameRoll === null)) {
         setBoomText('pregameTie')
       }
 
