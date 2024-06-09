@@ -52,13 +52,13 @@ export default function Home2() {
 
   function Pieces() {
     return <group>
-      <RocketAnimated position={[4,2,0]} scale={0.5}/>
-      <RocketAnimated position={[-1,2,0]} scale={0.5}/>
+      <RocketAnimated position={[4,2,0]} rotation={[-Math.PI/8, -Math.PI/8, 0]} scale={0.5}/>
+      <RocketAnimated position={[-1,2,0]} rotation={[-Math.PI/8, -Math.PI/16, 0]} scale={0.5}/>
       <Float speed={3} floatIntensity={1}>
-        <group rotation={[-Math.PI/12,0,0]}>
-          <UfoAnimated position={[-1.5, 1, 3.5]} scale={0.5}/>
-          <UfoAnimated position={[-2.5, 1, 3.5]} scale={0.5}/>
-          <UfoAnimated position={[-2, 1, 4.2]} scale={0.5}/>
+        <group rotation={[-Math.PI/4,0,0]}>
+          <UfoAnimated position={[-1, -1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-2, -1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-1.5, -1.3, 4.2]} scale={0.5}/>
         </group>
       </Float>
       <UfoAnimated position={ufoPosition} scale={0.5} rotation={ufoRotation}/>
