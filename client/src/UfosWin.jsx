@@ -17,6 +17,7 @@ import UfosWinParticles from './particles/UfosWinParticles';
 import { deviceAtom, particleSettingAtom } from './GlobalState';
 import { useParams } from 'wouter';
 import { socket } from './SocketManager';
+import EarthModified from './meshes/EarthModified';
 
 export default function UfosWin({}) {
 
@@ -57,7 +58,7 @@ export default function UfosWin({}) {
 
   // earth shaking
   // particles dragged upward
-  const radius = 1.7
+  const radius = 1.5
   const offset = 2 * Math.PI / 4
   const floatHeight = 3
   const beamBrightness = 0.2
@@ -94,46 +95,37 @@ export default function UfosWin({}) {
     // set camera upright - move scene
   }
 
-  return <>
-    <PresentationControls
-      global
-      polar={[-0.4, 0.2]}
-      azimuth={[-1, 0.75]}
-      config={{ mass: 2, tension: 400 }}
-      snap={{ mass: 4, tension: 400 }}>
+  const textSize = 0.8
+  return <group>
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 
-      size={1} 
-      height={0.01} 
-      position={[-3.5, 4.5, 0]}>
+      size={textSize} 
+      height={0.03} 
+      position={[-2.7, 0, -5]}
+      rotation={[-Math.PI/2, 0, 0]}
+      >
       UFOS WIN!
       <meshStandardMaterial color="yellow"/>
     </Text3D>
-    {/* <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.8} height={0.01} position={[2, -5, 0]}>
-      Feedback
-      <meshStandardMaterial color="yellow"/>
-    </Text3D> */}
-    <Float floatIntensity={2} speed={5}>
-      <Earth position={[0,-2,0]} scale={1.3} rotate={false}/>
-    </Float>
     {/* UFO */}
-    <group ref={ufo0}>
-      <UfoAnimated scale={1.2} rotation={[Math.PI/12, 0, 0]}/>
+    <group position={[-0.15, 0, 0]} rotation={[-Math.PI/2 + Math.PI/16, 0, 0]}>
+      <group ref={ufo0}>
+        <UfoAnimated scale={1} rotation={[Math.PI/12, 0, 0]}/>
+      </group>
+      <group ref={ufo1}>
+        <UfoAnimated scale={1} rotation={[Math.PI/12, 0, 0]}/>
+      </group>
+      <group ref={ufo2}>
+        <UfoAnimated scale={1} rotation={[Math.PI/12, 0, 0]}/>
+      </group>
+      <group ref={ufo3}>
+        <UfoAnimated scale={1} rotation={[Math.PI/12, 0, 0]}/>
+      </group>
     </group>
-    <group ref={ufo1}>
-      <UfoAnimated scale={1.2} rotation={[Math.PI/12, 0, 0]}/>
-    </group>
-    <group ref={ufo2}>
-      <UfoAnimated scale={1.2} rotation={[Math.PI/12, 0, 0]}/>
-    </group>
-    <group ref={ufo3}>
-      <UfoAnimated scale={1.2} rotation={[Math.PI/12, 0, 0]}/>
-    </group>
-    <Stars/>
 
     {/* beam */}
-    <mesh position={[0, -1, 0.5]} rotation={[Math.PI/32, 0, 0]} material={shaderMaterial}>
-      <cylinderGeometry args={[1.5, 4, 7, 32]}/>
+    <mesh position={[0, 0, 0.2]} rotation={[-Math.PI/2 + Math.PI/32, 0, 0]} material={shaderMaterial}>
+      <cylinderGeometry args={[1.4, 3.8, 6, 32]}/>
       {/* <shaderMaterial 
         vertexShader={VertexShader}
         fragmentShader={FragmentShader}
@@ -144,23 +136,42 @@ export default function UfosWin({}) {
         ref={beamShaderRef}
       /> */}
     </mesh>
-    <group name='play-again-button' position={[-3.5, -6.5, 0]}>
+    {/* <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.8} height={0.01} position={[2, -5, 0]}>
+      Feedback
+      <meshStandardMaterial color="yellow"/>
+    </Text3D> */}
+    <Float floatIntensity={2} speed={5} rotation={[-Math.PI/2,Math.PI/2,0]}>
+      <EarthModified 
+      position={[0,-1,0]} 
+      scale={1} 
+      />
+    </Float>
+
+    <Stars/>
+    
+    <group 
+    name='play-again-button' 
+    position={[-3, 0, 6]}
+    rotation={[-Math.PI/2, 0, 0]}
+    >
       <Text3D
         font="/fonts/Luckiest Guy_Regular.json"
         rotation={[0, 0, 0]}
+        size={textSize} 
+        height={0.03} 
       >
         Play Again
         <meshStandardMaterial color="yellow"/>
       </Text3D>
-      <mesh name="play-again-button-background-outer" position={[3.7, 0.5, 0]}>
-        <boxGeometry args={[8.1, 1.6, 0.1]}/>
+      <mesh name="play-again-button-background-outer" position={[3, 0.4, 0]}>
+        <boxGeometry args={[6.7, 1.4, 0.02]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>
       <mesh 
         name="play-again-button-background-inner" 
-        position={[3.7, 0.5, 0]}
+        position={[3, 0.4, 0]}
       >
-        <boxGeometry args={[8, 1.5, 0.11]}/>
+        <boxGeometry args={[6.6, 1.3, 0.03]}/>
         <meshStandardMaterial color="black" ref={textMaterialRef}/>
       </mesh>
       <mesh 
@@ -174,16 +185,5 @@ export default function UfosWin({}) {
         <meshStandardMaterial color="grey" transparent opacity={0}/>
       </mesh>
     </group>
-    {/* <TextButton
-      text="Play again"
-      position={[-3, -6, 0]}
-      rotation={[0, 0, 0]}
-      // can't pass a function received from props
-      handlePointerClick={handleRestart}
-      boxWidth={5.9}
-      boxHeight={0.8}
-      size={0.8}
-    /> */}
-    </PresentationControls>
-  </>
+  </group>
 }

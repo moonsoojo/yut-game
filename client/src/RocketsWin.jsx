@@ -45,33 +45,52 @@ export default function RocketsWin() {
   function handlePointerDown() {
     socket.emit('reset', { roomId: params.id })
   }
-  return <PresentationControls
-    global
-    polar={[-0.4, 0.2]}
-    azimuth={[-1, 0.75]}
-    config={{ mass: 2, tension: 400 }}
-    snap={{ mass: 4, tension: 400 }}>
-    <Text3D font="/fonts/Luckiest Guy_Regular.json" size={1} height={0.01} position={[-4.3, 5, 0]}>
+
+  return <group>
+    <Text3D 
+      font="/fonts/Luckiest Guy_Regular.json" 
+      size={1} 
+      height={0.03} 
+      position={[-4.3, 0, -5]}
+      rotation={[-Math.PI/2, 0, 0]}
+    >
       ROCKETS WIN!
       <meshStandardMaterial color="yellow"/>
     </Text3D>
-    <group name='play-again-button' position={[-3.5, -6.5, 0]}>
+
+    <group name='earth-rotation-group' rotation={[-Math.PI/2 + Math.PI/28, 0, 0]}>
+      <EarthModified position={[0,0,0]} scale={2}/>
+    </group>
+    <group ref={rockets}>
+      <RocketWinMesh position={[-0.6, 4, 0]} rotation={[-Math.PI/2 + Math.PI/8, 0, 0]}/>
+      <RocketWinMesh position={[1.3, 4, 0.7]} rotation={[-Math.PI/2 + Math.PI/8, 0, 0]}/>
+      <RocketWinMesh position={[-1.5, 4, 2.2]} rotation={[-Math.PI/2 + Math.PI/8, 0, 0]}/>
+      <RocketWinMesh position={[0.6, 4, 2.8]} rotation={[-Math.PI/2 + Math.PI/8, 0, 0]}/>
+    </group>
+
+    <group 
+    name='play-again-button' 
+    position={[-3.8, 0, 5.4]} 
+    rotation={[-Math.PI/2, 0, 0]}
+    >
       <Text3D
         font="/fonts/Luckiest Guy_Regular.json"
         rotation={[0, 0, 0]}
+        size={1} 
+        height={0.03} 
       >
         Play Again
         <meshStandardMaterial color="yellow"/>
       </Text3D>
       <mesh name="play-again-button-background-outer" position={[3.7, 0.5, 0]}>
-        <boxGeometry args={[8.1, 1.6, 0.1]}/>
+        <boxGeometry args={[8.1, 1.6, 0.02]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>
       <mesh 
         name="play-again-button-background-inner" 
         position={[3.7, 0.5, 0]}
       >
-        <boxGeometry args={[8, 1.5, 0.11]}/>
+        <boxGeometry args={[8, 1.5, 0.03]}/>
         <meshStandardMaterial color="black" ref={textMaterialRef}/>
       </mesh>
       <mesh 
@@ -85,27 +104,6 @@ export default function RocketsWin() {
         <meshStandardMaterial color="grey" transparent opacity={0}/>
       </mesh>
     </group>
-    {/* <TextButton
-      text="Play again"
-      position={[-3, -5, 0]}
-      rotation={[0, 0, 0]}
-      // can't pass a function received from props
-      handlePointerClick={handleRestart}
-      boxWidth={5.85}
-      boxHeight={0.8}
-      size={0.8}
-    /> */}
-    {/* <Text3D font="/fonts/Luckiest Guy_Regular.json" size={0.8} height={0.01} position={[2, -5, 0]}>
-      Feedback
-      <meshStandardMaterial color="yellow"/>
-    </Text3D> */}
-    <EarthModified position={[0,0,0]} scale={2}/>
-    <group ref={rockets}>
-      <RocketWinMesh position={[-1.5,0.3,3.5]}/>
-      <RocketWinMesh position={[-1,-1.4,3.5]}/>
-      <RocketWinMesh position={[1.3,1,3.5]}/>
-      <RocketWinMesh position={[1.6,-0.7,3.5]}/>
-    </group>
     <Stars/>
-  </PresentationControls>
+  </group>
 }

@@ -590,11 +590,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          if (user.team === 0) {
-            move = 5;
-          } else {
-            move = 1
-          }
+          // if (user.team === 0) {
+          //   move = 5;
+          // } else {
+          //   move = 1
+          // }
           // move = 2;
           await Room.findOneAndUpdate(
             { 
@@ -607,7 +607,7 @@ io.on("connect", async (socket) => {
           )
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = 3
+          // move = 3
           let operation = { 
             $inc: { [`teams.$.moves.${move}`]: 1 } 
           }

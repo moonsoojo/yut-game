@@ -36,7 +36,7 @@ export default function PiecesOnBoard() {
     }))
     const [springs0_3, api0_3] = useSpring(() => ({        
         from: {
-            position: [0,5,0], 
+            position: [0,0,0], 
             scale: 1
         }
     }))
@@ -60,7 +60,7 @@ export default function PiecesOnBoard() {
     }))
     const [springs1_3, api1_3] = useSpring(() => ({        
         from: {
-            position: [0,5,0], 
+            position: [0,0,0], 
             scale: 1
         }
     }))
