@@ -62,6 +62,7 @@ export default function Yoot({ device }) {
       }
       setSleepCount(0);
     }
+    
   }, [yootThrowValues]);
 
   function getMoveText(move) {

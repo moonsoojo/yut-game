@@ -35,14 +35,14 @@ export default function PiecesOnBoard() {
     }))
     const [springs0_2, api0_2] = useSpring(() => ({        
         from: {
-            position: [0,5,0], 
+            position: [0,0,0], 
             scale: 1,
             sizeTwink: 0
         }
     }))
     const [springs0_3, api0_3] = useSpring(() => ({        
         from: {
-            position: [0,5,0], 
+            position: [0,0,0], 
             scale: 1,
             sizeTwink: 0
         }
@@ -63,14 +63,14 @@ export default function PiecesOnBoard() {
     }))
     const [springs1_2, api1_2] = useSpring(() => ({        
         from: {
-            position: [0,5,0], // Filler values
+            position: [0,0,0], // Filler values
             scale: 1,
             sizeTwink: 0
         }
     }))
     const [springs1_3, api1_3] = useSpring(() => ({        
         from: {
-            position: [0,5,0], 
+            position: [0,0,0], 
             scale: 1,
             sizeTwink: 0
         }
