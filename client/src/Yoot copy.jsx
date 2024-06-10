@@ -30,7 +30,6 @@ export default function Yoot({ device }) {
   const [sleepCount, setSleepCount] = useState(0);
   const [_outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
-  const [timer, setTimer] = useState(null)
   const params = useParams()
 
   const NUM_YOOTS = 4;
@@ -42,17 +41,6 @@ export default function Yoot({ device }) {
   }
 
   useEffect(() => {
-    // set timer
-    // clear on yoot rest
-    // clear on throw
-    // on timer expire, record throw
-    setTimer((prevTimer) => {
-      clearTimeout(prevTimer);
-      return setTimeout(() => {
-        console.log('record yoot')
-        recordThrow();
-      }, 4000)
-    })
 
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
@@ -74,7 +62,7 @@ export default function Yoot({ device }) {
       }
       setSleepCount(0);
     }
-
+    
   }, [yootThrowValues]);
 
   function getMoveText(move) {
@@ -91,39 +79,35 @@ export default function Yoot({ device }) {
   }
 
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
-  
-  function recordThrow() {
-
-    let move = observeThrow();
-    // Uncomment to test what happens on Yoot or Mo
-    // move = 4
-    
-    if (gamePhase === 'lobby') {
-      setLastMove(getMoveText(move))
-    } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
-
-      // Don't emit meteors when client renders for the first time
-      if (!initialYootThrow) {
-        if (move === 4 || move === 5) {
-          // setBoomText('bonus turn')
-          setParticleSetting({emitters: meteorSettings(device)})
-        }
-
+  // const [boomText, setBoomText] = useAtom(boomTextAtom)
+  useEffect(() => {
+    // console.log("[Yoots] sleepCount", sleepCount)
+    if (sleepCount == 4) {
+      
+      let move = observeThrow();
+      // Uncomment to test what happens on Yoot or Mo
+      // move = 4
+      
+      if (gamePhase === 'lobby') {
         setLastMove(getMoveText(move))
-        
-        socket.emit("recordThrow", { move, roomId: params.id })
-      } else {
-        setLastMove(null)
+      } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
+
+        // Don't emit meteors when client renders for the first time
+        if (!initialYootThrow) {
+          if (move === 4 || move === 5) {
+            // setBoomText('bonus turn')
+            setParticleSetting({emitters: meteorSettings(device)})
+          }
+
+          setLastMove(getMoveText(move))
+          
+          socket.emit("recordThrow", { move, roomId: params.id })
+        } else {
+          setLastMove(null)
+        }
       }
     }
-  }
-
-  // useEffect(() => {
-  //   // console.log("[Yoots] sleepCount", sleepCount)
-  //   if (sleepCount == 4) {
-  //     recordThrow();
-  //   }
-  // }, [sleepCount])
+  }, [sleepCount])
 
   useFrame((state, delta) => {
     let allYootsOnFloor = true;

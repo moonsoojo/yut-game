@@ -7,7 +7,7 @@ import { useSpring, animated } from '@react-spring/three';
 // custom components
 import HtmlElement from "./HtmlElement.jsx";
 import Chatbox from "./Chatbox.jsx";
-import Yoot from "./Yoot.jsx";
+import Yoot from "./Yoot copy.jsx";
 import Board from "./Board.jsx";
 import MoveAnimation from "./MoveAnimation.jsx";
 import PiecesSection from "./PiecesSection.jsx";
