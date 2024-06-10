@@ -384,21 +384,38 @@ io.on("connect", async (socket) => {
     return callback({ player })
   })
 
+  function getHostTurn(room) {
+    console.log(`[getHostTurn] room`, room)
+    const host = room.host
+    let turn;
+    room.teams[host.team].players.forEach(function (player, i) {
+      console.log(`[getHostTurn] i ${i}, player`, player._id.valueOf(), `host`, host._id.valueOf())
+      if (player._id.valueOf() === host._id.valueOf()) {
+        let playerIndices = [0, 0]
+        playerIndices[host.team] = i
+        turn = {
+          team: host.team,
+          players: playerIndices
+        }
+      }
+    })
+    return turn
+  }
+
   socket.on("startGame", async ({ roomId }) => {
-    let randomTeam = Math.floor(Math.random() * 2)
-    let turn = {
-      team: randomTeam,
-      players: [0, 0]
-    }
+
     try {
-      await Room.findOneAndUpdate({ _id: roomId }, {
-        gamePhase: "pregame",
-        turn
-      })
+      // find host
+      // give him first turn
+      const room = await Room.findOne({ _id: roomId }).populate('host')
+      const turn = getHostTurn(room)
+      console.log(`[startGame] turn`, turn)
       
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
-          [`teams.${randomTeam}.throws`]: 1,
+          [`teams.${turn.team}.throws`]: 1,
+          gamePhase: "pregame",
+          turn
         }
       })
     } catch (err) {
@@ -463,6 +480,7 @@ io.on("connect", async (socket) => {
 
       // Check thrown flag again because client takes time to update its state
       if (room.teams[user.team].throws > 0 && !room.yootThrown.flag) {
+
         // Update throw values
         // Update thrown flag so subsequent requests don't trigger a throw
         await Room.findOneAndUpdate(
@@ -477,17 +495,9 @@ io.on("connect", async (socket) => {
                 player: user._id
               }
             },
-          }
-        )
-
-        // Decrement throws for throwing team
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-            'teams._id': user.team 
-          }, 
-          { 
-            $inc: { [`teams.$.throws`]: -1 } 
+            $inc: {
+              [`teams.${user.team}.throws`]: -1
+            }
           }
         )
       }
