@@ -100,11 +100,12 @@ export default function Piece ({
         if (selection.tile != tile && tile in legalTiles) {
           console.log(`[Piece] moving piece`)
           socket.emit("move", ({ roomId: params.id, tile }))
+        } else {
+
+          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+  
+          socket.emit("select", { roomId: params.id, payload: null });
         }
-
-        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-
-        socket.emit("select", { roomId: params.id, payload: null });
       }
     }
   }

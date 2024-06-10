@@ -7,7 +7,6 @@ import { useGLTF } from "@react-three/drei";
 import { animated } from "@react-spring/three";
 
 export default function Polaris({position, rotation, scale}) {
-  console.log('polaris')
   const { nodes, materials } = useGLTF("/models/polaris.glb"); // lights
   return (
     <animated.group position={position} rotation={rotation} scale={scale}>

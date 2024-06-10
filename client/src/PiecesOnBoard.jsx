@@ -230,7 +230,7 @@ export default function PiecesOnBoard() {
                                 tension: 100,
                                 friction: 26
                             },
-                            delay: 1000,
+                            delay: 1000
                         },
                         {
                             sizeTwink: 0.1,
@@ -506,7 +506,7 @@ export default function PiecesOnBoard() {
                             ],
                             scale: 1.5,
                             config: {
-                                tension: 170,
+                                tension: 100,
                                 friction: 26,
                                 mass: 2
                             }
@@ -604,7 +604,7 @@ export default function PiecesOnBoard() {
                             ],
                             scale: 1.5,
                             config: {
-                                tension: 170,
+                                tension: 100,
                                 friction: 26,
                                 mass: 2
                             }
@@ -701,7 +701,7 @@ export default function PiecesOnBoard() {
                             ],
                             scale: 1.5,
                             config: {
-                                tension: 170,
+                                tension: 100,
                                 friction: 26,
                                 mass: 2
                             }
@@ -796,7 +796,7 @@ export default function PiecesOnBoard() {
                             ],
                             scale: 1.5,
                             config: {
-                                tension: 170,
+                                tension: 100,
                                 friction: 26,
                                 mass: 2
                             }
