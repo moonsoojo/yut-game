@@ -187,7 +187,9 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         let userSocketId = userFound.socketId
         if ('yootThrowValues' in data.updateDescription.updatedFields) {
           let yootThrowValues = data.fullDocument.yootThrowValues
-          io.to(userSocketId).emit('throwYoot', { yootThrowValues })
+          let yootThrown = data.fullDocument.yootThrown
+          console.log(`[Room.watch] yootThrown`, yootThrown)
+          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')
@@ -426,6 +428,7 @@ io.on("connect", async (socket) => {
 
   function generateRandomNumberInRange(num, plusMinus) {
     let result = num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+    console.log(`[generateRandomNumberInRange] result.toFixed(5)`, result.toFixed(5))
     return result.toFixed(5)
   };
 
@@ -439,11 +442,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: Decimal(generateRandomNumberInRange(20, 3)),
+        yImpulse: generateRandomNumberInRange(20, 3),
         torqueImpulse: {
-          x: Decimal(generateRandomNumberInRange(1, 0.5)),
-          y: Decimal(generateRandomNumberInRange(1.3, 0.7)), // Spins vertically through the center
-          z: Decimal(generateRandomNumberInRange(0.3, 0.2)) // Spins through the middle axis
+          x: generateRandomNumberInRange(1, 0.5),
+          y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.3, 0.2) // Spins through the middle axis
         },
       });
     }
@@ -588,10 +591,13 @@ io.on("connect", async (socket) => {
       let room = await Room.findOne({ _id: roomId })  
 
       // Check if user threw the yoot
-      if (user._id.valueOf() === room.yootThrown.player) { // room.yootThrown.player is a string
+      if (user._id.valueOf() === room.yootThrown.player.valueOf()) { // room.yootThrown.player is a string
 
         // Reset flag so client can activate the throw button again
-        operation['$set']['yootThrown.flag'] = false
+        operation['$set']['yootThrown'] = {
+          flag: false,
+          player: ''
+        }
 
         // Add move to team
         if (room.gamePhase === "pregame") {
@@ -632,35 +638,13 @@ io.on("connect", async (socket) => {
           // Test code using different throw outcome
           // move = 3
           operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
+          room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
           if (move === 4 || move === 5) {
             operation['$inc'][`teams.${user.team}.throws`] = 1
+            room.teams[user.team].throws++;
           }
-        }
-
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-          }, 
-          operation
-        )
-
-      }
-    } catch (err) {
-      console.log(`[recordThrow] error recording throw`, err)
-    }
-
-    // Pass turn
-    try {
-      // Fetch up-to-date room to calculate the next turn
-      let room = await Room.findOne({ _id: roomId })  
-
-      // Check if user has the turn
-      if (user._id.valueOf() === room.yootThrown.player.valueOf()) {
-
-        if (room.gamePhase === "pregame") {
-        } else if (room.gamePhase === "game") {
 
           // If user threw out of bounds, pass turn
           // Call .toObject() on moves to leave out the mongoose methods
@@ -682,9 +666,17 @@ io.on("connect", async (socket) => {
             )
           }
         }
+
+        await Room.findOneAndUpdate(
+          { 
+            _id: roomId, 
+          }, 
+          operation
+        )
+
       }
     } catch (err) {
-      console.log(`[recordThrow] error passing turn;`, err)
+      console.log(`[recordThrow] error recording throw`, err)
     }
   })
 

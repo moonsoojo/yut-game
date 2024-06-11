@@ -30,7 +30,10 @@ export const displayDisconnectAtom = atom(false)
 export const hostNameAtom = atom('')
 export const particleSettingAtom = atom(null)
 export const yootThrowValuesAtom = atom(null)
-export const yootThrownAtom = atom(false)
+export const yootThrownAtom = atom({
+  flag: false,
+  player: ''
+})
 export const displayScoreOptionsAtom = atom(false)
 export const selectionAtom = atom(null)
 export const tilesAtom = atom(JSON.parse(JSON.stringify(initialState.initialTiles)))

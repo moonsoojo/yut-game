@@ -138,6 +138,7 @@ export const SocketManager = () => {
         setYootActive(false)
       }
 
+      console.log(`[SocketManager] yootThrown`, room.yootThrown)
       setYootThrown(room.yootThrown)
 
       // Enable 'Let's play' button
@@ -221,8 +222,10 @@ export const SocketManager = () => {
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootThrowValues }) => {
+    socket.on('throwYoot', ({ yootThrowValues, yootThrown }) => {
       setYootThrowValues(yootThrowValues)
+      console.log(`[SocketManager] yootThrown`, yootThrown)
+      setYootThrown(yootThrown)
       // Disable the yoot button
       setYootActive(false)
       // Enable meteors

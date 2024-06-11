@@ -76,7 +76,9 @@ export default function Game() {
     const [hostName] = useAtom(hostNameAtom)
 
     function handleLetsPlay() {
-      socket.emit("startGame", { roomId: params.id })
+      if (readyToStart) {
+        socket.emit("startGame", { roomId: params.id })
+      }
     }
 
     return <>
@@ -85,7 +87,8 @@ export default function Game() {
         position={position}
         rotation={rotation}
         fontSize={fontSize}
-        handleClick={readyToStart && handleLetsPlay}
+        handleClick={handleLetsPlay}
+        disabled={!readyToStart}
         color={readyToStart ? 'yellow' : 'grey'}
       /> }
     </>

@@ -56,6 +56,11 @@ export default function Yoot({ device }) {
       }, 4000)
     })
 
+    // Show or hide yoot
+    for (let i = 0; i < yootMeshes.length; i++) {
+      yootMeshes[i].current.material.visible = true
+    }
+
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
       for (let i = 0; i < 4; i++) {
@@ -87,6 +92,18 @@ export default function Yoot({ device }) {
 
   }, [yootThrowValues]);
 
+  useEffect(() => {
+    if (gamePhase === 'lobby' || gamePhase === 'pregame') {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.visible = true
+      } 
+    } else {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.visible = false
+      } 
+    }
+  }, [gamePhase])
+
   function getMoveText(move) {
     const moveToText = {
       "0": "OUT",
@@ -107,6 +124,17 @@ export default function Yoot({ device }) {
     let move = observeThrow();
     // Uncomment to test what happens on Yoot or Mo
     // move = 4
+
+    // Show or hide yoot
+    if (gamePhase === 'lobby' || gamePhase === 'pregame') {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.visible = true
+      } 
+    } else {
+      for (let i = 0; i < yootMeshes.length; i++) {
+        yootMeshes[i].current.material.visible = false
+      } 
+    }
     
     if (gamePhase === 'lobby') {
       setLastMove(getMoveText(move))
@@ -145,11 +173,6 @@ export default function Yoot({ device }) {
     }
     if (allYootsOnFloor) {
       setOutOfBounds(false);
-    }
-
-    // Show or hide yoot
-    for (let i = 0; i < yootMeshes.length; i++) {
-      yootMeshes[i].current.material.visible = (gamePhase === "lobby" || gamePhase === "pregame" || yootThrown.flag)
     }
   })
 
@@ -281,12 +304,12 @@ export default function Yoot({ device }) {
           </RigidBody>
         );
       })}
-      {/* { gamePhase === 'lobby' && <PracticeYootButton
+      { gamePhase === 'lobby' && <PracticeYootButton
         position={layout[device].practiceThrowButton.position}
         rotation={layout[device].practiceThrowButton.rotation}
         fontSize={layout[device].practiceThrowButton.fontSize}
         scale={1}
-      />} */}
+      />}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
         position={layout[device].throwButton.position}
         rotation={layout[device].throwButton.rotation}

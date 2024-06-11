@@ -16,20 +16,21 @@ export default function HtmlElement({
   padding='2px',
   whiteSpace='nowrap',
   textOverflow='clip',
-  overflow='hidden'
+  overflow='hidden',
+  disabled=false
 }) {
   const [currColor, setCurrColor] = useState(color);
   useEffect(() => {
     setCurrColor(color)
   }, [color])
   function handlePointerEnter() {
-    if (handleClick) {
+    if (handleClick && !disabled) {
       document.body.style.cursor = "pointer";
       setCurrColor(colorHover)
     }
   }
   function handlePointerLeave() {
-    if (handleClick) {
+    if (handleClick && !disabled) {
       document.body.style.cursor = "default";
       setCurrColor(color)
     }
