@@ -14,6 +14,8 @@ import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThr
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
+import { roundNum } from "./helpers/helpers.js";
+import Decimal from 'decimal.js';
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -57,19 +59,27 @@ export default function Yoot({ device }) {
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
       for (let i = 0; i < 4; i++) {
-        yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
-        yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
+        yoots[i].current.setLinvel({ 
+          x: Decimal(0), 
+          y: Decimal(0), 
+          z: Decimal(0)
+        })
+        yoots[i].current.setAngvel({ 
+          x: Decimal(0), 
+          y: Decimal(0), 
+          z: Decimal(0)
+        })
         yoots[i].current.setTranslation(yootThrowValues[i].positionInHand);
         yoots[i].current.setRotation(yootThrowValues[i].rotation, true);
         yoots[i].current.applyImpulse({
-          x: 0,
-          y: yootThrowValues[i].yImpulse,
-          z: 0,
+          x: Decimal(0),
+          y: Decimal(yootThrowValues[i].yImpulse),
+          z: Decimal(0),
         });
         yoots[i].current.applyTorqueImpulse({
-          x: yootThrowValues[i].torqueImpulse.x,
-          y: yootThrowValues[i].torqueImpulse.y,
-          z: yootThrowValues[i].torqueImpulse.z,
+          x: Decimal(yootThrowValues[i].torqueImpulse.x),
+          y: Decimal(yootThrowValues[i].torqueImpulse.y),
+          z: Decimal(yootThrowValues[i].torqueImpulse.z),
         });
       }
       setSleepCount(0);

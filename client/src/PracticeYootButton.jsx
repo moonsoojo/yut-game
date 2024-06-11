@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { yootThrowValuesAtom } from './GlobalState';
 import HtmlElement from './HtmlElement';
 import { roundNum } from './helpers/helpers';
+import Decimal from 'decimal.js';
 
 export default function PracticeYootButton({ 
   position=[0,0,0], 
@@ -30,11 +31,11 @@ export default function PracticeYootButton({
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: roundNum(generateRandomNumberInRange(20, 3), 5),
+        yImpulse: (generateRandomNumberInRange(20, 3)),
         torqueImpulse: {
-          x: roundNum(generateRandomNumberInRange(1, 0.5), 5),
-          y: roundNum(generateRandomNumberInRange(1.3, 0.7), 5), // Spins vertically through the center
-          z: roundNum(generateRandomNumberInRange(0.3, 0.2), 5)// Spins through the middle axis
+          x: Decimal(generateRandomNumberInRange(1, 0.5)),
+          y: Decimal(generateRandomNumberInRange(1.3, 0.7)), // Spins vertically through the center
+          z: Decimal(generateRandomNumberInRange(0.3, 0.2)) // Spins through the middle axis
         },
       });
     }

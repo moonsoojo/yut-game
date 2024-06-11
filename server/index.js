@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { makeId } from '../client/src/helpers/helpers.js';
 import initialState from './initialState.js';
 import { roundNum } from './src/helpers.js';
+import Decimal from 'decimal.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -437,11 +438,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: roundNum(generateRandomNumberInRange(20, 3), 5),
+        yImpulse: Decimal(generateRandomNumberInRange(20, 3)),
         torqueImpulse: {
-          x: roundNum(generateRandomNumberInRange(1, 0.5), 5),
-          y: roundNum(generateRandomNumberInRange(1.3, 0.7), 5), // Spins vertically through the center
-          z: roundNum(generateRandomNumberInRange(0.3, 0.2), 5) // Spins through the middle axis
+          x: Decimal(generateRandomNumberInRange(1, 0.5)),
+          y: Decimal(generateRandomNumberInRange(1.3, 0.7)), // Spins vertically through the center
+          z: Decimal(generateRandomNumberInRange(0.3, 0.2)) // Spins through the middle axis
         },
       });
     }
