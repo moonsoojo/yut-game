@@ -36,7 +36,8 @@ import {
   legalTilesAtom,
   tilesAtom,
   helperTilesAtom,
-  winnerAtom
+  winnerAtom,
+  clientAtom
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -71,18 +72,21 @@ export default function Game() {
 
   function LetsPlayButton({ position, rotation, fontSize }) {
     const [readyToStart] = useAtom(readyToStartAtom)
+    const [client] = useAtom(clientAtom)
+    const [hostName] = useAtom(hostNameAtom)
 
     function handleLetsPlay() {
       socket.emit("startGame", { roomId: params.id })
     }
 
     return <>
-      { readyToStart && gamePhase === 'lobby' && <HtmlElement 
+      { hostName === 'you' && gamePhase === 'lobby' && <HtmlElement 
         text={'lets play!'}
         position={position}
         rotation={rotation}
         fontSize={fontSize}
-        handleClick={handleLetsPlay}
+        handleClick={readyToStart && handleLetsPlay}
+        color={readyToStart ? 'yellow' : 'grey'}
       /> }
     </>
   }

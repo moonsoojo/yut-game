@@ -425,7 +425,8 @@ io.on("connect", async (socket) => {
   })
 
   function generateRandomNumberInRange(num, plusMinus) {
-    return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+    let result = num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+    return result.toFixed(5)
   };
 
   function generateForceVectors(gamePhase) {

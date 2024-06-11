@@ -22,7 +22,8 @@ export default function PracticeYootButton({
     let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
 
     function generateRandomNumberInRange(num, plusMinus) {
-      return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+      let result = num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
+      return result.toFixed(5)
     };
 
     const yootForceVectors = [];
@@ -31,7 +32,7 @@ export default function PracticeYootButton({
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: (generateRandomNumberInRange(20, 3)),
+        yImpulse: Decimal(generateRandomNumberInRange(20, 3)),
         torqueImpulse: {
           x: Decimal(generateRandomNumberInRange(1, 0.5)),
           y: Decimal(generateRandomNumberInRange(1.3, 0.7)), // Spins vertically through the center
