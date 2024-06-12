@@ -188,7 +188,6 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         if ('yootThrowValues' in data.updateDescription.updatedFields) {
           let yootThrowValues = data.fullDocument.yootThrowValues
           let yootThrown = data.fullDocument.yootThrown
-          console.log(`[Room.watch] yootThrown`, yootThrown)
           io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
@@ -255,7 +254,7 @@ io.on("connect", async (socket) => {
         host: user._id,
         gamePhase: 'lobby',
         turn: {
-          team: 0,
+          team: -1,
           players: [0, 0]
         },
         yootThrown: {
@@ -594,10 +593,7 @@ io.on("connect", async (socket) => {
       if (user._id.valueOf() === room.yootThrown.player.valueOf()) { // room.yootThrown.player is a string
 
         // Reset flag so client can activate the throw button again
-        operation['$set']['yootThrown'] = {
-          flag: false,
-          player: ''
-        }
+        operation['$set']['yootThrown.flag'] = false
 
         // Add move to team
         if (room.gamePhase === "pregame") {
@@ -607,7 +603,7 @@ io.on("connect", async (socket) => {
           // } else {
           //   move = 1
           // }
-          // move = 0;
+          move = 2;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
           
@@ -925,7 +921,8 @@ io.on("connect", async (socket) => {
         player: ''
       }
       operation['$set']['turn'] = {
-        team: generateRandomNumberInRange(1, 1) > 1 ? 0 : 1,
+        team: -1,
+        // team: generateRandomNumberInRange(1, 1) > 1 ? 0 : 1,
         players: [0, 0]
       }
       operation['$set'][`teams.0.pieces`] = JSON.parse(JSON.stringify(initialState.initialPiecesTeam0))

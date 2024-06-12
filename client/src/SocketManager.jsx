@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -38,6 +38,7 @@ export const SocketManager = () => {
   const [_yootThrown, setYootThrown] = useAtom(yootThrownAtom)
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   // Use state to check if the game phase changed
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
@@ -117,7 +118,7 @@ export const SocketManager = () => {
       setGamePhase((lastPhase) => {
         console.log(room.gamePhase)
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
-          setBoomText('startGame')
+          setBoomText('gameStart')
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
           // Reset fireworks from win screen
           setParticleSetting(null)
@@ -151,9 +152,25 @@ export const SocketManager = () => {
         setReadyToStart(false)
       }
 
-      setTurn(room.turn)
+      setTurn((prevTurn) => {
+        if (room.gamePhase !== 'lobby' && prevTurn.team !== room.turn.team) {
+          const currentTeam = room.turn.team
+          const currentPlayer = room.turn.players[currentTeam]
+          const alert = {
+            type: 'turn',
+            team: currentTeam,
+            name: room.teams[currentTeam].players[currentPlayer].name
+          }
+          console.log(`[setTurn] alert`, alert)
+          setMainAlert(alert)
+        }
+        return room.turn
+      })
+      // setTurn(room.turn)
 
-      setDisplayMoves(room.teams[room.turn.team].moves)
+      if (room.gamePhase === 'game') {
+        setDisplayMoves(room.teams[room.turn.team].moves)
+      }
 
       if ((room.gamePhase === "pregame" || room.gamePhase === "game") && 
       clientHasTurn(socket.id, room.teams, room.turn)) {
