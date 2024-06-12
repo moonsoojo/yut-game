@@ -44,6 +44,9 @@ export const boomTextAtom = atom('')
 export const mainAlertAtom = atom({
   type: ''
 })
+export const pregameAlertAtom = atom({
+  type: ''
+})
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})

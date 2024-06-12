@@ -183,7 +183,7 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
         material={nodes.Cylinder.material}
         scale={[2, 0.055, 2.6]}
       >
-        <meshStandardMaterial color='black' opacity={0.7} transparent/>
+        <meshStandardMaterial color='black' opacity={0.8} transparent/>
       </mesh>
       <group ref={nameContainerRef}>
         <Text3D

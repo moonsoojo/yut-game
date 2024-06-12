@@ -152,7 +152,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   >
     {/* team name */}
     <HtmlElement
-      text={ team === 0 ? "Team Rockets" : "Team UFOs" }
+      text={ team === 0 ? "Team Rocket" : "Team UFO" }
       position={layout[device][`team${team}`].title.position}
       rotation={layout[device][`team${team}`].title.rotation}
       fontSize={layout[device][`team${team}`].title.fontSize}

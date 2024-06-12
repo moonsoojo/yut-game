@@ -1075,15 +1075,16 @@ export default {
     },
     whoGoesFirst: {
       title: {
-        position: [-4.5, 0, -5.8],
+        position: [-4.5, 0, -5],
         rotation: [-Math.PI/2,0,0],
-        fontSize: 35
+        size: 0.7,
+        height: 0.01
       },
       description: {
-        position: [-4.5, 0, -4.5],
+        position: [-4.5, 0, -4.3],
         rotation: [-Math.PI/2,0,0],
-        fontSize: 20,
-        width: 330
+        size: 0.35,
+        height: 0.01
       }
     },
     board: {

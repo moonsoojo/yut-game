@@ -47,6 +47,7 @@ import PiecesOnBoard from "./PiecesOnBoard.jsx";
 import ScoreButtons from "./ScoreButtons.jsx";
 import RocketsWin from "./RocketsWin.jsx";
 import UfosWin from "./UfosWin.jsx";
+import { Text3D } from "@react-three/drei";
 
 // There should be no state
 export default function Game() {
@@ -244,22 +245,27 @@ export default function Game() {
         </animated.group>
         {/* Who Goes First components */}
         { gamePhase === "pregame" && <group>
-          <HtmlElement
-            text={`Who goes first?`}
-            position={layout[device].whoGoesFirst.title.position}
-            rotation={layout[device].whoGoesFirst.title.rotation}
-            fontSize={layout[device].whoGoesFirst.title.fontSize}
-          />
-          <HtmlElement
-            text={`One player from each team throws the yoot.
-            The team with a higher number goes first.`}
-            position={layout[device].whoGoesFirst.description.position}
-            rotation={layout[device].whoGoesFirst.description.rotation}
-            fontSize={layout[device].whoGoesFirst.description.fontSize}
-            width={layout[device].whoGoesFirst.description.width}
-            whiteSpace="normal"
-            color='limegreen'
-          />
+          <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={layout[device].whoGoesFirst.title.position}
+          rotation={layout[device].whoGoesFirst.title.rotation}
+          size={layout[device].whoGoesFirst.title.size}
+          height={layout[device].whoGoesFirst.title.height}
+          >
+            {`Who goes first?`}
+            <meshStandardMaterial color="yellow"/>
+          </Text3D>
+          <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={layout[device].whoGoesFirst.description.position}
+          rotation={layout[device].whoGoesFirst.description.rotation}
+          size={layout[device].whoGoesFirst.description.size}
+          height={layout[device].whoGoesFirst.title.height}
+          lineHeight={0.8}
+          >
+            {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
+            <meshStandardMaterial color="green"/>
+          </Text3D>
         </group>}
         <Yoot device={device}/>
         <HtmlElement
