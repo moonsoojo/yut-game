@@ -41,7 +41,9 @@ export const initialYootThrowAtom = atom(true)
 export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
-export const mainAlertAtom = atom(null)
+export const mainAlertAtom = atom({
+  type: ''
+})
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})

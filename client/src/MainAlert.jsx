@@ -7,6 +7,7 @@ import { boomTextAtom, mainAlertAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
+import Ufo from './meshes/Ufo';
 
 // show yoots for bonus turn
 // show team for "your turn"
@@ -41,7 +42,7 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
           tension: 170,
           friction: 26
         },
-        delay: 100000
+        delay: 3000
       }
     ],
     loop: false,
@@ -142,36 +143,36 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
     console.log(`[Turn] name`, name)
     const { nodes, materials } = useGLTF('models/alert-background.glb')
 
-    const rocket0Ref = useRef();
-    const rocket1Ref = useRef();
-    const rocket2Ref = useRef();
-    const rocket3Ref = useRef();
-    const rocket4Ref = useRef();
-    const rocket5Ref = useRef();
-    const rocket6Ref = useRef();
+    const borderMesh0Ref = useRef();
+    const borderMesh1Ref = useRef();
+    const borderMesh2Ref = useRef();
+    const borderMesh3Ref = useRef();
+    const borderMesh4Ref = useRef();
+    const borderMesh5Ref = useRef();
+    const borderMesh6Ref = useRef();
+    const borderMeshRefs = [
+      borderMesh0Ref,
+      borderMesh1Ref,
+      borderMesh2Ref,
+      borderMesh3Ref,
+      borderMesh4Ref,
+      borderMesh5Ref,
+      borderMesh6Ref
+    ]
+    const nameRef = useRef();
+    const nameContainerRef = useRef();
 
     useFrame((state, delta) => {
-      rocket0Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2) * 2
-      rocket0Ref.current.position.y = 0.3
-      rocket0Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2) * 2.7
-      rocket1Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7) * 2
-      rocket1Ref.current.position.y = 0.3
-      rocket1Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7) * 2.7
-      rocket2Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 2) * 2
-      rocket2Ref.current.position.y = 0.3
-      rocket2Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 2) * 2.7
-      rocket3Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 3) * 2
-      rocket3Ref.current.position.y = 0.3
-      rocket3Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 3) * 2.7
-      rocket4Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 4) * 2
-      rocket4Ref.current.position.y = 0.3
-      rocket4Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 4) * 2.7
-      rocket5Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 5) * 2
-      rocket5Ref.current.position.y = 0.3
-      rocket5Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 5) * 2.7
-      rocket6Ref.current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 6) * 2
-      rocket6Ref.current.position.y = 0.3
-      rocket6Ref.current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI / 7 * 6) * 2.7
+      for (let i = 0; i < borderMeshRefs.length; i++) {      
+        borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * 2
+        borderMeshRefs[i].current.position.y = 0.3
+        borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * 2.7
+      }
+      
+      if (nameRef.current.geometry.boundingSphere) {
+        const centerX = nameRef.current.geometry.boundingSphere.center.x
+        nameContainerRef.current.position.z = -centerX
+      }
     })
 
     return <animated.group position={position} rotation={rotation} scale={scale}>
@@ -184,15 +185,19 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       >
         <meshStandardMaterial color='black' opacity={0.7} transparent/>
       </mesh>
-      {/* <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Cylinder.geometry}
-        material={nodes.Cylinder.material}
-        scale={[1.9, 0.065, 2.5]}
-      >
-        <meshStandardMaterial color='black'/>
-      </mesh> */}
+      <group ref={nameContainerRef}>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+          position={[0,0,0]}
+          size={0.6}
+          height={0.1}
+          ref={nameRef}
+        >
+          {formatName(name)}
+          <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
+        </Text3D>
+      </group>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         rotation={[Math.PI/2, Math.PI, Math.PI/2]}
@@ -201,44 +206,76 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
         height={0.1}
       >
         your turn!
-        <meshStandardMaterial color={ team === 0 ? 'red': 'green' }/>
+        <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
       </Text3D>
-      <group>
-      {/* <group ref={nameContainerRef}> */}
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          position={[0,0,0]}
-          size={0.5}
-          height={0.1}
-          // ref={nameRef}
-        >
-          {formatName(name)}
-          {/* {`.`} */}
-          <meshStandardMaterial color={ team === 0 ? 'red': 'green' }/>
-        </Text3D>
+      <group ref={borderMesh0Ref}>
+        <Star position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.3} color={ team === 0 ? 'red': 'turquoise' }/>
       </group>
-      <group ref={rocket0Ref}>
-        <Star position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.3} color='red'/>
-        {/* <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/> */}
+      <group ref={borderMesh1Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
-      <group ref={rocket1Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
+      <group ref={borderMesh2Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
-      <group ref={rocket2Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
+      <group ref={borderMesh3Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
-      <group ref={rocket3Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
+      <group ref={borderMesh4Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
-      <group ref={rocket4Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
+      <group ref={borderMesh5Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
-      <group ref={rocket5Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
-      </group>
-      <group ref={rocket6Ref}>
-        <Rocket position={[0, 0, 0]} rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} scale={0.4}/>
+      <group ref={borderMesh6Ref}>
+        { team === 0 ? <Rocket 
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.4}
+        /> : <Ufo
+        position={[0, 0, 0]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={0.5}
+        />}
       </group>
     </animated.group>
   }
@@ -253,7 +290,7 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       > */}
       {/* { text === 'gameStart' && <GameStart position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
       { text === 'pregameTie' && <PregameTie position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> } */}
-      { mainAlert && mainAlert.type === 'turn' && <Turn 
+    { mainAlert && mainAlert.type === 'turn' && <Turn 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}

@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
@@ -33,6 +33,8 @@ export default function Yoot({ device }) {
   const [_outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
   const [timer, setTimer] = useState(null)
+  // hide alert
+  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const NUM_YOOTS = 4;
@@ -56,10 +58,12 @@ export default function Yoot({ device }) {
       }, 4000)
     })
 
-    // Show or hide yoot
+    // Show yoot
     for (let i = 0; i < yootMeshes.length; i++) {
       yootMeshes[i].current.material.visible = true
     }
+
+    setMainAlert({ type: '' })
 
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
