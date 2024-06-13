@@ -118,15 +118,27 @@ export const SocketManager = () => {
         })
       }
 
+      function makeTurnAlertObj(room) {
+        const currentTeam = room.turn.team
+        const currentPlayer = room.turn.players[currentTeam]
+        const alert = {
+          type: 'turn',
+          team: currentTeam,
+          name: room.teams[currentTeam].players[currentPlayer].name
+        }
+        return alert
+      }
+
       setGamePhase((lastPhase) => {
         console.log(`[SocketManager] lastPhase`, lastPhase, `current phase`, room.gamePhase)
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
           console.log(`[SocketManager] game start`)
-
           setPregameAlert({
             type: 'gameStart',
             team: room.turn.team
           })
+          const turnAlert = makeTurnAlertObj(room)
+          setMainAlert(turnAlert)
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
           // Reset fireworks from win screen
           setParticleSetting(null)
@@ -164,15 +176,8 @@ export const SocketManager = () => {
         // if pregame result points turn to the same person
         // display alert with the same person's name
         if (room.gamePhase !== 'lobby' && prevTurn.team !== room.turn.team) {
-          const currentTeam = room.turn.team
-          const currentPlayer = room.turn.players[currentTeam]
-          const alert = {
-            type: 'turn',
-            team: currentTeam,
-            name: room.teams[currentTeam].players[currentPlayer].name
-          }
-          console.log(`[setTurn] alert`, alert)
-          setMainAlert(alert)
+          const turnAlert = makeTurnAlertObj(room)
+          setMainAlert(turnAlert)
         }
         return room.turn
       })
