@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Float, Text3D, useGLTF } from '@react-three/drei';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
-import { boomTextAtom, pregameAlertAtom, yootThrownAtom } from './GlobalState';
+import { pregameAlertAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Star from './meshes/Star';
 import RocketsGoFirst from './RocketsGoFirst';

@@ -45,6 +45,12 @@ export const mainAlertAtom = atom([])
 export const pregameAlertAtom = atom({
   type: ''
 })
+export const moveResultAtom = atom({
+  type: '',
+  team: -1,
+  amount: 0,
+  tile: -1
+})
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})

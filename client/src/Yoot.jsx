@@ -35,7 +35,6 @@ export default function Yoot({ device }) {
   const [timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  const [_pregameAlert, setPregameAlert] = useAtom(pregameAlertAtom)
   const params = useParams()
 
   const NUM_YOOTS = 4;

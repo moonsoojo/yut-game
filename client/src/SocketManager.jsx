@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom } from "./GlobalState.jsx";
+import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -39,6 +39,7 @@ export const SocketManager = () => {
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_moveResult, setMoveResult] = useAtom(moveResultAtom)
   const [_pregameAlert, setPregameAlert] = useAtom(pregameAlertAtom)
   // Use state to check if the game phase changed
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
@@ -182,6 +183,16 @@ export const SocketManager = () => {
         return room.turn
       })
       // setTurn(room.turn)
+
+      setMoveResult((prevResult) => {
+        console.log(`[setMoveResult] prevResult`, prevResult)
+        if (room.moveResult.type === 'catch') {
+          if (prevResult.tile !== room.moveResult.tile || prevResult.team !== room.moveResult.team) {
+            setMainAlert(room.moveResult)
+          }
+        }
+        return room.moveResult
+      })
 
       if (room.gamePhase === 'game') {
         setDisplayMoves(room.teams[room.turn.team].moves)

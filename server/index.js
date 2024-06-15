@@ -128,6 +128,7 @@ const roomSchema = new mongoose.Schema(
         }
       ]
     ],
+    moveResult: Object,
     results: [Number]
   },
   {
@@ -266,7 +267,13 @@ io.on("connect", async (socket) => {
         selection: null,
         legalTiles: {},
         tiles: JSON.parse(JSON.stringify(initialState.initialTiles)),
-        results: []
+        results: [],
+        moveResult: {
+          type: '',
+          team: -1,
+          amount: 0,
+          tile: -1
+        }
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -767,10 +774,11 @@ io.on("connect", async (socket) => {
 
         // Catch
         if (occupyingTeam != movingTeam) {
-          moveResult = {
+          operation['$set']['moveResult'] = {
             type: 'catch',
             team: movingTeam,
-            amount: tiles[to].length
+            amount: tiles[to].length,
+            tile: to
           }
           for (let piece of tiles[to]) {
             piece.tile = -1
@@ -795,23 +803,13 @@ io.on("connect", async (socket) => {
 
       if (throws === 0 && isEmptyMoves(moves.toObject())) {
         const newTurn = passTurn(room.turn, room.teams)
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-          }, 
-          { 
-            $set: { 
-              turn: newTurn,
-              // Empty the team's moves
-              [`teams.${movingTeam}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
-            },
-            $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
-          }
-        )
+        operation['$set']['turn'] = newTurn
+        operation['$set'][`teams.${movingTeam}.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
+        operation['$inc'][`teams.${newTurn.team}.throws`] = 1
+      } else {
+        operation['$set'][`teams.${movingTeam}.throws`] = throws
+        operation['$set'][`teams.${movingTeam}.moves`] = moves
       }
-
-      operation['$set'][`teams.${movingTeam}.throws`] = throws
-      operation['$set'][`teams.${movingTeam}.moves`] = moves
 
       await Room.findOneAndUpdate(
         { 

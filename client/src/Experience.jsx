@@ -6,7 +6,6 @@ import Stars from './particles/Stars'
 // server
 import MilkyWay from "./shader/MilkyWay.jsx";
 import Game from "./Game.jsx";
-import BoomText from "./BoomText.jsx";
 import MainAlert from "./MainAlert.jsx";
 import PregameAlert from "./PregameAlert.jsx";
 
