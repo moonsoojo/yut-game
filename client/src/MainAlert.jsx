@@ -12,6 +12,8 @@ import CatchAlert from './alerts/CatchAlert';
 import TripleCatchAlert from './alerts/TripleCatchAlert';
 import DoubleCatchAlert from './alerts/DoubleCatchAlert';
 import AllClearAlert from './alerts/AllClearAlert';
+import YootAlert from './alerts/YootAlert';
+import MoAlert from './alerts/MoAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
@@ -231,6 +233,14 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
+    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 4 && <YootAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}/> }
+    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 5 && <MoAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}/> }
     {/* </Float> */}
   </group>
 }

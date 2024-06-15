@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom } from "./GlobalState.jsx";
+import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -40,6 +40,7 @@ export const SocketManager = () => {
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const [_moveResult, setMoveResult] = useAtom(moveResultAtom)
+  const [_throwResult, setThrowResult] = useAtom(throwResultAtom)
   const [_pregameAlert, setPregameAlert] = useAtom(pregameAlertAtom)
   // Use state to check if the game phase changed
   const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
@@ -160,7 +161,6 @@ export const SocketManager = () => {
         setYootActive(false)
       }
 
-      console.log(`[SocketManager] yootThrown`, room.yootThrown)
       setYootThrown(room.yootThrown)
 
       // Enable 'Let's play' button
@@ -192,6 +192,22 @@ export const SocketManager = () => {
           }
         }
         return room.moveResult
+      })
+
+      setThrowResult((prevResult) => {
+        // type: regular, bonus
+        // bonus: num, streak
+        console.log(`[setThrowResult] prevResult`, prevResult)
+        if (room.throwResult.type === 'bonus' && prevResult.time !== room.throwResult.time) {
+          setMainAlert((prevAlert) => {
+            return {
+              type: 'throw',
+              num: room.throwResult.num,
+              time: room.throwResult.time
+            }
+          })
+        }
+        return room.throwResult
       })
 
       if (room.gamePhase === 'game') {

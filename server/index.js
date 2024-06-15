@@ -129,6 +129,7 @@ const roomSchema = new mongoose.Schema(
       ]
     ],
     moveResult: Object,
+    throwResult: Object,
     results: [Number]
   },
   {
@@ -273,6 +274,11 @@ io.on("connect", async (socket) => {
           team: -1,
           amount: 0,
           tile: -1
+        },
+        throwResult: {
+          type: '',
+          num: -2,
+          time: Date.now()
         }
       })
       await room.save();
@@ -647,6 +653,11 @@ io.on("connect", async (socket) => {
           if (move === 4 || move === 5) {
             operation['$inc'][`teams.${user.team}.throws`] = 1
             room.teams[user.team].throws++;
+            operation['$set']['throwResult'] = {
+              type: 'bonus',
+              num: move,
+              time: Date.now()
+            }
           }
 
           // If user threw out of bounds, pass turn

@@ -51,6 +51,11 @@ export const moveResultAtom = atom({
   amount: 0,
   tile: -1
 })
+export const throwResultAtom = atom({
+  type: '',
+  num: -2,
+  time: 0
+})
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
