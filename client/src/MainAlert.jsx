@@ -9,6 +9,9 @@ import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
 import Ufo from './meshes/Ufo';
 import CatchAlert from './alerts/CatchAlert';
+import TripleCatchAlert from './alerts/TripleCatchAlert';
+import DoubleCatchAlert from './alerts/DoubleCatchAlert';
+import AllClearAlert from './alerts/AllClearAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
@@ -209,6 +212,21 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       team={mainAlert.team} 
       name={mainAlert.name}/> }
     { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && <CatchAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}
+      team={mainAlert.team}/> }
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 2 && <DoubleCatchAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}
+      team={mainAlert.team}/> }
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 3 && <TripleCatchAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}
+      team={mainAlert.team}/> }
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 4 && <AllClearAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}

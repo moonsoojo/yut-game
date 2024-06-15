@@ -6,9 +6,12 @@ import Rocket from "../meshes/Rocket"
 import { useFrame } from "@react-three/fiber";
 import Yoot from "../meshes/Yoot";
 import { animated } from "@react-spring/three";
+import { mainAlertAtom } from "../GlobalState";
+import { useAtom } from "jotai";
 
 export default function DoubleCatchAlert({ position, rotation, scale, team }) {
   const { nodes, materials } = useGLTF('models/alert-background.glb')
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
 
   console.log(`[DoubleCatchAlert]`)
   const borderMesh0Ref = useRef();
@@ -70,29 +73,29 @@ export default function DoubleCatchAlert({ position, rotation, scale, team }) {
       <Ufo
         position={[0.9, 0.4, -0.9]} 
         rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
-        scale={0.9}
+        scale={1}
         glassOpacity={0.3}
       />
-      <mesh position={[1, 0.4, -0.2]}>
+      <mesh position={[0.9, 0.4, -0.2]}>
         <sphereGeometry args={[0.05, 32, 16]}/>
         <meshStandardMaterial color='turquoise'/>
       </mesh>
-      <mesh position={[1, 0.4, 0.1]}>
+      <mesh position={[0.9, 0.4, 0.1]}>
         <sphereGeometry args={[0.05, 32, 16]}/>
         <meshStandardMaterial color='turquoise'/>
       </mesh>
       <Rocket 
-        position={[1, 0.6, 0.8]} 
+        position={[1, 0.6, 0.65]} 
         rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
-        scale={0.6}
+        scale={0.7}
       />
-      <group position={[1, 0.3, 0.8]} scale={1.2}>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='red'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
-      </group>
-      <group position={[1.1, 0.2, 0.9]} scale={1.2}>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='red'/>
+      <Rocket 
+        position={[0.8, 0.6, 0.9]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.7}
+      />
+      <group position={[0.9, 0.3, 0.9]} scale={1.4}>
+        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
       </group>
@@ -102,38 +105,46 @@ export default function DoubleCatchAlert({ position, rotation, scale, team }) {
   function RocketCatchUfo() {
     return <group name='catch-picture'>
       <Rocket
-        position={[1, 0.4, -0.9]} 
+        position={[1, 0.4, -1]} 
         rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
-        scale={0.8}
+        scale={1}
       />
-      <mesh position={[1, 0.4, -0.3]}>
+      <mesh position={[0.9, 0.4, -0.3]}>
         <sphereGeometry args={[0.05, 32, 16]}/>
         <meshStandardMaterial color='red'/>
       </mesh>
-      <mesh position={[1, 0.4, 0]}>
+      <mesh position={[0.9, 0.4, 0]}>
         <sphereGeometry args={[0.05, 32, 16]}/>
         <meshStandardMaterial color='red'/>
       </mesh>
       <Ufo 
-        position={[0.95, 0.4, 0.85]} 
+        position={[0.9, 0.5, 1]} 
         rotation={[Math.PI/2, -Math.PI/16 * 8, Math.PI/2]} 
         scale={0.7}
         glassOpacity={0.1}
       />
-      <group position={[1, 0.3, 0.8]} scale={1.1}>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='red'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
-      </group>
-      <group position={[1.1, 0.2, 0.9]} scale={1.1}>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='red'/>
+      <Ufo 
+        position={[1.1, 0.5, 0.5]} 
+        rotation={[Math.PI/2, -Math.PI/16 * 8, Math.PI/2]} 
+        scale={0.7}
+        glassOpacity={0.1}
+      />
+      <group position={[1, 0.3, 0.8]} scale={1.3}>
+        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
       </group>
     </group>
   }
+  
 
-  return <animated.group position={position} rotation={rotation} scale={scale}>
+  function handleAlertClick(e) {
+    e.stopPropagation();
+    setMainAlert({ type: '' })
+  }
+
+
+  return <animated.group position={position} rotation={rotation} scale={scale} onPointerDown={(e) => handleAlertClick(e)}>
     <mesh
       castShadow
       receiveShadow
@@ -147,7 +158,7 @@ export default function DoubleCatchAlert({ position, rotation, scale, team }) {
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
       rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-      position={[-0.4, 0, -2]}
+      position={[-0.5, 0, -2]}
       size={0.7}
       height={0.1}
     >
