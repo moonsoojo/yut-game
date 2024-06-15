@@ -65,17 +65,7 @@ export default function Tile({
       } else if (selection.tile != tile && legalTileInfo) {
         // Server clears legalTiles and selection
         // When they're called separately, the order of operation is not kept
-        socket.emit("move", { roomId: params.id, tile }, ({moveResult}) => {
-          console.log(`[Tile] move result`, moveResult)
-          if (moveResult && moveResult.type === 'catch') {
-            const newAlert = {
-              type: moveResult.type,
-              team: moveResult.team,
-              amount: moveResult.amount
-            }
-            setMainAlert(newAlert)
-          }
-        });
+        socket.emit("move", { roomId: params.id, tile });
         // callback
         // if result === 'catch' 
           // display banner

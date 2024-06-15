@@ -10,7 +10,6 @@ import RocketsGoFirst from './RocketsGoFirst';
 import UfosGoFirst from './UfosGoFirst';
 
 export default function PregameAlert({ position, rotation, initialScale }) {
-  const { nodes, materials } = useGLTF("models/boom-wrap.glb");
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({
@@ -116,31 +115,31 @@ export default function PregameAlert({ position, rotation, initialScale }) {
     )
   }
 
-  function Rules() {
-    return <group>
-      <Text3D
-      font="fonts/Luckiest Guy_Regular.json"
-      position={layout[device].whoGoesFirst.title.position}
-      rotation={layout[device].whoGoesFirst.title.rotation}
-      size={layout[device].whoGoesFirst.title.size}
-      height={layout[device].whoGoesFirst.title.height}
-      >
-        {`Who goes first?`}
-        <meshStandardMaterial color="yellow"/>
-      </Text3D>
-      <Text3D
-      font="fonts/Luckiest Guy_Regular.json"
-      position={layout[device].whoGoesFirst.description.position}
-      rotation={layout[device].whoGoesFirst.description.rotation}
-      size={layout[device].whoGoesFirst.description.size}
-      height={layout[device].whoGoesFirst.title.height}
-      lineHeight={0.8}
-      >
-        {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
-        <meshStandardMaterial color="green"/>
-      </Text3D>
-    </group>
-  }
+  // function Rules() {
+  //   return <group>
+  //     <Text3D
+  //     font="fonts/Luckiest Guy_Regular.json"
+  //     position={layout[device].whoGoesFirst.title.position}
+  //     rotation={layout[device].whoGoesFirst.title.rotation}
+  //     size={layout[device].whoGoesFirst.title.size}
+  //     height={layout[device].whoGoesFirst.title.height}
+  //     >
+  //       {`Who goes first?`}
+  //       <meshStandardMaterial color="yellow"/>
+  //     </Text3D>
+  //     <Text3D
+  //     font="fonts/Luckiest Guy_Regular.json"
+  //     position={layout[device].whoGoesFirst.description.position}
+  //     rotation={layout[device].whoGoesFirst.description.rotation}
+  //     size={layout[device].whoGoesFirst.description.size}
+  //     height={layout[device].whoGoesFirst.title.height}
+  //     lineHeight={0.8}
+  //     >
+  //       {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
+  //       <meshStandardMaterial color="green"/>
+  //     </Text3D>
+  //   </group>
+  // }
 
   // remove conditional render in 'Game' component
   // use conditional springs with pregameAlert.type for each alert

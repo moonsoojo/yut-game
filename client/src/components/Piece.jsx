@@ -100,17 +100,7 @@ export default function Piece ({
         console.log(`[Piece] selection is not null`)
         if (selection.tile != tile && tile in legalTiles) {
           console.log(`[Piece] moving piece`)
-          socket.emit("move", { roomId: params.id, tile }, ({moveResult}) => {
-            console.log(`[Piece] move result`, moveResult)
-            if (moveResult && moveResult.type === 'catch') {
-              const newAlert = {
-                type: moveResult.type,
-                team: moveResult.team,
-                amount: moveResult.amount
-              }
-              setMainAlert(newAlert)
-            }
-          });
+          socket.emit("move", { roomId: params.id, tile });
         } else {
 
           socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })

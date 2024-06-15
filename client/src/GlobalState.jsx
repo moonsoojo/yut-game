@@ -45,6 +45,11 @@ export const mainAlertAtom = atom([])
 export const pregameAlertAtom = atom({
   type: ''
 })
+export const throwAlertAtom = atom({
+  type: '',
+  num: -2,
+  time: 0
+})
 export const moveResultAtom = atom({
   type: '',
   team: -1,
@@ -52,7 +57,6 @@ export const moveResultAtom = atom({
   tile: -1
 })
 export const throwResultAtom = atom({
-  type: '',
   num: -2,
   time: 0
 })

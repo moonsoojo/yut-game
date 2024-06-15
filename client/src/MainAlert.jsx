@@ -1,9 +1,9 @@
 
 import { useSpring, animated } from '@react-spring/three';
-import { Float, Text3D, useGLTF } from '@react-three/drei';
-import React, { useEffect, useRef, useState } from 'react';
+import { Text3D, useGLTF } from '@react-three/drei';
+import React, { useRef } from 'react';
 import { useAtom } from 'jotai';
-import { boomTextAtom, mainAlertAtom } from './GlobalState';
+import {  mainAlertAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
@@ -16,9 +16,7 @@ import YootAlert from './alerts/YootAlert';
 import MoAlert from './alerts/MoAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
-  const { nodes, materials } = useGLTF("models/boom-wrap.glb");
-  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  console.log(`[MainAlert]`, mainAlert)
+  const [mainAlert] = useAtom(mainAlertAtom)
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({
@@ -57,7 +55,6 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   }
 
   function Turn({position, rotation, scale, team, name}) {
-    console.log(`[Turn] name`, name)
     const { nodes, materials } = useGLTF('models/alert-background.glb')
 
     const borderMesh0Ref = useRef();
@@ -199,14 +196,6 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   return <group
   position={position}
   rotation={rotation}>
-    {/* <Float 
-      floatIntensity={0.5} 
-      rotationIntensity={0.5}
-      position={position}
-      rotation={rotation}
-      > */}
-      {/* { text === 'gameStart' && <GameStart position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> }
-      { text === 'pregameTie' && <PregameTie position={[-0.3, 1, 0]} rotation={rotation} scale={springs.scale}/> } */}
     { mainAlert && mainAlert.type === 'turn' && <Turn 
       position={[5,3,0]}
       rotation={[0,0,0]}

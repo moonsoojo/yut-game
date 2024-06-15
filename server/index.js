@@ -616,12 +616,17 @@ io.on("connect", async (socket) => {
           // } else {
           //   move = 1
           // }
-          // move = 2;
+          // move = 5;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
+
+          operation['$set']['throwResult'] = {
+            type: 'regular',
+            num: move,
+            time: Date.now()
+          }
           
           const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)
-          console.log(`[recordThrow] outcome`, outcome)
           if (outcome === "pass") {
             const newTurn = passTurn(room.turn, room.teams)
             operation['$set']['turn'] = newTurn
@@ -641,7 +646,6 @@ io.on("connect", async (socket) => {
             operation['$set']['pregameOutcome'] = outcome.toString()
             operation['$set']['gamePhase'] = 'game'
             operation['$inc'][`teams.${outcome}.throws`] = 1
-            console.log(`[recordThrow] newTurn`, newTurn)
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
@@ -655,6 +659,12 @@ io.on("connect", async (socket) => {
             room.teams[user.team].throws++;
             operation['$set']['throwResult'] = {
               type: 'bonus',
+              num: move,
+              time: Date.now()
+            }
+          } else {
+            operation['$set']['throwResult'] = {
+              type: 'regular',
               num: move,
               time: Date.now()
             }
@@ -739,7 +749,7 @@ io.on("connect", async (socket) => {
     return true;
   }
 
-  socket.on("move", async ({ roomId, tile }, callback) => {
+  socket.on("move", async ({ roomId, tile }) => {
     try {
       const room = await Room.findById(roomId)
       let moveInfo = room.legalTiles[tile]
@@ -753,7 +763,6 @@ io.on("connect", async (socket) => {
       let pieces = room.selection.pieces
       let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
-      let moveResult = null
 
       let moves = room.teams[movingTeam].moves;
       let throws = room.teams[movingTeam].throws;
@@ -799,7 +808,7 @@ io.on("connect", async (socket) => {
           
           operation['$set'][`tiles.${to}`] = pieces
           throws++;
-        } else { // Join
+        } else { // Join or move into tile
           operation['$push'][`tiles.${to}`] = { '$each': pieces }
         }
       } else {
@@ -828,10 +837,6 @@ io.on("connect", async (socket) => {
         }, 
         operation
       )
-
-      return callback({ 
-        moveResult: moveResult,
-      })
       
     } catch (err) {
       console.log(`[move] error making move`, err)

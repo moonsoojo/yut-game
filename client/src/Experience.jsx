@@ -8,6 +8,7 @@ import MilkyWay from "./shader/MilkyWay.jsx";
 import Game from "./Game.jsx";
 import MainAlert from "./MainAlert.jsx";
 import PregameAlert from "./PregameAlert.jsx";
+import ThrowAlert from "./alerts/ThrowAlert.jsx";
 
 export default function Experience() {
 
@@ -25,7 +26,8 @@ export default function Experience() {
       colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
     />
     {/* <BoomText rotation={[0, Math.PI/2, 0]} initialScale={2}/>  */}
-    <MainAlert position={[0, 0.3, 7]} rotation={[0, Math.PI/2, 0]} initialScale={1}/> 
-    <PregameAlert position={[-2, 0, -4]} rotation={[0, Math.PI/2, 0]} initialScale={1.7}/>
+    <MainAlert position={[0, 0.3, 6]} rotation={[0, Math.PI/2, 0]} initialScale={1}/> 
+    <PregameAlert position={[-2, 0, -4.5]} rotation={[0, Math.PI/2, 0]} initialScale={1.7}/>
+    <ThrowAlert position={[0,0,4.5]} rotation={[0, Math.PI/2, 0]} initialScale={1}/>
   </group>
 }
