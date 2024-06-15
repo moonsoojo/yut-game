@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom } from "../GlobalState.jsx";
+import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom, mainAlertAtom } from "../GlobalState.jsx";
 import { useParams } from "wouter";
 import { pieceStatus } from "../helpers/helpers.js";
 import { animated } from "@react-spring/three";
@@ -30,6 +30,7 @@ export default function Piece ({
   const [yootThrown] = useAtom(yootThrownAtom)
   const [tiles] = useAtom(tilesAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
+  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const group = useRef();
@@ -76,7 +77,7 @@ export default function Piece ({
   // rocket shaking on selected
   function handlePointerDown(event) {
     console.log(`[Piece] click`)
-    if (gamePhase === "game" && client.team == team && hasTurn && !yootThrown.flag) {
+    if (gamePhase === "game" && hasTurn && client.team === team && !yootThrown.flag) {
       event.stopPropagation();
       if (selection === null) {
         console.log(`[Piece] selection is null`)
@@ -99,7 +100,17 @@ export default function Piece ({
         console.log(`[Piece] selection is not null`)
         if (selection.tile != tile && tile in legalTiles) {
           console.log(`[Piece] moving piece`)
-          socket.emit("move", ({ roomId: params.id, tile }))
+          socket.emit("move", { roomId: params.id, tile }, ({moveResult}) => {
+            console.log(`[Piece] move result`, moveResult)
+            if (moveResult && moveResult.type === 'catch') {
+              const newAlert = {
+                type: moveResult.type,
+                team: moveResult.team,
+                amount: moveResult.amount
+              }
+              setMainAlert(newAlert)
+            }
+          });
         } else {
 
           socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })

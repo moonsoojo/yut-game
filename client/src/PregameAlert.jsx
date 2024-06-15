@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Float, Text3D, useGLTF } from '@react-three/drei';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
-import { boomTextAtom, pregameAlertAtom } from './GlobalState';
+import { boomTextAtom, pregameAlertAtom, yootThrownAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Star from './meshes/Star';
 import RocketsGoFirst from './RocketsGoFirst';
@@ -11,7 +11,6 @@ import UfosGoFirst from './UfosGoFirst';
 
 export default function PregameAlert({ position, rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
-  // const [_text, setText] = useAtom(boomTextAtom)
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({

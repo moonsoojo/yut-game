@@ -8,15 +8,8 @@ import { useFrame } from '@react-three/fiber';
 import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
 import Ufo from './meshes/Ufo';
+import CatchAlert from './alerts/CatchAlert';
 
-// show yoots for bonus turn
-// show team for "your turn"
-// do not play again on re-render
-// local storage or useMemo
-// on player action, reset this count
-  // click piece
-  // throw the yoot
-  // button click - start game
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
   const { nodes, materials } = useGLTF("models/boom-wrap.glb");
   const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
@@ -49,87 +42,6 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
     // reset: true,
     // onRest: () => setMainAlert(null) // must be set to null, or component will re-render
   })
-
-  function GameStart({ position, rotation, scale }) {
-    console.log(`[BoomText][GameStart]`)
-
-    return <animated.group position={position} rotation={rotation} scale={scale}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Circle002.geometry}
-        material={nodes.Circle002.material}
-        scale={[1.2, 0.2, 1.2]}
-      >
-        <meshStandardMaterial color='yellow'/>
-      </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Circle002.geometry}
-        material={nodes.Circle002.material}
-        scale={[1.1, 0.3, 1.1]}
-        position={[0, 0.02, 0]}
-      >
-        <meshStandardMaterial color='green'/>
-      </mesh>
-      <group name="text" position={[0.01, -0.2, -0.48]} scale={1.2}>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[0, 0, 0]}
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          size={0.2}
-        >
-          GAME
-          <meshStandardMaterial color="yellow"/>
-        </Text3D>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[-0.25, 0, 0]}
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          size={0.2}
-        >
-          START!
-          <meshStandardMaterial color="yellow"/>
-        </Text3D>
-      </group>
-    </animated.group>
-  }
-  function PregameTie({ position, rotation, scale }) {
-
-    return <animated.group position={position} rotation={rotation} scale={scale}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Circle002.geometry}
-        material={nodes.Circle002.material}
-        scale={[1.2, 0.2, 1.2]}
-      >
-        <meshStandardMaterial color='yellow'/>
-      </mesh>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Circle002.geometry}
-        material={nodes.Circle002.material}
-        scale={[1.1, 0.3, 1.1]}
-        position={[0, 0.02, 0]}
-      >
-        <meshStandardMaterial color='green'/>
-      </mesh>
-      <group name="text" position={[-0.15, -0.2, -0.35]} scale={1.2}>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          position={[0, 0, 0]}
-          size={0.3}
-        >
-          TIE!
-          <meshStandardMaterial color="yellow"/>
-        </Text3D>
-      </group>
-    </animated.group>
-  }
 
   function formatName(name) {
     if (name.length > 10) {
@@ -296,6 +208,11 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       scale={springs.scale}
       team={mainAlert.team} 
       name={mainAlert.name}/> }
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && <CatchAlert 
+      position={[5,3,0]}
+      rotation={[0,0,0]}
+      scale={springs.scale}
+      team={mainAlert.team}/> }
     {/* </Float> */}
   </group>
 }

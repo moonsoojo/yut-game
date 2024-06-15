@@ -41,9 +41,7 @@ export const initialYootThrowAtom = atom(true)
 export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
-export const mainAlertAtom = atom({
-  type: ''
-})
+export const mainAlertAtom = atom([])
 export const pregameAlertAtom = atom({
   type: ''
 })

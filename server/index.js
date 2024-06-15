@@ -721,7 +721,7 @@ io.on("connect", async (socket) => {
     return true;
   }
 
-  socket.on("move", async ({ roomId, tile }) => {
+  socket.on("move", async ({ roomId, tile }, callback) => {
     try {
       const room = await Room.findById(roomId)
       let moveInfo = room.legalTiles[tile]
@@ -735,6 +735,7 @@ io.on("connect", async (socket) => {
       let pieces = room.selection.pieces
       let starting = pieces[0].tile === -1
       let movingTeam = pieces[0].team;
+      let moveResult = null
 
       let moves = room.teams[movingTeam].moves;
       let throws = room.teams[movingTeam].throws;
@@ -764,8 +765,13 @@ io.on("connect", async (socket) => {
       if (tiles[to].length > 0) {
         let occupyingTeam = tiles[to][0].team
 
-        // Capture
+        // Catch
         if (occupyingTeam != movingTeam) {
+          moveResult = {
+            type: 'catch',
+            team: movingTeam,
+            amount: tiles[to].length
+          }
           for (let piece of tiles[to]) {
             piece.tile = -1
             piece.history = []
@@ -813,6 +819,10 @@ io.on("connect", async (socket) => {
         }, 
         operation
       )
+
+      return callback({ 
+        moveResult: moveResult,
+      })
       
     } catch (err) {
       console.log(`[move] error making move`, err)

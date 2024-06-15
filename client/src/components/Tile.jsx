@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import { clientAtom, gamePhaseAtom, hasTurnAtom, selectionAtom, teamsAtom, tilesAtom, yootThrownAtom } from "../GlobalState";
+import { clientAtom, gamePhaseAtom, hasTurnAtom, mainAlertAtom, selectionAtom, teamsAtom, tilesAtom, yootThrownAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import { Text3D } from "@react-three/drei";
@@ -27,6 +27,7 @@ export default function Tile({
   const [teams] = useAtom(teamsAtom)
   const [client] = useAtom(clientAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const group = useRef()
@@ -49,9 +50,9 @@ export default function Tile({
     console.log(`[Tile] click`)
     event.stopPropagation();
     const team = client.team
+    let pieces = tiles[tile]
     if (gamePhase === "game" && hasTurn && !yootThrown.flag) {
-      if (selection === null) {
-        let pieces = tiles[tile]
+      if (selection === null && pieces.length > 0 && pieces[0].team === team) {
         let history = tiles[tile][0].history
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
@@ -59,18 +60,29 @@ export default function Tile({
 
           socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
         }
+      } else if (selection.tile != tile && legalTileInfo) {
+        // Server clears legalTiles and selection
+        // When they're called separately, the order of operation is not kept
+        socket.emit("move", { roomId: params.id, tile }, ({moveResult}) => {
+          console.log(`[Tile] move result`, moveResult)
+          if (moveResult && moveResult.type === 'catch') {
+            const newAlert = {
+              type: moveResult.type,
+              team: moveResult.team,
+              amount: moveResult.amount
+            }
+            setMainAlert(newAlert)
+          }
+        });
+        // callback
+        // if result === 'catch' 
+          // display banner
       } else {
-        if (selection.tile != tile && legalTileInfo) {
-          // Server clears legalTiles and selection
-          // When they're called separately, the order of operation is not kept
-          socket.emit("move", { roomId: params.id, tile });
-        } else {
+
+        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
   
-          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-    
-          socket.emit("select", { roomId: params.id, payload: null });
-  
-        }
+        socket.emit("select", { roomId: params.id, payload: null });
+
       }
     }
   }
