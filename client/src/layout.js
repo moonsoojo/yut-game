@@ -1332,13 +1332,13 @@ export default {
       fontSize: 1
     },
     moveList: {
-      position: [8, 0, -1],
+      position: [8, 0, -1.2],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
       width: 180
     },
     currentPlayer: {
-      position: [8.4, 0, -1.7],
+      position: [8.4, 0, -2.5],
       rotation: [0,0,0],
       fontSize: 20,
       width: 120

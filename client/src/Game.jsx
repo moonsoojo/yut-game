@@ -298,8 +298,6 @@ export default function Game() {
         { gamePhase === 'game' && <MoveList
           position={layout[device].moveList.position}
           rotation={layout[device].moveList.rotation}
-          fontSize={layout[device].moveList.fontSize}
-          width={layout[device].moveList.width}
         /> }
         { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
           position={layout[device].currentPlayer.position} 

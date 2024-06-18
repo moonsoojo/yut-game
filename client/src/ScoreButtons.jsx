@@ -18,13 +18,13 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
     function scorePointerEnter(event) {
       event.stopPropagation();
       document.body.style.cursor = "pointer";
-      buttonMatInner.current.color = new THREE.Color('#006400')
+      buttonMatInner.current.color = new THREE.Color('green')
     }
   
     function scorePointerOut(event) {
       event.stopPropagation();
       document.body.style.cursor = "default";
-      buttonMatInner.current.color = new THREE.Color('green')
+      buttonMatInner.current.color = new THREE.Color('black')
     }
 
     return <group position={position}>
@@ -34,7 +34,7 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
       </mesh>
       <mesh rotation={[-Math.PI/2, 0, 0]}>
         <cylinderGeometry args={[0.45, 0.45, 0.11]}/>
-        <meshStandardMaterial color='green' ref={buttonMatInner} />
+        <meshStandardMaterial color='black' ref={buttonMatInner} />
       </mesh>
       <Text3D font="/fonts/Luckiest Guy_Regular.json" height={0.01} size={0.5} position={[-0.17, -0.22, 0.05]}>
         {`${moveInfo.move}`}

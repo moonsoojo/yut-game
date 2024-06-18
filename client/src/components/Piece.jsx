@@ -30,7 +30,6 @@ export default function Piece ({
   const [yootThrown] = useAtom(yootThrownAtom)
   const [tiles] = useAtom(tilesAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
-  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const group = useRef();
