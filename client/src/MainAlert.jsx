@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Text3D, useGLTF } from '@react-three/drei';
 import React, { useRef } from 'react';
 import { useAtom } from 'jotai';
-import {  mainAlertAtom } from './GlobalState';
+import { gamePhaseAtom, mainAlertAtom, turnAlertActiveAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
@@ -17,6 +17,9 @@ import MoAlert from './alerts/MoAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
   const [mainAlert] = useAtom(mainAlertAtom)
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [turnAlertActive] = useAtom(turnAlertActiveAtom)
+  console.log(`[MainAlert] turnAlertActive`, turnAlertActive)
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({
@@ -28,21 +31,21 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
         scale: initialScale,
         // Specify config here for animation to not trigger again before delay ends
         config: {
-          tension: 170,
+          tension: 120,
           friction: 26
-        }
+        },
       },
       {
         scale: 0,
         config: {
-          tension: 170,
+          tension: 100,
           friction: 26
         },
         delay: 3000
       }
     ],
     loop: false,
-    // reset: true,
+    reset: true, // turn it on to reset animation
     // onRest: () => setMainAlert(null) // must be set to null, or component will re-render
   })
 
@@ -193,31 +196,34 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
       </group>
     </animated.group>
   }
+
   return <group
   position={position}
   rotation={rotation}>
-    { mainAlert && mainAlert.type === 'turn' && <Turn 
+    { mainAlert && mainAlert.type === 'turn' && (gamePhase === 'pregame' || turnAlertActive) && <Turn 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team} 
       name={mainAlert.name}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && <CatchAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && turnAlertActive && <CatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 2 && <DoubleCatchAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 2 && turnAlertActive && <DoubleCatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 3 && <TripleCatchAlert 
+      {/* catch animation */}
+      {/* laser beam vs. psy-power (turquoise jello / mewtwo hypnotize / meshDistortMaterial) */}
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 3 && turnAlertActive && <TripleCatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 4 && <AllClearAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 4 && turnAlertActive && <AllClearAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
