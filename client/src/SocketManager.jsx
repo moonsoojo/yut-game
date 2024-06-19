@@ -284,6 +284,11 @@ export const SocketManager = () => {
         setWinner(room.results[room.results.length-1])
       }
 
+      // score animation
+      // loop through pieces in each team
+      // compared to last state, if any of them scored,
+      // display score animation
+
     })
 
     // hybrid: yoot thrown should not be set in room update.

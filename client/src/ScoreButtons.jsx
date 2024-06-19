@@ -36,7 +36,11 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
         <cylinderGeometry args={[0.45, 0.45, 0.11]}/>
         <meshStandardMaterial color='black' ref={buttonMatInner} />
       </mesh>
-      <Text3D font="/fonts/Luckiest Guy_Regular.json" height={0.01} size={0.5} position={[-0.17, -0.22, 0.05]}>
+      <Text3D 
+      font="/fonts/Luckiest Guy_Regular.json" 
+      height={0.01} 
+      size={0.5} 
+      position={[-0.17, -0.22, 0.05]}>
         {`${moveInfo.move}`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>

@@ -288,13 +288,13 @@ export default function Game() {
         />
         <PiecesOnBoard/>
         {/* Conditionally render to activate animation on state change */}
-        { lastMove && <MoveAnimation 
+        {/* { lastMove && <MoveAnimation 
           move={lastMove}
           initialScale={layout[device].moveAnimation.initialScale}
           initialPosition={layout[device].moveAnimation.initialPosition}
           endingPosition={layout[device].moveAnimation.endingPosition}
           fontSize={layout[device].moveAnimation.fontSize}
-        /> }
+        /> } */}
         { gamePhase === 'game' && <MoveList
           position={layout[device].moveList.position}
           rotation={layout[device].moveList.rotation}

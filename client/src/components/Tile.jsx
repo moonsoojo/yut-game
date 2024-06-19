@@ -94,14 +94,14 @@ export default function Tile({
   useFrame((state) => {
     if (selection === null && tiles[tile].length > 0 && tiles[tile][0].team === client.team && hasTurn && hasValidMove(client.team)) {
       if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
-        wrapperMat.current.opacity = 0.4
+        wrapperMat.current.opacity = 0.3
         if (tiles[tile][0].team === 0) {
           wrapperMat.current.color = new THREE.Color('#EA5E5E')
         } else {
           wrapperMat.current.color = new THREE.Color('turquoise')
         }
       } else {
-        wrapperMat.current.opacity = 0.4
+        wrapperMat.current.opacity = 0.3
         wrapperMat.current.color = new THREE.Color('grey')
       }
     } else if (selection != null && legalTileInfo) {
@@ -116,7 +116,7 @@ export default function Tile({
       } else {
         wrapperMat.current.color = new THREE.Color('turquoise')
       }
-      wrapperMat.current.opacity = 0.4;
+      wrapperMat.current.opacity = 0.3;
     } else {
       // group.current.scale.x = scale
       // group.current.scale.y = scale
