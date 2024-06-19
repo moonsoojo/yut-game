@@ -11,7 +11,7 @@ import PregameAlert from "./PregameAlert.jsx";
 import ThrowAlert from "./alerts/ThrowAlert.jsx";
 
 export default function Experience() {
-
+  console.log(`[Experience]`)
   return <group>
     {/* add game */}
     <Game/>

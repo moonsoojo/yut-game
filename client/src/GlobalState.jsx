@@ -42,6 +42,7 @@ export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
 export const mainAlertAtom = atom([])
+export const turnAlertActiveAtom = atom(false)
 export const pregameAlertAtom = atom({
   type: ''
 })

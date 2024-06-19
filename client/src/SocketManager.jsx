@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom } from "./GlobalState.jsx";
+import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -39,12 +39,13 @@ export const SocketManager = () => {
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
   const [_moveResult, setMoveResult] = useAtom(moveResultAtom)
   const [_throwResult, setThrowResult] = useAtom(throwResultAtom)
   const [_pregameAlert, setPregameAlert] = useAtom(pregameAlertAtom)
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   // Use state to check if the game phase changed
-  const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
@@ -80,7 +81,6 @@ export const SocketManager = () => {
 
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
-      console.log(`[SocketManager] socket id`, socket.id)
 
       setMessages(room.messages)
       setTeams(room.teams)
@@ -133,15 +133,14 @@ export const SocketManager = () => {
       }
 
       setGamePhase((lastPhase) => {
-        console.log(`[SocketManager] lastPhase`, lastPhase, `current phase`, room.gamePhase)
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
-          console.log(`[SocketManager] game start`)
           setPregameAlert({
             type: 'gameStart',
             team: room.turn.team
           })
           const turnAlert = makeTurnAlertObj(room)
           setMainAlert(turnAlert)
+          setTurnAlertActive(true)
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
           // Reset fireworks from win screen
           setParticleSetting(null)
@@ -186,7 +185,6 @@ export const SocketManager = () => {
       // setTurn(room.turn)
 
       setMoveResult((prevResult) => {
-        console.log(`[setMoveResult] prevResult`, prevResult)
         if (room.moveResult.type === 'catch') {
           if (prevResult.tile !== room.moveResult.tile 
             || prevResult.team !== room.moveResult.team) {
@@ -199,7 +197,6 @@ export const SocketManager = () => {
       setThrowResult((prevResult) => {
         // type: regular, bonus
         // bonus: num, streak
-        console.log(`[setThrowResult] prevResult`, prevResult)
         if (prevResult.time !== room.throwResult.time) {
           if (room.throwResult.type === 'bonus') {
             setMainAlert({
@@ -295,7 +292,6 @@ export const SocketManager = () => {
     // it should only be updated on throw yoot (from the server).
     socket.on('throwYoot', ({ yootThrowValues, yootThrown }) => {
       setYootThrowValues(yootThrowValues)
-      console.log(`[SocketManager] yootThrown`, yootThrown)
       setYootThrown(yootThrown)
       // Disable the yoot button
       setYootActive(false)

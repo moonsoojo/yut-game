@@ -130,7 +130,8 @@ const roomSchema = new mongoose.Schema(
     ],
     moveResult: Object,
     throwResult: Object,
-    results: [Number]
+    results: [Number],
+    // turnAlertActive: Boolean
   },
   {
     versionKey: false,
@@ -279,7 +280,8 @@ io.on("connect", async (socket) => {
           type: '',
           num: -2,
           time: Date.now()
-        }
+        },
+        // turnAlertActive: true
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -430,7 +432,7 @@ io.on("connect", async (socket) => {
         $set: {
           [`teams.${turn.team}.throws`]: 1,
           gamePhase: "pregame",
-          turn
+          turn,
         }
       })
     } catch (err) {
@@ -510,7 +512,8 @@ io.on("connect", async (socket) => {
               yootThrown: {
                 flag: true,
                 player: user._id
-              }
+              },
+              // turnAlertActive: false
             },
             $inc: {
               [`teams.${user.team}.throws`]: -1
@@ -611,11 +614,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          if (user.team === 1) {
-            move = 5;
-          } else {
-            move = 1
-          }
+          // if (user.team === 1) {
+          //   move = 5;
+          // } else {
+          //   move = 1
+          // }
           // move = 5;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
@@ -649,7 +652,7 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = 3
+          // move = 3
           operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
           room.teams[user.team].moves[move]++;
 
@@ -668,6 +671,10 @@ io.on("connect", async (socket) => {
               num: move,
               time: Date.now()
             }
+
+            // if (move === 0) {
+            //   operation['$set']['turnAlertActive'] = true
+            // }
           }
 
           // If user threw out of bounds, pass turn
@@ -970,6 +977,22 @@ io.on("connect", async (socket) => {
       console.log(`[reset] error resetting game`, err)
     }
   })
+
+  // socket.on("turnAlertActive", async ({ roomId, flag }) => {
+  //   try {
+  //     let operation = {}
+  //     operation['$set'] = {}
+  //     operation['$set'][`turnAlertActive`] = flag
+  //     await Room.findOneAndUpdate(
+  //       { 
+  //         _id: roomId, 
+  //       }, 
+  //       operation
+  //     )
+  //   } catch (err) {
+  //     console.log(`[reset] error setting turn alert flag`, err)
+  //   }
+  // })
 
   socket.on("disconnect", async () => {
     console.log(`${socket.id} disconnect`)

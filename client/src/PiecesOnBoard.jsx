@@ -1,14 +1,13 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom } from './GlobalState';
+import { pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
 import { roundNum, generateRandomNumberInRange } from './helpers/helpers';
-import Twink from './particles/Twink';
-import Star from './meshes/Star';
 import Polaris from './meshes/Polaris';
 import { Text3D } from '@react-three/drei';
+import { useParams } from 'wouter';
 
 export default function PiecesOnBoard() {
     const [teams] = useAtom(teamsAtom)
@@ -20,6 +19,8 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
+    const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
+    const params = useParams()
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
             position: [0,3,0], // Value before api start
@@ -169,7 +170,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 // save last move's path in piece
@@ -192,20 +195,18 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
     }, [pieceTeam0Id0])
 
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam0Id1.lastPath
-        console.log(`[piece 0_1] path`, path)
-        if (path.length > 0) {
-            // save last move's path in piece            
+        if (path.length > 0) {    
             if (path[path.length-1] === 29) {
-                console.log(`[piece 0_1] score animation`)
                 api0_1.start({
                     from: {
                         position: [
@@ -274,6 +275,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -295,7 +299,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
@@ -307,7 +313,6 @@ export default function PiecesOnBoard() {
         if (path.length > 0) {
             // save last move's path in piece
             if (path[path.length-1] === 29) {
-                console.log(`[piece 0_2] score animation`)
                 api0_2.start({
                     from: {
                         position: [
@@ -376,9 +381,10 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
-                console.log(`[piece 0_2] api started`)
             } else {
                 const toAnimations = path.map((value) => (
                     // on score, move to Earth and add an additional animation
@@ -408,11 +414,9 @@ export default function PiecesOnBoard() {
     useEffect(() => {        
         // clear path on capture
         const path = pieceTeam0Id3.lastPath
-        console.log(`[piece 0_3] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             if (path[path.length-1] === 29) {
-                console.log(`[piece 0_3] score animation`)
                 api0_3.start({
                     from: {
                         position: [
@@ -481,7 +485,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -512,7 +518,6 @@ export default function PiecesOnBoard() {
     useEffect(() => {        
         // clear path on capture
         const path = pieceTeam1Id0.lastPath        
-        console.log(`[piece 1_0] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             if (path[path.length-1] === 29) {
@@ -585,7 +590,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 // save last move's path in piece
@@ -617,11 +624,9 @@ export default function PiecesOnBoard() {
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam1Id1.lastPath
-        console.log(`[piece 1_1] path`, path)
         if (path.length > 0) {
             // save last move's path in piece
             if (path[path.length-1] === 29) {
-                console.log(`[piece 1_1] score animation`)
                 api1_1.start({
                     from: {
                         position: [
@@ -691,7 +696,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 // save last move's path in piece
@@ -724,7 +731,6 @@ export default function PiecesOnBoard() {
     useEffect(() => {
         // clear path on capture
         const path = pieceTeam1Id2.lastPath
-        console.log(`[piece 1_2] path`, path)
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
                 api1_2.start({
@@ -796,7 +802,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -818,7 +826,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
@@ -899,7 +909,9 @@ export default function PiecesOnBoard() {
                             },
                         },
                     ],
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             } else {
                 const toAnimations13 = path.map((value) => {

@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom, turnAlertActiveAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
@@ -35,6 +35,7 @@ export default function Yoot({ device }) {
   const [timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   const params = useParams()
 
@@ -65,6 +66,7 @@ export default function Yoot({ device }) {
     }
 
     setMainAlert({ type: '' })
+    setTurnAlertActive(false)
     setThrowAlert({ type: '' })
     // setPregameAlert({ type: '' })
 
