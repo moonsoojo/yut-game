@@ -619,7 +619,7 @@ io.on("connect", async (socket) => {
           // } else {
           //   move = 1
           // }
-          // move = 5;
+          move = 2;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
 

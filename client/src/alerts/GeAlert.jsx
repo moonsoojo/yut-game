@@ -1,7 +1,7 @@
 import { Text3D, useGLTF } from "@react-three/drei";
 import { animated } from "@react-spring/three";
 
-export default function GaeAlert({ position, rotation, scale }) {
+export default function GeAlert({ position, rotation, scale }) {
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   return (
     <animated.group position={position} rotation={rotation} scale={scale}>
@@ -26,11 +26,11 @@ export default function GaeAlert({ position, rotation, scale }) {
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-        position={[-0.2, 0, -1.1]}
+        position={[-0.2, 0, -0.9]}
         size={0.5}
         height={0.1}
       >
-        GAE
+        GE
         <meshStandardMaterial color="yellow"/>
       </Text3D>
       <group name='move-token' position={[0, 0.09, 0.7]}>

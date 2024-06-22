@@ -2,7 +2,7 @@ import { Float } from "@react-three/drei";
 import { throwAlertAtom } from "../GlobalState";
 import { useSpring } from "@react-spring/three";
 import { useAtom } from "jotai";
-import GaeAlert from "./GaeAlert";
+import GeAlert from "./GeAlert";
 import GulAlert from "./GulAlert";
 import BackdoAlert from "./BackdoAlert";
 import OutAlert from "./OutAlert";
@@ -45,7 +45,7 @@ export default function ThrowAlert({ position=[0,0,0], rotation, initialScale })
       position={[0,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}/> }
-    { throwAlert && throwAlert.num === 2 && <GaeAlert 
+    { throwAlert && throwAlert.num === 2 && <GeAlert 
       position={[0,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}/> }
