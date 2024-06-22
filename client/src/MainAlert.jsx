@@ -20,6 +20,16 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [turnAlertActive] = useAtom(turnAlertActiveAtom)
   console.log(`[MainAlert] turnAlertActive`, turnAlertActive)
+  // what happens when you click the next player's yoot button before the pieces stop moving?
+  // when you have a yoot and another move, and you place a piece before the other one ends
+  // sequence: make move -> highlight pieces (move available) -> make move -> score -> pass turn
+
+  // precheck: assign state to each piece. all pieces must be still before 'pass check' event is emitted
+  // instead of passing turn in the 'move' or 'score' ('recordThrow' is OK because pieces are not moving),
+  // write a new event handler that triggers at the end of the move or score animation
+  // make 'turnAlertActive' part of the game state and change from server
+
+  // i want the piece to be highlighted instead of the tile because it's confusing when the tile is highlighted before the piece gets there
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({
