@@ -425,14 +425,23 @@ io.on("connect", async (socket) => {
       // find host
       // give him first turn
       const room = await Room.findOne({ _id: roomId }).populate('host')
-      const turn = getHostTurn(room)
-      console.log(`[startGame] turn`, turn)
+      // if this is a second game, winner gets to go first
+      let newTurn;
+      if (room.results.length > 0) {
+        newTurn = {
+          team: room.results[room.results.length-1],
+          players: [0, 0]
+        }
+      } else {
+        newTurn = getHostTurn(room)
+      }
+      console.log(`[startGame] turn`, newTurn)
       
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
-          [`teams.${turn.team}.throws`]: 1,
+          [`teams.${newTurn.team}.throws`]: 1,
           gamePhase: "pregame",
-          turn,
+          turn: newTurn,
         }
       })
     } catch (err) {
@@ -525,13 +534,6 @@ io.on("connect", async (socket) => {
       console.log(`[throwYoot] error updating throw values and thrown flag, and decrementing throws`, err)
     }
   })
-
-  function currentPlayer(room) {
-    const turn = room.turn
-    const currentTeam = turn.team
-    const currentPlayer = room.teams[currentTeam].players[turn.players[currentTeam]]
-    return currentPlayer
-  }
 
   function passTurn(currentTurn, teams) {
     const currentTeam = currentTurn.team
@@ -652,7 +654,7 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = 3
+          move = 3
           operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
           room.teams[user.team].moves[move]++;
 
