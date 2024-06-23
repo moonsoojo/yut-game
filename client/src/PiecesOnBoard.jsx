@@ -405,7 +405,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
@@ -509,7 +511,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
@@ -615,7 +619,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }
@@ -721,7 +727,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations[0].position,
                     },
                     to: toAnimations,
-                    loop: false
+                    loop: false,
+                    onRest: () => setTurnAlertActive(true),
+                    onStart: () => setTurnAlertActive(false)
                 })
             }
         }

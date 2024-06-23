@@ -75,11 +75,7 @@ export default {
     [],
     [],
     [],
-    [
-      { tile: 27, team: 1, id: 0, history: [], lastPath: [] },
-      { tile: 27, team: 1, id: 1, history: [], lastPath: [] },
-      { tile: 27, team: 1, id: 3, history: [], lastPath: [] },
-    ],
+    [],
     [],
   ],
 };
