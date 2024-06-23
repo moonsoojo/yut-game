@@ -253,7 +253,7 @@ export default function Game() {
           height={layout[device].whoGoesFirst.title.height}
           >
             {`Who goes first?`}
-            <meshStandardMaterial color="yellow"/>
+            <meshStandardMaterial color="green"/>
           </Text3D>
           <Text3D
           font="fonts/Luckiest Guy_Regular.json"

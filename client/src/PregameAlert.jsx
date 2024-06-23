@@ -60,13 +60,16 @@ export default function PregameAlert({ position, rotation, initialScale }) {
       borderMesh6Ref
     ]
 
+    const height = 0.75
+    const width = 1.7
     useFrame((state, delta) => {
       for (let i = 0; i < borderMeshRefs.length; i++) {      
-        borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * 0.7
-        borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * 1.7
+        borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
+        borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
       }
     })
     
+    const starScale = 0.09
     return (
       <animated.group position={position} rotation={rotation} scale={scale}>
         <mesh
@@ -81,65 +84,49 @@ export default function PregameAlert({ position, rotation, initialScale }) {
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           rotation={[Math.PI/2, Math.PI, Math.PI/2]}
-          position={[-0.28, 0, -0.64]}
-          size={0.6}
-          height={0.1}
+          position={[-0.1, 0.1, -0.64]}
+          size={0.5}
+          height={0.01}
         >
           TIE!
           <meshStandardMaterial color="yellow"/>
         </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[Math.PI/2, Math.PI, Math.PI/2]}
+          position={[-0.45, 0.1, -0.64]}
+          size={0.2}
+          height={0.01}
+        >
+          GO AGAIN
+          <meshStandardMaterial color="yellow"/>
+        </Text3D>
         <group name='border'>
           <group ref={borderMesh0Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh1Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh2Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh3Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh4Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh5Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
           <group ref={borderMesh6Ref}>
-            <Star position={[0, 0.1, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={0.12} color='yellow'/>
+            <Star position={[0, 0.05, 0]} rotation={[Math.PI/2, -Math.PI/2, Math.PI/2]} scale={starScale} color='yellow'/>
           </group>
         </group>
       </animated.group>
     )
   }
-
-  // function Rules() {
-  //   return <group>
-  //     <Text3D
-  //     font="fonts/Luckiest Guy_Regular.json"
-  //     position={layout[device].whoGoesFirst.title.position}
-  //     rotation={layout[device].whoGoesFirst.title.rotation}
-  //     size={layout[device].whoGoesFirst.title.size}
-  //     height={layout[device].whoGoesFirst.title.height}
-  //     >
-  //       {`Who goes first?`}
-  //       <meshStandardMaterial color="yellow"/>
-  //     </Text3D>
-  //     <Text3D
-  //     font="fonts/Luckiest Guy_Regular.json"
-  //     position={layout[device].whoGoesFirst.description.position}
-  //     rotation={layout[device].whoGoesFirst.description.rotation}
-  //     size={layout[device].whoGoesFirst.description.size}
-  //     height={layout[device].whoGoesFirst.title.height}
-  //     lineHeight={0.8}
-  //     >
-  //       {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
-  //       <meshStandardMaterial color="green"/>
-  //     </Text3D>
-  //   </group>
-  // }
 
   // remove conditional render in 'Game' component
   // use conditional springs with pregameAlert.type for each alert
@@ -164,7 +151,7 @@ export default function PregameAlert({ position, rotation, initialScale }) {
     }
     { pregameAlert 
     && pregameAlert.type === 'pregameTie' && <PregameTie 
-    position={[-0.3, 2, 0]} 
+    position={[0.5, 3, 1]} 
     rotation={rotation} 
     scale={springs.scale}/> }
   </Float>
