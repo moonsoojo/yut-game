@@ -30,7 +30,7 @@ export default function Yoot({ device }) {
   const [yootThrown] = useAtom(yootThrownAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [sleepCount, setSleepCount] = useState(0);
-  const [_outOfBounds, setOutOfBounds] = useState(false);
+  const [outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
   const [timer, setTimer] = useState(null)
   // hide alert
@@ -172,20 +172,33 @@ export default function Yoot({ device }) {
   //   }
   // }, [sleepCount])
 
+  const yootFloorMatRef = useRef();
   useFrame((state, delta) => {
-    let allYootsOnFloor = true;
-    for (let i = 0; i < yoots.length; i++) {
-      if (yoots[i].current && yoots[i].current.translation().y < 0) {
-        setOutOfBounds(true);
-        allYootsOnFloor = false
+    // let allYootsOnFloor = true;
+    // for (let i = 0; i < yoots.length; i++) {
+    //   if (yoots[i].current && yoots[i].current.translation().y < 0) {
+    //     setOutOfBounds(true);
+    //     allYootsOnFloor = false
+    //   }
+    // }
+    // if (allYootsOnFloor) {
+    //   setOutOfBounds(false);
+    // }
+
+    if (outOfBounds) {
+      if (Math.floor(state.clock.elapsedTime % 2) === 0) {
+        yootFloorMatRef.current.opacity = 0.2
+      } else {
+        yootFloorMatRef.current.opacity = 0
       }
+    } else {
+      yootFloorMatRef.current.opacity = 0
     }
-    if (allYootsOnFloor) {
-      setOutOfBounds(false);
-    }
+    
   })
 
   function observeThrow() {
+    console.log(`[Yoot][observeThrow]`)
     let result = 0
 
     // nak
@@ -193,6 +206,11 @@ export default function Yoot({ device }) {
     for (let i = 0; i < yoots.length; i++) {
       if (yoots[i].current.translation().y < 0) {
         nak = true;
+        console.log(`[Yoot][observeThrow] out of bounds`)
+        setOutOfBounds(true)
+        setTimeout(() => {
+          setOutOfBounds(false)
+        }, 7000)
       }
     }
     if (!nak) {
@@ -251,6 +269,8 @@ export default function Yoot({ device }) {
             transparent 
             opacity={0}
             depthWrite={false}
+            color='yellow'
+            ref={yootFloorMatRef}
           />
         </mesh>
       </RigidBody>
