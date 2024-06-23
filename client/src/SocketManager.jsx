@@ -248,22 +248,30 @@ export const SocketManager = () => {
         for (let i = 1; i < path.length; i++) {
           const pathTile = path[i]
           let helperText = ''
-          if (parseInt(moveInfo.move) < 0) {
-            helperText = (i * -1)
-          } else {
-            helperText = i
-          }
-          if (pathTile === parseInt(legalTile)) {
+          if (pathTile === parseInt(legalTile)) { // only do this for destination tiles
+
             if (legalTile === '29') {
               // pass
-            } else if (tiles[pathTile].length === 0) {
-              // pass
-            } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
-              helperText += ', kick'
-            } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
-              helperText += ', combine'
-            }
+            } else {
+
+              if (parseInt(moveInfo.move) < 0) {
+                helperText = (i * -1)
+              } else {
+                helperText = i
+              }
+
+              // additional text
+              if (tiles[pathTile].length === 0) { // if tile doesn't contain a piece
+                // pass
+              } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
+                helperText += ', catch'
+              } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
+                helperText += ', piggyback'
+              }
+            } 
           }
+
+          // if tiles have no text or text length is longer than the existing one
           if (!helperTiles[pathTile] || helperTiles[pathTile].length < helperText) {
             helperTiles[pathTile] = helperText
           }

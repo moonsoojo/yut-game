@@ -68,9 +68,6 @@ export default function Tile({
         // Server clears legalTiles and selection
         // When they're called separately, the order of operation is not kept
         socket.emit("move", { roomId: params.id, tile });
-        // callback
-        // if result === 'catch' 
-          // display banner
       } else {
 
         socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
