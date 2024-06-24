@@ -19,7 +19,7 @@ export function getLegalTiles(tile, moves, pieces, history) {
     } else if (moves[move] > 0) {
 
       // Special Rule: If you don't have a piece on the board, you can place one on Earth immediately
-      if (checkBackdoRule(moves, pieces)) {
+      if (parseInt(move) < 0 && checkBackdoRule(moves, pieces)) {
 
         legalTiles[0] = { tile: 0, move: "-1", history: [], path: [1, 0] }
 
@@ -177,7 +177,7 @@ function checkBackdoRule(moves, pieces) {
 
   // should have no pieces on the board
   for (let piece of pieces) {
-    if (piece.tile !== -1 || piece.tile !== 29) {
+    if (piece.tile !== -1 && piece.tile !== 29) {
       return false;
     }
   }
