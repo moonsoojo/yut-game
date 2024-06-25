@@ -654,7 +654,7 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          move = 3
+          // move = 3
           operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
           room.teams[user.team].moves[move]++;
 

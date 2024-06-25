@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { socket } from "../SocketManager";
 import React from "react";
 import { useFrame } from "@react-three/fiber";
-import { clientAtom, gamePhaseAtom, hasTurnAtom, mainAlertAtom, selectionAtom, teamsAtom, tilesAtom, turnAtom, yootThrownAtom } from "../GlobalState";
+import { animationPlayingAtom, clientAtom, gamePhaseAtom, hasTurnAtom, mainAlertAtom, selectionAtom, teamsAtom, tilesAtom, turnAtom, yootThrownAtom } from "../GlobalState";
 import Pointer from "../meshes/Pointer";
 import { useParams } from "wouter";
 import { Text3D } from "@react-three/drei";
@@ -29,7 +29,8 @@ export default function Tile({
   const [client] = useAtom(clientAtom)
   const [turn] = useAtom(turnAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  // const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [animationPlaying] = useAtom(animationPlayingAtom)
   const params = useParams()
 
   const group = useRef()
@@ -89,7 +90,12 @@ export default function Tile({
   }
 
   useFrame((state) => {
-    if (selection === null && tiles[tile].length > 0 && tiles[tile][0].team === client.team && hasTurn && hasValidMove(client.team)) {
+    if (selection === null 
+      && tiles[tile].length > 0 
+      && tiles[tile][0].team === client.team 
+      && hasTurn && hasValidMove(client.team)
+      && !animationPlaying
+    ) {
       if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
         wrapperMat.current.opacity = 0.3
         if (tiles[tile][0].team === 0) {

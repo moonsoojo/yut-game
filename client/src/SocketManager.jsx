@@ -140,7 +140,7 @@ export const SocketManager = () => {
           })
           const turnAlert = makeTurnAlertObj(room)
           setMainAlert(turnAlert)
-          setTurnAlertActive(true)
+          // setTurnAlertActive(true)
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
           // Reset fireworks from win screen
           setParticleSetting(null)

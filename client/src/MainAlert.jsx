@@ -3,7 +3,7 @@ import { useSpring, animated } from '@react-spring/three';
 import { Text3D, useGLTF } from '@react-three/drei';
 import React, { useRef } from 'react';
 import { useAtom } from 'jotai';
-import { gamePhaseAtom, mainAlertAtom, turnAlertActiveAtom } from './GlobalState';
+import { animationPlayingAtom, gamePhaseAtom, mainAlertAtom, turnAlertActiveAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Rocket from './meshes/Rocket';
 import Star from './meshes/Star';
@@ -16,10 +16,11 @@ import YootAlert from './alerts/YootAlert';
 import MoAlert from './alerts/MoAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
-  const [mainAlert] = useAtom(mainAlertAtom)
+  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
-  const [turnAlertActive] = useAtom(turnAlertActiveAtom)
-  console.log(`[MainAlert] turnAlertActive`, turnAlertActive)
+  // const [turnAlertActive] = useAtom(turnAlertActiveAtom)
+  console.log(`[MainAlert]`)
+  const [animationPlaying] = useAtom(animationPlayingAtom)
   // what happens when you click the next player's yoot button before the pieces stop moving?
   // when you have a yoot and another move, and you place a piece before the other one ends
   // sequence: make move -> highlight pieces (move available) -> make move -> score -> pass turn
@@ -56,7 +57,13 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
     ],
     loop: false,
     reset: true, // turn it on to reset animation
-    // onRest: () => setMainAlert(null) // must be set to null, or component will re-render
+    onStart: () => {},
+    // don't trigger alert again after it plays
+    // alert plays, and on piece move, it plays again
+    // onRest: () => setMainAlert((prevAlert) => {
+    //   console.log('main alert rest')
+    //   return { type: '' }
+    // })
   })
 
   function formatName(name) {
@@ -210,39 +217,39 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   return <group
   position={position}
   rotation={rotation}>
-    { mainAlert && mainAlert.type === 'turn' && (gamePhase === 'pregame' || turnAlertActive) && <Turn 
+    { mainAlert && mainAlert.type === 'turn' && (gamePhase === 'pregame' || !animationPlaying) && <Turn 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team} 
       name={mainAlert.name}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && turnAlertActive && <CatchAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 1 && !animationPlaying && <CatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 2 && turnAlertActive && <DoubleCatchAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 2 && !animationPlaying && <DoubleCatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
       {/* catch animation */}
       {/* laser beam vs. psy-power (turquoise jello / mewtwo hypnotize / meshDistortMaterial) */}
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 3 && turnAlertActive && <TripleCatchAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 3 && !animationPlaying && <TripleCatchAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 4 && turnAlertActive && <AllClearAlert 
+    { mainAlert && mainAlert.type === 'catch' && mainAlert.amount === 4 && !animationPlaying && <AllClearAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}
       team={mainAlert.team}/> }
-    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 4 && <YootAlert 
+    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 4 && !animationPlaying && <YootAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}/> }
-    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 5 && <MoAlert 
+    { mainAlert && mainAlert.type === 'throw' && mainAlert.num === 5 && !animationPlaying && <MoAlert 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}/> }

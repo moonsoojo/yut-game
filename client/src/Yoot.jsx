@@ -10,7 +10,7 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom, turnAlertActiveAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, yootActiveAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
@@ -35,8 +35,11 @@ export default function Yoot({ device }) {
   const [timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
+  // const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
+  const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
+  const [animationPlaying] = useAtom(animationPlayingAtom)
+  const [yootActive] = useAtom(yootActiveAtom)
   const params = useParams()
 
   const NUM_YOOTS = 4;
@@ -55,8 +58,8 @@ export default function Yoot({ device }) {
     setTimer((prevTimer) => {
       clearTimeout(prevTimer);
       return setTimeout(() => {
-        console.log('record yoot')
         recordThrow();
+        setAnimationPlaying(false)
       }, 4000)
     })
 
@@ -66,7 +69,8 @@ export default function Yoot({ device }) {
     }
 
     setMainAlert({ type: '' })
-    setTurnAlertActive(false)
+    // setTurnAlertActive(false)
+    setAnimationPlaying(true)
     setThrowAlert({ type: '' })
     // setPregameAlert({ type: '' })
 
@@ -343,6 +347,7 @@ export default function Yoot({ device }) {
         position={layout[device].throwButton.position}
         rotation={layout[device].throwButton.rotation}
         scale={layout[device].throwButton.scale}
+        active={yootActive && !animationPlaying}
       />}
     </Physics>
   );

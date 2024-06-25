@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
+import { animationPlayingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
@@ -20,10 +20,12 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
     const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
+    const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
+
     const params = useParams()
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
-            position: [0,3,0], // Value before api start
+            position: [0,0,0], // Value before api start
             scale: 1,
             sizeTwink: 0,
             welcomeTextScale: 0
@@ -31,7 +33,7 @@ export default function PiecesOnBoard() {
     }))
     const [springs0_1, api0_1] = useSpring(() => ({        
         from: {
-            position: [0,3,0], 
+            position: [0,0,0], 
             scale: 1,
             sizeTwink: 0,
             welcomeTextScale: 0
@@ -94,6 +96,14 @@ export default function PiecesOnBoard() {
     ]
 
     const heightOffset = 0.9
+
+    function handleAnimationStart() {
+        setAnimationPlaying(true)
+    }
+
+    function handleAnimationEnd() {
+        setAnimationPlaying(false)
+    }
 
     useEffect(() => {
         // clear path on capture
@@ -171,8 +181,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 // save last move's path in piece
@@ -196,8 +206,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -276,8 +286,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -300,8 +310,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -382,8 +392,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 const toAnimations = path.map((value) => (
@@ -406,8 +416,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -488,8 +498,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -512,8 +522,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -595,8 +605,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 // save last move's path in piece
@@ -620,8 +630,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -703,8 +713,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 // save last move's path in piece
@@ -728,8 +738,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -811,8 +821,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -835,8 +845,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }
@@ -918,8 +928,8 @@ export default function PiecesOnBoard() {
                         },
                     ],
                     loop: false,
-                    onRest: () => setTurnAlertActive(true),
-                    onStart: () => setTurnAlertActive(false)
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             } else {
                 const toAnimations13 = path.map((value) => {
@@ -941,7 +951,9 @@ export default function PiecesOnBoard() {
                         position: toAnimations13[0].position,
                     },
                     to: toAnimations13,
-                    loop: false
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
                 })
             }
         }

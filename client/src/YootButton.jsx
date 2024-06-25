@@ -10,7 +10,8 @@ import { useParams } from 'wouter';
 export default function YootButton({ 
   position, 
   rotation, 
-  scale
+  scale,
+  active
 }) {
   // yoots with material
   // get texture of yoot
@@ -22,8 +23,6 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  const [yootActive] = useAtom(yootActiveAtom);
-
   // To tell the server which room to throw the yoot in
   const params = useParams();
 
@@ -33,7 +32,7 @@ export default function YootButton({
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
   useFrame((state, delta) => {
-    if (yootActive) {
+    if (active) {
       buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
       buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
       buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
@@ -52,7 +51,7 @@ export default function YootButton({
   }
 
   function handleYootThrow() {
-    if (yootActive) { // Prevent multiple emits
+    if (active) { // Prevent multiple emits
       socket.emit("throwYoot", { roomId: params.id });
     }
   }
@@ -71,7 +70,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scaleOuter}
       >
-        <meshStandardMaterial color={ yootActive ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ active ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -92,7 +91,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
         >
-          { !yootActive && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -103,7 +102,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !yootActive && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -114,7 +113,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !yootActive && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -125,7 +124,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !yootActive && <meshStandardMaterial color="grey"/>}
+          { !active && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -136,7 +135,7 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ yootActive ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ active ? "#963600" : "grey" }/>
       </Text3D>
       <mesh 
         position={[0, 0.1, 0]} 

@@ -37,7 +37,6 @@ export default function ThrowAlert({ position=[0,0,0], rotation, initialScale })
     ],
     loop: false,
     reset: true,
-    // onRest: () => setText(null)
   })
 
   return <group position={position} rotation={rotation}>
