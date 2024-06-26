@@ -41,7 +41,6 @@ export const initialYootThrowAtom = atom(true)
 export const lastMoveAtom = atom(null)
 export const hasTurnAtom = atom(false)
 export const boomTextAtom = atom('')
-export const mainAlertAtom = atom([])
 export const turnAlertActiveAtom = atom(false)
 export const pregameAlertAtom = atom({
   type: ''
@@ -66,6 +65,20 @@ export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
 export const winnerAtom = atom(-1)
+
+export const mainAlertAtom = atomWithCompare(
+  { type: '' },
+  (prev, next) => {
+    console.log(`[mainAlertAtom] prev`, prev, `next`, next)
+    if (prev.type !== next) {
+      return false
+    } else if (prev.type === 'turn' && prev.team === next.team && prev.name === next.team) {
+      return true
+    } else {
+      return false
+    }
+  }
+)
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
   (prev, next) => {

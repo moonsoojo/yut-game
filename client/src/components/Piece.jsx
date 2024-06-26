@@ -31,6 +31,7 @@ export default function Piece ({
   const [tiles] = useAtom(tilesAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
+  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const group = useRef();
@@ -79,8 +80,10 @@ export default function Piece ({
   // rocket shaking on selected
   function handlePointerDown(event) {
     console.log(`[Piece] click`)
+    
     if (gamePhase === "game" && hasTurn && client.team === team && !yootThrown.flag && !animationPlaying) {
       event.stopPropagation();
+      setMainAlert({ type: '' })
       if (selection === null) {
         console.log(`[Piece] selection is null`)
         let pieces;

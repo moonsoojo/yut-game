@@ -29,7 +29,7 @@ export default function Tile({
   const [client] = useAtom(clientAtom)
   const [turn] = useAtom(turnAtom)
   const [gamePhase] = useAtom(gamePhaseAtom)
-  // const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
   const params = useParams()
 
@@ -55,6 +55,7 @@ export default function Tile({
     const team = client.team
     let pieces = tiles[tile]
     if (gamePhase === "game" && hasTurn && !yootThrown.flag) {
+      setMainAlert({ type: '' })
       if (selection === null) {
         if (pieces.length > 0 && pieces[0].team === team) {
           let history = tiles[tile][0].history

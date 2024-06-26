@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { animationPlayingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
+import { animationPlayingAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
@@ -10,7 +10,6 @@ import { Text3D } from '@react-three/drei';
 import { useParams } from 'wouter';
 
 export default function PiecesOnBoard() {
-    const [teams] = useAtom(teamsAtom)
     const [pieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
     const [pieceTeam0Id1] = useAtom(pieceTeam0Id1Atom)
     const [pieceTeam0Id2] = useAtom(pieceTeam0Id2Atom)
@@ -19,8 +18,8 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
-    const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
+    const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
 
     const params = useParams()
     const [springs0_0, api0_0] = useSpring(() => ({        
@@ -983,7 +982,7 @@ export default function PiecesOnBoard() {
     }
 
     return <>
-        { onBoardCheck(teams[0].pieces[0].tile) && <Piece team={0} id={0} tile={teams[0].pieces[0].tile} position={springs0_0.position} scale={springs0_0.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id0.tile) && <Piece team={0} id={0} tile={pieceTeam0Id0.tile} position={springs0_0.position} scale={springs0_0.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 3.5,
@@ -993,7 +992,7 @@ export default function PiecesOnBoard() {
             scale={springs0_0.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_0.welcomeTextScale}/>
-        { onBoardCheck(teams[0].pieces[1].tile) && <Piece team={0} id={1} tile={teams[0].pieces[1].tile} position={springs0_1.position} scale={springs0_1.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id1.tile) && <Piece team={0} id={1} tile={pieceTeam0Id1.tile} position={springs0_1.position} scale={springs0_1.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 3.5,
@@ -1004,7 +1003,7 @@ export default function PiecesOnBoard() {
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_1.welcomeTextScale}/>
 
-        { onBoardCheck(teams[0].pieces[2].tile) && <Piece team={0} id={2} tile={teams[0].pieces[2].tile} position={springs0_2.position} scale={springs0_2.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id2.tile) && <Piece team={0} id={2} tile={pieceTeam0Id2.tile} position={springs0_2.position} scale={springs0_2.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 3.5,
@@ -1015,7 +1014,7 @@ export default function PiecesOnBoard() {
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_2.welcomeTextScale}/>
 
-        { onBoardCheck(teams[0].pieces[3].tile) && <Piece team={0} id={3} tile={teams[0].pieces[3].tile} position={springs0_3.position} scale={springs0_3.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id3.tile) && <Piece team={0} id={3} tile={pieceTeam0Id3.tile} position={springs0_3.position} scale={springs0_3.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 3.5,
@@ -1025,7 +1024,7 @@ export default function PiecesOnBoard() {
             scale={springs0_3.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_3.welcomeTextScale}/>
-        { onBoardCheck(teams[1].pieces[0].tile) && <Piece team={1} id={0} tile={teams[1].pieces[0].tile} position={springs1_0.position} scale={springs1_0.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id0.tile) && <Piece team={1} id={0} tile={pieceTeam1Id0.tile} position={springs1_0.position} scale={springs1_0.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 roundNum(3.5),
@@ -1035,7 +1034,7 @@ export default function PiecesOnBoard() {
             scale={springs1_0.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_0.welcomeTextScale}/>
-        { onBoardCheck(teams[1].pieces[1].tile) && <Piece team={1} id={1} tile={teams[1].pieces[1].tile} position={springs1_1.position} scale={springs1_1.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id1.tile) && <Piece team={1} id={1} tile={pieceTeam1Id1.tile} position={springs1_1.position} scale={springs1_1.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[1][0], 1),
@@ -1046,7 +1045,7 @@ export default function PiecesOnBoard() {
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_1.welcomeTextScale}/>
 
-        { onBoardCheck(teams[1].pieces[2].tile) && <Piece team={1} id={2} tile={teams[1].pieces[2].tile} position={springs1_2.position} scale={springs1_2.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id2.tile) && <Piece team={1} id={2} tile={pieceTeam1Id2.tile} position={springs1_2.position} scale={springs1_2.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[2][0], 1),
@@ -1057,7 +1056,7 @@ export default function PiecesOnBoard() {
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_2.welcomeTextScale}/>
 
-        { onBoardCheck(teams[1].pieces[3].tile) && <Piece team={1} id={3} tile={teams[1].pieces[3].tile} position={springs1_3.position} scale={springs1_3.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id3.tile) && <Piece team={1} id={3} tile={pieceTeam1Id3.tile} position={springs1_3.position} scale={springs1_3.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[3][0], 1),

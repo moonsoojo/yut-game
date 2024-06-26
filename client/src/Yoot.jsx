@@ -68,8 +68,8 @@ export default function Yoot({ device }) {
       yootMeshes[i].current.material.visible = true
     }
 
-    setMainAlert({ type: '' })
     // setTurnAlertActive(false)
+    setMainAlert({ type: '' })
     setAnimationPlaying(true)
     setThrowAlert({ type: '' })
     // setPregameAlert({ type: '' })

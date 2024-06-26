@@ -17,7 +17,7 @@ import MoAlert from './alerts/MoAlert';
 
 export default function MainAlert({ position=[0,0,0], rotation, initialScale }) {
   const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  const [gamePhase] = useAtom(gamePhaseAtom)
+  // const [gamePhase] = useAtom(gamePhaseAtom)
   // const [turnAlertActive] = useAtom(turnAlertActiveAtom)
   console.log(`[MainAlert]`)
   const [animationPlaying] = useAtom(animationPlayingAtom)
@@ -57,9 +57,16 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
     ],
     loop: false,
     reset: true, // turn it on to reset animation
-    onStart: () => {},
+    onStart: () => {
+      console.log(`[MainAlert] start`, mainAlert)
+    },
+    onRest: () => {
+      console.log(`[MainAlert] rest`, mainAlert)
+    }
     // don't trigger alert again after it plays
-    // alert plays, and on piece move, it plays again
+    // alert plays, and on piece move, it briefly plays again
+    // when it finishes moving, it plays fully again
+
     // onRest: () => setMainAlert((prevAlert) => {
     //   console.log('main alert rest')
     //   return { type: '' }
@@ -217,7 +224,7 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   return <group
   position={position}
   rotation={rotation}>
-    { mainAlert && mainAlert.type === 'turn' && (gamePhase === 'pregame' || !animationPlaying) && <Turn 
+    { mainAlert && mainAlert.type === 'turn' && (!animationPlaying) && <Turn 
       position={[5,3,0]}
       rotation={[0,0,0]}
       scale={springs.scale}

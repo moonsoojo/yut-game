@@ -86,6 +86,7 @@ export const SocketManager = () => {
       setTeams(room.teams)
       setSpectators(room.spectators)
 
+      // nothing can be rendering MainAlert
       setPieceTeam0Id0(room.teams[0].pieces[0])
       setPieceTeam0Id1(room.teams[0].pieces[1])
       setPieceTeam0Id2(room.teams[0].pieces[2])
@@ -139,6 +140,7 @@ export const SocketManager = () => {
             team: room.turn.team
           })
           const turnAlert = makeTurnAlertObj(room)
+          console.log('[setGamePhase] set main alert')
           setMainAlert(turnAlert)
           // setTurnAlertActive(true)
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
@@ -178,6 +180,7 @@ export const SocketManager = () => {
         // display alert with the same person's name
         if (room.gamePhase !== 'lobby' && prevTurn.team !== room.turn.team) {
           const turnAlert = makeTurnAlertObj(room)
+          console.log('[setTurn] set main alert')
           setMainAlert(turnAlert)
         }
         return room.turn
@@ -188,6 +191,7 @@ export const SocketManager = () => {
         if (room.moveResult.type === 'catch') {
           if (prevResult.tile !== room.moveResult.tile 
             || prevResult.team !== room.moveResult.team) {
+            console.log('[setMoveResult] set main alert')
             setMainAlert(room.moveResult)
           }
         }
@@ -199,6 +203,7 @@ export const SocketManager = () => {
         // bonus: num, streak
         if (prevResult.time !== room.throwResult.time) {
           if (room.throwResult.type === 'bonus') {
+            console.log('[setThrowResult] set main alert')
             setMainAlert({
               type: 'throw',
               num: room.throwResult.num,
