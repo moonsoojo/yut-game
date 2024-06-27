@@ -65,20 +65,7 @@ export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
 export const winnerAtom = atom(-1)
-
-export const mainAlertAtom = atomWithCompare(
-  { type: '' },
-  (prev, next) => {
-    console.log(`[mainAlertAtom] prev`, prev, `next`, next)
-    if (prev.type !== next) {
-      return false
-    } else if (prev.type === 'turn' && prev.team === next.team && prev.name === next.team) {
-      return true
-    } else {
-      return false
-    }
-  }
-)
+export const mainAlertAtom = atom(null)
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),
   (prev, next) => {

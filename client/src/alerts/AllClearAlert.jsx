@@ -5,14 +5,43 @@ import Ufo from "../meshes/Ufo"
 import Rocket from "../meshes/Rocket"
 import { useFrame } from "@react-three/fiber";
 import Yoot from "../meshes/Yoot";
-import { animated } from "@react-spring/three";
-import { mainAlertAtom } from "../GlobalState";
+import { animated, useSpring } from "@react-spring/three";
+import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
-export default function AllClearAlert({ position, rotation, scale, team }) {
+export default function AllClearAlert({ position, rotation }) {
   console.log(`[AllClearAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
-  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [turn] = useAtom(turnAtom)
+
+  const initialScale = 1
+  const springs = useSpring({
+      from: {
+        scale: 0
+      },
+      to: [
+        {
+          scale: initialScale,
+          // Specify config here for animation to not trigger again before delay ends
+          config: {
+            tension: 120,
+            friction: 26
+          },
+        },
+        {
+          scale: 0,
+          config: {
+            tension: 100,
+            friction: 26
+          },
+          delay: 3000
+        }
+      ],
+      loop: false,
+      reset: true, // turn it on to replay the animation
+      onStart: () => {},
+      onRest: () => {}
+  })
 
   const borderMesh0Ref = useRef();
   const borderMesh1Ref = useRef();
@@ -194,7 +223,7 @@ export default function AllClearAlert({ position, rotation, scale, team }) {
     setMainAlert({ type: '' })
   }
 
-  return <animated.group position={position} rotation={rotation} scale={scale} onPointerDown={handleAlertClick}>
+  return <animated.group position={position} rotation={rotation} scale={springs.scale} onPointerDown={handleAlertClick}>
     <mesh
       castShadow
       receiveShadow
@@ -204,7 +233,7 @@ export default function AllClearAlert({ position, rotation, scale, team }) {
     >
       <meshStandardMaterial color='black' opacity={0.7} transparent/>
     </mesh>
-    { team === 0 ? <RocketCatchAllUfo/> : <UfoCatchAllRocket/> }
+    { turn.team === 0 ? <RocketCatchAllUfo/> : <UfoCatchAllRocket/> }
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
       rotation={[Math.PI/2, Math.PI, Math.PI/2]}
@@ -213,7 +242,7 @@ export default function AllClearAlert({ position, rotation, scale, team }) {
       height={0.1}
     >
       ALL CLEAR!
-      <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
+      <meshStandardMaterial color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </Text3D>
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
@@ -223,28 +252,28 @@ export default function AllClearAlert({ position, rotation, scale, team }) {
       height={0.1}
     >
       BONUS THROW
-      <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
+      <meshStandardMaterial color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </Text3D>
     <group ref={borderMesh0Ref}>
       <YootEmoji/>
     </group>
     <group ref={borderMesh1Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
     <group ref={borderMesh2Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
     <group ref={borderMesh3Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
     <group ref={borderMesh4Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
     <group ref={borderMesh5Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
     <group ref={borderMesh6Ref}>
-      <Star scale={0.1} color={ team === 0 ? 'red': 'turquoise' }/>
+      <Star scale={0.1} color={ turn.team === 0 ? 'red': 'turquoise' }/>
     </group>
   </animated.group>
 }

@@ -3,14 +3,40 @@ import Yoot from "../meshes/Yoot";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import Star from "../meshes/Star";
-import { animated } from "@react-spring/three";
-import { useAtom } from "jotai";
-import { mainAlertAtom } from "../GlobalState";
+import { animated, useSpring } from "@react-spring/three";
 
-export default function YootAlert({ position, rotation, scale }) {
+export default function YootAlert({ position, rotation }) {
   console.log(`[YootAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
-  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+
+  const initialScale = 1
+  const springs = useSpring({
+      from: {
+        scale: 0
+      },
+      to: [
+        {
+          scale: initialScale,
+          // Specify config here for animation to not trigger again before delay ends
+          config: {
+            tension: 120,
+            friction: 26
+          },
+        },
+        {
+          scale: 0,
+          config: {
+            tension: 100,
+            friction: 26
+          },
+          delay: 3000
+        }
+      ],
+      loop: false,
+      reset: true, // turn it on to replay the animation
+      onStart: () => {},
+      onRest: () => {}
+  })
 
   const borderMesh0Ref = useRef();
   const borderMesh1Ref = useRef();
@@ -53,7 +79,7 @@ export default function YootAlert({ position, rotation, scale }) {
     setMainAlert({ type: '' })
   }
 
-  return <animated.group position={position} rotation={rotation} scale={scale} onPointerDown={(e) => handleAlertClick(e)}>
+  return <animated.group position={position} rotation={rotation} scale={springs.scale} onPointerDown={(e) => handleAlertClick(e)}>
     <mesh
       castShadow
       receiveShadow

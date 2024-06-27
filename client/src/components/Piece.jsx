@@ -31,7 +31,7 @@ export default function Piece ({
   const [tiles] = useAtom(tilesAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
-  const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const params = useParams()
 
   const group = useRef();
@@ -139,7 +139,7 @@ export default function Piece ({
           depthWrite={false}
         />
       </mesh>
-      { team === 0 ? <Rocket animation={animation}/> : <Ufo animation={animation}/>}
+      { team === 0 ? <Rocket animation={!animationPlaying ? animation : null}/> : <Ufo animation={!animationPlaying ? animation : null}/>}
     </animated.group>
   )      
 };

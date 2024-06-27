@@ -97,7 +97,7 @@ export default function PiecesOnBoard() {
     const heightOffset = 0.9
 
     function handleAnimationStart() {
-        setAnimationPlaying(true)
+        // setAnimationPlaying(true)
     }
 
     function handleAnimationEnd() {

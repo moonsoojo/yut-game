@@ -54,7 +54,7 @@ export default function Tile({
     event.stopPropagation();
     const team = client.team
     let pieces = tiles[tile]
-    if (gamePhase === "game" && hasTurn && !yootThrown.flag) {
+    if (gamePhase === "game" && hasTurn && !yootThrown.flag && !animationPlaying) {
       setMainAlert({ type: '' })
       if (selection === null) {
         if (pieces.length > 0 && pieces[0].team === team) {

@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom } from "./GlobalState.jsx";
+import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -39,6 +39,7 @@ export const SocketManager = () => {
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
   const [_moveResult, setMoveResult] = useAtom(moveResultAtom)
   const [_throwResult, setThrowResult] = useAtom(throwResultAtom)
@@ -83,7 +84,46 @@ export const SocketManager = () => {
       console.log(`[SocketManager] room`, room)
 
       setMessages(room.messages)
-      setTeams(room.teams)
+      setTeams((prevTeams) => {
+        // detect movement
+        // so it runs in the same render as the setMainAlert
+        const newTeams = room.teams
+        for (let i = 0; i < 2; i++) {
+          const prevPieces = prevTeams[i].pieces
+          const newPieces = newTeams[i].pieces
+          for (let j = 0; j < 4; j++) {
+            if (prevPieces[j].tile !== newPieces[j].tile) {
+              setAnimationPlaying(true)
+            }
+          }
+        }
+        
+        // detect catch
+        // so it runs in the same render as the setMainAlert
+        for (let i = 0; i < 2; i++) {
+          const enemyTeam = room.turn.team === 1 ? 0 : 1
+          const prevPiecesEnemy = prevTeams[enemyTeam].pieces
+          const newPiecesEnemy = newTeams[enemyTeam].pieces
+          console.log(`[setTeams] prevPiecesEnemy`, prevPiecesEnemy)
+          console.log(`[setTeams] newPiecesEnemy`, newPiecesEnemy)
+          let numCaught = 0
+          for (let j = 0; j < 4; j++) {
+            if (prevPiecesEnemy[j].tile !== -1 && newPiecesEnemy[j].tile === -1) {
+              numCaught++
+            }
+          }
+          if (numCaught > 0) {
+            setMainAlert({
+              type: 'catch',
+              team: room.turn.team,
+              amount: numCaught,
+              time: Date.now()
+            })
+          }
+        }
+        
+        return newTeams
+      })
       setSpectators(room.spectators)
 
       // nothing can be rendering MainAlert
@@ -187,16 +227,16 @@ export const SocketManager = () => {
       })
       // setTurn(room.turn)
 
-      setMoveResult((prevResult) => {
-        if (room.moveResult.type === 'catch') {
-          if (prevResult.tile !== room.moveResult.tile 
-            || prevResult.team !== room.moveResult.team) {
-            console.log('[setMoveResult] set main alert')
-            setMainAlert(room.moveResult)
-          }
-        }
-        return room.moveResult
-      })
+      // setMoveResult((prevResult) => {
+      //   if (room.moveResult.type === 'catch') {
+      //     if (prevResult.tile !== room.moveResult.tile 
+      //       || prevResult.team !== room.moveResult.team) {
+      //       console.log('[setMoveResult] set main alert')
+      //       setMainAlert(room.moveResult)
+      //     }
+      //   }
+      //   return room.moveResult
+      // })
 
       setThrowResult((prevResult) => {
         // type: regular, bonus
