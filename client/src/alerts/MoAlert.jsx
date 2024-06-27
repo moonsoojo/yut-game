@@ -4,10 +4,13 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import Star from "../meshes/Star";
 import { animated, useSpring } from "@react-spring/three";
+import { useAtom } from "jotai";
+import { mainAlertAtom } from "../GlobalState";
 
-export default function MoAlert({ position, rotation, scale }) {
+export default function MoAlert({ position, rotation }) {
   console.log(`[MoAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
 
   const initialScale = 1
   const springs = useSpring({

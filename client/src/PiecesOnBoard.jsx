@@ -108,77 +108,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
-            // if destination is scored
-            // trigger another animation
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api0_0.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[0][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[0][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[0][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[0][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[0][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[0][0]*2, 1),
-                                roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                                roundNum(3.5 + idOffsets[0][2]*2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -216,74 +214,74 @@ export default function PiecesOnBoard() {
         const path = pieceTeam0Id1.lastPath
         if (path.length > 0) {    
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api0_1.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[1][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
-                            roundNum(3.5 + idOffsets[1][2]*2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[1][0]*2, 1),
-                                roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
-                                roundNum(3.5 + idOffsets[1][2]*2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[1][0]*2, 1),
-                                roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
-                                roundNum(3.5 + idOffsets[1][2]*2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -320,76 +318,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam0Id2.lastPath
         if (path.length > 0) {
-            // save last move's path in piece
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api0_2.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[2][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
-                            roundNum(3.5 + idOffsets[2][2]*2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
-                        welcomeTextScale: 0
+                        welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[2][0]*2, 1),
-                                roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
-                                roundNum(3.5 + idOffsets[2][2]*2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[2][0]*2, 1),
-                                roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
-                                roundNum(3.5 + idOffsets[2][2]*2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -426,76 +423,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam0Id3.lastPath
         if (path.length > 0) {
-            // save last move's path in piece
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api0_3.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -532,77 +528,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam1Id0.lastPath        
         if (path.length > 0) {
-            // save last move's path in piece
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api1_0.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[0][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[0][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[0][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[0][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[0][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[0][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[0][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[0][2] * 2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26,
-                                mass: 2
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -640,77 +634,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam1Id1.lastPath
         if (path.length > 0) {
-            // save last move's path in piece
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api1_1.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[1][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[1][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[1][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[1][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[1][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[1][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[1][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[1][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[1][2] * 2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26,
-                                mass: 2
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -750,75 +742,74 @@ export default function PiecesOnBoard() {
         const path = pieceTeam1Id2.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api1_2.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[2][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[2][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[2][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[2][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[2][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[2][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[2][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[2][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[2][2] * 2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26,
-                                mass: 2
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -855,77 +846,75 @@ export default function PiecesOnBoard() {
         // clear path on capture
         const path = pieceTeam1Id3.lastPath
         if (path.length > 0) {
-            // save last move's path in piece
             if (path[path.length-1] === 29) {
+                console.log(`[PiecesOnBoard] path`, path)
+                const pathToEarth = path.slice(0, path.length-1)
+                const toAnimations = pathToEarth.map((value) => {
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                        ],
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                const scoreAnimation = [
+                    {
+                        position: [
+                            roundNum(3.5 + idOffsets[0][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
+                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                        ],
+                        scale: 1.5,
+                        welcomeTextScale: 1,
+                        config: {
+                            tension: 130,
+                            friction: 26
+                        }
+                    },
+                    {
+                        position: [
+                            3.5,
+                            1,
+                            3.5
+                        ],
+                        scale: 0,
+                        welcomeTextScale: 0,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        },
+                    },
+                    {
+                        sizeTwink: 0.1,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                        delay: generateRandomNumberInRange(150, 100)
+                    },
+                    {
+                        sizeTwink: 0,
+                        config: {
+                            tension: 5000,
+                            friction: 100,
+                            mass: 0.1
+                        },
+                    },
+                ]
+                let animations = toAnimations.concat(scoreAnimation)
                 api1_3.start({
                     from: {
-                        position: [
-                            roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                            roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                            roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                        ],
+                        position: animations[0].position,
                         scale: 1,
                         welcomeTextScale: 0,
                     },
-                    to: [
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                            ],
-                            scale: 1,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            }
-                        },
-                        {
-                            position: [
-                                roundNum(3.5 + idOffsets[3][0] * 2, 1),
-                                roundNum(1 + heightOffset + idOffsets[3][1] * 2, 1),
-                                roundNum(3.5 + idOffsets[3][2] * 2, 1),
-                            ],
-                            scale: 1.5,
-                            welcomeTextScale: 1,
-                            config: {
-                                tension: 130,
-                                friction: 26,
-                                mass: 2
-                            }
-                        },
-                        {
-                            position: [
-                                3.5,
-                                1,
-                                3.5
-                            ],
-                            scale: 0,
-                            welcomeTextScale: 0,
-                            config: {
-                                tension: 170,
-                                friction: 26
-                            },
-                        },
-                        {
-                            sizeTwink: 0.1,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                            delay: generateRandomNumberInRange(150, 100)
-                        },
-                        {
-                            sizeTwink: 0,
-                            config: {
-                                tension: 5000,
-                                friction: 100,
-                                mass: 0.1
-                            },
-                        },
-                    ],
+                    to: animations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),

@@ -178,16 +178,16 @@ export default function Yoot({ device }) {
 
   const yootFloorMatRef = useRef();
   useFrame((state, delta) => {
-    // let allYootsOnFloor = true;
-    // for (let i = 0; i < yoots.length; i++) {
-    //   if (yoots[i].current && yoots[i].current.translation().y < 0) {
-    //     setOutOfBounds(true);
-    //     allYootsOnFloor = false
-    //   }
-    // }
-    // if (allYootsOnFloor) {
-    //   setOutOfBounds(false);
-    // }
+    let allYootsOnFloor = true;
+    for (let i = 0; i < yoots.length; i++) {
+      if (yoots[i].current && yoots[i].current.translation().y < 0) {
+        setOutOfBounds(true);
+        allYootsOnFloor = false
+      }
+    }
+    if (allYootsOnFloor) {
+      setOutOfBounds(false);
+    }
 
     if (outOfBounds) {
       if (Math.floor(state.clock.elapsedTime % 2) === 0) {
