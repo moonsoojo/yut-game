@@ -47,6 +47,7 @@ import RocketsWin from "./RocketsWin.jsx";
 import UfosWin from "./UfosWin.jsx";
 import { Text3D } from "@react-three/drei";
 import { Color, MeshStandardMaterial } from "three";
+import { formatName } from "./helpers/helpers.js";
 
 // There should be no state
 export default function Game() {
@@ -70,41 +71,84 @@ export default function Game() {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
-  function LetsPlayButton({ position, rotation, fontSize }) {
+  function LetsPlayButton({ position }) {
     const [readyToStart] = useAtom(readyToStartAtom)
-    const [client] = useAtom(clientAtom)
     const [hostName] = useAtom(hostNameAtom)
 
-    function handleLetsPlay() {
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('green')
+    }
+  
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('yellow')
+    }
+  
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      // only throws for the client
       if (readyToStart) {
         socket.emit("startGame", { roomId: params.id })
       }
     }
 
+    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
     return <>
-      { hostName === 'you' && gamePhase === 'lobby' && <HtmlElement 
-        text={'lets play!'}
-        position={position}
-        rotation={rotation}
-        fontSize={fontSize}
-        handleClick={handleLetsPlay}
-        disabled={!readyToStart}
-        color={readyToStart ? 'yellow' : 'grey'}
-      /> }
+      { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
+        <mesh
+          material={yellowMaterial}
+        >
+          <boxGeometry args={[2.4, 0.03, 0.55]}/>
+        </mesh>
+        <mesh>
+          <boxGeometry args={[2.35, 0.04, 0.5]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh 
+          name='wrapper' 
+          onPointerEnter={e => handlePointerEnter(e)}
+          onPointerLeave={e => handlePointerLeave(e)}
+          onPointerDown={e => handlePointerDown(e)}
+        >
+          <boxGeometry args={[1.2, 0.1, 0.6]}/>
+          <meshStandardMaterial transparent opacity={0}/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-1.05, 0.025, 0.15]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+          lineHeight={0.9}
+          material={yellowMaterial}
+        >
+          {/* i want this to look more fun */}
+          {`let's play!`}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group> }
     </>
   }
 
-  function Host({ position, rotation }) {
+  function HostName({ position }) {
     const [hostName] = useAtom(hostNameAtom)
-    return <HtmlElement
-      text={`HOST: ${hostName}`}
-      position={position}
-      rotation={rotation}
-      fontSize={layout[device].hostName.fontSize}
-    />
+    return <group position={position}>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.9, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+      >
+        {`HOST: ${hostName}`}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+    </group>
   }
 
-  function CurrentPlayer({ position, rotation, fontSize, width, pieceScale }) {
+  function CurrentPlayer({ position, pieceScale }) {
     const [teams] = useAtom(teamsAtom)
 
     // If player disconnects, and there's no player remaining in the team,
@@ -112,7 +156,7 @@ export default function Game() {
     const player = teams[turn.team].players[turn.players[turn.team]]
     const name = player ? player.name : ''
 
-    return <group position={position} rotation={rotation}>
+    return <group position={position}>
       { turn.team === 0 && <Rocket
         position={[0, 0, 0]}
         rotation={[0, 0, 0]}
@@ -125,17 +169,16 @@ export default function Game() {
         scale={pieceScale}
         animation={null}
       />}
-      <HtmlElement
-        text={`${name}`}
-        position={[0.6, 0, -0.2]}
-        rotation={[-Math.PI/2,0,0]}
-        fontSize={fontSize}
-        color='yellow'
-        width={width}
-        whiteSpace="nowrap"
-        textOverflow='ellipsis'
-        overflow='hidden'
-      />
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[0.7, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.35}
+        height={0.01}
+      >
+        {`${formatName(name)}`}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
     </group>
   }
 
@@ -263,6 +306,106 @@ export default function Game() {
     </group>
   }
 
+  function SettingsButton({ position }) {
+    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('green')
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('yellow')
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      console.log('settings button click')
+    }
+
+    return <group position={position}>
+      <mesh
+        material={yellowMaterial}
+      >
+        <boxGeometry args={[2.05, 0.03, 0.55]}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[2, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.9, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+        material={yellowMaterial}
+      >
+        Settings
+      </Text3D>
+    </group>
+  }
+
+  function RulebookButton({ position }) {
+    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('green')
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('yellow')
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      console.log('settings button click')
+    }
+
+    return <group position={position}>
+      <mesh
+        material={yellowMaterial}
+      >
+        <boxGeometry args={[2.22, 0.03, 0.55]}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[2.17, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.98, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+        material={yellowMaterial}
+      >
+        Rulebook
+      </Text3D>
+    </group>
+  }
+
   // UI prop guideline
   // Pass position, rotation and scale
   // pass device if component has another responsive attribute
@@ -300,12 +443,8 @@ export default function Game() {
           scale={layout[device].chat.scale}
           device={device}
         /> }
-        <InviteButton
-          position={layout[device].invite.position} 
-        />
-        <DiscordButton
-          position={layout[device].discord.position}
-        />
+        <InviteButton position={layout[device].invite.position}/>
+        <DiscordButton position={layout[device].discord.position}/>
         { disconnect && <DisconnectModal
           position={layout[device].disconnectModal.position}
           rotation={layout[device].disconnectModal.rotation}
@@ -313,10 +452,8 @@ export default function Game() {
         <LetsPlayButton
           position={layout[device].letsPlayButton.position}
           rotation={layout[device].letsPlayButton.rotation}
-          fontSize={layout[device].letsPlayButton.fontSize}
-          device={device}
         />
-        <Host
+        <HostName
           position={layout[device].hostName.position}
           rotation={layout[device].hostName.rotation}
         />
@@ -359,20 +496,8 @@ export default function Game() {
           </Text3D>
         </group>}
         <Yoot device={device}/>
-        <HtmlElement
-          text='Settings'
-          position={layout[device].settings.position}
-          rotation={layout[device].settings.rotation}
-          fontSize={layout[device].settings.fontSize}
-          handleClick={handleSettings}
-        />
-        <HtmlElement
-          text='Rules'
-          position={layout[device].rulebookButton.position}
-          rotation={layout[device].rulebookButton.rotation}
-          fontSize={layout[device].rulebookButton.fontSize}
-          handleClick={handleRules}
-        />
+        <SettingsButton position={layout[device].settings.position}/>
+        <RulebookButton position={layout[device].rulebookButton.position}/>
         <PiecesSection 
           position={layout[device].piecesSection.position}
           device={device}

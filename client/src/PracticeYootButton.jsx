@@ -5,6 +5,8 @@ import { yootThrowValuesAtom } from './GlobalState';
 import HtmlElement from './HtmlElement';
 import { roundNum } from './helpers/helpers';
 import Decimal from 'decimal.js';
+import { Text3D } from '@react-three/drei';
+import { Color, MeshStandardMaterial } from 'three';
 
 export default function PracticeYootButton({ 
   position=[0,0,0], 
@@ -44,18 +46,54 @@ export default function PracticeYootButton({
     return yootForceVectors
   }
 
-  function handlePracticeThrow() {
-    // Only throws for the client
+  const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+  function handlePointerEnter(e) {
+    e.stopPropagation();
+    yellowMaterial.color = new Color('green')
+  }
+
+  function handlePointerLeave(e) {
+    e.stopPropagation();
+    yellowMaterial.color = new Color('yellow')
+  }
+
+  function handlePointerDown(e) {
+    e.stopPropagation();
+    // only throws for the client
     setYootThrowValues(generateForveVectors())
   }
 
-  return <HtmlElement
-    text={`Practice Throw`}
-    position={position}
-    rotation={rotation}
-    scale={scale}
-    fontSize={fontSize}
-    whiteSpace='normal'
-    handleClick={handlePracticeThrow}
-  />
+  return <group position={position}>
+    <mesh
+      material={yellowMaterial}
+    >
+      <boxGeometry args={[2.05, 0.03, 1.2]}/>
+    </mesh>
+    <mesh>
+      <boxGeometry args={[2, 0.04, 1.15]}/>
+      <meshStandardMaterial color='black'/>
+    </mesh>
+    <mesh 
+      name='wrapper' 
+      onPointerEnter={e => handlePointerEnter(e)}
+      onPointerLeave={e => handlePointerLeave(e)}
+      onPointerDown={e => handlePointerDown(e)}
+    >
+      <boxGeometry args={[1.2, 0.1, 0.6]}/>
+      <meshStandardMaterial transparent opacity={0}/>
+    </mesh>
+    <Text3D
+      font="fonts/Luckiest Guy_Regular.json"
+      position={[-0.9, 0.025, -0.12]}
+      rotation={[-Math.PI/2, 0, 0]}
+      size={0.3}
+      height={0.01}
+      lineHeight={0.9}
+      material={yellowMaterial}
+    >
+      {`practice\nthrow`}
+      <meshStandardMaterial color='yellow'/>
+    </Text3D>
+  </group>
 }

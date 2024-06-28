@@ -42,7 +42,7 @@ export default function App () {
       } }
       onCreated={ created }
       >
-      <Perf/>
+      {/* <Perf/> */}
       <directionalLight position={ [ 0, 10, 0 ] } intensity={ 4 } />
       <ambientLight intensity={ 1 } />
       <ParticleSystem/>

@@ -1033,7 +1033,7 @@ export default {
         fontSize: 15
       },
       pregameRoll: {
-        position: [2.1, 0, 0.5],
+        position: [3.4, 0, 0.5],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 20
       }
@@ -1068,7 +1068,7 @@ export default {
         fontSize: 15
       },
       pregameRoll: {
-        position: [2.5, 0, 0.6],
+        position: [3.5, 0, 0.6],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 20
       }
@@ -1116,17 +1116,17 @@ export default {
       fontSize: 13,
     },
     settings: {
-      position: [8, 0, -5.5],
+      position: [9, 0, -5.5],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
     },
     rulebookButton: {
-      position: [8, 0, -4.6],
+      position: [9.085, 0, -4.8],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
     },
     hostName: {
-      position: [8, 0, -3.8],
+      position: [8.9, 0, -4.1],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
     },
@@ -1159,7 +1159,7 @@ export default {
       fontSize: 15
     },
     practiceThrowButton: {
-      position: [8, 0, 3],
+      position: [9, 0, 3],
       rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ'],
       fontSize: 20
     },

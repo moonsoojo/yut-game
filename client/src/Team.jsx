@@ -144,14 +144,18 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       rollText = teams[team].pregameRoll.toString()
     }
 
-    return <HtmlElement
-      text={<div>
-        Roll: <span style={{ "color": team === 0 ? "red" : "turquoise" }}>{rollText}</span>
-      </div>}
-      position={layout[device][`team${team}`].pregameRoll.position}
-      rotation={layout[device][`team${team}`].pregameRoll.rotation}
-      fontSize={layout[device][`team${team}`].pregameRoll.fontSize}
-    />
+    return <group position={layout[device][`team${team}`].pregameRoll.position}>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.9, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.35}
+        height={0.01}
+      >
+        {`roll: ${rollText}`}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+    </group>
   }
 
   function PlayerIds() {
