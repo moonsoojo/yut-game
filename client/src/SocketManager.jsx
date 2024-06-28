@@ -104,8 +104,6 @@ export const SocketManager = () => {
           const enemyTeam = room.turn.team === 1 ? 0 : 1
           const prevPiecesEnemy = prevTeams[enemyTeam].pieces
           const newPiecesEnemy = newTeams[enemyTeam].pieces
-          console.log(`[setTeams] prevPiecesEnemy`, prevPiecesEnemy)
-          console.log(`[setTeams] newPiecesEnemy`, newPiecesEnemy)
           let numCaught = 0
           for (let j = 0; j < 4; j++) {
             if (prevPiecesEnemy[j].tile !== -1 && newPiecesEnemy[j].tile === -1) {

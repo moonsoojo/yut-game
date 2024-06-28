@@ -36,7 +36,6 @@ export default function PregameAlert({ position, rotation, initialScale }) {
     ],
     loop: false,
     reset: true,
-    // onRest: () => setText(null)
   })
 
   function PregameTie({ position, rotation, scale }) {

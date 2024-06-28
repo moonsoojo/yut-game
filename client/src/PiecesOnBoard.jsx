@@ -219,9 +219,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -232,9 +232,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[1][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
+                            roundNum(3.5 + idOffsets[1][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -324,9 +324,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -337,9 +337,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[2][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
+                            roundNum(3.5 + idOffsets[2][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -429,9 +429,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -442,9 +442,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[3][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[3][1]*2, 1),
+                            roundNum(3.5 + idOffsets[3][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -637,12 +637,13 @@ export default function PiecesOnBoard() {
             if (path[path.length-1] === 29) {
                 console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
+                console.log(`[PiecesOnBoard][team1_id1] pathToEarth`, pathToEarth)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -653,9 +654,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[1][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
+                            roundNum(3.5 + idOffsets[1][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -747,9 +748,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -760,9 +761,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[2][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
+                            roundNum(3.5 + idOffsets[2][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -852,9 +853,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
                         ],
                         config: {
                             tension: 170,
@@ -865,9 +866,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[3][0]*2, 1),
+                            roundNum(1 + heightOffset + idOffsets[3][1]*2, 1),
+                            roundNum(3.5 + idOffsets[3][2]*2, 1),
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,

@@ -20,8 +20,8 @@ export default function MainAlert({ position=[0,0,0], rotation, initialScale }) 
   const [mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   // const [gamePhase] = useAtom(gamePhaseAtom)
   // const [turnAlertActive] = useAtom(turnAlertActiveAtom)
-  console.log(`[MainAlert]`, mainAlert)
   const [animationPlaying] = useAtom(animationPlayingAtom)
+  console.log(`[MainAlert]`, mainAlert, 'animationPlaying', animationPlaying)
   // what happens when you click the next player's yoot button before the pieces stop moving?
   // when you have a yoot and another move, and you place a piece before the other one ends
   // sequence: make move -> highlight pieces (move available) -> make move -> score -> pass turn

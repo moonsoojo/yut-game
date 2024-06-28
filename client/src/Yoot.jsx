@@ -35,7 +35,6 @@ export default function Yoot({ device }) {
   const [timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  // const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
   const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
