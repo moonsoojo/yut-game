@@ -223,22 +223,8 @@ export const SocketManager = () => {
         }
         return room.turn
       })
-      // setTurn(room.turn)
-
-      // setMoveResult((prevResult) => {
-      //   if (room.moveResult.type === 'catch') {
-      //     if (prevResult.tile !== room.moveResult.tile 
-      //       || prevResult.team !== room.moveResult.team) {
-      //       console.log('[setMoveResult] set main alert')
-      //       setMainAlert(room.moveResult)
-      //     }
-      //   }
-      //   return room.moveResult
-      // })
 
       setThrowResult((prevResult) => {
-        // type: regular, bonus
-        // bonus: num, streak
         if (prevResult.time !== room.throwResult.time) {
           if (room.throwResult.type === 'bonus') {
             console.log('[setThrowResult] set main alert')
@@ -332,10 +318,7 @@ export const SocketManager = () => {
         setWinner(room.results[room.results.length-1])
       }
 
-      // score animation
-      // loop through pieces in each team
-      // compared to last state, if any of them scored,
-      // display score animation
+      console.log('[SocketManager] finished ingesting room state')
 
     })
 

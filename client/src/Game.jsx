@@ -1,5 +1,5 @@
 // js
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
 import layout from "./layout.js";
 import { useSpring, animated } from '@react-spring/three';
@@ -48,15 +48,14 @@ import UfosWin from "./UfosWin.jsx";
 import { Text3D } from "@react-three/drei";
 import { Color, MeshStandardMaterial } from "three";
 import { formatName } from "./helpers/helpers.js";
+import { useFrame } from "@react-three/fiber";
+import Star from "./meshes/Star.jsx";
 
 // There should be no state
 export default function Game() {
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
-  // To render the animation
-  const [lastMove] = useAtom(lastMoveAtom)
-  const [boomText] = useAtom(boomTextAtom)
   // To adjust board size
   const [gamePhase] = useAtom(gamePhaseAtom)
   const [turn] = useAtom(turnAtom)
@@ -71,66 +70,220 @@ export default function Game() {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
+  // 2d, flat
+  // 3d, animated, border moving and scales from 0 to 1
   function LetsPlayButton({ position }) {
     const [readyToStart] = useAtom(readyToStartAtom)
     const [hostName] = useAtom(hostNameAtom)
-
-    function handlePointerEnter(e) {
-      e.stopPropagation();
-      yellowMaterial.color = new Color('green')
-    }
-  
-    function handlePointerLeave(e) {
-      e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
-    }
-  
-    function handlePointerDown(e) {
-      e.stopPropagation();
-      // only throws for the client
-      if (readyToStart) {
-        socket.emit("startGame", { roomId: params.id })
-      }
-    }
-
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
-
-    return <>
-      { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
-        <mesh
-          material={yellowMaterial}
-        >
-          <boxGeometry args={[2.4, 0.03, 0.55]}/>
+    
+    function DisabledButton() {
+      return <group>
+        <mesh>
+          <boxGeometry args={[1.55, 0.03, 1.2]}/>
+          <meshStandardMaterial color='grey'/>
         </mesh>
         <mesh>
-          <boxGeometry args={[2.35, 0.04, 0.5]}/>
+          <boxGeometry args={[1.5, 0.04, 1.15]}/>
           <meshStandardMaterial color='black'/>
-        </mesh>
-        <mesh 
-          name='wrapper' 
-          onPointerEnter={e => handlePointerEnter(e)}
-          onPointerLeave={e => handlePointerLeave(e)}
-          onPointerDown={e => handlePointerDown(e)}
-        >
-          <boxGeometry args={[1.2, 0.1, 0.6]}/>
-          <meshStandardMaterial transparent opacity={0}/>
         </mesh>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[-1.05, 0.025, 0.15]}
+          position={[-0.6, 0.025, -0.12]}
           rotation={[-Math.PI/2, 0, 0]}
           size={0.3}
           height={0.01}
           lineHeight={0.9}
-          material={yellowMaterial}
         >
-          {/* i want this to look more fun */}
-          {`let's play!`}
-          <meshStandardMaterial color='yellow'/>
+          {`lets\nplay!`}
+          <meshStandardMaterial color='grey'/>
         </Text3D>
+      </group>
+    }
+
+    function ActivatedButton() {
+
+      const [hover, setHover] = useState(false)
+      const borderMesh0Ref = useRef();
+      const borderMesh1Ref = useRef();
+      const borderMesh2Ref = useRef();
+      const borderMesh3Ref = useRef();
+      const borderMesh4Ref = useRef();
+      const borderMesh5Ref = useRef();
+      const borderMesh6Ref = useRef();
+      const borderMeshRefs = [
+          borderMesh0Ref,
+          borderMesh1Ref,
+          borderMesh2Ref,
+          borderMesh3Ref,
+          borderMesh4Ref,
+          borderMesh5Ref,
+          borderMesh6Ref
+      ]
+      const buttonGroupRef = useRef();
+  
+      const backdropHeight = 1.1
+      const backdropWidth = 1.6
+      useFrame((state, delta) => {
+          for (let i = 0; i < borderMeshRefs.length; i++) {      
+            borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropWidth
+            borderMeshRefs[i].current.position.y = 0.1
+            borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropHeight
+          }
+          buttonGroupRef.current.scale.x = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
+          buttonGroupRef.current.scale.y = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
+          buttonGroupRef.current.scale.z = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
+      })
+  
+      function handlePointerEnter(e) {
+          e.stopPropagation()
+          setHover(true)
+      }
+      
+      function handlePointerLeave(e) {
+          e.stopPropagation()
+          setHover(false)
+      }
+
+      function handlePointerDown(e) {
+        e.stopPropagation();
+        // only throws for the client
+        if (readyToStart) {
+          socket.emit("startGame", { roomId: params.id })
+        }
+      }
+
+      const springs = useSpring({
+        from: {
+          scale: 0
+        },
+        to: [
+          {
+            scale: 1,
+            config: {
+              tension: 170,
+              friction: 26
+            },
+          }
+        ],
+        // don't have to reset since component is conditionally rendered
+      })
+  
+      return <animated.group name='animated-group' scale={springs.scale}>
+        <group name='lets-play-button-active' scale={0.8} position={[0.1, 0, 0.5]} ref={buttonGroupRef}>
+          <mesh 
+            position={[0, 0, 0]} 
+            rotation={[0, 0, 0]} 
+            scale={[backdropWidth, 0.1, backdropHeight]} 
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+            onPointerDown={handlePointerDown}
+          >
+            <cylinderGeometry args={[1, 1, 0.1, 48]}/>
+            <meshStandardMaterial color={hover ? 'yellow' : 'black'} transparent opacity={hover ? 0.3 : 1} />
+          </mesh>
+          <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              rotation={[-Math.PI/2,0,0]}
+              position={[-0.8,0.5,0]}
+              size={0.45}
+              height={0.01}
+              lineHeight={0.7}
+          >
+              {`Let's\nPlay!`}
+              <meshStandardMaterial color={hover ? 'green' : 'yellow'}/>
+          </Text3D>
+          <group ref={borderMesh0Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh1Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh2Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh3Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh4Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh5Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+          <group ref={borderMesh6Ref}>
+              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
+          </group>
+        </group>
+      </animated.group>
+    }
+
+    return <>
+      { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
+        { readyToStart ? <ActivatedButton/> : <DisabledButton/> }
       </group> }
     </>
   }
+
+  // function LetsPlayButtonBackup({ position }) {
+  //   const [readyToStart] = useAtom(readyToStartAtom)
+  //   const [hostName] = useAtom(hostNameAtom)
+
+  //   function handlePointerEnter(e) {
+  //     e.stopPropagation();
+  //     yellowMaterial.color = new Color('green')
+  //   }
+  
+  //   function handlePointerLeave(e) {
+  //     e.stopPropagation();
+  //     yellowMaterial.color = new Color('yellow')
+  //   }
+  
+  //   function handlePointerDown(e) {
+  //     e.stopPropagation();
+  //     // only throws for the client
+  //     if (readyToStart) {
+  //       socket.emit("startGame", { roomId: params.id })
+  //     }
+  //   }
+
+  //   const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+  //   return <>
+  //     { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
+  //       <mesh
+  //         material={yellowMaterial}
+  //       >
+  //         <boxGeometry args={[2.4, 0.03, 0.55]}/>
+  //       </mesh>
+  //       <mesh>
+  //         <boxGeometry args={[2.35, 0.04, 0.5]}/>
+  //         <meshStandardMaterial color='black'/>
+  //       </mesh>
+  //       <mesh 
+  //         name='wrapper' 
+  //         onPointerEnter={e => handlePointerEnter(e)}
+  //         onPointerLeave={e => handlePointerLeave(e)}
+  //         onPointerDown={e => handlePointerDown(e)}
+  //       >
+  //         <boxGeometry args={[1.2, 0.1, 0.6]}/>
+  //         <meshStandardMaterial transparent opacity={0}/>
+  //       </mesh>
+  //       <Text3D
+  //         font="fonts/Luckiest Guy_Regular.json"
+  //         position={[-1.05, 0.025, 0.15]}
+  //         rotation={[-Math.PI/2, 0, 0]}
+  //         size={0.3}
+  //         height={0.01}
+  //         lineHeight={0.9}
+  //         material={yellowMaterial}
+  //       >
+  //         {/* i want this to look more fun */}
+  //         {`let's play!`}
+  //         <meshStandardMaterial color='yellow'/>
+  //       </Text3D>
+  //     </group> }
+  //   </>
+  // }
 
   function HostName({ position }) {
     const [hostName] = useAtom(hostNameAtom)

@@ -1178,7 +1178,7 @@ export default {
       },
     },
     letsPlayButton: {
-      position: [8,0,4.5],
+      position: [8.75,0,4.5],
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 20,
     },
