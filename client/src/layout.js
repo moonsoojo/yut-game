@@ -1005,30 +1005,30 @@ export default {
     },
     team0: {
       scale: 1,
-      position: [-11, 0, -5.7],
+      position: [-11, 0, -5.2],
       title: {
         position: [0,0,0],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 20
       },
       pieces: {
-        position: [0.23, 0, 0.6],
+        position: [0.23, 0, 0],
         positionStartX: 0,
         positionStartY: 0,
         positionStartZ: 0.8,
         rotation: [0, 0, 0],
-        scale: 1.2,
-        space: 1,
+        scale: 1.4,
+        space: 1.1,
       },
       names: {
-        position: [0, 0, 1.2],
+        position: [0, 0, 1.3],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 20,
         padding: '0px 15px 0px 0px',
         divWidth: 200
       },
       join: {
-        position: [2.3, 0, 0.65],
+        position: [3, 0, 0.45],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
@@ -1047,7 +1047,7 @@ export default {
         fontSize: 20
       },
       pieces: {
-        position: [0.23, 0, 0.6],
+        position: [0.23, 0, 0.1],
         positionStartX: 0,
         positionStartY: 0,
         positionStartZ: 0.8,
@@ -1056,14 +1056,14 @@ export default {
         space: 1.2,
       },
       names: {
-        position: [0, 0, 1.2],
+        position: [0, 0, 1.3],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 20,
         padding: '0px 15px 0px 0px',
         divWidth: 200
       },
       join: {
-        position: [2.5, 0, 0.7],
+        position: [3.1, 0, 0.5],
         rotation: [-Math.PI / 2, 0, 0],
         fontSize: 15
       },
@@ -1242,12 +1242,12 @@ export default {
       position: [-8, 0, 1.9]
     },
     invite: {
-      position: [-11, 0, 2.7],
+      position: [-10.25, 0, 3.1],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20
     },
     discord: {
-      position: [-9.3, 0, 2.7],
+      position: [-8.5, 0, 3.1],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20
     },

@@ -9,7 +9,6 @@ import HtmlElement from "./HtmlElement.jsx";
 import Chatbox from "./Chatbox.jsx";
 import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
-import MoveAnimation from "./MoveAnimation.jsx";
 import PiecesSection from "./PiecesSection.jsx";
 import Team from "./Team.jsx";
 import GameCamera from "./GameCamera.jsx";
@@ -41,13 +40,13 @@ import {
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
-import BoomText from "./BoomText.jsx";
 import MoveList from "./MoveList.jsx";
 import PiecesOnBoard from "./PiecesOnBoard.jsx";
 import ScoreButtons from "./ScoreButtons.jsx";
 import RocketsWin from "./RocketsWin.jsx";
 import UfosWin from "./UfosWin.jsx";
 import { Text3D } from "@react-three/drei";
+import { Color, MeshStandardMaterial } from "three";
 
 // There should be no state
 export default function Game() {
@@ -164,6 +163,106 @@ export default function Game() {
     winScreenScale: gamePhase === 'finished' ? 1 : 0
   })
 
+  function InviteButton({ position }) {
+    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('green')
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('yellow')
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      console.log('invite button click')
+    }
+
+    return <group position={position}>
+      <mesh
+        material={yellowMaterial}
+      >
+        <boxGeometry args={[1.5, 0.03, 0.55]}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[1.45, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.61, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+        material={yellowMaterial}
+      >
+        Invite
+      </Text3D>
+    </group>
+  }
+
+  function DiscordButton({ position }) {
+    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('green')
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      yellowMaterial.color = new Color('yellow')
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      console.log('discord button click')
+    }
+
+    return <group position={position}>
+      <mesh
+        material={yellowMaterial}
+      >
+        <boxGeometry args={[1.83, 0.03, 0.55]}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[1.77, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.77, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+        material={yellowMaterial}
+      >
+        DISCORD
+      </Text3D>
+    </group>
+  }
+
   // UI prop guideline
   // Pass position, rotation and scale
   // pass device if component has another responsive attribute
@@ -201,19 +300,11 @@ export default function Game() {
           scale={layout[device].chat.scale}
           device={device}
         /> }
-        <HtmlElement
-          text={`Invite`}
+        <InviteButton
           position={layout[device].invite.position} 
-          rotation={layout[device].invite.rotation}
-          fontSize={layout[device].invite.fontSize}
-          handleClick={handleInvite}
         />
-        <HtmlElement
-          text={`Discord`}
-          position={layout[device].discord.position} 
-          rotation={layout[device].discord.rotation}
-          fontSize={layout[device].discord.fontSize}
-          handleClick={handleDiscord}
+        <DiscordButton
+          position={layout[device].discord.position}
         />
         { disconnect && <DisconnectModal
           position={layout[device].disconnectModal.position}

@@ -5,7 +5,7 @@ import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, turnAtom } from './
 import { Html, Text3D } from '@react-three/drei';
 import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
-import { formatName, pieceStatus } from './helpers/helpers';
+import { pieceStatus } from './helpers/helpers';
 import { Color, MeshStandardMaterial } from 'three';
 
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
@@ -40,6 +40,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
         material={yellowMaterial}
       >
         <boxGeometry args={[1.15, 0.03, 0.55]}/>
+        {/* <meshStandardMaterial color='yellow'/> */}
       </mesh>
       <mesh>
         <boxGeometry args={[1.1, 0.04, 0.5]}/>
@@ -63,6 +64,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
         material={yellowMaterial}
       >
         JOIN
+        {/* <meshStandardMaterial color='yellow'/> */}
       </Text3D>
     </group>
     
@@ -154,24 +156,43 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     />
   }
 
+  function playerNameDisplay(team, playerIndex, name) {
+    if (team === turn.team && playerIndex === turn.players[turn.team] && 
+      (gamePhase === "pregame" || gamePhase === "game")) {
+      return <div>{name}<span style={{'color': 'red'}}> &#9679;</span></div>
+    } else {
+      return name
+    }
+  }
+
   function PlayerIds() {
-    return <group
+    return <Html
       position={layout[device][`team${team}`].names.position}
       rotation={layout[device][`team${team}`].names.rotation}
+      transform
     >
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        position: 'absolute',
+        width: `${layout[device][`team${team}`].names.divWidth}px`
+      }}>
       {teams[team].players.map((value, index) => (
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
+        <div
+          style={{
+              color: "yellow",
+              fontFamily: 'Luckiest Guy',
+              fontSize: layout[device][`team${team}`].names.fontSize,
+              padding: layout[device][`team${team}`].names.padding
+          }}
           key={index}
-          size={0.35}
-          height={0.01}
-          position={[0, -index * 0.5, 0]}
         >
-          {formatName(value.name, 12)}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
+          {playerNameDisplay(team, index, value.name)}
+        </div>
       ))}
-    </group>
+      </div>
+    </Html>
   }
 
   return <group

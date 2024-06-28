@@ -107,3 +107,11 @@ export function roundNum(num, place) {
 export function generateRandomNumberInRange(num, plusMinus) {
   return num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
 };
+
+export function formatName(name, maxLength = 10) {
+  if (name.length > maxLength) {
+      return name.substring(0, maxLength) + '...'
+  } else {
+      return name
+  }
+}
