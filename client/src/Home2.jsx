@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Float, PresentationControls, useGLTF } from "@react-three/drei";
+import { Float, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useAtom } from "jotai";
 import layout from './layout';
@@ -122,21 +122,155 @@ export default function Home2() {
 
   const [location, setLocation] = useLocation();
 
-  function handleLetsPlay() {
-    socket.emit('createRoom', { hostId: client._id }, ({ roomId }) => {
-      setLocation(`/${roomId}`)
-    })
+  function AboutButton({ position, rotation, scale }) {
+    const [hover, setHover] = useState(false)
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      setHover(true)
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      setHover(false)
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      setDisplay('about')
+    }
+
+    return <group position={position} rotation={rotation} scale={scale}>
+      <mesh>
+        <boxGeometry args={[1.5, 0.03, 0.55]}/>
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[1.45, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[1.5, 0.1, 0.55]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-0.65, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+      >
+        About
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </Text3D>
+    </group>
   }
-  function handleHowToPlay() {
-    setDisplay('howToPlay');
+
+  function HowToPlayButton({ position, rotation, scale }) {
+    const [hover, setHover] = useState(false)
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      setHover(true)
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      setHover(false)
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      setDisplay('howToPlay')
+    }
+
+    return <group position={position} rotation={rotation} scale={scale}>
+      <mesh>
+        <boxGeometry args={[2.8, 0.03, 0.55]}/>
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[2.75, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[2.8, 0.1, 0.55]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-1.27, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+      >
+        How To Play
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </Text3D>
+    </group>
   }
-  function handleAbout() {
-    setDisplay('about')
+
+  function LetsPlayButton({ position, rotation, scale }) {
+    const [hover, setHover] = useState(false)
+
+    function handlePointerEnter(e) {
+      e.stopPropagation();
+      setHover(true)
+    }
+
+    function handlePointerLeave(e) {
+      e.stopPropagation();
+      setHover(false)
+    }
+
+    function handlePointerDown(e) {
+      e.stopPropagation();
+      socket.emit('createRoom', { hostId: client._id }, ({ roomId }) => {
+        setLocation(`/${roomId}`)
+      })
+    }
+
+    return <group position={position} rotation={rotation} scale={scale}>
+      <mesh>
+        <boxGeometry args={[3, 0.03, 0.55]}/>
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </mesh>
+      <mesh>
+        <boxGeometry args={[2.95, 0.04, 0.5]}/>
+        <meshStandardMaterial color='black'/>
+      </mesh>
+      <mesh 
+        name='wrapper' 
+        onPointerEnter={e => handlePointerEnter(e)}
+        onPointerLeave={e => handlePointerLeave(e)}
+        onPointerDown={e => handlePointerDown(e)}
+      >
+        <boxGeometry args={[2.8, 0.1, 0.55]}/>
+        <meshStandardMaterial transparent opacity={0}/>
+      </mesh>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-1.37, 0.025, 0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
+      >
+        Start a game
+        <meshStandardMaterial color={ hover ? 'green': 'yellow'}/>
+      </Text3D>
+    </group>
   }
   
-  // move board down to fill the gap
-  // add page navigation on how-to-play
-  // dots and arrows
   return <PresentationControls
     global
     polar={[-0.4, 0.2]}
@@ -160,28 +294,20 @@ export default function Home2() {
         rotation={layout[device].title.yoots.rotation}
         scale={layout[device].title.yoots.scale} 
       />
-      <HtmlElement 
-        position={layout[device].title.about.position}
+      <AboutButton 
+        position={layout[device].title.about.position} 
         rotation={layout[device].title.about.rotation}
-        fontSize={layout[device].title.about.fontSize} 
-        handleClick={handleAbout}
-        text='about'
-        color='yellow'
+        scale={layout[device].title.about.scale}
       />
-      <HtmlElement
+      <HowToPlayButton
         position={layout[device].title.howToPlay.position}
         rotation={layout[device].title.howToPlay.rotation}
-        fontSize={layout[device].title.howToPlay.fontSize} 
-        handleClick={handleHowToPlay}
-        text='how to play'
+        scale={layout[device].title.howToPlay.scale}
       />
-      <HtmlElement
+      <LetsPlayButton
         position={layout[device].title.letsPlay.position}
         rotation={layout[device].title.letsPlay.rotation}
-        fontSize={layout[device].title.letsPlay.fontSize}
-        text="LET'S PLAY!"
         scale={layout[device].title.letsPlay.scale}
-        handleClick={handleLetsPlay}
       />
     </group>
     <group>

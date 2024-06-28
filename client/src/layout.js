@@ -737,19 +737,19 @@ export default {
       },
       about: {
         show: true,
-        position: [0,-5,0],
-        rotation: [0,0,0],
-        fontSize: 40
+        position: [1.5,-6,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
       },
       howToPlay: {
-        position: [0,-7,0],
-        rotation: [0,0,0],
-        fontSize: 40
+        position: [2.8,-7.5,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
       },      
       letsPlay: {
-        position: [0,-9,0],
-        rotation: [0,0,0],
-        fontSize: 40
+        position: [3,-9,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
       },
       pieces: {
         position: [0,0,0],
@@ -1164,14 +1164,14 @@ export default {
       fontSize: 20
     },
     startEarth: {
-      position: [5.2, 0, 1.8],
+      position: [5.2, 0, 2.6],
       text: {
         position: [0,0,0],
         rotation: [-Math.PI/2, 0, 0],
         fontSize: 15,
       },
       helperArrow: {
-        position: [0.3,0,-0.2],
+        position: [0.3,0,-0.5],
         rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
         color: 'limegreen',
         scale: [0.9,0.9,0.9]

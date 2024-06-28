@@ -69,9 +69,9 @@ export default function RocketsWin() {
     </group>
 
     <group 
-    name='play-again-button' 
-    position={[-3.8, 0, 5.4]} 
-    rotation={[-Math.PI/2, 0, 0]}
+      name='play-again-button' 
+      position={[-3.8, 0, 5.4]} 
+      rotation={[-Math.PI/2, 0, 0]}
     >
       <Text3D
         font="/fonts/Luckiest Guy_Regular.json"

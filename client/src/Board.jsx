@@ -10,6 +10,7 @@ import Neptune from './meshes/Neptune';
 import Moon from './meshes/Moon';
 import layout from './layout';
 import Pointer from './meshes/Pointer';
+import { Text3D } from '@react-three/drei';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -252,13 +253,16 @@ export default function Board({
     {showStart && <group 
       position={layout[device].startEarth.position} 
       scale={1.67}>
-      <HtmlElement
-        text="Start"
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
         position={layout[device].startEarth.text.position}
-        rotation={layout[device].startEarth.text.rotation}
-        fontSize={layout[device].startEarth.text.fontSize}
-        color='limegreen'
-      />
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.25}
+        height={0.01}
+      >
+        Start
+        <meshStandardMaterial color='limegreen'/>
+      </Text3D>
       <mesh
         position={layout[device].startEarth.helperArrow.position}
         rotation={layout[device].startEarth.helperArrow.rotation}

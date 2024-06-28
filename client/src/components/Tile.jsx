@@ -158,7 +158,7 @@ export default function Tile({
           font="fonts/Luckiest Guy_Regular.json"
           position={[0.3, 1, -0.3]}
           rotation={[-Math.PI/2, 0, 0]}
-          size={0.2}
+          size={0.3}
           height={0.01}
         >
           {pathNum}
