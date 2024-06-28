@@ -39,7 +39,8 @@ export default function DoubleCatchAlert({ position, rotation }) {
       loop: false,
       reset: true, // turn it on to replay the animation
       onStart: () => {},
-      onRest: () => {}
+      onRest: () => {},
+      delay: 500
   })
 
   console.log(`[DoubleCatchAlert]`)

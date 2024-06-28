@@ -40,7 +40,8 @@ export default function CatchAlert({ position, rotation }) {
       loop: false,
       reset: true, // turn it on to replay the animation
       onStart: () => {},
-      onRest: () => {}
+      onRest: () => {},
+      delay: 500
   })
 
   const borderMesh0Ref = useRef();

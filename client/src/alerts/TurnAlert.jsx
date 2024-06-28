@@ -40,7 +40,8 @@ export default function TurnAlert({position, rotation}) {
         loop: false,
         reset: true, // turn it on to replay the animation
         onStart: () => {},
-        onRest: () => {}
+        onRest: () => {},
+        delay: 500
     })
 
     function formatName(name) {
