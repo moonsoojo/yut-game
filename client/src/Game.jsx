@@ -126,7 +126,7 @@ export default function Game() {
       useFrame((state, delta) => {
           for (let i = 0; i < borderMeshRefs.length; i++) {      
             borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropWidth
-            borderMeshRefs[i].current.position.y = 0.1
+            borderMeshRefs[i].current.position.y = 0.05
             borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropHeight
           }
           buttonGroupRef.current.scale.x = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
@@ -184,7 +184,7 @@ export default function Game() {
           <Text3D
               font="fonts/Luckiest Guy_Regular.json"
               rotation={[-Math.PI/2,0,0]}
-              position={[-0.8,0.5,0]}
+              position={[-0.8,0,-0.15]}
               size={0.45}
               height={0.01}
               lineHeight={0.7}

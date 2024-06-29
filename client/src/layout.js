@@ -1130,7 +1130,7 @@ export default {
       fontSize: 20,
     },
     piecesSection: {
-      position: [8, 0, 1],
+      position: [8, 0, 0.5],
       pieces: {
         rotation: [0, 0, 0],
         positions: [

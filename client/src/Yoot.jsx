@@ -135,7 +135,7 @@ export default function Yoot({ device }) {
 
     let move = observeThrow();
     // Uncomment to test what happens on Yoot or Mo
-    // move = 4
+    // move = Math.random() > 0.5 ? 4 : 5
 
     // Show or hide yoot
     if (gamePhase === 'lobby' || gamePhase === 'pregame') {
@@ -151,11 +151,8 @@ export default function Yoot({ device }) {
     if (gamePhase === 'lobby') {
       setLastMove(getMoveText(move))
     } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
-
-      // Don't emit meteors when client renders for the first time
       if (!initialYootThrow) {
-        if (move === 4 || move === 5) {
-          // setBoomText('bonus turn')
+        if (gamePhase === 'game' && (move === 4 || move === 5)) {
           setParticleSetting({emitters: meteorSettings(device)})
         }
 
