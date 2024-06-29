@@ -65,6 +65,7 @@ export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
 export const winnerAtom = atom(-1)
+export const throwCountAtom = atom(0)
 export const mainAlertAtom = atom(null)
 export const pieceTeam0Id0Atom = atomWithCompare(
   JSON.parse(JSON.stringify(initialState.teams[0].pieces[0])),

@@ -3,7 +3,7 @@ import HtmlElement from './HtmlElement';
 import Board from './Board';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
-import Yoot from './meshes/Yoot';
+import YootMesh from './meshes/YootMesh';
 import { Float, Text3D } from '@react-three/drei';
 
 import initialState from '../initialState';
@@ -43,10 +43,10 @@ export default function About(props) {
   }
   function Yoots(props) {
     return <group {...props}>
-      <Yoot scale={0.5} position={[0,0,0]}/>
-      <Yoot scale={0.5} position={[0,0,-1]}/>
-      <Yoot scale={0.5} position={[0,0,-2]}/>
-      <Yoot scale={0.5} position={[0,0,-3]}/>
+      <YootMesh scale={0.5} position={[0,0,0]}/>
+      <YootMesh scale={0.5} position={[0,0,-1]}/>
+      <YootMesh scale={0.5} position={[0,0,-2]}/>
+      <YootMesh scale={0.5} position={[0,0,-3]}/>
     </group>
   }
 

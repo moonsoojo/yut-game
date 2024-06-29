@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom } from "./GlobalState.jsx";
+import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -61,6 +61,7 @@ export const SocketManager = () => {
   const [_pieceTeam1Id1, setPieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
   const [_pieceTeam1Id2, setPieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
   const [_pieceTeam1Id3, setPieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
+  const [_throwCount, setThrowCount] = useAtom(throwCountAtom)
   const [_winner, setWinner] = useAtom(winnerAtom)
   // UI
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
@@ -220,7 +221,8 @@ export const SocketManager = () => {
       setTurn((prevTurn) => {
         // if pregame result points turn to the same person
         // display alert with the same person's name
-        if (room.gamePhase !== 'lobby' && prevTurn.team !== room.turn.team) {
+        const nextTurn = room.turn
+        if (room.gamePhase !== 'lobby' && prevTurn.team !== nextTurn.team) {
           const turnAlert = makeTurnAlertObj(room)
           console.log('[setTurn] set main alert')
           setMainAlert(turnAlert)
@@ -322,19 +324,26 @@ export const SocketManager = () => {
         setWinner(room.results[room.results.length-1])
       }
 
+      if (room.gamePhase === 'pregame' || room.gamePhase === 'game') {
+        const turn = room.turn
+        setThrowCount(room.teams[turn.team].throws)
+      }
+
       console.log('[SocketManager] finished ingesting room state')
 
     })
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootThrowValues, yootThrown }) => {
+    socket.on('throwYoot', ({ yootThrowValues, yootThrown, throwCount }) => {
       setYootThrowValues(yootThrowValues)
       setYootThrown(yootThrown)
       // Disable the yoot button
       setYootActive(false)
       // Enable meteors
       setInitialYootThrow(false)
+      // set throw count
+      setThrowCount(throwCount)
     })
 
     socket.on('disconnect', () => {

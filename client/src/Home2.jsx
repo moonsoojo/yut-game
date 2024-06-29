@@ -7,7 +7,7 @@ import RocketAnimated from './meshes/RocketAnimated';
 import UfoAnimated from './meshes/UfoAnimated';
 import { useFrame } from '@react-three/fiber';
 import { Euler } from 'three';
-import Yoot from './meshes/Yoot';
+import YootMesh from './meshes/YootMesh';
 import { useLocation } from 'wouter';
 import HowToPlay from './HowToPlay';
 import Title from './Title';
@@ -111,10 +111,10 @@ export default function Home2() {
       scale={scale}
     >
       <Float floatIntensity={0.001} floatingRange={[0.05, 0.05]} speed={2} rotationIntensity={0.3}>
-        <Yoot scale={1} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
-        <Yoot scale={1} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
-        <Yoot scale={1} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
-        <Yoot scale={1} position={[0,0,4]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
+        <YootMesh scale={1} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,4]} rotation={[0, 0, -Math.PI/2]} />
       </Float>
     </animated.group>
   }

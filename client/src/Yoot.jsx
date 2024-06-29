@@ -10,12 +10,13 @@ import layout from "./layout.js";
 import TextButton from "./components/TextButton.jsx";
 import YootButton from "./YootButton.jsx";
 import meteorSettings from "./particles/Meteors.js";
-import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, yootActiveAtom } from "./GlobalState.jsx";
+import { particleSettingAtom, gamePhaseAtom, yootThrowValuesAtom, initialYootThrowAtom, lastMoveAtom, yootThrownAtom, mainAlertAtom, pregameAlertAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, yootActiveAtom, throwCountAtom, hasTurnAtom, clientAtom, turnAtom } from "./GlobalState.jsx";
 import { useParams } from "wouter";
 import HtmlElement from "./HtmlElement.jsx";
 import PracticeYootButton from "./PracticeYootButton.jsx";
 import { roundNum } from "./helpers/helpers.js";
 import Decimal from 'decimal.js';
+import YootMesh from "./meshes/YootMesh.jsx";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -39,6 +40,9 @@ export default function Yoot({ device }) {
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
   const [yootActive] = useAtom(yootActiveAtom)
+  // throw count
+  const [client] = useAtom(clientAtom)
+  const [turn] = useAtom(turnAtom)
   const params = useParams()
 
   const NUM_YOOTS = 4;
@@ -198,7 +202,6 @@ export default function Yoot({ device }) {
   })
 
   function observeThrow() {
-    console.log(`[Yoot][observeThrow]`)
     let result = 0
 
     // nak
@@ -206,7 +209,6 @@ export default function Yoot({ device }) {
     for (let i = 0; i < yoots.length; i++) {
       if (yoots[i].current.translation().y < 0) {
         nak = true;
-        console.log(`[Yoot][observeThrow] out of bounds`)
         setOutOfBounds(true)
         setTimeout(() => {
           setOutOfBounds(false)
@@ -250,6 +252,28 @@ export default function Yoot({ device }) {
 
   function onSleepHandler() {
     setSleepCount((count) => count+1);
+  }
+
+  function ThrowCount({position}) {
+    const [throwCount] = useAtom(throwCountAtom)
+
+    function YootIcon({ position }) {
+      // kept this code in case i wanna try the other approach (display when it's not your team's turn)
+      const active = client.team === turn.team
+      return <group position={position}>
+        <YootMesh active={active} position={[0,0,0]} rotation={[-Math.PI/4, Math.PI/2 + Math.PI/32*2, -Math.PI/2, 'YXZ']} scale={0.06}/>
+        <YootMesh active={active} position={[0.07,0.05,-0.1]} rotation={[0, Math.PI/2 + Math.PI/32*1, -Math.PI/2, 'YXZ']} scale={0.06}/>
+        <YootMesh active={active} position={[0.16,0.03,-0.06]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/2, 'YXZ']} scale={0.06}/>
+        <YootMesh active={active} position={[0.25,0,0]} rotation={[Math.PI/4*3, Math.PI/2 - Math.PI/32*1, -Math.PI/2, 'YXZ']} scale={0.06}/>
+      </group>
+    }
+
+    const tempArray = [...Array(throwCount)]
+    return <group position={position}>
+      {tempArray.map((value, index) => {
+        return <YootIcon key={index} position={[0,0, -index*0.9]}/>
+      })}
+    </group>
   }
 
   return (
@@ -344,6 +368,9 @@ export default function Yoot({ device }) {
         rotation={layout[device].throwButton.rotation}
         scale={layout[device].throwButton.scale}
         active={yootActive && !animationPlaying}
+      />}
+      { (gamePhase === "pregame" || gamePhase === "game") && (client.team === turn.team) && <ThrowCount 
+        position={layout[device].throwCount.position}
       />}
     </Physics>
   );

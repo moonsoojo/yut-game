@@ -4,7 +4,7 @@ import Star from "../meshes/Star"
 import Ufo from "../meshes/Ufo"
 import Rocket from "../meshes/Rocket"
 import { useFrame } from "@react-three/fiber";
-import Yoot from "../meshes/Yoot";
+import YootMesh from "../meshes/YootMesh";
 import { animated, useSpring } from "@react-spring/three";
 import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
@@ -73,10 +73,10 @@ export default function DoubleCatchAlert({ position, rotation }) {
 
   function YootEmoji() {
     return <group name='yoot-emoji'>
-      <Yoot position={[0, 0, -0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, -0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, 0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, 0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, -0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, -0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, 0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, 0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
     </group>
   }
 

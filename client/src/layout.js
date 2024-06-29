@@ -1143,7 +1143,7 @@ export default {
       }
     },
     throwCount: {
-      position: [5, 0, -1.5],
+      position: [7.3, 0, 5.2],
       rotation: [-Math.PI / 2, 0, 0],
       fontSize: 15
     },
@@ -1331,13 +1331,13 @@ export default {
       fontSize: 1
     },
     moveList: {
-      position: [8, 0, -1.2],
+      position: [8, 0, -1.7],
       rotation: [-Math.PI/2, 0, 0],
       fontSize: 20,
       width: 180
     },
     currentPlayer: {
-      position: [8.4, 0, -2.5],
+      position: [8.4, 0, -3],
       rotation: [0,0,0],
       fontSize: 20,
       width: 120

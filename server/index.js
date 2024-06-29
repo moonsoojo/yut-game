@@ -189,7 +189,9 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         if ('yootThrowValues' in data.updateDescription.updatedFields) {
           let yootThrowValues = data.fullDocument.yootThrowValues
           let yootThrown = data.fullDocument.yootThrown
-          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown })
+          let currentTeam = data.fullDocument.turn.team
+          let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
+          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown, throwCount })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')

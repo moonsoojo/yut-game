@@ -1,5 +1,5 @@
 import { Text3D, useGLTF } from "@react-three/drei";
-import Yoot from "../meshes/Yoot";
+import YootMesh from "../meshes/YootMesh";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import Star from "../meshes/Star";
@@ -67,10 +67,10 @@ export default function YootAlert({ position, rotation }) {
 
   function YootEmoji() {
     return <group name='yoot-emoji'>
-      <Yoot position={[0, 0, -0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, -0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, 0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
-      <Yoot position={[0, 0, 0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, -0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, -0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, 0.05]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
+      <YootMesh position={[0, 0, 0.15]} rotation={[0, Math.PI, -Math.PI/2]} scale={0.05}/>
     </group>
   }
 
