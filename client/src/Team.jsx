@@ -164,6 +164,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       rotation={layout[device][`team${team}`].names.rotation}
     >
       {teams[team].players.map((value, index) => (
+        index < 5 &&
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           key={index}

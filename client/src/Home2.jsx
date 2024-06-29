@@ -9,7 +9,6 @@ import { useFrame } from '@react-three/fiber';
 import { Euler } from 'three';
 import Yoot from './meshes/Yoot';
 import { useLocation } from 'wouter';
-import HtmlElement from './HtmlElement';
 import HowToPlay from './HowToPlay';
 import Title from './Title';
 import About from './About';
@@ -17,12 +16,11 @@ import Stars from './particles/Stars';
 import { socket } from './SocketManager';
 import { clientAtom, deviceAtom } from './GlobalState';
 import Board from './Board';
-import initialState from '../initialState';
 
 export default function Home2() {
 
   const [device] = useAtom(deviceAtom)
-  const [display, setDisplay] = useState('about')
+  const [display, setDisplay] = useState('board')
   // const [display, setDisplay] = useState('board')
   const [client] = useAtom(clientAtom)
   
