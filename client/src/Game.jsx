@@ -634,7 +634,7 @@ export default function Game() {
           height={layout[device].whoGoesFirst.title.height}
           >
             {`Who goes first?`}
-            <meshStandardMaterial color="green"/>
+            <meshStandardMaterial color="limegreen"/>
           </Text3D>
           <Text3D
           font="fonts/Luckiest Guy_Regular.json"
@@ -645,7 +645,7 @@ export default function Game() {
           lineHeight={0.8}
           >
             {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
-            <meshStandardMaterial color="green"/>
+            <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
         <Yoot device={device}/>
