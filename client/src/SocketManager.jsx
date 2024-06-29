@@ -163,12 +163,16 @@ export const SocketManager = () => {
       function makeTurnAlertObj(room) {
         const currentTeam = room.turn.team
         const currentPlayer = room.turn.players[currentTeam]
-        const alert = {
-          type: 'turn',
-          team: currentTeam,
-          name: room.teams[currentTeam].players[currentPlayer].name
+        if (!room.teams[currentTeam].players[currentPlayer]) {
+          return { type: '' }
+        } else {
+          const alert = {
+            type: 'turn',
+            team: currentTeam,
+            name: room.teams[currentTeam].players[currentPlayer].name
+          }
+          return alert
         }
-        return alert
       }
 
       setGamePhase((lastPhase) => {
