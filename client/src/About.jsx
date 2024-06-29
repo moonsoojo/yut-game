@@ -4,7 +4,7 @@ import Board from './Board';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
 import Yoot from './meshes/Yoot';
-import { Float } from '@react-three/drei';
+import { Float, Text3D } from '@react-three/drei';
 
 import initialState from '../initialState';
 
@@ -51,55 +51,87 @@ export default function About(props) {
   }
 
   return <group {...props}>
-    <HtmlElement
-      position={[0,0,0]}
-      fontSize={26} 
-      text='A board game played'
-    />
-    <HtmlElement
-      position={[0,-0.7,0]}
-      fontSize={26} 
-      text='during the holidays in Korea.'
-    />
+    <Text3D 
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[0,-0.5,0]}
+        size={0.4}
+        height={0.01}
+    >
+      Yoot Nori is a game played during
+      <meshStandardMaterial color='yellow'/>
+    </Text3D>
+    <Text3D 
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[0,-1.1,0]}
+        size={0.4}
+        height={0.01}
+    >
+      the holidays in Korea.
+      <meshStandardMaterial color='yellow'/>
+    </Text3D>
     <group>
-      <HtmlElement
-        position={[-1,-4,-1]}
-        fontSize={26} 
-        text='Board'
-      />
+      <Text3D 
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-1,-4,-1]}
+          size={0.4}
+          height={0.01}
+      >
+        board
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
       <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
         <Board device={props.device} rotation={[Math.PI/2, 0, 0]} scale={0.5} position={[5, -5, 0]} interactive={false} showStart={false}/>
       </Float>
       
-      <HtmlElement
-        position={[-1,-10,-1]}
-        fontSize={26} 
-        text='Pieces'
-      />
+      <Text3D 
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-1,-10,-1]}
+          size={0.4}
+          height={0.01}
+      >
+        pieces
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
       <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
         <Rockets position={[3, -10, 0]} rotation={[Math.PI/4, 0, 0]}/>
       </Float>
       <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
         <Ufos position={[7, -10.5, 0]} rotation={[Math.PI/4, 0, 0]}/>
       </Float>
-      <HtmlElement
+
+
+      <Text3D 
+        font="fonts/Luckiest Guy_Regular.json"
         position={[10,-3,-1]}
-        fontSize={26} 
-        text='Yoot (Dice)'
-      />
+        size={0.4}
+        height={0.01}
+      >
+        Yoot (dice)
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
       <Float floatIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
-        <Yoots position={[13, -6, -2]} rotation={[0, Math.PI/2, 0]} scale={0.5}/>
+        <Yoots position={[13, -6, -2]} rotation={[0, Math.PI/2, 0]} scale={0.7}/>
       </Float>
-      <HtmlElement
-        position={[10,-9,-1]}
-        fontSize={26} 
-        text='Players: 2 or more'
-      />
-      <HtmlElement
-        position={[10,-10,-1]}
-        fontSize={26} 
-        text='Age: Everyone'
-      />
+
+      <Text3D 
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[10,-10,-1]}
+          size={0.4}
+          height={0.01}
+      >
+        players: 2 or more
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+
+      <Text3D 
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[10,-11,-1]}
+          size={0.4}
+          height={0.01}
+      >
+        age: everyone
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
     </group>
   </group>
 }

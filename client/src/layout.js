@@ -795,8 +795,8 @@ export default {
       },
       page1: {
         text: {
-          position: [-2.5,0,-5],
-          rotation: [-Math.PI/8, 0, 0],
+          position: [-2.5,0,-4],
+          rotation: [-Math.PI/4, 0, 0],
           fontSize: 26
         },
         firstCornerTiles: {
@@ -860,7 +860,7 @@ export default {
         },
         letsGoText: {
           lets: {
-            position: [-0.5,0,1.7],
+            position: [0,0,2.2],
             rotation: [-Math.PI/8, -Math.PI/16, 0],
             fontSize: 26
           },
@@ -872,14 +872,14 @@ export default {
         },
         fireworks: {
           initialPosition: {
-            x: -0.5,
+            x: -1,
             y: 0,
-            z: -2,
+            z: -3,
           },
           positionRange: {
-            x: 0.5,
+            x: 1,
             y: 0,
-            z: 0.5
+            z: 1
           }
         }
       },
@@ -966,8 +966,7 @@ export default {
       },
       page5: {
         text: {
-          position: [-3.5,0,-7],
-          rotation: [-Math.PI/8, 0, 0]
+          position: [-3.5,0,-7]
         },
         tilesPos: [
           [0,0,1.5],
@@ -982,7 +981,7 @@ export default {
         },
         scoreText: {
           position: [-1, 2, 4],
-          rotation: [-Math.PI/8, -Math.PI/16, 0]
+          rotation: [-Math.PI/4, 0, 0]
         },
         rocket0Scale: [
           1.2,

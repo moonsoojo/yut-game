@@ -186,9 +186,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           } else if (startTime + textTime < state.clock.elapsedTime && !text) {
             setText(true)
           } else if (startTime + textTime < state.clock.elapsedTime) {
-            textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.3 + 1.5
-            textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.3 + 1.5
-            textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.3 + 1.5
+            textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
+            textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
+            textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
           }
         } else {
           setStartTime(0);
@@ -216,24 +216,36 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         position={layout[device].howToPlay.page0.text.position}
         rotation={[Math.PI/8, 0, 0]}
       >
-        <HtmlElement
-          text='1. Throw the yoot (dice).'
-          position={[-4,0,-3]}
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-3.5,0,-2.5]}
           rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='The way they lie determines'
-          position={[-3.5,0,-2.4]}
-          rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='how many steps to advance.'
+          size={0.5}
+          height={0.01}
+        >
+          {`1. Throw the yoot (dice).`}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
           position={[-3.5,0,-1.8]}
           rotation={[-Math.PI/2, 0, 0]}
-          fontSize={26}
-        />
+          size={0.5}
+          height={0.01}
+        >
+          {`The way they lie determines`}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-3.5,0,-1.1]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'how many steps to advance.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       </group>
       <Physics>
         <RigidBody type="fixed">
@@ -517,12 +529,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     return <group name='how-to-play-page-1'>
-      <HtmlElement
-        text='2. Advance your piece.'
-        position={layout[device].howToPlay.page1.text.position}
-        rotation={layout[device].howToPlay.page1.text.rotation}
-        fontSize={layout[device].howToPlay.page1.text.fontSize}
-      />
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={layout[device].howToPlay.page1.text.position}
+          rotation={layout[device].howToPlay.page1.text.rotation}
+          size={0.5}
+          height={0.01}
+        >
+          {'2. Advance your piece.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       <FirstCornerTiles position={layout[device].howToPlay.page1.firstCornerTiles.position}/>
       <HomePieces position={layout[device].howToPlay.page1.homePieces.position}/>
       <MoveDisplay position={layout[device].howToPlay.page1.moveDisplay.position}/>
@@ -550,6 +566,20 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
+    const letsGoMatRef = useRef();
+    const letsGoRef = useRef();
+    const freqR = 0.4
+    const freqG = 0.6
+    const freqB = 0.8
+    useFrame((state, delta) => {
+      letsGoMatRef.current.color.r = Math.cos(state.clock.elapsedTime*freqR * 4) + 0.3
+      letsGoMatRef.current.color.g = Math.cos(state.clock.elapsedTime*freqG * 4) + 0.4
+      letsGoMatRef.current.color.b = Math.cos(state.clock.elapsedTime*freqB * 4) + 0.5
+      letsGoRef.current.scale.x = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+      letsGoRef.current.scale.y = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+      letsGoRef.current.scale.z = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+    })
+
     function Fireworks() {
 
       const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
@@ -571,14 +601,14 @@ export default function HowToPlay({ device, position, rotation, scale }) {
                   z: layout[device].howToPlay.page2.fireworks.positionRange.z,
                 },
                 randomizePosition: true,
-                rate: new Rate(10, 1),
+                rate: new Rate(20, 1),
                 initializers: [
                   new Position(zone),
                   new Mass(0.1),
                   new Radius(1.5, 1.7),
                   new Life(1.5, 2),
                   new Body(createSprite('./textures/dot.png')),
-                  new RadialVelocity(2, new Vector3D(0, 5, 0), 180)
+                  new RadialVelocity(3, new Vector3D(0, 5, 0), 180)
                 ],
                 behaviours: [
                   new Alpha(0.7, 0),
@@ -730,7 +760,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           },
           {
             cursorEffectOpacity: 0,
-            delay: 200,
+            delay: 100,
             config: {
               tension: 0,
               clamp: true
@@ -837,29 +867,29 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           <HomePieces position={[-2, 0, 2]}/>
         </group>
         <animated.group scale={springs.moveScale}>
-          <HtmlElement
-            text='MOVE: 1-STEP'
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
             position={layout[device].howToPlay.page2.moveText.position}
             rotation={layout[device].howToPlay.page2.moveText.rotation}
-            fontSize={layout[device].howToPlay.page2.moveText.fontSize}
-            color='limegreen'
-          />
+            size={0.4}
+            height={0.01}
+          >
+            {'MOVE: 1-STEP'}
+            <meshStandardMaterial color='limegreen'/>
+          </Text3D>
         </animated.group>
         <animated.group scale={springs.letsGoScale}>
-          <HtmlElement
-            text="Let's"
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
             position={layout[device].howToPlay.page2.letsGoText.lets.position}
             rotation={layout[device].howToPlay.page2.letsGoText.lets.rotation}
-            fontSize={layout[device].howToPlay.page2.letsGoText.lets.fontSize}
-            color='yellow'
-          />
-          <HtmlElement
-            text="GO!"
-            position={layout[device].howToPlay.page2.letsGoText.go.position}
-            rotation={layout[device].howToPlay.page2.letsGoText.go.rotation}
-            fontSize={layout[device].howToPlay.page2.letsGoText.go.fontSize}
-            color='yellow'
-          />
+            size={0.4}
+            height={0.01}
+            ref={letsGoRef}
+          >
+            {`let's\ngo!`}
+            <meshStandardMaterial color='yellow' ref={letsGoMatRef}/>
+          </Text3D>
         </animated.group>
         <animated.group scale={springs.scoreScale}>
           <Text3D
@@ -886,30 +916,46 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     return <group>
-      <HtmlElement
-        text='3. The first team'
-        position={[1,0,1]}
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[1,0,1.5]}
         rotation={[-Math.PI/4, 0, 0]}
-        fontSize={22}
-      />
-      <HtmlElement
-        text=' to move four'
-        position={[1,0,2]}
+        size={0.4}
+        height={0.01}
+      >
+        {'3. The first team to'}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[1,0,2.5]}
         rotation={[-Math.PI/4, 0, 0]}
-        fontSize={22}
-      />
-      <HtmlElement
-        text=' pieces around'
-        position={[1,0,3]}
+        size={0.4}
+        height={0.01}
+      >
+        {'move four pieces'}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[1,0,3.5]}
         rotation={[-Math.PI/4, 0, 0]}
-        fontSize={22}
-      />
-      <HtmlElement
-        text=' the board wins!'
-        position={[1,0,4]}
+        size={0.4}
+        height={0.01}
+      >
+        {' around the board'}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[1,0,4.5]}
         rotation={[-Math.PI/4, 0, 0]}
-        fontSize={22}
-      />      
+        size={0.4}
+        height={0.01}
+      >
+        {'to earth wins!'}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
       <Tiles device={device}/>
       <Fireworks/>
     </group>
@@ -1069,24 +1115,36 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     // ufo is flipped over, moved to a corner and scaled to 0. show sparkle
     return <group>
       <group name='text' position={layout[device].howToPlay.page3.text.position}>
-        <HtmlElement
-          text='4. If you move into a tile with'
-          position={[0,0,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text=' an enemy, it will be captured.'
-          position={[0,-1,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='You will get an extra turn.'
-          position={[0,-2,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,1]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'4. If you move into a tile with'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'an enemy, you will capture it.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'You will get an extra turn.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       </group>
       <FirstCornerTiles position={springs.firstCornerTilesPos}/>
       <animated.group scale={springs.moveTextScale}>
@@ -1379,30 +1437,42 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     // ufo is flipped over, moved to a corner and scaled to 0. show sparkle
     return <group>
       <group name='text' position={layout[device].howToPlay.page4.text.position}>
-        <HtmlElement
-          text='5. If you move a piece into a tile'
-          position={[0,0,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='with your own, the pieces will'
-          position={[0,-1,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='move together on the next turn.'
-          position={[0,-2,0]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,1]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'5. If you move a piece into a tile'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'with your own piece, they will'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'move together on the next turn.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       </group>
       <FirstCornerTiles position={[-1, 0, -1]}/>
       <animated.group scale={springs.moveText0Scale}>
         <Text3D
           position={[-3, 0, 0]}
-          rotation={[-Math.PI/2,0,0]}
+          rotation={[-Math.PI/4,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
@@ -1411,8 +1481,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
         <Text3D
-          position={[-0.6, 0, 0.7]}
-          rotation={[-Math.PI/2,0,0]}
+          position={[-0.6, 0, 0.9]}
+          rotation={[-Math.PI/4,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
@@ -1424,7 +1494,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <animated.group scale={springs.moveText1Scale}>
         <Text3D
           position={[-3, 0, 0]}
-          rotation={[-Math.PI/2,0,0]}
+          rotation={[-Math.PI/4,0,0]}
           font="/fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
@@ -2000,7 +2070,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             rotation={layout[device].howToPlay.page5.scoreText.rotation}
           >
             SCORE!
-            <meshStandardMaterial color='green'/>
+            <meshStandardMaterial color='limegreen'/>
           </Text3D>
         </animated.group>
       </animated.group>;
@@ -2009,58 +2079,96 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group>
       <animated.group name='text' 
         position={layout[device].howToPlay.page5.text.position} 
-        rotation={layout[device].howToPlay.page5.text.rotation}
         scale={springs.ruleTextScale}
       >
-        <HtmlElement
-          text='6. When you start a move'
-          position={[0,0,0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text=' from a planet or the Moon,'
-          position={[0,-0.7,0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text=' you can take a shortcut.'
-          position={[0,-1.4,0]}
-          fontSize={26}
-        />
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'6. When you start a move'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D> 
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'from a planet or the Moon,'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D> 
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,4]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'you can take a shortcut.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D> 
       </animated.group>
       <animated.group name='note-text' position={[2,0,2]} rotation={[-Math.PI/4, 0, 0]} scale={springs.noteTextScale}>
-        <HtmlElement
-          text='NOTE:'
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
           position={[0,0,0]}
-          fontSize={20}
-        />
-        <HtmlElement
-          text='You cannot bend'
+          rotation={[0, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'NOTE:'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D> 
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
           position={[0,-0.5,0]}
-          fontSize={20}
-        />
-        <HtmlElement
-          text=' in the middle of'
+          rotation={[0, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'You cannot bend'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
           position={[0,-1,0]}
-          fontSize={20}
-        />
-        <HtmlElement
-          text='a move.'
+          rotation={[0, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'in the middle of'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
           position={[0,-1.5,0]}
-          fontSize={20}
-        />
+          rotation={[0, 0, 0]}
+          size={0.4}
+          height={0.01}
+        >
+          {'a move.'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       </animated.group>
       <animated.group 
       name='move-text' 
       position={[-3,0,2.5]} 
       rotation={[-Math.PI/4, 0, 0]} 
       scale={springs.moveTextScale}>
-        <HtmlElement
-          text='move: 4'
-          position={[0,-2,0]}
-          fontSize={20}
-          color='limegreen'
-        />
+        <Text3D
+          font="/fonts/Luckiest Guy_Regular.json" 
+          size={0.4} 
+          height={0.01}
+          position={[1.5,-2,1]}
+          rotation={layout[device].howToPlay.page5.scoreText.rotation}
+        >
+          {'move: 4'}
+          <meshStandardMaterial color='limegreen'/>
+        </Text3D>
       </animated.group>
       <Cursor2
         position={springs.cursorPos}
@@ -2085,136 +2193,195 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function Page6() {
     return <group scale={0.9}>
       <animated.group name='text' position={[-3.5,0,-7]}>
-        <HtmlElement
-          text='7. How to read the yoot (dice) throw'
-          position={[-2,0,1]}
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-1,0,1.5]}
           rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
+          size={0.5}
+          height={0.01}
+        >
+          {'7. How to read the yoot outcome'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
       </animated.group>
-      <group position={[-4.3, 0, -1]} scale={0.8}>        
-        <HtmlElement
-          text='"DO"'
-          position={[-0.2,0,-3.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='1 Step'
-          position={[-0.2,0,-2.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
+      <group position={[-4.3, 0, -1]} scale={0.8}>     
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"DO"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>       
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'1 Step'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>   
         <Float rotationIntensity={0.1}>
           <YootSet points="do" scale={0.4}/>
         </Float>
       </group>
       <group position={[-0.2, 0, -1]} scale={0.8}>        
-        <HtmlElement
-          text='"GE"'
-          position={[-0.2,0,-3.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='2 steps'
-          position={[-0.2,0,-2.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
+      <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"GE"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>       
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'2 Steps'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>   
         <Float rotationIntensity={0.1}>
           <YootSet points="ge" scale={0.4}/>
         </Float>
       </group>
       <group position={[3.5, 0, -1]} scale={0.8}>        
-        <HtmlElement
-          text='"GULL"'
-          position={[-0.2,0,-3.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='3 steps'
-          position={[-0.2,0,-2.8]}
-          rotation={[-Math.PI/8, 0, 0]}
-          fontSize={26}
-        />
-        
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"GUL"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>       
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2]}
+          rotation={[-Math.PI/4, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'3 Steps'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>   
         <Float rotationIntensity={0.1}>
         <YootSet points="girl" scale={0.4}/>
         </Float>
       </group>
       <group position={[-4.3, 0, 4]} scale={0.7}>        
-        <HtmlElement
-          text='"YOOT"'
-          position={[-0.2,0,-4.2]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='4 steps'
-          position={[-0.2,0,-3.4]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='bonus turn'
-          position={[-0.2,0,-2.6]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-          color='limegreen'
-        />
-        
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"YOOT"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>       
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'4 Steps'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>   
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-1.4]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'bonus turn'}
+          <meshStandardMaterial color='limegreen'/>
+        </Text3D>   
         <Float rotationIntensity={0.1}>
-        <YootSet points="yoot" scale={0.4}/>
+        <YootSet points="yoot" scale={0.4} position={[0, 0, 0.3]}/>
         </Float>
       </group>
-      <group position={[-0.2, 0, 4]} scale={0.7}>        
-        <HtmlElement
-          text='"MO"'
-          position={[-0.2,0,-4.2]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='5 steps'
-          position={[-0.2,0,-3.4]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='bonus turn'
-          position={[-0.2,0,-2.6]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-          color='limegreen'
-        />
+      <group position={[-0.2, 0, 4]} scale={0.7}>     
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"MO"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>      
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'5 steps'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>      
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-1.4]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'bonus turn'}
+          <meshStandardMaterial color='limegreen'/>
+        </Text3D>      
         <Float rotationIntensity={0.1}>
-        <YootSet points="mo" scale={0.4}/>
+        <YootSet points="mo" scale={0.4} position={[0, 0, 0.3]}/>
         </Float>
       </group>
       <group position={[3.5, 0, 4]} scale={0.7}>        
-        <HtmlElement
-          text='"BACKDO"'
-          position={[-0.2,0,-4.2]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='-1 step'
-          position={[-0.2,0,-3.4]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-        />
-        <HtmlElement
-          text='backward'
-          position={[-0.2,0,-2.6]}
-          rotation={[-Math.PI/4, 0, 0]}
-          fontSize={26}
-          color='red'
-        />
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-3]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'"backdo"'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>         
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-2.2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'-1 step'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>      
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.2,0,-1.4]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'backward'}
+          <meshStandardMaterial color='red'/>
+        </Text3D>
         <Float rotationIntensity={0.1}>
-          <YootSet points="backdo" scale={0.4}/>
+          <YootSet points="backdo" scale={0.4} position={[0, 0, 0.3]}/>
         </Float>
       </group>
     </group>
