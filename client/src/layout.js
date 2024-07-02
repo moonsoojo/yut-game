@@ -27,37 +27,36 @@ export default {
       position: [0,0,0],
       rotation: [0,0,0],
       text: {
-        position: [-2.1,0,-5.8],
+        position: [-2.1,0,-6.3],
         rotation: [-Math.PI/4,0,Math.PI/64],
         fontSize: 20,
         scale: 1.7
       },
       yoots: {
-        position: [1.1, 0, -4.5],
+        position: [1.1, 0, -5],
         rotation: [Math.PI/4,Math.PI/2,0],
         scale: 0.14
       },
       tiles: {
-        position: [0, 0, -1.8],
+        position: [0, 0, -2.3],
         rotation: [0, -Math.PI/16, 0],
         scale: 0.4
       },
       about: {
         show: false,
-        position: [-0.4, 0, 0.5],
-        rotation: [-Math.PI/4,0,0],
-        scale: 0.7,
-        fontSize: 10
+        position: [0, 0, 0.3],
+        rotation: [0,0,0],
+        scale: 0.7
       },
       howToPlay: {
-        position: [-0.75, 0, 1],
-        rotation: [-Math.PI/4,0,0],
-        fontSize: 10
+        position: [0, 0, 0.8],
+        rotation: [0,0,0],
+        scale: 0.7
       },
       letsPlay: {
-        position: [-0.63, 0, 1.48],
-        rotation: [-Math.PI/4,0,0],
-        fontSize: 10
+        position: [0, 0, 1.3],
+        rotation: [0,0,0],
+        scale: 0.7
       },
       pieces: {
         position: [0,0,0],
@@ -302,9 +301,48 @@ export default {
       }
     },
     about: {
-      position: [-2.1, 0, -3.3],
+      position: [-2.1, 0, -4.3],
       rotation: [-Math.PI/4,0,0],
-      scale: 0.28
+      scale: 0.28,
+      mainDescription: {
+        size: 0.6,
+        line0Position: [0,-0.5,0],
+        line1Position: [0,-1.3,0]
+      },
+      board: {
+        position: [5.5, -6, 0],
+        rotation: [Math.PI/2, 0, 0],
+        scale: 0.6,
+        text: {
+          position: [-1,-4,-1],
+          size: 0.6
+        }
+      },
+      pieces: {
+        position: [-1,-12,-1],
+        size: 0.6,
+        rockets: {
+          position: [4, -12, 0]
+        },
+        ufos: {
+          position: [7.5, -12, 0]
+        }
+      },
+      yoot: {
+        position: [13, -7, -2],
+        text: {
+          position: [10,-4,-1],
+          size: 0.6
+        }
+      },
+      playersText: {
+        position: [11,-11.5,-1],
+        size: 0.6
+      },
+      ageText: {
+        position: [10,-11,-1],
+        size: 0.6
+      }
     },
     team0: {
       scale: 1,
@@ -762,9 +800,48 @@ export default {
       }
     },
     about: {
-      position: [-6, 0, -9],
+      position: [-5, -4, -12],
       rotation: [-Math.PI/4,0,Math.PI/32],
-      scale: 1
+      scale: 1,
+      mainDescription: {
+        size: 0.6,
+        line0Position: [0,-0.5,0],
+        line1Position: [0,-1.3,0]
+      },
+      board: {
+        position: [5.5, -6, 0],
+        rotation: [Math.PI/2, 0, 0],
+        scale: 0.6,
+        text: {
+          position: [-1,-4,-1],
+          size: 0.6
+        }
+      },
+      pieces: {
+        position: [-1,-12,-1],
+        size: 0.6,
+        rockets: {
+          position: [4, -12, 0]
+        },
+        ufos: {
+          position: [7.5, -12, 0]
+        }
+      },
+      yoot: {
+        position: [13, -7, -2],
+        text: {
+          position: [10,-4,-1],
+          size: 0.6
+        }
+      },
+      playersText: {
+        position: [11,-11,-1],
+        size: 0.6
+      },
+      ageText: {
+        position: [10,-11,-1],
+        size: 0.6
+      }
     },
     howToPlay: {
       position: [-1,0,-4],
