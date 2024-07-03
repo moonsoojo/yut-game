@@ -58,4 +58,4 @@ export default function Earth({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   );
 }
 
-useGLTF.preload("/models/earth-round.glb");
+useGLTF.preload("models/earth-round.glb");

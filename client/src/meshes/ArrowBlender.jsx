@@ -16,3 +16,4 @@ export default function ArrowBlender({position, rotation, scale, color}) {
       </group>
     );
 }
+useGLTF.preload('models/arrow.glb')

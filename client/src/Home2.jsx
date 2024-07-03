@@ -16,6 +16,7 @@ import Stars from './particles/Stars';
 import { socket } from './SocketManager';
 import { clientAtom, deviceAtom } from './GlobalState';
 import Board from './Board';
+import { Physics } from '@react-three/rapier';
 
 export default function Home2() {
 
@@ -327,12 +328,14 @@ export default function Home2() {
           rotation={layout[device].about.rotation}
           scale={layout[device].about.scale}
         />}
-        { display === 'howToPlay' && <HowToPlay 
-          device={device}
-          position={layout[device].howToPlay.position}
-          rotation={layout[device].howToPlay.rotation}
-          scale={layout[device].howToPlay.scale}
-        />}
+        <Physics>
+          { display === 'howToPlay' && <HowToPlay 
+            device={device}
+            position={layout[device].howToPlay.position}
+            rotation={layout[device].howToPlay.rotation}
+            scale={layout[device].howToPlay.scale}
+          />}
+        </Physics>
       </group>  
     </group>
     

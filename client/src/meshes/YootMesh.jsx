@@ -37,3 +37,5 @@ export default function YootMesh({
     </group>
   );
 }
+
+useGLTF.preload("models/yoot.glb")

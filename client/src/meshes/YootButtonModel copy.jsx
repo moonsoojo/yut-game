@@ -100,7 +100,7 @@ export default function YootButtonModel({
     <Text3D
       position={[-1, 0.2, -0.7]}
       rotation={[-Math.PI/2,0,-Math.PI/2]}
-      font="/fonts/Luckiest Guy_Regular.json" 
+      font="fonts/Luckiest Guy_Regular.json" 
       size={0.3} 
       height={0.01}
     >

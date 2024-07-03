@@ -218,3 +218,5 @@ export default function Rocket({
     </animated.group>
   )
 }
+
+useGLTF.preload("models/rocket.glb")

@@ -2,7 +2,6 @@ import { Float, MeshDistortMaterial, Text3D, useGLTF } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody } from '@react-three/rapier';
 import React, { useEffect, useRef, useState } from 'react';
 import YootButtonModel from './meshes/YootButtonModel';
-import HtmlElement from './HtmlElement';
 import { useFrame, useThree } from '@react-three/fiber';
 import Cursor from './meshes/Cursor';
 import Earth from './meshes/Earth';
@@ -335,7 +334,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         { text && <Text3D
           position={layout[device].howToPlay.page0.moveText.position}
           rotation={[-Math.PI/2,0,0]}
-          font="/fonts/Luckiest Guy_Regular.json" 
+          font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
           ref={textRef}
@@ -518,7 +517,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       return <Text3D
         position={position}
         rotation={[-Math.PI/2,0,0]}
-        font="/fonts/Luckiest Guy_Regular.json" 
+        font="fonts/Luckiest Guy_Regular.json" 
         size={0.5} 
         height={0.01}
       >
@@ -892,7 +891,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </animated.group>
         <animated.group scale={springs.scoreScale}>
           <Text3D
-            font="/fonts/Luckiest Guy_Regular.json" 
+            font="fonts/Luckiest Guy_Regular.json" 
             position={layout[device].howToPlay.page2.scoreText.position}
             rotation={layout[device].howToPlay.page2.scoreText.rotation}
             size={layout[device].howToPlay.page2.scoreText.size} 
@@ -1150,7 +1149,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Text3D
           position={layout[device].howToPlay.page3.moveText.position}
           rotation={[-Math.PI/2,0,0]}
-          font="/fonts/Luckiest Guy_Regular.json" 
+          font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
@@ -1472,7 +1471,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Text3D
           position={[-3, 0, 0]}
           rotation={[-Math.PI/4,0,0]}
-          font="/fonts/Luckiest Guy_Regular.json" 
+          font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
@@ -1482,7 +1481,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Text3D
           position={[-0.6, 0, 0.9]}
           rotation={[-Math.PI/4,0,0]}
-          font="/fonts/Luckiest Guy_Regular.json" 
+          font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
@@ -1494,7 +1493,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Text3D
           position={[-3, 0, 0]}
           rotation={[-Math.PI/4,0,0]}
-          font="/fonts/Luckiest Guy_Regular.json" 
+          font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
         >
@@ -2062,7 +2061,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </animated.group>
         <animated.group scale={springs.scoreScale}>
           <Text3D
-            font="/fonts/Luckiest Guy_Regular.json" 
+            font="fonts/Luckiest Guy_Regular.json" 
             size={0.5} 
             height={0.01}
             position={layout[device].howToPlay.page5.scoreText.position}

@@ -50,3 +50,4 @@ export default function BonusTurn(props) {
     </animated.group>
   </Float>
 }
+useGLTF.preload('models/boom-wrap.glb')

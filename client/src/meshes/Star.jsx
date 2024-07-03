@@ -28,4 +28,4 @@ export default function Star({ position=[0,0,0], rotation=[0,0,0], scale=1, colo
   );
 }
 
-useGLTF.preload("/models/star.glb");
+useGLTF.preload("models/star.glb");
