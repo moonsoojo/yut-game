@@ -134,11 +134,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             for (let i = 0; i < 4; i++) {
               yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
               yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
-              if (device === "landscapeDesktop") {
-                yoots[i].current.setTranslation({ x: -2 + 0.8*i, y: 1, z: -2});
-              } else {
-                yoots[i].current.setTranslation({ x: -1 + 0.4*i, y: 0.5, z: -1});
-              }
+              yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.initialThrowPos[i]);
               yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
               if (device === "landscapeDesktop") {
                 yoots[i].current.applyImpulse({
@@ -158,8 +154,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
                   z: 0,
                 });
                 yoots[i].current.applyTorqueImpulse({
-                  x: 0.005,
-                  y: 0.0015,
+                  x: 0.002,
+                  y: 0.001,
                   z: 0.003 + i * 0.00005,
                 });
               }
@@ -245,7 +241,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </group>
-      <Physics>
+      {/* <Physics> */}
+      <>
         <RigidBody type="fixed">
           <CuboidCollider args={[5, 0.3, 5]} restitution={0.2} friction={1}/>
           <mesh>
@@ -342,16 +339,17 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           {layout[device].howToPlay.page0.moveText.text}
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>}
-      </Physics>
+      </>
+      {/* </Physics> */}
       <YootButtonModel
-        position={[3, 0, 2]}
-        rotation={[Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]}
+        position={layout[device].howToPlay.page0.yootButtonModel.position}
+        rotation={layout[device].howToPlay.page0.yootButtonModel.rotation}
         turnedOn={yootButtonTurnedOn}
       />
       <Cursor
-        position={[4, 0.3, 3.4]}
-        rotation={[0, 0, 0]}
-        scale={[3, 3, 0.1]}
+        position={layout[device].howToPlay.page0.cursor.position}
+        rotation={layout[device].howToPlay.page0.cursor.rotation}
+        scale={layout[device].howToPlay.page0.cursor.scale}
         effect={effect}
       />
     </group>
@@ -2385,7 +2383,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     </group>
   }
 
-  function Pagination() {
+  function Pagination({ position, scale }) {
     function handlePageLeft() {
       setPage(page => {
         if (page === 0) {
@@ -2428,7 +2426,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       setPage(6)
     }
 
-    return <group name='pagination'>
+    return <group name='pagination' position={position} scale={scale}>
       <mesh position={[-4, 0, 6]} rotation={[0, 0, Math.PI/2]} onPointerUp={handlePageLeft}>
         <coneGeometry args={[layout[device].howToPlay.pagination.arrowRadius, 0.6, 3]}/>
         <meshStandardMaterial color="yellow"/>
@@ -2470,11 +2468,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
   const pages = [<Page0/>, <Page1/>, <Page2/>, <Page3/>, <Page4/>, <Page5/>, <Page6/>]
 
+  console.log(layout[device].howToPlay.pagination.position)
   return <group position={position} rotation={rotation} scale={scale}>
     {pages[page]}
-    <group scale={0.8} position={[0, 0, 1]}>
-      <Pagination/>
-    </group>
+    <Pagination 
+    position={layout[device].howToPlay.pagination.position}
+    scale={layout[device].howToPlay.pagination.scale}/>
   </group>
 }
 

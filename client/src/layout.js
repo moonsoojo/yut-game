@@ -44,19 +44,19 @@ export default {
       },
       about: {
         show: false,
-        position: [0, 0, 0.3],
+        position: [0, 0, 0.5],
         rotation: [0,0,0],
-        scale: 0.7
+        scale: 0.6
       },
       howToPlay: {
-        position: [0, 0, 0.8],
+        position: [0, 0, 0.9],
         rotation: [0,0,0],
-        scale: 0.7
+        scale: 0.6
       },
       letsPlay: {
         position: [0, 0, 1.3],
         rotation: [0,0,0],
-        scale: 0.7
+        scale: 0.6
       },
       pieces: {
         position: [0,0,0],
@@ -69,25 +69,34 @@ export default {
       scale: 0.4,
       page0: {
         text: {
-          position: [-1, 0, -1]
+          position: [-1, 0, -2]
         },
         moveText: {
-          text: "MOVE: 4-STEPS",
-          position: [-3.2, 0.7, -0.2]
+          text: "MOVE: 3-STEPS",
+          position: [-3.2, 0.7, -1.2]
         },
         yoot: {
           initialPos: [
-            [-2 + 0, 1, 3],
-            [-2 + 0.8, 1, 3],
-            [-2 + 1.6, 1, 3],
-            [-2 + 2.4, 1, 3]
+            [-2 + 0, 1, 1],
+            [-2 + 0.8, 1, 1],
+            [-2 + 1.6, 1, 1],
+            [-2 + 2.4, 1, 1]
           ],
           initialThrowPos: [
-            { x: -1, y: 0.5, z: -1},
-            { x: -1 + 0.4, y: 0.5, z: -1},
-            { x: -1 + 0.8, y: 0.5, z: -1},
-            { x: -1 + 1.2, y: 0.5, z: -1}
+            { x: -1, y: 0.5, z: -1.5},
+            { x: -1 + 0.4, y: 0.5, z: -1.5},
+            { x: -1 + 0.8, y: 0.5, z: -1.5},
+            { x: -1 + 1.2, y: 0.5, z: -1.5}
           ]
+        },
+        yootButtonModel: {
+          position: [3, 0, 1],
+          rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
+        },
+        cursor: {
+          position: [4, 0.3, 2.4],
+          rotation: [0, 0, 0],
+          scale: [3, 3, 0.1]
         }
       },
       page1: {
@@ -297,7 +306,9 @@ export default {
       },
       pagination: {
         pageRadius: 0.3,
-        arrowRadius: 0.4
+        arrowRadius: 0.4,
+        position: [0, 0, 0.2],
+        scale: 0.8
       }
     },
     about: {
