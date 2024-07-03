@@ -2,6 +2,7 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
+import HtmlElement from '../HtmlElement';
 
 export default function YootButtonModel({
   position,
@@ -60,6 +61,7 @@ export default function YootButtonModel({
         rotation={[0,0,-Math.PI/2]}
         scale={scaleYootArray}
       >
+        { !turnedOn && <meshStandardMaterial color="grey"/>}
       </mesh>
       <mesh
         castShadow
@@ -70,6 +72,7 @@ export default function YootButtonModel({
         rotation={[0,0,-Math.PI/2]}
         scale={scaleYootArray}
         >
+        { !turnedOn && <meshStandardMaterial color="grey"/>}
       </mesh>
       <mesh
         castShadow
@@ -80,6 +83,7 @@ export default function YootButtonModel({
         rotation={[0,0,-Math.PI/2]}
         scale={scaleYootArray}
         >
+        { !turnedOn && <meshStandardMaterial color="grey"/>}
       </mesh>
       <mesh
         castShadow
@@ -90,6 +94,7 @@ export default function YootButtonModel({
         rotation={[0,0,-Math.PI/2]}
         scale={scaleYootArray}
         >
+        { !turnedOn && <meshStandardMaterial color="grey"/>}
       </mesh>
     </group>
     <Text3D
@@ -98,15 +103,12 @@ export default function YootButtonModel({
       font="/fonts/Luckiest Guy_Regular.json" 
       size={0.3} 
       height={0.01}
-      
     >
       THROW
       <meshStandardMaterial color={ turnedOn ? "yellow" : "grey" }/>
     </Text3D>
   </group>
 }
-
-
 
 
 useGLTF.preload('models/rounded-rectangle.glb')

@@ -58,7 +58,7 @@ export default function About(props) {
         size={layout[props.device].about.mainDescription.size}
         height={0.01}
     >
-      Yoot Nori is a game played during
+      Yoot Nori (game) is a game played
       <meshStandardMaterial color='yellow'/>
     </Text3D>
     <Text3D 
@@ -67,7 +67,7 @@ export default function About(props) {
         size={layout[props.device].about.mainDescription.size}
         height={0.01}
     >
-      the holidays in Korea.
+      during the holidays in Korea.
       <meshStandardMaterial color='yellow'/>
     </Text3D>
     <group>
