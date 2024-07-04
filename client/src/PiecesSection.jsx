@@ -3,7 +3,7 @@ import { useAtom } from 'jotai';
 import { clientAtom, selectionAtom, teamsAtom } from './GlobalState';
 import layout from './layout';
 import Piece from './components/Piece';
-import { pieceStatus } from './helpers/helpers';
+import { pieceSelected, pieceStatus } from './helpers/helpers';
 
 export default function PiecesSection({ 
   position=[0,0,0], 
@@ -89,13 +89,6 @@ export default function PiecesSection({
       }
     }
 
-    function pieceSelected(pieceId) {
-      return selection && 
-      selection.pieces[0].tile === -1 && 
-      selection.pieces[0].team === team &&
-      selection.pieces[0].id === pieceId
-    }
-
     return (
       <group>
         {
@@ -116,8 +109,10 @@ export default function PiecesSection({
               id={value.id}
               key={index}
               // on selection, no other piece should be in 'selectable' animation
-              animation={(selection === null && hasValidMoveHome()) ? 'selectable' : null}
-              selected={pieceSelected(value.id)}
+              // animation={(selection === null && hasValidMoveHome()) ? 'selectable' : null}
+              selectable={(selection === null && hasValidMoveHome())}
+              onBoard={false}
+              selected={pieceSelected(selection, value.id, team)}
             />
           )
         }

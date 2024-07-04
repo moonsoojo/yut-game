@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { animationPlayingAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
+import { animationPlayingAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, selectionAtom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
-import { roundNum, generateRandomNumberInRange } from './helpers/helpers';
+import { roundNum, generateRandomNumberInRange, pieceSelected } from './helpers/helpers';
 import Polaris from './meshes/Polaris';
 import { Text3D } from '@react-three/drei';
 
@@ -950,9 +950,32 @@ export default function PiecesOnBoard() {
             </Text3D>
         </animated.group>
     }
+    
+    const [teams] = useAtom(teamsAtom)
+    function hasValidMoveBoard(team) {
+        const moves = teams[team].moves
+        for (const move in moves) {
+            if (parseInt(move) !== 0 && moves[move] > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const [selection] = useAtom(selectionAtom)
 
     return <>
-        { onBoardCheck(pieceTeam0Id0.tile) && <Piece team={0} id={0} tile={pieceTeam0Id0.tile} position={springs0_0.position} scale={springs0_0.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id0.tile) && <Piece 
+        team={0} 
+        id={0} 
+        tile={pieceTeam0Id0.tile} 
+        position={springs0_0.position} 
+        scale={springs0_0.scale} 
+        selectable={hasValidMoveBoard(0)}
+        selected={pieceSelected(selection, 0, 0)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 3.5,
@@ -962,7 +985,17 @@ export default function PiecesOnBoard() {
             scale={springs0_0.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_0.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam0Id1.tile) && <Piece team={0} id={1} tile={pieceTeam0Id1.tile} position={springs0_1.position} scale={springs0_1.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id1.tile) && <Piece 
+        team={0} 
+        id={1} 
+        tile={pieceTeam0Id1.tile} 
+        position={springs0_1.position} 
+        scale={springs0_1.scale} 
+        selectable={hasValidMoveBoard(0)}
+        selected={pieceSelected(selection, 1, 0)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 3.5,
@@ -972,7 +1005,17 @@ export default function PiecesOnBoard() {
             scale={springs0_1.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_1.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam0Id2.tile) && <Piece team={0} id={2} tile={pieceTeam0Id2.tile} position={springs0_2.position} scale={springs0_2.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id2.tile) && <Piece 
+        team={0} 
+        id={2} 
+        tile={pieceTeam0Id2.tile} 
+        position={springs0_2.position} 
+        scale={springs0_2.scale} 
+        selectable={hasValidMoveBoard(0)}
+        selected={pieceSelected(selection, 2, 0)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 3.5,
@@ -982,7 +1025,17 @@ export default function PiecesOnBoard() {
             scale={springs0_2.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_2.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam0Id3.tile) && <Piece team={0} id={3} tile={pieceTeam0Id3.tile} position={springs0_3.position} scale={springs0_3.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam0Id3.tile) && <Piece 
+        team={0} 
+        id={3} 
+        tile={pieceTeam0Id3.tile} 
+        position={springs0_3.position} 
+        scale={springs0_3.scale} 
+        selectable={hasValidMoveBoard(0)}
+        selected={pieceSelected(selection, 3, 0)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 3.5,
@@ -992,7 +1045,17 @@ export default function PiecesOnBoard() {
             scale={springs0_3.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_3.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id0.tile) && <Piece team={1} id={0} tile={pieceTeam1Id0.tile} position={springs1_0.position} scale={springs1_0.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id0.tile) && <Piece 
+        team={1} 
+        id={0} 
+        tile={pieceTeam1Id0.tile} 
+        position={springs1_0.position}
+        scale={springs1_0.scale} 
+        selectable={hasValidMoveBoard(1)}
+        selected={pieceSelected(selection, 0, 1)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 roundNum(3.5),
@@ -1002,7 +1065,17 @@ export default function PiecesOnBoard() {
             scale={springs1_0.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_0.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id1.tile) && <Piece team={1} id={1} tile={pieceTeam1Id1.tile} position={springs1_1.position} scale={springs1_1.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id1.tile) && <Piece 
+        team={1} 
+        id={1} 
+        tile={pieceTeam1Id1.tile} 
+        position={springs1_1.position} 
+        scale={springs1_1.scale} 
+        selectable={hasValidMoveBoard(1)}
+        selected={pieceSelected(selection, 1, 1)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[1][0], 1),
@@ -1012,7 +1085,17 @@ export default function PiecesOnBoard() {
             scale={springs1_1.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_1.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id2.tile) && <Piece team={1} id={2} tile={pieceTeam1Id2.tile} position={springs1_2.position} scale={springs1_2.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id2.tile) && <Piece 
+        team={1} 
+        id={2} 
+        tile={pieceTeam1Id2.tile} 
+        position={springs1_2.position} 
+        scale={springs1_2.scale} 
+        selectable={hasValidMoveBoard(1)}
+        selected={pieceSelected(selection, 2, 1)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[2][0], 1),
@@ -1028,7 +1111,11 @@ export default function PiecesOnBoard() {
         tile={pieceTeam1Id3.tile} 
         position={springs1_3.position} 
         scale={springs1_3.scale} 
-        animation='onBoard'/> }
+        selectable={hasValidMoveBoard(1)}
+        selected={pieceSelected(selection, 3, 1)}
+        onBoard={true}
+        animation='onBoard'
+        /> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[3][0], 1),

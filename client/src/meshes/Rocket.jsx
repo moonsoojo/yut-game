@@ -11,7 +11,10 @@ export default function Rocket({
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1,
-  animation=null
+  selectable=false,
+  selected=false,
+  onBoard=false,
+  animationPlaying=false
 }) {
   const { scene, materials } = useGLTF(
     "models/rocket.glb"
@@ -26,21 +29,36 @@ export default function Rocket({
   const whiteMat = (new THREE.MeshStandardMaterial({ 'color': 'white' })).clone()
   
   useFrame((state, delta) => {
-    if (animation === 'selectable') {
-      flame.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
-      // shaking
-      // rocket.current.position.x = position[0] + Math.random() * 0.012
-      // rocket.current.position.y = position[1] + Math.random() * 0.012
-      // rocket.current.position.z = position[2] + Math.random() * 0.012
-      if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
+    if (!animationPlaying) {
+      if (selected) {
+        rocket.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+        rocket.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+        rocket.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+      } else if (selectable) {
+        flame.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
+        rocket.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        rocket.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        rocket.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        // shaking
+        // rocket.current.position.x = position[0] + Math.random() * 0.009
+        // rocket.current.position.y = position[1] + Math.random() * 0.009
+        // rocket.current.position.z = position[2] + Math.random() * 0.009
+        if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
+          redMat.color = new THREE.Color('red')
+          whiteMat.color = new THREE.Color('white')
+        } else {
+          redMat.color = new THREE.Color(0xFFB067)
+          whiteMat.color = new THREE.Color(0xffbabc)
+        }
+      } else {
         redMat.color = new THREE.Color('red')
         whiteMat.color = new THREE.Color('white')
-      } else {
-        redMat.color = new THREE.Color(0xFFB067)
-        whiteMat.color = new THREE.Color(0xffbabc)
       }
-    } else if (animation === 'onBoard') {
-      console.log(`[Rocket] animation on board`)
+    } else {
+      redMat.color = new THREE.Color('red')
+      whiteMat.color = new THREE.Color('white')
+    }
+    if (onBoard) {
       flame.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocket.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     }

@@ -5,7 +5,6 @@ import layout from "./layout.js";
 import { useSpring, animated } from '@react-spring/three';
 
 // custom components
-import HtmlElement from "./HtmlElement.jsx";
 import Chatbox from "./Chatbox.jsx";
 import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
@@ -16,7 +15,7 @@ import DisconnectModal from "./DisconnectModal.jsx";
 import JoinTeamModal from "./JoinTeamModal.jsx";
 
 // three js
-import { Leva, useControls } from "leva"
+// import { Leva, useControls } from "leva"
 // import { Perf } from 'r3f-perf'
 
 // server
@@ -24,19 +23,16 @@ import { socket } from "./SocketManager";
 import { useParams } from "wouter";
 import { 
   deviceAtom, 
-  lastMoveAtom, 
   readyToStartAtom, 
   hostNameAtom, 
   disconnectAtom, 
   gamePhaseAtom, 
   turnAtom,
   teamsAtom,
-  boomTextAtom,
   legalTilesAtom,
   tilesAtom,
   helperTilesAtom,
   winnerAtom,
-  clientAtom
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -223,67 +219,6 @@ export default function Game() {
       </group> }
     </>
   }
-
-  // function LetsPlayButtonBackup({ position }) {
-  //   const [readyToStart] = useAtom(readyToStartAtom)
-  //   const [hostName] = useAtom(hostNameAtom)
-
-  //   function handlePointerEnter(e) {
-  //     e.stopPropagation();
-  //     yellowMaterial.color = new Color('green')
-  //   }
-  
-  //   function handlePointerLeave(e) {
-  //     e.stopPropagation();
-  //     yellowMaterial.color = new Color('yellow')
-  //   }
-  
-  //   function handlePointerDown(e) {
-  //     e.stopPropagation();
-  //     // only throws for the client
-  //     if (readyToStart) {
-  //       socket.emit("startGame", { roomId: params.id })
-  //     }
-  //   }
-
-  //   const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
-
-  //   return <>
-  //     { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
-  //       <mesh
-  //         material={yellowMaterial}
-  //       >
-  //         <boxGeometry args={[2.4, 0.03, 0.55]}/>
-  //       </mesh>
-  //       <mesh>
-  //         <boxGeometry args={[2.35, 0.04, 0.5]}/>
-  //         <meshStandardMaterial color='black'/>
-  //       </mesh>
-  //       <mesh 
-  //         name='wrapper' 
-  //         onPointerEnter={e => handlePointerEnter(e)}
-  //         onPointerLeave={e => handlePointerLeave(e)}
-  //         onPointerDown={e => handlePointerDown(e)}
-  //       >
-  //         <boxGeometry args={[1.2, 0.1, 0.6]}/>
-  //         <meshStandardMaterial transparent opacity={0}/>
-  //       </mesh>
-  //       <Text3D
-  //         font="fonts/Luckiest Guy_Regular.json"
-  //         position={[-1.05, 0.025, 0.15]}
-  //         rotation={[-Math.PI/2, 0, 0]}
-  //         size={0.3}
-  //         height={0.01}
-  //         lineHeight={0.9}
-  //         material={yellowMaterial}
-  //       >
-  //         {/* i want this to look more fun */}
-  //         {`let's play!`}
-  //         <meshStandardMaterial color='yellow'/>
-  //       </Text3D>
-  //     </group> }
-  //   </>
-  // }
 
   function HostName({ position }) {
     const [hostName] = useAtom(hostNameAtom)

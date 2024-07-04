@@ -115,3 +115,10 @@ export function formatName(name, maxLength = 10) {
       return name
   }
 }
+
+export function pieceSelected(selection, pieceId, team) {
+  return selection && 
+  selection.pieces[0].tile === -1 && 
+  selection.pieces[0].team === team &&
+  selection.pieces[0].id === pieceId
+}

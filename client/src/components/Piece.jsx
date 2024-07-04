@@ -18,9 +18,12 @@ export default function Piece ({
   team,
   id,
   scale=1,
-  animation=null,
-  selected=false
+  selectable=false,
+  selected=false,
+  onBoard=false,
 }) {
+
+  console.log(`[Piece] team${team} id${id} selectable ${selectable}`)
 
   const [selection] = useAtom(selectionAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
@@ -37,32 +40,6 @@ export default function Piece ({
   const group = useRef();
   const wrapperMat = useRef();
   const wrapper = useRef();
-
-  useFrame((state, delta) => {
-    // wrapperMat.current.opacity = 0.2
-    if (!animationPlaying) {
-      if (selected) {
-        group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
-        group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
-        group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
-      } else if (animation === 'selectable') {
-        // Bulging
-        group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
-        group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
-        group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
-        // Up and down movement
-        group.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
-        // wrapperMat.current.opacity = 0.2
-      } else if (animation === 'onBoard') { // 'selectable' overrides 'onBoard'
-        // Up and down movement
-        // wrapper.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
-      } else {
-        group.current.scale.x = scale
-        group.current.scale.y = scale
-        group.current.scale.z = scale
-      }
-    }
-  });
 
   function handlePointerEnter(event) {
     event.stopPropagation();
@@ -133,8 +110,14 @@ export default function Piece ({
         />
       </mesh>
       { team === 0 ? <Rocket 
-      animation={!animationPlaying ? animation : null}/> : <Ufo 
-      animation={!animationPlaying ? animation : null}/>}
+      animationPlaying={animationPlaying}
+      selected={selected}
+      onBoard={onBoard}
+      selectable={selectable}/> : <Ufo 
+      animationPlaying={animationPlaying}
+      selected={selected}
+      onBoard={onBoard}
+      selectable={selectable}/>}
     </animated.group>
   )      
 };

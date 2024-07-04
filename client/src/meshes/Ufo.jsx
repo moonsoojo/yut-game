@@ -11,7 +11,10 @@ export default function Ufo({
   position=[0,0,0],
   rotation=[0,0,0],
   scale=1,
-  animation=null
+  selectable=false,
+  selected=false,
+  onBoard=false,
+  animationPlaying=false
 }) {
   const { scene, materials } = useGLTF("models/ufo.glb");
 
@@ -29,27 +32,52 @@ export default function Ufo({
   const ballBackLeftMatRef = useRef();
 
   useFrame((state, delta) => {
-    if (animation === 'selectable') {
-      balls.current.rotation.y = state.clock.elapsedTime * 0.7;
-      if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
-        frontBackPanelCircleMat.current.color = new THREE.Color('white')
-        leftRightPanelCircleMat.current.color = new THREE.Color('purple')
-        ballFrontRightMatRef.current.color = new THREE.Color('purple')
-        ballFrontLeftMatRef.current.color = new THREE.Color('white')
-        ballBackRightMatRef.current.color = new THREE.Color('white')
-        ballBackLeftMatRef.current.color = new THREE.Color('purple')
-        glassMat.opacity = 0.6
+    if (!animationPlaying) {
+      if (selected) {
+        ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+        ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+        ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+      } else if (selectable) {
+        ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
+        balls.current.rotation.y = state.clock.elapsedTime * 0.7;
+        if (Math.floor(state.clock.elapsedTime) % 2 == 0) {
+          frontBackPanelCircleMat.current.color = new THREE.Color('white')
+          leftRightPanelCircleMat.current.color = new THREE.Color('purple')
+          ballFrontRightMatRef.current.color = new THREE.Color('purple')
+          ballFrontLeftMatRef.current.color = new THREE.Color('white')
+          ballBackRightMatRef.current.color = new THREE.Color('white')
+          ballBackLeftMatRef.current.color = new THREE.Color('purple')
+          glassMat.opacity = 0.6
+        } else {
+          frontBackPanelCircleMat.current.color = new THREE.Color('purple')
+          leftRightPanelCircleMat.current.color = new THREE.Color('white')
+          ballFrontRightMatRef.current.color = new THREE.Color('white')
+          ballFrontLeftMatRef.current.color = new THREE.Color('purple')
+          ballBackRightMatRef.current.color = new THREE.Color('purple')
+          ballBackLeftMatRef.current.color = new THREE.Color('white')
+          glassMat.opacity = 0.3
+        }
       } else {
-        frontBackPanelCircleMat.current.color = new THREE.Color('purple')
-        leftRightPanelCircleMat.current.color = new THREE.Color('white')
-        ballFrontRightMatRef.current.color = new THREE.Color('white')
-        ballFrontLeftMatRef.current.color = new THREE.Color('purple')
-        ballBackRightMatRef.current.color = new THREE.Color('purple')
-        ballBackLeftMatRef.current.color = new THREE.Color('white')
+        frontBackPanelCircleMat.current.color = new THREE.Color('turquoise')
+        leftRightPanelCircleMat.current.color = new THREE.Color('turquoise')
+        ballFrontRightMatRef.current.color = new THREE.Color('turquoise')
+        ballFrontLeftMatRef.current.color = new THREE.Color('turquoise')
+        ballBackRightMatRef.current.color = new THREE.Color('turquoise')
+        ballBackLeftMatRef.current.color = new THREE.Color('turquoise')
         glassMat.opacity = 0.3
       }
-    } else if (animation === 'onBoard') {
-      console.log(`[Ufo] animation on board`)
+    } else {
+      frontBackPanelCircleMat.current.color = new THREE.Color('turquoise')
+      leftRightPanelCircleMat.current.color = new THREE.Color('turquoise')
+      ballFrontRightMatRef.current.color = new THREE.Color('turquoise')
+      ballFrontLeftMatRef.current.color = new THREE.Color('turquoise')
+      ballBackRightMatRef.current.color = new THREE.Color('turquoise')
+      ballBackLeftMatRef.current.color = new THREE.Color('turquoise')
+      glassMat.opacity = 0.3
+    }
+    if (onBoard) {
       balls.current.rotation.y = state.clock.elapsedTime * 0.7;
       ufo.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     }
