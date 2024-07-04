@@ -28,12 +28,12 @@ export default function Yoot({ device }) {
   
   const [yootThrowValues] = useAtom(yootThrowValuesAtom);
   const [initialYootThrow] = useAtom(initialYootThrowAtom);
-  const [yootThrown] = useAtom(yootThrownAtom)
+  // const [yootThrown] = useAtom(yootThrownAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
-  const [sleepCount, setSleepCount] = useState(0);
+  const [_sleepCount, setSleepCount] = useState(0);
   const [outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
-  const [timer, setTimer] = useState(null)
+  const [_timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
@@ -71,11 +71,9 @@ export default function Yoot({ device }) {
       yootMeshes[i].current.material.visible = true
     }
 
-    // setTurnAlertActive(false)
     setMainAlert({ type: '' })
     setAnimationPlaying(true)
     setThrowAlert({ type: '' })
-    // setPregameAlert({ type: '' })
 
     // client lags if you emit here
     if (yootThrowValues !== null && document.visibilityState === "visible") {
@@ -189,15 +187,15 @@ export default function Yoot({ device }) {
       setOutOfBounds(false);
     }
 
-    if (outOfBounds) {
-      if (Math.floor(state.clock.elapsedTime % 2) === 0) {
-        yootFloorMatRef.current.opacity = 0.2
-      } else {
-        yootFloorMatRef.current.opacity = 0
-      }
-    } else {
-      yootFloorMatRef.current.opacity = 0
-    }
+    // if (outOfBounds) {
+    //   if (Math.floor(state.clock.elapsedTime % 2) === 0) {
+    //     yootFloorMatRef.current.opacity = 0.2
+    //   } else {
+    //     yootFloorMatRef.current.opacity = 0
+    //   }
+    // } else {
+    //   yootFloorMatRef.current.opacity = 0
+    // }
     
   })
 
