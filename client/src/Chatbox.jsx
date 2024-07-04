@@ -60,11 +60,11 @@ export default function Chatbox({ position=[0,0,0], rotation=[0,0,0], scale=1, d
       position: 'absolute'
     }}>
       <div style={{
-        borderRadius: layout[device].chat.box.borderRadius,
-        height: layout[device].chat.box.height,
-        width: layout[device].chat.box.width,
-        padding: layout[device].chat.box.padding,
-        fontSize: layout[device].chat.box.fontSize,
+        borderRadius: layout[device].game.chat.box.borderRadius,
+        height: layout[device].game.chat.box.height,
+        width: layout[device].game.chat.box.width,
+        padding: layout[device].game.chat.box.padding,
+        fontSize: layout[device].game.chat.box.fontSize,
         'background': 'rgba(128, 128, 128, 0.3)',
         'overflowY': 'auto',
         'wordWrap': 'break-word',
@@ -83,12 +83,12 @@ export default function Chatbox({ position=[0,0,0], rotation=[0,0,0], scale=1, d
         <input 
           id='input-message'
           style={{ 
-            height: layout[device].chat.input.height,
-            borderRadius: layout[device].chat.input.borderRadius,
-            padding: layout[device].chat.input.padding,
-            border: layout[device].chat.input.border,
-            width: layout[device].chat.box.width,
-            fontSize: layout[device].chat.input.fontSize
+            height: layout[device].game.chat.input.height,
+            borderRadius: layout[device].game.chat.input.borderRadius,
+            padding: layout[device].game.chat.input.padding,
+            border: layout[device].game.chat.input.border,
+            width: layout[device].game.chat.box.width,
+            fontSize: layout[device].game.chat.input.fontSize
           }} 
           onChange={e => setMessage(e.target.value)} 
           value={message}

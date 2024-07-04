@@ -1,5 +1,5 @@
 import { Float } from "@react-three/drei";
-import { throwAlertAtom } from "../GlobalState";
+import { deviceAtom, throwAlertAtom } from "../GlobalState";
 import { useSpring } from "@react-spring/three";
 import { useAtom } from "jotai";
 import GeAlert from "./GeAlert";
@@ -9,9 +9,11 @@ import OutAlert from "./OutAlert";
 import DoAlert from "./DoAlert";
 import YootAlertPregame from "./YootAlertPregame";
 import MoAlertPregame from "./MoAlertPregame";
+import layout from "../layout";
 
-export default function ThrowAlert({ position=[0,0,0], rotation, initialScale }) {
-  const [throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
+export default function ThrowAlert() {
+  const [throwAlert] = useAtom(throwAlertAtom)
+  const [device] = useAtom(deviceAtom)
 
   const springs = useSpring({
     from: {
@@ -19,7 +21,7 @@ export default function ThrowAlert({ position=[0,0,0], rotation, initialScale })
     },
     to: [
       {
-        scale: initialScale,
+        scale: layout[device].game.throwAlert.initialScale,
         // Specify config here for animation to not trigger again before delay ends
         config: {
           tension: 170,
@@ -39,7 +41,9 @@ export default function ThrowAlert({ position=[0,0,0], rotation, initialScale })
     reset: true,
   })
 
-  return <group position={position} rotation={rotation}>
+  return <group 
+  position={layout[device].game.throwAlert.position} 
+  rotation={layout[device].game.throwAlert.rotation}>
     { throwAlert && throwAlert.num === 1 && <DoAlert 
       position={[0,3,0]}
       rotation={[0,0,0]}

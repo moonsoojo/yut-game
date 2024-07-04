@@ -3,13 +3,16 @@ import { useSpring, animated } from '@react-spring/three';
 import { Float, Text3D, useGLTF } from '@react-three/drei';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
-import { pregameAlertAtom } from './GlobalState';
+import { deviceAtom, pregameAlertAtom } from './GlobalState';
 import { useFrame } from '@react-three/fiber';
 import Star from './meshes/Star';
 import RocketsGoFirst from './RocketsGoFirst';
 import UfosGoFirst from './UfosGoFirst';
+import layout from './layout';
 
-export default function PregameAlert({ position, rotation, initialScale }) {
+export default function PregameAlert() {
+
+  const [device] = useAtom(deviceAtom)
 
   // Prevent text from re-appearing on re-render
   const springs = useSpring({
@@ -18,7 +21,7 @@ export default function PregameAlert({ position, rotation, initialScale }) {
     },
     to: [
       {
-        scale: initialScale,
+        scale: layout[device].game.pregameAlert.initialScale,
         // Specify config here for animation to not trigger again before delay ends
         config: {
           tension: 170,
@@ -131,27 +134,27 @@ export default function PregameAlert({ position, rotation, initialScale }) {
   // use conditional springs with pregameAlert.type for each alert
   // possible states: x goes first, y goes first, pregameTie
   const [pregameAlert] = useAtom(pregameAlertAtom)
-  return <Float position={position} floatIntensity={0.5} rotationIntensity={0.5}>
+  return <Float position={layout[device].game.pregameAlert.position} floatIntensity={0.5} rotationIntensity={0.5}>
     { pregameAlert 
     && pregameAlert.type === 'gameStart' &&
     pregameAlert.team === 0 && 
     <RocketsGoFirst
-    position={[0.5, 2, 1]} 
-    rotation={rotation} 
+    position={layout[device].game.pregameAlert.rocketsGoFirst.position} 
+    rotation={layout[device].game.pregameAlert.rocketsGoFirst.rotation} 
     scale={springs.scale}/> 
     }
     { pregameAlert 
     && pregameAlert.type === 'gameStart' &&
     pregameAlert.team === 1 && 
     <UfosGoFirst
-    position={[0.5, 2, 1]} 
-    rotation={rotation} 
+    position={layout[device].game.pregameAlert.ufosGoFirst.position} 
+    rotation={layout[device].game.pregameAlert.ufosGoFirst.rotation} 
     scale={springs.scale}/> 
     }
     { pregameAlert 
     && pregameAlert.type === 'pregameTie' && <PregameTie 
-    position={[0.5, 3, 1]} 
-    rotation={rotation} 
+    position={layout[device].game.pregameAlert.tie.position} 
+    rotation={layout[device].game.pregameAlert.tie.rotation} 
     scale={springs.scale}/> }
   </Float>
 }

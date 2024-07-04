@@ -1,9 +1,8 @@
 import React from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
-import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, turnAtom } from './GlobalState';
+import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom } from './GlobalState';
 import { Html, Text3D } from '@react-three/drei';
-import HtmlElement from './HtmlElement';
 import Piece from './components/Piece';
 import { formatName, pieceStatus } from './helpers/helpers';
 import { Color, MeshStandardMaterial } from 'three';
@@ -11,7 +10,6 @@ import { Color, MeshStandardMaterial } from 'three';
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
-  const [turn] = useAtom(turnAtom)
 
   function JoinTeamButton() {
     const [client] = useAtom(clientAtom);
@@ -34,7 +32,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     }
 
     return client.team !== team && joinTeam !== team && <group
-      position={layout[device][`team${team}`].join.position}
+      position={layout[device].game[`team${team}`].join.position}
     >
       <mesh
         material={yellowMaterial}
@@ -57,23 +55,14 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={[-0.45, 0.025, 0.15]}
-        rotation={layout[device][`team${team}`].join.rotation}
-        size={0.3}
-        height={0.01}
+        rotation={layout[device].game[`team${team}`].join.rotation}
+        size={layout[device].game[`team${team}`].join.size}
+        height={layout[device].game[`team${team}`].join.height}
         material={yellowMaterial}
       >
         JOIN
       </Text3D>
     </group>
-    
-    
-    // <HtmlElement
-    //   text="JOIN"
-    //   position={layout[device][`team${team}`].join.position}
-    //   rotation={layout[device][`team${team}`].join.rotation}
-    //   fontSize={layout[device][`team${team}`].join.fontSize}
-    //   handleClick={handleJoinTeam}
-    // /> 
   }
 
   // Need to accept "key" to use it in an map
@@ -91,10 +80,10 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function HomePieces({position, scale=1}) {
-    let space = layout[device][`team${team}`].pieces.space;
-    let positionStartX = layout[device][`team${team}`].pieces.positionStartX;
-    let positionStartY = layout[device][`team${team}`].pieces.positionStartY;
-    let positionStartZ = layout[device][`team${team}`].pieces.positionStartZ;
+    let space = layout[device].game[`team${team}`].pieces.space;
+    let positionStartX = layout[device].game[`team${team}`].pieces.positionStartX;
+    let positionStartY = layout[device].game[`team${team}`].pieces.positionStartY;
+    let positionStartZ = layout[device].game[`team${team}`].pieces.positionStartZ;
 
     return (
       <group position={position} scale={scale}>
@@ -121,8 +110,8 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
                 positionStartY,
                 positionStartZ,
               ]}
-              rotation={layout[device][`team${team}`].pieces.rotation}
-              scale={layout[device][`team${team}`].pieces.scale}
+              rotation={layout[device].game[`team${team}`].pieces.rotation}
+              scale={layout[device].game[`team${team}`].pieces.scale}
               tile={-1}
               team={team}
               id={value.id}
@@ -144,13 +133,13 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       rollText = teams[team].pregameRoll.toString()
     }
 
-    return <group position={layout[device][`team${team}`].pregameRoll.position}>
+    return <group position={layout[device].game[`team${team}`].pregameRoll.position}>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={[-0.9, 0.025, 0.15]}
         rotation={[-Math.PI/2, 0, 0]}
-        size={0.35}
-        height={0.01}
+        size={layout[device].game[`team${team}`].pregameRoll.size}
+        height={layout[device].game[`team${team}`].pregameRoll.height}
       >
         {`roll: ${rollText}`}
         <meshStandardMaterial color='yellow'/>
@@ -160,19 +149,19 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
 
   function PlayerIds() {
     return <group
-      position={layout[device][`team${team}`].names.position}
-      rotation={layout[device][`team${team}`].names.rotation}
+      position={layout[device].game[`team${team}`].names.position}
+      rotation={layout[device].game[`team${team}`].names.rotation}
     >
       {teams[team].players.map((value, index) => (
         index < 5 &&
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           key={index}
-          size={0.35}
-          height={0.01}
+          size={layout[device].game[`team${team}`].names.size}
+          height={layout[device].game[`team${team}`].names.height}
           position={[0, -index * 0.5, 0]}
         >
-          {formatName(value.name, 12)}
+          {formatName(value.name, layout[device].game[`team${team}`].names.maxLength)}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       ))}
@@ -186,10 +175,10 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     {/* team name */}
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
-      position={layout[device][`team${team}`].title.position}
-      rotation={layout[device][`team${team}`].title.rotation}
-      size={0.4}
-      height={0.01}
+      position={layout[device].game[`team${team}`].title.position}
+      rotation={layout[device].game[`team${team}`].title.rotation}
+      size={layout[device].game[`team${team}`].title.size}
+      height={layout[device].game[`team${team}`].title.height}
     >
       { team === 0 ? "Team Rocket" : "Team UFO" }
       <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
@@ -198,7 +187,11 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     { gamePhase === "lobby" && <JoinTeamButton/> }
     { gamePhase === "pregame" && <RollDisplay/> }
     {/* pieces */}
-    <HomePieces position={layout[device][`team${team}`].pieces.position} team={team} scale={0.5}/>
+    <HomePieces 
+    position={layout[device].game[`team${team}`].pieces.position} 
+    team={team} 
+    scale={layout[device].game[`team${team}`].pieces.sectionScale}
+    />
     {/* player ids */}
     <PlayerIds/>
   </group>

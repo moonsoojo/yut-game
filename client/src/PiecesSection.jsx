@@ -101,9 +101,9 @@ export default function PiecesSection({
               position={piecePositions[index]}
               key={index}
             /> : <Piece
-              position={layout[device].piecesSection.pieces.positions[index]}
-              rotation={layout[device].piecesSection.pieces.rotation}
-              scale={layout[device].piecesSection.pieces.scale}
+              position={layout[device].game.piecesSection.pieces.positions[index]}
+              rotation={layout[device].game.piecesSection.pieces.rotation}
+              scale={layout[device].game.piecesSection.pieces.scale}
               tile={-1}
               team={team}
               id={value.id}

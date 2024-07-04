@@ -15,7 +15,6 @@ export default function MoveList({ position, rotation }) {
     const [moves] = useAtom(displayMovesAtom)
     const moveList = movesToArray()
 
-    // don't display if it's 'out'
     function movesToArray() {
       const moveList = []
       for (const move in moves) {

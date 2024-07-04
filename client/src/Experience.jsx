@@ -11,7 +11,6 @@ import PregameAlert from "./PregameAlert.jsx";
 import ThrowAlert from "./alerts/ThrowAlert.jsx";
 
 export default function Experience() {
-  console.log(`[Experience]`)
   return <group>
     {/* add game */}
     <Game/>
@@ -25,9 +24,11 @@ export default function Experience() {
       colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
       colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
     />
-    {/* <BoomText rotation={[0, Math.PI/2, 0]} initialScale={2}/>  */}
-    <MainAlert position={[0, 0.3, 6]} rotation={[0, Math.PI/2, 0]} initialScale={1}/> 
-    <PregameAlert position={[-2, 0, -4.5]} rotation={[0, Math.PI/2, 0]} initialScale={1.7}/>
-    <ThrowAlert position={[0,0,4.5]} rotation={[0, Math.PI/2, 0]} initialScale={1}/>
+    <MainAlert/> 
+    <PregameAlert/>
+    <ThrowAlert 
+    position={[0,0,4.5]} 
+    rotation={[0, Math.PI/2, 0]} 
+    initialScale={1}/>
   </group>
 }

@@ -84,11 +84,11 @@ export default function Game() {
         </mesh>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[-0.6, 0.025, -0.12]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={0.3}
-          height={0.01}
-          lineHeight={0.9}
+          position={layout[device].game.letsPlayButton.disabledButton.position}
+          rotation={layout[device].game.letsPlayButton.disabledButton.rotation}
+          size={layout[device].game.letsPlayButton.disabledButton.size}
+          height={layout[device].game.letsPlayButton.disabledButton.height}
+          lineHeight={layout[device].game.letsPlayButton.disabledButton.lineHeight}
         >
           {`lets\nplay!`}
           <meshStandardMaterial color='grey'/>
@@ -117,8 +117,8 @@ export default function Game() {
       ]
       const buttonGroupRef = useRef();
   
-      const backdropHeight = 1.1
-      const backdropWidth = 1.6
+      const backdropHeight = layout[device].game.letsPlayButton.activeButton.backdropHeight
+      const backdropWidth = layout[device].game.letsPlayButton.activeButton.backdropWidth
       useFrame((state, delta) => {
           for (let i = 0; i < borderMeshRefs.length; i++) {      
             borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropWidth
@@ -165,7 +165,10 @@ export default function Game() {
       })
   
       return <animated.group name='animated-group' scale={springs.scale}>
-        <group name='lets-play-button-active' scale={0.8} position={[0.1, 0, 0.5]} ref={buttonGroupRef}>
+        <group name='lets-play-button-active' 
+        scale={layout[device].game.letsPlayButton.activeButton.scale} 
+        position={layout[device].game.letsPlayButton.activeButton.position} 
+        ref={buttonGroupRef}>
           <mesh 
             position={[0, 0, 0]} 
             rotation={[0, 0, 0]} 
@@ -179,11 +182,11 @@ export default function Game() {
           </mesh>
           <Text3D
               font="fonts/Luckiest Guy_Regular.json"
-              rotation={[-Math.PI/2,0,0]}
-              position={[-0.8,0,-0.15]}
-              size={0.45}
-              height={0.01}
-              lineHeight={0.7}
+              position={layout[device].game.letsPlayButton.activeButton.text.position}
+              rotation={layout[device].game.letsPlayButton.activeButton.text.rotation}
+              size={layout[device].game.letsPlayButton.activeButton.text.size}
+              height={layout[device].game.letsPlayButton.activeButton.text.height}
+              lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
           >
               {`Let's\nPlay!`}
               <meshStandardMaterial color={hover ? 'green' : 'yellow'}/>
@@ -220,15 +223,13 @@ export default function Game() {
     </>
   }
 
-  function HostName({ position }) {
+  function HostName({ position, rotation }) {
     const [hostName] = useAtom(hostNameAtom)
-    return <group position={position}>
+    return <group position={position} rotation={rotation}>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-0.9, 0.025, 0.15]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.3}
-        height={0.01}
+        size={layout[device].game.hostName.size}
+        height={layout[device].game.hostName.height}
       >
         {`HOST: ${hostName}`}
         <meshStandardMaterial color='yellow'/>
@@ -259,10 +260,10 @@ export default function Game() {
       />}
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[0.7, 0.025, 0.15]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.35}
-        height={0.01}
+        position={layout[device].game.currentPlayer.text.position}
+        rotation={layout[device].game.currentPlayer.text.rotation}
+        size={layout[device].game.currentPlayer.text.size}
+        height={layout[device].game.currentPlayer.text.height}
       >
         {`${formatName(name)}`}
         <meshStandardMaterial color='yellow'/>
@@ -288,8 +289,8 @@ export default function Game() {
 
   // Animations
   const { boardScale, boardPosition, gameScale, winScreenScale } = useSpring({
-    boardScale: layout[device].board[gamePhase].scale,
-    boardPosition: layout[device].board[gamePhase].position,
+    boardScale: layout[device].game.board[gamePhase].scale,
+    boardPosition: layout[device].game.board[gamePhase].position,
     gameScale: gamePhase !== 'finished' ? 1 : 1,
     winScreenScale: gamePhase === 'finished' ? 1 : 0
   })
@@ -335,8 +336,8 @@ export default function Game() {
         font="fonts/Luckiest Guy_Regular.json"
         position={[-0.61, 0.025, 0.15]}
         rotation={[-Math.PI/2, 0, 0]}
-        size={0.3}
-        height={0.01}
+        size={layout[device].game.invite.size}
+        height={layout[device].game.invite.height}
         material={yellowMaterial}
       >
         Invite
@@ -385,8 +386,8 @@ export default function Game() {
         font="fonts/Luckiest Guy_Regular.json"
         position={[-0.77, 0.025, 0.15]}
         rotation={[-Math.PI/2, 0, 0]}
-        size={0.3}
-        height={0.01}
+        size={layout[device].game.discord.size}
+        height={layout[device].game.discord.height}
         material={yellowMaterial}
       >
         DISCORD
@@ -433,10 +434,10 @@ export default function Game() {
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-0.9, 0.025, 0.15]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.3}
-        height={0.01}
+        position={layout[device].game.settings.text.position}
+        rotation={layout[device].game.settings.text.rotation}
+        size={layout[device].game.settings.text.size}
+        height={layout[device].game.settings.text.height}
         material={yellowMaterial}
       >
         Settings
@@ -483,10 +484,10 @@ export default function Game() {
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-0.98, 0.025, 0.15]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.3}
-        height={0.01}
+        position={layout[device].game.rulebookButton.text.position}
+        rotation={layout[device].game.rulebookButton.text.rotation}
+        size={layout[device].game.rulebookButton.text.size}
+        height={layout[device].game.rulebookButton.text.height}
         material={yellowMaterial}
       >
         Rulebook
@@ -509,48 +510,47 @@ export default function Game() {
       <GameCamera position={layout[device].camera.position}/>
       { gamePhase !== 'finished' && <animated.group scale={gameScale}>
         <Team 
-          position={layout[device].team0.position}
-          scale={layout[device].team0.scale}
+          position={layout[device].game.team0.position}
+          scale={layout[device].game.team0.scale}
           device={device}
           team={0} 
         />
         <Team 
-          position={layout[device].team1.position}
-          scale={layout[device].team1.scale}
+          position={layout[device].game.team1.position}
+          scale={layout[device].game.team1.scale}
           device={device}
           team={1} 
         />
         <JoinTeamModal 
-          position={layout[device].joinTeamModal.position}
-          rotation={layout[device].joinTeamModal.rotation}
-          scale={layout[device].joinTeamModal.scale}
+          position={layout[device].game.joinTeamModal.position}
+          rotation={layout[device].game.joinTeamModal.rotation}
+          scale={layout[device].game.joinTeamModal.scale}
         />
         { !disconnect && <Chatbox 
-          position={layout[device].chat.position}
-          rotation={layout[device].chat.rotation}
-          scale={layout[device].chat.scale}
+          position={layout[device].game.chat.position}
+          rotation={layout[device].game.chat.rotation}
+          scale={layout[device].game.chat.scale}
           device={device}
         /> }
-        <InviteButton position={layout[device].invite.position}/>
-        <DiscordButton position={layout[device].discord.position}/>
+        <InviteButton position={layout[device].game.invite.position}/>
+        <DiscordButton position={layout[device].game.discord.position}/>
         { disconnect && <DisconnectModal
-          position={layout[device].disconnectModal.position}
-          rotation={layout[device].disconnectModal.rotation}
+          position={layout[device].game.disconnectModal.position}
+          rotation={layout[device].game.disconnectModal.rotation}
         /> }
         <LetsPlayButton
-          position={layout[device].letsPlayButton.position}
-          rotation={layout[device].letsPlayButton.rotation}
+          position={layout[device].game.letsPlayButton.position}
+          rotation={layout[device].game.letsPlayButton.rotation}
         />
         <HostName
-          position={layout[device].hostName.position}
-          rotation={layout[device].hostName.rotation}
+          position={layout[device].game.hostName.position}
+          rotation={layout[device].game.hostName.rotation}
         />
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}
             rotation={[0,0,0]}
             scale={1}
-            // scale={0.6}
             tiles={tiles}
             legalTiles={legalTiles}
             helperTiles={helperTiles}
@@ -563,53 +563,48 @@ export default function Game() {
         { gamePhase === "pregame" && <group>
           <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].whoGoesFirst.title.position}
-          rotation={layout[device].whoGoesFirst.title.rotation}
-          size={layout[device].whoGoesFirst.title.size}
-          height={layout[device].whoGoesFirst.title.height}
+          position={layout[device].game.whoGoesFirst.title.position}
+          rotation={layout[device].game.whoGoesFirst.title.rotation}
+          size={layout[device].game.whoGoesFirst.title.size}
+          height={layout[device].game.whoGoesFirst.title.height}
           >
             {`Who goes first?`}
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
           <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].whoGoesFirst.description.position}
-          rotation={layout[device].whoGoesFirst.description.rotation}
-          size={layout[device].whoGoesFirst.description.size}
-          height={layout[device].whoGoesFirst.title.height}
-          lineHeight={0.8}
+          position={layout[device].game.whoGoesFirst.description.position}
+          rotation={layout[device].game.whoGoesFirst.description.rotation}
+          size={layout[device].game.whoGoesFirst.description.size}
+          height={layout[device].game.whoGoesFirst.title.height}
+          lineHeight={layout[device].game.whoGoesFirst.title.lineHeight}
           >
             {`One player from each team throws\nthe yoot. The team with a higher\nnumber goes first.`}
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
         <Yoot device={device}/>
-        <SettingsButton position={layout[device].settings.position}/>
-        <RulebookButton position={layout[device].rulebookButton.position}/>
+        <SettingsButton 
+        position={layout[device].game.settings.position}/>
+        <RulebookButton 
+        position={layout[device].game.rulebookButton.position}/>
         <PiecesSection 
-          position={layout[device].piecesSection.position}
-          device={device}
+        position={layout[device].game.piecesSection.position}
+        device={device}
         />
         <PiecesOnBoard/>
-        {/* Conditionally render to activate animation on state change */}
-        {/* { lastMove && <MoveAnimation 
-          move={lastMove}
-          initialScale={layout[device].moveAnimation.initialScale}
-          initialPosition={layout[device].moveAnimation.initialPosition}
-          endingPosition={layout[device].moveAnimation.endingPosition}
-          fontSize={layout[device].moveAnimation.fontSize}
-        /> } */}
         { gamePhase === 'game' && <MoveList
-          position={layout[device].moveList.position}
-          rotation={layout[device].moveList.rotation}
+          position={layout[device].game.moveList.position}
+          rotation={layout[device].game.moveList.rotation}
         /> }
         { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-          position={layout[device].currentPlayer.position} 
-          rotation={layout[device].currentPlayer.rotation}
-          fontSize={layout[device].currentPlayer.fontSize}
+          position={layout[device].game.currentPlayer.position} 
+          rotation={layout[device].game.currentPlayer.rotation}
+          fontSize={layout[device].game.currentPlayer.fontSize}
         /> }
         { (29 in legalTiles) && <ScoreButtons
-          position={[4.5, 0, 3.5]}
+          position={layout[device].game.scoreButtons.position}
+          rotation={layout[device].game.scoreButtons.rotation}
           legalTiles={legalTiles}
         /> }
         </animated.group>

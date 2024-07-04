@@ -23,8 +23,6 @@ export default function Piece ({
   onBoard=false,
 }) {
 
-  console.log(`[Piece] team${team} id${id} selectable ${selectable}`)
-
   const [selection] = useAtom(selectionAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
   const [client] = useAtom(clientAtom)

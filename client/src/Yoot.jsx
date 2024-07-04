@@ -63,7 +63,7 @@ export default function Yoot({ device }) {
       return setTimeout(() => {
         recordThrow();
         setAnimationPlaying(false)
-      }, 5000)
+      }, 4000)
     })
 
     // Show yoot
@@ -284,9 +284,9 @@ export default function Yoot({ device }) {
         friction={0.9}
       >
         {/* Height has to be thick enough for Yoot to not fall through the collider */}
-        <CuboidCollider args={[8, 0.5, 8]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[10, 0.5, 10]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[16, 1, 16]} />
+          <boxGeometry args={[20, 1, 20]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}

@@ -1,13 +1,10 @@
-import React, { useRef, useState } from "react";
-import { Text3D, useGLTF } from "@react-three/drei";
+import React, { useRef } from "react";
+import { Text3D } from "@react-three/drei";
 import { socket } from "./SocketManager";
-import { useAtom } from "jotai";
-import { displayScoreOptionsAtom } from "./GlobalState";
 import { useParams } from "wouter";
 import * as THREE from 'three';
 
-const SCORE_TILE = 29
-export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
+export default function ScoreButtons({ position, rotation, legalTiles }) {
   
   const params = useParams()
 
@@ -86,7 +83,7 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
 
   return <group 
     position={position} 
-    rotation={[-Math.PI/2, 0, 0]}
+    rotation={rotation}
   >
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 
@@ -96,7 +93,7 @@ export default function ScoreButtons({ position=[0,0,0], legalTiles }) {
       {`score with`}
       <meshStandardMaterial color='limegreen'/>
     </Text3D>
-    <group position={[0,0,0]}>
+    <group>
       {legalTiles[29].map( (value, index) => ( // must use parentheses instead of brackets
         <MoveToken 
           moveInfo={value} 

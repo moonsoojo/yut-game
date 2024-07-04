@@ -1,3 +1,5 @@
+import RocketsGoFirst from "./RocketsGoFirst";
+
 let floorPosition = [0,1.5,0]
 let outOfBoundsPosition = [
   floorPosition[0]-1,
@@ -732,6 +734,13 @@ export default {
         size: 0.6
       }
     },
+    game: {
+      joinTeamModal: {
+        position: [-2.5, 0, -1.5],
+        rotation: [-Math.PI/2, 0, 0],
+        scale: [1, 1, 1]
+      },
+    },
     team0: {
       scale: 1,
       position: [-4, 0, -7.5],
@@ -852,29 +861,6 @@ export default {
         scale: [0.2, 0.2, 0.6]
       },
       fontSize: 15
-    },
-    tips: {
-      button: {
-        position: [-4.3, 0, 3.5],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 13,
-      },
-      whosFirst: {
-        position: [2.8, 1.2, 3.3]
-      },
-      thatsIt: {
-        position: [0, 1.5, 0]
-      },
-      selectAUnit: {
-        position: [0, 1.5, 4.5]
-      },
-      placeHere: {
-        position: [0.5, 4, 1.5],
-        line0Position: [-0.75, 0.05, -0.1],
-        line1Position: [-0.75, 0.05, 0.25],
-        line2Position: [-0.75, 0.05, 0.45],
-        size: 0.2
-      }
     },
     hostName: {
       position: [-4.1, 0, -4.5],
@@ -1854,144 +1840,259 @@ export default {
         arrowRadius: 0.4
       }
     },
-    team0: {
-      scale: 1,
-      position: [-11, 0, -5.2],
-      title: {
-        position: [0,0,0],
+    game: {
+      letsPlayButton: {
+        position: [8.75,0,4.5],
         rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 20
+        disabledButton: {
+          position: [-0.6, 0.025, -0.12],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+          lineHeight: 0.9
+        },
+        activeButton: {
+          backdropWidth: 1.6,
+          backdropHeight: 1.1,
+          scale: 0.8,
+          position: [0.1, 0, 0.5],
+          text: {
+            position: [-0.8,0,-0.15],
+            rotation: [-Math.PI/2,0,0],
+            size: 0.45,
+            height: 0.01,
+            lineHeight: 0.7
+          }
+        }
       },
-      pieces: {
-        position: [0.23, 0, 0],
-        positionStartX: 0,
-        positionStartY: 0,
-        positionStartZ: 0.8,
-        rotation: [0, 0, 0],
-        scale: 1.4,
-        space: 1.1,
-      },
-      names: {
-        position: [0, 0, 1.3],
+      hostName: {
+        position: [8, 0.025, -3.95],
         rotation: [-Math.PI/2, 0, 0],
-        fontSize: 20,
-        padding: '0px 15px 0px 0px',
-        divWidth: 200
-      },
-      join: {
-        position: [3, 0, 0.45],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
-      },
-      pregameRoll: {
-        position: [3.4, 0, 0.5],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 20
-      }
-    },
-    team1: {
-      scale: 1,
-      position: [-11, 0, -1],
-      title: {
-        position: [0,0,0],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 20
-      },
-      pieces: {
-        position: [0.23, 0, 0.1],
-        positionStartX: 0,
-        positionStartY: 0,
-        positionStartZ: 0.8,
-        rotation: [0, 0, 0],
-        scale: 1.2,
-        space: 1.2,
-      },
-      names: {
-        position: [0, 0, 1.3],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 20,
-        padding: '0px 15px 0px 0px',
-        divWidth: 200
-      },
-      join: {
-        position: [3.1, 0, 0.5],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
-      },
-      pregameRoll: {
-        position: [3.5, 0, 0.6],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 20
-      }
-    },
-    whoGoesFirst: {
-      title: {
-        position: [-4.5, 0, -5],
-        rotation: [-Math.PI/2,0,0],
-        size: 0.7,
+        size: 0.3,
         height: 0.01
       },
-      description: {
-        position: [-4.5, 0, -4.3],
-        rotation: [-Math.PI/2,0,0],
-        size: 0.35,
+      team0: {
+        position: [-11, 0, -5.2],
+        scale: 1,
+        title: {
+          position: [0,0,0],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.4,
+          height: 0.01
+        },
+        pieces: {
+          position: [0.23, 0, 0],
+          positionStartX: 0,
+          positionStartY: 0,
+          positionStartZ: 0.8,
+          rotation: [0, 0, 0],
+          scale: 1.4,
+          space: 1.1,
+          sectionScale: 0.5
+        },
+        names: {
+          position: [0, 0, 1.3],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01,
+          maxLength: 12
+        },
+        join: {
+          position: [3, 0, 0.45],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.3,
+          height: 0.01
+        },
+        pregameRoll: {
+          position: [3.4, 0, 0.5],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
+      team1: {
+        scale: 1,
+        position: [-11, 0, -1],
+        title: {
+          position: [0,0,0],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.4,
+          height: 0.01
+        },
+        pieces: {
+          position: [0.23, 0, 0.1],
+          positionStartX: 0,
+          positionStartY: 0,
+          positionStartZ: 0.8,
+          rotation: [0, 0, 0],
+          scale: 1.2,
+          space: 1.2,
+          sectionScale: 0.5
+        },
+        names: {
+          position: [0, 0, 1.3],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01,
+          maxLength: 12
+        },
+        join: {
+          position: [3.1, 0, 0.5],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.3,
+          height: 0.01
+        },
+        pregameRoll: {
+          position: [3.5, 0, 0.6],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
+      joinTeamModal: {
+        position: [-2.5, 0, -1.5],
+        rotation: [-Math.PI/2, 0, 0],
+        scale: [1, 1, 1]
+      },
+      chat: {
+        position: [-11,0,3.5],
+        rotation: [-Math.PI/2, 0, 0],
+        scale: [0.5, 0.5, 0.5],
+        box: {
+          borderRadius: '5px',
+          height: '130px',
+          width: '380px',
+          padding: '10px',
+          fontSize: '20px',
+        },
+        input: {
+          height: '15px',
+          fontSize: '20px',
+          borderRadius: '5px',
+          padding: '10px',
+          border: 0,
+        }
+      },
+      invite: {
+        position: [-10.25, 0, 3.1],
+        size: 0.3,
         height: 0.01
-      }
-    },
-    board: {
-      lobby: {
-        scale: 1,
-        position: [0, 0, 0]
       },
-      pregame: {
-        scale: 0.2,
-        position: [5.5, 0, -3.4]
+      discord: {
+        position: [-8.5, 0, 3.1],
+        size: 0.3,
+        height: 0.01
       },
-      game: {
-        scale: 1,
-        position: [0, 0, 0]
+      disconnectModal: {
+        position: [-2.6,0.1,-1],
+        rotation: [-Math.PI/2,0,0],
       },
-      finished: {
-        scale: 0.2,
-        position: [5, 0, 1]
-      }
-    },
-    gamePhase: {
-      position: [5, 0, -2],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      fontSize: 15
-    },
-    roomId: {
-      position: [-4.5, 0, -3.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    settings: {
-      position: [9, 0, -5.5],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20,
-    },
-    rulebookButton: {
-      position: [9.085, 0, -4.8],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20,
-    },
-    hostName: {
-      position: [8.9, 0, -4.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20,
-    },
-    piecesSection: {
-      position: [8, 0, 0.5],
-      pieces: {
-        rotation: [0, 0, 0],
-        positions: [
-          [0.5, 0, -0.5],
-          [1.8, 0, -0.5],
-          [0.5, 0, 0.7],
-          [1.8, 0, 0.7]
-        ],
-        scale: 1.4
+      board: {
+        lobby: {
+          scale: 1,
+          position: [0, 0, 0]
+        },
+        pregame: {
+          scale: 0.2,
+          position: [5.5, 0, -3.4]
+        },
+        game: {
+          scale: 1,
+          position: [0, 0, 0]
+        },
+        finished: {
+          scale: 0.2,
+          position: [5, 0, 1]
+        }
+      },
+      whoGoesFirst: {
+        title: {
+          position: [-4.5, 0, -5],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.7,
+          height: 0.01
+        },
+        description: {
+          position: [-4.5, 0, -4.3],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.35,
+          height: 0.01,
+          lineHeight: 0.8
+        }
+      },
+      settings: {
+        position: [9, 0, -5.5],
+        text: {
+          position: [-0.9, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+        }
+      },
+      rulebookButton: {
+        position: [9.085, 0, -4.8],
+        text: {
+          position: [-0.98, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+        }
+      },
+      piecesSection: {
+        position: [8, 0, 0.5],
+        pieces: {
+          rotation: [0, 0, 0],
+          positions: [
+            [0.5, 0, -0.5],
+            [1.8, 0, -0.5],
+            [0.5, 0, 0.7],
+            [1.8, 0, 0.7]
+          ],
+          scale: 1.4
+        }
+      },
+      moveList: {
+        position: [8, 0, -1.7],
+        rotation: [-Math.PI/2, 0, 0],
+      },
+      currentPlayer: {
+        position: [8.4, 0, -3],
+        rotation: [0,0,0],
+        text: {
+          position: [0.7, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
+      scoreButtons: {
+        position: [4.5, 0, 3.5],
+        rotation: [-Math.PI/2, 0, 0],
+      },
+      mainAlert: {
+        position: [0, 0.3, 6],
+        rotation: [0, Math.PI/2, 0]
+      },
+      pregameAlert: {
+        position: [-2, 0, -4.5],
+        initialScale: 1.7,
+        rocketsGoFirst: {
+          position: [0.5, 2, 1],
+          rotation: [0, Math.PI/2, 0],
+        },
+        ufosGoFirst: {
+          position: [0.5, 2, 1],
+          rotation: [0, Math.PI/2, 0],
+        },
+        tie: {
+          position: [0.5, 3, 1],
+          rotation: [0, Math.PI/2, 0],
+        }
+      },
+      throwAlert: {
+        position: [0,0,4.5],
+        rotation: [0, Math.PI/2, 0],
+        initialScale: 1
       }
     },
     throwCount: {
@@ -2028,11 +2129,6 @@ export default {
         scale: [0.9,0.9,0.9]
       },
     },
-    letsPlayButton: {
-      position: [8.75,0,4.5],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 20,
-    },
     startTip: {
       position: [5, 0, 2],
       rotation: [-Math.PI / 2, 0, 0],
@@ -2044,39 +2140,8 @@ export default {
     spectatorMessage: {
       position: [4.5, 0, 2.5]
     },
-    tips: {
-      button: {
-        position: [-8, 0, 1.35],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15
-      },
-      whosFirst: {
-        position: [3,0.65,3.2]
-      },      
-      thatsIt: {
-        position: [0,0.6,-0.5]
-      },
-      selectAUnit: {
-        position: [3.5,0.5,0.3]
-      },
-      placeHere: {
-        position: [0, 4, 1],
-        line0Position: [-0.75, 0.05, -0.1],
-        line1Position: [-0.75, 0.05, 0.25],
-        line2Position: [-0.75, 0.05, 0.45],
-        size: 0.2
-      }
-    },
     ready: [0,0,-2.5],
     currentPlayerName: [-1,0,-3.5],
-    joinTeamModal: {
-      position: [-2.5, 0, -1.5],
-      rotation: [-Math.PI/2, 0, 0],
-    },
-    disconnectModal: {
-      position: [-2.6,0.1,-1],
-      rotation: [-Math.PI/2,0,0],
-    },
     tipsModal: {
       position: [-4,0,-1.5],
       rotation: [-Math.PI/2,0,0],
@@ -2091,35 +2156,6 @@ export default {
     },
     menu: {
       position: [-8, 0, 1.9]
-    },
-    invite: {
-      position: [-10.25, 0, 3.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20
-    },
-    discord: {
-      position: [-8.5, 0, 3.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20
-    },
-    chat: {
-      position: [-11,0,3.5],
-      rotation: [-Math.PI/2, 0, 0],
-      scale: [0.5, 0.5, 0.5],
-      box: {
-        borderRadius: '5px',
-        height: '130px',
-        width: '380px',
-        padding: '10px',
-        fontSize: '20px',
-      },
-      input: {
-        height: '15px',
-        fontSize: '20px',
-        borderRadius: '5px',
-        padding: '10px',
-        border: 0,
-      }
     },
     moves: {
       text: {
@@ -2168,10 +2204,6 @@ export default {
       position: [6, 0, 3],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
     },
-    scoreButton: {
-      position: [6, 0, 3.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
     resetButton: {
       position: [6, 0, 4],
       rotation: [-Math.PI / 2, 0, 0, "XZY"],
@@ -2181,18 +2213,6 @@ export default {
       initialPosition: [8, 0, 6.5],
       endingPosition: [9, 0, 4.5],
       fontSize: 1
-    },
-    moveList: {
-      position: [8, 0, -1.7],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 20,
-      width: 180
-    },
-    currentPlayer: {
-      position: [8.4, 0, -3],
-      rotation: [0,0,0],
-      fontSize: 20,
-      width: 120
     },
     throwButton: {
       position: [9, 0, 4.2],

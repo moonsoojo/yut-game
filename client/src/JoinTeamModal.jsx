@@ -3,7 +3,6 @@ import { Html } from '@react-three/drei';
 import { socket } from './SocketManager';
 import { useAtom } from 'jotai';
 import { joinTeamAtom } from './GlobalState';
-import layout from './layout';
 
 export default function JoinTeamModal({ position, rotation, scale }) {
 
