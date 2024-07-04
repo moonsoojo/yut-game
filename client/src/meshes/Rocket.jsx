@@ -40,6 +40,7 @@ export default function Rocket({
         whiteMat.color = new THREE.Color(0xffbabc)
       }
     } else if (animation === 'onBoard') {
+      console.log(`[Rocket] animation on board`)
       flame.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
       rocket.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
     }

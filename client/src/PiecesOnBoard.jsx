@@ -7,7 +7,6 @@ import Piece from './components/Piece';
 import { roundNum, generateRandomNumberInRange } from './helpers/helpers';
 import Polaris from './meshes/Polaris';
 import { Text3D } from '@react-three/drei';
-import { useParams } from 'wouter';
 
 export default function PiecesOnBoard() {
     const [pieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
@@ -19,12 +18,11 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
-    const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+    const [_mainAlert] = useAtom(mainAlertAtom)
 
-    const params = useParams()
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
-            position: [0,0,0], // Value before api start
+            position: [0,0,0], // Filler values
             scale: 1,
             sizeTwink: 0,
             welcomeTextScale: 0
@@ -72,7 +70,7 @@ export default function PiecesOnBoard() {
     }))
     const [springs1_2, api1_2] = useSpring(() => ({        
         from: {
-            position: [0,0,0], // Filler values
+            position: [0,0,0],
             scale: 1,
             sizeTwink: 0,
             welcomeTextScale: 0
@@ -97,7 +95,6 @@ export default function PiecesOnBoard() {
     const heightOffset = 0.9
 
     function handleAnimationStart() {
-        // setAnimationPlaying(true)
     }
 
     function handleAnimationEnd() {
@@ -105,11 +102,9 @@ export default function PiecesOnBoard() {
     }
 
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -214,7 +209,6 @@ export default function PiecesOnBoard() {
         const path = pieceTeam0Id1.lastPath
         if (path.length > 0) {    
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -315,11 +309,9 @@ export default function PiecesOnBoard() {
     }, [pieceTeam0Id1])
 
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam0Id2.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -420,11 +412,9 @@ export default function PiecesOnBoard() {
     }, [pieceTeam0Id2])
 
     useEffect(() => {        
-        // clear path on capture
         const path = pieceTeam0Id3.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -525,11 +515,9 @@ export default function PiecesOnBoard() {
     }, [pieceTeam0Id3])
 
     useEffect(() => {        
-        // clear path on capture
         const path = pieceTeam1Id0.lastPath        
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -631,13 +619,10 @@ export default function PiecesOnBoard() {
     }, [pieceTeam1Id0])
 
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam1Id1.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
-                console.log(`[PiecesOnBoard][team1_id1] pathToEarth`, pathToEarth)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
@@ -737,13 +722,10 @@ export default function PiecesOnBoard() {
         }
     }, [pieceTeam1Id1])
 
-
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam1Id2.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -844,11 +826,9 @@ export default function PiecesOnBoard() {
     }, [pieceTeam1Id2])
 
     useEffect(() => {
-        // clear path on capture
         const path = pieceTeam1Id3.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
-                console.log(`[PiecesOnBoard] path`, path)
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -962,11 +942,11 @@ export default function PiecesOnBoard() {
         rotation={rotation}
         scale={scale}>
             <Text3D
-            font="/fonts/Luckiest Guy_Regular.json" 
+            font="fonts/Luckiest Guy_Regular.json" 
             height={0.01} 
             size={0.4}>
                 {`Welcome\nBack!`}
-            <meshStandardMaterial color='yellow'/>
+                <meshStandardMaterial color='yellow'/>
             </Text3D>
         </animated.group>
     }
@@ -992,7 +972,6 @@ export default function PiecesOnBoard() {
             scale={springs0_1.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_1.welcomeTextScale}/>
-
         { onBoardCheck(pieceTeam0Id2.tile) && <Piece team={0} id={2} tile={pieceTeam0Id2.tile} position={springs0_2.position} scale={springs0_2.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
@@ -1003,7 +982,6 @@ export default function PiecesOnBoard() {
             scale={springs0_2.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_2.welcomeTextScale}/>
-
         { onBoardCheck(pieceTeam0Id3.tile) && <Piece team={0} id={3} tile={pieceTeam0Id3.tile} position={springs0_3.position} scale={springs0_3.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
@@ -1034,7 +1012,6 @@ export default function PiecesOnBoard() {
             scale={springs1_1.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_1.welcomeTextScale}/>
-
         { onBoardCheck(pieceTeam1Id2.tile) && <Piece team={1} id={2} tile={pieceTeam1Id2.tile} position={springs1_2.position} scale={springs1_2.scale} animation='onBoard'/> }
         <Polaris                         
             position={[
@@ -1045,8 +1022,13 @@ export default function PiecesOnBoard() {
             scale={springs1_2.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_2.welcomeTextScale}/>
-
-        { onBoardCheck(pieceTeam1Id3.tile) && <Piece team={1} id={3} tile={pieceTeam1Id3.tile} position={springs1_3.position} scale={springs1_3.scale} animation='onBoard'/> }
+        { onBoardCheck(pieceTeam1Id3.tile) && <Piece 
+        team={1} 
+        id={3} 
+        tile={pieceTeam1Id3.tile} 
+        position={springs1_3.position} 
+        scale={springs1_3.scale} 
+        animation='onBoard'/> }
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[3][0], 1),
@@ -1056,6 +1038,5 @@ export default function PiecesOnBoard() {
             scale={springs1_3.sizeTwink}
         />
         <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_3.welcomeTextScale}/>
-
     </>
 }

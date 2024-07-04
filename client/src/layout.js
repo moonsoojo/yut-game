@@ -38,7 +38,7 @@ export default {
         scale: 0.14
       },
       tiles: {
-        position: [0, 0, -2.3],
+        position: [0, 0, -2.1],
         rotation: [0, -Math.PI/16, 0],
         scale: 0.4
       },
@@ -69,7 +69,7 @@ export default {
       scale: 0.4,
       page0: {
         text: {
-          position: [-1, 0, -2]
+          position: [-1.5, 0, -2]
         },
         moveText: {
           text: "MOVE: 3-STEPS",
@@ -525,9 +525,9 @@ export default {
       },
       page6: {
         text: {
-          position: [-5.5,0,-6.5],
+          position: [-6,0,-6.9],
           rotation: [-Math.PI/4, 0, 0],
-          size: 0.5,
+          size: 0.55,
           height: 0.01,
         },
         do: {
@@ -1431,7 +1431,7 @@ export default {
       },
       page4: {
         text: {
-          position: [-3.5,0,-4],
+          position: [-4,0,-4.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.5,
           height: 0.01,

@@ -1091,7 +1091,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.page3.text.height}
           lineHeight={layout[device].howToPlay.page3.text.lineHeight}
         >
-          {`4. If you move into a tile with\nan enemy, you will capture it.\nYou will get another turn.`}
+          {`4. If you move into a tile with\nan enemy, you will capture it.\nYou will also get another turn.`}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       <FirstCornerTiles position={springs.firstCornerTilesPos}/>

@@ -79,13 +79,10 @@ export default function Piece ({
   // Piece selected: bulge
   // rocket shaking on selected
   function handlePointerDown(event) {
-    console.log(`[Piece] click`)
-    
     if (gamePhase === "game" && hasTurn && client.team === team && !yootThrown.flag && !animationPlaying) {
       event.stopPropagation();
       setMainAlert({ type: '' })
       if (selection === null) {
-        console.log(`[Piece] selection is null`)
         let pieces;
         let history;
         if (pieceStatus(tile) === 'home') {
@@ -102,14 +99,10 @@ export default function Piece ({
           socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
         }
       } else {
-        console.log(`[Piece] selection is not null`)
         if (selection.tile != tile && tile in legalTiles) {
-          console.log(`[Piece] moving piece`)
           socket.emit("move", { roomId: params.id, tile });
         } else {
-
           socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-  
           socket.emit("select", { roomId: params.id, payload: null });
         }
       }
@@ -139,7 +132,9 @@ export default function Piece ({
           depthWrite={false}
         />
       </mesh>
-      { team === 0 ? <Rocket animation={!animationPlaying ? animation : null}/> : <Ufo animation={!animationPlaying ? animation : null}/>}
+      { team === 0 ? <Rocket 
+      animation={!animationPlaying ? animation : null}/> : <Ufo 
+      animation={!animationPlaying ? animation : null}/>}
     </animated.group>
   )      
 };
