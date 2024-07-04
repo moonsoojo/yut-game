@@ -101,22 +101,22 @@ export default {
       },
       page1: {
         text: {
-          position: [-3.5,0,-5],
-          rotation: [-Math.PI/8, 0, 0],
-          fontSize: 26
+          position: [-4.5,0,-5.5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.55
         },
         firstCornerTiles: {
-          position: [-2, 0, -1.5]
+          position: [-2, 0, -2.5]
         },
         homePieces: {
-          position: [-2, 0, -2]
+          position: [-2, 0, -3]
         },
         moveDisplay: {
-          position: [-3.3, 0, 1.7]
+          position: [-3.3, 0, 0.7]
         },
-        cursorPos0: [1, 0.3, 1],
-        cursorPos1: [-0.5, 0.3, -0.4],
-        cursorPos2: [2.3, 1.3, 3],
+        cursorPos0: [1, 0.3, 0],
+        cursorPos1: [-0.5, 0.3, -1.4],
+        cursorPos2: [2.3, 1.3, 2],
         rocket3Pos0: [0,0,0],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
@@ -140,8 +140,15 @@ export default {
         ],
       },
       page2: {
-        tilesPos0: [0,0,0],
-        tilesPos1: [-2, 0, -4],
+        text: {
+          position: [1,0,0],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.4,
+          lineHeight: 0.9,
+          height: 0.01
+        },
+        tilesPos0: [0,0,-1.5],
+        tilesPos1: [-2, 0, -5.5],
         tilesScale0: 1,
         tilesScale1: 2,
         rocketHomeScale1: 1,
@@ -156,7 +163,7 @@ export default {
         ],
         moveText: {
           rotation: [-Math.PI/8, 0, 0],
-          position: [-0.2,0,1.2],
+          position: [-0.2,0,1.7],
           fontSize: 22
         },
         scoreText: {
@@ -191,21 +198,25 @@ export default {
       },
       page3: {
         text: {
-          position: [-4.5,0,-5]
+          position: [-5,0,-5.5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         },
         firstCornerTilesPos: [
-          [-1.5,0,-1],
-          [-0.5, 0, -1]
+          [-1.5,0,-2],
+          [-0.5, 0, -2]
         ],
         cursorPos: [
-          [0, 0.3, 0],
-          [-1,2,4.5],
+          [0, 0.3, -1],
+          [-1,2,3.5],
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.5,
             2,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1.8,
           ],
-          [5,2,3.5],
+          [5,2,2.5],
         ],
         rocketPos: [
           [
@@ -238,21 +249,25 @@ export default {
           [7, -3, -5]
         ],
         pointer: {
-          position: [0.1,2.5,0]
+          position: [0.1,2.5,-1]
         },
         bonusTurn: {
-          position: [-2, 0, 0.5]
+          position: [-2, 0, -0.5]
         },
         yootButtonModel: {
-          position: [1.5, 0, 0.5]
+          position: [1.5, 0, -0.5]
         },
         moveText: {
-          position: [-3,0,1]
+          position: [-3,0,0]
         }
       },
       page4: {
         text: {
-          position: [-5,0,-5]
+          position: [-5.5,0,-5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         },
         cursorPos: [
           [1, 0.3, 3],
@@ -268,16 +283,37 @@ export default {
         },
         pointer1: {
           position: [-0.15,1.9,0]
+        },
+        firstCornerTiles: {
+          position: [-1, 0, -1.5]
+        },
+        moveText0: {
+          position: [-4, 0, -0.5],
+          rotation: [-Math.PI/4,0,0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
+        },
+        moveText1: {
+          position: [-4, 0, -0.4],
+          rotation: [-Math.PI/4,0,0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         }
       },
       page5: {
         text: {
-          position: [-4,0,-6],
-          rotation: [-Math.PI/8, 0, 0]
+          position: [-4.5,0,-6],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9,
+          scales: [1, 0] 
         },
         tilesPos: [
-          [0,0,1.3],
-          [-3, 0, -1.5]
+          [0,0,0.8],
+          [-3, 0, -2]
         ],
         tilesScale: [
           0.6,
@@ -290,6 +326,15 @@ export default {
           position: [0.7, 2, 3.5],
           rotation: [-Math.PI/4, 0, 0]
         },
+        moveText: {
+          position: [2,-2,-2],
+          rotation: [-Math.PI/4, 0, 0],
+          scale: [0, 1]
+        },
+        noteText: {
+          position: [2,0,1],
+          rotation: [-Math.PI/4, 0, 0]
+        },
         rocket0Scale: [
           1.7,
           2.3,
@@ -299,10 +344,342 @@ export default {
           2.3,
           1.7,
           0,
-          1.7,
           2.3,
-          1.7,
-        ]
+          3,
+          2.3,
+        ],
+        rocket0Pos: [
+          [
+            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 2,
+            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+          ],
+          [
+            0 - 1,
+            2.5,
+            0 - 1,
+          ],
+          [
+            0 - 1,
+            3,
+            0 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            -1,
+            2,
+            -1
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            4,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+        ],
+        cursor: {
+          position: [
+            [1, 0.3, 2],
+            [4, 0, 4],
+            [-1.9, 0, 3]
+          ],
+          scale: [
+            [0,0,0],
+            [2, 2, 2]
+          ],
+          effectOpacity: [
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      page6: {
+        text: {
+          position: [-5.5,0,-6.5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+        },
+        do: {
+          position: [-4.7, 0, -2.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        ge: {
+          position: [-0.6, 0, -2.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        gul: {
+          position: [3.1, 0, -2.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        yoot: {
+          position: [-4.7, 0, 3],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        mo: {
+          position: [-0.6, 0, 3],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        backdo: {
+          position: [3.5, 0, 3],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
       },
       pagination: {
         pageRadius: 0.3,
@@ -811,7 +1188,7 @@ export default {
       }
     },
     about: {
-      position: [-5, -4, -12],
+      position: [-5, -4, -13],
       rotation: [-Math.PI/4,0,Math.PI/32],
       scale: 1,
       mainDescription: {
@@ -879,13 +1256,22 @@ export default {
             { x: -2 + 1.6, y: 1, z: -2},
             { x: -2 + 2.4, y: 1, z: -2}
           ]
+        },
+        yootButtonModel: {
+          position: [3, 0, 1],
+          rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
+        },
+        cursor: {
+          position: [4, 0.3, 2.4],
+          rotation: [0, 0, 0],
+          scale: [3, 3, 0.1]
         }
       },
       page1: {
         text: {
           position: [-2.5,0,-4],
           rotation: [-Math.PI/4, 0, 0],
-          fontSize: 26
+          size: 0.5
         },
         firstCornerTiles: {
           position: [-1, 0, -1.5]
@@ -922,6 +1308,13 @@ export default {
         ],
       },
       page2: {
+        text: {
+          position: [1.5,0,1.5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.4,
+          lineHeight: 1,
+          height: 0.01
+        },
         tilesPos0: [0,0,0],
         tilesPos1: [-2, 0, -4],
         tilesScale0: 0.8,
@@ -934,7 +1327,7 @@ export default {
         cursorPos: [
           [1, 0, 4],
           [0, 1.5, 5.8],
-          [0.3, 0.2, 3.9]
+          [0.3, 0.2, 3.5]
         ],
         moveText: {
           position: [-0.5,0,2],
@@ -942,7 +1335,7 @@ export default {
           fontSize: 26
         },
         scoreText: {
-          position: [-0.5, 0, 3.5],
+          position: [-0.5, 0, 3.1],
           rotation: [-Math.PI/8, -Math.PI/16, 0],
           size: 0.5
         },
@@ -973,7 +1366,11 @@ export default {
       },
       page3: {
         text: {
-          position: [-3.5,0,-5]
+          position: [-4.5,0,-5.5],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         },
         firstCornerTilesPos: [
           [-1.5,0,-1],
@@ -1034,7 +1431,11 @@ export default {
       },
       page4: {
         text: {
-          position: [-3.5,0,-5]
+          position: [-3.5,0,-4],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         },
         cursorPos: [
           [1, 0.3, 3],
@@ -1050,11 +1451,33 @@ export default {
         },
         pointer1: {
           position: [-0.3,1.7,0]
+        },
+        firstCornerTiles: {
+          position: [-1, 0, 0]
+        },
+        moveText0: {
+          position: [-3, 0, 0.5],
+          rotation: [-Math.PI/4,0,0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
+        },
+        moveText1: {
+          position: [-3, 0, 1],
+          rotation: [-Math.PI/4,0,0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9
         }
       },
       page5: {
         text: {
-          position: [-3.5,0,-7]
+          position: [-4,0,-6],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+          lineHeight: 0.9,
+          scales: [1, 0] 
         },
         tilesPos: [
           [0,0,1.5],
@@ -1071,6 +1494,15 @@ export default {
           position: [-1, 2, 4],
           rotation: [-Math.PI/4, 0, 0]
         },
+        moveText: {
+          position: [1.5, -2, 3],
+          rotation: [-Math.PI/4, 0, 0],
+          scale: [0, 0.8]
+        },
+        noteText: {
+          position: [2,0,2],
+          rotation: [-Math.PI/4, 0, 0]
+        },
         rocket0Scale: [
           1.2,
           1.8,
@@ -1083,7 +1515,339 @@ export default {
           1.4,
           1.9,
           1.4,
-        ]
+        ],
+        rocket0Pos: [
+          [
+            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+            0 + 2,
+            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+          ],
+          [
+            0 - 1,
+            2.5,
+            0 - 1,
+          ],
+          [
+            0 - 1,
+            3,
+            0 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((13 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((14 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            -1,
+            2,
+            -1
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              1.7 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+            1.5,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              3.5 - 1,
+          ],
+          [
+            Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2,
+            Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((8 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((9 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            2.6,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((11 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+          [
+            Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+            1.5,
+            Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
+              5 - 1,
+          ],
+        ],
+        cursor: {
+          position: [
+            [1, 0.3, 3],
+            [3, 0, 5],
+            [-1.9, 0, 4]
+          ],
+          scale: [
+            [0,0,0],
+            [2, 2, 2]
+          ],
+          effectOpacity: [
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      page6: {
+        text: {
+          position: [-5.5,0,-6],
+          rotation: [-Math.PI/4, 0, 0],
+          size: 0.5,
+          height: 0.01,
+        },
+        do: {
+          position: [-4.7, 0, -1.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        ge: {
+          position: [-0.6, 0, -1.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        gul: {
+          position: [3.1, 0, -1.7],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        yoot: {
+          position: [-4.7, 0, 4],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        mo: {
+          position: [-0.6, 0, 4],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        backdo: {
+          position: [3.5, 0, 4],
+          scale: 0.8,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
       },
       pagination: {
         pageRadius: 0.2,

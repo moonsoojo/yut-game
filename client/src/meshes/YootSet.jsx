@@ -58,7 +58,7 @@ export default function YootSet({position=[0,0,0], rotation=[0,0,0], scale=1, po
     return <>
         { points === 'do' && <Do/>}
         { points === 'ge' && <Ge/>}
-        { points === 'girl' && <Girl/>}
+        { points === 'gul' && <Girl/>}
         { points === 'yoot' && <YootShape/>}
         { points === 'mo' && <Mo/>}
         { points === 'backdo' && <Backdo/>}
