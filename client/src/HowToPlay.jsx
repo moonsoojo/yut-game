@@ -477,7 +477,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
                 position={position}
                 tile={i}
                 key={i}
-                scale={layout[device].star.scale}
+                scale={layout[device].howToPlay.star.scale}
                 device={device}
               />
             )
@@ -631,7 +631,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     // place on top of tiles with .map
     // adjust neptune particle size
     function Tiles({ device, rotation }) {
-      const TILE_RADIUS = layout[device].tileRadius.ring
+      const TILE_RADIUS = layout[device].howToPlay.tileRadius.ring
       const NUM_STARS = 20;
       let tiles = [];
       let rocket3AnimationsArray = []
@@ -662,7 +662,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               <Star
                 position={position}
                 key={i}
-                scale={layout[device].star.scale}
+                scale={layout[device].howToPlay.star.scale}
                 device={device}
               />
             );
@@ -692,7 +692,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tilesScale: layout[device].howToPlay.page2.tilesScale0,
           tilesPos: layout[device].howToPlay.page2.tilesPos0,
           rocketHomeScale: 0,
-          shortcutStarScale: layout[device].star.scale,
+          shortcutStarScale: layout[device].howToPlay.star.scale,
           moveScale: 0,
           scoreScale: 0,
           scoreColor: '#ffff00',
@@ -793,8 +793,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       // add components that use springs
   
       //shortcuts
-      const radiusShortcut1 = layout[device].tileRadius.shortcut1;
-      const radiusShortcut2 = layout[device].tileRadius.shortcut2;
+      const radiusShortcut1 = layout[device].howToPlay.tileRadius.shortcut1;
+      const radiusShortcut2 = layout[device].howToPlay.tileRadius.shortcut2;
       for (let i = 0; i < NUM_STARS; i++) {
         let indexShortcut1;
         let indexShortcut2;
@@ -824,7 +824,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position1}
               tile={indexShortcut1}
               key={i + 30}
-              scale={i == 5 ? springs.shortcutStarScale : layout[device].star.scale}
+              scale={i == 5 ? springs.shortcutStarScale : layout[device].howToPlay.star.scale}
               device={device}
             />
           );
@@ -840,7 +840,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position2}
               tile={indexShortcut2}
               key={i + 41}
-              scale={i == 5 ? springs.shortcutStarScale : layout[device].star.scale}
+              scale={i == 5 ? springs.shortcutStarScale : layout[device].howToPlay.star.scale}
               device={device}
             />
           );
@@ -1063,7 +1063,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position}
               tile={i}
               key={i}
-              scale={layout[device].star.scale}
+              scale={layout[device].howToPlay.star.scale}
               device={device}
             />
           )
@@ -1357,7 +1357,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           tiles.push(
             <Star
               position={position}
-              scale={layout[device].star.scale}
+              scale={layout[device].howToPlay.star.scale}
               key={i}
             />
           )
@@ -1684,7 +1684,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     })
 
     function Tiles(props) {
-      const TILE_RADIUS = layout[device].tileRadius.ring
+      const TILE_RADIUS = layout[device].howToPlay.tileRadius.ring
       const NUM_STARS = 20;
       let tiles = [];
   
@@ -1738,7 +1738,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position}
               tile={i}
               key={i}
-              scale={layout[device].star.scale}
+              scale={layout[device].howToPlay.star.scale}
               device={device}
             />
           );
@@ -1746,8 +1746,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       }
   
       //shortcuts
-      const radiusShortcut1 = layout[device].tileRadius.shortcut1;
-      const radiusShortcut2 = layout[device].tileRadius.shortcut2;
+      const radiusShortcut1 = layout[device].howToPlay.tileRadius.shortcut1;
+      const radiusShortcut2 = layout[device].howToPlay.tileRadius.shortcut2;
       for (let i = 0; i < NUM_STARS; i++) {
         let indexShortcut1;
         let indexShortcut2;
@@ -1777,7 +1777,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position1}
               tile={indexShortcut1}
               key={i + 30}
-              scale={layout[device].star.scale}
+              scale={layout[device].howToPlay.star.scale}
               device={device}
             />
           );
@@ -1793,7 +1793,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               position={position2}
               tile={indexShortcut2}
               key={i + 41}
-              scale={layout[device].star.scale}
+              scale={layout[device].howToPlay.star.scale}
               device={device}
             />
           );

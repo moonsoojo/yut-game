@@ -21,74 +21,118 @@ export default {
   portrait: {
     center: [0,0,0],
     camera: {
-      zoomMin: 0,
-      zoomMax: 55,
-      position: [0,20,3],
+      zoomMin: 30,
+      zoomMax: 150,
+      position: [0,17,7],
+      lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [0,0,0],
-      rotation: [0,0,0],
+      position: [-21,0,-9],
+      rotation: [-Math.PI/4, Math.PI/8, 0],
       text: {
-        position: [-2.1,0,-6.3],
-        rotation: [-Math.PI/4,0,Math.PI/64],
+        position: [0,0,0],
+        rotation: [0,0,0],
         fontSize: 20,
-        scale: 1.7
-      },
-      yoots: {
-        position: [1.1, 0, -5],
-        rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.14
+        scale: 3.6,
       },
       tiles: {
-        position: [0, 0, -2.1],
-        rotation: [0, -Math.PI/16, 0],
-        scale: 0.4
+        position: [0, 0, -4],
+        scale: 1
       },
       about: {
-        show: false,
-        position: [0, 0, 0.5],
-        rotation: [0,0,0],
-        scale: 0.6
+        show: true,
+        position: [1.5,-6,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
       },
       howToPlay: {
-        position: [0, 0, 0.9],
-        rotation: [0,0,0],
-        scale: 0.6
-      },
+        position: [2.8,-7.5,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
+      },      
       letsPlay: {
-        position: [0, 0, 1.3],
-        rotation: [0,0,0],
-        scale: 0.6
+        position: [3,-9,0],
+        rotation: [Math.PI/2,0,0],
+        scale: 2
       },
       pieces: {
         position: [0,0,0],
-        scale: 0.5
+        scale: 1
       },
+      yoots: {
+        position: [7, -2, 0],
+        rotation: [Math.PI/8 * 3,Math.PI/2,0],
+        scale: 0.4
+      }
+    },
+    about: {
+      position: [-5, -4, -13],
+      rotation: [-Math.PI/4,0,Math.PI/32],
+      scale: 1,
+      mainDescription: {
+        size: 0.6,
+        line0Position: [0,-0.5,0],
+        line1Position: [0,-1.3,0]
+      },
+      board: {
+        position: [5.5, -6, 0],
+        rotation: [Math.PI/2, 0, 0],
+        scale: 0.6,
+        text: {
+          position: [-1,-4,-1],
+          size: 0.6
+        }
+      },
+      pieces: {
+        position: [-1,-12,-1],
+        size: 0.6,
+        rockets: {
+          position: [4, -12, 0]
+        },
+        ufos: {
+          position: [7.5, -12, 0]
+        }
+      },
+      yoot: {
+        position: [13, -7, -2],
+        text: {
+          position: [10,-4,-1],
+          size: 0.6
+        }
+      },
+      playersText: {
+        position: [11,-11,-1],
+        size: 0.6
+      },
+      ageText: {
+        position: [10,-11,-1],
+        size: 0.6
+      }
     },
     howToPlay: {
-      position: [0,0,-2],
-      rotation: [0,0,0],
-      scale: 0.4,
+      position: [-1,0,-4],
+      rotation: [0,Math.PI/32,Math.PI/64],
+      scale: 1,
       page0: {
         text: {
-          position: [-1.5, 0, -2]
+          position: [0, 0, -1]
         },
         moveText: {
           text: "MOVE: 3-STEPS",
-          position: [-3.2, 0.7, -1.2]
+          position: [-5, 0.7, 0]
         },
         yoot: {
           initialPos: [
-            [-2 + 0, 1, 1],
-            [-2 + 0.8, 1, 1],
-            [-2 + 1.6, 1, 1],
-            [-2 + 2.4, 1, 1]
+            [-2 + 0, 1, 3],
+            [-2 + 0.8, 1, 3],
+            [-2 + 1.6, 1, 3],
+            [-2 + 2.4, 1, 3]
           ],
           initialThrowPos: [
-            { x: -1, y: 0.5, z: -1.5},
-            { x: -1 + 0.4, y: 0.5, z: -1.5},
-            { x: -1 + 0.8, y: 0.5, z: -1.5},
-            { x: -1 + 1.2, y: 0.5, z: -1.5}
+            { x: -2 + 0, y: 1, z: -2},
+            { x: -2 + 0.8, y: 1, z: -2},
+            { x: -2 + 1.6, y: 1, z: -2},
+            { x: -2 + 2.4, y: 1, z: -2}
           ]
         },
         yootButtonModel: {
@@ -103,22 +147,22 @@ export default {
       },
       page1: {
         text: {
-          position: [-4.5,0,-5.5],
+          position: [-2.5,0,-4],
           rotation: [-Math.PI/4, 0, 0],
-          size: 0.55
+          size: 0.5
         },
         firstCornerTiles: {
-          position: [-2, 0, -2.5]
+          position: [-1, 0, -1.5]
         },
         homePieces: {
-          position: [-2, 0, -3]
+          position: [-1, 0, -2]
         },
         moveDisplay: {
-          position: [-3.3, 0, 0.7]
+          position: [-2.3, 0, 1.7]
         },
-        cursorPos0: [1, 0.3, 0],
-        cursorPos1: [-0.5, 0.3, -1.4],
-        cursorPos2: [2.3, 1.3, 2],
+        cursorPos0: [1, 0.3, 1],
+        cursorPos1: [0.4, 0.3, -0.5],
+        cursorPos2: [3.2, 1.3, 2.3],
         rocket3Pos0: [0,0,0],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
@@ -143,82 +187,82 @@ export default {
       },
       page2: {
         text: {
-          position: [1,0,0],
+          position: [1.5,0,1.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.4,
-          lineHeight: 0.9,
+          lineHeight: 1,
           height: 0.01
         },
-        tilesPos0: [0,0,-1.5],
-        tilesPos1: [-2, 0, -5.5],
-        tilesScale0: 1,
-        tilesScale1: 2,
-        rocketHomeScale1: 1,
-        rocket0Pos: [0.3,0,-0.5],
-        rocket1Pos: [0.9,0,-0.5],
-        rocket2Pos: [0.3,0,0.1],
-        checkPos: [0.9,0,0.6],
+        tilesPos0: [0,0,0],
+        tilesPos1: [-2, 0, -4],
+        tilesScale0: 0.8,
+        tilesScale1: 1.5,
+        rocketHomeScale1: 1.3,
+        rocket0Pos: [-0.4,0,-0.7],
+        rocket1Pos: [0.8,0,-0.7],
+        rocket2Pos: [-0.4,0,0.5],
+        checkPos: [0.6,0,1],
         cursorPos: [
           [1, 0, 4],
-          [0.3, 1.5, 4.8],
-          [1, 0.2, 2.9]
+          [0, 1.5, 5.8],
+          [0.3, 0.2, 3.5]
         ],
         moveText: {
-          rotation: [-Math.PI/8, 0, 0],
-          position: [-0.2,0,1.7],
-          fontSize: 22
+          position: [-0.5,0,2],
+          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          fontSize: 26
         },
         scoreText: {
-          rotation: [-Math.PI/8, 0, 0],
-          position: [-0.1, 0, 2.5],
-          size: 0.4
+          position: [-0.5, 0, 3.1],
+          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          size: 0.5
         },
         letsGoText: {
           lets: {
-            position: [-0.2,0,1.7],
-            rotation: [-Math.PI/8, 0, 0],
-            fontSize: 22
+            position: [0,0,2.2],
+            rotation: [-Math.PI/8, -Math.PI/16, 0],
+            fontSize: 26
           },
           go: {
-            position: [-0.2,0,2.4],
-            rotation: [-Math.PI/8, 0, 0],
-            fontSize: 22
+            position: [-0.5,0,2.4],
+            rotation: [-Math.PI/8, -Math.PI/16, 0],
+            fontSize: 26
           }
         },
         fireworks: {
           initialPosition: {
-            x: -0.5,
+            x: -1,
             y: 0,
-            z: -2,
+            z: -3,
           },
           positionRange: {
-            x: 0.5,
+            x: 1,
             y: 0,
-            z: 0.5
+            z: 1
           }
         }
       },
       page3: {
         text: {
-          position: [-5,0,-5.5],
+          position: [-4.5,0,-5.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.5,
           height: 0.01,
           lineHeight: 0.9
         },
         firstCornerTilesPos: [
-          [-1.5,0,-2],
-          [-0.5, 0, -2]
+          [-1.5,0,-1],
+          [-1.5,0,-1]
         ],
         cursorPos: [
-          [0, 0.3, -1],
-          [-1,2,3.5],
+          [0, 0.3, 0],
+          [-1,2,4.5],
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.5,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.2,
             2,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1.8,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-0.5,
           ],
-          [5,2,2.5],
+          [5,2,3.5],
         ],
         rocketPos: [
           [
@@ -251,21 +295,21 @@ export default {
           [7, -3, -5]
         ],
         pointer: {
-          position: [0.1,2.5,-1]
+          position: [-0.5,2.5,0]
         },
         bonusTurn: {
-          position: [-2, 0, -0.5]
+          position: [-3, 0, 0.5]
         },
         yootButtonModel: {
-          position: [1.5, 0, -0.5]
+          position: [0.5, 0, 0.5]
         },
         moveText: {
-          position: [-3,0,0]
+          position: [-3, 0, 1]
         }
       },
       page4: {
         text: {
-          position: [-5.5,0,-5],
+          position: [-4,0,-4.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.5,
           height: 0.01,
@@ -274,30 +318,30 @@ export default {
         cursorPos: [
           [1, 0.3, 3],
           [-1.2,2,5.5],
-          [3,2,5],
+          [2.8,2,5],
           [6, 0.3, 1],
           [2.8,2,5],
-          [4.5, 2, 3.2],
-          [6.5, 0.3, 1]
+          [4, 2, 3],
+          [6, 0.3, 1]
         ],
         pointer0: {
           position: [-0.3,2.5,0]
         },
         pointer1: {
-          position: [-0.15,1.9,0]
+          position: [-0.3,1.7,0]
         },
         firstCornerTiles: {
-          position: [-1, 0, -1.5]
+          position: [-1, 0, 0]
         },
         moveText0: {
-          position: [-4, 0, -0.5],
+          position: [-3, 0, 0.5],
           rotation: [-Math.PI/4,0,0],
           size: 0.5,
           height: 0.01,
           lineHeight: 0.9
         },
         moveText1: {
-          position: [-4, 0, -0.4],
+          position: [-3, 0, 1],
           rotation: [-Math.PI/4,0,0],
           size: 0.5,
           height: 0.01,
@@ -306,7 +350,7 @@ export default {
       },
       page5: {
         text: {
-          position: [-4.5,0,-6],
+          position: [-4,0,-6],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.5,
           height: 0.01,
@@ -314,41 +358,41 @@ export default {
           scales: [1, 0] 
         },
         tilesPos: [
-          [0,0,0.8],
-          [-3, 0, -2]
+          [0,0,1.5],
+          [-3, 0, -1.5]
         ],
         tilesScale: [
           0.6,
-          0.9
+          1
         ],
         tilesOnly: {
-          scale: 1.2
+          scale: 1
         },
         scoreText: {
-          position: [0.7, 2, 3.5],
+          position: [-1, 2, 4],
           rotation: [-Math.PI/4, 0, 0]
         },
         moveText: {
-          position: [2,-2,-2],
+          position: [1.5, -2, 3],
           rotation: [-Math.PI/4, 0, 0],
-          scale: [0, 1]
+          scale: [0, 0.8]
         },
         noteText: {
-          position: [2,0,1],
+          position: [2,0,2],
           rotation: [-Math.PI/4, 0, 0]
         },
         rocket0Scale: [
-          1.7,
-          2.3,
-          1.7,
+          1.2,
+          1.8,
+          1.2,
           0,
-          1.7,
-          2.3,
-          1.7,
+          1.2,
+          1.6,
+          1.2,
           0,
-          2.3,
-          3,
-          2.3,
+          1.4,
+          1.9,
+          1.4,
         ],
         rocket0Pos: [
           [
@@ -489,7 +533,7 @@ export default {
           [
             Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
-            4,
+            2.6,
             Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
               5 - 1,
           ],
@@ -510,9 +554,9 @@ export default {
         ],
         cursor: {
           position: [
-            [1, 0.3, 2],
-            [4, 0, 4],
-            [-1.9, 0, 3]
+            [1, 0.3, 3],
+            [3, 0, 5],
+            [-1.9, 0, 4]
           ],
           scale: [
             [0,0,0],
@@ -527,13 +571,13 @@ export default {
       },
       page6: {
         text: {
-          position: [-6,0,-6.9],
+          position: [-5.5,0,-6],
           rotation: [-Math.PI/4, 0, 0],
-          size: 0.55,
+          size: 0.5,
           height: 0.01,
         },
         do: {
-          position: [-4.7, 0, -2.7],
+          position: [-4.7, 0, -1.7],
           scale: 0.8,
           text: {
             line0: {
@@ -555,7 +599,7 @@ export default {
           }
         },
         ge: {
-          position: [-0.6, 0, -2.7],
+          position: [-0.6, 0, -1.7],
           scale: 0.8,
           text: {
             line0: {
@@ -577,7 +621,7 @@ export default {
           }
         },
         gul: {
-          position: [3.1, 0, -2.7],
+          position: [3.1, 0, -1.7],
           scale: 0.8,
           text: {
             line0: {
@@ -599,7 +643,7 @@ export default {
           }
         },
         yoot: {
-          position: [-4.7, 0, 3],
+          position: [-4.7, 0, 4],
           scale: 0.8,
           text: {
             line0: {
@@ -627,7 +671,7 @@ export default {
           }
         },
         mo: {
-          position: [-0.6, 0, 3],
+          position: [-0.6, 0, 4],
           scale: 0.8,
           text: {
             line0: {
@@ -655,7 +699,7 @@ export default {
           }
         },
         backdo: {
-          position: [3.5, 0, 3],
+          position: [3.5, 0, 4],
           scale: 0.8,
           text: {
             line0: {
@@ -684,372 +728,301 @@ export default {
         },
       },
       pagination: {
-        pageRadius: 0.3,
-        arrowRadius: 0.4,
-        position: [0, 0, 0.2],
-        scale: 0.8
-      }
-    },
-    about: {
-      position: [-2.1, 0, -4.3],
-      rotation: [-Math.PI/4,0,0],
-      scale: 0.28,
-      mainDescription: {
-        size: 0.6,
-        line0Position: [0,-0.5,0],
-        line1Position: [0,-1.3,0]
+        pageRadius: 0.2,
+        arrowRadius: 0.4
       },
-      board: {
-        position: [5.5, -6, 0],
-        rotation: [Math.PI/2, 0, 0],
-        scale: 0.6,
-        text: {
-          position: [-1,-4,-1],
-          size: 0.6
-        }
+      tileRadius: {
+        ring: 5,
+        shortcut1: 3.5,
+        shortcut2: 1.7
       },
-      pieces: {
-        position: [-1,-12,-1],
-        size: 0.6,
-        rockets: {
-          position: [4, -12, 0]
-        },
-        ufos: {
-          position: [7.5, -12, 0]
-        }
+      star: {
+        scale: 0.4,
+        rocketScale: 0.6,
+        ufoScale: 0.3,
       },
-      yoot: {
-        position: [13, -7, -2],
-        text: {
-          position: [10,-4,-1],
-          size: 0.6
-        }
-      },
-      playersText: {
-        position: [11,-11.5,-1],
-        size: 0.6
-      },
-      ageText: {
-        position: [10,-11,-1],
-        size: 0.6
-      }
     },
     game: {
+      letsPlayButton: {
+        position: [8.75,0,4.5],
+        rotation: [-Math.PI / 2, 0, 0],
+        disabledButton: {
+          position: [-0.6, 0.025, -0.12],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+          lineHeight: 0.9
+        },
+        activeButton: {
+          backdropWidth: 1.6,
+          backdropHeight: 1.1,
+          scale: 0.8,
+          position: [0.1, 0, 0.5],
+          text: {
+            position: [-0.8,0,-0.15],
+            rotation: [-Math.PI/2,0,0],
+            size: 0.45,
+            height: 0.01,
+            lineHeight: 0.7
+          }
+        }
+      },
+      hostName: {
+        position: [8, 0.025, -3.95],
+        rotation: [-Math.PI/2, 0, 0],
+        size: 0.3,
+        height: 0.01
+      },
+      team0: {
+        position: [-11, 0, -5.2],
+        scale: 1,
+        title: {
+          position: [0,0,0],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.4,
+          height: 0.01
+        },
+        pieces: {
+          position: [0.23, 0, 0],
+          positionStartX: 0,
+          positionStartY: 0,
+          positionStartZ: 0.8,
+          rotation: [0, 0, 0],
+          scale: 1.4,
+          space: 1.1,
+          sectionScale: 0.5
+        },
+        names: {
+          position: [0, 0, 1.3],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01,
+          maxLength: 12
+        },
+        join: {
+          position: [3, 0, 0.45],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.3,
+          height: 0.01
+        },
+        pregameRoll: {
+          position: [3.4, 0, 0.5],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
+      team1: {
+        scale: 1,
+        position: [-11, 0, -1],
+        title: {
+          position: [0,0,0],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.4,
+          height: 0.01
+        },
+        pieces: {
+          position: [0.23, 0, 0.1],
+          positionStartX: 0,
+          positionStartY: 0,
+          positionStartZ: 0.8,
+          rotation: [0, 0, 0],
+          scale: 1.2,
+          space: 1.2,
+          sectionScale: 0.5
+        },
+        names: {
+          position: [0, 0, 1.3],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01,
+          maxLength: 12
+        },
+        join: {
+          position: [3.1, 0, 0.5],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.3,
+          height: 0.01
+        },
+        pregameRoll: {
+          position: [3.5, 0, 0.6],
+          rotation: [-Math.PI / 2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
       joinTeamModal: {
         position: [-2.5, 0, -1.5],
         rotation: [-Math.PI/2, 0, 0],
         scale: [1, 1, 1]
       },
-    },
-    team0: {
-      scale: 1,
-      position: [-4, 0, -7.5],
-      title: {
-        position: [0,0,0],
-        rotation: [-Math.PI / 2, 0, 0],
-      },
-      pieces: {
-        position: [0.2, 0, 0.7]
-      },
-      names: {
-        position: [0, 0, 1.1],
+      chat: {
+        position: [-11,0,3.5],
         rotation: [-Math.PI/2, 0, 0],
-        padding: '0px 15px 0px 0px',
-        divWidth: 150
+        scale: [0.5, 0.5, 0.5],
+        box: {
+          borderRadius: '5px',
+          height: '130px',
+          width: '380px',
+          padding: '10px',
+          fontSize: '20px',
+        },
+        input: {
+          height: '15px',
+          fontSize: '20px',
+          borderRadius: '5px',
+          padding: '10px',
+          border: 0,
+        }
       },
-      join: {
-        position: [2, 0, 0.1],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
+      invite: {
+        position: [-10.25, 0, 3.1],
+        size: 0.3,
+        height: 0.01
       },
-      pregameRoll: {
-        position: [2, 0, 0.5],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
-      }
-    },
-    team1: {
-      scale: 1,
-      position: [0, 0, -7.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      title: {
-        position: [0,0,0],
-        rotation: [-Math.PI / 2, 0, 0],
+      discord: {
+        position: [-8.5, 0, 3.1],
+        size: 0.3,
+        height: 0.01
       },
-      pieces: {
-        position: [0.2, 0, 0.6]
-      },
-      names: {
-        position: [0, 0, 1.1],
-        rotation: [-Math.PI/2, 0, 0],
-        padding: '0px 15px 0px 0px',
-        divWidth: 150
-      },
-      join: {
-        position: [2, 0, 0.1],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
-      },
-      pregameRoll: {
-        position: [1.8, 0, 0.5],
-        rotation: [-Math.PI / 2, 0, 0],
-        fontSize: 15
-      }
-    },
-    whoGoesFirst: {
-      title: {
-        position: [-4.5, 0, -5.8],
+      disconnectModal: {
+        position: [-2.6,0.1,-1],
         rotation: [-Math.PI/2,0,0],
-        fontSize: 35
       },
-      description: {
-        position: [-4.5, 0, -4.5],
-        rotation: [-Math.PI/2,0,0],
-        fontSize: 20,
-        width: 330
-      }
-    },
-    joinTeamModal: {
-      position: [-1, 0, -0.7],
-      rotation: [-Math.PI/2, 0, 0],
-      scale: [1, 1, 1]
-    },
-    disconnectModal: {
-      position: [-2.3,0.1,-1],
-      rotation: [-Math.PI/2,0,0],
-    },
-    startTip: {
-      position: [2, 0, 6.5],
-      line0Position: [0,0,0],
-      line1Position: [0,0,0.4],
-      line2Position: [0,0,0.8],
-      fontSize: 0.24,
-      rotation: [0, Math.PI / 2, 0],
-    },
-    spectatorMessage: {
-      line0Position: [0,0,0],
-      line1Position: [0,0,0.4],
-      size: 0.24
-    },
-    throwCount: {
-      position: [2, 0, 4.4],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13
-    },
-    gamePhase: {
-      position: [2, 0, 4.8],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13
-    },
-    turn: {
-      position: [2, 0, 4.8],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13
-    },
-    yourTurn: {
-      position: [2, 0, 5.2],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13
-    },
-    startEarth: {
-      position: [0.5,0,4.5],
-      rotation: [-Math.PI/2, 0, 0],
-      helperArrow: {
-        position: [2,0,4],
-        rotation: [Math.PI,Math.PI + Math.PI/4 + Math.PI/10,0],
-        color: 'limegreen',
-        scale: [0.2, 0.2, 0.6]
+      board: {
+        lobby: {
+          scale: 1,
+          position: [0, 0, 0]
+        },
+        pregame: {
+          scale: 0.2,
+          position: [5.5, 0, -3.4]
+        },
+        game: {
+          scale: 1,
+          position: [0, 0, 0]
+        },
+        finished: {
+          scale: 0.2,
+          position: [5, 0, 1]
+        }
       },
-      fontSize: 15
-    },
-    hostName: {
-      position: [-4.1, 0, -4.5],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    roomId: {
-      position: [-4.1, 0, -4.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    ready: [0,0,-2.5],
-    currentPlayerName: [-1,0,-3.5],
-    chat: {
-      position: [-4.35,0,5.3],
-      rotation: [-Math.PI/2, 0, 0],
-      scale: [0.5, 0.5, 0.5],
-      box: {
-        borderRadius: '5px',
-        height: '150px',
-        width: '200px',
-        padding: '10px',
-        fontSize: '20px',
+      whoGoesFirst: {
+        title: {
+          position: [-4.5, 0, -5],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.7,
+          height: 0.01
+        },
+        description: {
+          position: [-4.5, 0, -4.3],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.35,
+          height: 0.01,
+          lineHeight: 0.8
+        }
       },
-      input: {
-        height: '20px',
-        borderRadius: '5px',
-        padding: '10px',
-        border: 0,
-        width: '200px',
-        fontSize: '20px',
-      }
-    },
-    piecesSection: {
-      position: [-1, 0, 6],
-      scale: 1
-    },
-    actionButtons: {
-      position: [1.5, 0, 0],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    menu: {
-      position: [-7.3,-0.5,-2.3],
-    },
-    rulebook: {
-      position: [-3, 0.5, -13.8],
-      widthMax: 469,
-      widthMin: 0,
-      heightMin: 0,
-      heightMax: 170,
-      padding: 5
-    },
-    moves: {
-      text: {
-        position: [0, 0, 1.2],
+      settings: {
+        position: [9, 0, -5.5],
+        text: {
+          position: [-0.9, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+        }
+      },
+      rulebookButton: {
+        position: [9.085, 0, -4.8],
+        text: {
+          position: [-0.98, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.3,
+          height: 0.01,
+        }
+      },
+      piecesSection: {
+        position: [8, 0, 0.5],
+        pieces: {
+          rotation: [0, 0, 0],
+          positions: [
+            [0.5, 0, -0.5],
+            [1.8, 0, -0.5],
+            [0.5, 0, 0.7],
+            [1.8, 0, 0.7]
+          ],
+          scale: 1.4
+        }
+      },
+      moveList: {
+        position: [8, 0, -1.7],
         rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15
       },
-      list: {
-        position: [1.4, 0, 1.2],
+      currentPlayer: {
+        position: [8.4, 0, -3],
+        rotation: [0,0,0],
+        text: {
+          position: [0.7, 0.025, 0.15],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.35,
+          height: 0.01
+        }
+      },
+      practiceYootButton: {
+        position: [9, 0, 3],
+      },
+      yootButton: {
+        position: [9, 0, 4.2],
+        rotation: [0, Math.PI/2, 0],
+        scale: 1
+      },
+      throwCount: {
+        position: [7.3, 0, 5.2],
+      },
+      scoreButtons: {
+        position: [4.5, 0, 3.5],
         rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15
       },
-    },
-    tileRadius: {
-      ring: 4,
-      shortcut1: 2.7,
-      shortcut2: 1.4
-    },
-    tilePieceScale: 2.5,
-    star: {
-      scale: 0.4,
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    mars: {
-      rocketScale: 0.6,
-      ufoScale: 0.3,
-    },
-    saturn: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    moon: {
-      rocketScale: 0.6,
-      ufoScale: 0.3,
-    },
-    earth: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    homePieces: {
-      0: {
-        positionStartX: -4,
-        positionStartY: 0,
-        positionStartZ: 9,
-        space: 0.8,
-        rotation: [0, 0, 0],
+      mainAlert: {
+        position: [0, 0.3, 6],
+        rotation: [0, Math.PI/2, 0]
       },
-      1: {
-        positionStartX: 0,
-        positionStartY: 0,
-        positionStartZ: 9,
-        space: 0.8,
-        rotation: [0, 0, 0],
+      pregameAlert: {
+        position: [-2, 0, -4.5],
+        initialScale: 1.7,
+        rocketsGoFirst: {
+          position: [0.5, 2, 1],
+          rotation: [0, Math.PI/2, 0],
+        },
+        ufosGoFirst: {
+          position: [0.5, 2, 1],
+          rotation: [0, Math.PI/2, 0],
+        },
+        tie: {
+          position: [0.5, 3, 1],
+          rotation: [0, Math.PI/2, 0],
+        }
       },
-    },
-    letsPlayButton: {
-      position: [2,0,6.3],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15,
-    },
-    invite: {
-      position: [-4.3,0,4.1],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    discord: {
-      position: [-4.3, 0, 4.7],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    rulebookButton: {
-      position: [3.5, 0, -3.8],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    settings: {
-      position: [3, 0, -4.4],
-      rotation: [-Math.PI/2, 0, 0],
-      fontSize: 13,
-    },
-    startGameBanner: {
-      position: [2,0,10],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    throwButton: {
-      position: [2.2, 0, 6.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      scale: 0.8
-    },
-    throwButtonOrder: {
-      position: [-4, 0, 11.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    scoreButton: {
-      position: [-2, 0, 11],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    resetButton: {
-      position: [3, 0, 11],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    controlsButton: {
-      position: [-3, 0, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    rulesButton: {
-      position: [-3, -0.5, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    goalButton: {
-      position: [0, -0.5, 0],
-    },
-    diceButton: {
-      position: [0, -1, 0],
-    },
-    movesButton: {
-      position: [0, -1.5, 0],
-    },
-    scoreDetailsButton: {
-      position: [0, -2, 0],
-    },
-    tooltip: {
-      whoFirst: {
-        position: [1.3,1,3]
+      throwAlert: {
+        position: [0,0,4.5],
+        rotation: [0, Math.PI/2, 0],
+        initialScale: 1
       }
     },
-    tiles: {
-      position: [-8, 0, 0],
-      scale: 1
-    },
-    tipsModal: {
-      position: [-2.5,0,-0.9],
-      rotation: [-Math.PI/2,0,0],
-      height: 60,
-      padding: 10,
-      scale: [1,1,1],
-      fontSize: 15
+    board: {
+      startEarth: {
+        position: [5.2, 0, 2.6],
+        text: {
+          position: [0,0,0],
+          rotation: [-Math.PI/2, 0, 0],
+          fontSize: 15,
+        },
+        helperArrow: {
+          position: [0.3,0,-0.5],
+          rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
+          color: 'limegreen',
+          scale: [0.9,0.9,0.9]
+        },
+      },
     },
     meteors: {
       initialPosition: {
@@ -1063,7 +1036,7 @@ export default {
         emitters: [
           { // left
             initialPosition: {
-              x: -4,
+              x: -8,
               y: 0,
               z: 0
             },
@@ -1075,20 +1048,8 @@ export default {
           },
           { // left
             initialPosition: {
-              x: -1,
-              y: 2,
-              z: 0
-            },
-            positionRange: {
-              x: 2,
-              y: 2,
-              z: 2
-            }
-          },
-          { // left
-            initialPosition: {
-              x: 1,
-              y: 4,
+              x: -11,
+              y: 0,
               z: 0
             },
             positionRange: {
@@ -1099,8 +1060,20 @@ export default {
           },
           { // right
             initialPosition: {
-              x: 4,
-              y: 4,
+              x: 8,
+              y: 0,
+              z: 0
+            },
+            positionRange: {
+              x: 2,
+              y: 2,
+              z: 2
+            }
+          },
+          { // right
+            initialPosition: {
+              x: 11,
+              y: 0,
               z: 0
             },
             positionRange: {
@@ -1110,18 +1083,18 @@ export default {
             }
           }
         ],
-        timePanA: 1
+        timePanA: 1,
       },
       dust: {          
         initialPosition: {
           x: 0,
-          y: -5,
+          y: -4,
           z: 0
         },
         positionRange: {
-          x: 2,
+          x: 3,
           y: 1,
-          z: 2
+          z: 3
         }
       }
     }
@@ -1838,7 +1811,17 @@ export default {
       pagination: {
         pageRadius: 0.2,
         arrowRadius: 0.4
-      }
+      },
+      tileRadius: {
+        ring: 5,
+        shortcut1: 3.5,
+        shortcut2: 1.7
+      },
+      star: {
+        scale: 0.4,
+        rocketScale: 0.6,
+        ufoScale: 0.3,
+      },
     },
     game: {
       letsPlayButton: {
@@ -2065,6 +2048,17 @@ export default {
           height: 0.01
         }
       },
+      practiceYootButton: {
+        position: [9, 0, 3],
+      },
+      yootButton: {
+        position: [9, 0, 4.2],
+        rotation: [0, Math.PI/2, 0],
+        scale: 1
+      },
+      throwCount: {
+        position: [7.3, 0, 5.2],
+      },
       scoreButtons: {
         position: [4.5, 0, 3.5],
         rotation: [-Math.PI/2, 0, 0],
@@ -2095,158 +2089,21 @@ export default {
         initialScale: 1
       }
     },
-    throwCount: {
-      position: [7.3, 0, 5.2],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15
-    },
-    turn: {
-      position: [5, 0, -2],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15
-    },
-    yourTurn: {
-      position: [5, 0, 1.5],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15
-    },
-    practiceThrowButton: {
-      position: [9, 0, 3],
-      rotation: [-Math.PI/2, Math.PI/2, -Math.PI/2, 'YXZ'],
-      fontSize: 20
-    },
-    startEarth: {
-      position: [5.2, 0, 2.6],
-      text: {
-        position: [0,0,0],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15,
+    board: {
+      startEarth: {
+        position: [5.2, 0, 2.6],
+        text: {
+          position: [0,0,0],
+          rotation: [-Math.PI/2, 0, 0],
+          fontSize: 15,
+        },
+        helperArrow: {
+          position: [0.3,0,-0.5],
+          rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
+          color: 'limegreen',
+          scale: [0.9,0.9,0.9]
+        },
       },
-      helperArrow: {
-        position: [0.3,0,-0.5],
-        rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
-        color: 'limegreen',
-        scale: [0.9,0.9,0.9]
-      },
-    },
-    startTip: {
-      position: [5, 0, 2],
-      rotation: [-Math.PI / 2, 0, 0],
-      line0Position: [0,0,0],
-      line1Position: [0,0,0.5],
-      line2Position: [0,0,1],
-      fontSize: 15,
-    },
-    spectatorMessage: {
-      position: [4.5, 0, 2.5]
-    },
-    ready: [0,0,-2.5],
-    currentPlayerName: [-1,0,-3.5],
-    tipsModal: {
-      position: [-4,0,-1.5],
-      rotation: [-Math.PI/2,0,0],
-      height: 60,
-      padding: 10,
-      scale: [1.5,1.5,1.5],
-      fontSize: 15
-    },
-    actionButtons: {
-      position: [1.5, 0, 16],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    menu: {
-      position: [-8, 0, 1.9]
-    },
-    moves: {
-      text: {
-        position: [0, 0, 1.2],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15
-      },
-      list: {
-        position: [1.4, 0, 1.2],
-        rotation: [-Math.PI/2, 0, 0],
-        fontSize: 15
-      },
-    },
-    tiles: {
-      position: [-8, 0, 0],
-      scale: 0.6
-    },
-    tileRadius: {
-      ring: 5,
-      shortcut1: 3.5,
-      shortcut2: 1.7
-    },
-    tilePieceScale: 4,
-    star: {
-      scale: 0.4,
-      rocketScale: 0.6,
-      ufoScale: 0.3,
-    },
-    mars: {
-      rocketScale: 0.6,
-      ufoScale: 0.3,
-    },
-    saturn: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    moon: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    earth: {
-      rocketScale: 0.4,
-      ufoScale: 0.2,
-    },
-    startGameBanner: {
-      position: [6, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    resetButton: {
-      position: [6, 0, 4],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    moveAnimation: {
-      initialScale: 0.3,
-      initialPosition: [8, 0, 6.5],
-      endingPosition: [9, 0, 4.5],
-      fontSize: 1
-    },
-    throwButton: {
-      position: [9, 0, 4.2],
-      rotation: [0, Math.PI/2, 0],
-      scale: 1
-    },
-    throwButtonOrder: {
-      position: [6, 0, 5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    controlsButton: {
-      position: [-3, 0, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    rulesButton: {
-      position: [-3, -0.5, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    goalButton: {
-      position: [0, -0.5, 0],
-    },
-    diceButton: {
-      position: [0, -1, 0],
-    },
-    movesButton: {
-      position: [0, -1.5, 0],
-    },
-    scoreDetailsButton: {
-      position: [0, -2, 0],
-    },
-    tooltip: {
-      whoFirst: {
-        position: [0.5,1.5,2.2]
-      }
     },
     meteors: {
       initialPosition: {
@@ -2322,257 +2179,5 @@ export default {
         }
       }
     }
-  },
-  landscapeMobile: {
-    center: [-5.3, 0, -2.5],
-    camera: {
-      // zoom: 150,
-      zoomMin: 35,
-      zoomMax: 40,
-      position: [-5.3, 25, 1.5],
-      lookAtOffset: [0, 0, 0]
-    },
-    title: {
-      position1: [-13.5, 0, -5.5],
-      position2: [-13.5, 0, -4],
-      fontSize: '40px',
-      yoots: {
-        position1: [-9.9, 0, -5.2],
-        rotation1: [0, -Math.PI / 2, -Math.PI / 2],
-        position2: [-9.4, 0, -5.2],
-        rotation2: [0, -Math.PI / 2, -Math.PI / 2],
-        position3: [-8.9, 0, -5.2],
-        rotation3: [0, -Math.PI / 2, -Math.PI / 2],
-        position4: [-8.4, 0, -5.2],
-        rotation4: [0, -Math.PI / 2, -Math.PI / 2],
-        scale: [0.21, 1.3, 0.21]
-      },
-      rockets: {
-        position1: [0.3,0,-3],
-        position2: [0.3,0,-4],
-        position3: [2,0,-3],
-        position4: [2,0,-4],
-        scale: [1.1, 1.1, 1.1]
-      },
-      ufos: {
-        position1: [0.3,0,-5],
-        position2: [0.3,0,-6],
-        position3: [2,0,-5],
-        position4: [2,0,-6],
-        scale: [1.1, 1.1, 1.1]
-      },
-      letsPlay: {
-        position1: [0, 0, -1],
-        position2: [0, 0, 0.5],
-        positionBox: [1.4, 0, -0.65],
-        dimsBox: [3, 16, 0.1]
-      },
-      // rulebook: {
-      //   position1: [-13.5, 0, -1],
-      //   position2: [-13.5, 0, 0.5],
-      //   positionBox: [-12.1, 0, -0.65],
-      //   dimsBox: [3, 16, 0.1]
-      // }
-    },
-    team0: {
-      scale: 0.7,
-      position: [-13, 0, -5.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      pieces: {
-        position: [0.2, 0, 0.2]
-      },
-      names: {
-        position: [0, 0, 1]
-      },
-      join: {
-        position: [2, 0, 0],
-        rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      }
-    },
-    team1: {
-      scale: 0.7,
-      position: [-13, 0, -3.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      pieces: {
-        position: [0.2, 0, 0.1]
-      },
-      names: {
-        position: [0, 0, 1]
-      },
-      join: {
-        position: [2, 0, 0]
-      }
-    },
-    throwCount: {
-      position: throwPosition,
-      size: 0.21
-    },
-    turn: {
-      position: [-0.8, 0, -1.5],
-      size: 0.22
-    },
-    gamePhase: {
-      position: [-0.8, 0, -1.9],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      fontSize: 15
-    },
-    roomId: {
-      position: [5, 0, -3.5],
-      size: 0.3
-    },
-    rulebookButton: {
-      position: [5, 0, -3.5],
-      rotation: [-Math.PI/2, 0, 0],
-      size: 0.3
-    },
-    settings: {
-      position: [3, 0, -3.5],
-      size: 0.3
-    },
-    ready: [0,0,-2.5],
-    currentPlayerName: [-1,0,-3.5],
-    chat: {
-      position: [-13,-0.5,-1.5],
-      fontSizeMin: 12,
-      fontSizeMax: 40,
-      heightMin: 50,
-      heightMax: 140,
-      widthMin: 110,
-      widthMax: 220,
-      paddingMin: 5,
-      paddingMax: 7,
-    },
-    joinTeamModal: {
-      position: [-1.2, 0, -1]
-    },
-    piecesSection: {
-      position: [1.2, 0, -1.5],
-      scale: 0.8,
-      pieces: {
-        rotation: [-Math.PI / 2, 0, 0, "XZY"],
-      }
-    },
-    actionButtons: {
-      position: [1.5, 0, 0],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    menu: {
-      position: [0, 0, -6]
-    },
-    moves: {
-      text: [0,0,2],
-      list: [1.5,0,2],
-      // size: 0.3
-    },
-    tiles: {
-      position: [-8, 0, 0],
-      scale: 0.6
-    },
-    tileRadius: {
-      ring: 5,
-      shortcut1: 3.5,
-      shortcut2: 1.7
-    },
-    tilePieceScale: 4,
-    star: {
-      scale: 0.4,
-    },
-    mars: {
-    },
-    saturn: {
-    },
-    moon: {
-    },
-    earth: {
-    },
-    homePieces: {
-      0: {
-        positionStartX: -11.5,
-        positionStartY: 0,
-        positionStartZ: 6,
-        space: 0.8,
-        rotation: [0, 0, 0],
-      },
-      1: {
-        positionStartX: -8,
-        positionStartY: 0,
-        positionStartZ: 6,
-        space: 0.8,
-        rotation: [0, 0, 0],
-      },
-    },
-    letsPlayButton: {
-      position: [0,0,0],
-      rotation: [-Math.PI / 2, 0, 0],
-      fontSize: 15,
-    },
-    invite: {
-      position: [-6.8, 0, 1.9]
-    },
-    discord: {
-      position: [-5.1, 0, 1.9]
-    },
-    startTip: {
-      position: [4.5, 0, 2],
-      line0Position: [0,0,0],
-      line1Position: [0,0,0.5],
-      line2Position: [0,0,1],
-      fontSize: 0.3,
-      rotation: [0, Math.PI / 2, 0],
-    },
-    startEarth: {
-      position: [-0.8, -1.2, 0],
-      rotation: [-Math.PI/2, 0, 0],
-      helperArrow: {
-        position: [1.2,0,5.8],
-        rotation: [Math.PI/2,0,-Math.PI * (5/8)],
-        color: 'yellow',
-        scale: 2
-      },
-      fontSize: 15,
-      boxWidth: 2.4,
-      boxHeight: 0.7,
-      rotation: [0, Math.PI / 2, 0],
-    },
-    startGameBanner: {
-      position: [6, 0, 3],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    scoreButton: {
-      position: [6, 0, 3.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    resetButton: {
-      position: [6, 0, 4],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    throwButton: {
-      position: [6, 0, 4.5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    throwButtonOrder: {
-      position: [6, 0, 5],
-      rotation: [-Math.PI / 2, 0, 0, "XZY"],
-    },
-    controlsButton: {
-      position: [-3, 0, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    rulesButton: {
-      position: [-3, -0.5, -5],
-      rotation: [0, Math.PI / 2, 0],
-    },
-    goalButton: {
-      position: [0, -0.5, 0],
-    },
-    diceButton: {
-      position: [0, -1, 0],
-    },
-    movesButton: {
-      position: [0, -1.5, 0],
-    },
-    scoreDetailsButton: {
-      position: [0, -2, 0],
-    },
   },
 };

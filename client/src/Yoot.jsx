@@ -356,15 +356,12 @@ export default function Yoot({ device }) {
         );
       })}
       { gamePhase === 'lobby' && <PracticeYootButton
-        position={layout[device].practiceThrowButton.position}
-        rotation={layout[device].practiceThrowButton.rotation}
-        fontSize={layout[device].practiceThrowButton.fontSize}
-        scale={1}
+        position={layout[device].game.practiceYootButton.position}
       />}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
-        position={layout[device].throwButton.position}
-        rotation={layout[device].throwButton.rotation}
-        scale={layout[device].throwButton.scale}
+        position={layout[device].game.yootButton.position}
+        rotation={layout[device].game.yootButton.rotation}
+        scale={layout[device].game.yootButton.scale}
         active={yootActive && !animationPlaying}
       />}
       { (gamePhase === "pregame" || gamePhase === "game") && (client.team === turn.team) && <ThrowCount 

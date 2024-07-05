@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three';
 
 import { PresentationControls, Text3D } from '@react-three/drei'
-import fireworksSettings from './particles/RocketsWinFireworks';
+import fireworksSettings from './particles/Fireworks';
 import Stars from './particles/Stars'
 import EarthModified from './meshes/EarthModified';
 import RocketWinMesh from './meshes/RocketWinMesh';

@@ -10,9 +10,6 @@ import { Color, MeshStandardMaterial } from 'three';
 
 export default function PracticeYootButton({ 
   position=[0,0,0], 
-  rotation=[0,0,0], 
-  fontSize=20,
-  scale=1
 }) {
 
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)

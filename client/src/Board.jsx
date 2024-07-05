@@ -251,11 +251,11 @@ export default function Board({
   return <animated.group position={position} rotation={rotation} scale={scale}>
     {tileComponents}
     {showStart && <group 
-      position={layout[device].startEarth.position} 
+      position={layout[device].board.startEarth.position} 
       scale={1.67}>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].startEarth.text.position}
+        position={layout[device].board.startEarth.text.position}
         rotation={[-Math.PI/2, 0, 0]}
         size={0.25}
         height={0.01}
@@ -264,12 +264,12 @@ export default function Board({
         <meshStandardMaterial color='limegreen'/>
       </Text3D>
       <mesh
-        position={layout[device].startEarth.helperArrow.position}
-        rotation={layout[device].startEarth.helperArrow.rotation}
-        scale={layout[device].startEarth.helperArrow.scale}
+        position={layout[device].board.startEarth.helperArrow.position}
+        rotation={layout[device].board.startEarth.helperArrow.rotation}
+        scale={layout[device].board.startEarth.helperArrow.scale}
       >
         <Pointer
-          color={layout[device].startEarth.helperArrow.color}
+          color={layout[device].board.startEarth.helperArrow.color}
           animate={false}
         />
       </mesh>
