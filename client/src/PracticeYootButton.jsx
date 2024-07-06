@@ -9,7 +9,8 @@ import { Text3D } from '@react-three/drei';
 import { Color, MeshStandardMaterial } from 'three';
 
 export default function PracticeYootButton({ 
-  position=[0,0,0], 
+  position=[0,0,0],
+  scale=1 
 }) {
 
   const [_yootThrowValues, setYootThrowValues] = useAtom(yootThrowValuesAtom)
@@ -61,7 +62,7 @@ export default function PracticeYootButton({
     setYootThrowValues(generateForveVectors())
   }
 
-  return <group position={position}>
+  return <group position={position} scale={scale}>
     <mesh
       material={yellowMaterial}
     >

@@ -357,6 +357,7 @@ export default function Yoot({ device }) {
       })}
       { gamePhase === 'lobby' && <PracticeYootButton
         position={layout[device].game.practiceYootButton.position}
+        scale={layout[device].game.practiceYootButton.scale}
       />}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
         position={layout[device].game.yootButton.position}

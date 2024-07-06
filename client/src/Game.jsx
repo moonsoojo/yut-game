@@ -72,8 +72,8 @@ export default function Game() {
     const [readyToStart] = useAtom(readyToStartAtom)
     const [hostName] = useAtom(hostNameAtom)
     
-    function DisabledButton() {
-      return <group>
+    function DisabledButton({ position, scale }) {
+      return <group position={position} scale={scale}>
         <mesh>
           <boxGeometry args={[1.55, 0.03, 1.2]}/>
           <meshStandardMaterial color='grey'/>
@@ -84,11 +84,11 @@ export default function Game() {
         </mesh>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].game.letsPlayButton.disabledButton.position}
-          rotation={layout[device].game.letsPlayButton.disabledButton.rotation}
-          size={layout[device].game.letsPlayButton.disabledButton.size}
-          height={layout[device].game.letsPlayButton.disabledButton.height}
-          lineHeight={layout[device].game.letsPlayButton.disabledButton.lineHeight}
+          position={layout[device].game.letsPlayButton.disabledButton.text.position}
+          rotation={layout[device].game.letsPlayButton.disabledButton.text.rotation}
+          size={layout[device].game.letsPlayButton.disabledButton.text.size}
+          height={layout[device].game.letsPlayButton.disabledButton.text.height}
+          lineHeight={layout[device].game.letsPlayButton.disabledButton.text.lineHeight}
         >
           {`lets\nplay!`}
           <meshStandardMaterial color='grey'/>
@@ -154,7 +154,7 @@ export default function Game() {
         },
         to: [
           {
-            scale: 1,
+            scale: layout[device].game.letsPlayButton.activeButton.scale,
             config: {
               tension: 170,
               friction: 26
@@ -166,7 +166,6 @@ export default function Game() {
   
       return <animated.group name='animated-group' scale={springs.scale}>
         <group name='lets-play-button-active' 
-        scale={layout[device].game.letsPlayButton.activeButton.scale} 
         position={layout[device].game.letsPlayButton.activeButton.position} 
         ref={buttonGroupRef}>
           <mesh 
@@ -178,7 +177,7 @@ export default function Game() {
             onPointerDown={handlePointerDown}
           >
             <cylinderGeometry args={[1, 1, 0.1, 48]}/>
-            <meshStandardMaterial color={hover ? 'yellow' : 'black'} transparent opacity={hover ? 0.3 : 1} />
+            <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.2} />
           </mesh>
           <Text3D
               font="fonts/Luckiest Guy_Regular.json"
@@ -218,7 +217,10 @@ export default function Game() {
 
     return <>
       { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
-        { readyToStart ? <ActivatedButton/> : <DisabledButton/> }
+        { readyToStart ? <ActivatedButton/> : <DisabledButton 
+        position={layout[device].game.letsPlayButton.disabledButton.position}
+        scale={layout[device].game.letsPlayButton.disabledButton.scale}
+        /> }
       </group> }
     </>
   }
@@ -395,7 +397,7 @@ export default function Game() {
     </group>
   }
 
-  function SettingsButton({ position }) {
+  function SettingsButton({ position, scale }) {
     const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
 
     function handlePointerEnter(e) {
@@ -413,7 +415,7 @@ export default function Game() {
       console.log('settings button click')
     }
 
-    return <group position={position}>
+    return <group position={position} scale={scale}>
       <mesh
         material={yellowMaterial}
       >
@@ -445,7 +447,7 @@ export default function Game() {
     </group>
   }
 
-  function RulebookButton({ position }) {
+  function RulebookButton({ position, scale }) {
     const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
 
     function handlePointerEnter(e) {
@@ -463,14 +465,14 @@ export default function Game() {
       console.log('settings button click')
     }
 
-    return <group position={position}>
+    return <group position={position} scale={scale}>
       <mesh
         material={yellowMaterial}
       >
-        <boxGeometry args={[2.22, 0.03, 0.55]}/>
+        <boxGeometry args={[1.4, 0.03, 0.55]}/>
       </mesh>
       <mesh>
-        <boxGeometry args={[2.17, 0.04, 0.5]}/>
+        <boxGeometry args={[1.35, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -490,7 +492,7 @@ export default function Game() {
         height={layout[device].game.rulebookButton.text.height}
         material={yellowMaterial}
       >
-        Rulebook
+        Rules
       </Text3D>
     </group>
   }
@@ -585,9 +587,12 @@ export default function Game() {
         </group>}
         <Yoot device={device}/>
         <SettingsButton 
-        position={layout[device].game.settings.position}/>
+        position={layout[device].game.settings.position}
+        scale={layout[device].game.settings.scale}/>
         <RulebookButton 
-        position={layout[device].game.rulebookButton.position}/>
+        position={layout[device].game.rulebookButton.position}
+        scale={layout[device].game.rulebookButton.scale}
+        />
         <PiecesSection 
         position={layout[device].game.piecesSection.position}
         device={device}

@@ -33,6 +33,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
 
     return client.team !== team && joinTeam !== team && <group
       position={layout[device].game[`team${team}`].join.position}
+      scale={layout[device].game[`team${team}`].join.scale}
     >
       <mesh
         material={yellowMaterial}
@@ -180,7 +181,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       size={layout[device].game[`team${team}`].title.size}
       height={layout[device].game[`team${team}`].title.height}
     >
-      { team === 0 ? "Team Rocket" : "Team UFO" }
+      { team === 0 ? "Rockets" : "UFOs" }
       <meshStandardMaterial color={ team === 0 ? 'red': 'turquoise' }/>
     </Text3D>
     {/* join button */}
