@@ -4,14 +4,15 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { useAtom } from 'jotai';
 import { socket } from './SocketManager';
-import { yootActiveAtom } from './GlobalState';
+import { throwCountAtom, yootActiveAtom } from './GlobalState';
 import { useParams } from 'wouter';
 
 export default function YootButton({ 
   position, 
   rotation, 
   scale,
-  active
+  active,
+  throwCountProps
 }) {
   // yoots with material
   // get texture of yoot
@@ -33,9 +34,9 @@ export default function YootButton({
 
   useFrame((state, delta) => {
     if (active) {
-      buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
-      buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
-      buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.1 + scale
+      buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
+      buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
+      buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
     } else {
       buttonRef.current.scale.x = scale
       buttonRef.current.scale.y = scale

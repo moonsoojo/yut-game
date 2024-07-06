@@ -1,5 +1,3 @@
-import RocketsGoFirst from "./RocketsGoFirst";
-
 let floorPosition = [0,1.5,0]
 let outOfBoundsPosition = [
   floorPosition[0]-1,
@@ -23,7 +21,7 @@ export default {
     camera: {
       zoomMin: 0,
       zoomMax: 55,
-      position: [0,20,3],
+      position: [0,17,7],
     },
     title: {
       position: [0,0,0],
@@ -736,13 +734,13 @@ export default {
     },
     game: {
       letsPlayButton: {
-        position: [4,0,7],
+        position: [0.6,0,7.7],
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
-          position: [0,0,0.5],
-          scale: 1.6,
+          position: [-0.5,0,0.5],
+          scale: 1.8,
           text: {
-            position: [-0.6, 0.025, -0.12],
+            position: [-0.55, 0.025, -0.12],
             rotation: [-Math.PI/2, 0, 0],
             size: 0.3,
             height: 0.01,
@@ -750,10 +748,10 @@ export default {
           }
         },
         activeButton: {
-          backdropWidth: 1.6,
+          backdropWidth: 1.4,
           backdropHeight: 1.1,
-          scale: 0.9,
-          position: [0, 0, 0.7],
+          scale: 1.1,
+          position: [-0.3, 0, 0.5],
           text: {
             position: [-0.8,0,-0.15],
             rotation: [-Math.PI/2,0,0],
@@ -764,7 +762,7 @@ export default {
         }
       },
       hostName: {
-        position: [-4.5, 0.025, -4.5],
+        position: [-4.6, 0.025, 4.5],
         rotation: [-Math.PI/2, 0, 0],
         size: 0.3,
         height: 0.01
@@ -855,13 +853,13 @@ export default {
         scale: [1.3, 1.3, 1.3]
       },
       chat: {
-        position: [-4.7,0,6],
+        position: [-4.7,0,6.7],
         rotation: [-Math.PI/2, 0, 0],
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
           height: '140px',
-          width: '250px',
+          width: '220px',
           padding: '10px',
           fontSize: '20px',
         },
@@ -874,13 +872,13 @@ export default {
         }
       },
       invite: {
-        position: [-3.9, 0, 4.9],
+        position: [-3.92, 0, 5.5],
         scale: 0.9,
         size: 0.3,
         height: 0.01
       },
       discord: {
-        position: [-3.75, 0, 5.6],
+        position: [-3.75, 0, 6.2],
         scale: 0.9,
         size: 0.3,
         height: 0.01
@@ -896,7 +894,7 @@ export default {
         },
         pregame: {
           scale: 0.2,
-          position: [5.5, 0, -3.4]
+          position: [4.2, 0, -2.2]
         },
         game: {
           scale: 0.85,
@@ -905,21 +903,21 @@ export default {
         finished: {
           scale: 0.2,
           position: [5, 0, 1]
-        }
+        },
       },
       whoGoesFirst: {
         title: {
-          position: [-4.5, 0, -5],
+          position: [-4.5, 0, -4],
           rotation: [-Math.PI/2,0,0],
-          size: 0.7,
+          size: 0.5,
           height: 0.01
         },
         description: {
-          position: [-4.5, 0, -4.3],
+          position: [-4.5, 0, -3.3],
           rotation: [-Math.PI/2,0,0],
-          size: 0.35,
+          size: 0.3,
           height: 0.01,
-          lineHeight: 0.8
+          lineHeight: 0.7
         }
       },
       settings: {
@@ -943,24 +941,26 @@ export default {
         }
       },
       piecesSection: {
-        position: [-0.5, 0, 7],
+        position: [2.5, 0, 6],
         pieces: {
           rotation: [0, 0, 0],
           positions: [
-            [0.4, 0, -0.5],
-            [1.9, 0, -0.5],
-            [0.4, 0, 0.7],
-            [1.9, 0, 0.7]
+            [0, 0, -1],
+            [1.6, 0, -1],
+            [0, 0, 0.5],
+            [1.6, 0, 0.5]
           ],
-          scale: 1.4
+          scale: 1.5
         }
       },
       moveList: {
-        position: [8, 0, -1.7],
+        position: [2, 0, 8.3],
         rotation: [-Math.PI/2, 0, 0],
+        tokenScale: 0.8,
+        tokenPosition: [0.5, 0, 0.6]
       },
       currentPlayer: {
-        position: [8.4, 0, -3],
+        position: [3.2, 0, 5],
         rotation: [0,0,0],
         text: {
           position: [0.7, 0.025, 0.15],
@@ -970,27 +970,28 @@ export default {
         }
       },
       practiceYootButton: {
-        position: [4, 0, 5.7],
+        position: [3.3, 0, 8.5],
         scale: 1.2
       },
       yootButton: {
-        position: [9, 0, 4.2],
+        position: [0, 0, 7.5],
         rotation: [0, Math.PI/2, 0],
-        scale: 1
+        scale: 1.15
       },
       throwCount: {
-        position: [7.3, 0, 5.2],
+        position: [1.5, 0, 9],
+        orientation: 'downUp'
       },
       scoreButtons: {
-        position: [4.5, 0, 3.5],
+        position: [1.8, 0, 5.2],
         rotation: [-Math.PI/2, 0, 0],
       },
       mainAlert: {
-        position: [0, 0.3, 6],
+        position: [0, 0.3, 7],
         rotation: [0, Math.PI/2, 0]
       },
       pregameAlert: {
-        position: [-2, 0, -4.5],
+        position: [-2, 0, -3.5],
         initialScale: 1.7,
         rocketsGoFirst: {
           position: [0.5, 2, 1],
@@ -1006,9 +1007,21 @@ export default {
         }
       },
       throwAlert: {
-        position: [0,0,4.5],
+        position: [0,0,5.5],
         rotation: [0, Math.PI/2, 0],
         initialScale: 1
+      },
+      ufo: {
+        selectedAdditionalScale: 0.3,
+        selectedAnimatedScaleRange: 0.15
+      },
+      piecesOnBoard: {
+        positionScale: 0.85,
+        pieceScale: 0.9
+      },
+      welcomeBackText: {
+        position: [3, 0, 4.5],
+        rotation: [-Math.PI/2,0,0]
       }
     },
     board: {
@@ -1831,11 +1844,15 @@ export default {
         position: [8.75,0,4.5],
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
-          position: [-0.6, 0.025, -0.12],
-          rotation: [-Math.PI/2, 0, 0],
-          size: 0.3,
-          height: 0.01,
-          lineHeight: 0.9
+          position: [0.26,0,0.1],
+          scale: 1.33,
+          text: {
+            position: [-0.6, 0.025, -0.12],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.3,
+            height: 0.01,
+            lineHeight: 0.9
+          }
         },
         activeButton: {
           backdropWidth: 1.6,
@@ -2016,9 +2033,9 @@ export default {
         }
       },
       rulebookButton: {
-        position: [9.085, 0, -4.8],
+        position: [9.33, 0, -4.8],
         text: {
-          position: [-0.98, 0.025, 0.15],
+          position: [-0.58, 0.025, 0.15],
           rotation: [-Math.PI/2, 0, 0],
           size: 0.3,
           height: 0.01,
@@ -2038,8 +2055,10 @@ export default {
         }
       },
       moveList: {
-        position: [8, 0, -1.7],
+        position: [8, 0, -2],
         rotation: [-Math.PI/2, 0, 0],
+        tokenScale: 0.9,
+        tokenPosition: [0.5, 0, 0.6]
       },
       currentPlayer: {
         position: [8.4, 0, -3],
@@ -2060,7 +2079,8 @@ export default {
         scale: 1
       },
       throwCount: {
-        position: [7.3, 0, 5.2],
+        position: [7.7, 0, 5.4],
+        orientation: 'downUp'
       },
       scoreButtons: {
         position: [4.5, 0, 3.5],
@@ -2090,6 +2110,17 @@ export default {
         position: [0,0,4.5],
         rotation: [0, Math.PI/2, 0],
         initialScale: 1
+      },
+      ufo: {
+        selectedAdditionalScale: 0.3,
+        selectedAnimatedScaleRange: 0.15
+      },
+      piecesOnBoard: {
+        positionScale: 1
+      },
+      welcomeBackText: {
+        position: [3, 0, 4.5],
+        rotation: [-Math.PI/2,0,0]
       }
     },
     board: {

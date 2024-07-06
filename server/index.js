@@ -465,11 +465,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(20, 3),
+        yImpulse: generateRandomNumberInRange(15, 3),
         torqueImpulse: {
-          x: generateRandomNumberInRange(1, 0.5),
-          y: generateRandomNumberInRange(1.3, 0.7), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.3, 0.2) // Spins through the middle axis
+          x: generateRandomNumberInRange(0.8, 0.3),
+          y: generateRandomNumberInRange(0.9, 0.3), // Spins vertically through the center
+          z: generateRandomNumberInRange(0.15, 0.7) // Spins through the middle axis
         },
       });
     }
@@ -616,11 +616,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          // if (user.team === 1) {
-          //   move = 5;
-          // } else {
-          //   move = 1
-          // }
+          if (user.team === 0) {
+            move = 5;
+          } else {
+            move = 1
+          }
           // move = 5;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
@@ -654,8 +654,11 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = 3
-          operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
+          if (room.turn.team === 0) {
+            move = 1
+          } else {
+            move = 0
+          }
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
@@ -673,10 +676,6 @@ io.on("connect", async (socket) => {
               num: move,
               time: Date.now()
             }
-
-            // if (move === 0) {
-            //   operation['$set']['turnAlertActive'] = true
-            // }
           }
 
           // If user threw out of bounds, pass turn
@@ -684,19 +683,11 @@ io.on("connect", async (socket) => {
           if (room.teams[user.team].throws === 0 && 
           isEmptyMoves(room.teams[user.team].moves.toObject())) {
             const newTurn = passTurn(room.turn, room.teams)
-            await Room.findOneAndUpdate(
-              { 
-                _id: roomId, 
-              }, 
-              { 
-                $set: { 
-                  turn: newTurn,
-                  // Empty the team's moves
-                  [`teams.${user.team}.moves`]: JSON.parse(JSON.stringify(initialState.initialMoves)),
-                },
-                $inc: { [`teams.${newTurn.team}.throws`]: 1 } 
-              }
-            )
+            operation['$set']['turn'] = newTurn
+            operation['$set'][`teams.${user.team}.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
+            operation['$inc'][`teams.${newTurn.team}.throws`] = 1
+          } else {
+            operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
           }
         }
 

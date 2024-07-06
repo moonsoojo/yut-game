@@ -252,24 +252,36 @@ export default function Yoot({ device }) {
     setSleepCount((count) => count+1);
   }
 
-  function ThrowCount({position}) {
+  function ThrowCount({position, orientation}) {
     const [throwCount] = useAtom(throwCountAtom)
 
     function YootIcon({ position }) {
       // kept this code in case i wanna try the other approach (display when it's not your team's turn)
-      const active = client.team === turn.team
+      // const active = client.team === turn.team
       return <group position={position}>
-        <YootMesh active={active} position={[0,0,0]} rotation={[-Math.PI/4, Math.PI/2 + Math.PI/32*2, -Math.PI/2, 'YXZ']} scale={0.06}/>
+        {/* <YootMesh active={active} position={[0,0,0]} rotation={[-Math.PI/4, Math.PI/2 + Math.PI/32*2, -Math.PI/2, 'YXZ']} scale={0.06}/>
         <YootMesh active={active} position={[0.07,0.05,-0.1]} rotation={[0, Math.PI/2 + Math.PI/32*1, -Math.PI/2, 'YXZ']} scale={0.06}/>
         <YootMesh active={active} position={[0.16,0.03,-0.06]} rotation={[Math.PI/4, Math.PI/2, -Math.PI/2, 'YXZ']} scale={0.06}/>
-        <YootMesh active={active} position={[0.25,0,0]} rotation={[Math.PI/4*3, Math.PI/2 - Math.PI/32*1, -Math.PI/2, 'YXZ']} scale={0.06}/>
+        <YootMesh active={active} position={[0.25,0,0]} rotation={[Math.PI/4*3, Math.PI/2 - Math.PI/32*1, -Math.PI/2, 'YXZ']} scale={0.06}/> */}
+        <mesh>
+          <sphereGeometry args={[0.1, 32, 16]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
       </group>
+    }
+
+    function positionByOrientation(index, orientation) {
+      if (orientation === 'downUp') {
+        return [0, 0, -index*0.5]
+      } else if (orientation === 'leftRight') {
+        return [0, 0, index*0.4]
+      }
     }
 
     const tempArray = [...Array(throwCount)]
     return <group position={position}>
       {tempArray.map((value, index) => {
-        return <YootIcon key={index} position={[0,0, -index*0.9]}/>
+        return <YootIcon key={index} position={positionByOrientation(index, orientation)}/>
       })}
     </group>
   }
@@ -280,13 +292,13 @@ export default function Yoot({ device }) {
       <RigidBody
         type="fixed"
         restitution={0.01}
-        position={[0, 1.5, 2]}
+        position={[0, 1.5, 0]}
         friction={0.9}
       >
         {/* Height has to be thick enough for Yoot to not fall through the collider */}
-        <CuboidCollider args={[10, 0.5, 10]} restitution={0.2} friction={1} />
+        <CuboidCollider args={[6, 0.5, 6]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[20, 1, 20]} />
+          <boxGeometry args={[12, 1, 12]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
@@ -365,9 +377,10 @@ export default function Yoot({ device }) {
         scale={layout[device].game.yootButton.scale}
         active={yootActive && !animationPlaying}
       />}
-      { (gamePhase === "pregame" || gamePhase === "game") && (client.team === turn.team) && <ThrowCount 
-        position={layout[device].throwCount.position}
-      />}
+      { client.team === turn.team && <ThrowCount 
+        position={layout[device].game.throwCount.position}
+        orientation={layout[device].game.throwCount.orientation}
+      /> }
     </Physics>
   );
 }

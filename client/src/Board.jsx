@@ -16,7 +16,7 @@ import { Text3D } from '@react-three/drei';
 // Pass flag to Tile component
 function getMeshByTile(tile) {
   if (tile == 0) {
-    return <Earth scale={0.4}/>
+    return <Earth scale={0.45}/>
   } else if (tile == 5) {
     return <Mars scale={0.4}/>
   } else if (tile == 10) {
@@ -24,9 +24,9 @@ function getMeshByTile(tile) {
   } else if (tile == 15) {
     return <Neptune scale={0.4}/>
   } else if (tile == 22) {
-    return <Moon scale={0.3}/>
+    return <Moon scale={0.35}/>
   } else {
-    return <Star scale={0.5}/>
+    return <Star scale={0.4}/>
   }
 }
 

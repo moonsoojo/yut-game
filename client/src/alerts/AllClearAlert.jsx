@@ -278,3 +278,6 @@ export default function AllClearAlert({ position, rotation }) {
     </group>
   </animated.group>
 }
+
+useGLTF.preload('models/alert-background.glb')
+useGLTF.preload('models/bam-emoji.glb')

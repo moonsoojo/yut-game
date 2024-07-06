@@ -9,6 +9,12 @@ import { useParams } from "wouter";
 import { Text3D } from "@react-three/drei";
 import { getLegalTiles } from "../helpers/legalTiles";
 import * as THREE from 'three';
+import BackdoToken from "../moveTokens/BackdoToken";
+import MoToken from "../moveTokens/MoToken";
+import YootToken from "../moveTokens/YootToken";
+import GulToken from "../moveTokens/GulToken";
+import GeToken from "../moveTokens/GeToken";
+import DoToken from "../moveTokens/DoToken";
 
 export default function Tile({ 
   position=[0,0,0], 
@@ -129,6 +135,96 @@ export default function Tile({
     }
   })
 
+  // const actionPositionTable = {
+  //   0: [0, 0, 0],
+  //   1: [-1.6, 1, 0.4],
+  //   2: [-1.6, 1, 0.4],
+  //   3: [-1.6, 1, 0.4],
+  //   4: [-1.6, 1, 0.4],
+  //   5: [-1.6, 1, 0.4],
+  //   6: [0, 1, -1],
+  //   7: [0, 1, -1],
+  //   8: [0, 1, -1],
+  //   9: [0, 1, -1],
+  //   10: [0, 1, -1],
+  //   20: [0, 1, 2],
+  //   21: [0, 1, 2],
+  //   22: [0, 1, 2],
+  //   23: [0, 1, 2],
+  //   24: [0, 1, 2],
+  // }
+
+  function PathNumHelper({pathNum}) {
+    console.log(`[PathNumHelper] pathNum`, pathNum, `tile`, tile)
+    const Move = ({ position }) => {
+      return <>
+        { pathNum.move === -1 && <BackdoToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+        { pathNum.move === 1 && <DoToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+        { pathNum.move === 2 && <GeToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+        { pathNum.move === 3 && <GulToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+        { pathNum.move === 4 && <YootToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+        { pathNum.move === 5 && <MoToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
+      </>
+    }
+    // const Join = ({position}) => {
+    //   return <group name='pathNum' position={position}>
+    //     <mesh scale={[0.8, 1, 0.5]}>
+    //       <cylinderGeometry args={[1, 1, 0.1]}/>
+    //       <meshStandardMaterial color='black' transparent opacity={0.5}/>
+    //     </mesh>
+    //     <Text3D
+    //       font="fonts/Luckiest Guy_Regular.json"
+    //       position={[-0.5, 0.15, 0.19]}
+    //       rotation={[-Math.PI/2, 0, 0]}
+    //       size={0.35}
+    //       height={0.01}
+    //     >
+    //       {`join`}
+    //       <meshStandardMaterial color='yellow'/>
+    //     </Text3D>
+    //   </group>
+    // }
+    // const Catch = ({position}) => {
+    //   return <group name='pathNum' position={position}>
+    //     <mesh scale={[1, 1, 0.5]}>
+    //       <cylinderGeometry args={[1, 1, 0.1]}/>
+    //       <meshStandardMaterial color='black' transparent opacity={0.5}/>
+    //     </mesh>
+    //     <Text3D
+    //       font="fonts/Luckiest Guy_Regular.json"
+    //       position={[-0.68, 0.15, 0.2]}
+    //       rotation={[-Math.PI/2, 0, 0]}
+    //       size={0.35}
+    //       height={0.01}
+    //     >
+    //       {`catch`}
+    //       <meshStandardMaterial color='yellow'/>
+    //     </Text3D>
+    //   </group>
+    // }
+    const ActionMarker = ({position}) => {
+      return <group position={position} rotation={[-Math.PI/2, 0, 0]}>
+        <mesh position={[0,0,0]}>
+          <cylinderGeometry args={[0.1, 0.07, 0.3, 6]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <mesh position={[0,-0.33,0]}>
+          <sphereGeometry args={[0.09, 32, 16]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+      </group>
+    }
+
+    return <>
+      <Move position={[0.9,1,0]}/>
+      { pathNum.action === 'join' 
+      || pathNum.action === 'catch' 
+      && <ActionMarker position={[0.9,1,0.6]}/>}
+      {/* { pathNum.action === 'join' && <Join position={actionPositionTable[tile]}/>}
+      { pathNum.action === 'catch' && <Catch position={actionPositionTable[tile]}/>} */}
+    </>
+  }
+
   return <group position={position} rotation={rotation} scale={scale}>
     {/* { selection != null && legalTileInfo && <Pointer 
       scale={2}
@@ -153,22 +249,7 @@ export default function Tile({
       </mesh>
       {mesh}
       {/* path num */}
-      <group name='pathNum'>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[0.3, 1, -0.3]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={0.3}
-          height={0.01}
-        >
-          {pathNum}
-          <meshStandardMaterial color="#b3b10f"/>
-        </Text3D>
-      </group>
-      {/* <HtmlElement
-        text={pathNum}
-        fontSize={15}
-      /> */}
+      { pathNum && <PathNumHelper pathNum={pathNum}/> }
     </group>
   </group>
 }

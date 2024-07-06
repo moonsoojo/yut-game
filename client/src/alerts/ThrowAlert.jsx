@@ -34,7 +34,7 @@ export default function ThrowAlert() {
           tension: 170,
           friction: 26
         },
-        delay: 3000
+        delay: 800
       }
     ],
     loop: false,

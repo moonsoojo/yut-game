@@ -3,7 +3,7 @@ import { Text3D } from "@react-three/drei";
 export default function DoToken(props) {
 
   return <group {...props}>
-    <group name='move-token' position={[0, 0.09, 0.6]}>
+    <group name='move-token'>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         rotation={[Math.PI/2, Math.PI, Math.PI/2]}

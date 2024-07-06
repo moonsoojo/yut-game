@@ -6,6 +6,9 @@ import { useFrame } from "@react-three/fiber";
 import { animated } from "@react-spring/three";
 import React from "react";
 import * as THREE from 'three';
+import layout from "../layout";
+import { deviceAtom } from "../GlobalState";
+import { useAtom } from "jotai";
 
 export default function Ufo({
   position=[0,0,0],
@@ -31,12 +34,17 @@ export default function Ufo({
   const ballBackRightMatRef = useRef();
   const ballBackLeftMatRef = useRef();
 
+  const [device] = useAtom(deviceAtom)
+
+  // 0.8 for landscape
+  const selectedAdditionalScale = layout[device].game.ufo.selectedAdditionalScale
+  const selectedAnimatedScaleRange = layout[device].game.ufo.selectedAnimatedScaleRange
   useFrame((state, delta) => {
     if (!animationPlaying) {
       if (selected) {
-        ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
-        ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
-        ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.8
+        ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
+        ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
+        ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
       } else if (selectable) {
         ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
         ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
@@ -351,3 +359,5 @@ export default function Ufo({
     </animated.group>
   );
 }
+
+useGLTF.preload("models/ufo.glb")

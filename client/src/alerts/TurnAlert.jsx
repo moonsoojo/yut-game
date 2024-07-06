@@ -34,7 +34,7 @@ export default function TurnAlert({position, rotation}) {
               tension: 100,
               friction: 26
             },
-            delay: 3000
+            delay: 800
           }
         ],
         loop: false,

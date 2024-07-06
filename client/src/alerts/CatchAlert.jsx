@@ -10,7 +10,6 @@ import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
 export default function CatchAlert({ position, rotation }) {
-  console.log(`[CatchAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   const [turn] = useAtom(turnAtom)
 
@@ -214,3 +213,6 @@ export default function CatchAlert({ position, rotation }) {
     </group>
   </animated.group>
 }
+
+useGLTF.preload('models/alert-background.glb')
+useGLTF.preload('models/bam-emoji.glb')

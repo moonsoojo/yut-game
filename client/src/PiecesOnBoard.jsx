@@ -1,12 +1,13 @@
 import { useAtom } from 'jotai';
 import React, { useEffect } from 'react';
-import { animationPlayingAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, selectionAtom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
+import { animationPlayingAtom, clientAtom, deviceAtom, hasTurnAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, selectionAtom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
 import { roundNum, generateRandomNumberInRange, pieceSelected } from './helpers/helpers';
 import Polaris from './meshes/Polaris';
 import { Text3D } from '@react-three/drei';
+import layout from './layout';
 
 export default function PiecesOnBoard() {
     const [pieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
@@ -18,12 +19,12 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
-    const [_mainAlert] = useAtom(mainAlertAtom)
+    const [device] = useAtom(deviceAtom);
 
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], // Filler values
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -31,7 +32,7 @@ export default function PiecesOnBoard() {
     const [springs0_1, api0_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -39,7 +40,7 @@ export default function PiecesOnBoard() {
     const [springs0_2, api0_2] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -47,7 +48,7 @@ export default function PiecesOnBoard() {
     const [springs0_3, api0_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -55,7 +56,7 @@ export default function PiecesOnBoard() {
     const [springs1_0, api1_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -63,7 +64,7 @@ export default function PiecesOnBoard() {
     const [springs1_1, api1_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -71,7 +72,7 @@ export default function PiecesOnBoard() {
     const [springs1_2, api1_2] = useSpring(() => ({        
         from: {
             position: [0,0,0],
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -79,7 +80,7 @@ export default function PiecesOnBoard() {
     const [springs1_3, api1_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: 1,
+            scale: layout[device].game.piecesOnBoard.pieceScale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -88,8 +89,8 @@ export default function PiecesOnBoard() {
     const idOffsets = [
         [-0.3, 0, 0],
         [0.3, 0, 0],
-        [-0.3, 0, 0.4],
-        [0.3, 0, 0.4],
+        [-0.3, 0, 0.5],
+        [0.3, 0, 0.5],
     ]
 
     const heightOffset = 0.9
@@ -101,6 +102,7 @@ export default function PiecesOnBoard() {
         setAnimationPlaying(false)
     }
 
+    const positionScale = layout[device].game.piecesOnBoard.positionScale
     useEffect(() => {
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
@@ -109,9 +111,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale , 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale  + idOffsets[0][2] * positionScale , 1),
                         ],
                         config: {
                             tension: 170,
@@ -168,7 +170,7 @@ export default function PiecesOnBoard() {
                 api0_0.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: layout[device].game.piecesOnBoard.pieceScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -182,9 +184,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -213,9 +215,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -285,9 +287,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -316,9 +318,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -388,9 +390,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -419,9 +421,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -491,9 +493,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -522,9 +524,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -595,9 +597,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -626,9 +628,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale  + idOffsets[1][0] * positionScale , 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale  + idOffsets[1][2] * positionScale , 1),
                         ],
                         config: {
                             tension: 170,
@@ -699,9 +701,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -730,9 +732,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -802,9 +804,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -833,9 +835,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -905,9 +907,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1),
+                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1),
+                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
                         ],
                         config: {
                             tension: 170,
@@ -963,6 +965,7 @@ export default function PiecesOnBoard() {
     }
 
     const [selection] = useAtom(selectionAtom)
+    const [hasTurn] = useAtom(hasTurnAtom)
 
     return <>
         { onBoardCheck(pieceTeam0Id0.tile) && <Piece 
@@ -971,7 +974,7 @@ export default function PiecesOnBoard() {
         tile={pieceTeam0Id0.tile} 
         position={springs0_0.position} 
         scale={springs0_0.scale} 
-        selectable={hasValidMoveBoard(0)}
+        selectable={hasTurn && hasValidMoveBoard(0)}
         selected={pieceSelected(selection, 0, 0)}
         onBoard={true}
         animation='onBoard'
@@ -984,14 +987,17 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs0_0.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_0.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs0_0.welcomeTextScale}/>
         { onBoardCheck(pieceTeam0Id1.tile) && <Piece 
         team={0} 
         id={1} 
         tile={pieceTeam0Id1.tile} 
         position={springs0_1.position} 
         scale={springs0_1.scale} 
-        selectable={hasValidMoveBoard(0)}
+        selectable={hasTurn && hasValidMoveBoard(0)}
         selected={pieceSelected(selection, 1, 0)}
         onBoard={true}
         animation='onBoard'
@@ -1004,14 +1010,18 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs0_1.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_1.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs0_1.welcomeTextScale}
+        />
         { onBoardCheck(pieceTeam0Id2.tile) && <Piece 
         team={0} 
         id={2} 
         tile={pieceTeam0Id2.tile} 
         position={springs0_2.position} 
         scale={springs0_2.scale} 
-        selectable={hasValidMoveBoard(0)}
+        selectable={hasTurn && hasValidMoveBoard(0)}
         selected={pieceSelected(selection, 2, 0)}
         onBoard={true}
         animation='onBoard'
@@ -1024,14 +1034,18 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs0_2.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_2.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs0_2.welcomeTextScale}
+        />
         { onBoardCheck(pieceTeam0Id3.tile) && <Piece 
         team={0} 
         id={3} 
         tile={pieceTeam0Id3.tile} 
         position={springs0_3.position} 
         scale={springs0_3.scale} 
-        selectable={hasValidMoveBoard(0)}
+        selectable={hasTurn && hasValidMoveBoard(0)}
         selected={pieceSelected(selection, 3, 0)}
         onBoard={true}
         animation='onBoard'
@@ -1044,14 +1058,17 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs0_3.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs0_3.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs0_3.welcomeTextScale}/>
         { onBoardCheck(pieceTeam1Id0.tile) && <Piece 
         team={1} 
         id={0} 
         tile={pieceTeam1Id0.tile} 
         position={springs1_0.position}
         scale={springs1_0.scale} 
-        selectable={hasValidMoveBoard(1)}
+        selectable={hasTurn && hasValidMoveBoard(1)}
         selected={pieceSelected(selection, 0, 1)}
         onBoard={true}
         animation='onBoard'
@@ -1064,14 +1081,17 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs1_0.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_0.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs1_0.welcomeTextScale}/>
         { onBoardCheck(pieceTeam1Id1.tile) && <Piece 
         team={1} 
         id={1} 
         tile={pieceTeam1Id1.tile} 
         position={springs1_1.position} 
         scale={springs1_1.scale} 
-        selectable={hasValidMoveBoard(1)}
+        selectable={hasTurn && hasValidMoveBoard(1)}
         selected={pieceSelected(selection, 1, 1)}
         onBoard={true}
         animation='onBoard'
@@ -1084,14 +1104,17 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs1_1.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_1.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs1_1.welcomeTextScale}/>
         { onBoardCheck(pieceTeam1Id2.tile) && <Piece 
         team={1} 
         id={2} 
         tile={pieceTeam1Id2.tile} 
         position={springs1_2.position} 
         scale={springs1_2.scale} 
-        selectable={hasValidMoveBoard(1)}
+        selectable={hasTurn && hasValidMoveBoard(1)}
         selected={pieceSelected(selection, 2, 1)}
         onBoard={true}
         animation='onBoard'
@@ -1104,14 +1127,17 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs1_2.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_2.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs1_2.welcomeTextScale}/>
         { onBoardCheck(pieceTeam1Id3.tile) && <Piece 
         team={1} 
         id={3} 
         tile={pieceTeam1Id3.tile} 
         position={springs1_3.position} 
         scale={springs1_3.scale} 
-        selectable={hasValidMoveBoard(1)}
+        selectable={hasTurn && hasValidMoveBoard(1)}
         selected={pieceSelected(selection, 3, 1)}
         onBoard={true}
         animation='onBoard'
@@ -1124,6 +1150,9 @@ export default function PiecesOnBoard() {
             ]}
             scale={springs1_3.sizeTwink}
         />
-        <WelcomeBackText position={[4.8, 0, 4]} rotation={[-Math.PI/2,0,0]} scale={springs1_3.welcomeTextScale}/>
+        <WelcomeBackText 
+        position={layout[device].game.welcomeBackText.position} 
+        rotation={layout[device].game.welcomeBackText.rotation} 
+        scale={springs1_3.welcomeTextScale}/>
     </>
 }

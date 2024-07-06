@@ -15,19 +15,12 @@ export default function PiecesSection({
   const [teams] = useAtom(teamsAtom)
   const [selection] = useAtom(selectionAtom)
 
-  const piecePositions = [
-    [0.5, 0, -0.5],
-    [1.5, 0, -0.5],
-    [0.5, 0, 0.5],
-    [1.5, 0, 0.5]
-  ]
-
   function UnassignedPieces() {
     const emptyPieces = [0, 0, 0, 0]
     return <group>
       {emptyPieces.map((_value, index) =>
         (<mesh
-          position={piecePositions[index]}
+          position={layout[device].game.piecesSection.pieces.positions[index]}
           key={index}
         >
           <sphereGeometry args={[0.3, 32, 16]} />
@@ -94,11 +87,11 @@ export default function PiecesSection({
         {
           teams[team].pieces.map((value, index) =>
             pieceStatus(value.tile) === "onBoard" ? <EmptyPiece 
-              position={piecePositions[index]}
+              position={layout[device].game.piecesSection.pieces.positions[index]}
               key={index}
             /> : 
             pieceStatus(value.tile) === "scored" ? <ScoredPiece
-              position={piecePositions[index]}
+              position={layout[device].game.piecesSection.pieces.positions[index]}
               key={index}
             /> : <Piece
               position={layout[device].game.piecesSection.pieces.positions[index]}

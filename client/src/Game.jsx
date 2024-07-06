@@ -75,11 +75,11 @@ export default function Game() {
     function DisabledButton({ position, scale }) {
       return <group position={position} scale={scale}>
         <mesh>
-          <boxGeometry args={[1.55, 0.03, 1.2]}/>
+          <boxGeometry args={[1.4, 0.03, 1.2]}/>
           <meshStandardMaterial color='grey'/>
         </mesh>
         <mesh>
-          <boxGeometry args={[1.5, 0.04, 1.15]}/>
+          <boxGeometry args={[1.35, 0.04, 1.15]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <Text3D
@@ -544,10 +544,10 @@ export default function Game() {
           position={layout[device].game.letsPlayButton.position}
           rotation={layout[device].game.letsPlayButton.rotation}
         />
-        <HostName
+        {/* <HostName
           position={layout[device].game.hostName.position}
           rotation={layout[device].game.hostName.rotation}
-        />
+        /> */}
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}
@@ -593,25 +593,27 @@ export default function Game() {
         position={layout[device].game.rulebookButton.position}
         scale={layout[device].game.rulebookButton.scale}
         />
-        <PiecesSection 
+        { (device === 'landscapeDesktop' || (device === 'portrait' && !(29 in legalTiles))) && <PiecesSection 
         position={layout[device].game.piecesSection.position}
         device={device}
-        />
-        <PiecesOnBoard/>
-        { gamePhase === 'game' && <MoveList
-          position={layout[device].game.moveList.position}
-          rotation={layout[device].game.moveList.rotation}
-        /> }
-        { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-          position={layout[device].game.currentPlayer.position} 
-          rotation={layout[device].game.currentPlayer.rotation}
-          fontSize={layout[device].game.currentPlayer.fontSize}
         /> }
         { (29 in legalTiles) && <ScoreButtons
           position={layout[device].game.scoreButtons.position}
           rotation={layout[device].game.scoreButtons.rotation}
           legalTiles={legalTiles}
         /> }
+        <PiecesOnBoard/>
+        { gamePhase === 'game' && <MoveList
+          position={layout[device].game.moveList.position}
+          rotation={layout[device].game.moveList.rotation}
+          tokenScale={layout[device].game.moveList.tokenScale}
+          tokenPosition={layout[device].game.moveList.tokenPosition}
+        /> }
+        {/* { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
+          position={layout[device].game.currentPlayer.position} 
+          rotation={layout[device].game.currentPlayer.rotation}
+          fontSize={layout[device].game.currentPlayer.fontSize}
+        /> } */}
         </animated.group>
       }
       { gamePhase === 'finished' && <animated.group scale={winScreenScale}>

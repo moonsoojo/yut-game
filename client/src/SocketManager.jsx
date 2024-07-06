@@ -273,46 +273,28 @@ export const SocketManager = () => {
 
       // helper tiles
       for (const legalTile of Object.keys(legalTiles)) {
+        console.log(`[SocketManager] legalTile`, legalTile)
         let moveInfo;
         if (legalTile !== '29') {
           moveInfo = legalTiles[legalTile]
-        } else {
-          moveInfo = legalTiles[legalTile][0]
-        }
-        const path = moveInfo.path
-        for (let i = 1; i < path.length; i++) {
-          const pathTile = path[i]
-          let helperText = ''
-          if (pathTile === parseInt(legalTile)) { // only do this for destination tiles
-
-            if (legalTile === '29') {
-              // pass
-            } else {
-
-              if (parseInt(moveInfo.move) < 0) {
-                helperText = (i * -1)
-              } else {
-                helperText = i
-              }
-
-              // additional text
-              if (tiles[pathTile].length === 0) { // if tile doesn't contain a piece
-                // pass
-              } else if (tiles[pathTile][0].team !== selection.pieces[0].team) {
-                helperText += ', catch'
-              } else if (tiles[pathTile][0].team === selection.pieces[0].team) {
-                helperText += ', piggyback'
-              }
-            } 
+          
+          let helperProps = {
+            move: parseInt(moveInfo.move)
           }
 
-          // if tiles have no text or text length is longer than the existing one
-          if (!helperTiles[pathTile] || helperTiles[pathTile].length < helperText) {
-            helperTiles[pathTile] = helperText
+          // additional text
+          if (tiles[legalTile].length === 0) { // if tile doesn't contain a piece
+            helperProps.action = 'move'
+          } else if (tiles[legalTile][0].team !== selection.pieces[0].team) {
+            helperProps.action = 'catch'
+          } else if (tiles[legalTile][0].team === selection.pieces[0].team) {
+            helperProps.action = 'join'
           }
+          helperTiles[legalTile] = helperProps
         }
       }
       
+      console.log(`[SocketManager] helperTiles`, helperTiles)
       setHelperTiles(helperTiles)
 
       setTiles(room.tiles)
