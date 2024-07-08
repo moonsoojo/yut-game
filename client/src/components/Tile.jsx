@@ -216,10 +216,10 @@ export default function Tile({
     }
 
     return <>
-      <Move position={[0.9,1,0]}/>
-      { pathNum.action === 'join' 
-      || pathNum.action === 'catch' 
-      && <ActionMarker position={[0.9,1,0.6]}/>}
+      <Move position={[0.8,1.5,0]}/>
+      { (pathNum.action === 'join' 
+      || pathNum.action === 'catch') 
+      && <ActionMarker position={[0.8,1.5,0.6]}/>}
       {/* { pathNum.action === 'join' && <Join position={actionPositionTable[tile]}/>}
       { pathNum.action === 'catch' && <Catch position={actionPositionTable[tile]}/>} */}
     </>

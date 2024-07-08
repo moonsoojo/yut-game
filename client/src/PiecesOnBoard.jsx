@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
-import React, { useEffect } from 'react';
-import { animationPlayingAtom, clientAtom, deviceAtom, hasTurnAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, selectionAtom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
+import React, { useEffect, useRef } from 'react';
+import { animationPlayingAtom, clientAtom, deviceAtom, gamePhaseAtom, hasTurnAtom, mainAlertAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, selectionAtom, teamsAtom, turnAlertActiveAtom } from './GlobalState';
 import tilePositions from './tilePositions';
 import { useSpring, animated } from '@react-spring/three';
 import Piece from './components/Piece';
@@ -8,6 +8,8 @@ import { roundNum, generateRandomNumberInRange, pieceSelected } from './helpers/
 import Polaris from './meshes/Polaris';
 import { Text3D } from '@react-three/drei';
 import layout from './layout';
+import Star from './meshes/Star';
+import { useFrame } from '@react-three/fiber';
 
 export default function PiecesOnBoard() {
     const [pieceTeam0Id0] = useAtom(pieceTeam0Id0Atom)
@@ -20,11 +22,13 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
     const [device] = useAtom(deviceAtom);
+    const [gamePhase] = useAtom(gamePhaseAtom)
+    const responsiveScale = layout[device].game.board[gamePhase].scale
 
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], // Filler values
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -32,7 +36,7 @@ export default function PiecesOnBoard() {
     const [springs0_1, api0_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -40,7 +44,7 @@ export default function PiecesOnBoard() {
     const [springs0_2, api0_2] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -48,7 +52,7 @@ export default function PiecesOnBoard() {
     const [springs0_3, api0_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -56,7 +60,7 @@ export default function PiecesOnBoard() {
     const [springs1_0, api1_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -64,7 +68,7 @@ export default function PiecesOnBoard() {
     const [springs1_1, api1_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -72,7 +76,7 @@ export default function PiecesOnBoard() {
     const [springs1_2, api1_2] = useSpring(() => ({        
         from: {
             position: [0,0,0],
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -80,17 +84,17 @@ export default function PiecesOnBoard() {
     const [springs1_3, api1_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.piecesOnBoard.pieceScale,
+            scale: layout[device].game.board[gamePhase].scale,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
     }))
 
     const idOffsets = [
-        [-0.3, 0, 0],
-        [0.3, 0, 0],
-        [-0.3, 0, 0.5],
-        [0.3, 0, 0.5],
+        [-0.3, 0, -0.25],
+        [0.3, 0, -0.25],
+        [-0.3, 0, 0.25],
+        [0.3, 0, 0.25],
     ]
 
     const heightOffset = 0.9
@@ -102,7 +106,6 @@ export default function PiecesOnBoard() {
         setAnimationPlaying(false)
     }
 
-    const positionScale = layout[device].game.piecesOnBoard.positionScale
     useEffect(() => {
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
@@ -111,9 +114,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale , 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale  + idOffsets[0][2] * positionScale , 1),
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -124,9 +127,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[0][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -137,9 +140,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                         position: [
-                            3.5,
-                            1,
-                            3.5
+                            roundNum(3.5 + idOffsets[0][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[0][2]*1, 1) * responsiveScale,
                         ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -170,7 +173,7 @@ export default function PiecesOnBoard() {
                 api0_0.start({
                     from: {
                         position: animations[0].position,
-                        scale: layout[device].game.piecesOnBoard.pieceScale,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -184,9 +187,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -215,9 +218,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -228,9 +231,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[1][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
-                            roundNum(3.5 + idOffsets[1][2]*2, 1),
+                            roundNum(3.5 + idOffsets[1][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[1][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[1][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -274,7 +277,7 @@ export default function PiecesOnBoard() {
                 api0_1.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -287,9 +290,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -318,9 +321,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -331,9 +334,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[2][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
-                            roundNum(3.5 + idOffsets[2][2]*2, 1),
+                            roundNum(3.5 + idOffsets[2][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -377,7 +380,7 @@ export default function PiecesOnBoard() {
                 api0_2.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -390,9 +393,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -421,9 +424,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -434,9 +437,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[3][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[3][1]*2, 1),
-                            roundNum(3.5 + idOffsets[3][2]*2, 1),
+                            roundNum(3.5 + idOffsets[3][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[3][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[3][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -480,7 +483,7 @@ export default function PiecesOnBoard() {
                 api0_3.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -493,9 +496,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -524,9 +527,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -537,9 +540,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[0][1]*2, 1),
-                            roundNum(3.5 + idOffsets[0][2]*2, 1),
+                            roundNum(3.5 + idOffsets[0][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -583,7 +586,7 @@ export default function PiecesOnBoard() {
                 api1_0.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -597,9 +600,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[0][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[0][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -628,9 +631,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale  + idOffsets[1][0] * positionScale , 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale  + idOffsets[1][2] * positionScale , 1),
+                            roundNum(tilePositions[value][0]  + idOffsets[1][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2]  + idOffsets[1][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -642,7 +645,7 @@ export default function PiecesOnBoard() {
                     {
                         position: [
                             roundNum(3.5 + idOffsets[1][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[1][1]*2, 1),
+                            roundNum(0 + heightOffset + idOffsets[1][1]*2, 1),
                             roundNum(3.5 + idOffsets[1][2]*2, 1),
                         ],
                         scale: 1.5,
@@ -687,7 +690,7 @@ export default function PiecesOnBoard() {
                 api1_1.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -701,9 +704,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[1][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[1][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -732,9 +735,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -745,9 +748,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[2][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[2][1]*2, 1),
-                            roundNum(3.5 + idOffsets[2][2]*2, 1),
+                            roundNum(3.5 + idOffsets[2][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -791,7 +794,7 @@ export default function PiecesOnBoard() {
                 api1_2.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -804,9 +807,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[2][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[2][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -835,9 +838,9 @@ export default function PiecesOnBoard() {
                 const toAnimations = pathToEarth.map((value) => {
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -848,9 +851,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[3][0]*2, 1),
-                            roundNum(1 + heightOffset + idOffsets[3][1]*2, 1),
-                            roundNum(3.5 + idOffsets[3][2]*2, 1),
+                            roundNum(3.5 + idOffsets[3][0]*2, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[3][1]*2, 1) * responsiveScale,
+                            roundNum(3.5 + idOffsets[3][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -894,7 +897,7 @@ export default function PiecesOnBoard() {
                 api1_3.start({
                     from: {
                         position: animations[0].position,
-                        scale: 1,
+                        scale: responsiveScale,
                         welcomeTextScale: 0,
                     },
                     to: animations,
@@ -907,9 +910,9 @@ export default function PiecesOnBoard() {
                     // on score, move to Earth and add an additional animation
                     return {
                         position: [
-                            roundNum(tilePositions[value][0] * positionScale + idOffsets[3][0] * positionScale, 1),
-                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1),
-                            roundNum(tilePositions[value][2] * positionScale + idOffsets[3][2] * positionScale, 1),
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
                         ],
                         config: {
                             tension: 170,
@@ -939,17 +942,71 @@ export default function PiecesOnBoard() {
     }
 
     function WelcomeBackText({ position, rotation, scale }) {
+        const borderMesh0Ref = useRef();
+        const borderMesh1Ref = useRef();
+        const borderMesh2Ref = useRef();
+        const borderMesh3Ref = useRef();
+        const borderMesh4Ref = useRef();
+        const borderMesh5Ref = useRef();
+        const borderMesh6Ref = useRef();
+        const borderMeshRefs = [
+          borderMesh0Ref,
+          borderMesh1Ref,
+          borderMesh2Ref,
+          borderMesh3Ref,
+          borderMesh4Ref,
+          borderMesh5Ref,
+          borderMesh6Ref
+        ]
+
+        const height = 1.1
+        const width = 1.8
+        useFrame((state, delta) => {
+          for (let i = 0; i < borderMeshRefs.length; i++) {      
+            borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
+            borderMeshRefs[i].current.position.y = 0.05
+            borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
+          }
+        })
+
         return <animated.group
         position={position}
-        rotation={rotation}
         scale={scale}>
+            <mesh scale={[width, 1,height]}>
+                <cylinderGeometry args={[1, 1, 0.01, 32]}/>
+                <meshStandardMaterial color='black' transparent opacity={0.9}/>
+            </mesh>
             <Text3D
             font="fonts/Luckiest Guy_Regular.json" 
-            height={0.01} 
-            size={0.4}>
+            position={[-1.1, 0.1, -0.1]}
+            rotation={[-Math.PI/2, 0, 0]}
+            height={0.01}
+            lineHeight={0.9} 
+            size={0.35}>
                 {`Welcome\nBack!`}
                 <meshStandardMaterial color='yellow'/>
             </Text3D>
+            <group ref={borderMesh0Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
+            <group ref={borderMesh1Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
+            <group ref={borderMesh2Ref}>
+                <Star scale={0.1} color='yellow'/>
+            </group>
+            <group ref={borderMesh3Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
+            <group ref={borderMesh4Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
+            <group ref={borderMesh5Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
+            <group ref={borderMesh6Ref}>
+                <Star scale={0.1} color='yellow' />
+            </group>
         </animated.group>
     }
     
@@ -981,9 +1038,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                3.5,
-                1,
-                3.5,
+                roundNum(3.5 + idOffsets[0][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[0][2], 1) * responsiveScale,
             ]}
             scale={springs0_0.sizeTwink}
         />
@@ -1004,9 +1061,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                3.5,
-                1,
-                3.5,
+                roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[1][2], 1) * responsiveScale,
             ]}
             scale={springs0_1.sizeTwink}
         />
@@ -1028,9 +1085,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                3.5,
-                1,
-                3.5,
+                roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[2][2], 1) * responsiveScale,
             ]}
             scale={springs0_2.sizeTwink}
         />
@@ -1052,9 +1109,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                3.5,
-                1,
-                3.5,
+                roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[3][2], 1) * responsiveScale,
             ]}
             scale={springs0_3.sizeTwink}
         />
@@ -1075,9 +1132,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                roundNum(3.5),
-                roundNum(1),
-                roundNum(3.5),
+                roundNum(3.5 + idOffsets[0][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[0][2], 1) * responsiveScale,
             ]}
             scale={springs1_0.sizeTwink}
         />
@@ -1098,9 +1155,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[1][0], 1),
-                roundNum(1 + heightOffset + idOffsets[1][1], 1),
-                roundNum(3.5 + idOffsets[1][2], 1),
+                roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[1][2], 1) * responsiveScale,
             ]}
             scale={springs1_1.sizeTwink}
         />
@@ -1121,9 +1178,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[2][0], 1),
-                roundNum(1 + heightOffset + idOffsets[2][1], 1),
-                roundNum(3.5 + idOffsets[2][2], 1),
+                roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[2][2], 1) * responsiveScale,
             ]}
             scale={springs1_2.sizeTwink}
         />
@@ -1144,9 +1201,9 @@ export default function PiecesOnBoard() {
         /> }
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[3][0], 1),
-                roundNum(1 + heightOffset + idOffsets[3][1], 1),
-                roundNum(3.5 + idOffsets[3][2], 1),
+                roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
+                roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                roundNum(3.5 + idOffsets[3][2], 1) * responsiveScale,
             ]}
             scale={springs1_3.sizeTwink}
         />

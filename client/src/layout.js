@@ -1020,7 +1020,7 @@ export default {
         pieceScale: 0.9
       },
       welcomeBackText: {
-        position: [3, 0, 4.5],
+        position: [0, 1, 0],
         rotation: [-Math.PI/2,0,0]
       }
     },
@@ -1855,9 +1855,9 @@ export default {
           }
         },
         activeButton: {
-          backdropWidth: 1.6,
+          backdropWidth: 1.4,
           backdropHeight: 1.1,
-          scale: 0.8,
+          scale: 1,
           position: [0.1, 0, 0.5],
           text: {
             position: [-0.8,0,-0.15],
@@ -2083,7 +2083,7 @@ export default {
         orientation: 'downUp'
       },
       scoreButtons: {
-        position: [4.5, 0, 3.5],
+        position: [4.5, 0, 4.5],
         rotation: [-Math.PI/2, 0, 0],
       },
       mainAlert: {
@@ -2119,7 +2119,7 @@ export default {
         positionScale: 1
       },
       welcomeBackText: {
-        position: [3, 0, 4.5],
+        position: [3.5, 1, 1.2],
         rotation: [-Math.PI/2,0,0]
       }
     },
