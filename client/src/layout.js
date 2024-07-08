@@ -97,11 +97,11 @@ export default {
           position: [4, 0.3, 2.4],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
-        }
+        },
       },
       page1: {
         text: {
-          position: [-4.5,0,-5.5],
+          position: [-4,0,-5.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.55
         },
@@ -117,71 +117,65 @@ export default {
         cursorPos0: [1, 0.3, 0],
         cursorPos1: [-0.5, 0.3, -1.4],
         cursorPos2: [2.3, 1.3, 2],
-        rocket3Pos0: [0,0,0],
+        rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
-          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
           1.5,
-          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos2: [
-          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
-          1,
-          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
+          0.9,
+          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos3: [
-          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
-          1,
-          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
+          0.9,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos4: [
-          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
-          1,
-          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
+          0.9,
+          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
         ],
       },
       page2: {
         text: {
-          position: [1,0,0],
+          position: [1,0,0.5],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.4,
-          lineHeight: 0.9,
+          lineHeight: 1,
           height: 0.01
         },
         tilesPos0: [0,0,-1.5],
-        tilesPos1: [-2, 0, -5.5],
+        tilesPos1: [-2, 0, -7],
         tilesScale0: 1,
         tilesScale1: 2,
         rocketHomeScale1: 1,
-        rocket0Pos: [0.3,0,-0.5],
-        rocket1Pos: [0.9,0,-0.5],
-        rocket2Pos: [0.3,0,0.1],
-        checkPos: [0.9,0,0.6],
+        rocket0Pos: [0.8, 0, 0],
+        rocket1Pos: [1.6, 0, 0],
+        rocket2Pos: [0.8, 0, 1],
+        checkPos: [1.5, 0, 1],
         cursorPos: [
-          [1, 0, 4],
-          [0.3, 1.5, 4.8],
-          [1, 0.2, 2.9]
+          [1, 0, 4.5],
+          [0.3, 1.5, 5.7],
+          [1, 0.2, 3.2],
+          [1, 0.2, 4.2]
         ],
         moveText: {
           rotation: [-Math.PI/8, 0, 0],
-          position: [-0.2,0,1.7],
+          position: [0.5,0,2.2],
           fontSize: 22
         },
         scoreText: {
           rotation: [-Math.PI/8, 0, 0],
-          position: [-0.1, 0, 2.5],
+          position: [0.5, 0, 3],
           size: 0.4
         },
         letsGoText: {
-          lets: {
-            position: [-0.2,0,1.7],
-            rotation: [-Math.PI/8, 0, 0],
-            fontSize: 22
-          },
-          go: {
-            position: [-0.2,0,2.4],
-            rotation: [-Math.PI/8, 0, 0],
-            fontSize: 22
-          }
+          position: [0.8,0,2.2],
+          rotation: [-Math.PI/8, 0, 0],
+          fontSize: 22
         },
         fireworks: {
           initialPosition: {
@@ -206,7 +200,7 @@ export default {
         },
         firstCornerTilesPos: [
           [-1.5,0,-2],
-          [-0.5, 0, -2]
+          [-0.8, 0, -2]
         ],
         cursorPos: [
           [0, 0.3, -1],
@@ -252,10 +246,10 @@ export default {
           position: [0.1,2.5,-1]
         },
         bonusTurn: {
-          position: [-2, 0, -0.5]
+          position: [-2.7, 0, 0]
         },
         yootButtonModel: {
-          position: [1.5, 0, -0.5]
+          position: [0.7, 0, -0.5]
         },
         moveText: {
           position: [-3,0,0]
@@ -319,9 +313,6 @@ export default {
           0.6,
           0.9
         ],
-        tilesOnly: {
-          scale: 1.2
-        },
         scoreText: {
           position: [0.7, 2, 3.5],
           rotation: [-Math.PI/4, 0, 0]
@@ -344,166 +335,166 @@ export default {
           2.3,
           1.7,
           0,
-          2.3,
-          3,
-          2.3,
+          2,
+          2.8,
+          2,
         ],
         rocket0Pos: [
           [
-            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5,
             0 + 2,
-            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
+            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5,
           ],
           [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7,
           ],
           [
-            0 - 1,
+            0,
             2.5,
-            0 - 1,
+            0,
           ],
           [
-            0 - 1,
+            0,
             3,
-            0 - 1,
+            0,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((13 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((13 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((14 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((14 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
-            -1,
+            0,
             2,
-            -1
+            0
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((8 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((8 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((9 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((9 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             4,
             Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((11 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((11 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
         ],
         cursor: {
@@ -686,6 +677,16 @@ export default {
         arrowRadius: 0.4,
         position: [0, 0, 0.2],
         scale: 0.8
+      },
+      tileRadius: {
+        ring: 5,
+        shortcut1: 3.5,
+        shortcut2: 1.7
+      },
+      star: {
+        scale: 0.5,
+        rocketScale: 0.6,
+        ufoScale: 0.3,
       }
     },
     about: {
@@ -1260,26 +1261,26 @@ export default {
         cursorPos0: [1, 0.3, 1],
         cursorPos1: [0.4, 0.3, -0.5],
         cursorPos2: [3.2, 1.3, 2.3],
-        rocket3Pos0: [0,0,0],
+        rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
-          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
           1.5,
-          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos2: [
-          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
           1,
-          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos3: [
-          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
           1,
-          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
         ],
         rocket3Pos4: [
-          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
           1,
-          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 - 1,
+          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
         ],
       },
       page2: {
@@ -1302,7 +1303,8 @@ export default {
         cursorPos: [
           [1, 0, 4],
           [0, 1.5, 5.8],
-          [0.3, 0.2, 3.5]
+          [0.3, 0.2, 3.5],
+          [1, 0.2, 4.2]
         ],
         moveText: {
           position: [-0.5,0,2],
@@ -1315,16 +1317,9 @@ export default {
           size: 0.5
         },
         letsGoText: {
-          lets: {
-            position: [0,0,2.2],
-            rotation: [-Math.PI/8, -Math.PI/16, 0],
-            fontSize: 26
-          },
-          go: {
-            position: [-0.5,0,2.4],
-            rotation: [-Math.PI/8, -Math.PI/16, 0],
-            fontSize: 26
-          }
+          position: [0,0,2.2],
+          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          fontSize: 26
         },
         fireworks: {
           initialPosition: {
@@ -1459,12 +1454,9 @@ export default {
           [-3, 0, -1.5]
         ],
         tilesScale: [
-          0.6,
+          0.7,
           1
         ],
-        tilesOnly: {
-          scale: 1
-        },
         scoreText: {
           position: [-1, 2, 4],
           rotation: [-Math.PI/4, 0, 0]
@@ -1493,160 +1485,160 @@ export default {
         ],
         rocket0Pos: [
           [
-            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
-            0 + 2,
-            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5 -1,
-          ],
-          [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            -Math.cos(((5+5) * (Math.PI * 2)) / 20) * 5,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5 - 1,
+            Math.sin(((5+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 3.5,
             1.5,
-            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7 - 1,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 3.5,
           ],
           [
-            0 - 1,
+            Math.sin(((10 -5) * (Math.PI * 2)) / 20) * 1.7,
+            1.5,
+            Math.cos(((10 -5) * (Math.PI * 2)) / 20) * 1.7,
+          ],
+          [
+            0,
             2.5,
-            0 - 1,
+            0,
           ],
           [
-            0 - 1,
+            0,
             3,
-            0 - 1,
+            0,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((13 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((13 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((14 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((14 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((15 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((15 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
-            -1,
+            0,
             2,
-            -1
+            0
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              1.7 - 1,
+              1.7,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
             1.5,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              3.5 - 1,
+              3.5,
           ],
           [
             Math.sin(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2,
             Math.cos(((5 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((8 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((8 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((9 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((9 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((10 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             2.6,
             Math.cos(((10 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((11 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((11 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
           [
             Math.sin(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
             1.5,
             Math.cos(((12 -5) * (Math.PI * 2)) / 20) *
-              5 - 1,
+              5,
           ],
         ],
         cursor: {
@@ -2119,7 +2111,7 @@ export default {
         positionScale: 1
       },
       welcomeBackText: {
-        position: [3.5, 1, 1.2],
+        position: [0, 1, 0],
         rotation: [-Math.PI/2,0,0]
       }
     },

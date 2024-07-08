@@ -39,72 +39,43 @@ export default {
     { x: 0.8, y: 0.5, z: 0, },
   ],
   initialMoves: {
-    '0': 50,
-    '1': 50,
-    '2': 50,
-    '3': 50,
-    '4': 50,
-    '5': 50,
-    '-1': 50
+    '0': 0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+    '-1': 0
   },
   initialTiles: [
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },], // { [ { team: Number, id: Number, tile: Number, history: [Number], status: String } ] }
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
-    [
-      { tile: -1, team: 1, id: 0, history: [], lastPath: [] },],
+    [], // { [ { team: Number, id: Number, tile: Number, history: [Number], status: String } ] }
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
   ],
 };

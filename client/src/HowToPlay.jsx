@@ -394,7 +394,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           cursorEffectOpacity: 1,
           rocket3Pos: layout[device].howToPlay.page1.rocket3Pos1,
-          rocket3Scale: 1,
+          rocket3Scale: 1.5,
           legalTileScale: 0.4,
           pointerOpacity: 0,
           delay: 1000,
@@ -506,8 +506,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <group name='rocket-2' ref={rocket2}>
           <Rocket position={[-0.4,-0.5,0.7]} scale={1.5}/>
         </group>
-        <animated.group name='rocket-3' ref={rocket3} position={springs.rocket3Pos}>
-          <Rocket position={[0.8,-0.5,0.7]} scale={springs.rocket3Scale} />
+        <animated.group name='rocket-3' ref={rocket3} >
+          <Rocket position={springs.rocket3Pos} scale={springs.rocket3Scale} />
         </animated.group>
       </group>
     }
@@ -570,9 +570,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     const freqG = 0.6
     const freqB = 0.8
     useFrame((state, delta) => {
-      letsGoMatRef.current.color.r = Math.cos(state.clock.elapsedTime*freqR * 4) + 0.3
-      letsGoMatRef.current.color.g = Math.cos(state.clock.elapsedTime*freqG * 4) + 0.4
-      letsGoMatRef.current.color.b = Math.cos(state.clock.elapsedTime*freqB * 4) + 0.5
+      // letsGoMatRef.current.color.r = Math.cos(state.clock.elapsedTime*freqR * 4) + 0.3
+      // letsGoMatRef.current.color.g = Math.cos(state.clock.elapsedTime*freqG * 4) + 0.4
+      // letsGoMatRef.current.color.b = Math.cos(state.clock.elapsedTime*freqB * 4) + 0.5
       letsGoRef.current.scale.x = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
       letsGoRef.current.scale.y = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
       letsGoRef.current.scale.z = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
@@ -745,6 +745,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           },
           {
             cursorEffectOpacity: 1,
+            cursorPos: layout[device].howToPlay.page2.cursorPos[3],
             scoreScale: 0,
             moveScale: 0,
             rocket3Scale: 0,
@@ -879,8 +880,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <animated.group scale={springs.letsGoScale}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            position={layout[device].howToPlay.page2.letsGoText.lets.position}
-            rotation={layout[device].howToPlay.page2.letsGoText.lets.rotation}
+            position={layout[device].howToPlay.page2.letsGoText.position}
+            rotation={layout[device].howToPlay.page2.letsGoText.rotation}
             size={0.4}
             height={0.01}
             ref={letsGoRef}
@@ -922,7 +923,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         height={layout[device].howToPlay.page2.text.height}
         lineHeight={layout[device].howToPlay.page2.text.lineHeight}
       >
-        {`3. The first team to\nmove four pieces\naround the board\nto earth wins!`}
+        {`3. First team to\nmove four pieces\naround the board\nto earth wins!`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <Tiles device={device}/>
@@ -1811,11 +1812,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         />
       );
       return <animated.group {...props}>
-        <group scale={layout[device].howToPlay.page5.tilesOnly.scale}>
-          {tiles}
-        </group>
+        {tiles}
         <animated.group name='rocket-0' position={springs.rocket0Pos}>
-          <Rocket position={[0.8,-0.7,0.5]} scale={springs.rocket0Scale} />
+          <Rocket scale={springs.rocket0Scale} />
         </animated.group>
         <animated.group name='moon-arrow' scale={springs.pointer0Scale}>
           <ArrowBlender
