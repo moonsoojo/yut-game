@@ -947,9 +947,9 @@ export default {
           rotation: [0, 0, 0],
           positions: [
             [0, 0, -1],
-            [1.6, 0, -1],
+            [1.5, 0, -1],
             [0, 0, 0.5],
-            [1.6, 0, 0.5]
+            [1.5, 0, 0.5]
           ],
           scale: 1.5
         }
@@ -1015,10 +1015,6 @@ export default {
       ufo: {
         selectedAdditionalScale: 0.3,
         selectedAnimatedScaleRange: 0.15
-      },
-      piecesOnBoard: {
-        positionScale: 0.85,
-        pieceScale: 0.9
       },
       welcomeBackText: {
         position: [0, 1, 0],
@@ -1836,8 +1832,8 @@ export default {
         position: [8.75,0,4.5],
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
-          position: [0.26,0,0.1],
-          scale: 1.33,
+          position: [0.25,0,0.1],
+          scale: 1.48,
           text: {
             position: [-0.6, 0.025, -0.12],
             rotation: [-Math.PI/2, 0, 0],
@@ -2034,7 +2030,7 @@ export default {
         }
       },
       piecesSection: {
-        position: [8, 0, 0.5],
+        position: [7.8, 0, 0.5],
         pieces: {
           rotation: [0, 0, 0],
           positions: [
@@ -2106,9 +2102,6 @@ export default {
       ufo: {
         selectedAdditionalScale: 0.3,
         selectedAnimatedScaleRange: 0.15
-      },
-      piecesOnBoard: {
-        positionScale: 1
       },
       welcomeBackText: {
         position: [0, 1, 0],

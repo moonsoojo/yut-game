@@ -465,11 +465,11 @@ io.on("connect", async (socket) => {
         _id: i,
         positionInHand: initialYootPositions[i],
         rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(15, 3),
+        yImpulse: generateRandomNumberInRange(10, 3),
         torqueImpulse: {
           x: generateRandomNumberInRange(0.8, 0.3),
           y: generateRandomNumberInRange(0.9, 0.3), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.15, 0.7) // Spins through the middle axis
+          z: generateRandomNumberInRange(0.15, 0.3) // Spins through the middle axis
         },
       });
     }

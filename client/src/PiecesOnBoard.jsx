@@ -28,7 +28,7 @@ export default function PiecesOnBoard() {
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], // Filler values
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -36,7 +36,7 @@ export default function PiecesOnBoard() {
     const [springs0_1, api0_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -44,7 +44,7 @@ export default function PiecesOnBoard() {
     const [springs0_2, api0_2] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -52,7 +52,7 @@ export default function PiecesOnBoard() {
     const [springs0_3, api0_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -60,7 +60,7 @@ export default function PiecesOnBoard() {
     const [springs1_0, api1_0] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -68,7 +68,7 @@ export default function PiecesOnBoard() {
     const [springs1_1, api1_1] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -76,7 +76,7 @@ export default function PiecesOnBoard() {
     const [springs1_2, api1_2] = useSpring(() => ({        
         from: {
             position: [0,0,0],
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -84,7 +84,7 @@ export default function PiecesOnBoard() {
     const [springs1_3, api1_3] = useSpring(() => ({        
         from: {
             position: [0,0,0], 
-            scale: layout[device].game.board[gamePhase].scale,
+            scale: 0,
             sizeTwink: 0,
             welcomeTextScale: 0
         }
@@ -200,6 +200,7 @@ export default function PiecesOnBoard() {
                 api0_0.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -303,6 +304,7 @@ export default function PiecesOnBoard() {
                 api0_1.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -406,6 +408,7 @@ export default function PiecesOnBoard() {
                 api0_2.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -509,6 +512,7 @@ export default function PiecesOnBoard() {
                 api0_3.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -613,6 +617,7 @@ export default function PiecesOnBoard() {
                 api1_0.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -717,6 +722,7 @@ export default function PiecesOnBoard() {
                 api1_1.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -820,6 +826,7 @@ export default function PiecesOnBoard() {
                 api1_2.start({
                     from: {
                         position: toAnimations[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations,
                     loop: false,
@@ -923,6 +930,7 @@ export default function PiecesOnBoard() {
                 api1_3.start({
                     from: {
                         position: toAnimations13[0].position,
+                        scale: responsiveScale,
                     },
                     to: toAnimations13,
                     loop: false,

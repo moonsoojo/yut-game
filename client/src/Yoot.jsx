@@ -332,7 +332,7 @@ export default function Yoot({ device }) {
             position={[-1.5 + 1*index, 30, 2]}
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
-            restitution={0.3}
+            restitution={0.1}
             friction={0.6}
             name={`yoot${index}`}
             linearDamping={0.3}
