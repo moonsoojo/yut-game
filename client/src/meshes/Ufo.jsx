@@ -68,6 +68,9 @@ export default function Ufo({
           glassMat.opacity = 0.3
         }
       } else {
+        ufo.current.scale.x = scale
+        ufo.current.scale.y = scale
+        ufo.current.scale.z = scale
         frontBackPanelCircleMat.current.color = new THREE.Color('turquoise')
         leftRightPanelCircleMat.current.color = new THREE.Color('turquoise')
         ballFrontRightMatRef.current.color = new THREE.Color('turquoise')
@@ -77,6 +80,9 @@ export default function Ufo({
         glassMat.opacity = 0.3
       }
     } else {
+      ufo.current.scale.x = scale
+      ufo.current.scale.y = scale
+      ufo.current.scale.z = scale
       frontBackPanelCircleMat.current.color = new THREE.Color('turquoise')
       leftRightPanelCircleMat.current.color = new THREE.Color('turquoise')
       ballFrontRightMatRef.current.color = new THREE.Color('turquoise')

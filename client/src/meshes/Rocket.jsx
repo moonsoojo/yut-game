@@ -51,10 +51,16 @@ export default function Rocket({
           whiteMat.color = new THREE.Color(0xffbabc)
         }
       } else {
+        rocket.current.scale.x = scale
+        rocket.current.scale.y = scale
+        rocket.current.scale.z = scale
         redMat.color = new THREE.Color('red')
         whiteMat.color = new THREE.Color('white')
       }
     } else {
+      rocket.current.scale.x = scale
+      rocket.current.scale.y = scale
+      rocket.current.scale.z = scale
       redMat.color = new THREE.Color('red')
       whiteMat.color = new THREE.Color('white')
     }
