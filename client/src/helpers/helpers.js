@@ -117,8 +117,9 @@ export function formatName(name, maxLength = 10) {
 }
 
 export function pieceSelected(selection, pieceId, team) {
-  return selection && 
-  selection.pieces[0].tile === -1 && 
-  selection.pieces[0].team === team &&
-  selection.pieces[0].id === pieceId
+  if (selection) {
+    return selection.pieces[0].team === team && selection.pieces[0].id === pieceId
+  } else {
+    return false
+  }
 }
