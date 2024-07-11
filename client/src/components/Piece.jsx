@@ -22,7 +22,6 @@ export default function Piece ({
   selected=false,
   onBoard=false,
 }) {
-
   const [selection] = useAtom(selectionAtom);
   const [legalTiles] = useAtom(legalTilesAtom)
   const [client] = useAtom(clientAtom)

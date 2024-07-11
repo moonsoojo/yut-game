@@ -23,7 +23,7 @@ export default function PiecesOnBoard() {
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
     const [device] = useAtom(deviceAtom);
     const [gamePhase] = useAtom(gamePhaseAtom)
-    const responsiveScale = layout[device].game.board[gamePhase].scale
+    const responsiveScale = layout[device].game.board.game.scale
 
     const [springs0_0, api0_0] = useSpring(() => ({        
         from: {
@@ -107,7 +107,6 @@ export default function PiecesOnBoard() {
     }
 
     function startCheck(tile, lastPath) {
-        console.log('start check', tile, lastPath)
         const condition0 = (tile === 0 && lastPath[0] === 1)
         const condition1 = (tile <= 5 && lastPath[0] === 0)
         return (condition0 || condition1)
@@ -116,8 +115,8 @@ export default function PiecesOnBoard() {
     function caughtCheck(gamePhase, tile) {
         return gamePhase === 'game' && tile === -1
     }
+
     useEffect(() => {
-        console.log(`[PiecesOnBoard] useEffect`, JSON.stringify(pieceTeam0Id0, null, 2))
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
             if (path[path.length-1] === 29) {
@@ -203,11 +202,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
                 })
             } else if (startCheck(pieceTeam0Id0.tile, pieceTeam0Id0.lastPath)) {
-                console.log(`[PiecesOnBoard] piece team 0 id 0 starting`)
                 const toAnimations = path.map((value) => {
                     // on score, move to Earth and add an additional animation
                     return {
@@ -338,6 +334,18 @@ export default function PiecesOnBoard() {
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
                 })
+            } else if (caughtCheck(gamePhase, pieceTeam0Id1.tile)) {
+                api0_1.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
             } else if (startCheck(pieceTeam0Id1.tile, pieceTeam0Id1.lastPath)) {
                 const toAnimations = path.map((value) => {
                     // on score, move to Earth and add an additional animation
@@ -467,10 +475,22 @@ export default function PiecesOnBoard() {
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
                 })
+            } else if (caughtCheck(gamePhase, pieceTeam0Id2.tile)) {
+                api0_2.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
             } else if (startCheck(pieceTeam0Id2.tile, pieceTeam0Id2.lastPath)) {
-                const toAnimations = path.map((value) => (
+                const toAnimations = path.map((value) => {
                     // on score, move to Earth and add an additional animation
-                    {
+                    return {
                         position: [
                             roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
                             roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
@@ -482,7 +502,7 @@ export default function PiecesOnBoard() {
                             friction: 26
                         }
                     }
-                ))
+                })
                 api0_2.start({
                     from: {
                         position: toAnimations[0].position,
@@ -596,6 +616,44 @@ export default function PiecesOnBoard() {
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
                 })
+            } else if (caughtCheck(gamePhase, pieceTeam0Id3.tile)) {
+                api0_3.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
+            } else if (startCheck(pieceTeam0Id3.tile, pieceTeam0Id3.lastPath)) {
+                const toAnimations = path.map((value) => {
+                    // on score, move to Earth and add an additional animation
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
+                        ],
+                        scale: responsiveScale,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                api0_3.start({
+                    from: {
+                        position: toAnimations[0].position,
+                        scale: 0,
+                    },
+                    to: toAnimations,
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
+                })
             } else {
                 const toAnimations = path.map((value) => {
                     // on score, move to Earth and add an additional animation
@@ -696,6 +754,44 @@ export default function PiecesOnBoard() {
                         welcomeTextScale: 0,
                     },
                     to: animations,
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
+                })
+            } else if (caughtCheck(gamePhase, pieceTeam1Id0.tile)) {
+                api1_0.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
+            } else if (startCheck(pieceTeam1Id0.tile, pieceTeam1Id0.lastPath)) {
+                const toAnimations = path.map((value) => {
+                    // on score, move to Earth and add an additional animation
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[0][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[0][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[0][2], 1) * responsiveScale,
+                        ],
+                        scale: responsiveScale,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                api1_0.start({
+                    from: {
+                        position: toAnimations[0].position,
+                        scale: 0,
+                    },
+                    to: toAnimations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -805,6 +901,44 @@ export default function PiecesOnBoard() {
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
                 })
+            } else if (caughtCheck(gamePhase, pieceTeam1Id1.tile)) {
+                api1_1.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
+            } else if (startCheck(pieceTeam1Id1.tile, pieceTeam1Id1.lastPath)) {
+                const toAnimations = path.map((value) => {
+                    // on score, move to Earth and add an additional animation
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[1][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[1][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[1][2], 1) * responsiveScale,
+                        ],
+                        scale: responsiveScale,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                api1_1.start({
+                    from: {
+                        position: toAnimations[0].position,
+                        scale: 0,
+                    },
+                    to: toAnimations,
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
+                })
             } else {
                 // save last move's path in piece
                 const toAnimations = path.map((value) => {
@@ -910,6 +1044,44 @@ export default function PiecesOnBoard() {
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
                 })
+            } else if (caughtCheck(gamePhase, pieceTeam1Id2.tile)) {
+                api1_2.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
+            } else if (startCheck(pieceTeam1Id2.tile, pieceTeam1Id2.lastPath)) {
+                const toAnimations = path.map((value) => {
+                    // on score, move to Earth and add an additional animation
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[2][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[2][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[2][2], 1) * responsiveScale,
+                        ],
+                        scale: responsiveScale,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                api1_2.start({
+                    from: {
+                        position: toAnimations[0].position,
+                        scale: 0,
+                    },
+                    to: toAnimations,
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
+                })
             } else {
                 const toAnimations = path.map((value) => {
                     // on score, move to Earth and add an additional animation
@@ -1010,6 +1182,44 @@ export default function PiecesOnBoard() {
                         welcomeTextScale: 0,
                     },
                     to: animations,
+                    loop: false,
+                    onStart: () => handleAnimationStart(false),
+                    onRest: () => handleAnimationEnd(true),
+                })
+            } else if (caughtCheck(gamePhase, pieceTeam1Id3.tile)) {
+                api1_3.start({
+                    from: {
+                        scale: responsiveScale,
+                    },
+                    to: [
+                        {
+                            scale: 0
+                        }
+                    ],
+                    loop: false,
+                })
+            } else if (startCheck(pieceTeam1Id3.tile, pieceTeam1Id3.lastPath)) {
+                const toAnimations = path.map((value) => {
+                    // on score, move to Earth and add an additional animation
+                    return {
+                        position: [
+                            roundNum(tilePositions[value][0] + idOffsets[3][0], 1) * responsiveScale,
+                            roundNum(tilePositions[value][1] + heightOffset + idOffsets[3][1], 1) * responsiveScale,
+                            roundNum(tilePositions[value][2] + idOffsets[3][2], 1) * responsiveScale,
+                        ],
+                        scale: responsiveScale,
+                        config: {
+                            tension: 170,
+                            friction: 26
+                        }
+                    }
+                })
+                api1_3.start({
+                    from: {
+                        position: toAnimations[0].position,
+                        scale: 0,
+                    },
+                    to: toAnimations,
                     loop: false,
                     onStart: () => handleAnimationStart(false),
                     onRest: () => handleAnimationEnd(true),
@@ -1144,7 +1354,6 @@ export default function PiecesOnBoard() {
         selectable={hasTurn && hasValidMoveBoard(0)}
         selected={pieceSelected(selection, 0, 0)}
         onBoard={true}
-        animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1158,17 +1367,17 @@ export default function PiecesOnBoard() {
         position={layout[device].game.welcomeBackText.position} 
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs0_0.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam0Id1.tile) && <Piece 
+        <Piece 
         team={0} 
         id={1} 
         tile={pieceTeam0Id1.tile} 
         position={springs0_1.position} 
         scale={springs0_1.scale} 
-        selectable={hasTurn && hasValidMoveBoard(0)}
+        selectable={(hasTurn && hasValidMoveBoard(0))}
         selected={pieceSelected(selection, 1, 0)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
@@ -1182,7 +1391,7 @@ export default function PiecesOnBoard() {
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs0_1.welcomeTextScale}
         />
-        { onBoardCheck(pieceTeam0Id2.tile) && <Piece 
+        <Piece 
         team={0} 
         id={2} 
         tile={pieceTeam0Id2.tile} 
@@ -1192,7 +1401,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 2, 0)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
@@ -1206,7 +1415,7 @@ export default function PiecesOnBoard() {
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs0_2.welcomeTextScale}
         />
-        { onBoardCheck(pieceTeam0Id3.tile) && <Piece 
+        <Piece 
         team={0} 
         id={3} 
         tile={pieceTeam0Id3.tile} 
@@ -1216,7 +1425,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 3, 0)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
@@ -1229,7 +1438,7 @@ export default function PiecesOnBoard() {
         position={layout[device].game.welcomeBackText.position} 
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs0_3.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id0.tile) && <Piece 
+        <Piece 
         team={1} 
         id={0} 
         tile={pieceTeam1Id0.tile} 
@@ -1239,7 +1448,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 0, 1)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[0][0], 1) * responsiveScale,
@@ -1252,7 +1461,7 @@ export default function PiecesOnBoard() {
         position={layout[device].game.welcomeBackText.position} 
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs1_0.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id1.tile) && <Piece 
+        <Piece 
         team={1} 
         id={1} 
         tile={pieceTeam1Id1.tile} 
@@ -1262,7 +1471,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 1, 1)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
@@ -1275,7 +1484,7 @@ export default function PiecesOnBoard() {
         position={layout[device].game.welcomeBackText.position} 
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs1_1.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id2.tile) && <Piece 
+        <Piece 
         team={1} 
         id={2} 
         tile={pieceTeam1Id2.tile} 
@@ -1285,7 +1494,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 2, 1)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
@@ -1298,7 +1507,7 @@ export default function PiecesOnBoard() {
         position={layout[device].game.welcomeBackText.position} 
         rotation={layout[device].game.welcomeBackText.rotation} 
         scale={springs1_2.welcomeTextScale}/>
-        { onBoardCheck(pieceTeam1Id3.tile) && <Piece 
+        <Piece 
         team={1} 
         id={3} 
         tile={pieceTeam1Id3.tile} 
@@ -1308,7 +1517,7 @@ export default function PiecesOnBoard() {
         selected={pieceSelected(selection, 3, 1)}
         onBoard={true}
         animation='onBoard'
-        /> }
+        />
         <Polaris                         
             position={[
                 roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
