@@ -99,13 +99,6 @@ export default function PiecesOnBoard() {
 
     const heightOffset = 0.9
 
-    function handleAnimationStart() {
-    }
-
-    function handleAnimationEnd() {
-        setAnimationPlaying(false)
-    }
-
     function startCheck(tile, lastPath) {
         const condition0 = (tile === 0 && lastPath[0] === 1)
         const condition1 = (tile <= 5 && lastPath[0] === 0)
@@ -188,8 +181,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id0.tile)) {
                 api0_0.start({
@@ -202,8 +195,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id0.tile, pieceTeam0Id0.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -228,8 +221,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 // save last move's path in piece
@@ -254,8 +247,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -333,8 +326,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id1.tile)) {
                 api0_1.start({
@@ -347,8 +340,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id1.tile, pieceTeam0Id1.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -373,8 +366,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -397,8 +390,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -476,8 +469,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id2.tile)) {
                 api0_2.start({
@@ -490,8 +483,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id2.tile, pieceTeam0Id2.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -516,8 +509,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 const toAnimations = path.map((value) => (
@@ -540,8 +533,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -619,8 +612,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id3.tile)) {
                 api0_3.start({
@@ -633,8 +626,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id3.tile, pieceTeam0Id3.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -659,8 +652,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -684,8 +677,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -763,8 +756,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id0.tile)) {
                 api1_0.start({
@@ -777,8 +770,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id0.tile, pieceTeam1Id0.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -803,8 +796,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 // save last move's path in piece
@@ -829,8 +822,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -908,8 +901,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id1.tile)) {
                 api1_1.start({
@@ -922,8 +915,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id1.tile, pieceTeam1Id1.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -948,8 +941,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 // save last move's path in piece
@@ -974,8 +967,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -1053,8 +1046,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id0.tile)) {
                 api1_2.start({
@@ -1067,8 +1060,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id2.tile, pieceTeam1Id2.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -1093,8 +1086,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 const toAnimations = path.map((value) => {
@@ -1118,8 +1111,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
@@ -1197,8 +1190,8 @@ export default function PiecesOnBoard() {
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id3.tile)) {
                 api1_3.start({
@@ -1211,8 +1204,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id3.tile, pieceTeam1Id3.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -1237,8 +1230,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             } else {
                 const toAnimations13 = path.map((value) => {
@@ -1262,8 +1255,8 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations13,
                     loop: false,
-                    onStart: () => handleAnimationStart(false),
-                    onRest: () => handleAnimationEnd(true),
+                    onStart: () => setAnimationPlaying(true),
+                    onRest: () => setAnimationPlaying(false),
                 })
             }
         }
