@@ -87,7 +87,7 @@ export default function About(props) {
         rotation={layout[props.device].about.board.rotation} 
         scale={layout[props.device].about.board.scale} 
         interactive={false} 
-        showStart={false}/>
+        showStart={true}/>
       </Float>
       <Text3D 
           font="fonts/Luckiest Guy_Regular.json"
