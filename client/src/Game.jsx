@@ -49,6 +49,7 @@ import Star from "./meshes/Star.jsx";
 
 // There should be no state
 export default function Game() {
+  console.log(`[Game]`)
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
@@ -62,15 +63,16 @@ export default function Game() {
   const [winner] = useAtom(winnerAtom)
   const params = useParams();
 
+  
+  const [readyToStart] = useAtom(readyToStartAtom)
+  const [hostName] = useAtom(hostNameAtom)
+
   useEffect(() => {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
-  // 2d, flat
-  // 3d, animated, border moving and scales from 0 to 1
   function LetsPlayButton({ position }) {
-    const [readyToStart] = useAtom(readyToStartAtom)
-    const [hostName] = useAtom(hostNameAtom)
+    console.log(`[Game][LetsPlayButton]`)
     
     function DisabledButton({ position, scale }) {
       return <group position={position} scale={scale}>
@@ -99,36 +101,9 @@ export default function Game() {
     function ActivatedButton() {
 
       const [hover, setHover] = useState(false)
-      const borderMesh0Ref = useRef();
-      const borderMesh1Ref = useRef();
-      const borderMesh2Ref = useRef();
-      const borderMesh3Ref = useRef();
-      const borderMesh4Ref = useRef();
-      const borderMesh5Ref = useRef();
-      const borderMesh6Ref = useRef();
-      const borderMeshRefs = [
-          borderMesh0Ref,
-          borderMesh1Ref,
-          borderMesh2Ref,
-          borderMesh3Ref,
-          borderMesh4Ref,
-          borderMesh5Ref,
-          borderMesh6Ref
-      ]
-      const buttonGroupRef = useRef();
   
       const backdropHeight = layout[device].game.letsPlayButton.activeButton.backdropHeight
       const backdropWidth = layout[device].game.letsPlayButton.activeButton.backdropWidth
-      useFrame((state, delta) => {
-          for (let i = 0; i < borderMeshRefs.length; i++) {      
-            borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropWidth
-            borderMeshRefs[i].current.position.y = 0.05
-            borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * backdropHeight
-          }
-          buttonGroupRef.current.scale.x = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
-          buttonGroupRef.current.scale.y = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
-          buttonGroupRef.current.scale.z = Math.cos(state.clock.elapsedTime*3)*0.05 + 0.9
-      })
   
       function handlePointerEnter(e) {
           e.stopPropagation()
@@ -166,8 +141,7 @@ export default function Game() {
   
       return <animated.group name='animated-group' scale={springs.scale}>
         <group name='lets-play-button-active' 
-        position={layout[device].game.letsPlayButton.activeButton.position} 
-        ref={buttonGroupRef}>
+        position={layout[device].game.letsPlayButton.activeButton.position} >
           <mesh 
             position={[0, 0, 0]} 
             rotation={[0, 0, 0]} 
@@ -177,7 +151,7 @@ export default function Game() {
             onPointerDown={handlePointerDown}
           >
             <cylinderGeometry args={[1, 1, 0.1, 48]}/>
-            <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.2} />
+            <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} />
           </mesh>
           <Text3D
               font="fonts/Luckiest Guy_Regular.json"
@@ -190,27 +164,6 @@ export default function Game() {
               {`Let's\nPlay!`}
               <meshStandardMaterial color={hover ? 'green' : 'yellow'}/>
           </Text3D>
-          <group ref={borderMesh0Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh1Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh2Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh3Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh4Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh5Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
-          <group ref={borderMesh6Ref}>
-              <Star scale={0.15} color={hover ? 'green' : 'yellow'}/>
-          </group>
         </group>
       </animated.group>
     }
