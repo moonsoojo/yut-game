@@ -33,6 +33,7 @@ import {
   tilesAtom,
   helperTilesAtom,
   winnerAtom,
+  clientAtom,
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -73,6 +74,7 @@ export default function Game() {
 
   function LetsPlayButton({ position }) {
     console.log(`[Game][LetsPlayButton]`)
+    const [client] = useAtom(clientAtom)
     
     function DisabledButton({ position, scale }) {
       return <group position={position} scale={scale}>
@@ -168,8 +170,9 @@ export default function Game() {
       </animated.group>
     }
 
+
     return <>
-      { hostName === 'you' && gamePhase === 'lobby' && <group position={position}>
+      { hostName === client.name && gamePhase === 'lobby' && <group position={position}>
         { readyToStart ? <ActivatedButton/> : <DisabledButton 
         position={layout[device].game.letsPlayButton.disabledButton.position}
         scale={layout[device].game.letsPlayButton.disabledButton.scale}
@@ -497,10 +500,6 @@ export default function Game() {
           position={layout[device].game.letsPlayButton.position}
           rotation={layout[device].game.letsPlayButton.rotation}
         />
-        {/* <HostName
-          position={layout[device].game.hostName.position}
-          rotation={layout[device].game.hostName.rotation}
-        /> */}
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}

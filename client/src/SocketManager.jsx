@@ -137,11 +137,7 @@ export const SocketManager = () => {
 
       // Set host name for display
       if (room.host !== null) {
-        if (room.host.socketId === socket.id) {
-          setHostName('you')
-        } else {
           setHostName(room.host.name)
-        }
       }
 
       // Find client from users

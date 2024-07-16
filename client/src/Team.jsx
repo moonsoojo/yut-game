@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
-import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom } from './GlobalState';
+import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, hostNameAtom, turnAtom } from './GlobalState';
 import { Html, Text3D } from '@react-three/drei';
 import Piece from './components/Piece';
 import { formatName, pieceStatus } from './helpers/helpers';
 import { Color, MeshStandardMaterial } from 'three';
+import Yoot from './Yoot';
+import YootMesh from './meshes/YootMesh';
+import { useFrame } from '@react-three/fiber';
 
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
+  const [hostName] = useAtom(hostNameAtom);
+  const [turn] = useAtom(turnAtom)
 
   function JoinTeamButton() {
     const [client] = useAtom(clientAtom);
@@ -149,22 +154,47 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   }
 
   function PlayerIds() {
+    const playerIdsRef = useRef([[],[]])
+    const yootIconRef = useRef()
+    useFrame((state, delta) => {
+      playerIdsRef.current.forEach(function (value, i) {
+        playerIdsRef.current[i].forEach(function (value1, j) {
+          if (turn.team === i && turn.players[turn.team] === j && playerIdsRef.current[i][j].geometry.boundingSphere && (gamePhase === 'pregame' || gamePhase === 'game')) {
+            yootIconRef.current.scale.x = 1
+            yootIconRef.current.scale.y = 1
+            yootIconRef.current.scale.z = 1
+            yootIconRef.current.position.x = playerIdsRef.current[i][j].geometry.boundingSphere.center.x + playerIdsRef.current[i][j].geometry.boundingSphere.radius + 0.2
+            // yootIconRef.current.position.y is fixed
+            // yootIconRef.current.position.z is fixed
+          }
+        })
+      })
+    })
     return <group
       position={layout[device].game[`team${team}`].names.position}
       rotation={layout[device].game[`team${team}`].names.rotation}
     >
       {teams[team].players.map((value, index) => (
-        index < 5 &&
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          key={index}
-          size={layout[device].game[`team${team}`].names.size}
-          height={layout[device].game[`team${team}`].names.height}
-          position={[0, -index * 0.5, 0]}
-        >
-          {formatName(value.name, layout[device].game[`team${team}`].names.maxLength)}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
+        index < 5 && <group>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            key={index}
+            size={layout[device].game[`team${team}`].names.size}
+            height={layout[device].game[`team${team}`].names.height}
+            position={[0, -index * 0.5, 0]}
+            ref={(ref => playerIdsRef.current[team][index] = ref)}
+          >
+            {formatName(value.name, layout[device].game[`team${team}`].names.maxLength)
+            + (value.name === hostName ? ' (h) ' : '')}
+            <meshStandardMaterial color='yellow'/>
+          </Text3D>
+          <group ref={yootIconRef} scale={0} position={[0, 0.17, 0]}>
+            <YootMesh rotation={[0, Math.PI/2, 0]} scale={0.04}/>
+            <YootMesh rotation={[0, Math.PI/2, 0]} scale={0.04} position={[0.1, 0, 0]}/>
+            <YootMesh rotation={[0, Math.PI/2, 0]} scale={0.04} position={[0.2, 0, 0]}/>
+            <YootMesh rotation={[0, Math.PI/2, 0]} scale={0.04} position={[0.3, 0, 0]}/>
+          </group>
+        </group>
       ))}
     </group>
   }

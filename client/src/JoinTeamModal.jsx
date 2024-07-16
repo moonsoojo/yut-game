@@ -11,6 +11,20 @@ export default function JoinTeamModal({ position, rotation, scale }) {
   const [submitHover, setSubmitHover] = useState(false)
   const [cancelHover, setCancelHover] = useState(false)
   const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
+  
+  function isAlphaNumeric(str) {
+    var code, i, len;
+  
+    for (i = 0, len = str.length; i < len; i++) {
+      code = str.charCodeAt(i);
+      if (!(code > 47 && code < 58) && // numeric (0-9)
+          !(code > 64 && code < 91) && // upper alpha (A-Z)
+          !(code > 96 && code < 123)) { // lower alpha (a-z)
+        return false;
+      }
+    }
+    return true;
+  };
 
   function handleJoinSubmit(e) {
     e.preventDefault();
@@ -18,6 +32,8 @@ export default function JoinTeamModal({ position, rotation, scale }) {
       setAlert('Enter something')
     } else if (name.length > 15) {
       setAlert('Must be shorter than 16 characters.')
+    } else if (!isAlphaNumeric(name)) { // prevent user from imitating host by adding '(host)'
+      setAlert('Can only contain letters and numbers.')
     } else {
       setAlert("")
       socket.emit("joinTeam", { team: joinTeam, name }, ({ player }) => {
