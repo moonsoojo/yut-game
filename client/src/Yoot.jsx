@@ -367,10 +367,10 @@ export default function Yoot({ device }) {
           </RigidBody>
         );
       })}
-      { gamePhase === 'lobby' && <PracticeYootButton
+      {/* { gamePhase === 'lobby' && <PracticeYootButton
         position={layout[device].game.practiceYootButton.position}
         scale={layout[device].game.practiceYootButton.scale}
-      />}
+      />} */}
       { (gamePhase === "pregame" || gamePhase === "game") && <YootButton 
         position={layout[device].game.yootButton.position}
         rotation={layout[device].game.yootButton.rotation}

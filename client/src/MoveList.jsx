@@ -9,6 +9,8 @@ import GeToken from './moveTokens/GeToken';
 import YootToken from './moveTokens/YootToken';
 import MoToken from './moveTokens/MoToken';
 import GulToken from './moveTokens/GulToken';
+import Rocket from './meshes/Rocket';
+import Ufo from './meshes/Ufo';
 // import moveToText from './moveToText';
 
 export default function MoveList({ position, rotation, tokenScale, tokenPosition }) {
@@ -37,6 +39,8 @@ export default function MoveList({ position, rotation, tokenScale, tokenPosition
         MOVES:
         <meshStandardMaterial color='yellow'/>
       </Text3D>
+      { turn.team === 0 && <Rocket position={[2, 0, -0.2]} scale={0.6}/>}
+      { turn.team === 1 && <Ufo position={[2, 0, -0.2]} scale={0.6}/>}
       {
         moveList.map((value, index) => 
           <group key={index}>

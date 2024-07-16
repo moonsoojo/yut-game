@@ -942,7 +942,15 @@ export default {
         }
       },
       piecesSection: {
-        position: [2.5, 0, 6],
+        position: [2.5, 0, 7.8],
+        emptyPieces: {
+          positions: [
+            [0, 0, -0.3],
+            [1.5, 0, -0.3],
+            [0, 0, 1.1],
+            [1.5, 0, 1.1]
+          ]
+        },
         pieces: {
           rotation: [0, 0, 0],
           positions: [
@@ -955,10 +963,10 @@ export default {
         }
       },
       moveList: {
-        position: [2, 0, 8.3],
+        position: [2, 0, 5],
         rotation: [-Math.PI/2, 0, 0],
         tokenScale: 0.8,
-        tokenPosition: [0.5, 0, 0.6]
+        tokenPosition: [0.5, 0, 0.5]
       },
       currentPlayer: {
         position: [3.2, 0, 5],
@@ -1829,7 +1837,7 @@ export default {
     },
     game: {
       letsPlayButton: {
-        position: [8.75,0,4.5],
+        position: [8.65,0,3.5],
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
           position: [0.25,0,0.1],
@@ -1846,9 +1854,9 @@ export default {
           backdropWidth: 1.4,
           backdropHeight: 1.1,
           scale: 1,
-          position: [0.1, 0, 0.5],
+          position: [0.1, 0, 0],
           text: {
-            position: [-0.8,0,-0.15],
+            position: [-0.8,0,-0.1],
             rotation: [-Math.PI/2,0,0],
             size: 0.45,
             height: 0.01,
@@ -2031,6 +2039,14 @@ export default {
       },
       piecesSection: {
         position: [7.8, 0, 0.5],
+        emptyPieces: {
+          positions: [
+            [0.5, 0, -0.5],
+            [1.8, 0, -0.5],
+            [0.5, 0, 0.7],
+            [1.8, 0, 0.7]
+          ],
+        },
         pieces: {
           rotation: [0, 0, 0],
           positions: [

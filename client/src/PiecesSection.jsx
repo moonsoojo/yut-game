@@ -20,7 +20,7 @@ export default function PiecesSection({
     return <group>
       {emptyPieces.map((_value, index) =>
         (<mesh
-          position={layout[device].game.piecesSection.pieces.positions[index]}
+          position={layout[device].game.piecesSection.emptyPieces.positions[index]}
           key={index}
         >
           <sphereGeometry args={[0.3, 32, 16]} />
