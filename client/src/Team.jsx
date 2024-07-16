@@ -175,10 +175,9 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
       rotation={layout[device].game[`team${team}`].names.rotation}
     >
       {teams[team].players.map((value, index) => (
-        index < 5 && <group>
+        index < 5 && <group key={index}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            key={index}
             size={layout[device].game[`team${team}`].names.size}
             height={layout[device].game[`team${team}`].names.height}
             position={[0, -index * 0.5, 0]}

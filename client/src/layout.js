@@ -752,7 +752,7 @@ export default {
           backdropWidth: 1.4,
           backdropHeight: 1.1,
           scale: 1.1,
-          position: [-0.3, 0, 0.5],
+          position: [-0.5, 0, 0.5],
           text: {
             position: [-0.8,0,-0.15],
             rotation: [-Math.PI/2,0,0],
@@ -885,8 +885,8 @@ export default {
         height: 0.01
       },
       disconnectModal: {
-        position: [-2.6,0.1,-1],
-        rotation: [-Math.PI/2,0,0],
+        position: [0, 3, 1],
+        rotation: [0,0,0],
       },
       board: {
         lobby: {
@@ -1983,8 +1983,8 @@ export default {
         height: 0.01
       },
       disconnectModal: {
-        position: [-2.6,0.1,-1],
-        rotation: [-Math.PI/2,0,0],
+        position: [0, 3, 1],
+        rotation: [0,0,0],
       },
       board: {
         lobby: {
