@@ -100,9 +100,9 @@ export default [
         Math.sin(((19 + 7.5) * (Math.PI * 2)) / 20) * 5,
     ],
     [
-        Math.sin(((10 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.sin(((10 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
         0,
-        Math.cos(((10 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.cos(((10 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
     ],
     [
         Math.sin(((10 - 2.5) * (Math.PI * 2)) / 20) * 1.7,
@@ -120,14 +120,14 @@ export default [
         Math.cos(((0 - 2.5) * (Math.PI * 2)) / 20) * 1.7,
     ],
     [
-        Math.sin(((0 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.sin(((0 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
         0,
-        Math.cos(((0 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.cos(((0 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
     ],
     [
-        Math.sin(((15 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.sin(((15 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
         0,
-        Math.cos(((15 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.cos(((15 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
     ],
     [
         Math.sin(((15 - 2.5) * (Math.PI * 2)) / 20) * 1.7,
@@ -140,8 +140,8 @@ export default [
         Math.cos(((5 - 2.5) * (Math.PI * 2)) / 20) * 1.7,
     ],
     [
-        Math.sin(((5 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.sin(((5 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
         0,
-        Math.cos(((5 - 2.5) * (Math.PI * 2)) / 20) * 3.5,
+        Math.cos(((5 - 2.5) * (Math.PI * 2)) / 20) * 3.4,
     ],
 ]

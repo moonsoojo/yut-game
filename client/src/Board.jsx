@@ -67,7 +67,7 @@ export default function Board({
   }
 
   // Shortcuts
-  const radiusShortcut1 = 3.5;
+  const radiusShortcut1 = 3.4;
   const radiusShortcut2 = 1.7;
 
   let position20 = [
@@ -274,5 +274,35 @@ export default function Board({
         />
       </mesh>
     </group>}
+    <group name='helper-arrows'>
+      <mesh position={[2.9, 0, -2.9]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[2.8, 0, -4.1]} rotation={[Math.PI/2, 0, Math.PI*3/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[-2.8, 0, -2.8]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[-4.2, 0, -2.8]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[-2.8, 0, 4.1]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[0.75, 0, 0.75]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+      <mesh position={[-0.75, 0, 0.75]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+        <coneGeometry args={[0.08, 0.3, 8]}/>
+        <meshBasicMaterial color='grey'/>
+      </mesh>
+    </group>
   </animated.group>;
 }
