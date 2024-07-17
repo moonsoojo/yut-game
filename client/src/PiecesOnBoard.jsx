@@ -1049,7 +1049,7 @@ export default function PiecesOnBoard() {
                     onStart: () => setAnimationPlaying(true),
                     onRest: () => setAnimationPlaying(false),
                 })
-            } else if (caughtCheck(gamePhase, pieceTeam0Id0.tile)) {
+            } else if (caughtCheck(gamePhase, pieceTeam1Id2.tile)) {
                 api1_2.start({
                     from: {
                         scale: responsiveScale,
@@ -1262,15 +1262,7 @@ export default function PiecesOnBoard() {
         }
     }, [pieceTeam1Id3])
 
-    function onBoardCheck(tile) {
-        if (tile === -1) {
-            return false
-        } else {
-            return true
-        }
-    }
-
-    function WelcomeBackText({ position, rotation, scale }) {
+    function WelcomeBackText({ position, scale }) {
         const borderMesh0Ref = useRef();
         const borderMesh1Ref = useRef();
         const borderMesh2Ref = useRef();
@@ -1306,12 +1298,13 @@ export default function PiecesOnBoard() {
                 <meshStandardMaterial color='black' transparent opacity={0.9}/>
             </mesh>
             <Text3D
-            font="fonts/Luckiest Guy_Regular.json" 
-            position={[-1.1, 0.1, -0.1]}
-            rotation={[-Math.PI/2, 0, 0]}
-            height={0.01}
-            lineHeight={0.9} 
-            size={0.35}>
+                font="fonts/Luckiest Guy_Regular.json" 
+                position={[-1.1, 0.1, -0.1]}
+                rotation={[-Math.PI/2, 0, 0]}
+                height={0.01}
+                lineHeight={0.9} 
+                size={0.35}
+            >
                 {`Welcome\nBack!`}
                 <meshStandardMaterial color='yellow'/>
             </Text3D>
@@ -1355,14 +1348,14 @@ export default function PiecesOnBoard() {
 
     return <>
         <Piece 
-        team={0} 
-        id={0} 
-        tile={pieceTeam0Id0.tile} 
-        position={springs0_0.position} 
-        scale={springs0_0.scale} 
-        selectable={hasTurn && hasValidMoveBoard(0)}
-        selected={pieceSelected(selection, 0, 0)}
-        onBoard={true}
+            team={0} 
+            id={0} 
+            tile={pieceTeam0Id0.tile} 
+            position={springs0_0.position} 
+            scale={springs0_0.scale} 
+            selectable={hasTurn && hasValidMoveBoard(0)}
+            selected={pieceSelected(selection, 0, 0)}
+            onBoard={true}
         />
         <Polaris                         
             position={[
@@ -1373,19 +1366,20 @@ export default function PiecesOnBoard() {
             scale={springs0_0.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs0_0.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs0_0.welcomeTextScale}
+        />
         <Piece 
-        team={0} 
-        id={1} 
-        tile={pieceTeam0Id1.tile} 
-        position={springs0_1.position} 
-        scale={springs0_1.scale} 
-        selectable={(hasTurn && hasValidMoveBoard(0))}
-        selected={pieceSelected(selection, 1, 0)}
-        onBoard={true}
-        animation='onBoard'
+            team={0} 
+            id={1} 
+            tile={pieceTeam0Id1.tile} 
+            position={springs0_1.position} 
+            scale={springs0_1.scale} 
+            selectable={(hasTurn && hasValidMoveBoard(0))}
+            selected={pieceSelected(selection, 1, 0)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1396,20 +1390,20 @@ export default function PiecesOnBoard() {
             scale={springs0_1.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs0_1.welcomeTextScale}
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs0_1.welcomeTextScale}
         />
         <Piece 
-        team={0} 
-        id={2} 
-        tile={pieceTeam0Id2.tile} 
-        position={springs0_2.position} 
-        scale={springs0_2.scale} 
-        selectable={hasTurn && hasValidMoveBoard(0)}
-        selected={pieceSelected(selection, 2, 0)}
-        onBoard={true}
-        animation='onBoard'
+            team={0} 
+            id={2} 
+            tile={pieceTeam0Id2.tile} 
+            position={springs0_2.position} 
+            scale={springs0_2.scale} 
+            selectable={hasTurn && hasValidMoveBoard(0)}
+            selected={pieceSelected(selection, 2, 0)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1420,20 +1414,20 @@ export default function PiecesOnBoard() {
             scale={springs0_2.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs0_2.welcomeTextScale}
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs0_2.welcomeTextScale}
         />
         <Piece 
-        team={0} 
-        id={3} 
-        tile={pieceTeam0Id3.tile} 
-        position={springs0_3.position} 
-        scale={springs0_3.scale} 
-        selectable={hasTurn && hasValidMoveBoard(0)}
-        selected={pieceSelected(selection, 3, 0)}
-        onBoard={true}
-        animation='onBoard'
+            team={0} 
+            id={3} 
+            tile={pieceTeam0Id3.tile} 
+            position={springs0_3.position} 
+            scale={springs0_3.scale} 
+            selectable={hasTurn && hasValidMoveBoard(0)}
+            selected={pieceSelected(selection, 3, 0)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1444,19 +1438,20 @@ export default function PiecesOnBoard() {
             scale={springs0_3.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs0_3.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs0_3.welcomeTextScale}
+        />
         <Piece 
-        team={1} 
-        id={0} 
-        tile={pieceTeam1Id0.tile} 
-        position={springs1_0.position}
-        scale={springs1_0.scale} 
-        selectable={hasTurn && hasValidMoveBoard(1)}
-        selected={pieceSelected(selection, 0, 1)}
-        onBoard={true}
-        animation='onBoard'
+            team={1} 
+            id={0} 
+            tile={pieceTeam1Id0.tile} 
+            position={springs1_0.position}
+            scale={springs1_0.scale} 
+            selectable={hasTurn && hasValidMoveBoard(1)}
+            selected={pieceSelected(selection, 0, 1)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1467,19 +1462,20 @@ export default function PiecesOnBoard() {
             scale={springs1_0.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs1_0.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs1_0.welcomeTextScale}
+        />
         <Piece 
-        team={1} 
-        id={1} 
-        tile={pieceTeam1Id1.tile} 
-        position={springs1_1.position} 
-        scale={springs1_1.scale} 
-        selectable={hasTurn && hasValidMoveBoard(1)}
-        selected={pieceSelected(selection, 1, 1)}
-        onBoard={true}
-        animation='onBoard'
+            team={1} 
+            id={1} 
+            tile={pieceTeam1Id1.tile} 
+            position={springs1_1.position} 
+            scale={springs1_1.scale} 
+            selectable={hasTurn && hasValidMoveBoard(1)}
+            selected={pieceSelected(selection, 1, 1)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1490,19 +1486,20 @@ export default function PiecesOnBoard() {
             scale={springs1_1.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs1_1.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs1_1.welcomeTextScale}
+        />
         <Piece 
-        team={1} 
-        id={2} 
-        tile={pieceTeam1Id2.tile} 
-        position={springs1_2.position} 
-        scale={springs1_2.scale} 
-        selectable={hasTurn && hasValidMoveBoard(1)}
-        selected={pieceSelected(selection, 2, 1)}
-        onBoard={true}
-        animation='onBoard'
+            team={1} 
+            id={2} 
+            tile={pieceTeam1Id2.tile} 
+            position={springs1_2.position} 
+            scale={springs1_2.scale} 
+            selectable={hasTurn && hasValidMoveBoard(1)}
+            selected={pieceSelected(selection, 2, 1)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1513,19 +1510,19 @@ export default function PiecesOnBoard() {
             scale={springs1_2.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs1_2.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs1_2.welcomeTextScale}/>
         <Piece 
-        team={1} 
-        id={3} 
-        tile={pieceTeam1Id3.tile} 
-        position={springs1_3.position} 
-        scale={springs1_3.scale} 
-        selectable={hasTurn && hasValidMoveBoard(1)}
-        selected={pieceSelected(selection, 3, 1)}
-        onBoard={true}
-        animation='onBoard'
+            team={1} 
+            id={3} 
+            tile={pieceTeam1Id3.tile} 
+            position={springs1_3.position} 
+            scale={springs1_3.scale} 
+            selectable={hasTurn && hasValidMoveBoard(1)}
+            selected={pieceSelected(selection, 3, 1)}
+            onBoard={true}
+            animation='onBoard'
         />
         <Polaris                         
             position={[
@@ -1536,8 +1533,9 @@ export default function PiecesOnBoard() {
             scale={springs1_3.sizeTwink}
         />
         <WelcomeBackText 
-        position={layout[device].game.welcomeBackText.position} 
-        rotation={layout[device].game.welcomeBackText.rotation} 
-        scale={springs1_3.welcomeTextScale}/>
+            position={layout[device].game.welcomeBackText.position} 
+            rotation={layout[device].game.welcomeBackText.rotation} 
+            scale={springs1_3.welcomeTextScale}
+        />
     </>
 }

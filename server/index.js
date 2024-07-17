@@ -654,7 +654,11 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // move = -1
+          if (user.team === 0) {
+            move = 3;
+          } else {
+            move = 2
+          }
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo

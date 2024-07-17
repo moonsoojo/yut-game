@@ -118,7 +118,12 @@ export function formatName(name, maxLength = 10) {
 
 export function pieceSelected(selection, pieceId, team) {
   if (selection) {
-    return selection.pieces[0].team === team && selection.pieces[0].id === pieceId
+    for (const piece of selection.pieces) {
+      if (piece.id === pieceId && piece.team === team) {
+        return true
+      }
+    }
+    return false
   } else {
     return false
   }
