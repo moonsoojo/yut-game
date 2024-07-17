@@ -545,32 +545,30 @@ export default function Game() {
         position={layout[device].game.rulebookButton.position}
         scale={layout[device].game.rulebookButton.scale}
         />
-        { (device === 'landscapeDesktop' || (device === 'portrait' && !(29 in legalTiles))) && <PiecesSection 
+        <PiecesSection 
         position={layout[device].game.piecesSection.position}
         device={device}
-        /> }
+        />
         { (29 in legalTiles) && <ScoreButtons
           position={layout[device].game.scoreButtons.position}
           rotation={layout[device].game.scoreButtons.rotation}
+          scale={layout[device].game.scoreButtons.scale}
           legalTiles={legalTiles}
         /> }
         <PiecesOnBoard/>
-        { gamePhase === 'game' && <MoveList
+        { gamePhase === 'game' && 
+        (device === 'landscapeDesktop' || (device === 'portrait' && !(29 in legalTiles))) && 
+        <MoveList
           position={layout[device].game.moveList.position}
           rotation={layout[device].game.moveList.rotation}
           tokenScale={layout[device].game.moveList.tokenScale}
           tokenPosition={layout[device].game.moveList.tokenPosition}
         /> }
-        {/* { (gamePhase === "pregame" || gamePhase === "game") && <CurrentPlayer 
-          position={layout[device].game.currentPlayer.position} 
-          rotation={layout[device].game.currentPlayer.rotation}
-          fontSize={layout[device].game.currentPlayer.fontSize}
-        /> } */}
         </animated.group>
       }
       { gamePhase === 'finished' && <animated.group scale={winScreenScale}>
-        { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
-        { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
+        { winner === 0 && <RocketsWin/> }
+        { winner === 1 && <UfosWin/> }
       </animated.group> }
     </>
   );

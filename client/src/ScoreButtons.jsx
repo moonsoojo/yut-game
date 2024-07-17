@@ -4,7 +4,7 @@ import { socket } from "./SocketManager";
 import { useParams } from "wouter";
 import * as THREE from 'three';
 
-export default function ScoreButtons({ position, rotation, legalTiles }) {
+export default function ScoreButtons({ position, rotation, scale, legalTiles }) {
   
   const params = useParams()
 
@@ -84,6 +84,7 @@ export default function ScoreButtons({ position, rotation, legalTiles }) {
   return <group 
     position={position} 
     rotation={rotation}
+    scale={scale}
   >
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 

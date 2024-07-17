@@ -992,8 +992,9 @@ export default {
         orientation: 'downUp'
       },
       scoreButtons: {
-        position: [1.8, 0, 5.2],
+        position: [1.9, 0, 4.9],
         rotation: [-Math.PI/2, 0, 0],
+        scale: 0.8
       },
       mainAlert: {
         position: [0, 0.3, 7],
@@ -2089,6 +2090,7 @@ export default {
       scoreButtons: {
         position: [4.5, 0, 4.5],
         rotation: [-Math.PI/2, 0, 0],
+        scale: 1
       },
       mainAlert: {
         position: [0, 0.3, 6],
