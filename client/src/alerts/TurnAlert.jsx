@@ -7,6 +7,7 @@ import { animated, useSpring } from "@react-spring/three";
 import Star from "../meshes/Star";
 import { useAtom } from "jotai";
 import { mainAlertAtom, teamsAtom, turnAtom } from "../GlobalState";
+import { formatName } from "../helpers/helpers";
 
 export default function TurnAlert({position, rotation}) {
     const { nodes, materials } = useGLTF('models/alert-background.glb')
@@ -43,14 +44,6 @@ export default function TurnAlert({position, rotation}) {
         onRest: () => {},
         delay: 500
     })
-
-    function formatName(name) {
-        if (name.length > 10) {
-            return name.substring(0, 10) + '...'
-        } else {
-            return name
-        }
-    }
 
     const borderMesh0Ref = useRef();
     const borderMesh1Ref = useRef();
@@ -103,7 +96,7 @@ export default function TurnAlert({position, rotation}) {
           height={0.1}
           ref={nameRef}
         >
-          {formatName(teams[turn.team].players[turn.players[turn.team]].name)}
+          {formatName(teams[turn.team].players[turn.players[turn.team]].name, 9)}
           <meshStandardMaterial color={ turn.team === 0 ? 'red': 'turquoise' }/>
         </Text3D>
       </group>
