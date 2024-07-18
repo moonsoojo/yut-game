@@ -200,7 +200,7 @@ export default {
         },
         firstCornerTilesPos: [
           [-1.5,0,-2],
-          [-0.8, 0, -2]
+          [-0.8, 0, -1.7]
         ],
         cursorPos: [
           [0, 0.3, -1],
@@ -246,10 +246,10 @@ export default {
           position: [0.1,2.5,-1]
         },
         bonusTurn: {
-          position: [-2.7, 0, 0]
+          position: [-3.3, 0, 0.5]
         },
         yootButtonModel: {
-          position: [0.7, 0, -0.5]
+          position: [0.2, 0, 0]
         },
         moveText: {
           position: [-3,0,0]
