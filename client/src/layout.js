@@ -204,41 +204,41 @@ export default {
         ],
         cursorPos: [
           [0, 0.3, -1],
-          [-1,2,3.5],
+          [-1,2,3.8],
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.5,
-            2,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1.8,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
           ],
           [5,2,2.5],
         ],
         rocketPos: [
           [
-            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
           ]
         ],
         ufoPos: [
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
-            0.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
+            1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [7, -3, -5]
         ],
@@ -265,12 +265,66 @@ export default {
         },
         cursorPos: [
           [1, 0.3, 3],
-          [-1.2,2,5.5],
-          [3,2,5],
+          [-0.8,2,5.5],
+          [3.3,2,5.2],
           [6, 0.3, 1],
           [2.8,2,5],
           [4.5, 2, 3.2],
           [6.5, 0.3, 1]
+        ],
+        rocket0Pos: [
+          [
+            -Math.cos(((-1+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-0.3,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.3,
+            1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5-0.3,
+            1.1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+        ],
+        rocket1Pos: [
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5+0.3,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5+0.3,
+            1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5+0.3,
+            1.1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5,
+          ],
         ],
         pointer0: {
           position: [-0.3,2.5,0]
@@ -501,7 +555,7 @@ export default {
           position: [
             [1, 0.3, 2],
             [4, 0, 4],
-            [-1.9, 0, 3]
+            [-1.7, 0, 3.4]
           ],
           scale: [
             [0,0,0],
@@ -1352,42 +1406,42 @@ export default {
           [-1.5,0,-1]
         ],
         cursorPos: [
-          [0, 0.3, 0],
-          [-1,2,4.5],
+          [0, 0.3, 1],
+          [-1,2,5],
           [
             -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1.2,
             2,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-0.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 + 0.5,
           ],
           [5,2,3.5],
         ],
         rocketPos: [
           [
-            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-1,
-            1.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
+            2,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
           ]
         ],
         ufoPos: [
           [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.8,
-            0.5,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5-1,
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
+            1.5,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
           ],
           [7, -3, -5]
         ],
@@ -1401,7 +1455,7 @@ export default {
           position: [0.5, 0, 0.5]
         },
         moveText: {
-          position: [-3, 0, 1]
+          position: [-3, 0, 0]
         }
       },
       page4: {
@@ -1413,13 +1467,67 @@ export default {
           lineHeight: 0.9
         },
         cursorPos: [
-          [1, 0.3, 3],
-          [-1.2,2,5.5],
-          [2.8,2,5],
+          [1.1, 0.3, 3.3],
+          [-1.0,2,5.7],
+          [3,2,5.1],
           [6, 0.3, 1],
           [2.8,2,5],
           [4, 2, 3],
-          [6, 0.3, 1]
+          [6.3, 0.3, 1]
+        ],
+        rocket0Pos: [
+          [
+            -Math.cos(((-1+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5 ,
+          ],
+          [
+            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5-0.35,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5-0.35,
+            1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5-0.35,
+            1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+        ],
+        rocket1Pos: [
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 +0.35,
+            1,
+            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5  +0.35,
+            1,
+            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
+          ],
+          [
+            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 +0.35,
+            1.1,
+            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5,
+          ],
         ],
         pointer0: {
           position: [-0.3,2.5,0]

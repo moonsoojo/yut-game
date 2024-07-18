@@ -453,7 +453,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           -Math.cos(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
           0,
           Math.sin(((i+5) * (Math.PI * 2)) / NUM_STARS) * TILE_RADIUS,
-        ];
+        ];``
         if (i == 0) {
           tiles.push(<Earth position={position} key={i} scale={0.4}/>);
         } else {
@@ -506,8 +506,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <group name='rocket-2' ref={rocket2}>
           <Rocket position={[-0.4,-0.5,0.7]} scale={1.5}/>
         </group>
-        <animated.group name='rocket-3' ref={rocket3} >
-          <Rocket position={springs.rocket3Pos} scale={springs.rocket3Scale} />
+        <animated.group name='rocket-3' ref={rocket3} position={springs.rocket3Pos} scale={springs.rocket3Scale}>
+          <Rocket />
         </animated.group>
       </group>
     }
@@ -774,15 +774,15 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
       function HomePieces({ position }) {
         return <group position={position}>
-          <group name='rocket-0'>
-            <Rocket position={layout[device].howToPlay.page2.rocket0Pos} scale={springs.rocketHomeScale}/>
-          </group>
-          <group name='rocket-1'>
-            <Rocket position={layout[device].howToPlay.page2.rocket1Pos} scale={springs.rocketHomeScale}/>
-          </group>
-          <group name='rocket-2'>
-            <Rocket position={layout[device].howToPlay.page2.rocket2Pos} scale={springs.rocketHomeScale}/>
-          </group>
+          <animated.group name='rocket-0' position={layout[device].howToPlay.page2.rocket0Pos} scale={springs.rocketHomeScale}>
+            <Rocket/>
+          </animated.group>
+          <animated.group name='rocket-1' position={layout[device].howToPlay.page2.rocket1Pos} scale={springs.rocketHomeScale}>
+            <Rocket/>
+          </animated.group>
+          <animated.group name='rocket-2' position={layout[device].howToPlay.page2.rocket2Pos} scale={springs.rocketHomeScale}>
+            <Rocket/>
+          </animated.group>
           <Check 
             position={layout[device].howToPlay.page2.checkPos} 
             rotation={[Math.PI/8, 0, 0]}
@@ -1073,11 +1073,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   
       return <animated.group position={position}>
         { tiles }
-        <animated.group name='rocket' position={springs.rocketPos}>
-          <Rocket position={[0.8,-0.5,0.5]} scale={springs.rocketScale} />
+        <animated.group name='rocket' position={springs.rocketPos} scale={springs.rocketScale} >
+          <Rocket/>
         </animated.group>
-        <animated.group name='ufo' position={springs.ufoPos}>
-          <Ufo position={[0.8,0,0.5]} scale={springs.ufoScale} />
+        <animated.group name='ufo' position={springs.ufoPos} scale={springs.ufoScale} >
+          <Ufo/>
         </animated.group>
       </animated.group>;
     }
@@ -1138,16 +1138,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         legalTile1Scale: 0.4,
         pointer0Opacity: 0,
         pointer1Opacity: 0,
-        rocket0Pos: [
-          -Math.cos(((-1+5) * (Math.PI * 2)) / 20) * 5 -1,
-          0 + 1,
-          Math.sin(((-1+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-        ],
-        rocket1Pos: [
-          -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1,
-          0 + 1,
-          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-        ],
+        rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[0],
+        rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[0],
         moveText0Scale: 1,
         moveText1Scale: 0,
         bonusTurnScale: 0,
@@ -1196,38 +1188,22 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: [
-            -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5 -1,
-            0 + 1,
-            Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
+          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[1],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: [
-            -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5 -1,
-            0 + 1,
-            Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
+          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[2],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: [
-            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
-          rocket1Pos: [
-            -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1,
-            Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
+          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[3],
+          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[1],
           cursorPos: layout[device].howToPlay.page4.cursorPos[3],
           config: {
             tension: 170,
@@ -1281,32 +1257,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
-          rocket1Pos: [
-            -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1,
-            Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
+          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[4],
+          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[2],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: [
-            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -1.3,
-            0 + 1.1,
-            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
-          rocket1Pos: [
-            -Math.cos(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-            0 + 1.1,
-            Math.sin(((4+5) * (Math.PI * 2)) / 20) * 5 -0.7,
-          ],
+          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[5],
+          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[3],
           config: {
             tension: 170,
             friction: 26
@@ -1367,11 +1327,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   
       return <group position={position}>
         { tiles }
-        <animated.group name='rocket-0' position={springs.rocket0Pos}>
-          <Rocket position={[0.8,0,0.5]} scale={springs.rocket0Scale} />
+        <animated.group name='rocket-0' position={springs.rocket0Pos} scale={springs.rocket0Scale} >
+          <Rocket />
         </animated.group>
-        <animated.group name='rocket-1' position={springs.rocket1Pos}>
-          <Rocket position={[0.8,0,0.5]} scale={springs.rocket1Scale} />
+        <animated.group name='rocket-1' position={springs.rocket1Pos} scale={springs.rocket1Scale} >
+          <Rocket/>
         </animated.group>
         <Cursor
           position={springs.cursorPos}
@@ -1813,8 +1773,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       );
       return <animated.group {...props}>
         {tiles}
-        <animated.group name='rocket-0' position={springs.rocket0Pos}>
-          <Rocket scale={springs.rocket0Scale} />
+        <animated.group name='rocket-0' scale={springs.rocket0Scale} position={springs.rocket0Pos}>
+          <Rocket />
         </animated.group>
         <animated.group name='moon-arrow' scale={springs.pointer0Scale}>
           <ArrowBlender
@@ -1980,7 +1940,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.do.text.line0.size}
           height={layout[device].howToPlay.page6.do.text.line0.height}
         >
-          {'"DO"'}
+          {'DO'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
@@ -2010,7 +1970,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.ge.text.line0.size}
           height={layout[device].howToPlay.page6.ge.text.line0.height}
         >
-          {'"GE"'}
+          {'GE'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
@@ -2040,7 +2000,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.gul.text.line0.size}
           height={layout[device].howToPlay.page6.gul.text.line0.height}
         >
-          {'"GUL"'}
+          {'GUL'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
@@ -2070,7 +2030,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.yoot.text.line0.size}
           height={layout[device].howToPlay.page6.yoot.text.line0.height}
         >
-          {'"YOOT"'}
+          {'YOOT'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
@@ -2110,7 +2070,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.mo.text.line0.size}
           height={layout[device].howToPlay.page6.mo.text.line0.height}
         >
-          {'"MO"'}
+          {'MO'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>      
         <Text3D
@@ -2150,7 +2110,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.backdo.text.line0.size}
           height={layout[device].howToPlay.page6.backdo.text.line0.height}
         >
-          {'"backdo"'}
+          {'backdo'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>         
         <Text3D
