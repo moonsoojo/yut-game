@@ -58,16 +58,7 @@ export default function About(props) {
         size={layout[props.device].about.mainDescription.size}
         height={0.01}
     >
-      Yoot Nori (game) is a game played
-      <meshStandardMaterial color='yellow'/>
-    </Text3D>
-    <Text3D 
-        font="fonts/Luckiest Guy_Regular.json"
-        position={layout[props.device].about.mainDescription.line1Position}
-        size={layout[props.device].about.mainDescription.size}
-        height={0.01}
-    >
-      during the holidays in Korea.
+      {`Two teams throw wooden dice (yoot)\nto move tokens on the board. The one\nthat moves four tokens back to\nthe start first wins.`}
       <meshStandardMaterial color='yellow'/>
     </Text3D>
     <group>

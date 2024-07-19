@@ -72,7 +72,7 @@ export default {
           position: [-1.5, 0, -2]
         },
         moveText: {
-          text: "MOVE: 3-STEPS",
+          text: "MOVE: 4-STEPS",
           position: [-3.2, 0.7, -1.2]
         },
         yoot: {
@@ -749,41 +749,40 @@ export default {
       scale: 0.28,
       mainDescription: {
         size: 0.6,
-        line0Position: [0,-0.5,0],
-        line1Position: [0,-1.3,0]
+        line0Position: [0,0.5,0],
       },
       board: {
-        position: [5.5, -6, 0],
+        position: [5.5, -7.5, 0],
         rotation: [Math.PI/2, 0, 0],
         scale: 0.6,
         text: {
-          position: [-1,-4,-1],
+          position: [-1,-5.5,-1],
           size: 0.6
         }
       },
       pieces: {
-        position: [-1,-12,-1],
+        position: [-1,-13,-1],
         size: 0.6,
         rockets: {
-          position: [4, -12, 0]
+          position: [4, -13, 0]
         },
         ufos: {
-          position: [7.5, -12, 0]
+          position: [7.5, -13, 0]
         }
       },
       yoot: {
-        position: [13, -7, -2],
+        position: [13, -8.5, -2],
         text: {
-          position: [10.5,-4,-1],
+          position: [10.5,-5.5,-1],
           size: 0.6
         }
       },
       playersText: {
-        position: [11,-11.5,-1],
+        position: [11,-12.5,-1],
         size: 0.6
       },
       ageText: {
-        position: [10,-11,-1],
+        position: [10,-1.5,-1],
         size: 0.6
       }
     },
@@ -1228,41 +1227,40 @@ export default {
       scale: 1,
       mainDescription: {
         size: 0.6,
-        line0Position: [0,-0.5,0],
-        line1Position: [0,-1.3,0]
+        line0Position: [-1,0.5,0],
       },
       board: {
-        position: [5.5, -6, 0],
+        position: [5.5, -7, 0],
         rotation: [Math.PI/2, 0, 0],
         scale: 0.6,
         text: {
-          position: [-1,-4,-1],
+          position: [-1,-5,-1],
           size: 0.6
         }
       },
       pieces: {
-        position: [-1,-12,-1],
+        position: [-1,-13,-1],
         size: 0.6,
         rockets: {
-          position: [4, -12, 0]
+          position: [4, -13, 0]
         },
         ufos: {
-          position: [7.5, -12, 0]
+          position: [7.5, -13, 0]
         }
       },
       yoot: {
-        position: [14, -7, -2],
+        position: [14, -8, -2],
         text: {
-          position: [11.1,-4,-1],
+          position: [11.1,-5,-1],
           size: 0.6
         }
       },
       playersText: {
-        position: [11,-11,-1],
+        position: [11.5,-12.5,-1],
         size: 0.6
       },
       ageText: {
-        position: [10,-11,-1],
+        position: [10.5,-12.5,-1],
         size: 0.6
       }
     },
