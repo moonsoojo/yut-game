@@ -774,7 +774,7 @@ export default {
       yoot: {
         position: [13, -7, -2],
         text: {
-          position: [10,-4,-1],
+          position: [10.5,-4,-1],
           size: 0.6
         }
       },
@@ -1251,9 +1251,9 @@ export default {
         }
       },
       yoot: {
-        position: [13, -7, -2],
+        position: [14, -7, -2],
         text: {
-          position: [10,-4,-1],
+          position: [11.1,-4,-1],
           size: 0.6
         }
       },
