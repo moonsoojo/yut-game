@@ -1,6 +1,11 @@
 import React, { useRef } from "react";
 import { useTexture } from "@react-three/drei";
 import { animated } from "@react-spring/three";
+import * as THREE from 'three';
+import AtmosphereFragmentShader from '../shader/moon/atmosphere/fragment.glsl'
+import AtmosphereVertexShader from '../shader/moon/atmosphere/vertex.glsl'
+import FragmentShader from '../shader/moon/fragment.glsl'
+import VertexShader from '../shader/moon/vertex.glsl'
 
 export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   const props = useTexture({
@@ -20,18 +25,31 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
         <mesh>
           <sphereGeometry args={[0.6, 32, 32]} />
           <meshStandardMaterial map={props.map} />
+          <shaderMaterial
+            vertexShader={VertexShader}
+            fragmentShader={FragmentShader}
+            uniforms={{
+              uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,1)),
+              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#00aaff')),
+              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#ff6600')),
+            }}
+          />
+        </mesh>
+        <mesh scale={1.04}>
+          <sphereGeometry args={[0.6, 32, 32]} />
+          <shaderMaterial 
+          side={THREE.BackSide} 
+          transparent 
+          vertexShader={AtmosphereVertexShader}
+          fragmentShader={AtmosphereFragmentShader}
+          uniforms={{
+            uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,1)),
+            uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#e7e7e7')),
+            uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#000000')),
+          }}
+          />
         </mesh>
       </group>
-      {/* <HelperArrow
-        position={[0, 0, 1]}
-        rotation={[Math.PI/2, 0, 0]}
-        scale={0.9}
-      />
-      <HelperArrow
-        position={[-1, 0, 0]}
-        rotation={[0, 0, Math.PI/2]}
-        scale={0.9}
-      /> */}
     </animated.group>
   );
 }
