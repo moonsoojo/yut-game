@@ -5,9 +5,9 @@ function randomNumberBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-export default function Stars({ position=[0,0,0], count=1000, size=5 }) {
+export default function Stars({ position=[0,0,0], count=1000, size=0.2 }) {
   const radius1MinNeptune = 20;
-  const radius1MaxNeptune = 80;
+  const radius1MaxNeptune = 40;
   const colorOneHex = "#FFFFFF";
   const colorTwoHex = "#000000";
   const positions1 = new Float32Array(count * 3);

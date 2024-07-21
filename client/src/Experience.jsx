@@ -9,12 +9,16 @@ import Game from "./Game.jsx";
 import MainAlert from "./MainAlert.jsx";
 import PregameAlert from "./PregameAlert.jsx";
 import ThrowAlert from "./alerts/ThrowAlert.jsx";
+import StarsShader from "./shader/stars/StarsShader.jsx";
 
 export default function Experience() {
   return <group>
     {/* add game */}
     <Game/>
-    <Stars count={7000} size={5}/>
+    <StarsShader
+    count={7000}
+    size={5}
+    />
     <MilkyWay 
       rotation={[-Math.PI/2, 0, -35.0]} 
       position={[0, -3, 0]} 

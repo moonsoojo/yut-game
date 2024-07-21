@@ -44,7 +44,7 @@ export default function App () {
       >
       {/* <Perf/> */}
       <directionalLight position={ [ 0, 10, 0 ] } intensity={ 4 } />
-      <ambientLight intensity={ 1 } />
+      <ambientLight intensity={ 0.9 } />
       <ParticleSystem/>
       <SocketManager/>
       <Route path="/">

@@ -16,7 +16,7 @@ import JoinTeamModal from "./JoinTeamModal.jsx";
 
 // three js
 // import { Leva, useControls } from "leva"
-// import { Perf } from 'r3f-perf'
+import { Perf } from 'r3f-perf'
 
 // server
 import { socket } from "./SocketManager";
@@ -463,7 +463,7 @@ export default function Game() {
     // declared at the top. don't pass it in as a prop
 
   return (<>
-      {/* <Perf/> */}
+      <Perf/>
       {/* <Leva hidden /> */}
       <GameCamera position={layout[device].camera.position}/>
       { gamePhase !== 'finished' && <animated.group scale={gameScale}>
