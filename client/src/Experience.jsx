@@ -15,7 +15,7 @@ export default function Experience() {
     {/* add game */}
     <Game/>
     <Stars count={7000} size={5}/>
-    {/* <MilkyWay 
+    <MilkyWay 
       rotation={[-Math.PI/2, 0, -35.0]} 
       position={[0, -3, 0]} 
       scale={5}
@@ -23,7 +23,7 @@ export default function Experience() {
       colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
       colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
       colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
-    /> */}
+    />
     <MainAlert/> 
     <PregameAlert/>
     <ThrowAlert 

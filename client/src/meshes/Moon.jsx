@@ -8,9 +8,9 @@ import FragmentShader from '../shader/moon/fragment.glsl'
 import VertexShader from '../shader/moon/vertex.glsl'
 
 export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
-  const props = useTexture({
-    map: "textures/moon/moon-color.jpg", // must use absolute path - string starts with a slash
-  });
+  const textureLoader = new THREE.TextureLoader()
+  const moonTexture = textureLoader.load("textures/moon/moon-color.jpg") // must use absolute path - string starts with a slash
+  moonTexture.colorSpace = THREE.SRGBColorSpace
 
   const moon = useRef();
 
@@ -24,18 +24,18 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
       <group scale={3.4}>
         <mesh>
           <sphereGeometry args={[0.6, 32, 32]} />
-          <meshStandardMaterial map={props.map} />
           <shaderMaterial
             vertexShader={VertexShader}
             fragmentShader={FragmentShader}
             uniforms={{
-              uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,1)),
-              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#00aaff')),
-              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#ff6600')),
+              uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
+              uMoonTexture: new THREE.Uniform(moonTexture),
+              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
+              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#C0C0C0'))
             }}
           />
         </mesh>
-        <mesh scale={1.04}>
+        <mesh scale={1.1}>
           <sphereGeometry args={[0.6, 32, 32]} />
           <shaderMaterial 
           side={THREE.BackSide} 
@@ -43,9 +43,9 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
           vertexShader={AtmosphereVertexShader}
           fragmentShader={AtmosphereFragmentShader}
           uniforms={{
-            uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,1)),
-            uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#e7e7e7')),
-            uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#000000')),
+            uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
+            uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
+            uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
           }}
           />
         </mesh>

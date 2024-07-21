@@ -22,7 +22,7 @@ void main()
 
     // Alpha
     float edgeAlpha = dot(viewDirection, normal);
-    edgeAlpha = smoothstep(0.0, 0.5, edgeAlpha);
+    edgeAlpha = smoothstep(0.0, 1.1, edgeAlpha);
 
     float dayAlpha = smoothstep(- 0.5, 0.0, sunOrientation);
 
