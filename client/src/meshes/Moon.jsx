@@ -31,11 +31,11 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
               uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
               uMoonTexture: new THREE.Uniform(moonTexture),
               uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
-              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#C0C0C0'))
+              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#D0D0D0'))
             }}
           />
         </mesh>
-        <mesh scale={1.1}>
+        <mesh scale={1.5}>
           <sphereGeometry args={[0.6, 32, 32]} />
           <shaderMaterial 
           side={THREE.BackSide} 
