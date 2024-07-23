@@ -35,10 +35,10 @@ export default function GameLog({ position, rotation, scale }) {
         {log.content.text}
       </p>
     } else if (log.logType === 'throw') {
-      // content: playerName, team, move
+      // content: playerName, team, move, bonus
       return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy'}} key={index}>
         <span style={{color: log.content.team === 0 ? 'red' : 'turquoise'}}>
-        {log.content.playerName}</span> threw {moveToHtml(log.content.move)}.
+        {log.content.playerName}</span> threw {moveToHtml(log.content.move)} {log.content.bonus ? <span style={{ color: 'yellow' }}>{`(bonus throw)`}</span> : <></>}.
       </p>
     } else if (log.logType === 'pregameResult') {
       // content: team

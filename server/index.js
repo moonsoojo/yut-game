@@ -626,28 +626,16 @@ io.on("connect", async (socket) => {
 
         // on yoot or mo, if gamePhase is 'game', add 'bonus: true' to 'content'.
         // else, add 'bonus: false'
-        let gameLogs = []
-        
-        let player = await User.findOne({ _id: room.teams[user.team].players[room.turn.players[user.team]] })  
-        gameLogs.push(
-          {
-            logType: 'throw',
-            content: {
-              playerName: player.name,
-              team: user.team,
-              move: move
-            }
-          }
-        )
+        let gameLogs = [] 
 
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          // if (user.team === 0) {
-          //   move = 5;
-          // } else {
-          //   move = 1
-          // }
+          if (user.team === 0) {
+            move = 5;
+          } else {
+            move = 4
+          }
           // move = 0;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
@@ -657,6 +645,18 @@ io.on("connect", async (socket) => {
             num: move,
             time: Date.now()
           }
+
+          gameLogs.push(
+            {
+              logType: 'throw',
+              content: {
+                playerName: user.name,
+                team: user.team,
+                move: move,
+                bonus: false
+              }
+            }
+          )
           
           const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)
           if (outcome === "pass") {
@@ -697,11 +697,11 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          // if (user.team === 0) {
-          //   move = 3;
-          // } else {
-          //   move = 2
-          // }
+          if (user.team === 0) {
+            move = 4;
+          } else {
+            move = 5;
+          }
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
@@ -713,12 +713,31 @@ io.on("connect", async (socket) => {
               num: move,
               time: Date.now()
             }
+            
+            gameLogs.push({
+              logType: 'throw',
+              content: {
+                playerName: user.name,
+                team: user.team,
+                move: move,
+                bonus: true
+              }
+            })
           } else {
             operation['$set']['throwResult'] = {
               type: 'regular',
               num: move,
               time: Date.now()
             }
+            gameLogs.push({
+              logType: 'throw',
+              content: {
+                playerName: user.name,
+                team: user.team,
+                move: move,
+                bonus: false
+              }
+            })
           }
 
           // If user threw out of bounds, pass turn
