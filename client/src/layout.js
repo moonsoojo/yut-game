@@ -805,7 +805,7 @@ export default {
           backdropWidth: 1.4,
           backdropHeight: 1.1,
           scale: 1.1,
-          position: [-0.5, 0, 0.5],
+          position: [-0.5, 0, 0],
           text: {
             position: [-0.8,0,-0.15],
             rotation: [-Math.PI/2,0,0],
@@ -907,15 +907,15 @@ export default {
         scale: [1.3, 1.3, 1.3]
       },
       chat: {
-        position: [-4.7,0,6.7],
+        position: [-4.7,0,6.2],
         rotation: [-Math.PI/2, 0, 0],
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
-          height: '140px',
+          height: '200px',
           width: '220px',
           padding: '10px',
-          fontSize: '20px',
+          fontSize: '24px',
         },
         input: {
           height: '15px',
@@ -926,13 +926,13 @@ export default {
         }
       },
       invite: {
-        position: [-3.92, 0, 5.5],
+        position: [-3.92, 0, 5.1],
         scale: 0.9,
         size: 0.3,
         height: 0.01
       },
       discord: {
-        position: [-3.75, 0, 6.2],
+        position: [-3.75, 0, 5.8],
         scale: 0.9,
         size: 0.3,
         height: 0.01
@@ -2061,15 +2061,15 @@ export default {
         scale: [1, 1, 1]
       },
       chat: {
-        position: [-11,0,3.5],
+        position: [-11.05,0,3.1],
         rotation: [-Math.PI/2, 0, 0],
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
-          height: '130px',
-          width: '380px',
+          height: '170px',
+          width: '420px',
           padding: '10px',
-          fontSize: '20px',
+          fontSize: '24px',
         },
         input: {
           height: '15px',
@@ -2080,12 +2080,12 @@ export default {
         }
       },
       invite: {
-        position: [-10.25, 0, 3.1],
+        position: [-10.25, 0, 2.7],
         size: 0.3,
         height: 0.01
       },
       discord: {
-        position: [-8.5, 0, 3.1],
+        position: [-8.5, 0, 2.7],
         size: 0.3,
         height: 0.01
       },
