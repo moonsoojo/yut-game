@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
     versionKey: false,
   }
 )
+
 const roomSchema = new mongoose.Schema(
   {
     createdTime: Date,
@@ -84,6 +85,11 @@ const roomSchema = new mongoose.Schema(
       _id: false,
       name: String,
       text: String
+    }],
+    gameLogs: [{
+      _id: false,
+      logType: String,
+      content: Object
     }],
     host: {
       type: mongoose.Schema.Types.ObjectId, 
@@ -129,7 +135,6 @@ const roomSchema = new mongoose.Schema(
     moveResult: Object,
     throwResult: Object,
     results: [Number],
-    // turnAlertActive: Boolean
   },
   {
     versionKey: false,
@@ -207,8 +212,6 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
   }
 })
 
-
-
 io.on("connect", async (socket) => {
 
   connectMongo().catch(err => console.log('mongo connect error', err))
@@ -254,6 +257,7 @@ io.on("connect", async (socket) => {
           }
         ],
         messages: [],
+        gameLogs: [],
         host: user._id,
         gamePhase: 'lobby',
         turn: {
@@ -422,10 +426,9 @@ io.on("connect", async (socket) => {
   socket.on("startGame", async ({ roomId }) => {
 
     try {
-      // find host
-      // give him first turn
+
       const room = await Room.findOne({ _id: roomId }).populate('host')
-      // if this is a second game, winner gets to go first
+
       let newTurn;
       if (room.results.length > 0) {
         newTurn = {
@@ -435,13 +438,20 @@ io.on("connect", async (socket) => {
       } else {
         newTurn = getHostTurn(room)
       }
-      console.log(`[startGame] turn`, newTurn)
       
       await Room.findOneAndUpdate({ _id: roomId }, {
         $set: {
           [`teams.${newTurn.team}.throws`]: 1,
           gamePhase: "pregame",
           turn: newTurn,
+        },
+        $push: {
+          gameLogs: {
+            logType: 'gameStart',
+            content: {
+              text: `Match ${room.results.length+1} started.`
+            }
+          }
         }
       })
     } catch (err) {
@@ -740,15 +750,6 @@ io.on("connect", async (socket) => {
     }
   });
 
-  function movesIsEmpty (moves) {
-    for (const move in moves) {
-      if (parseInt(move) != 0 && moves[move] > 0) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   socket.on("move", async ({ roomId, tile }) => {
     try {
       const room = await Room.findById(roomId)
@@ -970,22 +971,6 @@ io.on("connect", async (socket) => {
       console.log(`[reset] error resetting game`, err)
     }
   })
-
-  // socket.on("turnAlertActive", async ({ roomId, flag }) => {
-  //   try {
-  //     let operation = {}
-  //     operation['$set'] = {}
-  //     operation['$set'][`turnAlertActive`] = flag
-  //     await Room.findOneAndUpdate(
-  //       { 
-  //         _id: roomId, 
-  //       }, 
-  //       operation
-  //     )
-  //   } catch (err) {
-  //     console.log(`[reset] error setting turn alert flag`, err)
-  //   }
-  // })
 
   socket.on("disconnect", async () => {
     console.log(`${socket.id} disconnect`)

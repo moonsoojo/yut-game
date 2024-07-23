@@ -47,6 +47,7 @@ import { Color, MeshStandardMaterial } from "three";
 import { formatName } from "./helpers/helpers.js";
 import { useFrame } from "@react-three/fiber";
 import Star from "./meshes/Star.jsx";
+import GameLog from "./GameLog.jsx";
 
 // There should be no state
 export default function Game() {
@@ -463,7 +464,7 @@ export default function Game() {
     // declared at the top. don't pass it in as a prop
 
   return (<>
-      <Perf/>
+      {/* <Perf/> */}
       {/* <Leva hidden /> */}
       <GameCamera position={layout[device].camera.position}/>
       { gamePhase !== 'finished' && <animated.group scale={gameScale}>
@@ -484,11 +485,16 @@ export default function Game() {
           rotation={layout[device].game.joinTeamModal.rotation}
           scale={layout[device].game.joinTeamModal.scale}
         />
-        { !disconnect && <Chatbox 
+        {/* { !disconnect && <Chatbox 
           position={layout[device].game.chat.position}
           rotation={layout[device].game.chat.rotation}
           scale={layout[device].game.chat.scale}
           device={device}
+        /> } */}
+        { !disconnect && <GameLog
+          position={layout[device].game.chat.position}
+          rotation={layout[device].game.chat.rotation}
+          scale={layout[device].game.chat.scale}
         /> }
         <InviteButton position={layout[device].game.invite.position}/>
         <DiscordButton position={layout[device].game.discord.position}/>
@@ -537,7 +543,7 @@ export default function Game() {
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
-        {/* <Yoot device={device}/> */}
+        <Yoot device={device}/>
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>

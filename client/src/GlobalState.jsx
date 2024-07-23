@@ -25,6 +25,7 @@ export const spectatorsAtom = atom([])
 export const clientAtom = atom({})
 export const teamsAtom = atom(JSON.parse(JSON.stringify(initialState.teams)))
 export const messagesAtom = atom([]);
+export const gameLogsAtom = atom([]);
 export const roomAtom = atom({})
 export const displayDisconnectAtom = atom(false)
 export const hostNameAtom = atom('')

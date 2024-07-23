@@ -1,5 +1,4 @@
 import React from 'react';
-import HtmlElement from './HtmlElement';
 import Board from './Board';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
