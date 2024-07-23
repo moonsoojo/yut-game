@@ -6,6 +6,7 @@ import AtmosphereFragmentShader from '../shader/moon/atmosphere/fragment.glsl'
 import AtmosphereVertexShader from '../shader/moon/atmosphere/vertex.glsl'
 import FragmentShader from '../shader/moon/fragment.glsl'
 import VertexShader from '../shader/moon/vertex.glsl'
+import { useFrame } from "@react-three/fiber";
 
 export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   const textureLoader = new THREE.TextureLoader()
@@ -13,6 +14,9 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
   moonTexture.colorSpace = THREE.SRGBColorSpace
 
   const moon = useRef();
+  useFrame((state) => {
+    moon.current.rotation.y = state.clock.elapsedTime * 0.5;
+  });
 
   return (
     <animated.group
@@ -30,8 +34,8 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
             uniforms={{
               uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
               uMoonTexture: new THREE.Uniform(moonTexture),
-              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#EFEFEF')),
-              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#EFEFEF'))
+              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#D0D0D0')),
+              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#D0D0D0'))
             }}
           />
         </mesh>

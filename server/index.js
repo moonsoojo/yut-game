@@ -602,7 +602,6 @@ io.on("connect", async (socket) => {
   }
 
   socket.on("recordThrow", async ({ move, roomId }) => {
-    console.log("[recordThrow] move", move)
 
     let user;
     try {
@@ -816,7 +815,6 @@ io.on("connect", async (socket) => {
   
       let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
-      // let teams = room.teams
       let from = room.selection.tile
       let to = tile
       let moveUsed = moveInfo.move
@@ -834,7 +832,8 @@ io.on("connect", async (socket) => {
       operation['$inc'] = {}
       operation['$push'] = {}
 
-      operation['$push']['gameLogs'] = {
+      let gameLogs = [];
+      gameLogs.push({
         logType: "move",
         content: {
           playerName: user.name,
@@ -843,7 +842,7 @@ io.on("connect", async (socket) => {
           numPieces: pieces.length,
           starting
         }
-      }
+      })
 
       for (const piece of pieces) {
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
@@ -881,8 +880,27 @@ io.on("connect", async (socket) => {
           
           operation['$set'][`tiles.${to}`] = pieces
           throws++;
-        } else { // Join or move into tile
+
+          gameLogs.push({
+            logType: "catch",
+            content: {
+              playerName: user.name,
+              team: movingTeam,
+              caughtTeam: occupyingTeam,
+              numPiecesCaught: tiles[to].length,
+            }
+          })
+        } else { // Join pieces
           operation['$push'][`tiles.${to}`] = { '$each': pieces }
+          
+          gameLogs.push({
+            logType: "join",
+            content: {
+              playerName: user.name,
+              team: movingTeam,
+              numPiecesCombined: pieces.length + tiles[to].length,
+            }
+          })
         }
       } else {
         operation['$push'][`tiles.${to}`] = { '$each': pieces }
@@ -903,6 +921,8 @@ io.on("connect", async (socket) => {
         operation['$set'][`teams.${movingTeam}.throws`] = throws
         operation['$set'][`teams.${movingTeam}.moves`] = moves
       }
+      
+      operation['$push']['gameLogs'] = { '$each': gameLogs }
 
       await Room.findOneAndUpdate(
         { 

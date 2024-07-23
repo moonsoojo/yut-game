@@ -104,51 +104,51 @@ export default function GameLog({ position, rotation, scale }) {
       } else if (tile === 5) { // mars
         return <></>
       } else if (tile === 6) { // star5
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>star 5 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 7) { // star6
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>star 6 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 8) { // star7
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>star 7 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 9) { // star8
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>star 8 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 10) { // saturn
         return <></>
-      } else if (tile === 11) { // star3-1
-        return <></>
-      } else if (tile === 12) { // star3-2
-        return <></>
-      } else if (tile === 13) { // star3-3
-        return <></>
-      } else if (tile === 14) { // star3-4
-        return <></>
+      } else if (tile === 11) { // star9
+        return <span style={{ color: '#F1EE92' }}>star 9 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 12) { // star10
+        return <span style={{ color: '#F1EE92' }}>star 10 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 13) { // star11
+        return <span style={{ color: '#F1EE92' }}>star 11 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 14) { // star12
+        return <span style={{ color: '#F1EE92' }}>star 12 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 15) { // neptune
         return <></>
-      } else if (tile === 16) { // star4-1
-        return <></>
-      } else if (tile === 17) { // star4-2
-        return <></>
-      } else if (tile === 18) { // star4-3
-        return <></>
-      } else if (tile === 19) { // star4-4
-        return <></>
-      } else if (tile === 20) { // star5-1
-        return <></>
-      } else if (tile === 21) { // star5-2
-        return <></>
+      } else if (tile === 16) {
+        return <span style={{ color: '#F1EE92' }}>star 13 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 17) {
+        return <span style={{ color: '#F1EE92' }}>star 14 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 18) { 
+        return <span style={{ color: '#F1EE92' }}>star 15 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 19) { 
+        return <span style={{ color: '#F1EE92' }}>star 16 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 20) { 
+        return <span style={{ color: '#F1EE92' }}>star 17 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 21) {
+        return <span style={{ color: '#F1EE92' }}>star 18 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 22) { // moon
         return <></>
-      } else if (tile === 23) { // star5-3
-        return <></>
-      } else if (tile === 24) { // star5-4
-        return <></>
-      } else if (tile === 25) { // star6-1
-        return <></>
-      } else if (tile === 26) { // star6-2
-        return <></>
-      } else if (tile === 27) { // star6-3
-        return <></>
-      } else if (tile === 28) { // star6-4
-        return <></>
+      } else if (tile === 23) { 
+        return <span style={{ color: '#F1EE92' }}>star 19 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 24) {
+        return <span style={{ color: '#F1EE92' }}>star 20 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 25) { 
+        return <span style={{ color: '#F1EE92' }}>star 21 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 26) { 
+        return <span style={{ color: '#F1EE92' }}>star 22 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 27) {
+        return <span style={{ color: '#F1EE92' }}>star 23 <img src='images/star.png' width='20px'/></span>
+      } else if (tile === 28) {
+        return <span style={{ color: '#F1EE92' }}>star 24 <img src='images/star.png' width='20px'/></span>
       }
     }
     if (log.logType === 'gameStart') {
@@ -179,6 +179,18 @@ export default function GameLog({ position, rotation, scale }) {
       return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
         <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
         {log.content.playerName}</span> {log.content.starting ? 'launched' : 'moved'} {piecesToHtml(log.content.team, log.content.numPieces)} to {tileToHtml(log.content.tile)}
+      </p>
+    } else if (log.logType === 'catch') {
+      // content: playerName, team, caughtTeam, numPiecesCaught
+      return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
+        <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
+        {log.content.playerName}</span> kicked {piecesToHtml(log.content.caughtTeam, log.content.numPiecesCaught)} back home
+      </p>
+    } else if (log.logType === 'join') {
+      // content: playerName, team, caughtTeam, numPiecesCaught
+      return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
+        <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
+        {log.content.playerName}</span> combined {piecesToHtml(log.content.team, log.content.numPiecesCombined)}
       </p>
     }
   }

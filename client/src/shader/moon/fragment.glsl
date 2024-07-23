@@ -27,7 +27,7 @@ void main()
     // Atmosphere
     float atmosphereDayMix = smoothstep(- 0.5, 1.0, sunOrientation);
     vec3 atmosphereColor = mix(uAtmosphereTwilightColor, uAtmosphereDayColor, atmosphereDayMix);
-    atmosphereColor *= 3.0;
+    atmosphereColor *= 2.0;
     color = mix(color, atmosphereColor, fresnel * atmosphereDayMix);
 
     // Final color

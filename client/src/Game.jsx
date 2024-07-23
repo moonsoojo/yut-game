@@ -543,7 +543,7 @@ export default function Game() {
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
-        <Yoot device={device}/>
+        {/* <Yoot device={device}/> */}
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>
