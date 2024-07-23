@@ -1,8 +1,9 @@
 import { Html } from '@react-three/drei';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { deviceAtom, gameLogsAtom } from './GlobalState';
 import layout from './layout';
 import { useAtom } from 'jotai';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 export default function GameLog({ position, rotation, scale }) {
 
@@ -54,6 +55,17 @@ export default function GameLog({ position, rotation, scale }) {
     }
   }
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [logs]);
+
   // background
   // text
   // props: messages
@@ -77,7 +89,11 @@ export default function GameLog({ position, rotation, scale }) {
         'wordWrap': 'break-word',
         'letterSpacing': '1.5px'
       }}>
-        {logs.map((log, index) => formatMessage(log, index))}
+        
+        <ScrollToBottom className="game-logs">
+          {logs.map((log, index) => formatMessage(log, index))}
+          <div ref={messagesEndRef} />
+        </ScrollToBottom>
       </div>
     </div>
   </Html>

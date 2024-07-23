@@ -30,8 +30,8 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
             uniforms={{
               uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
               uMoonTexture: new THREE.Uniform(moonTexture),
-              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
-              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#D0D0D0'))
+              uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#FFFFFF')),
+              uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#FFFFFF'))
             }}
           />
         </mesh>
@@ -44,8 +44,8 @@ export default function Moon({ position=[0,0,0], rotation=[0,0,0], scale=1 }) {
           fragmentShader={AtmosphereFragmentShader}
           uniforms={{
             uSunDirection: new THREE.Uniform(new THREE.Vector3(0,0,0)),
-            uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
-            uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#C0C0C0')),
+            uAtmosphereDayColor: new THREE.Uniform(new THREE.Color('#FFFFFF')),
+            uAtmosphereTwilightColor: new THREE.Uniform(new THREE.Color('#FFFFFF')),
           }}
           />
         </mesh>
