@@ -449,7 +449,7 @@ io.on("connect", async (socket) => {
           gameLogs: {
             logType: 'gameStart',
             content: {
-              text: `Match ${room.results.length+1} started.`
+              text: `Match ${room.results.length+1} started`
             }
           }
         }
@@ -631,7 +631,7 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          if (user.team === 0) {
+          if (user.team === 1) {
             move = 5;
           } else {
             move = 4
@@ -697,8 +697,8 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          if (user.team === 0) {
-            move = 4;
+          if (user.team === 1) {
+            move = 1;
           } else {
             move = 5;
           }
@@ -807,6 +807,13 @@ io.on("connect", async (socket) => {
   socket.on("move", async ({ roomId, tile }) => {
     try {
       const room = await Room.findById(roomId)
+      let user;
+      try {
+        user = await User.findOne({ socketId: socket.id })
+      } catch (err) {
+        console.log(`[recordThrow] error getting user with socket id ${socket.id}`, err)
+      }
+  
       let moveInfo = room.legalTiles[tile]
       let tiles = room.tiles
       // let teams = room.teams
@@ -826,6 +833,17 @@ io.on("connect", async (socket) => {
       operation['$set'] = {}
       operation['$inc'] = {}
       operation['$push'] = {}
+
+      operation['$push']['gameLogs'] = {
+        logType: "move",
+        content: {
+          playerName: user.name,
+          team: movingTeam,
+          tile,
+          numPieces: pieces.length,
+          starting
+        }
+      }
 
       for (const piece of pieces) {
         operation['$set'][`teams.${movingTeam}.pieces.${piece.id}.tile`] = to
