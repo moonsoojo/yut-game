@@ -220,6 +220,8 @@ io.on("connect", async (socket) => {
   let name = makeId(5)
   addUser(socket, name)
   console.log(`[connect] added user with socket ${socket.id}`)
+  // save user into a variable
+  // if addUser failed, disconnect and alert client
 
   socket.on("createRoom", async ({}, callback) => {
     let objectId = new mongoose.Types.ObjectId()
@@ -945,6 +947,8 @@ io.on("connect", async (socket) => {
       operation['$set'] = {}
       operation['$inc'] = {}
       operation['$push'] = {}
+
+      let gameLogs = [];
       
       // update pieces
       const pieces = room.selection.pieces
@@ -959,6 +963,22 @@ io.on("connect", async (socket) => {
         // set state within the scope of this function for win check
         room.teams[movingTeam].pieces[piece.id].tile = 29
       }
+
+      let user;
+      try {
+        user = await User.findOne({ socketId: socket.id })
+      } catch (err) {
+        console.log(`[recordThrow] error getting user with socket id ${socket.id}`, err)
+      }
+
+      gameLogs.push({
+        logType: 'score',
+        content: {
+          playerName: user.name,
+          team: movingTeam,
+          numPiecesScored: room.selection.pieces.length
+        }
+      })
 
       // update tiles
       const from = room.selection.tile
@@ -984,6 +1004,14 @@ io.on("connect", async (socket) => {
       if (winCheck(room.teams[movingTeam])) {
         operation['$push'][`results`] = movingTeam
         operation['$set']['gamePhase'] = 'finished'
+
+        gameLogs.push({
+          logType: 'finish',
+          content: {
+            winningTeam: movingTeam,
+            matchNum: room.results.length+1
+          }
+        })
       } else {
         // pass check
         let throws = room.teams[movingTeam].throws;
@@ -1006,6 +1034,8 @@ io.on("connect", async (socket) => {
           )
         }
       }
+
+      operation['$push']['gameLogs'] = { '$each' : gameLogs }
 
       await Room.findOneAndUpdate(
         { 

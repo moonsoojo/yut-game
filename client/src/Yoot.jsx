@@ -63,7 +63,7 @@ export default function Yoot({ device }) {
       return setTimeout(() => {
         recordThrow();
         setAnimationPlaying(false)
-      }, 4000)
+      }, 3500)
     })
 
     // Show yoot

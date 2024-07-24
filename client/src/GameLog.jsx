@@ -187,10 +187,22 @@ export default function GameLog({ position, rotation, scale }) {
         {log.content.playerName}</span> kicked {piecesToHtml(log.content.caughtTeam, log.content.numPiecesCaught)} back home
       </p>
     } else if (log.logType === 'join') {
-      // content: playerName, team, caughtTeam, numPiecesCaught
+      // content: playerName, team, numPiecesCombined
       return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
         <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
         {log.content.playerName}</span> combined {piecesToHtml(log.content.team, log.content.numPiecesCombined)}
+      </p>
+    } else if (log.logType === 'score') {
+      // content: playerName, team, numPiecesCombined
+      return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
+        <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
+        {log.content.playerName}</span> scored {piecesToHtml(log.content.team, log.content.numPiecesScored)}
+      </p>
+    } else if (log.logType === 'finish') {
+      // content: winningTeam, matchNum
+      return <p style={{color: 'lightgreen', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
+        <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
+        {log.content.winningTeam === 0 ? 'Rockets' : 'UFOs'}</span> won match {log.content.matchNum}!
       </p>
     }
   }
