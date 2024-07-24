@@ -151,6 +151,9 @@ export default function GameLog({ position, rotation, scale }) {
         return <span style={{ color: '#F1EE92' }}>star 24 <img src='images/star.png' width='20px'/></span>
       }
     }
+    function BonusThrow() {
+      return <span style={{ color: '#F1EE92' }}>{`(bonus throw`}<img src='images/yoot.png' width="35px" height="25px"/>{`)`}</span>
+    }
     if (log.logType === 'gameStart') {
       // content: text
       return <p style={{color: 'lightgreen', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
@@ -160,7 +163,7 @@ export default function GameLog({ position, rotation, scale }) {
       // content: playerName, team, move, bonus
       return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
         <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
-        {log.content.playerName}</span> threw {moveToHtml(log.content.move)} {log.content.bonus ? <span style={{ color: '#F1EE92' }}>{`(bonus throw)`}</span> : <></>}
+        {log.content.playerName}</span> threw {moveToHtml(log.content.move)} {log.content.bonus && <BonusThrow/>}
       </p>
     } else if (log.logType === 'pregameResult') {
       // content: team
@@ -184,7 +187,7 @@ export default function GameLog({ position, rotation, scale }) {
       // content: playerName, team, caughtTeam, numPiecesCaught
       return <p style={{color: '#e0e0e0', margin: 0, fontFamily: 'Luckiest Guy', padding: '3px' }} key={index}>
         <span style={{color: log.content.team === 0 ? '#FF3D1D' : '#88D8D0'}}>
-        {log.content.playerName}</span> kicked {piecesToHtml(log.content.caughtTeam, log.content.numPiecesCaught)} back home
+        {log.content.playerName}</span> kicked {piecesToHtml(log.content.caughtTeam, log.content.numPiecesCaught)} back home <BonusThrow/>
       </p>
     } else if (log.logType === 'join') {
       // content: playerName, team, numPiecesCombined

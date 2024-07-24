@@ -632,11 +632,11 @@ io.on("connect", async (socket) => {
         // Add move to team
         if (room.gamePhase === "pregame") {
           // Test code using different throw outcome
-          if (user.team === 1) {
-            move = 5;
-          } else {
-            move = 4
-          }
+          // if (user.team === 1) {
+          //   move = 5;
+          // } else {
+          //   move = 4
+          // }
           // move = 0;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
@@ -698,11 +698,11 @@ io.on("connect", async (socket) => {
           }
         } else if (room.gamePhase === "game") {
           // Test code using different throw outcome
-          if (user.team === 1) {
-            move = 1;
-          } else {
-            move = 5;
-          }
+          // if (user.team === 1) {
+          //   move = 1;
+          // } else {
+          //   move = 5;
+          // }
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
