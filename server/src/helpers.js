@@ -6,7 +6,7 @@ export function getCurrentPlayerSocketId (turn, teams) {
   }
 }
 
-function makeId(length) {
+export function makeId(length) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;

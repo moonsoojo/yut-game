@@ -4,7 +4,7 @@ import http from 'http';
 import router from './router.js'; // needs .js suffix
 import cors from 'cors';
 import mongoose from 'mongoose';
-import { makeId } from '../client/src/helpers/helpers.js';
+import { makeId } from './src/helpers.js';
 import initialState from './initialState.js';
 
 const app = express();
@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     // origin: [
-    //   // "https://master.dh445c3qmwe4t.amplifyapp.com",
+    //   "https://master.dh445c3qmwe4t.amplifyapp.com",
     // ],
     origin: "*"
   },
