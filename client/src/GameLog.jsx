@@ -29,6 +29,7 @@ export default function GameLog({ position, rotation, scale }) {
         return <span>a <span style={{ color: '#F1EE92' }}>backdo ({move})</span></span>
       }
     }
+
     function piecesToHtml(team, numPieces) {
       // image of pieces
       if (team === 0) {
@@ -89,12 +90,13 @@ export default function GameLog({ position, rotation, scale }) {
         }
       }
     }
+
     function tileToHtml(tile) {
       // image of tile
       if (tile === 0) { // earth
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>Earth <img src='images/earth.png' width='28px'/></span>
       } else if (tile === 1) { // star1
-        return <span style={{ color: '#F1EE92' }}>star 1 <img src='images/star.png' width='20px'/></span>
+        return <span style={{ color: '#F1EE92' }}>star 1 <img src='images/earth.png' width='25px'/></span>
       } else if (tile === 2) { // star2
         return <span style={{ color: '#F1EE92' }}>star 2 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 3) { // star3
@@ -102,7 +104,7 @@ export default function GameLog({ position, rotation, scale }) {
       } else if (tile === 4) { // star4
         return <span style={{ color: '#F1EE92' }}>star 4 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 5) { // mars
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>Mars <img src='images/mars.png' width='25px'/></span>
       } else if (tile === 6) { // star5
         return <span style={{ color: '#F1EE92' }}>star 5 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 7) { // star6
@@ -112,7 +114,7 @@ export default function GameLog({ position, rotation, scale }) {
       } else if (tile === 9) { // star8
         return <span style={{ color: '#F1EE92' }}>star 8 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 10) { // saturn
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>Saturn <img src='images/saturn.png' width='25px'/></span>
       } else if (tile === 11) { // star9
         return <span style={{ color: '#F1EE92' }}>star 9 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 12) { // star10
@@ -122,7 +124,7 @@ export default function GameLog({ position, rotation, scale }) {
       } else if (tile === 14) { // star12
         return <span style={{ color: '#F1EE92' }}>star 12 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 15) { // neptune
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>Neptune <img src='images/neptune.png' width='30px'/></span>
       } else if (tile === 16) {
         return <span style={{ color: '#F1EE92' }}>star 13 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 17) {
@@ -136,7 +138,7 @@ export default function GameLog({ position, rotation, scale }) {
       } else if (tile === 21) {
         return <span style={{ color: '#F1EE92' }}>star 18 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 22) { // moon
-        return <></>
+        return <span style={{ color: '#F1EE92' }}>the Moon <img src='images/moon.png' width='30px'/></span>
       } else if (tile === 23) { 
         return <span style={{ color: '#F1EE92' }}>star 19 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 24) {
@@ -152,7 +154,7 @@ export default function GameLog({ position, rotation, scale }) {
       }
     }
     function BonusThrow() {
-      return <span style={{ color: '#F1EE92' }}>{`(bonus throw`}<img src='images/yoot.png' width="35px" height="25px"/>{`)`}</span>
+      return <span style={{ color: '#F1EE92' }}>{`(bonus throw`}<img src='images/yoot.png' width="35px" height="27px"/>{`)`}</span>
     }
     if (log.logType === 'gameStart') {
       // content: text
