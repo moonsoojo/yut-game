@@ -15,6 +15,7 @@ import YootToken from "../moveTokens/YootToken";
 import GulToken from "../moveTokens/GulToken";
 import GeToken from "../moveTokens/GeToken";
 import DoToken from "../moveTokens/DoToken";
+import Piece from "./Piece";
 
 export default function Tile({ 
   position=[0,0,0], 
@@ -226,12 +227,6 @@ export default function Tile({
   }
 
   return <group position={position} rotation={rotation} scale={scale}>
-    {/* { selection != null && legalTileInfo && <Pointer 
-      scale={2}
-      position={[0, 2, 0]}
-      tile={tile} 
-      color={selection.pieces[0].team === 0 ? "red" : "turquoise"}
-    />} */}
     <group ref={group}>
       <mesh
         onPointerEnter={(e) => { interactive && handlePointerEnter(e) }}
@@ -251,5 +246,9 @@ export default function Tile({
       {/* path num */}
       { pathNum && <PathNumHelper pathNum={pathNum}/> }
     </group>
+    {/* <Piece team={0} position={[0, 1, 0.3]}/>
+    <Piece team={0} position={[0, 1, 0.3]}/>
+    <Piece team={0} position={[0, 1, 0.3]}/>
+    <Piece team={0} position={[0, 1, 0.3]}/> */}
   </group>
 }

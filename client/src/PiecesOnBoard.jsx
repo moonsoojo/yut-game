@@ -20,6 +20,14 @@ export default function PiecesOnBoard() {
     const [pieceTeam1Id1] = useAtom(pieceTeam1Id1Atom)
     const [pieceTeam1Id2] = useAtom(pieceTeam1Id2Atom)
     const [pieceTeam1Id3] = useAtom(pieceTeam1Id3Atom)
+    console.log('piece team 0 id 0 history', pieceTeam0Id0.history, 'lastPath', pieceTeam0Id0.lastPath);
+    console.log('piece team 0 id 1 history', pieceTeam0Id1.history, 'lastPath', pieceTeam0Id1.lastPath);
+    console.log('piece team 0 id 2 history', pieceTeam0Id2.history, 'lastPath', pieceTeam0Id2.lastPath);
+    console.log('piece team 0 id 3 history', pieceTeam0Id3.history, 'lastPath', pieceTeam0Id3.lastPath);
+    console.log('piece team 1 id 0 history', pieceTeam1Id0.history, 'lastPath', pieceTeam1Id0.lastPath);
+    console.log('piece team 1 id 1 history', pieceTeam1Id1.history, 'lastPath', pieceTeam1Id1.lastPath);
+    console.log('piece team 1 id 2 history', pieceTeam1Id2.history, 'lastPath', pieceTeam1Id2.lastPath);
+    console.log('piece team 1 id 3 history', pieceTeam1Id3.history, 'lastPath', pieceTeam1Id3.lastPath);
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
     const [device] = useAtom(deviceAtom);
     const [gamePhase] = useAtom(gamePhaseAtom)
@@ -100,6 +108,7 @@ export default function PiecesOnBoard() {
     const heightOffset = 0.9
 
     function startCheck(tile, lastPath) {
+        console.log()
         const condition0 = (tile === 0 && lastPath[0] === 1)
         const condition1 = (tile <= 5 && lastPath[0] === 0)
         return (condition0 || condition1)
