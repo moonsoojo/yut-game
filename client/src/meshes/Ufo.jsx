@@ -100,7 +100,7 @@ export default function Ufo({
     }
     if (onBoard) {
       balls.current.rotation.y = state.clock.elapsedTime * 0.7;
-      ufo.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.1
+      ufo.current.position.z = position[2] + Math.cos(state.clock.elapsedTime * 2) * 0.05
     }
   });
 

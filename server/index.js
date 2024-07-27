@@ -703,6 +703,7 @@ io.on("connect", async (socket) => {
           // } else {
           //   move = 5;
           // }
+          // move = Math.random() > 0.5 ? 1 : -1;
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
