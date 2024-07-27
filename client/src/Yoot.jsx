@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { RigidBody, CuboidCollider, Physics } from "@react-three/rapier";
+import { RigidBody, CuboidCollider, Physics, CylinderCollider } from "@react-three/rapier";
 import { useGLTF, /*useKeyboardControls*/ } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -31,13 +31,12 @@ export default function Yoot({ device }) {
   // const [yootThrown] = useAtom(yootThrownAtom)
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [_sleepCount, setSleepCount] = useState(0);
-  const [outOfBounds, setOutOfBounds] = useState(false);
   const [_lastMove, setLastMove] = useAtom(lastMoveAtom)
   const [_timer, setTimer] = useState(null)
   // hide alert
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
   const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
-  const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
+  const [throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   const [animationPlaying] = useAtom(animationPlayingAtom)
   const [yootActive] = useAtom(yootActiveAtom)
   // throw count
@@ -149,7 +148,7 @@ export default function Yoot({ device }) {
         yootMeshes[i].current.material.visible = false
       } 
     }
-    
+     
     if (gamePhase === 'lobby') {
       setLastMove(getMoveText(move))
     } else if (gamePhase === 'pregame' || gamePhase === 'game') {  
@@ -167,36 +166,28 @@ export default function Yoot({ device }) {
     }
   }
 
-  // useEffect(() => {
-  //   // console.log("[Yoots] sleepCount", sleepCount)
-  //   if (sleepCount == 4) {
-  //     recordThrow();
-  //   }
-  // }, [sleepCount])
-
-  const yootFloorMatRef = useRef();
+  const yootOutShineSec = 6;
+  let outShineStartTime = null;
+  let outShinePlayed = false;
+  const outIndicator = useRef();
+  const yootMatFloorRef = useRef();
   useFrame((state, delta) => {
-    let allYootsOnFloor = true;
-    for (let i = 0; i < yoots.length; i++) {
-      if (yoots[i].current && yoots[i].current.translation().y < 0) {
-        setOutOfBounds(true);
-        allYootsOnFloor = false
+    // console.log('[Yoot] throwAlert', throwAlert, 'outShineStartTime', outShineStartTime)
+    if (throwAlert.num === 0 && !outShinePlayed) {
+      if (outShineStartTime === null) {
+        outShineStartTime = state.clock.elapsedTime;
+      } else if ((outShineStartTime + yootOutShineSec) > state.clock.elapsedTime) {
+        yootMatFloorRef.current.opacity = Math.floor(state.clock.elapsedTime - outShineStartTime) % 2 === 1 ? 0.3 : 0.1;
+        // outIndicator.current.position.x = Math.sin(Math.floor(state.clock.elapsedTime*20)/10) * 6
+        // outIndicator.current.position.z = Math.cos(Math.floor(state.clock.elapsedTime*20)/10) * 6
+      } else {
+        outShineStartTime = null;
+        outShinePlayed = true;
+        yootMatFloorRef.current.opacity = 0;
       }
+    } else {
+      yootMatFloorRef.current.opacity = 0;
     }
-    if (allYootsOnFloor) {
-      setOutOfBounds(false);
-    }
-
-    // if (outOfBounds) {
-    //   if (Math.floor(state.clock.elapsedTime % 2) === 0) {
-    //     yootFloorMatRef.current.opacity = 0.2
-    //   } else {
-    //     yootFloorMatRef.current.opacity = 0
-    //   }
-    // } else {
-    //   yootFloorMatRef.current.opacity = 0
-    // }
-    
   })
 
   function observeThrow() {
@@ -207,12 +198,9 @@ export default function Yoot({ device }) {
     for (let i = 0; i < yoots.length; i++) {
       if (yoots[i].current.translation().y < 0) {
         nak = true;
-        setOutOfBounds(true)
-        setTimeout(() => {
-          setOutOfBounds(false)
-        }, 7000)
       }
     }
+
     if (!nak) {
       let countUps = 0
       let backdoUp = false
@@ -239,10 +227,6 @@ export default function Yoot({ device }) {
       } else {
         result = countUps
       }
-      // test: set all result to the same value
-      // if (gamePhase === "game") {
-      //   result = 5
-      // }
     }
       
     return result
@@ -288,6 +272,11 @@ export default function Yoot({ device }) {
 
   return (
     <Physics>
+      {/* out indicator */}
+      {/* { outShineStartTime && <mesh ref={outIndicator}>
+        <sphereGeometry args={[0.05, 32, 16]}/>
+        <meshStandardMaterial color='white'/>
+      </mesh> } */}
       {/* Floor */}
       <RigidBody
         type="fixed"
@@ -296,15 +285,15 @@ export default function Yoot({ device }) {
         friction={0.9}
       >
         {/* Height has to be thick enough for Yoot to not fall through the collider */}
-        <CuboidCollider args={[6, 0.5, 6]} restitution={0.2} friction={1} />
+        <CylinderCollider args={[0.5, 6]} restitution={0.2} friction={1} />
         <mesh>
-          <boxGeometry args={[12, 1, 12]} />
+          <cylinderGeometry args={[6, 6, 1, 20]} />
           <meshStandardMaterial 
             transparent 
             opacity={0}
             depthWrite={false}
             color='yellow'
-            ref={yootFloorMatRef}
+            ref={yootMatFloorRef}
           />
         </mesh>
       </RigidBody>
@@ -332,7 +321,7 @@ export default function Yoot({ device }) {
             position={[-1.5 + 1*index, 30, 2]}
             rotation={[0, Math.PI/2, 0]}
             colliders="hull"
-            restitution={0.1}
+            restitution={0.2}
             friction={0.6}
             name={`yoot${index}`}
             linearDamping={0.3}

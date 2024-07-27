@@ -45,7 +45,7 @@ export default function meteorSettings(device) {
                     new Scale(0.6, 0.4),
                     new Color(new THREE.Color(colors.getValue()), new THREE.Color(colors.getValue())),
                 ],
-                numEmit: 8,
+                numEmit: 14,
                 moving: true
             }
         )
