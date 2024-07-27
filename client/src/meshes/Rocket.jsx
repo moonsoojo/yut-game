@@ -14,7 +14,8 @@ export default function Rocket({
   selectable=false,
   selected=false,
   onBoard=false,
-  animationPlaying=false
+  animationPlaying=false,
+  selection=null
 }) {
   const { scene, materials } = useGLTF(
     "models/rocket.glb"
@@ -34,7 +35,7 @@ export default function Rocket({
         rocket.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.4
         rocket.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.4
         rocket.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.2 + 0.4
-      } else if (selectable) {
+      } else if (selectable && !selection) {
         flame.current.scale.y = 4 + Math.sin(state.clock.elapsedTime * 10) * 0.7;
         rocket.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
         rocket.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1

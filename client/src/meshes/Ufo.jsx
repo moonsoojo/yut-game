@@ -17,7 +17,8 @@ export default function Ufo({
   selectable=false,
   selected=false,
   onBoard=false,
-  animationPlaying=false
+  animationPlaying=false,
+  selection=null
 }) {
   const { scene, materials } = useGLTF("models/ufo.glb");
 
@@ -45,7 +46,13 @@ export default function Ufo({
         ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
         ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
         ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * selectedAnimatedScaleRange + selectedAdditionalScale
-      } else if (selectable) {
+        frontBackPanelCircleMat.current.color = new THREE.Color('turquoise')
+        leftRightPanelCircleMat.current.color = new THREE.Color('turquoise')
+        ballFrontRightMatRef.current.color = new THREE.Color('turquoise')
+        ballFrontLeftMatRef.current.color = new THREE.Color('turquoise')
+        ballBackRightMatRef.current.color = new THREE.Color('turquoise')
+        ballBackLeftMatRef.current.color = new THREE.Color('turquoise')
+      } else if (selectable && !selection) {
         ufo.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
         ufo.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1
         ufo.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 1.5) * 0.1

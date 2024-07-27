@@ -110,11 +110,13 @@ export default function Piece ({
       animationPlaying={animationPlaying}
       selected={selected}
       onBoard={onBoard}
-      selectable={selectable}/> : <Ufo 
+      selectable={selectable}
+      selection={selection}/> : <Ufo 
       animationPlaying={animationPlaying}
       selected={selected}
       onBoard={onBoard}
-      selectable={selectable}/>}
+      selectable={selectable}
+      selection={selection}/>}
     </animated.group>
   )      
 };
