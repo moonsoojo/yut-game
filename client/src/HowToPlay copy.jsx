@@ -49,48 +49,43 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
-    // clearTimeout(pageTimeout)
-    // if (page === 0) {
-    //   const page1Timeout = setTimeout(() => {
-    //     setPage(1)
-    //   }, 11000)
-    //   setPageTimeout(page1Timeout)
-    // } else if (page === 1) {
-    //   const page2Timeout = setTimeout(() => {
-    //     setPage(2)
-    //   }, 12000)
-    //   setPageTimeout(page2Timeout)
-    // } else if (page === 2) {
-    //   const page3Timeout = setTimeout(() => {
-    //     setPage(3)
-    //   }, PAGE_2_PLAY_TIME)
-    //   setPageTimeout(page3Timeout)
-    // } else if (page === 3) {
-    //   const page4Timeout = setTimeout(() => {
-    //     setPage(4)
-    //   }, 14500)
-    //   setPageTimeout(page4Timeout)
-    // } else if (page === 4) {
-    //   const page5Timeout = setTimeout(() => {
-    //     setPage(5)
-    //   }, 17500)
-    //   setPageTimeout(page5Timeout)
-    // } else if (page === 5) {
-    //   const page6Timeout = setTimeout(() => {
-    //     setPage(6)
-    //   }, 23500)
-    //   setPageTimeout(page6Timeout)
-    // } else if (page === 6) {
-    //   const page7Timeout = setTimeout(() => {
-    //     setPage(7)
-    //   }, 14500)
-    //   setPageTimeout(page7Timeout)
-    // } else if (page === 7) {
-    //   const page0Timeout = setTimeout(() => {
-    //     setPage(0)
-    //   }, 14500)
-    //   setPageTimeout(page0Timeout)
-    // }
+    clearTimeout(pageTimeout)
+    if (page === 0) {
+      const page1Timeout = setTimeout(() => {
+        setPage(1)
+      }, 11000)
+      setPageTimeout(page1Timeout)
+    } else if (page === 1) {
+      const page2Timeout = setTimeout(() => {
+        setPage(2)
+      }, 12000)
+      setPageTimeout(page2Timeout)
+    } else if (page === 2) {
+      const page3Timeout = setTimeout(() => {
+        setPage(3)
+      }, PAGE_2_PLAY_TIME)
+      setPageTimeout(page3Timeout)
+    } else if (page === 3) {
+      const page4Timeout = setTimeout(() => {
+        setPage(4)
+      }, 14500)
+      setPageTimeout(page4Timeout)
+    } else if (page === 4) {
+      const page5Timeout = setTimeout(() => {
+        setPage(5)
+      }, 17500)
+      setPageTimeout(page5Timeout)
+    } else if (page === 5) {
+      const page6Timeout = setTimeout(() => {
+        setPage(6)
+      }, 23500)
+      setPageTimeout(page6Timeout)
+    } else if (page === 6) {
+      const page0Timeout = setTimeout(() => {
+        setPage(0)
+      }, 14500)
+      setPageTimeout(page0Timeout)
+    }
   }, [page])
   
   function Page0() {
@@ -193,9 +188,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           setStartTime(0);
           setThrown(false);
           for (let i = 0; i < 4; i++) {
-            
-            // yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.initialThrowPos[i]);
-            yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.resetPos[i]);
+            yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.initialThrowPos[i]);
             yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
           }
           setRecord0(false)
@@ -219,12 +212,32 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       >
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[-4.5,0,-2.5]}
+          position={[-3.5,0,-2.5]}
           rotation={[-Math.PI/2, 0, 0]}
-          size={0.4}
+          size={0.5}
           height={0.01}
         >
-          {`1. Throw the yoot (dice).\nThe way they lie determines\nhow many steps to advance.`}
+          {`1. Throw the yoot (dice).`}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-3.5,0,-1.8]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {`The way they lie determines`}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-3.5,0,-1.1]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          {'how many steps to advance.'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </group>
@@ -319,7 +332,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           position={layout[device].howToPlay.page0.moveText.position}
           rotation={[-Math.PI/2,0,0]}
           font="fonts/Luckiest Guy_Regular.json" 
-          size={layout[device].howToPlay.page0.moveText.size} 
+          size={0.5} 
           height={0.01}
           ref={textRef}
         >
@@ -2130,80 +2143,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     </group>
   }
 
-  function Tabs({ position=[0,0,0], scale=1 }) {
-    // tabs on the right
-    function handlePageChoosingTeams() {
-      setPage(0)
-    }
-    function handlePageThrowingTheDice() {
-      setPage(1)
-    }
-    function handlePageMovingPieces() {
-      setPage(2)
-    }
-    function handlePageScoringPieces() {
-      setPage(3)
-    }
-    function handlePageCatchingPieces() {
-      setPage(4)
-    }
-    function handlePageCombiningPieces() {
-      setPage(5)
-    }
-    function handlePageTakingShortcuts() {
-      setPage(6)
-    }
-    function handlePageDiceResults() {
-      setPage(7)
-    }
-
-    return <group name='tabs' position={position} scale={scale}>
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        position={[2,0,-2.5]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.4}
-        height={0.01}
-      >
-        1. Choosing Teams
-      </Text3D>
-      <mesh position={[-3, 0, 6]} onPointerUp={handlePageChoosingTeams}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 0 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[-2, 0, 6]} onPointerUp={handlePageThrowingTheDice}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 1 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[-1, 0, 6]} onPointerUp={handlePageMovingPieces}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 2 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[-0, 0, 6]} onPointerUp={handlePageScoringPieces}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 3 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[1, 0, 6]} onPointerUp={handlePageCatchingPieces}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 4 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[2, 0, 6]} onPointerUp={handlePageCombiningPieces}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 5 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[3, 0, 6]} onPointerUp={handlePageTakingShortcuts}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[4, 0, 6]} onPointerUp={handlePageDiceResults}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
-      </mesh>
-    </group>
-  }
-
   function Pagination({ position, scale }) {
-
+    // tabs on the right
+    // automatically switches
     function handlePageLeft() {
       setPage(page => {
         if (page === 0) {
@@ -2213,7 +2155,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         }
       })
     }
-
+    
     function handlePageRight() {
       setPage(page => {
         if (page === 6) {
@@ -2223,7 +2165,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         }
       })
     }
-    
+
     function handlePage0() {
       setPage(0)
     }
@@ -2244,9 +2186,6 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
     function handlePage6() {
       setPage(6)
-    }
-    function handlePage7() {
-      setPage(7)
     }
 
     return <group name='pagination' position={position} scale={scale}>
@@ -2282,12 +2221,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
         <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
       </mesh>
-      <mesh position={[4, 0, 6]} onPointerUp={handlePage7}>
-        <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
-        <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
-      </mesh>
-      <mesh position={[5, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
-        <coneGeometry args={[layout[device].howToPlay.pagination.arrowRadius, 0.6, 3]}/>
+      <mesh position={[4, 0, 6]} rotation={[0, 0, -Math.PI/2]} onPointerUp={handlePageRight}>
+      <coneGeometry args={[layout[device].howToPlay.pagination.arrowRadius, 0.6, 3]}/>
         <meshStandardMaterial color="yellow"/>
       </mesh>
     </group>
@@ -2298,10 +2233,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   console.log(layout[device].howToPlay.pagination.position)
   return <group position={position} rotation={rotation} scale={scale}>
     {pages[page]}
-    { device === 'portrait' && <Pagination 
+    <Pagination 
     position={layout[device].howToPlay.pagination.position}
-    scale={layout[device].howToPlay.pagination.scale}/> }
-    { device === 'landscapeDesktop' && <Tabs/> }
+    scale={layout[device].howToPlay.pagination.scale}/>
   </group>
 }
 

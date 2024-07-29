@@ -69,11 +69,12 @@ export default {
       scale: 0.4,
       page0: {
         text: {
-          position: [-1.5, 0, -2]
+          position: [0.5, 0, -2]
         },
         moveText: {
           text: "MOVE: 4-STEPS",
-          position: [-3.2, 0.7, -1.2]
+          position: [-3.2, 0.7, -1.2],
+          size: 0.4
         },
         yoot: {
           initialPos: [
@@ -87,7 +88,13 @@ export default {
             { x: -1 + 0.4, y: 0.5, z: -1.5},
             { x: -1 + 0.8, y: 0.5, z: -1.5},
             { x: -1 + 1.2, y: 0.5, z: -1.5}
-          ]
+          ],
+          resetPos: [
+            { x: -1, y: 0.5, z: -1.5},
+            { x: -1 + 0.4, y: 0.5, z: -1.5},
+            { x: -1 + 0.8, y: 0.5, z: -1.5},
+            { x: -1 + 1.2, y: 0.5, z: -1.5}
+          ],
         },
         yootButtonModel: {
           position: [3, 0, 1],
@@ -1189,10 +1196,11 @@ export default {
         position: [0,0,0],
         rotation: [0,0,0],
         fontSize: 20,
-        scale: 3.6,
+        scale: 4,
       },
       tiles: {
-        position: [0, 0, -4],
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
         scale: 1
       },
       about: {
@@ -1274,28 +1282,35 @@ export default {
         },
         moveText: {
           text: "MOVE: 3-STEPS",
-          position: [-5, 0.7, 0]
+          position: [-5, 0.7, 1],
+          size: 0.4
         },
         yoot: {
           initialPos: [
-            [-2 + 0, 1, 3],
-            [-2 + 0.8, 1, 3],
-            [-2 + 1.6, 1, 3],
-            [-2 + 2.4, 1, 3]
+            [-3.5 + 0, 1, 3],
+            [-3.5 + 0.8, 1, 3],
+            [-3.5 + 1.6, 1, 3],
+            [-3.5 + 2.4, 1, 3]
           ],
           initialThrowPos: [
-            { x: -2 + 0, y: 1, z: -2},
-            { x: -2 + 0.8, y: 1, z: -2},
-            { x: -2 + 1.6, y: 1, z: -2},
-            { x: -2 + 2.4, y: 1, z: -2}
+            { x: -3.5 + 0, y: 1, z: -1},
+            { x: -3.5 + 0.8, y: 1, z: -1},
+            { x: -3.5 + 1.6, y: 1, z: -1},
+            { x: -3.5 + 2.4, y: 1, z: -1}
+          ],
+          resetPos: [
+            { x: -4 + 0, y: 1, z: -0.5},
+            { x: -4 + 0.8, y: 1, z: -0.5},
+            { x: -4 + 1.6, y: 1, z: -0.5},
+            { x: -4 + 2.4, y: 1, z: -0.5}
           ]
         },
         yootButtonModel: {
-          position: [3, 0, 1],
+          position: [2.5, 0, 3],
           rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
         },
         cursor: {
-          position: [4, 0.3, 2.4],
+          position: [3.5, 0.3, 4.4],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
         }

@@ -2,7 +2,7 @@ import React, { useRef, useMemo, useEffect } from "react";
 import { animated } from "@react-spring/three";
 import { useGLTF, Float } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
-import { useGraph } from "@react-three/fiber";
+import { useFrame, useGraph } from "@react-three/fiber";
 
 
 export default function UfoAnimated({
@@ -21,6 +21,10 @@ export default function UfoAnimated({
   useEffect(() => {
     ufoGlassRef.current.material.opacity = 0.2;
   }, []);
+
+  useFrame((state, delta) => {
+    ballsRef.current.rotation.y = state.clock.elapsedTime * 0.7;
+  })
 
   return (
     <group>

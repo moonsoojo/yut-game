@@ -35,13 +35,8 @@ export default function App () {
   return (<>
     <Canvas
       className='r3f'
-      camera={ {
-        fov: 45,
-        near: 0.1,
-        far: 200,
-      } }
       onCreated={ created }
-      >
+    >
       {/* <Perf/> */}
       <directionalLight position={ [ 0, 10, 0 ] } intensity={ 4 } />
       <ambientLight intensity={ 0.9 } />

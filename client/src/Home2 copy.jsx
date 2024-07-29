@@ -19,8 +19,6 @@ import Board from './Board';
 import { Physics } from '@react-three/rapier';
 import GameCamera from './GameCamera';
 import StarsShader from './shader/stars/StarsShader';
-import Rocket from './meshes/Rocket';
-import Ufo from './meshes/Ufo';
 
 export default function Home2() {
 
@@ -55,40 +53,16 @@ export default function Home2() {
 
   function Pieces() {
     return <group>
-      {/* rocket on star 1 */}
-      <Float 
-        speed={3} 
-        rotationIntensity={0.2}
-        floatIntensity={0.1}
-        floatingRange={[-0.1, 0.1]}
-      >
-        <RocketAnimated position={[4,0.5,1.8]} rotation={[-Math.PI/4, 0, 0]} scale={0.4}/>
+      <RocketAnimated position={[4,2,0]} rotation={[-Math.PI/4, -Math.PI/8, 0]} scale={0.5}/>
+      <RocketAnimated position={[-1,2,0]} rotation={[-Math.PI/4, -Math.PI/16, 0]} scale={0.5}/>
+      <Float speed={3} floatIntensity={1}>
+        <group rotation={[-Math.PI/4,0,0]}>
+          <UfoAnimated position={[-1, -1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-2, -1, 3.5]} scale={0.5}/>
+          <UfoAnimated position={[-1.5, -1.3, 4.2]} scale={0.5}/>
+        </group>
       </Float>
-      {/* rocket on moon */}
-      <Float 
-        speed={3} 
-        rotationIntensity={0.3}
-        floatIntensity={0.1}
-        floatingRange={[-1, 1]}
-      >
-        <RocketAnimated position={[0,2,-0.1]} rotation={[-Math.PI/4, 0, 0]} scale={0.4}/>
-      </Float>
-      <Rocket position={[5,2,4]} rotation={[-Math.PI/8, 0, 0]} scale={1.2}/>
-      <Rocket position={[6,2,4]} rotation={[-Math.PI/8, 0, 0]} scale={1.2}/>
-      {/* ufo home piece */}
-      <Ufo rotation={[-Math.PI/16,0,0]} position={[3.8, 0, 4.9]} scale={1.2}/>
-      <Float 
-      rotationIntensity={0.05} 
-      speed={4} 
-      floatIntensity={1}
-      floatingRange={[0, 0.2]}
-      >
-        <UfoAnimated rotation={[-Math.PI/4,0,0]} position={[4.45, 0.5, -1]} scale={0.5}/>
-      </Float>
-      <Float rotationIntensity={0.03} speed={3} floatIntensity={1} floatingRange={[-0.1, 0.1]}>
-        <UfoAnimated rotation={[-Math.PI/4,0,0]} position={[0.3, 0.5, -4.7]} scale={0.5}/>
-        <UfoAnimated rotation={[-Math.PI/4,0,0]} position={[1.1, 0.5, -4.7]} scale={0.5}/>
-      </Float>
+      <UfoAnimated position={ufoPosition} scale={0.5} rotation={ufoRotation}/>
     </group>
   }
 
@@ -139,10 +113,10 @@ export default function Home2() {
       scale={scale}
     >
       <Float floatIntensity={0.001} floatingRange={[0.05, 0.05]} speed={2} rotationIntensity={0.3}>
-        <YootMesh scale={0.9} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
-        <YootMesh scale={0.9} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
-        <YootMesh scale={0.9} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
-        <YootMesh scale={0.9} position={[0,0,4]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,-2]} rotation={[0, 0, -Math.PI/2]} scene={scene} materials={materials}/>
+        <YootMesh scale={1} position={[0,0,0]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,2]} rotation={[0, 0, -Math.PI/2]} />
+        <YootMesh scale={1} position={[0,0,4]} rotation={[0, 0, -Math.PI/2]} />
       </Float>
     </animated.group>
   }
@@ -299,32 +273,43 @@ export default function Home2() {
   }
   
   return <>
-    <GameCamera position={layout[device].camera.position}/>
-    <group>
+    {/* <GameCamera position={layout['landscapeDesktop'].camera.position}/> */}
+    
+    <OrbitControls/>
+    <OrthographicCamera
+      makeDefault
+      zoom={50}
+      position={[0, 17, 7]}
+    />
+    <group
+      position={layout[device].title.position}
+      rotation={layout[device].title.rotation}
+      scale={1.4}
+    >
       <Title 
-        position={[-11,0,-5]}
-        rotation={[-Math.PI/2,0,0]}
+        position={layout[device].title.text.position}
+        rotation={layout[device].title.text.rotation}
         scale={layout[device].title.text.scale}
         setDisplay={setDisplay}
       />
       <Yoots 
-        position={[-3.5, 0, -2.8]}
-        rotation={[Math.PI/2,Math.PI/2,-Math.PI/2]}
+        position={layout[device].title.yoots.position}
+        rotation={layout[device].title.yoots.rotation}
         scale={layout[device].title.yoots.scale} 
       />
       <AboutButton 
-        position={[-9.5, 0, 0.5]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.about.position} 
+        rotation={layout[device].title.about.rotation}
         scale={layout[device].title.about.scale}
       />
       <HowToPlayButton
-        position={[-8.2, 0, 2]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.howToPlay.position}
+        rotation={layout[device].title.howToPlay.rotation}
         scale={layout[device].title.howToPlay.scale}
       />
       <LetsPlayButton
-        position={[-8, 0, 3.5]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.letsPlay.position}
+        rotation={layout[device].title.letsPlay.rotation}
         scale={layout[device].title.letsPlay.scale}
       />
     </group>
@@ -334,13 +319,9 @@ export default function Home2() {
         rotation={[0,0,0]}
         scale={1}
       >
-        { display === 'board' && <group position={[4.5, 0, 0]}>
-          <Board 
-            rotation={[0, 0, 0]} 
-            scale={0.9}
-            showStart={true} 
-            interactive={false}/>
-          <Pieces/>
+        { display === 'board' && <group>
+          <Board showStart={true} interactive={false} scale={1}/>
+          {/* <Pieces/> */}
         </group> }
       </group>
       <group>
@@ -354,7 +335,7 @@ export default function Home2() {
           { display === 'howToPlay' && <HowToPlay 
             device={device}
             position={layout[device].howToPlay.position}
-            rotation={[0,0,0]}
+            rotation={layout[device].howToPlay.rotation}
             scale={layout[device].howToPlay.scale}
           />}
         </Physics>
