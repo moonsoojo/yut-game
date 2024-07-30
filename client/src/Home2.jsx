@@ -32,27 +32,6 @@ export default function Home2() {
     "models/yoot.glb"
   );
 
-  const { ufoRotation, ufoPosition } = useSpring({
-    from: {
-      ufoRotation: [-Math.PI/8,0,Math.PI * 1/4],
-      ufoPosition: [4, 2, 4]
-    },
-    to: [
-      {
-        ufoRotation: [-Math.PI/8,0,Math.PI * -1/4],
-        ufoPosition: [2, 2, 4],
-      },
-      {
-        ufoRotation: [-Math.PI/8,0,Math.PI * 1/4],
-        ufoPosition: [4, 2, 4],
-      }
-    ],
-    config: {
-      friction: 36
-    },
-    loop: true
-  })
-
   function Pieces() {
     return <group>
       {/* rocket on star 1 */}
@@ -92,46 +71,6 @@ export default function Home2() {
     </group>
   }
 
-  useFrame((state, delta) => {
-    const camera = state.camera
-    if (device === "landscapeDesktop") {
-      // console.log(camera.rotation) 
-      // rotate camera to look at what you want
-      // const camera = state.camera    
-    //   const euler = new Euler(
-    //     -0.9678104558564694, 
-    //     0.07841126014215415,
-    //     0.11327856815709492, 
-    //     "XYZ"
-    //   )
-    //   camera.setRotationFromEuler(euler)
-    //   camera.position.x = -3.431723242390655
-    //   camera.position.y = (12.798027537168215)
-    //   camera.position.z = (6.469516796871723 )
-    // } else if (device === "portrait") {
-    //   // console.log(camera.rotation) 
-    //   // rotate camera to look at what you want
-    //   // const camera = state.camera    
-    //   const euler = new Euler(
-    //     -0.9678104558564694, 
-    //     0,
-    //     0, 
-    //     "XYZ"
-    //   )
-    //   camera.setRotationFromEuler(euler)
-    //   camera.position.x = (0)
-    //   camera.position.y = (10)
-    //   camera.position.z = (5)
-    }
-    // camera.fov = fov
-    
-    // set position in index.jsx
-    // console.log(camera.position)
-    
-    /* how to make camera.lookAt() with default camera */
-    // camera.lookAt(new Vector3(-0.311, -0.661, -0.683))
-  })
-
   function Yoots({position, rotation, scale}) {
     return <animated.group
       position={position}
@@ -147,7 +86,7 @@ export default function Home2() {
     </animated.group>
   }
 
-  const [location, setLocation] = useLocation();
+  const [_location, setLocation] = useLocation();
 
   function AboutButton({ position, rotation, scale }) {
     const [hover, setHover] = useState(false)

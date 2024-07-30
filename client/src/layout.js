@@ -1273,40 +1273,40 @@ export default {
       }
     },
     howToPlay: {
-      position: [-1,0,-4],
+      position: [3,0,0],
       rotation: [0,Math.PI/32,Math.PI/64],
       scale: 1,
       page0: {
         text: {
-          position: [0, 0, -1]
+          position: [1, 0, -1.5]
         },
         moveText: {
           text: "MOVE: 3-STEPS",
-          position: [-5, 0.7, 1],
+          position: [-5, 0.7, 0.5],
           size: 0.4
         },
         yoot: {
           initialPos: [
-            [-3.5 + 0, 1, 3],
-            [-3.5 + 0.8, 1, 3],
-            [-3.5 + 1.6, 1, 3],
-            [-3.5 + 2.4, 1, 3]
+            [-2.5 + 0, 1, 2],
+            [-2.5 + 0.8, 1, 2],
+            [-2.5 + 1.6, 1, 2],
+            [-2.5 + 2.4, 1, 2]
           ],
           initialThrowPos: [
-            { x: -3.5 + 0, y: 1, z: -1},
-            { x: -3.5 + 0.8, y: 1, z: -1},
-            { x: -3.5 + 1.6, y: 1, z: -1},
-            { x: -3.5 + 2.4, y: 1, z: -1}
+            { x: 1.2 + 0, y: 1, z: 1.3},
+            { x: 1.2 + 0.8, y: 1, z: 1.3},
+            { x: 1.2 + 1.6, y: 1, z: 1.3},
+            { x: 1.2 + 2.4, y: 1, z: 1.3}
           ],
           resetPos: [
-            { x: -4 + 0, y: 1, z: -0.5},
-            { x: -4 + 0.8, y: 1, z: -0.5},
-            { x: -4 + 1.6, y: 1, z: -0.5},
-            { x: -4 + 2.4, y: 1, z: -0.5}
+            { x: 1.2 + 0, y: 1, z: 1.3},
+            { x: 1.2 + 0.8, y: 1, z: 1.3},
+            { x: 1.2 + 1.6, y: 1, z: 1.3},
+            { x: 1.2 + 2.4, y: 1, z: 1.3}
           ]
         },
         yootButtonModel: {
-          position: [2.5, 0, 3],
+          position: [3.5, 0, 3],
           rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
         },
         cursor: {

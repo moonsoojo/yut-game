@@ -193,8 +193,6 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           setStartTime(0);
           setThrown(false);
           for (let i = 0; i < 4; i++) {
-            
-            // yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.initialThrowPos[i]);
             yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.resetPos[i]);
             yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
           }
@@ -221,7 +219,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           font="fonts/Luckiest Guy_Regular.json"
           position={[-4.5,0,-2.5]}
           rotation={[-Math.PI/2, 0, 0]}
-          size={0.4}
+          size={0.35}
           height={0.01}
         >
           {`1. Throw the yoot (dice).\nThe way they lie determines\nhow many steps to advance.`}
@@ -231,9 +229,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       {/* <Physics> */}
       <>
         <RigidBody type="fixed">
-          <CuboidCollider args={[5, 0.3, 5]} restitution={0.2} friction={1}/>
+          <CuboidCollider args={[10, 0.3, 10]} restitution={0.2} friction={1}/>
           <mesh>
-            <boxGeometry args={[10, 0.6, 10]} />
+            <boxGeometry args={[20, 0.6, 20]} />
             <meshStandardMaterial 
               transparent 
               color='yellow'
@@ -2158,16 +2156,159 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     return <group name='tabs' position={position} scale={scale}>
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        position={[2,0,-2.5]}
-        rotation={[-Math.PI/2, 0, 0]}
-        size={0.4}
-        height={0.01}
-      >
-        1. Choosing Teams
-      </Text3D>
-      <mesh position={[-3, 0, 6]} onPointerUp={handlePageChoosingTeams}>
+      <group name='tab-0' position={[0,0,0]} scale={0.8}>
+        <mesh position={[1.8, -0.1, -0.15]}>
+          <boxGeometry args={[3.9, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1.8, -0.1, -0.15]}>
+          <boxGeometry args={[4, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          1. Choosing Teams
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-1' position={[0,0,0.6]} scale={0.8}>
+        <mesh position={[2.1, -0.1, -0.15]}>
+          <boxGeometry args={[4.5, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[2.1, -0.1, -0.15]}>
+          <boxGeometry args={[4.6, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          2. Throwing the dice
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-2' position={[0,0,1.2]} scale={0.8}>
+        <mesh position={[1.9, -0.1, -0.15]}>
+          <boxGeometry args={[4.1, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1.9, -0.1, -0.15]}>
+          <boxGeometry args={[4.2, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          3. reading the dice
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-1' position={[0,0,1.8]} scale={0.8}>
+        <mesh position={[1.65, -0.1, -0.15]}>
+          <boxGeometry args={[3.6, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1.65, -0.1, -0.15]}>
+          <boxGeometry args={[3.7, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          4. moving pieces
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-2' position={[0,0,2.4]} scale={0.8}>
+        <mesh position={[1, -0.1, -0.15]}>
+          <boxGeometry args={[2.3, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1, -0.1, -0.15]}>
+          <boxGeometry args={[2.4, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          5. scoring
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-3' position={[0,0,3]} scale={0.8}>
+        <mesh position={[1.8, -0.1, -0.15]}>
+          <boxGeometry args={[3.9, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1.8, -0.1, -0.15]}>
+          <boxGeometry args={[4, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          6. catching pieces
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-4' position={[0,0,3.6]} scale={0.8}>
+        <mesh position={[2, -0.1, -0.15]}>
+          <boxGeometry args={[4.3, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[2, -0.1, -0.15]}>
+          <boxGeometry args={[4.4, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          7. combining pieces
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <group name='tab-5' position={[0,0,4.2]} scale={0.8}>
+        <mesh position={[1.35, -0.1, -0.15]}>
+          <boxGeometry args={[3, 0.05, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh position={[1.35, -0.1, -0.15]}>
+          <boxGeometry args={[3.1, 0.04, 0.7]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.3}
+          height={0.01}
+        >
+          8. shortcuts
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      {/* <mesh position={[-3, 0, 6]} onPointerUp={handlePageChoosingTeams}>
         <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
         <meshStandardMaterial color={ page === 0 ? "green" : "yellow" }/>
       </mesh>
@@ -2198,7 +2339,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <mesh position={[4, 0, 6]} onPointerUp={handlePageDiceResults}>
         <sphereGeometry args={[layout[device].howToPlay.pagination.pageRadius, 32, 16]}/>
         <meshStandardMaterial color={ page === 6 ? "green" : "yellow" }/>
-      </mesh>
+      </mesh> */}
     </group>
   }
 
@@ -2301,7 +2442,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     { device === 'portrait' && <Pagination 
     position={layout[device].howToPlay.pagination.position}
     scale={layout[device].howToPlay.pagination.scale}/> }
-    { device === 'landscapeDesktop' && <Tabs/> }
+    { device === 'landscapeDesktop' && <Tabs position={[5.5, 0, -4]} scale={1}/> }
   </group>
 }
 
