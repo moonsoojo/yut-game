@@ -4,9 +4,11 @@ import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
 import YootMesh from './meshes/YootMesh';
 import { Float, Text3D } from '@react-three/drei';
+import { animated, useSpring } from '@react-spring/three';
 
 import initialState from '../initialState';
 import layout from './layout';
+import YootRhino from './meshes/YootRhino';
 
 export default function About(props) {
   function Rockets(props) {
@@ -18,13 +20,14 @@ export default function About(props) {
         <Rocket position={[0.5,0,-0.7]} scale={2}/>
       </group>
       <group name='rocket-2'>
-        <Rocket position={[-1,0,0.7]} scale={2}/>
+        <Rocket position={[-1,0,0.9]} scale={2}/>
       </group>
       <group name='rocket-3'>
-        <Rocket position={[0.5,0,0.7]} scale={2} />
+        <Rocket position={[0.5,0,0.9]} scale={2} />
       </group>
     </group>
   }
+
   function Ufos(props) {
     return <group {...props}>
       <group name='ufo-0'>
@@ -34,19 +37,133 @@ export default function About(props) {
         <Ufo position={[0.8,0,-0.7]} scale={2}/>
       </group>
       <group name='ufo-2'>
-        <Ufo position={[-0.6,0,0.7]} scale={2}/>
+        <Ufo position={[-0.6,0,0.9]} scale={2}/>
       </group>
       <group name='ufo-3'>
-        <Ufo position={[0.8,0,0.7]} scale={2} />
+        <Ufo position={[0.8,0,0.9]} scale={2} />
       </group>
     </group>
   }
   function Yoots(props) {
+    // on hover: flip yoot one by one
+    // on hover out: flip yoot again
+
+    const [springs0, api0] = useSpring(() => ({        
+      from: {
+        rotation: [0,0,0],
+      }
+    }))
+    const [springs1, api1] = useSpring(() => ({        
+      from: {
+        rotation: [0,0,0],
+      }
+    }))
+    const [springs2, api2] = useSpring(() => ({        
+      from: {
+        rotation: [0,0,0],
+      }
+    }))
+    const [springs3, api3] = useSpring(() => ({        
+      from: {
+        rotation: [0,0,0],
+      }
+    }))
+
+    function handlePointerEnter() {
+      console.log(`[About] pointer enter`)
+      api0.start({ 
+        from: {
+          rotation: [0, 0, 0]
+        },
+        to: {
+          rotation: [0, Math.PI, 0]
+        },
+      })
+      api1.start({ 
+        from: {
+          rotation: [0, 0, 0]
+        },
+        to: {
+          rotation: [0, Math.PI, 0]
+        },
+        delay: 100
+      })
+      api2.start({ 
+        from: {
+          rotation: [0, 0, 0]
+        },
+        to: {
+          rotation: [0, Math.PI, 0]
+        },
+        delay: 200
+      })
+      api3.start({ 
+        from: {
+          rotation: [0, 0, 0]
+        },
+        to: {
+          rotation: [0, Math.PI, 0]
+        },
+        delay: 300
+      })
+    }
+
+    function handlePointerLeave() {
+      console.log(`[About] pointer leave`)
+      api0.start({ 
+        from: {
+          rotation: [0, Math.PI, 0]
+        },
+        to: {
+          rotation: [0, 0, 0]
+        },
+      })
+      api1.start({ 
+        from: {
+          rotation: [0, Math.PI, 0]
+        },
+        to: {
+          rotation: [0, 0, 0]
+        },
+        delay: 100
+      })
+      api2.start({ 
+        from: {
+          rotation: [0, Math.PI, 0]
+        },
+        to: {
+          rotation: [0, 0, 0]
+        },
+        delay: 200
+      })
+      api3.start({ 
+        from: {
+          rotation: [0, Math.PI, 0]
+        },
+        to: {
+          rotation: [0, 0, 0]
+        },
+        delay: 300
+      })
+    }
+
     return <group {...props}>
-      <YootMesh scale={0.5} position={[0,0,0]}/>
-      <YootMesh scale={0.5} position={[0,0,-1]}/>
-      <YootMesh scale={0.5} position={[0,0,-2]}/>
-      <YootMesh scale={0.5} position={[0,0,-3]}/>
+      <animated.group rotation={springs0.rotation} position={[0,0,0]}>
+        <YootMesh scale={0.5}/>
+      </animated.group>
+      <animated.group rotation={springs1.rotation} position={[0,0,-1]}>
+        <YootMesh scale={0.5}/>
+      </animated.group>
+      <animated.group rotation={springs2.rotation} position={[0,0,-2]}>
+        <YootMesh scale={0.5}/>
+      </animated.group>
+      <animated.group rotation={springs3.rotation} position={[0,0,-3]}>
+        <YootRhino rotation={[Math.PI, 0, 0]} scale={0.5}/>
+      </animated.group>
+      <mesh position={[0, 0, -1.5]} onPointerEnter={handlePointerEnter} onPointerLeave={handlePointerLeave}>
+        <boxGeometry args={[2, 7, 5]}/>
+        <meshStandardMaterial color='grey' transparent opacity={0}/>
+      </mesh>
     </group>
   }
 
@@ -57,7 +174,7 @@ export default function About(props) {
         size={layout[props.device].about.mainDescription.size}
         height={0.01}
     >
-      {`Two teams throw wooden dice (yoot)\nto move tokens on the board. The one\nthat moves four tokens back to\nthe start first wins.`}
+      {`Two teams throw wooden dice (yoot)\nto move their tokens on the board. The\none that moves four tokens back to\nthe start first wins.`}
       <meshStandardMaterial color='yellow'/>
     </Text3D>
     <group>
@@ -89,10 +206,10 @@ export default function About(props) {
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <Float rotationIntensity={0.001} speed={3} floatingRange={[0.01, 0.01]}>
-        <Rockets position={layout[props.device].about.pieces.rockets.position} rotation={[Math.PI/4, 0, 0]}/>
+        <Rockets position={layout[props.device].about.pieces.rockets.position} rotation={[Math.PI/2, 0, 0]}/>
       </Float>
       <Float rotationIntensity={0.001} speed={3} floatingRange={[0.01, 0.01]}>
-        <Ufos position={layout[props.device].about.pieces.ufos.position} rotation={[Math.PI/4, 0, 0]}/>
+        <Ufos position={layout[props.device].about.pieces.ufos.position} rotation={[Math.PI/2, 0, 0]}/>
       </Float>
       <Text3D 
         font="fonts/Luckiest Guy_Regular.json"
@@ -104,7 +221,11 @@ export default function About(props) {
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <Float rotationIntensity={0.001} speed={1} floatingRange={[0.01, 0.01]}>
-        <Yoots position={layout[props.device].about.yoot.position} rotation={[0, Math.PI/2, 0]} scale={0.7}/>
+        <Yoots 
+        position={layout[props.device].about.yoot.position} 
+        rotation={[0, Math.PI/2, 0]} 
+        scale={0.8}
+        />
       </Float>
 
       <Text3D 

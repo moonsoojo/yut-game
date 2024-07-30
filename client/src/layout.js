@@ -1230,9 +1230,9 @@ export default {
       }
     },
     about: {
-      position: [-5, -4, -13],
-      rotation: [-Math.PI/4,0,Math.PI/32],
-      scale: 1,
+      position: [1, 0, -4],
+      rotation: [-Math.PI/2,0,0],
+      scale: 0.6,
       mainDescription: {
         size: 0.6,
         line0Position: [-1,0.5,0],
@@ -1257,11 +1257,11 @@ export default {
         }
       },
       yoot: {
-        position: [14, -8, -2],
+        position: [14.2, -8, -1],
         text: {
           position: [11.1,-5,-1],
           size: 0.6
-        }
+        },
       },
       playersText: {
         position: [11.5,-12.5,-1],
