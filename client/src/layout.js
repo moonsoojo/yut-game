@@ -1282,8 +1282,8 @@ export default {
         },
         moveText: {
           text: "MOVE: 3-STEPS",
-          position: [-5, 0.7, 0.5],
-          size: 0.4
+          position: [-3.7, 0.7, -0.9],
+          size: 0.3
         },
         yoot: {
           initialPos: [
@@ -1310,29 +1310,29 @@ export default {
           rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
         },
         cursor: {
-          position: [3.5, 0.3, 4.4],
+          position: [3.8, 0.3, 4.8],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
         }
       },
       page1: {
         text: {
-          position: [-2.5,0,-4],
+          position: [-3,0,-4],
           rotation: [-Math.PI/4, 0, 0],
-          size: 0.5
+          size: 0.4
         },
         firstCornerTiles: {
-          position: [-1, 0, -1.5]
+          position: [-2, 0, -1.5]
         },
         homePieces: {
-          position: [-1, 0, -2]
+          position: [-2, 0, -2]
         },
         moveDisplay: {
-          position: [-2.3, 0, 1.7]
+          position: [-3.3, 0, 1.7]
         },
         cursorPos0: [1, 0.3, 1],
-        cursorPos1: [0.4, 0.3, -0.5],
-        cursorPos2: [3.2, 1.3, 2.3],
+        cursorPos1: [-0.6, 0.3, -0.5],
+        cursorPos2: [2.2, 1.3, 2.3],
         rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
@@ -1364,14 +1364,14 @@ export default {
           height: 0.01
         },
         tilesPos0: [0,0,0],
-        tilesPos1: [-2, 0, -4],
+        tilesPos1: [-2, 0.5, -4],
         tilesScale0: 0.8,
         tilesScale1: 1.5,
         rocketHomeScale1: 1.3,
-        rocket0Pos: [-0.4,0,-0.7],
-        rocket1Pos: [0.8,0,-0.7],
-        rocket2Pos: [-0.4,0,0.5],
-        checkPos: [0.6,0,1],
+        rocket0Pos: [-0.4,0.5,-0.7],
+        rocket1Pos: [0.8,0.5,-0.7],
+        rocket2Pos: [-0.4,0.5,0.5],
+        checkPos: [0.6,0.5,1],
         cursorPos: [
           [1, 0, 4],
           [0, 1.5, 5.8],
@@ -1408,9 +1408,9 @@ export default {
       },
       page3: {
         text: {
-          position: [-4.5,0,-5.5],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.5,
+          position: [-3.5,0,-4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.4,
           height: 0.01,
           lineHeight: 0.9
         },
@@ -1456,7 +1456,7 @@ export default {
             1.5,
             Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
           ],
-          [7, -3, -5]
+          [6, -3, -2]
         ],
         pointer: {
           position: [-0.5,2.5,0]
@@ -1473,19 +1473,19 @@ export default {
       },
       page4: {
         text: {
-          position: [-4,0,-4.5],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.5,
+          position: [-3.5,0,-4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.4,
           height: 0.01,
           lineHeight: 0.9
         },
         cursorPos: [
           [1.1, 0.3, 3.3],
           [-1.0,2,5.7],
-          [3,2,5.1],
-          [6, 0.3, 1],
-          [2.8,2,5],
-          [4, 2, 3],
+          [3.5,2,5.1],
+          [6.5, 0.3, 1],
+          [3.5,2,5],
+          [5, 2, 3],
           [6.3, 0.3, 1]
         ],
         rocket0Pos: [
@@ -1568,19 +1568,19 @@ export default {
       },
       page5: {
         text: {
-          position: [-4,0,-6],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.5,
+          position: [-3.5,0,-4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.4,
           height: 0.01,
           lineHeight: 0.9,
           scales: [1, 0] 
         },
         tilesPos: [
-          [0,0,1.5],
+          [0,0,2],
           [-3, 0, -1.5]
         ],
         tilesScale: [
-          0.7,
+          0.6,
           1
         ],
         scoreText: {
@@ -1588,12 +1588,12 @@ export default {
           rotation: [-Math.PI/4, 0, 0]
         },
         moveText: {
-          position: [1.5, -2, 3],
+          position: [0, -2, 4],
           rotation: [-Math.PI/4, 0, 0],
           scale: [0, 0.8]
         },
         noteText: {
-          position: [2,0,2],
+          position: [2.5,0,2],
           rotation: [-Math.PI/4, 0, 0]
         },
         rocket0Scale: [
@@ -1771,7 +1771,7 @@ export default {
           position: [
             [1, 0.3, 3],
             [3, 0, 5],
-            [-1.9, 0, 4]
+            [-1.6, 0, 4.4]
           ],
           scale: [
             [0,0,0],
@@ -1786,14 +1786,14 @@ export default {
       },
       page6: {
         text: {
-          position: [-5.5,0,-6],
+          position: [-4,0,-4],
           rotation: [-Math.PI/4, 0, 0],
-          size: 0.5,
+          size: 0.4,
           height: 0.01,
         },
         do: {
-          position: [-4.7, 0, -1.7],
-          scale: 0.8,
+          position: [-3.6, 0, -1.2],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-2.7],
@@ -1814,8 +1814,8 @@ export default {
           }
         },
         ge: {
-          position: [-0.6, 0, -1.7],
-          scale: 0.8,
+          position: [-0.6, 0, -1.2],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-2.7],
@@ -1836,8 +1836,8 @@ export default {
           }
         },
         gul: {
-          position: [3.1, 0, -1.7],
-          scale: 0.8,
+          position: [2.6, 0, -1.2],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-2.7],
@@ -1858,8 +1858,8 @@ export default {
           }
         },
         yoot: {
-          position: [-4.7, 0, 4],
-          scale: 0.8,
+          position: [-3.6, 0, 3.5],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-3.5],
@@ -1886,8 +1886,8 @@ export default {
           }
         },
         mo: {
-          position: [-0.6, 0, 4],
-          scale: 0.8,
+          position: [-0.6, 0, 3.5],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-3.5],
@@ -1914,8 +1914,8 @@ export default {
           }
         },
         backdo: {
-          position: [3.5, 0, 4],
-          scale: 0.8,
+          position: [2.6, 0, 3.5],
+          scale: 0.6,
           text: {
             line0: {
               position: [-0.2,0,-3.5],

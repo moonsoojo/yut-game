@@ -41,6 +41,9 @@ import ArrowBlender from './meshes/ArrowBlender';
 import YootSet from './meshes/YootSet';
 import { particleSettingAtom } from './GlobalState';
 import { useAtom } from 'jotai';
+import GulToken from './moveTokens/GulToken';
+import GeToken from './moveTokens/GeToken';
+import YootToken from './moveTokens/YootToken';
 
 export default function HowToPlay({ device, position, rotation, scale }) {
   
@@ -49,48 +52,48 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
-    // clearTimeout(pageTimeout)
-    // if (page === 0) {
-    //   const page1Timeout = setTimeout(() => {
-    //     setPage(1)
-    //   }, 11000)
-    //   setPageTimeout(page1Timeout)
-    // } else if (page === 1) {
-    //   const page2Timeout = setTimeout(() => {
-    //     setPage(2)
-    //   }, 12000)
-    //   setPageTimeout(page2Timeout)
-    // } else if (page === 2) {
-    //   const page3Timeout = setTimeout(() => {
-    //     setPage(3)
-    //   }, PAGE_2_PLAY_TIME)
-    //   setPageTimeout(page3Timeout)
-    // } else if (page === 3) {
-    //   const page4Timeout = setTimeout(() => {
-    //     setPage(4)
-    //   }, 14500)
-    //   setPageTimeout(page4Timeout)
-    // } else if (page === 4) {
-    //   const page5Timeout = setTimeout(() => {
-    //     setPage(5)
-    //   }, 17500)
-    //   setPageTimeout(page5Timeout)
-    // } else if (page === 5) {
-    //   const page6Timeout = setTimeout(() => {
-    //     setPage(6)
-    //   }, 23500)
-    //   setPageTimeout(page6Timeout)
-    // } else if (page === 6) {
-    //   const page7Timeout = setTimeout(() => {
-    //     setPage(7)
-    //   }, 14500)
-    //   setPageTimeout(page7Timeout)
-    // } else if (page === 7) {
-    //   const page0Timeout = setTimeout(() => {
-    //     setPage(0)
-    //   }, 14500)
-    //   setPageTimeout(page0Timeout)
-    // }
+    clearTimeout(pageTimeout)
+    if (page === 0) {
+      const page1Timeout = setTimeout(() => {
+        setPage(1)
+      }, 11000)
+      setPageTimeout(page1Timeout)
+    } else if (page === 1) {
+      const page2Timeout = setTimeout(() => {
+        setPage(2)
+      }, 12000)
+      setPageTimeout(page2Timeout)
+    } else if (page === 2) {
+      const page3Timeout = setTimeout(() => {
+        setPage(3)
+      }, PAGE_2_PLAY_TIME)
+      setPageTimeout(page3Timeout)
+    } else if (page === 3) {
+      const page4Timeout = setTimeout(() => {
+        setPage(4)
+      }, 13900)
+      setPageTimeout(page4Timeout)
+    } else if (page === 4) {
+      const page5Timeout = setTimeout(() => {
+        setPage(5)
+      }, 17500)
+      setPageTimeout(page5Timeout)
+    } else if (page === 5) {
+      const page6Timeout = setTimeout(() => {
+        setPage(6)
+      }, 23500)
+      setPageTimeout(page6Timeout)
+    } else if (page === 6) {
+      const page7Timeout = setTimeout(() => {
+        setPage(7)
+      }, 14500)
+      setPageTimeout(page7Timeout)
+    } else if (page === 7) {
+      const page0Timeout = setTimeout(() => {
+        setPage(0)
+      }, 14500)
+      setPageTimeout(page0Timeout)
+    }
   }, [page])
   
   function Page0() {
@@ -185,9 +188,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           } else if (startTime + textTime < state.clock.elapsedTime && !text) {
             setText(true)
           } else if (startTime + textTime < state.clock.elapsedTime) {
-            textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
-            textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
-            textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.1 + 1.2
+            textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
+            textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
+            textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
           }
         } else {
           setStartTime(0);
@@ -313,17 +316,19 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             </RigidBody>
           );
         })}
-        { text && <Text3D
-          position={layout[device].howToPlay.page0.moveText.position}
-          rotation={[-Math.PI/2,0,0]}
-          font="fonts/Luckiest Guy_Regular.json" 
-          size={layout[device].howToPlay.page0.moveText.size} 
-          height={0.01}
-          ref={textRef}
-        >
-          {layout[device].howToPlay.page0.moveText.text}
-          <meshStandardMaterial color={ "limegreen" }/>
-        </Text3D>}
+        { text && <group ref={textRef}
+            position={layout[device].howToPlay.page0.moveText.position}>
+          <Text3D
+            rotation={[-Math.PI/2,0,0]}
+            font="fonts/Luckiest Guy_Regular.json" 
+            size={layout[device].howToPlay.page0.moveText.size} 
+            height={0.01}
+          >
+            {layout[device].howToPlay.page0.moveText.text}
+            <meshStandardMaterial color={ "limegreen" }/>
+          </Text3D>
+          <GulToken scale={0.7} position={[3.1, 0, -0.15]} rotation={[0, Math.PI/2, 0]}/>
+        </group>}
       </>
       {/* </Physics> */}
       <YootButtonModel
@@ -348,7 +353,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         cursorEffectOpacity: 0,
         legalTileScale: 0.4,
         pointerOpacity: 0,
-        rocket3Pos: layout[device].howToPlay.page1.rocket3Pos0
+        rocket3Pos: layout[device].howToPlay.page1.rocket3Pos0,
+        moveTokenScale: 0,
+        moveToken1Scale: 1
       },
       to: [
         {
@@ -360,6 +367,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           cursorEffectOpacity: 1,
           legalTileScale: 0.8,
           pointerOpacity: 1,
+          moveTokenScale: 0.7,
           delay: 500,
           config: {
             tension: 0,
@@ -379,6 +387,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {
           cursorEffectOpacity: 1,
           rocket3Pos: layout[device].howToPlay.page1.rocket3Pos1,
+          moveTokenScale: 0,
+          moveToken1Scale: 0,
           rocket3Scale: 1.5,
           legalTileScale: 0.4,
           pointerOpacity: 0,
@@ -472,6 +482,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   
       return <group position={position}>
         { tiles }
+        <animated.group position={[5,0,2.5]} rotation={[0, Math.PI/2, 0]} scale={springs.moveTokenScale}>
+          <GulToken />
+        </animated.group>
       </group>;
     }
     
@@ -498,16 +511,20 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function MoveDisplay({ position }) {
-      return <Text3D
-        position={position}
-        rotation={[-Math.PI/2,0,0]}
-        font="fonts/Luckiest Guy_Regular.json" 
-        size={0.5} 
-        height={0.01}
-      >
-        MOVE: 3-STEPS
-        <meshStandardMaterial color={ "limegreen" }/>
-      </Text3D>
+      return <group position={position}>
+        <Text3D
+          rotation={[-Math.PI/2,0,0]}
+          font="fonts/Luckiest Guy_Regular.json" 
+          size={0.4} 
+          height={0.01}
+        >
+          MOVES:
+          <meshStandardMaterial color={ "limegreen" }/>
+        </Text3D>
+        <animated.group position={[2.4, 0, -0.2]} rotation={[0, Math.PI/2, 0]} scale={springs.moveToken1Scale}>
+          <GulToken/>
+        </animated.group>
+      </group>
     }
 
     return <group name='how-to-play-page-1'>
@@ -549,8 +566,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function Page2() {
     const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
-    const letsGoMatRef = useRef();
-    const letsGoRef = useRef();
+    // const letsGoMatRef = useRef();
+    // const letsGoRef = useRef();
     const freqR = 0.4
     const freqG = 0.6
     const freqB = 0.8
@@ -558,9 +575,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       // letsGoMatRef.current.color.r = Math.cos(state.clock.elapsedTime*freqR * 4) + 0.3
       // letsGoMatRef.current.color.g = Math.cos(state.clock.elapsedTime*freqG * 4) + 0.4
       // letsGoMatRef.current.color.b = Math.cos(state.clock.elapsedTime*freqB * 4) + 0.5
-      letsGoRef.current.scale.x = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
-      letsGoRef.current.scale.y = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
-      letsGoRef.current.scale.z = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+      // letsGoRef.current.scale.x = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+      // letsGoRef.current.scale.y = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
+      // letsGoRef.current.scale.z = Math.cos(state.clock.elapsedTime * 4) * 0.1 + 1.1
     })
 
     function Fireworks() {
@@ -611,6 +628,76 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           clearTimeout(fireTimeoutId)
         }
       }, [device])
+    }
+
+    function WelcomeBackText({ position, scale }) {
+      const borderMesh0Ref = useRef();
+      const borderMesh1Ref = useRef();
+      const borderMesh2Ref = useRef();
+      const borderMesh3Ref = useRef();
+      const borderMesh4Ref = useRef();
+      const borderMesh5Ref = useRef();
+      const borderMesh6Ref = useRef();
+      const borderMeshRefs = [
+        borderMesh0Ref,
+        borderMesh1Ref,
+        borderMesh2Ref,
+        borderMesh3Ref,
+        borderMesh4Ref,
+        borderMesh5Ref,
+        borderMesh6Ref
+      ]
+
+      const height = 1.1
+      const width = 1.8
+      useFrame((state, delta) => {
+        for (let i = 0; i < borderMeshRefs.length; i++) {      
+          borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
+          borderMeshRefs[i].current.position.y = 0.05
+          borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
+        }
+      })
+
+      return <animated.group
+      position={position}
+      scale={scale}>
+          <mesh scale={[width, 1,height]}>
+              <cylinderGeometry args={[1, 1, 0.01, 32]}/>
+              <meshStandardMaterial color='black' transparent opacity={0.9}/>
+          </mesh>
+          <Text3D
+              font="fonts/Luckiest Guy_Regular.json" 
+              position={[-1.1, 0.1, -0.1]}
+              rotation={[-Math.PI/2, 0, 0]}
+              height={0.01}
+              lineHeight={0.9} 
+              size={0.35}
+          >
+              {`Welcome\nBack!`}
+              <meshStandardMaterial color='yellow'/>
+          </Text3D>
+          <group ref={borderMesh0Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+          <group ref={borderMesh1Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+          <group ref={borderMesh2Ref}>
+              <Star scale={0.1} color='yellow'/>
+          </group>
+          <group ref={borderMesh3Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+          <group ref={borderMesh4Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+          <group ref={borderMesh5Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+          <group ref={borderMesh6Ref}>
+              <Star scale={0.1} color='yellow' />
+          </group>
+      </animated.group>
     }
 
     // place on top of tiles with .map
@@ -686,7 +773,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           cursorEffectOpacity: 0,
           checkmarkColor: '#808080',
           checkmarkScale: 0,
-          letsGoScale: 0,
+          scoreTextScale: 0,
         },
         to: [
           ...rocket3AnimationsArray.slice(2), 
@@ -735,7 +822,6 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             moveScale: 0,
             rocket3Scale: 0,
             checkmarkColor: '#ff0000',
-            letsGoScale: 1,
             delay: 500,
             config: {
               tension: 0,
@@ -744,9 +830,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           },
           {
             cursorEffectOpacity: 0,
-            delay: 100,
+            scoreTextScale: 1,
+            // delay: 100,
             config: {
-              tension: 0,
+              friction: 26,
+              tension: 170,
+              // tension: 0,
               clamp: true
             },
           },
@@ -862,8 +951,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             <meshStandardMaterial color='limegreen'/>
           </Text3D>
         </animated.group>
-        <animated.group scale={springs.letsGoScale}>
-          <Text3D
+        <animated.group scale={springs.scoreTextScale}>
+          {/* <Text3D
             font="fonts/Luckiest Guy_Regular.json"
             position={layout[device].howToPlay.page2.letsGoText.position}
             rotation={layout[device].howToPlay.page2.letsGoText.rotation}
@@ -873,7 +962,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           >
             {`let's\ngo!`}
             <meshStandardMaterial color='yellow' ref={letsGoMatRef}/>
-          </Text3D>
+          </Text3D> */}
         </animated.group>
         <animated.group scale={springs.scoreScale}>
           <Text3D
@@ -887,6 +976,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             <AnimatedMeshDistortMaterial color={springs.scoreColor} distort={0}/>
           </Text3D>
         </animated.group>
+        <WelcomeBackText scale={springs.scoreTextScale} position={[2, 0, 2]}/>
         <group>
           <Cursor2
             position={springs.cursorPos}
@@ -898,6 +988,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </group>
       </animated.group>;
     }
+
+    
 
     return <group>
       <Text3D
@@ -931,7 +1023,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         moveTextScale: 1,
         bonusTurnScale: 0,
         yootButtonScale: 0,
-        firstCornerTilesPos: layout[device].howToPlay.page3.firstCornerTilesPos[0]
+        firstCornerTilesPos: layout[device].howToPlay.page3.firstCornerTilesPos[0],
+        moveTokenScale: 1,
+        moveToken1Scale: 0
       },
       to: [
         {
@@ -940,6 +1034,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 1,
+          moveToken1Scale: 1,
           rocketScale: 2.1,
           legalTileScale: 0.8,
           pointerOpacity: 1,
@@ -959,6 +1054,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 1,
+          moveTokenScale: 0,
+          moveToken1Scale: 0,
           rocketScale: 1.5,
           legalTileScale: 0.4,
           pointerOpacity: 0,
@@ -1064,6 +1161,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <animated.group name='ufo' position={springs.ufoPos} scale={springs.ufoScale} >
           <Ufo/>
         </animated.group>
+        <animated.group scale={springs.moveToken1Scale}>
+          <GulToken position={[5,0,4]} rotation={[0, Math.PI/2, 0]}/>
+        </animated.group>
       </animated.group>;
     }
 
@@ -1077,7 +1177,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.page3.text.height}
           lineHeight={layout[device].howToPlay.page3.text.lineHeight}
         >
-          {`4. If you move into a tile with an\nenemy, the enemy has to return\nto the starting point. You will\n get another turn.`}
+          {`4. If you move into a tile with\nan opponent, it has to return\nto the starting point. You\nwill get another turn.`}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       <FirstCornerTiles position={springs.firstCornerTilesPos}/>
@@ -1089,9 +1189,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.5} 
           height={0.01}
         >
-          MOVE: 3-STEPS
+          MOVE:
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
+        <animated.group scale={springs.moveTokenScale}>
+          <GulToken position={[-0.5,0,-0.25]} rotation={[0, Math.PI/2, 0]}/>
+        </animated.group>
       </animated.group>
       <group>
         <Cursor
@@ -1102,10 +1205,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           effect={true}
         />
       </group>
-      <BonusTurn rotation={[Math.PI/4 - Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.bonusTurn.position} scale={springs.bonusTurnScale}/>
+      <BonusTurn rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.bonusTurn.position} scale={springs.bonusTurnScale}/>
       <Float>
         <animated.group scale={springs.yootButtonScale}>
-          <YootButtonModel rotation={[Math.PI/4 - Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.yootButtonModel.position} turnedOn={true}/>
+          <YootButtonModel rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.yootButtonModel.position} turnedOn={true}/>
         </animated.group>
       </Float>
     </group>
@@ -1129,6 +1232,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         moveText1Scale: 0,
         bonusTurnScale: 0,
         yootButtonScale: 0,
+        moveTokenScale: 0,
+        moveToken1Scale: 0
       },
       to: [
         {
@@ -1141,6 +1246,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           rocket1Scale: 1.6,
           legalTile0Scale: 0.6,
           pointer0Opacity: 1,
+          moveTokenScale: 1,
           delay: 500,
           config: {
             tension: 0,
@@ -1156,6 +1262,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 1,
+          moveTokenScale: 0,
           rocket0Scale: 1.2,
           rocket1Scale: 1.2,
           legalTile0Scale: 0.4,
@@ -1205,6 +1312,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 1,
+          moveToken1Scale: 1,
           rocket0Scale: 1.6,
           rocket1Scale: 1.6,
           legalTile1Scale: 0.6,
@@ -1224,6 +1332,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 1,
+          moveToken1Scale: 0,
           rocket0Scale: 1.2,
           rocket1Scale: 1.2,
           legalTile1Scale: 0.4,
@@ -1325,6 +1434,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           effectOpacity={springs.cursorEffectOpacity}
           effect={true}
         />
+        <animated.group scale={springs.moveTokenScale}>
+          <GulToken position={[4,0,5]} rotation={[0, Math.PI/2, 0]}/>
+        </animated.group>
+        <animated.group scale={springs.moveToken1Scale}>
+          <GeToken position={[6,0,3]} rotation={[0, Math.PI/2, 0]}/>
+        </animated.group>
       </group>;
     }
 
@@ -1338,7 +1453,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         height={layout[device].howToPlay.page4.text.height}
         lineHeight={layout[device].howToPlay.page4.text.lineHeight}
       >
-        {'5. If you move a piece into a tile\nwith your own piece, they will\nmove together on your next turn.'}
+        {'5. If you move a piece into a\ntile with your own piece,\nthey will move together on\nyour next turn.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <FirstCornerTiles position={layout[device].howToPlay.page4.firstCornerTiles.position}/>
@@ -1351,9 +1466,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.page4.moveText0.height}
           lineHeight={layout[device].howToPlay.page4.moveText0.lineHeight}
         >
-          {`MOVES: 3-STEPS,\n                  2-STEPS`}
+          {`MOVES:`}
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
+        <GulToken position={[-0.2, 0, 0.2]} rotation={[0, Math.PI/2, 0]}/>
+        <GeToken position={[0.7, 0, 0.2]} rotation={[0, Math.PI/2, 0]}/>
       </animated.group>
       <animated.group scale={springs.moveText1Scale}>
         <Text3D
@@ -1364,9 +1481,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.page4.moveText1.height}
           lineHeight={layout[device].howToPlay.page4.moveText1.lineHeight}
         >
-          MOVES: 2-STEPS
+          MOVES:
           <meshStandardMaterial color={ "limegreen" }/>
         </Text3D>
+        <GeToken position={[-0.2, 0, 0.7]} rotation={[0, Math.PI/2, 0]}/>
       </animated.group>
     </group>
   }
@@ -1395,6 +1513,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         ruleTextScale: layout[device].howToPlay.page5.text.scales[0],
         noteTextScale: 0,
         moveTextScale: layout[device].howToPlay.page5.moveText.scale[0],
+        moveTokenScale: 0
       },
       to: [
         {
@@ -1579,6 +1698,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           pointer2Scale: 1,
           pointer3Scale: 1,
           pointer4Scale: 2.5,
+          moveTokenScale: 1,
           delay: 1000,
           config: {
             tension: 0,
@@ -1615,6 +1735,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[23],
+          moveTokenScale: 0,
           pointer4Scale: 0,
           legalTile3Scale: 0.4,
           delay: 500,
@@ -1836,55 +1957,24 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.4}
           height={0.01}
         >
-          {'NOTE:'}
+          {'NOTE: you cannot\nbend in the middle\nof a move.'}
           <meshStandardMaterial color='yellow'/>
         </Text3D> 
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[0,-0.5,0]}
-          rotation={[0, 0, 0]}
-          size={0.4}
-          height={0.01}
-        >
-          {'You cannot bend'}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[0,-1,0]}
-          rotation={[0, 0, 0]}
-          size={0.4}
-          height={0.01}
-        >
-          {'in the middle of'}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[0,-1.5,0]}
-          rotation={[0, 0, 0]}
-          size={0.4}
-          height={0.01}
-        >
-          {'a move.'}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
       </animated.group>
       <animated.group 
         name='move-text' 
-        position={[-3,0,2.5]} 
-        rotation={[-Math.PI/4, 0, 0]} 
+        position={layout[device].howToPlay.page5.moveText.position}
+        rotation={layout[device].howToPlay.page5.moveText.rotation}
         scale={springs.moveTextScale}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
           height={0.01}
-          position={layout[device].howToPlay.page5.moveText.position}
-          rotation={layout[device].howToPlay.page5.moveText.rotation}
         >
-          {'move: 4-steps'}
+          {'MOVE:'}
           <meshStandardMaterial color='limegreen'/>
         </Text3D>
+        <YootToken position={[2.5,0,-1]} rotation={[Math.PI/4, Math.PI/2, 0]} />
       </animated.group>
       <Cursor2
         position={springs.cursorPos}
@@ -1898,11 +1988,14 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         rotation={springs.tilesRotation} 
         scale={springs.tilesScale}
       />
+      <animated.group scale={springs.moveTokenScale}>
+        <YootToken position={[3, 0, 0.5]} rotation={[0, Math.PI/2, 0]} />
+      </animated.group>
     </group>
   }
 
   function Page6() {
-    return <group scale={0.9}>
+    return <group scale={1}>
       <animated.group name='text'>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
@@ -1911,7 +2004,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.text.size}
           height={layout[device].howToPlay.page6.text.height}
         >
-          {'7. How to read the yoot outcome'}
+          {'7. How to read the yoot throw'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </animated.group>

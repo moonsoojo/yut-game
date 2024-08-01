@@ -13,7 +13,7 @@ export default function BonusTurn(props) {
         receiveShadow
         geometry={nodes.Circle002.geometry}
         material={nodes.Circle002.material}
-        scale={[1, 1, 1]}
+        scale={[1, 0.1, 1]}
       >
         <meshStandardMaterial color='yellow'/>
       </mesh>
@@ -22,12 +22,12 @@ export default function BonusTurn(props) {
         receiveShadow
         geometry={nodes.Circle002.geometry}
         material={nodes.Circle002.material}
-        scale={[0.9, 1.1, 0.9]}
+        scale={[0.9, 0.11, 0.9]}
         position={[0, 0.02, 0]}
       >
       <meshStandardMaterial color='green'/>
       </mesh>
-      <group name="text" position={[0, -0.15, -0.36]} scale={1.2}>
+      <group name="text" position={[0, 0.1, -0.36]} scale={[1.2, 0.1, 1.2]}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           rotation={[Math.PI/2, Math.PI, Math.PI/2]}
