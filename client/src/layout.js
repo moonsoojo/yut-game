@@ -1322,17 +1322,17 @@ export default {
           size: 0.4
         },
         firstCornerTiles: {
-          position: [-2, 0, -1.5]
+          position: [-2, 0, -1]
         },
         homePieces: {
-          position: [-2, 0, -2]
+          position: [-2, 0, -1.5]
         },
         moveDisplay: {
           position: [-3.3, 0, 1.7]
         },
-        cursorPos0: [1, 0.3, 1],
-        cursorPos1: [-0.6, 0.3, -0.5],
-        cursorPos2: [2.2, 1.3, 2.3],
+        cursorPos0: [1, 0.3, 1.5],
+        cursorPos1: [-0.6, 0.3, 0],
+        cursorPos2: [2.2, 1.3, 2.8],
         rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,

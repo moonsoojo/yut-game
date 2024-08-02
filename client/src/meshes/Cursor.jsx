@@ -7,28 +7,29 @@ const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 export default function Cursor({
   position, 
   rotation=[0,0,0], 
-  scale, 
+  scale=1, 
   effectOpacity=0,
   effect=false
 }) {
   const { nodes } = useGLTF("models/cursor.glb");
   let scaleArray;
   let scaleArrayOuter;
-  if (scale.length === 1) {
-    scaleArray = [1 * scale, 1 * scale, 1 * scale]
-    scaleArrayOuter = [
-      1.1 * scaleArray[0], 
-      1.1 * scaleArray[1], 
-      0.01 * scaleArray[2]
-    ]
-  } else {
+  if (Array.isArray(scale)) {
     scaleArray = scale
     scaleArrayOuter = [
       1.1 * scaleArray[0], 
       1.1 * scaleArray[1], 
-      0.01 * scaleArray[2]
+      0.9 * scaleArray[2]
+    ]
+  } else {
+    scaleArray = [1 * scale, 1 * scale, 1 * scale]
+    scaleArrayOuter = [
+      1.1 * scaleArray[0], 
+      1.1 * scaleArray[1], 
+      0.9 * scaleArray[2]
     ]
   }
+  console.log(scaleArray, scaleArrayOuter)
 
   return (
     <animated.group

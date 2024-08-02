@@ -52,48 +52,545 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
     clearTimeout(pageTimeout)
-    if (page === 0) {
+    if (page === 0) { // picking teams
       const page1Timeout = setTimeout(() => {
         setPage(1)
-      }, 11000)
+      }, 9000)
       setPageTimeout(page1Timeout)
-    } else if (page === 1) {
+    } else if (page === 1) { // throwing the dice
       const page2Timeout = setTimeout(() => {
         setPage(2)
-      }, 9000)
+      }, 11000)
       setPageTimeout(page2Timeout)
-    } else if (page === 2) {
+    } else if (page === 2) { // reading the dice
       const page3Timeout = setTimeout(() => {
         setPage(3)
-      }, 14400)
+      }, 9000)
       setPageTimeout(page3Timeout)
-    } else if (page === 3) {
+    } else if (page === 3) { // moving pieces
       const page4Timeout = setTimeout(() => {
         setPage(4)
-      }, 13900)
+      }, 11400)
       setPageTimeout(page4Timeout)
-    } else if (page === 4) {
+    } else if (page === 4) { // scoring pieces
       const page5Timeout = setTimeout(() => {
         setPage(5)
-      }, 17500)
+      }, 13900)
       setPageTimeout(page5Timeout)
-    } else if (page === 5) {
+    } else if (page === 5) { // catching pieces
       const page6Timeout = setTimeout(() => {
         setPage(6)
-      }, 23500)
+      }, 11500)
       setPageTimeout(page6Timeout)
-    } else if (page === 6) {
+    } else if (page === 6) { // combining pieces
       const page7Timeout = setTimeout(() => {
         setPage(7)
-      }, 14500)
+      }, 15500)
       setPageTimeout(page7Timeout)
-    } else if (page === 7) {
+    } else if (page === 7) { // shortcuts
       const page0Timeout = setTimeout(() => {
         setPage(0)
-      }, 12000)
+      }, 23500)
       setPageTimeout(page0Timeout)
     }
   }, [page])
+
+  function PickingTheTeamsPage() {
+    const springs = useSpring({
+      from: {
+        cursorPos: [4, 0, 0],
+        cursorEffectOpacity: 0,
+        inputModalScale: 0,
+        placeholderScale: 1,
+        letterRScale: 0,
+        letterHScale: 0,
+        letterIScale: 0,
+        letterNScale: 0,
+        letterOScale: 0,
+        rhinoTextScale: 0,
+      },
+      to: [
+        {
+          cursorPos: [1.5, 0.5, -1.4],
+          delay: 100
+        },
+        {
+          cursorEffectOpacity: 1,
+          inputModalScale: 1,
+          inputCursorScale: 1,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 100,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          inputCursorScale: 0,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          placeholderScale: 0,
+          letterRScale: 1,
+          config: {
+            tension: 0
+          },
+          delay: 1000
+        },
+        {
+          placeholderScale: 0,
+          letterHScale: 1,
+          config: {
+            tension: 0
+          },
+          delay: 200
+        },
+        {
+          placeholderScale: 0,
+          letterIScale: 1,
+          config: {
+            tension: 0
+          },
+          delay: 200
+        },
+        {
+          placeholderScale: 0,
+          letterNScale: 1,
+          config: {
+            tension: 0
+          },
+          delay: 200
+        },
+        {
+          placeholderScale: 0,
+          letterOScale: 1,
+          config: {
+            tension: 0
+          },
+          delay: 200
+        },
+        {
+          cursorPos: [-0.5, 0.5, 1.3],
+          delay: 300,
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        },
+        {
+          cursorEffectOpacity: 1,
+          inputModalScale: 0,
+          delay: 500,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          cursorEffectOpacity: 0,
+          delay: 100,
+          config: {
+            tension: 0,
+          }
+        },
+        {
+          
+          rhinoTextScale: 1,
+          config: {
+            tension: 170,
+            friction: 26
+          }
+        }
+      ],
+      delay: 1000,
+      config: {
+        tension: 170,
+        friction: 26
+      }
+    })
+    return <group>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[-3,0,-4]}
+        rotation={[-Math.PI/2,0,0]}
+        size={layout[device].howToPlay.page1.text.size}
+        height={0.01}
+      >
+        {'1. Press join to Pick a team.'}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
+      <group name='rockets' position={[-3, 0, -2.5]}>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,0]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'Rockets'}
+          <meshStandardMaterial color='red'/>
+        </Text3D>
+        <Rocket position={[0.4,0,0.6]}/>
+        <Rocket position={[1.2,0,0.6]}/>
+        <Rocket position={[2.0,0,0.6]}/>
+        <Rocket position={[2.8,0,0.6]}/>
+        <group name='rockets-join-button' position={[3, 0, 0.8]}>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[0.7,0,0]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.4}
+            height={0.01}
+          >
+            {'join'}
+            <meshStandardMaterial color='yellow'/>
+          </Text3D>
+          <mesh position={[1.3, -0.01, -0.15]}>
+            <boxGeometry args={[1.5, 0.01, 0.8]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh position={[1.3, -0.01, -0.15]}>
+            <boxGeometry args={[1.4, 0.02, 0.7]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+        </group>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          ros&#233;
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[2,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'lisa'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[3.8,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'jisoo'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[5.8,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'jennie'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <animated.group scale={springs.rhinoTextScale}>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[0,0,2.7]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={layout[device].howToPlay.page1.text.size}
+            height={0.01}
+          >
+            {'Rhino'}
+            <meshStandardMaterial color='yellow'/>
+          </Text3D>
+        </animated.group>
+      </group>
+      <group name='ufos' position={[-3, 0, 1.5]}>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,0]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'ufos'}
+          <meshStandardMaterial color='turquoise'/>
+        </Text3D>
+        <Ufo position={[0.4,0,0.6]}/>
+        <Ufo position={[1.4,0,0.6]}/>
+        <Ufo position={[2.4,0,0.6]}/>
+        <Ufo position={[3.4,0,0.6]}/>
+        <group position={[3.5, 0, 0.8]}>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[0.7,0,0]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.4}
+            height={0.01}
+          >
+            {'join'}
+            <meshStandardMaterial color='yellow'/>
+          </Text3D>
+          <mesh position={[1.3, -0.01, -0.15]}>
+            <boxGeometry args={[1.5, 0.01, 0.8]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh position={[1.3, -0.01, -0.15]}>
+            <boxGeometry args={[1.4, 0.02, 0.7]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+        </group>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'j-hope'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[2.5,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'jimin'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[4.5,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'jin'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[6,0,2]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'rm'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,2.7]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'jungkook'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[3.5,0,2.7]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'suga'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[5.5,0,2.7]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={layout[device].howToPlay.page1.text.size}
+          height={0.01}
+        >
+          {'v'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+      </group>
+      <animated.group position={springs.cursorPos}>
+        <Cursor 
+        scale={1.5}
+        effect={true}
+        effectOpacity={springs.cursorEffectOpacity}
+        />
+      </animated.group>
+      <animated.group name='input-modal' scale={springs.inputModalScale}  position={[0, 0.1, 0]}>
+        <mesh>
+          <boxGeometry args={[5.7, 0.01, 3.4]}/>
+          <meshStandardMaterial color='yellow'/>
+        </mesh>
+        <mesh>
+          <boxGeometry args={[5.6, 0.02, 3.3]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-2.4, 0.02, -0.9]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.35}
+          height={0.01}
+        >
+          {'joining'}
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-0.45, 0.02, -0.9]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.35}
+          height={0.01}
+        >
+          rockets
+          <meshStandardMaterial color='red'/>
+        </Text3D>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[1.65, 0.02, -0.9]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.35}
+          height={0.01}
+        >
+          as
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <group position={[0, 0.01, -0.1]}>
+          <mesh>
+            <boxGeometry args={[4.2, 0.01, 0.8]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[4.1, 0.02, 0.7]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <animated.group scale={springs.placeholderScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-1.95, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'here...'}
+              <meshStandardMaterial color='grey' transparent opacity={0.7}/>
+            </Text3D>
+          </animated.group>
+          <animated.group scale={springs.letterRScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-1.95, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'R'}
+              <meshStandardMaterial color='yellow'/>
+            </Text3D>
+          </animated.group>
+          <animated.group scale={springs.letterHScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-1.68, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'H'}
+              <meshStandardMaterial color='yellow'/>
+            </Text3D>
+          </animated.group>
+          <animated.group scale={springs.letterIScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-1.39, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'I'}
+              <meshStandardMaterial color='yellow'/>
+            </Text3D>
+          </animated.group>
+          <animated.group scale={springs.letterNScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-1.25, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'N'}
+              <meshStandardMaterial color='yellow'/>
+            </Text3D>
+          </animated.group>
+          <animated.group scale={springs.letterOScale}>
+            <Text3D
+              font="fonts/Luckiest Guy_Regular.json"
+              position={[-0.94, 0.02, 0.15]}
+              rotation={[-Math.PI/2, 0, 0]}
+              size={0.3}
+              height={0.01}
+            >
+              {'O'}
+              <meshStandardMaterial color='yellow'/>
+            </Text3D>
+          </animated.group>
+        </group>
+        <group name='leggo-button' position={[-0.7, 0.01, 1]}>
+          <mesh>
+            <boxGeometry args={[1.7, 0.01, 0.75]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[1.6, 0.02, 0.65]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-0.7, 0.02, 0.15]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.3}
+            height={0.01}
+          >
+            {'leggo!'}
+            <meshStandardMaterial color='yellow'/>
+          </Text3D>
+        </group>
+        <group name='nah-button' position={[1, 0.01, 1]}>
+          <mesh>
+            <boxGeometry args={[1.1, 0.01, 0.75]}/>
+            <meshStandardMaterial color='red'/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[1, 0.02, 0.65]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-0.4, 0.02, 0.15]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.3}
+            height={0.01}
+          >
+            {'nah'}
+            <meshStandardMaterial color='red'/>
+          </Text3D>
+        </group>
+      </animated.group>
+    </group>
+  }
   
   function ThrowingTheDicePage() {
     
@@ -614,7 +1111,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
                   new Scale(0.5, 0.2),
                   new Color(new THREE.Color("#00ff00"), new THREE.Color("#ff0000"))
                 ],
-                numEmit: 'infinite'
+                numEmit: 8
               }
             ]
           })
@@ -987,8 +1484,6 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </group>
       </animated.group>;
     }
-
-    
 
     return <group>
       <Text3D
@@ -2003,7 +2498,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.page6.text.size}
           height={layout[device].howToPlay.page6.text.height}
         >
-          {'2. How to read the throw'}
+          {'2. How to read the dice'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </animated.group>
@@ -2221,10 +2716,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   }
 
   function Tabs({ position=[0,0,0], scale=1 }) {
-    // tabs on the right
-    // function handlePageChoosingTeams() {
-    //   setPage(0)
-    // }
+    const [pickingTeamsHover, setPickingTeamsHover] = useState(false)
     const [throwingTheDiceHover, setThrowingTheDiceHover] = useState(false)
     const [readingTheDiceHover, setReadingTheDiceHover] = useState(false)
     const [movingPiecesHover, setMovingPiecesHover] = useState(false)
@@ -2233,8 +2725,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     const [combiningPiecesHover, setCombiningPiecesHover] = useState(false)
     const [shortcutsHover, setShortcutsHover] = useState(false)
 
-    function handleThrowingTheDiceClick() {
+    function handlePickingTeamsClick() {
       setPage(0)
+    }
+    function handlePickingTeamsPointerEnter() {
+      setPickingTeamsHover(true)
+    }
+    function handlePickingTeamsPointerLeave() {
+      setPickingTeamsHover(false)
+    }
+
+    function handleThrowingTheDiceClick() {
+      setPage(1)
     }
     function handleThrowingTheDicePointerEnter() {
       setThrowingTheDiceHover(true)
@@ -2244,7 +2746,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleReadingTheDiceClick() {
-      setPage(1)
+      setPage(2)
     }
     function handleReadingTheDicePointerEnter() {
       setReadingTheDiceHover(true)
@@ -2254,7 +2756,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleMovingPiecesClick() {
-      setPage(2)
+      setPage(3)
     }
     function handleMovingPiecesPointerEnter() {
       setMovingPiecesHover(true)
@@ -2264,7 +2766,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleScoringClick() {
-      setPage(3)
+      setPage(4)
     }
     function handleScoringPointerEnter() {
       setScoringHover(true)
@@ -2274,7 +2776,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleCatchingPiecesClick() {
-      setPage(4)
+      setPage(5)
     }
     function handleCatchingPiecesPointerEnter() {
       setCatchingPiecesHover(true)
@@ -2284,7 +2786,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleCombiningPiecesClick() {
-      setPage(5)
+      setPage(6)
     }
     function handleCombiningPiecesPointerEnter() {
       setCombiningPiecesHover(true)
@@ -2294,7 +2796,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     function handleShortcutsClick() {
-      setPage(6)
+      setPage(7)
     }
     function handleShortcutsPointerEnter() {
       setShortcutsHover(true)
@@ -2304,14 +2806,24 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     return <group name='tabs' position={position} scale={scale}>
-      {/* <group name='tab-0' position={[0,0,0]} scale={0.8}>
-        <mesh position={[1.8, -0.1, -0.15]}>
-          <boxGeometry args={[3.9, 0.05, 0.6]}/>
+      <group name='tab-0' position={[0,0,0]} scale={0.8}>
+        <mesh position={[2.1, -0.1, -0.15]}>
+          <boxGeometry args={[4.5, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
-        <mesh position={[1.8, -0.1, -0.15]}>
-          <boxGeometry args={[4, 0.04, 0.7]}/>
-          <meshStandardMaterial color='yellow'/>
+        <mesh position={[2.1, -0.1, -0.15]}>
+          <boxGeometry args={[4.6, 0.04, 0.7]}/>
+          <meshStandardMaterial color={pickingTeamsHover || page === 0 ? 'green' : 'yellow'}/>
+        </mesh>
+        <mesh 
+          name='tab-0-wrapper' 
+          position={[2.1, -0.1, -0.15]} 
+          onClick={handlePickingTeamsClick}
+          onPointerEnter={handlePickingTeamsPointerEnter}
+          onPointerLeave={handlePickingTeamsPointerLeave}
+        >
+          <boxGeometry args={[4.6, 0.1, 0.7]}/>
+          <meshStandardMaterial transparent opacity={0}/>
         </mesh>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
@@ -2319,18 +2831,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          1. Choosing Teams
-          <meshStandardMaterial color='yellow'/>
+          1. Picking the teams
+          <meshStandardMaterial color={pickingTeamsHover || page === 0 ? 'green' : 'yellow'}/>
         </Text3D>
-      </group> */}
-      <group name='tab-1' position={[0,0,0]} scale={0.8}>
+      </group>
+      <group name='tab-1' position={[0,0,0.6]} scale={0.8}>
         <mesh position={[2.1, -0.1, -0.15]}>
           <boxGeometry args={[4.5, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[2.1, -0.1, -0.15]}>
           <boxGeometry args={[4.6, 0.04, 0.7]}/>
-          <meshStandardMaterial color={throwingTheDiceHover || page === 0 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={throwingTheDiceHover || page === 1 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-1-wrapper' 
@@ -2348,18 +2860,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          1. Throwing the dice
-          <meshStandardMaterial color={throwingTheDiceHover || page === 0 ? 'green' : 'yellow'}/>
+          2. Throwing the dice
+          <meshStandardMaterial color={throwingTheDiceHover || page === 1 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-2' position={[0,0,0.6]} scale={0.8}>
+      <group name='tab-2' position={[0,0,1.2]} scale={0.8}>
         <mesh position={[1.9, -0.1, -0.15]}>
           <boxGeometry args={[4.1, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[1.9, -0.1, -0.15]}>
           <boxGeometry args={[4.2, 0.04, 0.7]}/>
-          <meshStandardMaterial color={readingTheDiceHover || page === 1 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={readingTheDiceHover || page === 2 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-2-wrapper' 
@@ -2377,18 +2889,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          2. reading the dice
-          <meshStandardMaterial color={readingTheDiceHover || page === 1 ? 'green' : 'yellow'}/>
+          3. reading the dice
+          <meshStandardMaterial color={readingTheDiceHover || page === 2 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-3' position={[0,0,1.2]} scale={0.8}>
+      <group name='tab-3' position={[0,0,1.8]} scale={0.8}>
         <mesh position={[1.65, -0.1, -0.15]}>
           <boxGeometry args={[3.6, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[1.65, -0.1, -0.15]}>
           <boxGeometry args={[3.7, 0.04, 0.7]}/>
-          <meshStandardMaterial color={movingPiecesHover || page === 2 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={movingPiecesHover || page === 3 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-3-wrapper' 
@@ -2406,18 +2918,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          3. moving pieces
-          <meshStandardMaterial color={movingPiecesHover || page === 2 ? 'green' : 'yellow'}/>
+          4. moving pieces
+          <meshStandardMaterial color={movingPiecesHover || page === 3 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-4' position={[0,0,1.8]} scale={0.8}>
+      <group name='tab-4' position={[0,0,2.4]} scale={0.8}>
         <mesh position={[1, -0.1, -0.15]}>
           <boxGeometry args={[2.3, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[1, -0.1, -0.15]}>
           <boxGeometry args={[2.4, 0.04, 0.7]}/>
-          <meshStandardMaterial color={scoringHover || page === 3 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={scoringHover || page === 4 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-4-wrapper' 
@@ -2435,18 +2947,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          4. scoring
-          <meshStandardMaterial color={scoringHover || page === 3 ? 'green' : 'yellow'}/>
+          5. scoring
+          <meshStandardMaterial color={scoringHover || page === 4 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-5' position={[0,0,2.4]} scale={0.8}>
+      <group name='tab-5' position={[0,0,3]} scale={0.8}>
         <mesh position={[1.8, -0.1, -0.15]}>
           <boxGeometry args={[3.9, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[1.8, -0.1, -0.15]}>
           <boxGeometry args={[4, 0.04, 0.7]}/>
-          <meshStandardMaterial color={catchingPiecesHover || page === 4 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={catchingPiecesHover || page === 5 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-5-wrapper' 
@@ -2464,18 +2976,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          5. catching pieces
-          <meshStandardMaterial color={catchingPiecesHover || page === 4 ? 'green' : 'yellow'}/>
+          6. catching pieces
+          <meshStandardMaterial color={catchingPiecesHover || page === 5 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-6' position={[0,0,3.0]} scale={0.8}>
+      <group name='tab-6' position={[0,0,3.6]} scale={0.8}>
         <mesh position={[2, -0.1, -0.15]}>
           <boxGeometry args={[4.3, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[2, -0.1, -0.15]}>
           <boxGeometry args={[4.4, 0.04, 0.7]}/>
-          <meshStandardMaterial color={combiningPiecesHover || page === 5 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={combiningPiecesHover || page === 6 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-6-wrapper' 
@@ -2493,18 +3005,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          6. combining pieces
-          <meshStandardMaterial color={combiningPiecesHover || page === 5 ? 'green' : 'yellow'}/>
+          7. combining pieces
+          <meshStandardMaterial color={combiningPiecesHover || page === 6 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
-      <group name='tab-7' position={[0,0,3.6]} scale={0.8}>
+      <group name='tab-7' position={[0,0,4.2]} scale={0.8}>
         <mesh position={[1.35, -0.1, -0.15]}>
           <boxGeometry args={[3, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <mesh position={[1.35, -0.1, -0.15]}>
           <boxGeometry args={[3.1, 0.04, 0.7]}/>
-          <meshStandardMaterial color={shortcutsHover || page === 6 ? 'green' : 'yellow'}/>
+          <meshStandardMaterial color={shortcutsHover || page === 7 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-7-wrapper' 
@@ -2522,8 +3034,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          7. shortcuts
-          <meshStandardMaterial color={shortcutsHover || page === 6 ? 'green' : 'yellow'}/>
+          8. shortcuts
+          <meshStandardMaterial color={shortcutsHover || page === 7 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>
     </group>
@@ -2620,7 +3132,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     </group>
   }
 
-  const pages = [<ThrowingTheDicePage/>, <ReadingTheDicePage/>, <MovingPiecesPage/>, <ScoringPage/>, <CatchingPiecesPage/>, <CombiningPiecesPage/>, <ShortcutsPage/>]
+  const pages = [<PickingTheTeamsPage/>, <ThrowingTheDicePage/>, <ReadingTheDicePage/>, <MovingPiecesPage/>, <ScoringPage/>, <CatchingPiecesPage/>, <CombiningPiecesPage/>, <ShortcutsPage/>]
 
   console.log(layout[device].howToPlay.pagination.position)
   return <group position={position} rotation={rotation} scale={scale}>
