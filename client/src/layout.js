@@ -1786,7 +1786,7 @@ export default {
       },
       page6: {
         text: {
-          position: [-4,0,-4],
+          position: [-3.7,0,-4],
           rotation: [-Math.PI/4, 0, 0],
           size: 0.4,
           height: 0.01,
