@@ -98,7 +98,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function PickingTheTeamsPage() {
     const springs = useSpring({
       from: {
-        cursorPos: [4, 0, 0],
+        cursorPos: layout[device].howToPlay.pickingTheTeamsPage.cursorPos[0],
         cursorEffectOpacity: 0,
         inputModalScale: 0,
         placeholderScale: 1,
@@ -111,7 +111,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       },
       to: [
         {
-          cursorPos: [1.5, 0.5, -1.4],
+          cursorPos: layout[device].howToPlay.pickingTheTeamsPage.cursorPos[1],
           delay: 100
         },
         {
@@ -178,7 +178,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           delay: 200
         },
         {
-          cursorPos: [-0.5, 0.5, 1.3],
+          cursorPos: layout[device].howToPlay.pickingTheTeamsPage.cursorPos[2],
           delay: 300,
           config: {
             tension: 170,
@@ -201,7 +201,6 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          
           rhinoTextScale: 1,
           config: {
             tension: 170,
@@ -218,10 +217,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-3,0,-4]}
-        rotation={[-Math.PI/2,0,0]}
-        size={layout[device].howToPlay.page1.text.size}
-        height={0.01}
+        position={layout[device].howToPlay.pickingTheTeamsPage.text.position}
+        rotation={layout[device].howToPlay.pickingTheTeamsPage.text.rotation}
+        size={layout[device].howToPlay.pickingTheTeamsPage.text.size}
+        height={layout[device].howToPlay.pickingTheTeamsPage.text.height}
       >
         {'1. Press join to Pick a team.'}
         <meshStandardMaterial color='yellow'/>
@@ -229,25 +228,25 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <group name='rockets' position={[-3, 0, -2.5]}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[0,0,0]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.rockets.text.position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.text.rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.rockets.text.size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.rockets.text.height}
         >
           {'Rockets'}
           <meshStandardMaterial color='red'/>
         </Text3D>
-        <Rocket position={[0.4,0,0.6]}/>
-        <Rocket position={[1.2,0,0.6]}/>
-        <Rocket position={[2.0,0,0.6]}/>
-        <Rocket position={[2.8,0,0.6]}/>
-        <group name='rockets-join-button' position={[3, 0, 0.8]}>
+        <Rocket position={layout[device].howToPlay.pickingTheTeamsPage.rockets.piece0.position}/>
+        <Rocket position={layout[device].howToPlay.pickingTheTeamsPage.rockets.piece1.position}/>
+        <Rocket position={layout[device].howToPlay.pickingTheTeamsPage.rockets.piece2.position}/>
+        <Rocket position={layout[device].howToPlay.pickingTheTeamsPage.rockets.piece3.position}/>
+        <group name='rockets-join-button' position={layout[device].howToPlay.pickingTheTeamsPage.rockets.joinButton.position}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            position={[0.7,0,0]}
-            rotation={[-Math.PI/2, 0, 0]}
-            size={0.4}
-            height={0.01}
+            position={layout[device].howToPlay.pickingTheTeamsPage.rockets.joinButton.text.position}
+            rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.joinButton.text.rotation}
+            size={layout[device].howToPlay.pickingTheTeamsPage.rockets.joinButton.text.size}
+            height={layout[device].howToPlay.pickingTheTeamsPage.rockets.joinButton.text.height}
           >
             {'join'}
             <meshStandardMaterial color='yellow'/>
@@ -263,40 +262,40 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </group>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[0,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[0].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[0].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[0].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[0].height}
         >
           ros&#233;
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[2,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[1].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[1].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[1].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[1].height}
         >
           {'lisa'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[3.8,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[2].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[2].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[2].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[2].height}
         >
           {'jisoo'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[5.8,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[3].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[3].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[3].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[3].height}
         >
           {'jennie'}
           <meshStandardMaterial color='yellow'/>
@@ -304,38 +303,38 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <animated.group scale={springs.rhinoTextScale}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            position={[0,0,2.7]}
-            rotation={[-Math.PI/2, 0, 0]}
-            size={layout[device].howToPlay.page1.text.size}
-            height={0.01}
+            position={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[4].position}
+            rotation={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[4].rotation}
+            size={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[4].size}
+            height={layout[device].howToPlay.pickingTheTeamsPage.rockets.names[4].height}
           >
             {'Rhino'}
             <meshStandardMaterial color='yellow'/>
           </Text3D>
         </animated.group>
       </group>
-      <group name='ufos' position={[-3, 0, 1.5]}>
+      <group name='ufos' position={layout[device].howToPlay.pickingTheTeamsPage.ufos.position}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[0,0,0]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.text.position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.text.rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.text.size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.text.height}
         >
           {'ufos'}
           <meshStandardMaterial color='turquoise'/>
         </Text3D>
-        <Ufo position={[0.4,0,0.6]}/>
-        <Ufo position={[1.4,0,0.6]}/>
-        <Ufo position={[2.4,0,0.6]}/>
-        <Ufo position={[3.4,0,0.6]}/>
-        <group position={[3.5, 0, 0.8]}>
+        <Ufo position={layout[device].howToPlay.pickingTheTeamsPage.ufos.piece0.position}/>
+        <Ufo position={layout[device].howToPlay.pickingTheTeamsPage.ufos.piece1.position}/>
+        <Ufo position={layout[device].howToPlay.pickingTheTeamsPage.ufos.piece2.position}/>
+        <Ufo position={layout[device].howToPlay.pickingTheTeamsPage.ufos.piece3.position}/>
+        <group name='ufos-join-button' position={layout[device].howToPlay.pickingTheTeamsPage.ufos.joinButton.position}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            position={[0.7,0,0]}
-            rotation={[-Math.PI/2, 0, 0]}
-            size={0.4}
-            height={0.01}
+            position={layout[device].howToPlay.pickingTheTeamsPage.ufos.joinButton.text.position}
+            rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.joinButton.text.rotation}
+            size={layout[device].howToPlay.pickingTheTeamsPage.ufos.joinButton.text.size}
+            height={layout[device].howToPlay.pickingTheTeamsPage.ufos.joinButton.text.height}
           >
             {'join'}
             <meshStandardMaterial color='yellow'/>
@@ -351,70 +350,70 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </group>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[0,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[0].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[0].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[0].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[0].height}
         >
           {'j-hope'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[2.5,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[1].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[1].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[1].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[1].height}
         >
           {'jimin'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[4.5,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[2].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[2].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[2].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[2].height}
         >
           {'jin'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[6,0,2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[3].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[3].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[3].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[3].height}
         >
           {'rm'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[0,0,2.7]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[4].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[4].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[4].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[4].height}
         >
           {'jungkook'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[3.5,0,2.7]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[5].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[5].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[5].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[5].height}
         >
           {'suga'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={[5.5,0,2.7]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={layout[device].howToPlay.page1.text.size}
-          height={0.01}
+          position={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[6].position}
+          rotation={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[6].rotation}
+          size={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[6].size}
+          height={layout[device].howToPlay.pickingTheTeamsPage.ufos.names[6].height}
         >
           {'v'}
           <meshStandardMaterial color='yellow'/>
@@ -638,7 +637,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             for (let i = 0; i < 4; i++) {
               yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
               yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
-              yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.initialThrowPos[i]);
+              yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.initialThrowPos[i]);
               yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
               if (device === "landscapeDesktop") {
                 yoots[i].current.applyImpulse({
@@ -692,7 +691,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           setStartTime(0);
           setThrown(false);
           for (let i = 0; i < 4; i++) {
-            yoots[i].current.setTranslation(layout[device].howToPlay.page0.yoot.resetPos[i]);
+            yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.resetPos[i]);
             yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
           }
           setRecord0(false)
@@ -710,21 +709,16 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     })
 
     return <group name='how-to-play-page-0'>
-      <group
-        position={layout[device].howToPlay.page0.text.position}
-        rotation={[Math.PI/8, 0, 0]}
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={layout[device].howToPlay.throwingTheDicePage.text.position}
+        rotation={layout[device].howToPlay.throwingTheDicePage.text.rotation}
+        size={layout[device].howToPlay.throwingTheDicePage.text.size}
+        height={layout[device].howToPlay.throwingTheDicePage.text.height}
       >
-        <Text3D
-          font="fonts/Luckiest Guy_Regular.json"
-          position={[-4,0,-2]}
-          rotation={[-Math.PI/2, 0, 0]}
-          size={0.4}
-          height={0.01}
-        >
-          {`1. Throw the yoot (dice).`}
-          <meshStandardMaterial color='yellow'/>
-        </Text3D>
-      </group>
+        {`1. Throw the yoot (dice).`}
+        <meshStandardMaterial color='yellow'/>
+      </Text3D>
       {/* <Physics> */}
       <>
         <RigidBody type="fixed">
@@ -742,7 +736,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           return (
             <RigidBody
               ref={ref}            
-              position={layout[device].howToPlay.page0.yoot.initialPos[index]}
+              position={layout[device].howToPlay.throwingTheDicePage.yoot.initialPos[index]}
               rotation={[0, Math.PI/2, 0]}
               colliders="hull"
               restitution={0.3}
@@ -813,14 +807,14 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           );
         })}
         { text && <group ref={textRef}
-            position={layout[device].howToPlay.page0.moveText.position}>
+            position={layout[device].howToPlay.throwingTheDicePage.moveText.position}>
           <Text3D
             rotation={[-Math.PI/2,0,0]}
             font="fonts/Luckiest Guy_Regular.json" 
-            size={layout[device].howToPlay.page0.moveText.size} 
+            size={layout[device].howToPlay.throwingTheDicePage.moveText.size} 
             height={0.01}
           >
-            {layout[device].howToPlay.page0.moveText.text}
+            {layout[device].howToPlay.throwingTheDicePage.moveText.text}
             <meshStandardMaterial color={ "limegreen" }/>
           </Text3D>
           <GulToken scale={0.7} position={[3.1, 0, -0.15]} rotation={[0, Math.PI/2, 0]}/>
@@ -828,14 +822,14 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       </>
       {/* </Physics> */}
       <YootButtonModel
-        position={layout[device].howToPlay.page0.yootButtonModel.position}
-        rotation={layout[device].howToPlay.page0.yootButtonModel.rotation}
+        position={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.position}
+        rotation={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.rotation}
         turnedOn={yootButtonTurnedOn}
       />
       <Cursor
-        position={layout[device].howToPlay.page0.cursor.position}
-        rotation={layout[device].howToPlay.page0.cursor.rotation}
-        scale={layout[device].howToPlay.page0.cursor.scale}
+        position={layout[device].howToPlay.throwingTheDicePage.cursor.position}
+        rotation={layout[device].howToPlay.throwingTheDicePage.cursor.rotation}
+        scale={layout[device].howToPlay.throwingTheDicePage.cursor.scale}
         effect={effect}
       />
     </group>
@@ -844,18 +838,18 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function MovingPiecesPage() {
     const springs = useSpring({
       from: {
-        cursorPos: layout[device].howToPlay.page1.cursorPos0,
+        cursorPos: layout[device].howToPlay.movingPiecesPage.cursorPos0,
         rocket3Scale: 1.5,
         cursorEffectOpacity: 0,
         legalTileScale: 0.4,
         pointerOpacity: 0,
-        rocket3Pos: layout[device].howToPlay.page1.rocket3Pos0,
+        rocket3Pos: layout[device].howToPlay.movingPiecesPage.rocket3Pos0,
         moveTokenScale: 0,
         moveToken1Scale: 1
       },
       to: [
         {
-          cursorPos: layout[device].howToPlay.page1.cursorPos1,
+          cursorPos: layout[device].howToPlay.movingPiecesPage.cursorPos1,
           delay: 1000
         },
         {
@@ -877,12 +871,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          cursorPos: layout[device].howToPlay.page1.cursorPos2,
+          cursorPos: layout[device].howToPlay.movingPiecesPage.cursorPos2,
           delay: 800,
         },
         {
           cursorEffectOpacity: 1,
-          rocket3Pos: layout[device].howToPlay.page1.rocket3Pos1,
+          rocket3Pos: layout[device].howToPlay.movingPiecesPage.rocket3Pos1,
           moveTokenScale: 0,
           moveToken1Scale: 0,
           rocket3Scale: 1.5,
@@ -902,7 +896,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket3Pos: layout[device].howToPlay.page1.rocket3Pos2,
+          rocket3Pos: layout[device].howToPlay.movingPiecesPage.rocket3Pos2,
           delay: 100,
           config: {
             tension: 170,
@@ -910,7 +904,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket3Pos: layout[device].howToPlay.page1.rocket3Pos3,
+          rocket3Pos: layout[device].howToPlay.movingPiecesPage.rocket3Pos3,
           delay: 100,
           config: {
             tension: 170,
@@ -918,7 +912,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket3Pos: layout[device].howToPlay.page1.rocket3Pos4,
+          rocket3Pos: layout[device].howToPlay.movingPiecesPage.rocket3Pos4,
           delay: 100,
           config: {
             tension: 170,
@@ -1026,17 +1020,17 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group name='how-to-play-page-1'>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].howToPlay.page1.text.position}
-        rotation={layout[device].howToPlay.page1.text.rotation}
-        size={layout[device].howToPlay.page1.text.size}
+        position={layout[device].howToPlay.movingPiecesPage.text.position}
+        rotation={layout[device].howToPlay.movingPiecesPage.text.rotation}
+        size={layout[device].howToPlay.movingPiecesPage.text.size}
         height={0.01}
       >
         {'3. Advance your piece.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
-      <FirstCornerTiles position={layout[device].howToPlay.page1.firstCornerTiles.position}/>
-      <HomePieces position={layout[device].howToPlay.page1.homePieces.position}/>
-      <MoveDisplay position={layout[device].howToPlay.page1.moveDisplay.position}/>
+      <FirstCornerTiles position={layout[device].howToPlay.movingPiecesPage.firstCornerTiles.position}/>
+      <HomePieces position={layout[device].howToPlay.movingPiecesPage.homePieces.position}/>
+      <MoveDisplay position={layout[device].howToPlay.movingPiecesPage.moveDisplay.position}/>
       <group ref={cursorRef}>
         <Cursor
           position={springs.cursorPos}
@@ -1087,14 +1081,14 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             emitters: [
               {
                 initialPosition: {
-                  x: layout[device].howToPlay.page2.fireworks.initialPosition.x,
-                  y: layout[device].howToPlay.page2.fireworks.initialPosition.y,
-                  z: layout[device].howToPlay.page2.fireworks.initialPosition.z,
+                  x: layout[device].howToPlay.scoringPage.fireworks.initialPosition.x,
+                  y: layout[device].howToPlay.scoringPage.fireworks.initialPosition.y,
+                  z: layout[device].howToPlay.scoringPage.fireworks.initialPosition.z,
                 },
                 positionRange: {
-                  x: layout[device].howToPlay.page2.fireworks.positionRange.x,
-                  y: layout[device].howToPlay.page2.fireworks.positionRange.y,
-                  z: layout[device].howToPlay.page2.fireworks.positionRange.z,
+                  x: layout[device].howToPlay.scoringPage.fireworks.positionRange.x,
+                  y: layout[device].howToPlay.scoringPage.fireworks.positionRange.y,
+                  z: layout[device].howToPlay.scoringPage.fireworks.positionRange.z,
                 },
                 randomizePosition: true,
                 rate: new Rate(20, 1),
@@ -1257,15 +1251,15 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         from: {
           rocket3Pos: rocket3AnimationsArray[1].rocket3Pos,
           rocket3Scale: 1,
-          tilesScale: layout[device].howToPlay.page2.tilesScale0,
-          tilesPos: layout[device].howToPlay.page2.tilesPos0,
+          tilesScale: layout[device].howToPlay.scoringPage.tilesScale0,
+          tilesPos: layout[device].howToPlay.scoringPage.tilesPos0,
           rocketHomeScale: 0,
           shortcutStarScale: layout[device].howToPlay.star.scale,
           moveScale: 0,
           scoreScale: 0,
           scoreColor: '#ffff00',
           cursorScale: 0,
-          cursorPos: layout[device].howToPlay.page2.cursorPos[0],
+          cursorPos: layout[device].howToPlay.scoringPage.cursorPos[0],
           cursorEffectOpacity: 0,
           checkmarkColor: '#808080',
           checkmarkScale: 0,
@@ -1275,9 +1269,9 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           ...rocket3AnimationsArray.slice(2), 
           rocket3AnimationsArray[0],
           {
-            tilesScale: layout[device].howToPlay.page2.tilesScale1,
-            tilesPos: layout[device].howToPlay.page2.tilesPos1,
-            rocketHomeScale: layout[device].howToPlay.page2.rocketHomeScale1,
+            tilesScale: layout[device].howToPlay.scoringPage.tilesScale1,
+            tilesPos: layout[device].howToPlay.scoringPage.tilesPos1,
+            rocketHomeScale: layout[device].howToPlay.scoringPage.rocketHomeScale1,
             checkmarkScale: 0.3,
             shortcutStarScale: 0,
             moveScale: 1,
@@ -1285,7 +1279,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             delay: 500
           },
           {
-            cursorPos: layout[device].howToPlay.page2.cursorPos[1],
+            cursorPos: layout[device].howToPlay.scoringPage.cursorPos[1],
             delay: 500
           },
           {
@@ -1307,13 +1301,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             },
           },
           {
-            cursorPos: layout[device].howToPlay.page2.cursorPos[2],
+            cursorPos: layout[device].howToPlay.scoringPage.cursorPos[2],
             scoreColor: '#ffffff',
             delay: 500
           },
           {
             cursorEffectOpacity: 1,
-            cursorPos: layout[device].howToPlay.page2.cursorPos[3],
+            cursorPos: layout[device].howToPlay.scoringPage.cursorPos[3],
             scoreScale: 0,
             moveScale: 0,
             rocket3Scale: 0,
@@ -1326,7 +1320,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           },
           {
             cursorEffectOpacity: 0,
-            scoreTextScale: 1,
+            scoreTextScale: 0.8,
             // delay: 100,
             config: {
               friction: 26,
@@ -1344,17 +1338,17 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
       function HomePieces({ position }) {
         return <group position={position}>
-          <animated.group name='rocket-0' position={layout[device].howToPlay.page2.rocket0Pos} scale={springs.rocketHomeScale}>
+          <animated.group name='rocket-0' position={layout[device].howToPlay.scoringPage.rocket0Pos} scale={springs.rocketHomeScale}>
             <Rocket/>
           </animated.group>
-          <animated.group name='rocket-1' position={layout[device].howToPlay.page2.rocket1Pos} scale={springs.rocketHomeScale}>
+          <animated.group name='rocket-1' position={layout[device].howToPlay.scoringPage.rocket1Pos} scale={springs.rocketHomeScale}>
             <Rocket/>
           </animated.group>
-          <animated.group name='rocket-2' position={layout[device].howToPlay.page2.rocket2Pos} scale={springs.rocketHomeScale}>
+          <animated.group name='rocket-2' position={layout[device].howToPlay.scoringPage.rocket2Pos} scale={springs.rocketHomeScale}>
             <Rocket/>
           </animated.group>
           <Check 
-            position={layout[device].howToPlay.page2.checkPos} 
+            position={layout[device].howToPlay.scoringPage.checkPos} 
             rotation={[Math.PI/8, 0, 0]}
             scale={springs.checkmarkScale} 
             color={springs.checkmarkColor}
@@ -1438,8 +1432,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <animated.group scale={springs.moveScale}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
-            position={layout[device].howToPlay.page2.moveText.position}
-            rotation={layout[device].howToPlay.page2.moveText.rotation}
+            position={layout[device].howToPlay.scoringPage.moveText.position}
+            rotation={layout[device].howToPlay.scoringPage.moveText.rotation}
             size={0.4}
             height={0.01}
           >
@@ -1447,32 +1441,19 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             <meshStandardMaterial color='limegreen'/>
           </Text3D>
         </animated.group>
-        <animated.group scale={springs.scoreTextScale}>
-          {/* <Text3D
-            font="fonts/Luckiest Guy_Regular.json"
-            position={layout[device].howToPlay.page2.letsGoText.position}
-            rotation={layout[device].howToPlay.page2.letsGoText.rotation}
-            size={0.4}
-            height={0.01}
-            ref={letsGoRef}
-          >
-            {`let's\ngo!`}
-            <meshStandardMaterial color='yellow' ref={letsGoMatRef}/>
-          </Text3D> */}
-        </animated.group>
         <animated.group scale={springs.scoreScale}>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json" 
-            position={layout[device].howToPlay.page2.scoreText.position}
-            rotation={layout[device].howToPlay.page2.scoreText.rotation}
-            size={layout[device].howToPlay.page2.scoreText.size} 
+            position={layout[device].howToPlay.scoringPage.scoreText.position}
+            rotation={layout[device].howToPlay.scoringPage.scoreText.rotation}
+            size={layout[device].howToPlay.scoringPage.scoreText.size} 
             height={0.01}
           >
             SCORE
             <AnimatedMeshDistortMaterial color={springs.scoreColor} distort={0}/>
           </Text3D>
         </animated.group>
-        <WelcomeBackText scale={springs.scoreTextScale} position={[2, 0, 2]}/>
+        <WelcomeBackText scale={springs.scoreTextScale} position={layout[device].howToPlay.scoringPage.welcomeBackText.position}/>
         <group>
           <Cursor2
             position={springs.cursorPos}
@@ -1488,11 +1469,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].howToPlay.page2.text.position}
-        rotation={layout[device].howToPlay.page2.text.rotation}
-        size={layout[device].howToPlay.page2.text.size}
-        height={layout[device].howToPlay.page2.text.height}
-        lineHeight={layout[device].howToPlay.page2.text.lineHeight}
+        position={layout[device].howToPlay.scoringPage.text.position}
+        rotation={layout[device].howToPlay.scoringPage.text.rotation}
+        size={layout[device].howToPlay.scoringPage.text.size}
+        height={layout[device].howToPlay.scoringPage.text.height}
+        lineHeight={layout[device].howToPlay.scoringPage.text.lineHeight}
       >
         {`4. First team to\nmove four pieces\naround the board\nto earth wins!`}
         <meshStandardMaterial color='yellow'/>
@@ -1506,24 +1487,24 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function CatchingPiecesPage() {
     const springs = useSpring({
       from: {
-        cursorPos: layout[device].howToPlay.page3.cursorPos[0],
+        cursorPos: layout[device].howToPlay.catchingPiecesPage.cursorPos[0],
         rocketScale: 1.5,
         cursorEffectOpacity: 0,
         legalTileScale: 0.4,
         pointerOpacity: 0,
-        rocketPos: layout[device].howToPlay.page3.rocketPos[0],
-        ufoPos: layout[device].howToPlay.page3.ufoPos[0],
+        rocketPos: layout[device].howToPlay.catchingPiecesPage.rocketPos[0],
+        ufoPos: layout[device].howToPlay.catchingPiecesPage.ufoPos[0],
         ufoScale: 1.5,
         moveTextScale: 1,
         bonusTurnScale: 0,
         yootButtonScale: 0,
-        firstCornerTilesPos: layout[device].howToPlay.page3.firstCornerTilesPos[0],
+        firstCornerTilesPos: layout[device].howToPlay.catchingPiecesPage.firstCornerTilesPos[0],
         moveTokenScale: 1,
         moveToken1Scale: 0
       },
       to: [
         {
-          cursorPos: layout[device].howToPlay.page3.cursorPos[1],
+          cursorPos: layout[device].howToPlay.catchingPiecesPage.cursorPos[1],
           delay: 1000
         },
         {
@@ -1543,7 +1524,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           delay: 200,
         },
         {
-          cursorPos: layout[device].howToPlay.page3.cursorPos[2],
+          cursorPos: layout[device].howToPlay.catchingPiecesPage.cursorPos[2],
           delay: 1000,
         },
         {
@@ -1561,29 +1542,29 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 0,
-          cursorPos: layout[device].howToPlay.page3.cursorPos[3],
+          cursorPos: layout[device].howToPlay.catchingPiecesPage.cursorPos[3],
           delay: 200,
           config: {
             tension: 0,
           }
         },
         {
-          rocketPos: layout[device].howToPlay.page3.rocketPos[1],
+          rocketPos: layout[device].howToPlay.catchingPiecesPage.rocketPos[1],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocketPos: layout[device].howToPlay.page3.rocketPos[2],
+          rocketPos: layout[device].howToPlay.catchingPiecesPage.rocketPos[2],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocketPos: layout[device].howToPlay.page3.rocketPos[3],
-          ufoPos: layout[device].howToPlay.page3.ufoPos[1],
+          rocketPos: layout[device].howToPlay.catchingPiecesPage.rocketPos[3],
+          ufoPos: layout[device].howToPlay.catchingPiecesPage.ufoPos[1],
           ufoScale: 0,
           config: {
             tension: 100,
@@ -1594,7 +1575,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           moveTextScale: 0,
           bonusTurnScale: 2,
           yootButtonScale: 1,
-          firstCornerTilesPos: layout[device].howToPlay.page3.firstCornerTilesPos[1],
+          firstCornerTilesPos: layout[device].howToPlay.catchingPiecesPage.firstCornerTilesPos[1],
           config: {
             tension: 170,
             friction: 26
@@ -1631,7 +1612,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
                 scale={springs.legalTileScale}
                 device={device}
               />
-              <Pointer color='red' position={layout[device].howToPlay.page3.pointer.position} scale={2} opacity={springs.pointerOpacity}/>
+              <Pointer color='red' position={layout[device].howToPlay.catchingPiecesPage.pointer.position} scale={2} opacity={springs.pointerOpacity}/>
             </group>
           )
         } else {            
@@ -1665,11 +1646,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page3.text.position}
-          rotation={layout[device].howToPlay.page3.text.rotation}
-          size={layout[device].howToPlay.page3.text.size}
-          height={layout[device].howToPlay.page3.text.height}
-          lineHeight={layout[device].howToPlay.page3.text.lineHeight}
+          position={layout[device].howToPlay.catchingPiecesPage.text.position}
+          rotation={layout[device].howToPlay.catchingPiecesPage.text.rotation}
+          size={layout[device].howToPlay.catchingPiecesPage.text.size}
+          height={layout[device].howToPlay.catchingPiecesPage.text.height}
+          lineHeight={layout[device].howToPlay.catchingPiecesPage.text.lineHeight}
         >
           {`5. If you move into a tile with\nan opponent, it has to return\nto the starting point. You\nwill get another turn.`}
           <meshStandardMaterial color='yellow'/>
@@ -1677,7 +1658,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <FirstCornerTiles position={springs.firstCornerTilesPos}/>
       <animated.group scale={springs.moveTextScale}>
         <Text3D
-          position={layout[device].howToPlay.page3.moveText.position}
+          position={layout[device].howToPlay.catchingPiecesPage.moveText.position}
           rotation={[-Math.PI/2,0,0]}
           font="fonts/Luckiest Guy_Regular.json" 
           size={0.5} 
@@ -1699,10 +1680,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           effect={true}
         />
       </group>
-      <BonusTurn rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.bonusTurn.position} scale={springs.bonusTurnScale}/>
+      <BonusTurn rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.catchingPiecesPage.bonusTurn.position} scale={springs.bonusTurnScale}/>
       <Float>
         <animated.group scale={springs.yootButtonScale}>
-          <YootButtonModel rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.page3.yootButtonModel.position} turnedOn={true}/>
+          <YootButtonModel rotation={[Math.PI/16, Math.PI/2, 0]} position={layout[device].howToPlay.catchingPiecesPage.yootButtonModel.position} turnedOn={true}/>
         </animated.group>
       </Float>
     </group>
@@ -1712,7 +1693,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function CombiningPiecesPage() {    
     const springs = useSpring({
       from: {
-        cursorPos: layout[device].howToPlay.page4.cursorPos[0],
+        cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[0],
         rocket0Scale: 1.2,
         rocket1Scale: 1.2,
         cursorEffectOpacity: 0,
@@ -1720,8 +1701,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         legalTile1Scale: 0.4,
         pointer0Opacity: 0,
         pointer1Opacity: 0,
-        rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[0],
-        rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[0],
+        rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[0],
+        rocket1Pos: layout[device].howToPlay.combiningPiecesPage.rocket1Pos[0],
         moveText0Scale: 1,
         moveText1Scale: 0,
         bonusTurnScale: 0,
@@ -1731,7 +1712,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       },
       to: [
         {
-          cursorPos: layout[device].howToPlay.page4.cursorPos[1],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[1],
           delay: 1000
         },
         {
@@ -1751,7 +1732,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           delay: 200,
         },
         {
-          cursorPos: layout[device].howToPlay.page4.cursorPos[2],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[2],
           delay: 1000,
         },
         {
@@ -1774,23 +1755,23 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[1],
+          rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[1],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[2],
+          rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[2],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[3],
-          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[1],
-          cursorPos: layout[device].howToPlay.page4.cursorPos[3],
+          rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[3],
+          rocket1Pos: layout[device].howToPlay.combiningPiecesPage.rocket1Pos[1],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[3],
           config: {
             tension: 170,
             friction: 26
@@ -1801,7 +1782,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           moveText1Scale: 1,
         },
         {
-          cursorPos: layout[device].howToPlay.page4.cursorPos[4],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[4],
           delay: 1000
         },
         {
@@ -1821,7 +1802,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           delay: 200,
         },
         {
-          cursorPos: layout[device].howToPlay.page4.cursorPos[5],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[5],
           delay: 1000
         },
         {
@@ -1838,23 +1819,23 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           cursorEffectOpacity: 0,
-          cursorPos: layout[device].howToPlay.page4.cursorPos[6],
+          cursorPos: layout[device].howToPlay.combiningPiecesPage.cursorPos[6],
           delay: 200,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[4],
-          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[2],
+          rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[4],
+          rocket1Pos: layout[device].howToPlay.combiningPiecesPage.rocket1Pos[2],
           config: {
             tension: 170,
             friction: 26
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page4.rocket0Pos[5],
-          rocket1Pos: layout[device].howToPlay.page4.rocket1Pos[3],
+          rocket0Pos: layout[device].howToPlay.combiningPiecesPage.rocket0Pos[5],
+          rocket1Pos: layout[device].howToPlay.combiningPiecesPage.rocket1Pos[3],
           config: {
             tension: 170,
             friction: 26
@@ -1887,7 +1868,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               key={i}
             >
               <Star scale={springs.legalTile0Scale}/>
-              <Pointer color='red' position={layout[device].howToPlay.page4.pointer0.position} scale={2} opacity={springs.pointer0Opacity}/>
+              <Pointer color='red' position={layout[device].howToPlay.combiningPiecesPage.pointer0.position} scale={2} opacity={springs.pointer0Opacity}/>
             </group>
           )
         } else if (i === 4) {
@@ -1899,7 +1880,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
               <Mars
                 scale={springs.legalTile1Scale}
               />
-              <Pointer color='red' position={layout[device].howToPlay.page4.pointer1.position} scale={2.3} opacity={springs.pointer1Opacity}/>
+              <Pointer color='red' position={layout[device].howToPlay.combiningPiecesPage.pointer1.position} scale={2.3} opacity={springs.pointer1Opacity}/>
             </group>
           )
         } else {            
@@ -1941,24 +1922,24 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     return <group>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].howToPlay.page4.text.position}
-        rotation={layout[device].howToPlay.page4.text.rotation}
-        size={layout[device].howToPlay.page4.text.size}
-        height={layout[device].howToPlay.page4.text.height}
-        lineHeight={layout[device].howToPlay.page4.text.lineHeight}
+        position={layout[device].howToPlay.combiningPiecesPage.text.position}
+        rotation={layout[device].howToPlay.combiningPiecesPage.text.rotation}
+        size={layout[device].howToPlay.combiningPiecesPage.text.size}
+        height={layout[device].howToPlay.combiningPiecesPage.text.height}
+        lineHeight={layout[device].howToPlay.combiningPiecesPage.text.lineHeight}
       >
         {'6. If you move a piece into a\ntile with your own piece,\nthey will move together on\nyour next turn.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
-      <FirstCornerTiles position={layout[device].howToPlay.page4.firstCornerTiles.position}/>
+      <FirstCornerTiles position={layout[device].howToPlay.combiningPiecesPage.firstCornerTiles.position}/>
       <animated.group scale={springs.moveText0Scale}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json" 
-          position={layout[device].howToPlay.page4.moveText0.position}
-          rotation={layout[device].howToPlay.page4.moveText0.rotation}
-          size={layout[device].howToPlay.page4.moveText0.size} 
-          height={layout[device].howToPlay.page4.moveText0.height}
-          lineHeight={layout[device].howToPlay.page4.moveText0.lineHeight}
+          position={layout[device].howToPlay.combiningPiecesPage.moveText0.position}
+          rotation={layout[device].howToPlay.combiningPiecesPage.moveText0.rotation}
+          size={layout[device].howToPlay.combiningPiecesPage.moveText0.size} 
+          height={layout[device].howToPlay.combiningPiecesPage.moveText0.height}
+          lineHeight={layout[device].howToPlay.combiningPiecesPage.moveText0.lineHeight}
         >
           {`MOVES:`}
           <meshStandardMaterial color={ "limegreen" }/>
@@ -1969,11 +1950,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <animated.group scale={springs.moveText1Scale}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json" 
-          position={layout[device].howToPlay.page4.moveText1.position}
-          rotation={layout[device].howToPlay.page4.moveText1.rotation}
-          size={layout[device].howToPlay.page4.moveText1.size} 
-          height={layout[device].howToPlay.page4.moveText1.height}
-          lineHeight={layout[device].howToPlay.page4.moveText1.lineHeight}
+          position={layout[device].howToPlay.combiningPiecesPage.moveText1.position}
+          rotation={layout[device].howToPlay.combiningPiecesPage.moveText1.rotation}
+          size={layout[device].howToPlay.combiningPiecesPage.moveText1.size} 
+          height={layout[device].howToPlay.combiningPiecesPage.moveText1.height}
+          lineHeight={layout[device].howToPlay.combiningPiecesPage.moveText1.lineHeight}
         >
           MOVES:
           <meshStandardMaterial color={ "limegreen" }/>
@@ -1986,10 +1967,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
   function ShortcutsPage() {
     const springs = useSpring({
       from: {
-        cursorPos: layout[device].howToPlay.page5.cursor.position[0],
-        cursorScale: layout[device].howToPlay.page5.cursor.scale[0],
-        cursorEffectOpacity: layout[device].howToPlay.page5.cursor.effectOpacity[0],
-        rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[0],
+        cursorPos: layout[device].howToPlay.shortcutsPage.cursor.position[0],
+        cursorScale: layout[device].howToPlay.shortcutsPage.cursor.scale[0],
+        cursorEffectOpacity: layout[device].howToPlay.shortcutsPage.cursor.effectOpacity[0],
+        rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[0],
         legalTile0Scale: 0.4,
         legalTile1Scale: 0.4,
         legalTile2Scale: 0.4,
@@ -1999,41 +1980,41 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         pointer2Scale: 0,
         pointer3Scale: 0,
         pointer4Scale: 0,
-        rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[0],
+        rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[0],
         scoreScale: 0,
-        tilesScale: layout[device].howToPlay.page5.tilesScale[0],
-        tilesPos: layout[device].howToPlay.page5.tilesPos[0],
+        tilesScale: layout[device].howToPlay.shortcutsPage.tilesScale[0],
+        tilesPos: layout[device].howToPlay.shortcutsPage.tilesPos[0],
         tilesRotation: [0,0,0],
-        ruleTextScale: layout[device].howToPlay.page5.text.scales[0],
+        ruleTextScale: layout[device].howToPlay.shortcutsPage.text.scales[0],
         noteTextScale: 0,
-        moveTextScale: layout[device].howToPlay.page5.moveText.scale[0],
+        moveTextScale: layout[device].howToPlay.shortcutsPage.moveText.scale[0],
         moveTokenScale: 0
       },
       to: [
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[1],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[1],
           delay: 1000,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[2],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[2],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[3],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[3],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[4],
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[1],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[4],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[1],
           legalTile0Scale: 0.6,
           pointer0Scale: 1.5,
           delay: 500,
@@ -2042,8 +2023,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[5],
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[2],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[5],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[2],
           legalTile0Scale: 0.4,
           pointer0Scale: 0,
           delay: 1000,
@@ -2052,21 +2033,21 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[6],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[6],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[7],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[7],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[3],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[3],
           delay: 500,
           scoreScale: 1,
           config: {
@@ -2074,8 +2055,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[8],
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[4],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[8],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[4],
           scoreScale: 0,
           delay: 1000,
           config: {
@@ -2083,29 +2064,29 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[9],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[9],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[10],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[10],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[11],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[11],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[5],
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[12],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[5],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[12],
           legalTile1Scale: 0.6,
           pointer1Scale: 1,
           delay: 500,
@@ -2114,8 +2095,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[6],
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[13],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[6],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[13],
           legalTile1Scale: 0.4,
           pointer1Scale: 0,
           delay: 1000,
@@ -2124,35 +2105,35 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[14],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[14],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[15],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[15],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[16],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[16],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[17],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[17],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[18],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[18],
           delay: 500,
           config: {
             tension: 0,
@@ -2160,7 +2141,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           scoreScale: 1,
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[7],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[7],
           delay: 500,
           config: {
             tension: 0,
@@ -2168,25 +2149,25 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         },
         {
           scoreScale: 0,
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[8],
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[19],
-          tilesScale: layout[device].howToPlay.page5.tilesScale[1],
-          tilesPos: layout[device].howToPlay.page5.tilesPos[1],
-          tilesRotation: [Math.PI/8, -Math.PI/4, 0],
-          ruleTextScale: layout[device].howToPlay.page5.text.scales[1],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[8],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[19],
+          tilesScale: layout[device].howToPlay.shortcutsPage.tilesScale[1],
+          tilesPos: layout[device].howToPlay.shortcutsPage.tilesPos[1],
+          tilesRotation: [0, -Math.PI/16, 0],
+          ruleTextScale: layout[device].howToPlay.shortcutsPage.text.scales[1],
           noteTextScale: 1,
-          cursorPos: layout[device].howToPlay.page5.cursor.position[1],
-          cursorScale: layout[device].howToPlay.page5.cursor.scale[1],
-          moveTextScale: layout[device].howToPlay.page5.moveText.scale[1],
+          cursorPos: layout[device].howToPlay.shortcutsPage.cursor.position[1],
+          cursorScale: layout[device].howToPlay.shortcutsPage.cursor.scale[1],
+          moveTextScale: layout[device].howToPlay.shortcutsPage.moveText.scale[1],
           delay: 1000
         },
         {
-          cursorPos: layout[device].howToPlay.page5.cursor.position[2],
+          cursorPos: layout[device].howToPlay.shortcutsPage.cursor.position[2],
           delay: 1000
         },
         {
-          cursorEffectOpacity: layout[device].howToPlay.page5.cursor.effectOpacity[1],
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[9],
+          cursorEffectOpacity: layout[device].howToPlay.shortcutsPage.cursor.effectOpacity[1],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[9],
           legalTile2Scale: 0.4,
           legalTile3Scale: 0.8,
           pointer2Scale: 1,
@@ -2199,36 +2180,36 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           }
         },
         {
-          cursorEffectOpacity: layout[device].howToPlay.page5.cursor.effectOpacity[2],
+          cursorEffectOpacity: layout[device].howToPlay.shortcutsPage.cursor.effectOpacity[2],
           delay: 200,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Scale: layout[device].howToPlay.page5.rocket0Scale[10],
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[20],
+          rocket0Scale: layout[device].howToPlay.shortcutsPage.rocket0Scale[10],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[20],
           delay: 2000,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[21],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[21],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[22],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[22],
           delay: 500,
           config: {
             tension: 0,
           }
         },
         {
-          rocket0Pos: layout[device].howToPlay.page5.rocket0Pos[23],
+          rocket0Pos: layout[device].howToPlay.shortcutsPage.rocket0Pos[23],
           moveTokenScale: 0,
           pointer4Scale: 0,
           legalTile3Scale: 0.4,
@@ -2413,8 +2394,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
             font="fonts/Luckiest Guy_Regular.json" 
             size={0.5} 
             height={0.01}
-            position={layout[device].howToPlay.page5.scoreText.position}
-            rotation={layout[device].howToPlay.page5.scoreText.rotation}
+            position={layout[device].howToPlay.shortcutsPage.scoreText.position}
+            rotation={layout[device].howToPlay.shortcutsPage.scoreText.rotation}
           >
             SCORE!
             <meshStandardMaterial color='limegreen'/>
@@ -2429,11 +2410,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       >
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page5.text.position} 
-          rotation={layout[device].howToPlay.page5.text.rotation}
-          size={layout[device].howToPlay.page5.text.size}
-          height={layout[device].howToPlay.page5.text.height}
-          lineHeight={layout[device].howToPlay.page5.text.lineHeight}
+          position={layout[device].howToPlay.shortcutsPage.text.position} 
+          rotation={layout[device].howToPlay.shortcutsPage.text.rotation}
+          size={layout[device].howToPlay.shortcutsPage.text.size}
+          height={layout[device].howToPlay.shortcutsPage.text.height}
+          lineHeight={layout[device].howToPlay.shortcutsPage.text.lineHeight}
         >
           {`7. When you start a move\nfrom a planet or the Moon,\nyou can take a shortcut.`}
           <meshStandardMaterial color='yellow'/>
@@ -2441,8 +2422,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       </animated.group>
       <animated.group 
       name='note-text' 
-      position={layout[device].howToPlay.page5.noteText.position} 
-      rotation={layout[device].howToPlay.page5.noteText.rotation} 
+      position={layout[device].howToPlay.shortcutsPage.noteText.position} 
+      rotation={layout[device].howToPlay.shortcutsPage.noteText.rotation} 
       scale={springs.noteTextScale}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
@@ -2457,8 +2438,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       </animated.group>
       <animated.group 
         name='move-text' 
-        position={layout[device].howToPlay.page5.moveText.position}
-        rotation={layout[device].howToPlay.page5.moveText.rotation}
+        position={layout[device].howToPlay.shortcutsPage.moveText.position}
+        rotation={layout[device].howToPlay.shortcutsPage.moveText.rotation}
         scale={springs.moveTextScale}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json" 
@@ -2468,7 +2449,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           {'MOVE:'}
           <meshStandardMaterial color='limegreen'/>
         </Text3D>
-        <YootToken position={[2.5,0,-1]} rotation={[Math.PI/4, Math.PI/2, 0]} />
+        <YootToken position={layout[device].howToPlay.shortcutsPage.yootToken.position} rotation={[Math.PI/2, Math.PI/2, 0]} />
       </animated.group>
       <Cursor2
         position={springs.cursorPos}
@@ -2483,7 +2464,10 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         scale={springs.tilesScale}
       />
       <animated.group scale={springs.moveTokenScale}>
-        <YootToken position={[3, 0, 0.5]} rotation={[0, Math.PI/2, 0]} />
+        <YootToken 
+          position={layout[device].howToPlay.shortcutsPage.tileHelper.position} 
+          rotation={layout[device].howToPlay.shortcutsPage.tileHelper.rotation} 
+        />
       </animated.group>
     </group>
   }
@@ -2493,34 +2477,34 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       <animated.group name='text'>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.text.position}
-          rotation={layout[device].howToPlay.page6.text.rotation}
-          size={layout[device].howToPlay.page6.text.size}
-          height={layout[device].howToPlay.page6.text.height}
+          position={layout[device].howToPlay.readingTheDicePage.text.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.text.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.text.size}
+          height={layout[device].howToPlay.readingTheDicePage.text.height}
         >
           {'2. How to read the dice'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </animated.group>
       <group 
-      position={layout[device].howToPlay.page6.do.position} 
-      scale={layout[device].howToPlay.page6.do.scale}>     
+      position={layout[device].howToPlay.readingTheDicePage.do.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.do.scale}>     
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.do.text.line0.position}
-          rotation={layout[device].howToPlay.page6.do.text.line0.rotation}
-          size={layout[device].howToPlay.page6.do.text.line0.size}
-          height={layout[device].howToPlay.page6.do.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.do.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.do.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.do.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.do.text.line0.height}
         >
           {'DO'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.do.text.line1.position}
-          rotation={layout[device].howToPlay.page6.do.text.line1.rotation}
-          size={layout[device].howToPlay.page6.do.text.line1.size}
-          height={layout[device].howToPlay.page6.do.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.do.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.do.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.do.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.do.text.line1.height}
         >
           {'1 Step'}
           <meshStandardMaterial color='yellow'/>
@@ -2528,29 +2512,29 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
           <YootSet 
           points="do" 
-          scale={layout[device].howToPlay.page6.do.yootSet.scale} 
-          position={layout[device].howToPlay.page6.do.yootSet.position}/>
+          scale={layout[device].howToPlay.readingTheDicePage.do.yootSet.scale} 
+          position={layout[device].howToPlay.readingTheDicePage.do.yootSet.position}/>
         </Float>
       </group>
       <group 
-      position={layout[device].howToPlay.page6.ge.position} 
-      scale={layout[device].howToPlay.page6.ge.scale}>        
+      position={layout[device].howToPlay.readingTheDicePage.ge.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.ge.scale}>        
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.ge.text.line0.position}
-          rotation={layout[device].howToPlay.page6.ge.text.line0.rotation}
-          size={layout[device].howToPlay.page6.ge.text.line0.size}
-          height={layout[device].howToPlay.page6.ge.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.ge.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.ge.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.ge.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.ge.text.line0.height}
         >
           {'GE'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.ge.text.line1.position}
-          rotation={layout[device].howToPlay.page6.ge.text.line1.rotation}
-          size={layout[device].howToPlay.page6.ge.text.line1.size}
-          height={layout[device].howToPlay.page6.ge.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.ge.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.ge.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.ge.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.ge.text.line1.height}
         >
           {'2 Steps'}
           <meshStandardMaterial color='yellow'/>
@@ -2558,29 +2542,29 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
           <YootSet 
           points="ge" 
-          scale={layout[device].howToPlay.page6.ge.yootSet.scale} 
-          position={layout[device].howToPlay.page6.ge.yootSet.position}/>
+          scale={layout[device].howToPlay.readingTheDicePage.ge.yootSet.scale} 
+          position={layout[device].howToPlay.readingTheDicePage.ge.yootSet.position}/>
         </Float>
       </group>
       <group 
-      position={layout[device].howToPlay.page6.gul.position} 
-      scale={layout[device].howToPlay.page6.gul.scale}>        
+      position={layout[device].howToPlay.readingTheDicePage.gul.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.gul.scale}>        
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.gul.text.line0.position}
-          rotation={layout[device].howToPlay.page6.gul.text.line0.rotation}
-          size={layout[device].howToPlay.page6.gul.text.line0.size}
-          height={layout[device].howToPlay.page6.gul.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.gul.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.gul.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.gul.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.gul.text.line0.height}
         >
           {'GUL'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.gul.text.line1.position}
-          rotation={layout[device].howToPlay.page6.gul.text.line1.rotation}
-          size={layout[device].howToPlay.page6.gul.text.line1.size}
-          height={layout[device].howToPlay.page6.gul.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.gul.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.gul.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.gul.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.gul.text.line1.height}
         >
           {'3 Steps'}
           <meshStandardMaterial color='yellow'/>
@@ -2588,39 +2572,39 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
         <YootSet 
         points="gul" 
-        scale={layout[device].howToPlay.page6.gul.yootSet.scale} 
-        position={layout[device].howToPlay.page6.gul.yootSet.position}/>
+        scale={layout[device].howToPlay.readingTheDicePage.gul.yootSet.scale} 
+        position={layout[device].howToPlay.readingTheDicePage.gul.yootSet.position}/>
         </Float>
       </group>
       <group
-      position={layout[device].howToPlay.page6.yoot.position} 
-      scale={layout[device].howToPlay.page6.yoot.scale}>            
+      position={layout[device].howToPlay.readingTheDicePage.yoot.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.yoot.scale}>            
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.yoot.text.line0.position}
-          rotation={layout[device].howToPlay.page6.yoot.text.line0.rotation}
-          size={layout[device].howToPlay.page6.yoot.text.line0.size}
-          height={layout[device].howToPlay.page6.yoot.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.yoot.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.yoot.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.yoot.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.yoot.text.line0.height}
         >
           {'YOOT'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>       
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.yoot.text.line1.position}
-          rotation={layout[device].howToPlay.page6.yoot.text.line1.rotation}
-          size={layout[device].howToPlay.page6.yoot.text.line1.size}
-          height={layout[device].howToPlay.page6.yoot.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.yoot.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.yoot.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.yoot.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.yoot.text.line1.height}
         >
           {'4 Steps'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>   
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.yoot.text.line2.position}
-          rotation={layout[device].howToPlay.page6.yoot.text.line2.rotation}
-          size={layout[device].howToPlay.page6.yoot.text.line2.size}
-          height={layout[device].howToPlay.page6.yoot.text.line2.height}
+          position={layout[device].howToPlay.readingTheDicePage.yoot.text.line2.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.yoot.text.line2.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.yoot.text.line2.size}
+          height={layout[device].howToPlay.readingTheDicePage.yoot.text.line2.height}
         >
           {'bonus turn'}
           <meshStandardMaterial color='limegreen'/>
@@ -2628,39 +2612,39 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
           <YootSet 
           points="yoot" 
-          scale={layout[device].howToPlay.page6.yoot.yootSet.scale} 
-          position={layout[device].howToPlay.page6.yoot.yootSet.position}/>
+          scale={layout[device].howToPlay.readingTheDicePage.yoot.yootSet.scale} 
+          position={layout[device].howToPlay.readingTheDicePage.yoot.yootSet.position}/>
         </Float>
       </group>
       <group       
-      position={layout[device].howToPlay.page6.mo.position} 
-      scale={layout[device].howToPlay.page6.mo.scale}>   
+      position={layout[device].howToPlay.readingTheDicePage.mo.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.mo.scale}>   
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.mo.text.line0.position}
-          rotation={layout[device].howToPlay.page6.mo.text.line0.rotation}
-          size={layout[device].howToPlay.page6.mo.text.line0.size}
-          height={layout[device].howToPlay.page6.mo.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.mo.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.mo.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.mo.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.mo.text.line0.height}
         >
           {'MO'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>      
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.mo.text.line1.position}
-          rotation={layout[device].howToPlay.page6.mo.text.line1.rotation}
-          size={layout[device].howToPlay.page6.mo.text.line1.size}
-          height={layout[device].howToPlay.page6.mo.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.mo.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.mo.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.mo.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.mo.text.line1.height}
         >
           {'5 steps'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>      
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.mo.text.line2.position}
-          rotation={layout[device].howToPlay.page6.mo.text.line2.rotation}
-          size={layout[device].howToPlay.page6.mo.text.line2.size}
-          height={layout[device].howToPlay.page6.mo.text.line2.height}
+          position={layout[device].howToPlay.readingTheDicePage.mo.text.line2.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.mo.text.line2.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.mo.text.line2.size}
+          height={layout[device].howToPlay.readingTheDicePage.mo.text.line2.height}
         >
           {'bonus turn'}
           <meshStandardMaterial color='limegreen'/>
@@ -2668,39 +2652,39 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
         <YootSet 
         points="mo" 
-        scale={layout[device].howToPlay.page6.mo.yootSet.scale} 
-        position={layout[device].howToPlay.page6.mo.yootSet.position}/>
+        scale={layout[device].howToPlay.readingTheDicePage.mo.yootSet.scale} 
+        position={layout[device].howToPlay.readingTheDicePage.mo.yootSet.position}/>
         </Float>
       </group>
       <group 
-      position={layout[device].howToPlay.page6.backdo.position} 
-      scale={layout[device].howToPlay.page6.backdo.scale}>       
+      position={layout[device].howToPlay.readingTheDicePage.backdo.position} 
+      scale={layout[device].howToPlay.readingTheDicePage.backdo.scale}>       
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.backdo.text.line0.position}
-          rotation={layout[device].howToPlay.page6.backdo.text.line0.rotation}
-          size={layout[device].howToPlay.page6.backdo.text.line0.size}
-          height={layout[device].howToPlay.page6.backdo.text.line0.height}
+          position={layout[device].howToPlay.readingTheDicePage.backdo.text.line0.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.backdo.text.line0.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.backdo.text.line0.size}
+          height={layout[device].howToPlay.readingTheDicePage.backdo.text.line0.height}
         >
           {'backdo'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>         
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.backdo.text.line1.position}
-          rotation={layout[device].howToPlay.page6.backdo.text.line1.rotation}
-          size={layout[device].howToPlay.page6.backdo.text.line1.size}
-          height={layout[device].howToPlay.page6.backdo.text.line1.height}
+          position={layout[device].howToPlay.readingTheDicePage.backdo.text.line1.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.backdo.text.line1.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.backdo.text.line1.size}
+          height={layout[device].howToPlay.readingTheDicePage.backdo.text.line1.height}
         >
           {'-1 step'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>      
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
-          position={layout[device].howToPlay.page6.backdo.text.line2.position}
-          rotation={layout[device].howToPlay.page6.backdo.text.line2.rotation}
-          size={layout[device].howToPlay.page6.backdo.text.line2.size}
-          height={layout[device].howToPlay.page6.backdo.text.line2.height}
+          position={layout[device].howToPlay.readingTheDicePage.backdo.text.line2.position}
+          rotation={layout[device].howToPlay.readingTheDicePage.backdo.text.line2.rotation}
+          size={layout[device].howToPlay.readingTheDicePage.backdo.text.line2.size}
+          height={layout[device].howToPlay.readingTheDicePage.backdo.text.line2.height}
         >
           {'backward'}
           <meshStandardMaterial color='red'/>
@@ -2708,8 +2692,8 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         <Float rotationIntensity={0.1}>
           <YootSet 
           points="backdo" 
-          scale={layout[device].howToPlay.page6.backdo.yootSet.scale} 
-          position={layout[device].howToPlay.page6.backdo.yootSet.position}/>
+          scale={layout[device].howToPlay.readingTheDicePage.backdo.yootSet.scale} 
+          position={layout[device].howToPlay.readingTheDicePage.backdo.yootSet.position}/>
         </Float>
       </group>
     </group>

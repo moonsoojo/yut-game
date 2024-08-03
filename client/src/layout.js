@@ -67,7 +67,7 @@ export default {
       position: [0,0,-2],
       rotation: [0,0,0],
       scale: 0.4,
-      page0: {
+      throwingTheDicePage: {
         text: {
           position: [0.5, 0, -2]
         },
@@ -106,7 +106,7 @@ export default {
           scale: [3, 3, 0.1]
         },
       },
-      page1: {
+      movingPiecesPage: {
         text: {
           position: [-4,0,-5.5],
           rotation: [-Math.PI/4, 0, 0],
@@ -146,7 +146,7 @@ export default {
           Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
         ],
       },
-      page2: {
+      scoringPage: {
         text: {
           position: [1,0,0.5],
           rotation: [-Math.PI/4, 0, 0],
@@ -197,7 +197,7 @@ export default {
           }
         }
       },
-      page3: {
+      catchingPiecesPage: {
         text: {
           position: [-5,0,-5.5],
           rotation: [-Math.PI/4, 0, 0],
@@ -262,7 +262,7 @@ export default {
           position: [-3,0,0]
         }
       },
-      page4: {
+      combiningPiecesPage: {
         text: {
           position: [-5.5,0,-5],
           rotation: [-Math.PI/4, 0, 0],
@@ -357,7 +357,7 @@ export default {
           lineHeight: 0.9
         }
       },
-      page5: {
+      shortcutsPage: {
         text: {
           position: [-4.5,0,-6],
           rotation: [-Math.PI/4, 0, 0],
@@ -575,7 +575,7 @@ export default {
           ]
         }
       },
-      page6: {
+      readingTheDicePage: {
         text: {
           position: [-6,0,-6.9],
           rotation: [-Math.PI/4, 0, 0],
@@ -1242,12 +1242,12 @@ export default {
         rotation: [Math.PI/2, 0, 0],
         scale: 0.6,
         text: {
-          position: [-1,-5,-1],
+          position: [-1,-5,0],
           size: 0.6
         }
       },
       pieces: {
-        position: [-1,-13,-1],
+        position: [-1,-13,0],
         size: 0.6,
         rockets: {
           position: [4, -13, 0]
@@ -1257,14 +1257,14 @@ export default {
         }
       },
       yoot: {
-        position: [14.2, -8, -1],
+        position: [14.2, -8, 0],
         text: {
-          position: [11.1,-5,-1],
+          position: [11.1,-5,0],
           size: 0.6
         },
       },
       playersText: {
-        position: [11.5,-12.5,-1],
+        position: [11.5,-12.5,0],
         size: 0.6
       },
       ageText: {
@@ -1276,9 +1276,161 @@ export default {
       position: [3,0,0],
       rotation: [0,Math.PI/32,Math.PI/64],
       scale: 1,
-      page0: {
+      pickingTheTeamsPage: {
+        cursorPos: [
+          [4,0,0],
+          [1.5, 0.5, -1.4],
+          [-0.5, 0.5, 1.3],
+        ],
         text: {
-          position: [1, 0, -1.5]
+          position: [-3,0,-4],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.4,
+          height: 0.01
+        },
+        rockets: {
+          position: [-3, 0, -2.5],
+          text: {
+            position: [0,0,0],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.4,
+            height: 0.01
+          },
+          piece0: {
+            position: [0.4,0,0.6]
+          },
+          piece1: {
+            position: [1.2,0,0.6]
+          },
+          piece2: {
+            position: [2.0,0,0.6]
+          },
+          piece3: {
+            position: [2.8,0,0.6]
+          },
+          joinButton: {
+            position: [3, 0, 0.8],
+            text: {
+              position: [0.7,0,0],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            }
+          },
+          names: [
+            {
+              position: [0,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [2,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [3.8,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [5.8,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+          ]
+        },
+        ufos: {
+          position: [-3, 0, 1.5],
+          text: {
+            position: [0,0,0],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.4,
+            height: 0.01
+          },
+          piece0: {
+            position: [0.4,0,0.6]
+          },
+          piece1: {
+            position: [1.4,0,0.6]
+          },
+          piece2: {
+            position: [2.4,0,0.6]
+          },
+          piece3: {
+            position: [3.4,0,0.6]
+          },
+          joinButton: {
+            position: [3.5, 0, 0.8],
+            text: {
+              position: [0.7,0,0],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            }
+          },
+          names: [
+            {
+              position: [0,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [2.5,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [4.5,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [6,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [3.5,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [5.5,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+          ]
+        }
+      },
+      throwingTheDicePage: {
+        text: {
+          position: [-3, 0, -3.5],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.4,
+          height: 0.01
         },
         moveText: {
           text: "MOVE: 3-STEPS",
@@ -1306,33 +1458,33 @@ export default {
           ]
         },
         yootButtonModel: {
-          position: [3.5, 0, 3],
-          rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
+          position: [3.5, 0, 2],
+          rotation: [0,Math.PI/2,0]
         },
         cursor: {
-          position: [3.8, 0.3, 4.8],
+          position: [3.8, 0.3, 3.5],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
         }
       },
-      page1: {
+      movingPiecesPage: {
         text: {
           position: [-3,0,-4],
-          rotation: [-Math.PI/4, 0, 0],
+          rotation: [-Math.PI/2, 0, 0],
           size: 0.4
         },
         firstCornerTiles: {
           position: [-2, 0, -1]
         },
         homePieces: {
-          position: [-2, 0, -1.5]
+          position: [-2, 0.7, -1.5]
         },
         moveDisplay: {
           position: [-3.3, 0, 1.7]
         },
-        cursorPos0: [1, 0.3, 1.5],
+        cursorPos0: [1, 0.3, 1.7],
         cursorPos1: [-0.6, 0.3, 0],
-        cursorPos2: [2.2, 1.3, 2.8],
+        cursorPos2: [2.4, 1.3, 2.8],
         rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
@@ -1355,10 +1507,10 @@ export default {
           Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
         ],
       },
-      page2: {
+      scoringPage: {
         text: {
           position: [1.5,0,1.5],
-          rotation: [-Math.PI/4, 0, 0],
+          rotation: [-Math.PI/2, 0, 0],
           size: 0.4,
           lineHeight: 1,
           height: 0.01
@@ -1367,25 +1519,25 @@ export default {
         tilesPos1: [-2, 0.5, -4],
         tilesScale0: 0.8,
         tilesScale1: 1.5,
-        rocketHomeScale1: 1.3,
-        rocket0Pos: [-0.4,0.5,-0.7],
-        rocket1Pos: [0.8,0.5,-0.7],
-        rocket2Pos: [-0.4,0.5,0.5],
-        checkPos: [0.6,0.5,1],
+        rocketHomeScale1: 1.1,
+        rocket0Pos: [0.8,0.5,-0.1],
+        rocket1Pos: [1.8,0.5,-0.1],
+        rocket2Pos: [0.8,0.5,0.8],
+        checkPos: [1.6, 0.5,0.8],
         cursorPos: [
           [1, 0, 4],
           [0, 1.5, 5.8],
-          [0.3, 0.2, 3.5],
+          [1.8, 0.2, 3.5],
           [1, 0.2, 4.2]
         ],
         moveText: {
-          position: [-0.5,0,2],
-          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          position: [1,0,2],
+          rotation: [-Math.PI/2, 0, 0],
           fontSize: 26
         },
         scoreText: {
-          position: [-0.5, 0, 3.1],
-          rotation: [-Math.PI/8, -Math.PI/16, 0],
+          position: [1, 0, 3.1],
+          rotation: [-Math.PI/2, 0, 0],
           size: 0.5
         },
         letsGoText: {
@@ -1404,9 +1556,12 @@ export default {
             y: 0,
             z: 1
           }
+        },
+        welcomeBackText: {
+          position: [2.5, 0, 2]
         }
       },
-      page3: {
+      catchingPiecesPage: {
         text: {
           position: [-3.5,0,-4],
           rotation: [-Math.PI/2, 0, 0],
@@ -1471,7 +1626,7 @@ export default {
           position: [-3, 0, 0]
         }
       },
-      page4: {
+      combiningPiecesPage: {
         text: {
           position: [-3.5,0,-4],
           rotation: [-Math.PI/2, 0, 0],
@@ -1553,20 +1708,20 @@ export default {
         },
         moveText0: {
           position: [-3, 0, 0.5],
-          rotation: [-Math.PI/4,0,0],
+          rotation: [-Math.PI/2,0,0],
           size: 0.5,
           height: 0.01,
           lineHeight: 0.9
         },
         moveText1: {
           position: [-3, 0, 1],
-          rotation: [-Math.PI/4,0,0],
+          rotation: [-Math.PI/2,0,0],
           size: 0.5,
           height: 0.01,
           lineHeight: 0.9
         }
       },
-      page5: {
+      shortcutsPage: {
         text: {
           position: [-3.5,0,-4],
           rotation: [-Math.PI/2, 0, 0],
@@ -1584,17 +1739,17 @@ export default {
           1
         ],
         scoreText: {
-          position: [-1, 2, 4],
-          rotation: [-Math.PI/4, 0, 0]
+          position: [0.5, 0, 3.5],
+          rotation: [-Math.PI/2, 0, 0]
         },
         moveText: {
-          position: [0, -2, 4],
-          rotation: [-Math.PI/4, 0, 0],
+          position: [0, 0, 4],
+          rotation: [-Math.PI/2, 0, 0],
           scale: [0, 0.8]
         },
         noteText: {
-          position: [2.5,0,2],
-          rotation: [-Math.PI/4, 0, 0]
+          position: [3,0,2],
+          rotation: [-Math.PI/2, 0, 0]
         },
         rocket0Scale: [
           1.2,
@@ -1771,7 +1926,7 @@ export default {
           position: [
             [1, 0.3, 3],
             [3, 0, 5],
-            [-1.6, 0, 4.4]
+            [0.7, 0.5, 2.6]
           ],
           scale: [
             [0,0,0],
@@ -1782,12 +1937,20 @@ export default {
             1,
             0
           ]
+        },
+        yootToken: {
+          position: [2.5,0.2,0],
+          rotation: [Math.PI/2, Math.PI/2, 0]
+        },
+        tileHelper: {
+          position: [2.7, 0, -2.7],
+          rotation: [0, Math.PI/2, 0]
         }
       },
-      page6: {
+      readingTheDicePage: {
         text: {
           position: [-3.7,0,-4],
-          rotation: [-Math.PI/4, 0, 0],
+          rotation: [-Math.PI/2, 0, 0],
           size: 0.4,
           height: 0.01,
         },
@@ -1797,13 +1960,13 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             }
@@ -1819,13 +1982,13 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             }
@@ -1841,13 +2004,13 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             }
@@ -1863,19 +2026,19 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line2: {
               position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
@@ -1891,19 +2054,19 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line2: {
               position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
@@ -1919,19 +2082,19 @@ export default {
           text: {
             line0: {
               position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line1: {
               position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             },
             line2: {
               position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
+              rotation: [-Math.PI/2, 0, 0],
               size: 0.5,
               height: 0.01,
             }
