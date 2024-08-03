@@ -5,8 +5,6 @@ import Ufo from './meshes/Ufo';
 import YootMesh from './meshes/YootMesh';
 import { Float, Text3D } from '@react-three/drei';
 import { animated, useSpring } from '@react-spring/three';
-
-import initialState from '../initialState';
 import layout from './layout';
 import YootRhino from './meshes/YootRhino';
 
@@ -70,7 +68,6 @@ export default function About(props) {
     }))
 
     function handlePointerEnter() {
-      console.log(`[About] pointer enter`)
       api0.start({ 
         from: {
           rotation: [0, 0, 0]
@@ -109,7 +106,6 @@ export default function About(props) {
     }
 
     function handlePointerLeave() {
-      console.log(`[About] pointer leave`)
       api0.start({ 
         from: {
           rotation: [0, Math.PI, 0]
@@ -227,7 +223,6 @@ export default function About(props) {
         scale={0.8}
         />
       </Float>
-
       <Text3D 
           font="fonts/Luckiest Guy_Regular.json"
           position={layout[props.device].about.playersText.position}
@@ -237,16 +232,6 @@ export default function About(props) {
         {`players:\n2 or more\nage: everyone`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
-
-      {/* <Text3D 
-          font="fonts/Luckiest Guy_Regular.json"
-          position={layout[props.device].about.ageText.position}
-          size={layout[props.device].about.ageText.size}
-          height={0.01}
-      >
-        age: everyone
-        <meshStandardMaterial color='yellow'/>
-      </Text3D> */}
     </group>
   </group>
 }

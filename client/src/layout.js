@@ -27,41 +27,44 @@ export default {
       position: [0,0,0],
       rotation: [0,0,0],
       text: {
-        position: [-2.1,0,-6.3],
-        rotation: [-Math.PI/4,0,Math.PI/64],
-        fontSize: 20,
-        scale: 1.7
+        position: [-4,0,-8.3],
+        rotation: [-Math.PI/2,0,0],
+        scale: 3.5
       },
       yoots: {
-        position: [1.1, 0, -5],
-        rotation: [Math.PI/4,Math.PI/2,0],
-        scale: 0.14
+        position: [2.5, 0, -6.3],
+        rotation: [0,Math.PI/2,0],
+        scale: 0.35
       },
       tiles: {
-        position: [0, 0, -2.1],
+        position: [0, 0, -0.1],
         rotation: [0, -Math.PI/16, 0],
         scale: 0.4
       },
       about: {
         show: false,
-        position: [0, 0, 0.5],
+        position: [0, 0, 6],
         rotation: [0,0,0],
-        scale: 0.6
+        scale: 1.5
       },
       howToPlay: {
-        position: [0, 0, 0.9],
+        position: [0, 0, 7],
         rotation: [0,0,0],
-        scale: 0.6
+        scale: 1.5
       },
       letsPlay: {
-        position: [0, 0, 1.3],
+        position: [0, 0, 8],
         rotation: [0,0,0],
-        scale: 0.6
+        scale: 1.5
       },
       pieces: {
         position: [0,0,0],
         scale: 0.5
       },
+      board: {
+        position: [0, 0, 0.5],
+        scale: 0.75
+      }
     },
     howToPlay: {
       position: [0,0,-2],
@@ -1190,33 +1193,25 @@ export default {
       lookAtOffset: [0, 0, 0]
     },
     title: {
-      position: [-21,0,-9],
-      rotation: [-Math.PI/4, Math.PI/8, 0],
       text: {
-        position: [0,0,0],
-        rotation: [0,0,0],
-        fontSize: 20,
+        position: [-11,0,-5],
+        rotation: [-Math.PI/2,0,0],
         scale: 4,
-      },
-      tiles: {
-        position: [0, 0, 0],
-        rotation: [0, 0, 0],
-        scale: 1
       },
       about: {
         show: true,
-        position: [1.5,-6,0],
-        rotation: [Math.PI/2,0,0],
+        position: [-9.5, 0, 0.5],
+        rotation: [0,0,0],
         scale: 2
       },
       howToPlay: {
-        position: [2.8,-7.5,0],
-        rotation: [Math.PI/2,0,0],
+        position: [-8.2, 0, 2],
+        rotation: [0, 0, 0],
         scale: 2
       },      
       letsPlay: {
-        position: [3,-9,0],
-        rotation: [Math.PI/2,0,0],
+        position: [-8, 0, 3.5],
+        rotation: [0, 0, 0],
         scale: 2
       },
       pieces: {
@@ -1224,9 +1219,13 @@ export default {
         scale: 1
       },
       yoots: {
-        position: [7, -2, 0],
-        rotation: [Math.PI/8 * 3,Math.PI/2,0],
+        position: [-3.5, 0, -2.8],
+        rotation: [Math.PI/2,Math.PI/2,-Math.PI/2],
         scale: 0.4
+      },
+      board: {
+        position: [4.5, 0, 0],
+        scale: 0.9
       }
     },
     about: {

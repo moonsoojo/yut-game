@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { Float, OrbitControls, OrthographicCamera, PresentationControls, Text3D, useGLTF } from "@react-three/drei";
-import { useSpring, animated } from "@react-spring/three";
+import { Float, Text3D, useGLTF } from "@react-three/drei";
+import { animated } from "@react-spring/three";
 import { useAtom } from "jotai";
 import layout from './layout';
 import RocketAnimated from './meshes/RocketAnimated';
 import UfoAnimated from './meshes/UfoAnimated';
-import { useFrame } from '@react-three/fiber';
-import { Euler } from 'three';
 import YootMesh from './meshes/YootMesh';
 import { useLocation } from 'wouter';
 import HowToPlay from './HowToPlay';
 import Title from './Title';
 import About from './About';
-import Stars from './particles/Stars';
 import { socket } from './SocketManager';
 import { clientAtom, deviceAtom } from './GlobalState';
 import Board from './Board';
@@ -241,65 +238,56 @@ export default function Home2() {
     <GameCamera position={layout[device].camera.position}/>
     <group>
       <Title 
-        position={[-11,0,-5]}
-        rotation={[-Math.PI/2,0,0]}
+        position={layout[device].title.text.position}
+        rotation={layout[device].title.text.rotation}
         scale={layout[device].title.text.scale}
         setDisplay={setDisplay}
       />
       <Yoots 
-        position={[-3.5, 0, -2.8]}
-        rotation={[Math.PI/2,Math.PI/2,-Math.PI/2]}
+        position={layout[device].title.yoots.position}
+        rotation={layout[device].title.yoots.rotation}
         scale={layout[device].title.yoots.scale} 
       />
       <AboutButton 
-        position={[-9.5, 0, 0.5]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.about.position} 
+        rotation={layout[device].title.about.rotation}
         scale={layout[device].title.about.scale}
       />
       <HowToPlayButton
-        position={[-8.2, 0, 2]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.howToPlay.position} 
+        rotation={layout[device].title.howToPlay.rotation}
         scale={layout[device].title.howToPlay.scale}
       />
       <LetsPlayButton
-        position={[-8, 0, 3.5]} 
-        rotation={[0, 0, 0]}
+        position={layout[device].title.letsPlay.position} 
+        rotation={layout[device].title.letsPlay.rotation}
         scale={layout[device].title.letsPlay.scale}
       />
     </group>
     <group>
-      <group
-        position={[0,0,0]}
-        rotation={[0,0,0]}
-        scale={1}
-      >
-        { display === 'board' && <group position={[4.5, 0, 0]}>
-          <Board 
-            rotation={[0, 0, 0]} 
-            scale={0.9}
-            showStart={true} 
-            interactive={false}/>
-          <Pieces/>
-        </group> }
-      </group>
-      <group>
-        { display === 'about' && <About 
+      { display === 'board' && <group position={layout[device].title.board.position} 
+          scale={layout[device].title.board.scale}>
+        <Board 
+          showStart={true} 
+          interactive={false}/>
+        <Pieces/>
+      </group> }
+      { display === 'about' && <About 
+        device={device}
+        position={layout[device].about.position}
+        rotation={layout[device].about.rotation}
+        scale={layout[device].about.scale}
+      />}
+      <Physics>
+        { display === 'howToPlay' && <HowToPlay 
           device={device}
-          position={layout[device].about.position}
-          rotation={layout[device].about.rotation}
-          scale={layout[device].about.scale}
+          position={layout[device].howToPlay.position}
+          rotation={[0,0,0]}
+          scale={layout[device].howToPlay.scale}
         />}
-        <Physics>
-          { display === 'howToPlay' && <HowToPlay 
-            device={device}
-            position={layout[device].howToPlay.position}
-            rotation={[0,0,0]}
-            scale={layout[device].howToPlay.scale}
-          />}
-        </Physics>
-      </group>  
+      </Physics>
     </group>
     
     <StarsShader count={1000} size={0.2}/>
-    </>
+  </>
 }
