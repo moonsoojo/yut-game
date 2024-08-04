@@ -96,7 +96,7 @@ export default function GameLog({ position, rotation, scale }) {
       if (tile === 0) { // earth
         return <span style={{ color: '#F1EE92' }}>Earth <img src='images/earth.png' width='28px'/></span>
       } else if (tile === 1) { // star1
-        return <span style={{ color: '#F1EE92' }}>star 1 <img src='images/earth.png' width='25px'/></span>
+        return <span style={{ color: '#F1EE92' }}>star 1 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 2) { // star2
         return <span style={{ color: '#F1EE92' }}>star 2 <img src='images/star.png' width='20px'/></span>
       } else if (tile === 3) { // star3

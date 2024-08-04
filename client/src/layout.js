@@ -230,36 +230,91 @@ export default {
           height: 0.01
         },
         moveText: {
-          text: "MOVE: 4-STEPS",
-          position: [-3.2, 0.7, -1.2],
-          size: 0.4
+          text: "MOVE:\n3-STEPS",
+          position: [2.3, 0.7, -0.9],
+          size: 0.5
+        },
+        gulToken: {
+          position: [3.1, 0, 0.7],
+          rotation: [0, Math.PI/2, 0],
+          scale: 0.9
         },
         yoot: {
-          initialPos: [
-            [-2 + 0, 1, 1],
-            [-2 + 0.8, 1, 1],
-            [-2 + 1.6, 1, 1],
-            [-2 + 2.4, 1, 1]
-          ],
-          initialThrowPos: [
-            { x: -1, y: 0.5, z: -1.5},
-            { x: -1 + 0.4, y: 0.5, z: -1.5},
-            { x: -1 + 0.8, y: 0.5, z: -1.5},
-            { x: -1 + 1.2, y: 0.5, z: -1.5}
-          ],
-          resetPos: [
-            { x: -1, y: 0.5, z: -1.5},
-            { x: -1 + 0.4, y: 0.5, z: -1.5},
-            { x: -1 + 0.8, y: 0.5, z: -1.5},
-            { x: -1 + 1.2, y: 0.5, z: -1.5}
-          ],
+          yoot0Wrapper: {
+            restPos: {
+              x: -2,
+              y: 0,
+              z: 1
+            },
+            throwPos: {
+              x: -2.5,
+              y: 0,
+              z: 1
+            },
+            liePos: {
+              x: -2.7,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot1Wrapper: {
+            restPos: {
+              x: -1.5,
+              y: 0.5,
+              z: 1
+            },
+            throwPos: {
+              x: -1.5,
+              y: 0.5,
+              z: 1
+            },
+            liePos: {
+              x: -1.5,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot2Wrapper: {
+            restPos: {
+              x: -0.7,
+              y: 0,
+              z: 1
+            },
+            throwPos: {
+              x: -0.4,
+              y: 0,
+              z: 1
+            },
+            liePos: {
+              x: -0.3,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot3Wrapper: {
+            restPos: {
+              x: -0.1,
+              y: 0.7,
+              z: 1
+            },
+            throwPos: {
+              x: 0.5,
+              y: 0.7,
+              z: 1
+            },
+            liePos: {
+              x: 0.8,
+              y: 0,
+              z: 1,
+            }
+          },
         },
         yootButtonModel: {
-          position: [3, 0, 3],
+          position: [3.5, 0, 2.5],
           rotation: [0, Math.PI/2, 0, "ZXY"]
         },
         cursor: {
-          position: [4, 0.3, 4.4],
+          position: [4.5, 0.3, 4.1],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
         },
@@ -578,7 +633,7 @@ export default {
           position: [-3.3, 0, 1]
         },
         yootButtonModel: {
-          position: [0.2, 0, 1]
+          position: [0.2, 0, 1],
         },
         moveText: {
           position: [-3,0,0.5]
@@ -1620,39 +1675,94 @@ export default {
           height: 0.01
         },
         moveText: {
-          text: "MOVE: 3-STEPS",
-          position: [-3.7, 0.7, -0.9],
-          size: 0.3
+          text: "MOVE:\n3-STEPS",
+          position: [2, 0.7, -0.9],
+          size: 0.4
+        },
+        gulToken: {
+          position: [2.5, 0, 0.6],
+          rotation: [0, Math.PI/2, 0],
+          scale: 0.8
         },
         yoot: {
-          initialPos: [
-            [-2.5 + 0, 1, 2],
-            [-2.5 + 0.8, 1, 2],
-            [-2.5 + 1.6, 1, 2],
-            [-2.5 + 2.4, 1, 2]
-          ],
-          initialThrowPos: [
-            { x: 1.2 + 0, y: 1, z: 1.3},
-            { x: 1.2 + 0.8, y: 1, z: 1.3},
-            { x: 1.2 + 1.6, y: 1, z: 1.3},
-            { x: 1.2 + 2.4, y: 1, z: 1.3}
-          ],
-          resetPos: [
-            { x: 1.2 + 0, y: 1, z: 1.3},
-            { x: 1.2 + 0.8, y: 1, z: 1.3},
-            { x: 1.2 + 1.6, y: 1, z: 1.3},
-            { x: 1.2 + 2.4, y: 1, z: 1.3}
-          ]
+          yoot0Wrapper: {
+            restPos: {
+              x: -2,
+              y: 0,
+              z: 1
+            },
+            throwPos: {
+              x: -2.5,
+              y: 0,
+              z: 1
+            },
+            liePos: {
+              x: -2.7,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot1Wrapper: {
+            restPos: {
+              x: -1.5,
+              y: 0.5,
+              z: 1
+            },
+            throwPos: {
+              x: -1.5,
+              y: 0.5,
+              z: 1
+            },
+            liePos: {
+              x: -1.5,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot2Wrapper: {
+            restPos: {
+              x: -0.7,
+              y: 0,
+              z: 1
+            },
+            throwPos: {
+              x: -0.4,
+              y: 0,
+              z: 1
+            },
+            liePos: {
+              x: -0.3,
+              y: 0,
+              z: 1,
+            }
+          },
+          yoot3Wrapper: {
+            restPos: {
+              x: -0.1,
+              y: 0.7,
+              z: 1
+            },
+            throwPos: {
+              x: 0.5,
+              y: 0.7,
+              z: 1
+            },
+            liePos: {
+              x: 0.8,
+              y: 0,
+              z: 1,
+            }
+          },
         },
         yootButtonModel: {
-          position: [3.5, 0, 2],
+          position: [3, 0, 2],
           rotation: [0,Math.PI/2,0]
         },
         cursor: {
-          position: [3.8, 0.3, 3.5],
+          position: [3.3, 0.3, 3.5],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
-        }
+        },
       },
       movingPiecesPage: {
         text: {

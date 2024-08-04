@@ -598,112 +598,246 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;
     const materialsRhino = useGLTF("models/yoot-rhino-highlight.glb").materials;
 
-    const NUM_YOOTS = 4;
-    let yoots = [];
-    for (let i = 0; i < NUM_YOOTS; i++) {
-      yoots.push(useRef());
-    }
-
     const [startTime, setStartTime] = useState(0)
-    const yoot0Mat = useRef()
-    const yoot1Mat = useRef()
-    const yoot2Mat = useRef()
-    const yoot3Mat = useRef()
+    const yoot0 = useRef();
+    const yoot0Wrapper = useRef();
+    const yoot0Mat = useRef();
+    const yoot1 = useRef();
+    const yoot1Wrapper = useRef();
+    const yoot1Mat = useRef();
+    const yoot2 = useRef();
+    const yoot2Wrapper = useRef();
+    const yoot2Mat = useRef();
+    const yoot3 = useRef();
+    const yoot3Wrapper = useRef();
+    const yoot3Mat = useRef();
     const textRef = useRef()
-    const yootMats = [yoot0Mat, yoot1Mat, yoot2Mat, yoot3Mat]
-    const loopTime = 12
+    const [textVisible, setTextVisible] = useState(false)
     const [yootButtonTurnedOn, setYootButtonTurnedOn] = useState(true)
-    const throwTime = 2
-    const [thrown, setThrown] = useState(false)
-    const effectTime = 2.2
-    const [effect, setEffect] = useState(false)
-    const record0Time = 5
-    const [record0, setRecord0] = useState(false)
-    const record1Time = 5.5
-    const [record1, setRecord1] = useState(false)
-    const record2Time = 6
-    const [record2, setRecord2] = useState(false)
-    const record3Time = 6.5
-    const [record3, setRecord3] = useState(false)
-    const textTime = 7.1
-    const [text, setText] = useState(false)
-
-    useFrame((state, delta) => {
-      if (startTime === 0) {
-        setStartTime(state.clock.elapsedTime)
-      } else {
-        if (startTime + loopTime > state.clock.elapsedTime) {
-          if (startTime + throwTime < state.clock.elapsedTime && !thrown) {
-            for (let i = 0; i < 4; i++) {
-              yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
-              yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
-              yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.initialThrowPos[i]);
-              yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
-              if (device === "landscapeDesktop") {
-                yoots[i].current.applyImpulse({
-                  x: 0,
-                  y: 5,
-                  z: 0,
-                });
-                yoots[i].current.applyTorqueImpulse({
-                  x: 3,
-                  y: 0.003,
-                  z: 0.16 + i * 0.01,
-                });
-              } else {
-                yoots[i].current.applyImpulse({
-                  x: 0,
-                  y: 0.25,
-                  z: 0,
-                });
-                yoots[i].current.applyTorqueImpulse({
-                  x: 0.002,
-                  y: 0.001,
-                  z: 0.003 + i * 0.00005,
-                });
-              }
-            }
-            setYootButtonTurnedOn(false)
-            setThrown(true)
-            setEffect(true)
-          } else if ((startTime + effectTime < state.clock.elapsedTime) && effect) {
-            setEffect(false)
-          } else if ((startTime + record0Time < state.clock.elapsedTime) && !record0) {
-            yootMats[0].current.opacity = 1
-            setRecord0(true)
-          } else if ((startTime + record1Time < state.clock.elapsedTime) && !record1) {
-            yootMats[1].current.opacity = 1
-            setRecord1(true)
-          } else if ((startTime + record2Time < state.clock.elapsedTime) && !record2) {
-            yootMats[2].current.opacity = 1
-            setRecord2(true)
-          } else if ((startTime + record3Time < state.clock.elapsedTime) && !record3) {
-            yootMats[3].current.opacity = 1
-            setRecord3(true)
-          } else if (startTime + textTime < state.clock.elapsedTime && !text) {
-            setText(true)
-          } else if (startTime + textTime < state.clock.elapsedTime) {
-            textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
-            textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
-            textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
-          }
+    const restTime = 2 // time: 0 - 2
+    const throwTime = restTime + 3 // time: 2 - 5
+    const lieTime = throwTime + 1 // time: 5 - 7
+    const highlightYoot0Time = lieTime + 0.5 // time: 7 - 7.5
+    const highlightYoot1Time = highlightYoot0Time + 0.5 // time: 7.5 - 8
+    const highlightYoot2Time = highlightYoot1Time + 0.5 // time: 8 - 8.5
+    const recordTime = highlightYoot2Time + 0.5
+    const loopTime = recordTime + 2 // time: 0 - 12
+    // const effectTime = 2.2
+    // const record0Time = 5
+    // const record1Time = 5.5
+    // const record2Time = 6
+    // const record3Time = 6.5
+    // const textTime = 7.1
+    // scale 0: yoots still
+    // scale 1: yoots spinning
+    // scale 2: yoots still - lie
+    // scale 3: yoots highlight 1
+    // scale 4: yoots highlight 2
+    // scale 5: yoots highlight 3
+    // scale 6: move text
+    // use useFrame because scale can't be 0 with rigidbody
+    useFrame((state) => {
+      const time = state.clock.getElapsedTime();
+      if (yoot0.current) {
+        if (startTime === 0) {
+          setStartTime(time)
         } else {
-          setStartTime(0);
-          setThrown(false);
-          for (let i = 0; i < 4; i++) {
-            yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.resetPos[i]);
-            yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
+          if (startTime + loopTime > time) {
+  
+            if (startTime + restTime > time) { // held in a hand
+  
+              // set up
+              setYootButtonTurnedOn(true)
+              yoot0Mat.current.opacity = 0
+              yoot1Mat.current.opacity = 0
+              yoot2Mat.current.opacity = 0
+              setTextVisible(false)
+
+              // yoot 0
+              yoot0Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/16
+              yoot0Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.restPos.x
+              yoot0Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.restPos.y
+              yoot0Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.restPos.z
+              const eulerRotation0 = new THREE.Euler(-Math.PI/8*6, 0, 0);
+              const quaternionRotation0 = new THREE.Quaternion();
+              quaternionRotation0.setFromEuler(eulerRotation0);
+              yoot0.current.rotation.x = eulerRotation0.x;
+              yoot0.current.rotation.y = eulerRotation0.y;
+              yoot0.current.rotation.z = eulerRotation0.z;
+              yoot0.current.rotation.w = eulerRotation0.w;
+
+              // yoot 1
+              yoot1Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/32
+              yoot1Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.restPos.x
+              yoot1Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.restPos.y
+              yoot1Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.restPos.z
+              const eulerRotation1 = new THREE.Euler(-Math.PI/2 + Math.PI/4, 0, 0);
+              const quaternionRotation1 = new THREE.Quaternion();
+              quaternionRotation1.setFromEuler(eulerRotation1);
+              yoot1.current.rotation.x = eulerRotation1.x;
+              yoot1.current.rotation.y = eulerRotation1.y;
+              yoot1.current.rotation.z = eulerRotation1.z;
+              yoot1.current.rotation.w = eulerRotation1.w;
+
+              // yoot 2
+              yoot2Wrapper.current.rotation.y = Math.PI/2
+              yoot2Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.restPos.x
+              yoot2Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.restPos.y
+              yoot2Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.restPos.z
+              const eulerRotation2 = new THREE.Euler(Math.PI/2 + Math.PI/4, 0, 0);
+              const quaternionRotation2 = new THREE.Quaternion();
+              quaternionRotation2.setFromEuler(eulerRotation2);
+              yoot2.current.rotation.x = eulerRotation2.x;
+              yoot2.current.rotation.y = eulerRotation2.y;
+              yoot2.current.rotation.z = eulerRotation2.z;
+              yoot2.current.rotation.w = eulerRotation2.w;
+
+              // yoot 3
+              yoot3Wrapper.current.rotation.y = Math.PI/2 - Math.PI/32
+              yoot3Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.restPos.x
+              yoot3Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.restPos.y
+              yoot3Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.restPos.z
+              const eulerRotation3 = new THREE.Euler(Math.PI/2 - Math.PI/4, 0, 0);
+              const quaternionRotation3 = new THREE.Quaternion();
+              quaternionRotation3.setFromEuler(eulerRotation3);
+              yoot3.current.rotation.x = eulerRotation3.x;
+              yoot3.current.rotation.y = eulerRotation3.y;
+              yoot3.current.rotation.z = eulerRotation3.z;
+              yoot3.current.rotation.w = eulerRotation3.w;
+  
+            } else if (startTime + throwTime > time) { // spinning
+              setYootButtonTurnedOn(false)
+
+              // yoot 0
+              yoot0Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/16
+              yoot0Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.throwPos.x
+              yoot0Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.throwPos.y
+              yoot0Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.throwPos.z
+              const eulerRotation0 = new THREE.Euler(time*5, 0, 0);
+              const quaternionRotation0 = new THREE.Quaternion();
+              quaternionRotation0.setFromEuler(eulerRotation0);
+              yoot0.current.rotation.x = eulerRotation0.x;
+              yoot0.current.rotation.y = eulerRotation0.y;
+              yoot0.current.rotation.z = eulerRotation0.z;
+              yoot0.current.rotation.w = eulerRotation0.w;
+              yoot0.current.position.y = Math.sin((startTime + throwTime - time - Math.PI + Math.PI/2 + Math.PI/2 + Math.PI/8) * 1) * 4
+              
+              // yoot 1
+              yoot1Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/32
+              yoot1Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.throwPos.x
+              yoot1Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.throwPos.y
+              yoot1Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.throwPos.z
+              const eulerRotation1 = new THREE.Euler(time*6.9 + Math.PI/4 + Math.PI/32, 0, 0);
+              const quaternionRotation1 = new THREE.Quaternion();
+              quaternionRotation1.setFromEuler(eulerRotation1);
+              yoot1.current.rotation.x = eulerRotation1.x;
+              yoot1.current.rotation.y = eulerRotation1.y;
+              yoot1.current.rotation.z = eulerRotation1.z;
+              yoot1.current.rotation.w = eulerRotation1.w;
+              yoot1.current.position.y = Math.sin((startTime + throwTime - time - Math.PI + Math.PI/2 + Math.PI/2 + Math.PI/8) * 1) * 4.5 + 0.8
+              
+              // yoot 2
+              yoot2Wrapper.current.rotation.y = Math.PI/2
+              yoot2Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.throwPos.x
+              yoot2Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.throwPos.y
+              yoot2Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.throwPos.z
+              const eulerRotation2 = new THREE.Euler(time*5.7 + Math.PI/4 + Math.PI/16, 0, 0);
+              const quaternionRotation2 = new THREE.Quaternion();
+              quaternionRotation2.setFromEuler(eulerRotation2);
+              yoot2.current.rotation.x = eulerRotation2.x;
+              yoot2.current.rotation.y = eulerRotation2.y;
+              yoot2.current.rotation.z = eulerRotation2.z;
+              yoot2.current.rotation.w = eulerRotation2.w;
+              yoot2.current.position.y = Math.sin((startTime + throwTime - time - Math.PI + Math.PI/2 + Math.PI/2 + Math.PI/8) * 1) * 4.5 + 0.8
+              
+              // yoot 3
+              yoot3Wrapper.current.rotation.y = Math.PI/2 - Math.PI/32
+              yoot3Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.throwPos.x
+              yoot3Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.throwPos.y
+              yoot3Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.throwPos.z
+              const eulerRotation3 = new THREE.Euler(time*7.4 + Math.PI/4 + Math.PI/8, 0, 0);
+              const quaternionRotation3 = new THREE.Quaternion();
+              quaternionRotation3.setFromEuler(eulerRotation3);
+              yoot3.current.rotation.x = eulerRotation3.x;
+              yoot3.current.rotation.y = eulerRotation3.y;
+              yoot3.current.rotation.z = eulerRotation3.z;
+              yoot3.current.rotation.w = eulerRotation3.w;
+              yoot3.current.position.y = Math.sin((startTime + throwTime - time - Math.PI + Math.PI/2 + Math.PI/2 + Math.PI/8) * 1) * 4.5 + 0.8
+              
+            } else if (startTime + lieTime > time) {
+  
+              // yoot0
+              yoot0Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/16
+              yoot0Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.liePos.x
+              yoot0Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.liePos.y
+              yoot0Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot0Wrapper.liePos.z
+              const eulerRotation0 = new THREE.Euler(Math.PI, 0, 0);
+              const quaternionRotation0 = new THREE.Quaternion();
+              quaternionRotation0.setFromEuler(eulerRotation0);
+              yoot0.current.rotation.x = eulerRotation0.x;
+              yoot0.current.rotation.y = eulerRotation0.y;
+              yoot0.current.rotation.z = eulerRotation0.z;
+              yoot0.current.rotation.w = eulerRotation0.w;
+              yoot0.current.position.y = 0
+              
+              // yoot1
+              yoot1Wrapper.current.rotation.y = Math.PI/4 + Math.PI/4 + Math.PI/32
+              yoot1Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.liePos.x
+              yoot1Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.liePos.y
+              yoot1Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot1Wrapper.liePos.z
+              const eulerRotation1 = new THREE.Euler(Math.PI, 0, 0);
+              const quaternionRotation1 = new THREE.Quaternion();
+              quaternionRotation1.setFromEuler(eulerRotation1);
+              yoot1.current.rotation.x = eulerRotation1.x;
+              yoot1.current.rotation.y = eulerRotation1.y;
+              yoot1.current.rotation.z = eulerRotation1.z;
+              yoot1.current.rotation.w = eulerRotation1.w;
+              yoot1.current.position.y = 0
+              
+              // yoot2
+              yoot2Wrapper.current.rotation.y = Math.PI/2
+              yoot2Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.liePos.x
+              yoot2Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.liePos.y
+              yoot2Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot2Wrapper.liePos.z
+              const eulerRotation2 = new THREE.Euler(Math.PI, 0, 0);
+              const quaternionRotation2 = new THREE.Quaternion();
+              quaternionRotation2.setFromEuler(eulerRotation2);
+              yoot2.current.rotation.x = eulerRotation2.x;
+              yoot2.current.rotation.y = eulerRotation2.y;
+              yoot2.current.rotation.z = eulerRotation2.z;
+              yoot2.current.rotation.w = eulerRotation2.w;
+              yoot2.current.position.y = 0
+              
+              // yoot3
+              yoot3Wrapper.current.rotation.y = Math.PI/2 - Math.PI/32
+              yoot3Wrapper.current.position.x = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.liePos.x
+              yoot3Wrapper.current.position.y = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.liePos.y
+              yoot3Wrapper.current.position.z = layout[device].howToPlay.throwingTheDicePage.yoot.yoot3Wrapper.liePos.z
+              const eulerRotation3 = new THREE.Euler(0, 0, 0);
+              const quaternionRotation3 = new THREE.Quaternion();
+              quaternionRotation3.setFromEuler(eulerRotation3);
+              yoot3.current.rotation.x = eulerRotation3.x;
+              yoot3.current.rotation.y = eulerRotation3.y;
+              yoot3.current.rotation.z = eulerRotation3.z;
+              yoot3.current.rotation.w = eulerRotation3.w;
+              yoot3.current.position.y = 0
+              
+            } else if (startTime + highlightYoot0Time > time) {
+              console.log('highlight 0 time')
+              console.log(yoot0Mat.current)
+              yoot0Mat.current.opacity = 1
+            } else if (startTime + highlightYoot1Time > time) {
+              console.log('highlight 1 time')
+              yoot1Mat.current.opacity = 1
+            } else if (startTime + highlightYoot2Time > time) {
+              console.log('highlight 2 time')
+              yoot2Mat.current.opacity = 1
+            } else if (startTime + recordTime > time) {
+              setTextVisible(true)
+            }
+          } else {
+            setStartTime(0);
           }
-          setRecord0(false)
-          yootMats[0].current.opacity = 0
-          setRecord1(false)
-          yootMats[1].current.opacity = 0
-          setRecord2(false)
-          yootMats[2].current.opacity = 0
-          setRecord3(false)
-          yootMats[3].current.opacity = 0
-          setText(false)
-          setYootButtonTurnedOn(true)
         }
       }
     })
@@ -719,108 +853,154 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {`2. Throw the yoot (dice).`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
-      {/* <Physics> */}
-      <>
-        <RigidBody type="fixed">
-          <CuboidCollider args={[10, 0.3, 10]} restitution={0.2} friction={1}/>
-          <mesh>
-            <boxGeometry args={[20, 0.6, 20]} />
+      {/* <Physics/> component is in <Home2/> */}
+      <group ref={yoot0Wrapper}>
+        <group
+          ref={yoot0}
+          scale={0.5}
+        >
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder011.geometry}
+            material={materials["Texture wrap.008"]}
+            position={[0, -0.5, 0]}
+            rotation={[0, 0, -Math.PI / 2]}
+            scale={[1, 6.161, 1]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Plane.geometry}
+            material={nodes.Plane.material}
+            position={[0, -0.521, 0]}
+            rotation={[-Math.PI, 0, 0]}
+            scale={[4.905, 1, 0.455]}
+          >
             <meshStandardMaterial 
+              color="white" 
               transparent 
-              color='yellow'
               opacity={0}
+              ref={yoot0Mat}
             />
           </mesh>
-        </RigidBody>
-        {yoots.map((ref, index) => {
-          return (
-            <RigidBody
-              ref={ref}            
-              position={layout[device].howToPlay.throwingTheDicePage.yoot.initialPos[index]}
-              rotation={[0, Math.PI/2, 0]}
-              colliders="hull"
-              restitution={0.3}
-              friction={0.6}
-              name={`yoot${index}`}
-              linearDamping={0.3}
-              angularDamping={0.1} // when this value is high, yoots spin more
-              scale={0.35}
-              gravityScale={2}
-              key={index}
-            >
-              {index != 0 ? (
-                <group>
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Cylinder011.geometry}
-                    material={materials["Texture wrap.008"]}
-                    position={[0, 0.021, 0]}
-                    rotation={[0, 0, -Math.PI / 2]}
-                    scale={[1, 6.161, 1]}
-                  />
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Plane.geometry}
-                    material={nodes.Plane.material}
-                    rotation={[-Math.PI, 0, 0]}
-                    scale={[4.905, 1, 0.455]}
-                  >
-                    <meshStandardMaterial 
-                      color="white" 
-                      transparent 
-                      opacity={0}
-                      ref={yootMats[index]}
-                    />
-                  </mesh>
-                </group>
-              ) : (
-                <group>
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodesRhino.Cylinder007.geometry}
-                    material={materialsRhino["Texture wrap.005"]}
-                    position={[0, 0.022, 0]}
-                    rotation={[0, 0, -Math.PI / 2]}
-                    scale={[1, 6.161, 1]}
-                  />
-                  <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodesRhino.Plane001.geometry}
-                    material={nodesRhino.Plane001.material}
-                    rotation={[-Math.PI, 0, 0]}
-                    scale={[4.892, 1, 0.443]}
-                  >
-                    <meshStandardMaterial 
-                      color="white" 
-                      transparent 
-                      opacity={0}
-                      ref={yootMats[index]}
-                    />
-                  </mesh>
-                </group>
-              )}
-            </RigidBody>
-          );
-        })}
-        { text && <group ref={textRef}
-            position={layout[device].howToPlay.throwingTheDicePage.moveText.position}>
-          <Text3D
-            rotation={[-Math.PI/2,0,0]}
-            font="fonts/Luckiest Guy_Regular.json" 
-            size={layout[device].howToPlay.throwingTheDicePage.moveText.size} 
-            height={0.01}
+        </group>
+      </group>
+      <group ref={yoot1Wrapper}>
+        <group
+          ref={yoot1}
+          scale={0.5}
+        >
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder011.geometry}
+            material={materials["Texture wrap.008"]}
+            position={[0, -0.5, 0]}
+            rotation={[0, 0, -Math.PI / 2]}
+            scale={[1, 6.161, 1]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Plane.geometry}
+            material={nodes.Plane.material}
+            position={[0, -0.521, 0]}
+            rotation={[-Math.PI, 0, 0]}
+            scale={[4.905, 1, 0.455]}
           >
-            {layout[device].howToPlay.throwingTheDicePage.moveText.text}
-            <meshStandardMaterial color={ "limegreen" }/>
-          </Text3D>
-          <GulToken scale={0.7} position={[3.1, 0, -0.15]} rotation={[0, Math.PI/2, 0]}/>
-        </group>}
-      </>
-      {/* </Physics> */}
+            <meshStandardMaterial 
+              color="white" 
+              transparent 
+              opacity={0}
+              ref={yoot1Mat}
+            />
+          </mesh>
+        </group>
+      </group>
+      <group ref={yoot2Wrapper}>
+        <group
+          ref={yoot2}
+          scale={0.5}
+        >
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Cylinder011.geometry}
+            material={materials["Texture wrap.008"]}
+            position={[0, -0.5, 0]}
+            rotation={[0, 0, -Math.PI / 2]}
+            scale={[1, 6.161, 1]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Plane.geometry}
+            material={nodes.Plane.material}
+            position={[0, -0.521, 0]}
+            rotation={[-Math.PI, 0, 0]}
+            scale={[4.905, 1, 0.455]}
+          >
+            <meshStandardMaterial 
+              color="white" 
+              transparent 
+              opacity={0}
+              ref={yoot2Mat}
+            />
+          </mesh>
+        </group>
+      </group>
+      <group ref={yoot3Wrapper}>
+        <group 
+          ref={yoot3}
+          scale={0.5}
+        >
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodesRhino.Cylinder007.geometry}
+            material={materialsRhino["Texture wrap.005"]}
+            position={[0, -0.4, 0]}
+            rotation={[0, 0, -Math.PI / 2]}
+            scale={[1, 6.161, 1]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodesRhino.Plane001.geometry}
+            material={nodesRhino.Plane001.material}
+            position={[0, -0.422, 0]}
+            rotation={[-Math.PI, 0, 0]}
+            scale={[4.892, 1, 0.443]}
+          >
+            <meshStandardMaterial 
+              color="white" 
+              transparent 
+              opacity={0}
+              ref={yoot3Mat}
+            />
+          </mesh>
+        </group>
+      </group>
+      { textVisible && <group
+        position={layout[device].howToPlay.throwingTheDicePage.moveText.position}
+        ref={textRef}
+      >
+        <Text3D
+          rotation={[-Math.PI/2,0,0]}
+          font="fonts/Luckiest Guy_Regular.json" 
+          size={layout[device].howToPlay.throwingTheDicePage.moveText.size} 
+          height={0.01}
+        >
+          {layout[device].howToPlay.throwingTheDicePage.moveText.text}
+          <meshStandardMaterial color={ "limegreen" }/>
+        </Text3D>
+        <GulToken 
+          scale={layout[device].howToPlay.throwingTheDicePage.gulToken.scale} 
+          position={layout[device].howToPlay.throwingTheDicePage.gulToken.position} 
+          rotation={layout[device].howToPlay.throwingTheDicePage.gulToken.rotation}
+        />
+      </group> }
       <YootButtonModel
         position={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.position}
         rotation={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.rotation}
@@ -830,10 +1010,253 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         position={layout[device].howToPlay.throwingTheDicePage.cursor.position}
         rotation={layout[device].howToPlay.throwingTheDicePage.cursor.rotation}
         scale={layout[device].howToPlay.throwingTheDicePage.cursor.scale}
-        effect={effect}
       />
     </group>
   }
+
+  // function ThrowingTheDicePage() {
+    
+  //   const nodes = useGLTF("models/yoot-highlight.glb").nodes;
+  //   const materials = useGLTF("models/yoot-highlight.glb").materials;
+  //   const nodesRhino = useGLTF("models/yoot-rhino-highlight.glb").nodes;
+  //   const materialsRhino = useGLTF("models/yoot-rhino-highlight.glb").materials;
+
+  //   const NUM_YOOTS = 4;
+  //   let yoots = [];
+  //   for (let i = 0; i < NUM_YOOTS; i++) {
+  //     yoots.push(useRef());
+  //   }
+
+  //   const [startTime, setStartTime] = useState(0)
+  //   const yoot0Mat = useRef()
+  //   const yoot1Mat = useRef()
+  //   const yoot2Mat = useRef()
+  //   const yoot3Mat = useRef()
+  //   const textRef = useRef()
+  //   const yootMats = [yoot0Mat, yoot1Mat, yoot2Mat, yoot3Mat]
+  //   const loopTime = 12
+  //   const [yootButtonTurnedOn, setYootButtonTurnedOn] = useState(true)
+  //   const throwTime = 2
+  //   const [thrown, setThrown] = useState(false)
+  //   const effectTime = 2.2
+  //   const [effect, setEffect] = useState(false)
+  //   const record0Time = 5
+  //   const [record0, setRecord0] = useState(false)
+  //   const record1Time = 5.5
+  //   const [record1, setRecord1] = useState(false)
+  //   const record2Time = 6
+  //   const [record2, setRecord2] = useState(false)
+  //   const record3Time = 6.5
+  //   const [record3, setRecord3] = useState(false)
+  //   const textTime = 7.1
+  //   const [text, setText] = useState(false)
+
+  //   useFrame((state, delta) => {
+  //     if (startTime === 0) {
+  //       setStartTime(state.clock.elapsedTime)
+  //     } else {
+  //       if (startTime + loopTime > state.clock.elapsedTime) {
+  //         if (startTime + throwTime < state.clock.elapsedTime && !thrown) {
+  //           for (let i = 0; i < 4; i++) {
+  //             yoots[i].current.setLinvel({ x: 0, y: 0, z: 0 })
+  //             yoots[i].current.setAngvel({ x: 0, y: 0, z: 0 })
+  //             yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.initialThrowPos[i]);
+  //             yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
+  //             if (device === "landscapeDesktop") {
+  //               yoots[i].current.applyImpulse({
+  //                 x: 0,
+  //                 y: 5,
+  //                 z: 0,
+  //               });
+  //               yoots[i].current.applyTorqueImpulse({
+  //                 x: 3,
+  //                 y: 0.003,
+  //                 z: 0.16 + i * 0.01,
+  //               });
+  //             } else {
+  //               yoots[i].current.applyImpulse({
+  //                 x: 0,
+  //                 y: 0.25,
+  //                 z: 0,
+  //               });
+  //               yoots[i].current.applyTorqueImpulse({
+  //                 x: 0.002,
+  //                 y: 0.001,
+  //                 z: 0.003 + i * 0.00005,
+  //               });
+  //             }
+  //           }
+  //           setYootButtonTurnedOn(false)
+  //           setThrown(true)
+  //           setEffect(true)
+  //         } else if ((startTime + effectTime < state.clock.elapsedTime) && effect) {
+  //           setEffect(false)
+  //         } else if ((startTime + record0Time < state.clock.elapsedTime) && !record0) {
+  //           yootMats[0].current.opacity = 1
+  //           setRecord0(true)
+  //         } else if ((startTime + record1Time < state.clock.elapsedTime) && !record1) {
+  //           yootMats[1].current.opacity = 1
+  //           setRecord1(true)
+  //         } else if ((startTime + record2Time < state.clock.elapsedTime) && !record2) {
+  //           yootMats[2].current.opacity = 1
+  //           setRecord2(true)
+  //         } else if ((startTime + record3Time < state.clock.elapsedTime) && !record3) {
+  //           yootMats[3].current.opacity = 1
+  //           setRecord3(true)
+  //         } else if (startTime + textTime < state.clock.elapsedTime && !text) {
+  //           setText(true)
+  //         } else if (startTime + textTime < state.clock.elapsedTime) {
+  //           textRef.current.scale.x = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
+  //           textRef.current.scale.y = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
+  //           textRef.current.scale.z = Math.cos(state.clock.elapsedTime * 3) * 0.08 + 1.2
+  //         }
+  //       } else {
+  //         setStartTime(0);
+  //         setThrown(false);
+  //         for (let i = 0; i < 4; i++) {
+  //           yoots[i].current.setTranslation(layout[device].howToPlay.throwingTheDicePage.yoot.resetPos[i]);
+  //           yoots[i].current.setRotation({ x: 0, y: 1, z: 0, w: 1 }, true);
+  //         }
+  //         setRecord0(false)
+  //         yootMats[0].current.opacity = 0
+  //         setRecord1(false)
+  //         yootMats[1].current.opacity = 0
+  //         setRecord2(false)
+  //         yootMats[2].current.opacity = 0
+  //         setRecord3(false)
+  //         yootMats[3].current.opacity = 0
+  //         setText(false)
+  //         setYootButtonTurnedOn(true)
+  //       }
+  //     }
+  //   })
+
+  //   return <group name='how-to-play-page-0' scale={layout[device].howToPlay.throwingTheDicePage.scale}>
+  //     <Text3D
+  //       font="fonts/Luckiest Guy_Regular.json"
+  //       position={layout[device].howToPlay.throwingTheDicePage.text.position}
+  //       rotation={layout[device].howToPlay.throwingTheDicePage.text.rotation}
+  //       size={layout[device].howToPlay.throwingTheDicePage.text.size}
+  //       height={layout[device].howToPlay.throwingTheDicePage.text.height}
+  //     >
+  //       {`2. Throw the yoot (dice).`}
+  //       <meshStandardMaterial color='yellow'/>
+  //     </Text3D>
+  //     {/* <Physics> */}
+  //     <>
+  //       <RigidBody type="fixed">
+  //         <CuboidCollider args={[10, 0.3, 10]} restitution={0.2} friction={1}/>
+  //         <mesh>
+  //           <boxGeometry args={[20, 0.6, 20]} />
+  //           <meshStandardMaterial 
+  //             transparent 
+  //             color='yellow'
+  //             opacity={0}
+  //           />
+  //         </mesh>
+  //       </RigidBody>
+  //       {yoots.map((ref, index) => {
+  //         return (
+  //           <RigidBody
+  //             ref={ref}            
+  //             position={layout[device].howToPlay.throwingTheDicePage.yoot.initialPos[index]}
+  //             rotation={[0, Math.PI/2, 0]}
+  //             colliders="hull"
+  //             restitution={0.3}
+  //             friction={0.6}
+  //             name={`yoot${index}`}
+  //             linearDamping={0.3}
+  //             angularDamping={0.1} // when this value is high, yoots spin more
+  //             scale={0.35}
+  //             gravityScale={2}
+  //             key={index}
+  //           >
+  //             {index != 0 ? (
+  //               <group>
+  //                 <mesh
+  //                   castShadow
+  //                   receiveShadow
+  //                   geometry={nodes.Cylinder011.geometry}
+  //                   material={materials["Texture wrap.008"]}
+  //                   position={[0, 0.021, 0]}
+  //                   rotation={[0, 0, -Math.PI / 2]}
+  //                   scale={[1, 6.161, 1]}
+  //                 />
+  //                 <mesh
+  //                   castShadow
+  //                   receiveShadow
+  //                   geometry={nodes.Plane.geometry}
+  //                   material={nodes.Plane.material}
+  //                   rotation={[-Math.PI, 0, 0]}
+  //                   scale={[4.905, 1, 0.455]}
+  //                 >
+  //                   <meshStandardMaterial 
+  //                     color="white" 
+  //                     transparent 
+  //                     opacity={0}
+  //                     ref={yootMats[index]}
+  //                   />
+  //                 </mesh>
+  //               </group>
+  //             ) : (
+  //               <group>
+  //                 <mesh
+  //                   castShadow
+  //                   receiveShadow
+  //                   geometry={nodesRhino.Cylinder007.geometry}
+  //                   material={materialsRhino["Texture wrap.005"]}
+  //                   position={[0, 0.022, 0]}
+  //                   rotation={[0, 0, -Math.PI / 2]}
+  //                   scale={[1, 6.161, 1]}
+  //                 />
+  //                 <mesh
+  //                   castShadow
+  //                   receiveShadow
+  //                   geometry={nodesRhino.Plane001.geometry}
+  //                   material={nodesRhino.Plane001.material}
+  //                   rotation={[-Math.PI, 0, 0]}
+  //                   scale={[4.892, 1, 0.443]}
+  //                 >
+  //                   <meshStandardMaterial 
+  //                     color="white" 
+  //                     transparent 
+  //                     opacity={0}
+  //                     ref={yootMats[index]}
+  //                   />
+  //                 </mesh>
+  //               </group>
+  //             )}
+  //           </RigidBody>
+  //         );
+  //       })}
+  //       { text && <group ref={textRef}
+  //           position={layout[device].howToPlay.throwingTheDicePage.moveText.position}>
+  //         <Text3D
+  //           rotation={[-Math.PI/2,0,0]}
+  //           font="fonts/Luckiest Guy_Regular.json" 
+  //           size={layout[device].howToPlay.throwingTheDicePage.moveText.size} 
+  //           height={0.01}
+  //         >
+  //           {layout[device].howToPlay.throwingTheDicePage.moveText.text}
+  //           <meshStandardMaterial color={ "limegreen" }/>
+  //         </Text3D>
+  //         <GulToken scale={0.7} position={[3.1, 0, -0.15]} rotation={[0, Math.PI/2, 0]}/>
+  //       </group>}
+  //     </>
+  //     {/* </Physics> */}
+  //     <YootButtonModel
+  //       position={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.position}
+  //       rotation={layout[device].howToPlay.throwingTheDicePage.yootButtonModel.rotation}
+  //       turnedOn={yootButtonTurnedOn}
+  //     />
+  //     <Cursor
+  //       position={layout[device].howToPlay.throwingTheDicePage.cursor.position}
+  //       rotation={layout[device].howToPlay.throwingTheDicePage.cursor.rotation}
+  //       scale={layout[device].howToPlay.throwingTheDicePage.cursor.scale}
+  //       effect={effect}
+  //     />
+  //   </group>
+  // }
 
   function MovingPiecesPage() {
     const springs = useSpring({
@@ -1158,13 +1581,13 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           </mesh>
           <Text3D
               font="fonts/Luckiest Guy_Regular.json" 
-              position={[-1.1, 0.1, -0.1]}
+              position={[-1.2, 0.1, -0.1]}
               rotation={[-Math.PI/2, 0, 0]}
               height={0.01}
               lineHeight={0.9} 
-              size={0.35}
+              size={0.33}
           >
-              {`Welcome\nBack!`}
+              {`Finished\nthe route!`}
               <meshStandardMaterial color='yellow'/>
           </Text3D>
           <group ref={borderMesh0Ref}>
@@ -1480,7 +1903,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         height={layout[device].howToPlay.scoringPage.text.height}
         lineHeight={layout[device].howToPlay.scoringPage.text.lineHeight}
       >
-        {`5. First team to\nmove four pieces\naround the board\nto earth wins!`}
+        {`5. Bring the piece\nhome to score.\nFirst team to score\nfour pieces wins!`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <Tiles device={device}/>
@@ -2924,22 +3347,22 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         </Text3D>
       </group>
       <group name='tab-4' position={[0,0,2.4]} scale={0.8}>
-        <mesh position={[1, -0.1, -0.15]}>
-          <boxGeometry args={[2.3, 0.05, 0.6]}/>
+        <mesh position={[2.05, -0.1, -0.15]}>
+          <boxGeometry args={[4.4, 0.05, 0.6]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
-        <mesh position={[1, -0.1, -0.15]}>
-          <boxGeometry args={[2.4, 0.04, 0.7]}/>
+        <mesh position={[2.05, -0.1, -0.15]}>
+          <boxGeometry args={[4.5, 0.04, 0.7]}/>
           <meshStandardMaterial color={scoringHover || page === 4 ? 'green' : 'yellow'}/>
         </mesh>
         <mesh 
           name='tab-4-wrapper' 
-          position={[1, -0.1, -0.15]}
+          position={[2.05, -0.1, -0.15]}
           onClick={handleScoringClick}
           onPointerEnter={handleScoringPointerEnter}
           onPointerLeave={handleScoringPointerLeave}
         >
-          <boxGeometry args={[2.4, 0.1, 0.7]}/>
+          <boxGeometry args={[4.5, 0.1, 0.7]}/>
           <meshStandardMaterial transparent opacity={0}/>
         </mesh>
         <Text3D
@@ -2948,7 +3371,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={0.3}
           height={0.01}
         >
-          5. scoring
+          5. scoring & winning
           <meshStandardMaterial color={scoringHover || page === 4 ? 'green' : 'yellow'}/>
         </Text3D>
       </group>

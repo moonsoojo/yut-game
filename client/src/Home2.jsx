@@ -22,7 +22,7 @@ import Ufo from './meshes/Ufo';
 export default function Home2() {
 
   const [device] = useAtom(deviceAtom)
-  const [display, setDisplay] = useState('board')
+  const [display, setDisplay] = useState('howToPlay')
   const [client] = useAtom(clientAtom)
   
   const { scene, materials } = useGLTF(
