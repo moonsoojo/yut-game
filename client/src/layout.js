@@ -43,19 +43,19 @@ export default {
       },
       about: {
         show: false,
-        position: [0, 0, 6],
+        position: [0, 0, 5.8],
         rotation: [0,0,0],
-        scale: 1.5
+        scale: 1.7
       },
       howToPlay: {
         position: [0, 0, 7],
         rotation: [0,0,0],
-        scale: 1.5
+        scale: 1.7
       },
       letsPlay: {
-        position: [0, 0, 8],
+        position: [0, 0, 8.2],
         rotation: [0,0,0],
-        scale: 1.5
+        scale: 1.7
       },
       pieces: {
         position: [0,0,0],
@@ -67,12 +67,167 @@ export default {
       }
     },
     howToPlay: {
-      position: [0,0,-2],
+      position: [0,0,0],
       rotation: [0,0,0],
-      scale: 0.4,
+      scale: 0.8,
+      pickingTheTeamsPage: {
+        cursorPos: [
+          [4,0,0],
+          [-0.5, 0.5, -1.4],
+          [-0.5, 0.5, 2.3],
+        ],
+        text: {
+          position: [-5,0,-4],
+          rotation: [-Math.PI/2,0,0],
+          size: 0.5,
+          height: 0.01
+        },
+        rockets: {
+          position: [-5, 0, -2.5],
+          text: {
+            position: [0,0,0],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.5,
+            height: 0.01
+          },
+          piece0: {
+            position: [0.4,0,0.6]
+          },
+          piece1: {
+            position: [1.2,0,0.6]
+          },
+          piece2: {
+            position: [2.0,0,0.6]
+          },
+          piece3: {
+            position: [2.8,0,0.6]
+          },
+          joinButton: {
+            position: [3, 0, 0.8],
+            text: {
+              position: [0.7,0,0],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            }
+          },
+          names: [
+            {
+              position: [0,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,3.4],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,4.1],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,4.8],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+          ]
+        },
+        ufos: {
+          position: [0.6, 0, -2.5],
+          text: {
+            position: [0,0,0],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.5,
+            height: 0.01
+          },
+          piece0: {
+            position: [0.4,0,0.6]
+          },
+          piece1: {
+            position: [1.4,0,0.6]
+          },
+          piece2: {
+            position: [2.4,0,0.6]
+          },
+          piece3: {
+            position: [3.4,0,0.6]
+          },
+          joinButton: {
+            position: [3.7, 0, 0.8],
+            text: {
+              position: [0.7,0,0],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            }
+          },
+          names: [
+            {
+              position: [0,0,2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,2.7],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,3.4],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,4.1],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,4.8],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,5.5],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+            {
+              position: [0,0,6.2],
+              rotation: [-Math.PI/2, 0, 0],
+              size: 0.4,
+              height: 0.01
+            },
+          ]
+        },
+        inputModal: {
+          position: [0, 0.1, 1]
+        }
+      },
       throwingTheDicePage: {
         text: {
-          position: [0.5, 0, -2]
+          position: [-5, 0, -4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.5,
+          height: 0.01
         },
         moveText: {
           text: "MOVE: 4-STEPS",
@@ -100,60 +255,220 @@ export default {
           ],
         },
         yootButtonModel: {
-          position: [3, 0, 1],
-          rotation: [Math.PI/16, Math.PI/2, Math.PI/32, "ZXY"]
+          position: [3, 0, 3],
+          rotation: [0, Math.PI/2, 0, "ZXY"]
         },
         cursor: {
-          position: [4, 0.3, 2.4],
+          position: [4, 0.3, 4.4],
           rotation: [0, 0, 0],
           scale: [3, 3, 0.1]
         },
       },
+      readingTheDicePage: {
+        text: {
+          position: [-5, 0, -4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.5,
+          height: 0.01,
+        },
+        do: {
+          position: [-4.7, 0, -1.3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        ge: {
+          position: [-0.6, 0, -1.3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        gul: {
+          position: [3.1, 0, -1.3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-2.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-1.8],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.55
+          }
+        },
+        yoot: {
+          position: [-4.7, 0, 3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        mo: {
+          position: [-0.6, 0, 3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+        backdo: {
+          position: [3.5, 0, 3],
+          scale: 0.6,
+          text: {
+            line0: {
+              position: [-0.2,0,-3.5],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line1: {
+              position: [-0.2,0,-2.6],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            },
+            line2: {
+              position: [-0.2,0,-1.7],
+              rotation: [-Math.PI/4, 0, 0],
+              size: 0.5,
+              height: 0.01,
+            }
+          },
+          yootSet: {
+            position: [0, 0, 0.5],
+            scale: 0.5
+          }
+        },
+      },
       movingPiecesPage: {
         text: {
-          position: [-4,0,-5.5],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.55
-        },
-        firstCornerTiles: {
-          position: [-2, 0, -2.5]
+          position: [-5, 0, -4],
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.5
         },
         homePieces: {
-          position: [-2, 0, -3]
+          position: [-2, 0, -1.5]
+        },
+        firstCornerTiles: {
+          position: [-2, 0, -2]
         },
         moveDisplay: {
-          position: [-3.3, 0, 0.7]
+          position: [-3.3, 0, 1.2]
         },
         cursorPos0: [1, 0.3, 0],
-        cursorPos1: [-0.5, 0.3, -1.4],
+        cursorPos1: [-0.5, 0.3, -0.2],
         cursorPos2: [2.3, 1.3, 2],
         rocket3Pos0: [0.8,-0.5,0.7],
         rocket3Pos1: [
           -Math.cos(((0+5) * (Math.PI * 2)) / 20) * 5,
           1.5,
-          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5,
+          Math.sin(((0+5) * (Math.PI * 2)) / 20) * 5 - 0.5,
         ],
         rocket3Pos2: [
           -Math.cos(((1+5) * (Math.PI * 2)) / 20) * 5,
           0.9,
-          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5,
+          Math.sin(((1+5) * (Math.PI * 2)) / 20) * 5 - 0.5,
         ],
         rocket3Pos3: [
           -Math.cos(((2+5) * (Math.PI * 2)) / 20) * 5,
           0.9,
-          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5,
+          Math.sin(((2+5) * (Math.PI * 2)) / 20) * 5 - 0.5,
         ],
         rocket3Pos4: [
           -Math.cos(((3+5) * (Math.PI * 2)) / 20) * 5,
           0.9,
-          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5,
+          Math.sin(((3+5) * (Math.PI * 2)) / 20) * 5 - 0.5,
         ],
       },
       scoringPage: {
+        scale: 0.8,
+        position: [0, 0, 0.5],
         text: {
           position: [1,0,0.5],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.4,
+          rotation: [-Math.PI/2, 0, 0],
+          size: 0.5,
           lineHeight: 1,
           height: 0.01
         },
@@ -173,13 +488,13 @@ export default {
           [1, 0.2, 4.2]
         ],
         moveText: {
-          rotation: [-Math.PI/8, 0, 0],
-          position: [0.5,0,2.2],
+          rotation: [-Math.PI/2, 0, 0],
+          position: [0.7,0,2],
           fontSize: 22
         },
         scoreText: {
-          rotation: [-Math.PI/8, 0, 0],
-          position: [0.5, 0, 3],
+          rotation: [-Math.PI/2, 0, 0],
+          position: [0.7, 0, 2.8],
           size: 0.4
         },
         letsGoText: {
@@ -198,12 +513,16 @@ export default {
             y: 0,
             z: 0.5
           }
+        },
+        welcomeBackText: {
+          position: [2, 0, 2],
+          rotation: [-Math.PI/2,0,0]
         }
       },
       catchingPiecesPage: {
         text: {
-          position: [-5,0,-5.5],
-          rotation: [-Math.PI/4, 0, 0],
+          position: [-5,0,-4],
+          rotation: [-Math.PI/2, 0, 0],
           size: 0.5,
           height: 0.01,
           lineHeight: 0.9
@@ -578,168 +897,10 @@ export default {
           ]
         }
       },
-      readingTheDicePage: {
-        text: {
-          position: [-6,0,-6.9],
-          rotation: [-Math.PI/4, 0, 0],
-          size: 0.55,
-          height: 0.01,
-        },
-        do: {
-          position: [-4.7, 0, -2.7],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            }
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.55
-          }
-        },
-        ge: {
-          position: [-0.6, 0, -2.7],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            }
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.55
-          }
-        },
-        gul: {
-          position: [3.1, 0, -2.7],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-2.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-1.8],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            }
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.55
-          }
-        },
-        yoot: {
-          position: [-4.7, 0, 3],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line2: {
-              position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.5
-          }
-        },
-        mo: {
-          position: [-0.6, 0, 3],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line2: {
-              position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.5
-          }
-        },
-        backdo: {
-          position: [3.5, 0, 3],
-          scale: 0.8,
-          text: {
-            line0: {
-              position: [-0.2,0,-3.5],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line1: {
-              position: [-0.2,0,-2.6],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            },
-            line2: {
-              position: [-0.2,0,-1.7],
-              rotation: [-Math.PI/4, 0, 0],
-              size: 0.5,
-              height: 0.01,
-            }
-          },
-          yootSet: {
-            position: [0, 0, 0.5],
-            scale: 0.5
-          }
-        },
-      },
       pagination: {
         pageRadius: 0.3,
         arrowRadius: 0.4,
-        position: [0, 0, 0.2],
+        position: [-0.3, 0, 0.5],
         scale: 0.8
       },
       tileRadius: {
@@ -754,45 +915,45 @@ export default {
       }
     },
     about: {
-      position: [-2.1, 0, -4.3],
-      rotation: [-Math.PI/4,0,0],
-      scale: 0.28,
+      position: [-4, 0, -3.3],
+      rotation: [-Math.PI/2,0,0],
+      scale: 0.5,
       mainDescription: {
         size: 0.6,
         line0Position: [0,0.5,0],
       },
       board: {
-        position: [5.5, -7.5, 0],
+        position: [6.5, -7.5, 0],
         rotation: [Math.PI/2, 0, 0],
-        scale: 0.6,
+        scale: 0.7,
         text: {
-          position: [-1,-5.5,-1],
+          position: [0,-5.5,0],
           size: 0.6
         }
       },
       pieces: {
-        position: [-1,-13,-1],
+        position: [-1,-13,0],
         size: 0.6,
         rockets: {
-          position: [4, -13, 0]
+          position: [4, -14, 0]
         },
         ufos: {
-          position: [7.5, -13, 0]
+          position: [7.5, -14, 0]
         }
       },
       yoot: {
-        position: [13, -8.5, -2],
+        position: [14.5, -8.5, 0],
         text: {
-          position: [10.5,-5.5,-1],
+          position: [11.5,-5.5,0],
           size: 0.6
         }
       },
       playersText: {
-        position: [11,-12.5,-1],
+        position: [11.5,-13,0],
         size: 0.6
       },
       ageText: {
-        position: [10,-1.5,-1],
+        position: [10,-1.5,0],
         size: 0.6
       }
     },
@@ -1422,6 +1583,9 @@ export default {
               height: 0.01
             },
           ]
+        },
+        inputModal: {
+          position: [0, 0.1, 0]
         }
       },
       throwingTheDicePage: {

@@ -47,52 +47,52 @@ import YootToken from './moveTokens/YootToken';
 
 export default function HowToPlay({ device, position, rotation, scale }) {
   
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(5)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {
-    clearTimeout(pageTimeout)
-    if (page === 0) { // picking teams
-      const page1Timeout = setTimeout(() => {
-        setPage(1)
-      }, 9000)
-      setPageTimeout(page1Timeout)
-    } else if (page === 1) { // throwing the dice
-      const page2Timeout = setTimeout(() => {
-        setPage(2)
-      }, 11000)
-      setPageTimeout(page2Timeout)
-    } else if (page === 2) { // reading the dice
-      const page3Timeout = setTimeout(() => {
-        setPage(3)
-      }, 9000)
-      setPageTimeout(page3Timeout)
-    } else if (page === 3) { // moving pieces
-      const page4Timeout = setTimeout(() => {
-        setPage(4)
-      }, 11400)
-      setPageTimeout(page4Timeout)
-    } else if (page === 4) { // scoring pieces
-      const page5Timeout = setTimeout(() => {
-        setPage(5)
-      }, 13900)
-      setPageTimeout(page5Timeout)
-    } else if (page === 5) { // catching pieces
-      const page6Timeout = setTimeout(() => {
-        setPage(6)
-      }, 11500)
-      setPageTimeout(page6Timeout)
-    } else if (page === 6) { // combining pieces
-      const page7Timeout = setTimeout(() => {
-        setPage(7)
-      }, 15500)
-      setPageTimeout(page7Timeout)
-    } else if (page === 7) { // shortcuts
-      const page0Timeout = setTimeout(() => {
-        setPage(0)
-      }, 23500)
-      setPageTimeout(page0Timeout)
-    }
+    // clearTimeout(pageTimeout)
+    // if (page === 0) { // picking teams
+    //   const page1Timeout = setTimeout(() => {
+    //     setPage(1)
+    //   }, 9000)
+    //   setPageTimeout(page1Timeout)
+    // } else if (page === 1) { // throwing the dice
+    //   const page2Timeout = setTimeout(() => {
+    //     setPage(2)
+    //   }, 11000)
+    //   setPageTimeout(page2Timeout)
+    // } else if (page === 2) { // reading the dice
+    //   const page3Timeout = setTimeout(() => {
+    //     setPage(3)
+    //   }, 9000)
+    //   setPageTimeout(page3Timeout)
+    // } else if (page === 3) { // moving pieces
+    //   const page4Timeout = setTimeout(() => {
+    //     setPage(4)
+    //   }, 11400)
+    //   setPageTimeout(page4Timeout)
+    // } else if (page === 4) { // scoring pieces
+    //   const page5Timeout = setTimeout(() => {
+    //     setPage(5)
+    //   }, 13900)
+    //   setPageTimeout(page5Timeout)
+    // } else if (page === 5) { // catching pieces
+    //   const page6Timeout = setTimeout(() => {
+    //     setPage(6)
+    //   }, 11500)
+    //   setPageTimeout(page6Timeout)
+    // } else if (page === 6) { // combining pieces
+    //   const page7Timeout = setTimeout(() => {
+    //     setPage(7)
+    //   }, 15500)
+    //   setPageTimeout(page7Timeout)
+    // } else if (page === 7) { // shortcuts
+    //   const page0Timeout = setTimeout(() => {
+    //     setPage(0)
+    //   }, 23500)
+    //   setPageTimeout(page0Timeout)
+    // }
   }, [page])
 
   function PickingTheTeamsPage() {
@@ -214,7 +214,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         friction: 26
       }
     })
-    return <group>
+    return <group scale={layout[device].howToPlay.pickingTheTeamsPage.scale}>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={layout[device].howToPlay.pickingTheTeamsPage.text.position}
@@ -225,7 +225,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         {'1. Press join to Pick a team.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
-      <group name='rockets' position={[-3, 0, -2.5]}>
+      <group name='rockets' position={layout[device].howToPlay.pickingTheTeamsPage.rockets.position}>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           position={layout[device].howToPlay.pickingTheTeamsPage.rockets.text.position}
@@ -426,7 +426,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         effectOpacity={springs.cursorEffectOpacity}
         />
       </animated.group>
-      <animated.group name='input-modal' scale={springs.inputModalScale}  position={[0, 0.1, 0]}>
+      <animated.group name='input-modal' scale={springs.inputModalScale}  position={layout[device].howToPlay.pickingTheTeamsPage.inputModal.position}>
         <mesh>
           <boxGeometry args={[5.7, 0.01, 3.4]}/>
           <meshStandardMaterial color='yellow'/>
@@ -708,7 +708,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       }
     })
 
-    return <group name='how-to-play-page-0'>
+    return <group name='how-to-play-page-0' scale={layout[device].howToPlay.throwingTheDicePage.scale}>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={layout[device].howToPlay.throwingTheDicePage.text.position}
@@ -716,7 +716,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         size={layout[device].howToPlay.throwingTheDicePage.text.size}
         height={layout[device].howToPlay.throwingTheDicePage.text.height}
       >
-        {`1. Throw the yoot (dice).`}
+        {`2. Throw the yoot (dice).`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       {/* <Physics> */}
@@ -1017,7 +1017,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       </group>
     }
 
-    return <group name='how-to-play-page-1'>
+    return <group name='moving-pieces-page'>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={layout[device].howToPlay.movingPiecesPage.text.position}
@@ -1025,7 +1025,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         size={layout[device].howToPlay.movingPiecesPage.text.size}
         height={0.01}
       >
-        {'3. Advance your piece.'}
+        {'4. Advance your piece.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <FirstCornerTiles position={layout[device].howToPlay.movingPiecesPage.firstCornerTiles.position}/>
@@ -1062,6 +1062,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     const freqG = 0.6
     const freqB = 0.8
     useFrame((state, delta) => {
+      // text changing in rainbow colors
       // letsGoMatRef.current.color.r = Math.cos(state.clock.elapsedTime*freqR * 4) + 0.3
       // letsGoMatRef.current.color.g = Math.cos(state.clock.elapsedTime*freqG * 4) + 0.4
       // letsGoMatRef.current.color.b = Math.cos(state.clock.elapsedTime*freqB * 4) + 0.5
@@ -1466,7 +1467,11 @@ export default function HowToPlay({ device, position, rotation, scale }) {
       </animated.group>;
     }
 
-    return <group>
+    return <group 
+      name='scoring-page' 
+      position={layout[device].howToPlay.scoringPage.position}
+      scale={layout[device].howToPlay.scoringPage.scale}
+    >
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
         position={layout[device].howToPlay.scoringPage.text.position}
@@ -1475,7 +1480,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         height={layout[device].howToPlay.scoringPage.text.height}
         lineHeight={layout[device].howToPlay.scoringPage.text.lineHeight}
       >
-        {`4. First team to\nmove four pieces\naround the board\nto earth wins!`}
+        {`5. First team to\nmove four pieces\naround the board\nto earth wins!`}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <Tiles device={device}/>
@@ -1643,7 +1648,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
     }
 
     // ufo is flipped over, moved to a corner and scaled to 0. show sparkle
-    return <group>
+    return <group name='catching-pieces-page'>
         <Text3D
           font="fonts/Luckiest Guy_Regular.json"
           position={layout[device].howToPlay.catchingPiecesPage.text.position}
@@ -1652,7 +1657,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.catchingPiecesPage.text.height}
           lineHeight={layout[device].howToPlay.catchingPiecesPage.text.lineHeight}
         >
-          {`5. If you move into a tile with\nan opponent, it has to return\nto the starting point. You\nwill get another turn.`}
+          {`6. If you move into a tile with\nan opponent, it has to return\nto the starting point. You\nwill get another turn.`}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       <FirstCornerTiles position={springs.firstCornerTilesPos}/>
@@ -1928,7 +1933,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
         height={layout[device].howToPlay.combiningPiecesPage.text.height}
         lineHeight={layout[device].howToPlay.combiningPiecesPage.text.lineHeight}
       >
-        {'6. If you move a piece into a\ntile with your own piece,\nthey will move together on\nyour next turn.'}
+        {'7. If you move a piece into a\ntile with your own piece,\nthey will move together on\nyour next turn.'}
         <meshStandardMaterial color='yellow'/>
       </Text3D>
       <FirstCornerTiles position={layout[device].howToPlay.combiningPiecesPage.firstCornerTiles.position}/>
@@ -2416,7 +2421,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           height={layout[device].howToPlay.shortcutsPage.text.height}
           lineHeight={layout[device].howToPlay.shortcutsPage.text.lineHeight}
         >
-          {`7. When you start a move\nfrom a planet or the Moon,\nyou can take a shortcut.`}
+          {`8. When you start a move\nfrom a planet or the Moon,\nyou can take a shortcut.`}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </animated.group>
@@ -2482,7 +2487,7 @@ export default function HowToPlay({ device, position, rotation, scale }) {
           size={layout[device].howToPlay.readingTheDicePage.text.size}
           height={layout[device].howToPlay.readingTheDicePage.text.height}
         >
-          {'2. How to read the dice'}
+          {'3. How to read the dice'}
           <meshStandardMaterial color='yellow'/>
         </Text3D>
       </animated.group>
@@ -3118,12 +3123,12 @@ export default function HowToPlay({ device, position, rotation, scale }) {
 
   const pages = [<PickingTheTeamsPage/>, <ThrowingTheDicePage/>, <ReadingTheDicePage/>, <MovingPiecesPage/>, <ScoringPage/>, <CatchingPiecesPage/>, <CombiningPiecesPage/>, <ShortcutsPage/>]
 
-  console.log(layout[device].howToPlay.pagination.position)
   return <group position={position} rotation={rotation} scale={scale}>
     {pages[page]}
     { device === 'portrait' && <Pagination 
-    position={layout[device].howToPlay.pagination.position}
-    scale={layout[device].howToPlay.pagination.scale}/> }
+      position={layout[device].howToPlay.pagination.position}
+      scale={layout[device].howToPlay.pagination.scale}
+    /> }
     { device === 'landscapeDesktop' && <Tabs position={[5.5, 0, -4]} scale={1}/> }
   </group>
 }
