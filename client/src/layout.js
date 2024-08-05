@@ -528,9 +528,9 @@ export default {
           height: 0.01
         },
         tilesPos0: [0,0,-1.5],
-        tilesPos1: [-2, 0, -7],
+        tilesPos1: [-2, 0.5, -4.3],
         tilesScale0: 1,
-        tilesScale1: 2,
+        tilesScale1: 1.3,
         rocketHomeScale1: 1,
         rocket0Pos: [0.8, 0, 0],
         rocket1Pos: [1.6, 0, 0],
@@ -559,9 +559,9 @@ export default {
         },
         fireworks: {
           initialPosition: {
-            x: -0.5,
-            y: 0,
-            z: -2,
+            x: -1,
+            y: 2,
+            z: -3,
           },
           positionRange: {
             x: 0.5,
@@ -570,7 +570,7 @@ export default {
           }
         },
         welcomeBackText: {
-          position: [2, 0, 2],
+          position: [2.5, 0, 2],
           rotation: [-Math.PI/2,0,0]
         }
       },
@@ -1225,7 +1225,7 @@ export default {
         }
       },
       settings: {
-        position: [4.3, 0, -4.5],
+        position: [4.1, 0, -4.5],
         scale: 0.9,
         text: {
           position: [-0.9, 0.025, 0.15],
@@ -1235,13 +1235,13 @@ export default {
         }
       },
       rulebookButton: {
-        position: [4.6, 0, -3.9],
+        position: [4.375, 0, -3.9],
         scale: 0.9,
-        text: {
-          position: [-0.57, 0.025, 0.15],
-          rotation: [-Math.PI/2, 0, 0],
-          size: 0.3,
-          height: 0.01,
+      },
+      rulebook: {
+        position: [0, 9, 3],
+        blocker: {
+          args: [12, 0.1, 10]
         }
       },
       piecesSection: {
@@ -1805,6 +1805,8 @@ export default {
         ],
       },
       scoringPage: {
+        scale: 0.8,
+        position: [0, 0, 0.5],
         text: {
           position: [1.5,0,1.5],
           rotation: [-Math.PI/2, 0, 0],
@@ -1813,9 +1815,9 @@ export default {
           height: 0.01
         },
         tilesPos0: [0,0,0],
-        tilesPos1: [-2, 0.5, -4],
+        tilesPos1: [-2, 0.5, -2],
         tilesScale0: 0.8,
-        tilesScale1: 1.5,
+        tilesScale1: 1,
         rocketHomeScale1: 1.1,
         rocket0Pos: [0.8,0.5,-0.1],
         rocket1Pos: [1.8,0.5,-0.1],
@@ -1845,8 +1847,8 @@ export default {
         fireworks: {
           initialPosition: {
             x: -1,
-            y: 0,
-            z: -3,
+            y: 2,
+            z: -1,
           },
           positionRange: {
             x: 1,
@@ -1855,7 +1857,8 @@ export default {
           }
         },
         welcomeBackText: {
-          position: [2.5, 0, 2]
+          position: [2.5, 0, 2],
+          scale: 1.2
         }
       },
       catchingPiecesPage: {
@@ -2044,7 +2047,7 @@ export default {
           scales: [1, 0] 
         },
         tilesPos: [
-          [0,0,2],
+          [0,0,1.7],
           [-3, 0, -1.5]
         ],
         tilesScale: [
@@ -2627,12 +2630,13 @@ export default {
         }
       },
       rulebookButton: {
-        position: [9.33, 0, -4.8],
-        text: {
-          position: [-0.58, 0.025, 0.15],
-          rotation: [-Math.PI/2, 0, 0],
-          size: 0.3,
-          height: 0.01,
+        position: [9.3, 0, -4.8],
+        scale: 1,
+      },
+      rulebook: {
+        position: [-1.5, 9, 3],
+        blocker: {
+          args: [12, 0.1, 9]
         }
       },
       piecesSection: {

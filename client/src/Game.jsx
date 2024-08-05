@@ -48,6 +48,7 @@ import { formatName } from "./helpers/helpers.js";
 import { useFrame } from "@react-three/fiber";
 import Star from "./meshes/Star.jsx";
 import GameLog from "./GameLog.jsx";
+import HowToPlay from "./HowToPlay.jsx";
 
 // There should be no state
 export default function Game() {
@@ -63,11 +64,10 @@ export default function Game() {
   const [helperTiles] = useAtom(helperTilesAtom)
   const [tiles] = useAtom(tilesAtom)
   const [winner] = useAtom(winnerAtom)
-  const params = useParams();
-
-  
   const [readyToStart] = useAtom(readyToStartAtom)
   const [hostName] = useAtom(hostNameAtom)
+  const [showRulebook, setShowRulebook] = useState(false);
+  const params = useParams();
 
   useEffect(() => {
     socket.emit('joinRoom', { roomId: params.id })
@@ -180,70 +180,6 @@ export default function Game() {
         /> }
       </group> }
     </>
-  }
-
-  function HostName({ position, rotation }) {
-    const [hostName] = useAtom(hostNameAtom)
-    return <group position={position} rotation={rotation}>
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        size={layout[device].game.hostName.size}
-        height={layout[device].game.hostName.height}
-      >
-        {`HOST: ${hostName}`}
-        <meshStandardMaterial color='yellow'/>
-      </Text3D>
-    </group>
-  }
-
-  function CurrentPlayer({ position, pieceScale }) {
-    const [teams] = useAtom(teamsAtom)
-
-    // If player disconnects, and there's no player remaining in the team,
-    // don't display a name
-    const player = teams[turn.team].players[turn.players[turn.team]]
-    const name = player ? player.name : ''
-
-    return <group position={position}>
-      { turn.team === 0 && <Rocket
-        position={[0, 0, 0]}
-        rotation={[0, 0, 0]}
-        scale={pieceScale}
-        animation={null}
-      />}
-      { turn.team === 1 && <Ufo
-        position={[0, 0, 0.2]}
-        rotation={[0, 0, 0]}
-        scale={pieceScale}
-        animation={null}
-      />}
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].game.currentPlayer.text.position}
-        rotation={layout[device].game.currentPlayer.text.rotation}
-        size={layout[device].game.currentPlayer.text.size}
-        height={layout[device].game.currentPlayer.text.height}
-      >
-        {`${formatName(name)}`}
-        <meshStandardMaterial color='yellow'/>
-      </Text3D>
-    </group>
-  }
-
-  function handleInvite() {
-
-  }
-
-  function handleDiscord() {
-
-  }
-
-  function handleRules() {
-
-  }
-
-  function handleSettings() {
-
   }
 
   // Animations
@@ -376,10 +312,10 @@ export default function Game() {
       <mesh
         material={yellowMaterial}
       >
-        <boxGeometry args={[2.05, 0.03, 0.55]}/>
+        <boxGeometry args={[2.1, 0.03, 0.55]}/>
       </mesh>
       <mesh>
-        <boxGeometry args={[2, 0.04, 0.5]}/>
+        <boxGeometry args={[2.05, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -419,17 +355,21 @@ export default function Game() {
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('rulebook button click')
+      if (showRulebook) {
+        setShowRulebook(false)
+      } else {
+        setShowRulebook(true)
+      }
     }
 
     return <group position={position} scale={scale}>
       <mesh
         material={yellowMaterial}
       >
-        <boxGeometry args={[1.4, 0.03, 0.55]}/>
+        <boxGeometry args={[1.5, 0.03, 0.6]}/>
       </mesh>
       <mesh>
-        <boxGeometry args={[1.35, 0.04, 0.5]}/>
+        <boxGeometry args={[1.45, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -438,15 +378,15 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[1.5, 0.1, 0.6]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].game.rulebookButton.text.position}
-        rotation={layout[device].game.rulebookButton.text.rotation}
-        size={layout[device].game.rulebookButton.text.size}
-        height={layout[device].game.rulebookButton.text.height}
+        position={[-0.6,0.02,0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
         material={yellowMaterial}
       >
         Rules
@@ -548,8 +488,8 @@ export default function Game() {
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>
         <RulebookButton 
-        position={layout[device].game.rulebookButton.position}
-        scale={layout[device].game.rulebookButton.scale}
+          position={layout[device].game.rulebookButton.position}
+          scale={layout[device].game.rulebookButton.scale}
         />
         <PiecesSection 
         position={layout[device].game.piecesSection.position}
@@ -567,12 +507,22 @@ export default function Game() {
           tokenScale={layout[device].game.moveList.tokenScale}
           tokenPosition={layout[device].game.moveList.tokenPosition}
         /> }
-        </animated.group>
-      }
+      </animated.group> }
       { gamePhase === 'finished' && <animated.group scale={winScreenScale}>
         { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
         { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
       </animated.group> }
+      { showRulebook && <group>
+        <mesh name='blocker' position={[0.5,8,3]}>
+          <boxGeometry args={layout[device].game.rulebook.blocker.args}/>
+          <meshStandardMaterial color='black' transparent opacity={0.95}/>
+        </mesh>
+        <HowToPlay device={device} position={layout[device].game.rulebook.position} scale={0.8}/>
+        <group name='rulebook-close-button' position={[0,5,-5]} scale={5}>
+          <boxGeometry args={[1, 1, 1]}/>
+          <meshStandardMaterial color='yellow'/>
+        </group>
+      </group>}
     </>
   );
 }
