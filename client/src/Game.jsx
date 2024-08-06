@@ -341,16 +341,16 @@ export default function Game() {
   }
 
   function RulebookButton({ position, scale }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+    const [hover, setHover] = useState(false)
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true)
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false)
     }
 
     function handlePointerDown(e) {
@@ -363,10 +363,9 @@ export default function Game() {
     }
 
     return <group position={position} scale={scale}>
-      <mesh
-        material={yellowMaterial}
-      >
+      <mesh>
         <boxGeometry args={[1.5, 0.03, 0.6]}/>
+        <meshStandardMaterial color={ hover || showRulebook ? 'green': 'yellow' }/>
       </mesh>
       <mesh>
         <boxGeometry args={[1.45, 0.04, 0.5]}/>
@@ -387,9 +386,9 @@ export default function Game() {
         rotation={[-Math.PI/2, 0, 0]}
         size={0.3}
         height={0.01}
-        material={yellowMaterial}
       >
         Rules
+        <meshStandardMaterial color={ hover || showRulebook ? 'green': 'yellow' }/>
       </Text3D>
     </group>
   }
@@ -402,6 +401,8 @@ export default function Game() {
   // If state is contained globally, don't pass it as a prop
     // example: <Host/> is in this component. 'device' is
     // declared at the top. don't pass it in as a prop
+
+
 
   return (<>
       {/* <Perf/> */}
@@ -512,16 +513,18 @@ export default function Game() {
         { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
         { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
       </animated.group> }
-      { showRulebook && <group>
+      { showRulebook && gamePhase !== 'finished' && <group>
         <mesh name='blocker' position={[0.5,8,3]}>
           <boxGeometry args={layout[device].game.rulebook.blocker.args}/>
           <meshStandardMaterial color='black' transparent opacity={0.95}/>
         </mesh>
-        <HowToPlay device={device} position={layout[device].game.rulebook.position} scale={0.8}/>
-        <group name='rulebook-close-button' position={[0,5,-5]} scale={5}>
-          <boxGeometry args={[1, 1, 1]}/>
-          <meshStandardMaterial color='yellow'/>
-        </group>
+        <HowToPlay 
+          device={device} 
+          position={layout[device].game.rulebook.position} 
+          scale={0.8}
+          closeButton={true}
+          setShowRulebook={setShowRulebook}
+        />
       </group>}
     </>
   );

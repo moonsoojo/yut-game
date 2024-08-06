@@ -528,7 +528,7 @@ export default {
           height: 0.01
         },
         tilesPos0: [0,0,-1.5],
-        tilesPos1: [-2, 0.5, -4.3],
+        tilesPos1: [-1, 0.5, -5],
         tilesScale0: 1,
         tilesScale1: 1.3,
         rocketHomeScale1: 1,
@@ -1242,6 +1242,10 @@ export default {
         position: [0, 9, 3],
         blocker: {
           args: [12, 0.1, 10]
+        },
+        closeButton: {
+          position: [5.7,0,-5],
+          scale: 1
         }
       },
       piecesSection: {
@@ -1815,7 +1819,7 @@ export default {
           height: 0.01
         },
         tilesPos0: [0,0,0],
-        tilesPos1: [-2, 0.5, -2],
+        tilesPos1: [-0.5, 0.5, -3],
         tilesScale0: 0.8,
         tilesScale1: 1,
         rocketHomeScale1: 1.1,
@@ -2637,6 +2641,10 @@ export default {
         position: [-1.5, 9, 3],
         blocker: {
           args: [12, 0.1, 9]
+        },
+        closeButton: {
+          position: [9,0,5.3],
+          scale: 1
         }
       },
       piecesSection: {

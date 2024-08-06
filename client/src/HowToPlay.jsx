@@ -49,7 +49,9 @@ export default function HowToPlay({
   device, 
   position=[0,0,0], 
   rotation=[0,0,0], 
-  scale=1 
+  scale=1,
+  closeButton=false,
+  setShowRulebook=null
 }) {
   
   const [page, setPage] = useState(0)
@@ -3341,6 +3343,55 @@ export default function HowToPlay({
     </group>
   }
 
+  function CloseButton({position, scale}) {
+    const rulebookCloseButtonWrapper = useRef();
+    const [rulebookCloseButtonHover, setRulebookCloseButtonHover] = useState(false);
+    function handleRulebookCloseButtonPointerEnter() {
+      setRulebookCloseButtonHover(true)
+    }
+    function handleRulebookCloseButtonPointerLeave() {
+      setRulebookCloseButtonHover(false)
+    }
+    function handleRulebookCloseButtonPointerClick() {
+      setShowRulebook(false)
+    }
+
+    return <group 
+      name='rulebook-close-button' 
+      position={position}
+      scale={scale}
+    >
+      <mesh rotation={[Math.PI/2, 0, Math.PI/4]}>
+        <capsuleGeometry args={[0.06, 0.35, 4, 32]}/>
+        <meshStandardMaterial color={ rulebookCloseButtonHover ? 'green' : 'yellow' }/>
+      </mesh>
+      <mesh rotation={[Math.PI/2, 0, -Math.PI/4]}>
+        <capsuleGeometry args={[0.06, 0.35, 4, 32]}/>
+        <meshStandardMaterial color={ rulebookCloseButtonHover ? 'green' : 'yellow' }/>
+      </mesh>
+      <group name='rulebook-close-button'>
+        <mesh>
+          <boxGeometry args={[0.6, 0.02, 0.6]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh>
+          <boxGeometry args={[0.7, 0.01, 0.7]}/>
+          <meshStandardMaterial color={ rulebookCloseButtonHover ? 'green' : 'yellow' }/>
+        </mesh>
+        <mesh 
+          name='rulebook-close-button-wrapper' 
+          ref={rulebookCloseButtonWrapper}
+          onPointerEnter={handleRulebookCloseButtonPointerEnter}
+          onPointerLeave={handleRulebookCloseButtonPointerLeave}
+          onClick={handleRulebookCloseButtonPointerClick}
+        >
+          <boxGeometry args={[0.7, 0.02, 0.7]}/>
+          <meshStandardMaterial color='white' transparent opacity={0}/>
+        </mesh>
+      </group>
+    </group>
+  }
+
   const pages = [<PickingTheTeamsPage/>, <ThrowingTheDicePage/>, <ReadingTheDicePage/>, <MovingPiecesPage/>, <ScoringPage/>, <CatchingPiecesPage/>, <CombiningPiecesPage/>, <ShortcutsPage/>]
 
   return <group position={position} rotation={rotation} scale={scale}>
@@ -3350,6 +3401,10 @@ export default function HowToPlay({
       scale={layout[device].howToPlay.pagination.scale}
     /> }
     { device === 'landscapeDesktop' && <Tabs position={[5.5, 0, -4]} scale={1}/> }
+    { closeButton && <CloseButton
+      position={layout[device].game.rulebook.closeButton.position} 
+      scale={layout[device].game.rulebook.closeButton.scale
+    }/> }
   </group>
 }
 
