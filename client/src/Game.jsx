@@ -50,6 +50,9 @@ import Star from "./meshes/Star.jsx";
 import GameLog from "./GameLog.jsx";
 import HowToPlay from "./HowToPlay.jsx";
 
+// react spring
+import { MeshDistortMaterial } from '@react-three/drei'
+
 // There should be no state
 export default function Game() {
   console.log(`[Game]`)
@@ -74,7 +77,6 @@ export default function Game() {
   }, [])
 
   function LetsPlayButton({ position }) {
-    console.log(`[Game][LetsPlayButton]`)
     const [client] = useAtom(clientAtom)
     
     function DisabledButton({ position, scale }) {
@@ -191,31 +193,56 @@ export default function Game() {
   })
 
   function InviteButton({ position }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+    const [hover, setHover] = useState(false);
+    const [springs, api] = useSpring(() => ({        
+      from: {
+        opacity: 0, 
+      }
+    }))
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true)
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false);
     }
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('invite button click')
+      navigator.clipboard.writeText(window.location.href)
+      api.start({
+        from: {
+          opacity: 1
+        },
+        to: [
+          {
+            opacity: 1
+          },
+          { 
+            opacity: 0,
+            delay: 500,
+            config: {
+              tension: 170,
+              friction: 26
+            }
+          }
+        ]
+      })
     }
 
     return <group position={position}>
-      <mesh
-        material={yellowMaterial}
-      >
-        <boxGeometry args={[1.5, 0.03, 0.55]}/>
+      <mesh>
+        <boxGeometry args={layout[device].game.invite.outerBox.args}/>
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </mesh>
       <mesh>
-        <boxGeometry args={[1.45, 0.04, 0.5]}/>
+        <boxGeometry args={layout[device].game.invite.innerBox.args}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -224,45 +251,64 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[
+          layout[device].game.invite.outerBox.args[0], 
+          0.1, 
+          layout[device].game.invite.outerBox.args[2], 
+        ]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-0.61, 0.025, 0.15]}
+        position={layout[device].game.invite.text.position}
         rotation={[-Math.PI/2, 0, 0]}
         size={layout[device].game.invite.size}
         height={layout[device].game.invite.height}
-        material={yellowMaterial}
       >
-        Invite
+        {layout[device].game.invite.text.content}
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
+      </Text3D>
+      <Text3D 
+        name='copied-tooltip'
+        font="fonts/Luckiest Guy_Regular.json"
+        position={layout[device].game.invite.copiedText.position}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={layout[device].game.invite.size}
+        height={layout[device].game.invite.height}
+      >
+        copied!
+        <AnimatedMeshDistortMaterial
+          speed={5}
+          distort={0}
+          color='yellow'
+          transparent
+          opacity={springs.opacity}
+        />
       </Text3D>
     </group>
   }
 
   function DiscordButton({ position }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+    const [hover, setHover] = useState(false);
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true);
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false);
     }
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('discord button click')
     }
 
     return <group position={position}>
-      <mesh
-        material={yellowMaterial}
-      >
+      <mesh>
         <boxGeometry args={[1.83, 0.03, 0.55]}/>
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </mesh>
       <mesh>
         <boxGeometry args={[1.77, 0.04, 0.5]}/>
@@ -274,7 +320,7 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[1.83, 0.1, 0.55]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
@@ -283,9 +329,9 @@ export default function Game() {
         rotation={[-Math.PI/2, 0, 0]}
         size={layout[device].game.discord.size}
         height={layout[device].game.discord.height}
-        material={yellowMaterial}
       >
         DISCORD
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </Text3D>
     </group>
   }
@@ -438,7 +484,7 @@ export default function Game() {
           scale={layout[device].game.chat.scale}
         /> }
         <InviteButton position={layout[device].game.invite.position}/>
-        <DiscordButton position={layout[device].game.discord.position}/>
+        {/* <DiscordButton position={layout[device].game.discord.position}/> */}
         { disconnect && <DisconnectModal
           position={layout[device].game.disconnectModal.position}
           rotation={layout[device].game.disconnectModal.rotation}

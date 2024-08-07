@@ -1176,10 +1176,23 @@ export default {
         }
       },
       invite: {
-        position: [-3.92, 0, 5.1],
+        position: [-3.05, 0, 5.4],
         scale: 0.9,
         size: 0.3,
-        height: 0.01
+        height: 0.01,
+        text: {
+          content: `copy room\nlink to share`,
+          position: [-1.35, 0.025, -0.15]
+        },
+        copiedText: {
+          position: [-1.35, 0.025, -0.75]
+        },
+        outerBox: {
+          args: [3.2, 0.03, 1.3]
+        },
+        innerBox: {
+          args: [3.1, 0.04, 1.2]
+        }
       },
       discord: {
         position: [-3.75, 0, 5.8],
@@ -2578,9 +2591,23 @@ export default {
         }
       },
       invite: {
-        position: [-10.25, 0, 2.7],
+        position: [-8.35, 0, 2.7],
+        scale: 0.9,
         size: 0.3,
-        height: 0.01
+        height: 0.01,
+        text: {
+          content: `copy room link to share`,
+          position: [-2.55, 0.025, 0.15]
+        },
+        copiedText: {
+          position: [-2.55, 0.025, -0.5]
+        },
+        outerBox: {
+          args: [5.4, 0.03, 0.6]
+        },
+        innerBox: {
+          args: [5.3, 0.04, 0.5]
+        }
       },
       discord: {
         position: [-8.5, 0, 2.7],
