@@ -208,8 +208,7 @@ export const SocketManager = () => {
       // Enable 'Let's play' button
       if (room.gamePhase === 'lobby' && 
       room.teams[0].players.length > 0 && 
-      room.teams[1].players.length > 0 &&
-      room.host.socketId === socket.id) {
+      room.teams[1].players.length > 0) {
         setReadyToStart(true)
       } else {
         setReadyToStart(false)

@@ -1044,9 +1044,20 @@ export default {
           position: [-0.5,0,0.5],
           scale: 1.8,
           text: {
-            position: [-0.55, 0.025, -0.12],
+            position: [-0.6, 0.025, -0.25],
             rotation: [-Math.PI/2, 0, 0],
-            size: 0.3,
+            size: 0.2,
+            height: 0.01,
+            lineHeight: 0.9
+          }
+        },
+        waitingForHostButton: {
+          position: [-0.5,0,0.5],
+          scale: 1.8,
+          text: {
+            position: [-0.6, 0.025, -0.25],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.2,
             height: 0.01,
             lineHeight: 0.9
           }
@@ -1055,7 +1066,7 @@ export default {
           backdropWidth: 1.4,
           backdropHeight: 1.1,
           scale: 1.1,
-          position: [-0.5, 0, 0],
+          position: [-0.4, 0, 0.4],
           text: {
             position: [-0.8,0,-0.15],
             rotation: [-Math.PI/2,0,0],
@@ -1152,7 +1163,7 @@ export default {
         }
       },
       joinTeamModal: {
-        position: [-2.6, 0, -1.7],
+        position: [-2.9, 0, -1.7],
         rotation: [-Math.PI/2, 0, 0],
         scale: [1.3, 1.3, 1.3]
       },
@@ -1162,8 +1173,8 @@ export default {
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
-          height: '200px',
-          width: '220px',
+          height: '235px',
+          width: '240px',
           padding: '10px',
           fontSize: '24px',
         },
@@ -1262,7 +1273,7 @@ export default {
         }
       },
       piecesSection: {
-        position: [2.5, 0, 7.8],
+        position: [2.5, 0, 8],
         emptyPieces: {
           positions: [
             [0, 0, -0.3],
@@ -2459,11 +2470,22 @@ export default {
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
           position: [0.25,0,0.1],
-          scale: 1.48,
+          scale: 1.8,
           text: {
-            position: [-0.6, 0.025, -0.12],
+            position: [-0.6, 0.025, -0.25],
             rotation: [-Math.PI/2, 0, 0],
-            size: 0.3,
+            size: 0.2,
+            height: 0.01,
+            lineHeight: 0.9
+          }
+        },
+        waitingForHostButton: {
+          position: [0.25,0,0.1],
+          scale: 1.8,
+          text: {
+            position: [-0.6, 0.025, -0.25],
+            rotation: [-Math.PI/2, 0, 0],
+            size: 0.2,
             height: 0.01,
             lineHeight: 0.9
           }
@@ -2567,9 +2589,9 @@ export default {
         }
       },
       joinTeamModal: {
-        position: [-2.5, 0, -1.5],
+        position: [-3.4, 0, -2.5],
         rotation: [-Math.PI/2, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1.5, 1.5, 1.5]
       },
       chat: {
         position: [-11.05,0,3.1],

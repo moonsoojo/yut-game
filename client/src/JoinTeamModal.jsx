@@ -52,6 +52,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
     e.preventDefault()
     setName('')
     setJoinTeam(null);
+    setAlert('');
     return false;
   }
 
@@ -83,31 +84,34 @@ export default function JoinTeamModal({ position, rotation, scale }) {
           onSubmit={e => handleJoinSubmit(e)}>
           <div style={{
             top: '40%',
-            width: '136px',
+            width: '155px',
             backgroundColor: 'black',
-            border: '2px solid yellow',
+            border: '2px solid #F1EE92',
             padding: '10px'
           }}>
             <p style={{
               fontFamily: 'Luckiest Guy',
-              color: 'yellow',
+              color: '#F1EE92',
               fontSize: '15px',
               padding: '5px',
-              margin: '0px'
-            }}>Enter your name</p>
+              margin: '0px',
+              textAlign: 'center'
+            }}>
+              Join the {joinTeam === 0 ? <span style={{ color: '#FF5030' }}>rockets</span> : <span style={{ color: 'turquoise' }}>ufos</span>} as
+            </p>
             <input
               style={{
+                width: `142px`,
                 background: 'none',
                 border: 'none',
                 fontFamily: 'Luckiest Guy',
                 fontSize: `15px`,
-                color: 'yellow',
+                color: '#F1EE92',
                 padding: '5px',
-                width: `122px`,
-                border: '2px solid yellow'
+                border: '2px solid #F1EE92'
               }}
               onChange={e => setName(e.target.value)}
-              placeholder="here..."/>
+              placeholder="name..."/>
             <div>
               <p style={{ margin: '5px', color: 'red', fontFamily: 'Luckiest Guy', fontSize: '10px' }}>
                 {alert}
@@ -124,10 +128,10 @@ export default function JoinTeamModal({ position, rotation, scale }) {
                   fontFamily: 'Luckiest Guy',
                   fontSize: `15px`,
                   background: 'none',
-                  border: '2px solid yellow',
+                  border: `2px solid ${submitHover ? 'white' : '#F1EE92'}`,
                   margin: '5px',
                   padding: '5px',
-                  color: `${submitHover ? 'white' : 'yellow'}`,
+                  color: `${submitHover ? 'white' : '#F1EE92'}`,
                   position: 'relative'}}
                 onMouseOver={handleSubmitMouseEnter}
                 onMouseOut={handleSubmitMouseLeave}
@@ -141,7 +145,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
                   fontFamily: 'Luckiest Guy',
                   fontSize: `15px`,
                   background: 'none',
-                  border: '2px solid red',
+                  border: `2px solid ${cancelHover ? 'white' : 'red'}`,
                   margin: '5px',
                   padding: '5px',
                   color: `${cancelHover ? 'white' : 'red'}`,}}

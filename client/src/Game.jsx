@@ -34,6 +34,7 @@ import {
   helperTilesAtom,
   winnerAtom,
   clientAtom,
+  joinTeamAtom,
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -55,7 +56,6 @@ import { MeshDistortMaterial } from '@react-three/drei'
 
 // There should be no state
 export default function Game() {
-  console.log(`[Game]`)
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
@@ -70,6 +70,8 @@ export default function Game() {
   const [readyToStart] = useAtom(readyToStartAtom)
   const [hostName] = useAtom(hostNameAtom)
   const [showRulebook, setShowRulebook] = useState(false);
+  const [client, setClient] = useAtom(clientAtom)
+  
   const params = useParams();
 
   useEffect(() => {
@@ -77,16 +79,14 @@ export default function Game() {
   }, [])
 
   function LetsPlayButton({ position }) {
-    const [client] = useAtom(clientAtom)
-    
     function DisabledButton({ position, scale }) {
       return <group position={position} scale={scale}>
         <mesh>
-          <boxGeometry args={[1.4, 0.03, 1.2]}/>
+          <boxGeometry args={[1.5, 0.03, 1.3]}/>
           <meshStandardMaterial color='grey'/>
         </mesh>
         <mesh>
-          <boxGeometry args={[1.35, 0.04, 1.15]}/>
+          <boxGeometry args={[1.4, 0.04, 1.2]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <Text3D
@@ -97,13 +97,13 @@ export default function Game() {
           height={layout[device].game.letsPlayButton.disabledButton.text.height}
           lineHeight={layout[device].game.letsPlayButton.disabledButton.text.lineHeight}
         >
-          {`lets\nplay!`}
+          {`waiting\nfor\nplayers`}
           <meshStandardMaterial color='grey'/>
         </Text3D>
       </group>
     }
 
-    function ActivatedButton() {
+    function ActivatedButton({ position }) {
 
       const [hover, setHover] = useState(false)
   
@@ -146,7 +146,7 @@ export default function Game() {
   
       return <animated.group name='animated-group' scale={springs.scale}>
         <group name='lets-play-button-active' 
-        position={layout[device].game.letsPlayButton.activeButton.position} >
+        position={position}>
           <mesh 
             position={[0, 0, 0]} 
             rotation={[0, 0, 0]} 
@@ -173,15 +173,164 @@ export default function Game() {
       </animated.group>
     }
 
+    function WaitingForHostButton({ position, scale }) {
+      return <group position={position} scale={scale}>
+        <mesh>
+          <boxGeometry args={[1.5, 0.03, 1.3]}/>
+          <meshStandardMaterial color='grey'/>
+        </mesh>
+        <mesh>
+          <boxGeometry args={[1.4, 0.04, 1.2]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={layout[device].game.letsPlayButton.waitingForHostButton.text.position}
+          rotation={layout[device].game.letsPlayButton.waitingForHostButton.text.rotation}
+          size={layout[device].game.letsPlayButton.waitingForHostButton.text.size}
+          height={layout[device].game.letsPlayButton.waitingForHostButton.text.height}
+          lineHeight={layout[device].game.letsPlayButton.waitingForHostButton.text.lineHeight}
+        >
+          {`waiting\nfor\nhost`}
+          <meshStandardMaterial color='grey'/>
+        </Text3D>
+      </group>
+    }
 
     return <>
       { hostName === client.name && gamePhase === 'lobby' && <group position={position}>
-        { readyToStart ? <ActivatedButton/> : <DisabledButton 
+        { readyToStart ? <ActivatedButton
+        position={layout[device].game.letsPlayButton.activeButton.position}/> : <DisabledButton 
+        position={layout[device].game.letsPlayButton.disabledButton.position}
+        scale={layout[device].game.letsPlayButton.disabledButton.scale}
+        /> }
+      </group> }
+      { hostName !== client.name && gamePhase === 'lobby' && <group position={position}>
+        { readyToStart ? <WaitingForHostButton
+        position={layout[device].game.letsPlayButton.waitingForHostButton.position}
+        scale={layout[device].game.letsPlayButton.waitingForHostButton.scale}/> : <DisabledButton 
         position={layout[device].game.letsPlayButton.disabledButton.position}
         scale={layout[device].game.letsPlayButton.disabledButton.scale}
         /> }
       </group> }
     </>
+  }
+
+  function InitialJoinTeamModal({ position }) {
+    const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
+    // e.stopPropagation doesn't stop tile from being clicked
+    
+    const [joinRocketsHover, setJoinRocketsHover] = useState(false)
+    const [joinUfosHover, setJoinUfosHover] = useState(false)
+
+    function handleJoinRocketsPointerEnter(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(true)
+    }
+    function handleJoinRocketsPointerLeave(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(false)
+    }
+    function handleJoinRocketsClick(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(false)
+      setJoinTeam(0)
+    }
+    function handleJoinUfosPointerEnter(e) {
+      e.stopPropagation()
+      setJoinUfosHover(true)
+    }
+    function handleJoinUfosPointerLeave(e) {
+      e.stopPropagation()
+      setJoinUfosHover(false)
+    }
+    function handleJoinUfosClick(e) {
+      e.stopPropagation()
+      setJoinUfosHover(false)
+      setJoinTeam(1)
+    }
+    return <group position={position}>
+      { joinTeam === null && <group name='pick-a-team-modal'>
+        <group name='background'>
+          <mesh>
+            <boxGeometry args={[7.6, 0.01, 5]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[7.5, 0.02, 4.9]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+        </group>
+        <Text3D name='guide-text'
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-2,0.03,-1.5]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          pick a team.
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <group name='join-rockets-button' position={[-1.8, 0.02, 0.3]}>
+          <mesh>
+            <boxGeometry args={[3.4, 0.01, 2.5]}/>
+            <meshStandardMaterial color={ joinRocketsHover ? 'green' : 'red' }/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[3.3, 0.02, 2.4]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <mesh 
+            name='wrapper'
+            onPointerEnter={e => handleJoinRocketsPointerEnter(e)}
+            onPointerLeave={e => handleJoinRocketsPointerLeave(e)}
+            onClick={e => handleJoinRocketsClick(e)}
+          >
+            <boxGeometry args={[3.4, 0.02, 2.5]}/>
+            <meshStandardMaterial transparent opacity={0}/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-1.4,0.03,-0.3]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.5}
+            height={0.01}
+          >
+            {`join the\nrockets`}
+            <meshStandardMaterial color={ joinRocketsHover ? 'green' : 'red' }/>
+          </Text3D>
+        </group>
+        <group name='join-ufos-button' position={[1.8, 0.02, 0.3]}>
+          <mesh>
+            <boxGeometry args={[3.4, 0.01, 2.5]}/>
+            <meshStandardMaterial color={ joinUfosHover ? 'green' : 'turquoise' }/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[3.3, 0.02, 2.4]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <mesh 
+            name='wrapper'
+            onPointerEnter={e => handleJoinUfosPointerEnter(e)}
+            onPointerLeave={e => handleJoinUfosPointerLeave(e)}
+            onClick={e => handleJoinUfosClick(e)}
+          >
+            <boxGeometry args={[3.4, 0.02, 2.5]}/>
+            <meshStandardMaterial transparent opacity={0}/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-1.4,0.03,-0.3]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.5}
+            height={0.01}
+          >
+            {`join the\nufos`}
+            <meshStandardMaterial color={ joinUfosHover ? 'green' : 'turquoise' }/>
+          </Text3D>
+        </group>
+      </group>}
+    </group>
   }
 
   // Animations
@@ -572,6 +721,7 @@ export default function Game() {
           setShowRulebook={setShowRulebook}
         />
       </group>}
+      { parseInt(client.team) === -1 && <InitialJoinTeamModal position={[0, 2.7, 1]} />}
     </>
   );
 }
