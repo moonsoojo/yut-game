@@ -53,6 +53,10 @@ import HowToPlay from "./HowToPlay.jsx";
 
 // react spring
 import { MeshDistortMaterial } from '@react-three/drei'
+import { WolfConstellation } from "./meshes/WolfConstellation.jsx";
+import { RhinoConstellation } from "./meshes/RhinoConstellation.jsx";
+import { PegasusConstellation } from "./meshes/PegasusConstellation.jsx";
+import { TaurusConstellation } from "./meshes/TaurusConstellation.jsx";
 
 // There should be no state
 export default function Game() {
@@ -679,7 +683,7 @@ export default function Game() {
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
-        <Yoot device={device}/>
+        {/* <Yoot device={device}/> */}
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>
@@ -722,6 +726,10 @@ export default function Game() {
         />
       </group>}
       { parseInt(client.team) === -1 && <InitialJoinTeamModal position={[0, 2.7, 1]} />}
+      <WolfConstellation position={[0,0,-2.8]} scale={0.8}/>
+      <RhinoConstellation position={[2.9,0,0]} scale={0.15}/>
+      <PegasusConstellation position={[-2.9, 0, 0]} scale={0.1}/>
+      <TaurusConstellation position={[0,0,2.8]} scale={0.7}/>
     </>
   );
 }
