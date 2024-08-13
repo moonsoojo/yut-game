@@ -91,7 +91,7 @@ export default function ScoreButtons({ position, rotation, scale, legalTiles }) 
       height={0.01} 
       size={0.4}
     >
-      {`score with`}
+      {`touchdown`}
       <meshStandardMaterial color='limegreen'/>
     </Text3D>
     <group>

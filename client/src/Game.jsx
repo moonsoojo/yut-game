@@ -272,7 +272,7 @@ export default function Game() {
           size={0.5}
           height={0.01}
         >
-          pick a team.
+          pick a team
           <meshStandardMaterial color='yellow'/>
         </Text3D>
         <group name='join-rockets-button' position={[-1.8, 0.02, 0.3]}>

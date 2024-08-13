@@ -6,9 +6,9 @@ import { io } from "socket.io-client";
 import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom } from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
-// const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'localhost:5000';
 
-const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
+// const ENDPOINT = 'https://yoot-game-6c96a9884664.herokuapp.com/';
 
 export const socket = io(
   ENDPOINT, { 
