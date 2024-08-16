@@ -649,7 +649,7 @@ export default function Game() {
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}
-            rotation={[0,0,0]}
+            rotation={[0,-Math.PI/4,0]}
             scale={1}
             tiles={tiles}
             legalTiles={legalTiles}
@@ -683,7 +683,7 @@ export default function Game() {
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
-        <Yoot device={device}/>
+        {/* <Yoot device={device}/> */}
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>
@@ -726,10 +726,10 @@ export default function Game() {
         />
       </group>}
       { parseInt(client.team) === -1 && <InitialJoinTeamModal position={[0, 2.7, 1]} />}
-      <WolfConstellation position={[0,0,-2.8]} scale={0.8}/>
-      <RhinoConstellation position={[2.9,0,0]} scale={0.15}/>
-      <PegasusConstellation position={[-2.9, 0, 0]} scale={0.1}/>
-      <TaurusConstellation position={[0,0,2.8]} scale={0.7}/>
+      <WolfConstellation position={[2.2,0,-1.8]} scale={0.7}/>
+      <RhinoConstellation position={[2.9,0,2]} scale={0.13}/>
+      <PegasusConstellation position={[-2.4, 0, 2.1]} scale={0.09}/>
+      <TaurusConstellation position={[-1.7,0,-0.6]} scale={0.8} rotation={[-Math.PI/2, 0, Math.PI/16]}/>
     </>
   );
 }
