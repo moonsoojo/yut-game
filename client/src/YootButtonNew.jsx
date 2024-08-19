@@ -2,19 +2,9 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import { socket } from './SocketManager';
-import { throwCountAtom, yootActiveAtom } from './GlobalState';
 import { useParams } from 'wouter';
 
-export default function YootButton({ 
-  position, 
-  rotation, 
-  scale,
-  active
-}) {
-  // yoots with material
-  // get texture of yoot
-  // set color to grey/yellow
+export default function YootButtonNew({ position, rotation, scale, clickHandler, enabled }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
   const { scene } = useGLTF("/models/yoot-for-button.glb");
   const yootMaterials = useGLTF("/models/yoot-for-button.glb").materials
@@ -22,16 +12,13 @@ export default function YootButton({
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
 
-  // To tell the server which room to throw the yoot in
-  const params = useParams();
-
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
   const scaleYoot = 0.15
   const scaleYootArray=[1 * scaleYoot, 6.161 * scaleYoot, 1 * scaleYoot]
 
   useFrame((state, delta) => {
-    if (active) {
+    if (enabled) {
       buttonRef.current.scale.x = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
       buttonRef.current.scale.y = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
       buttonRef.current.scale.z = Math.sin(state.clock.elapsedTime * 3) * 0.07 + scale
@@ -49,16 +36,9 @@ export default function YootButton({
     document.body.style.cursor = "default";
   }
 
-  function handleYootThrow() {
-    if (active) { // Prevent multiple emits
-      socket.emit("throwYoot", { roomId: params.id });
-    }
-  }
-
   return <group 
     position={position} 
     rotation={rotation} 
-    // scale={scale} 
     ref={buttonRef}
   >
     <group>
@@ -69,7 +49,7 @@ export default function YootButton({
         rotation={[-Math.PI, 0, -Math.PI]}
         scale={scaleOuter}
       >
-        <meshStandardMaterial color={ active ? "yellow" : "grey" }/>
+        <meshStandardMaterial color={ enabled ? "yellow" : "grey" }/>
       </mesh>
       <mesh
         castShadow
@@ -90,7 +70,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
         >
-          { !active && <meshStandardMaterial color="grey"/>}
+          { !enabled && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -101,7 +81,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !active && <meshStandardMaterial color="grey"/>}
+          { !enabled && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -112,7 +92,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !active && <meshStandardMaterial color="grey"/>}
+          { !enabled && <meshStandardMaterial color="grey"/>}
         </mesh>
         <mesh
           castShadow
@@ -123,7 +103,7 @@ export default function YootButton({
           rotation={[0,0,-Math.PI/2]}
           scale={scaleYootArray}
           >
-          { !active && <meshStandardMaterial color="grey"/>}
+          { !enabled && <meshStandardMaterial color="grey"/>}
         </mesh>
       </group>
       <Text3D 
@@ -134,13 +114,13 @@ export default function YootButton({
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ active ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ enabled ? "#963600" : "grey" }/>
       </Text3D>
-      <mesh 
+      <mesh name='wrapper'
         position={[0, 0.1, 0]} 
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        onPointerDown={handleYootThrow}
+        onClick={clickHandler}
       >
         <boxGeometry args={[3, 0.3, 2]}/>
         <meshStandardMaterial transparent opacity={0}/>
@@ -148,6 +128,3 @@ export default function YootButton({
     </group>
   </group>
 }
-
-useGLTF.preload('/models/rounded-rectangle.glb')
-useGLTF.preload("/models/yoot-for-button.glb")
