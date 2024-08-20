@@ -2,7 +2,6 @@ import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import { useParams } from 'wouter';
 
 export default function YootButtonNew({ position, rotation, scale, clickHandler, enabled }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");

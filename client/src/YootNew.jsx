@@ -5,18 +5,28 @@
 // on finish, play the throw alert
 // what about the move list?
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { LoopOnce } from 'three'
 import { useAnimations, useGLTF } from '@react-three/drei';
+import animationToThrow from './animationToThrow';
+import { socket } from './SocketManager';
+import { useParams } from 'wouter';
+import { clientAtom, hasTurnAtom } from './GlobalState';
+import { useAtom } from 'jotai';
 
 export default function YootNew({ setAnimation, animation, scale, position }) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('models/yoot-animated.glb')
   const { actions, mixer } = useAnimations(animations, group)
+  const params = useParams();
+  const [hasTurn] = useAtom(hasTurnAtom)
 
   useEffect(() => {
     const fn = () => { 
-      setAnimation(null)
+      if (hasTurn) {
+        socket.emit("recordThrow", { move: animationToThrow[animation], roomId: params.id })
+        setAnimation(null)
+      }
     }
     mixer.addEventListener('finished', fn);
     return () => {

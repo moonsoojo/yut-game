@@ -35,6 +35,8 @@ import {
   winnerAtom,
   clientAtom,
   joinTeamAtom,
+  yootAnimationAtom,
+  yootActiveAtom,
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -78,7 +80,8 @@ export default function Game() {
   const [showRulebook, setShowRulebook] = useState(false);
   const [client] = useAtom(clientAtom)
 
-  const [yootAnimation, setYootAnimation] = useState(null);
+  const [yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom);
+  const [yootActive] = useAtom(yootActiveAtom)
   
   const params = useParams();
 
@@ -596,6 +599,17 @@ export default function Game() {
     </group>
   }
 
+  function handleThrowButtonClick(e) {
+    e.stopPropagation();
+
+    console.log('throw yoot')
+    socket.emit('throwYoot', { roomId: params.id })
+
+    // send 'throw yoot' to server
+    // on animation finish
+    // send 'record throw' to server
+  }
+
   // UI prop guideline
   // Pass position, rotation and scale
   // pass device if component has another responsive attribute
@@ -604,15 +618,6 @@ export default function Game() {
   // If state is contained globally, don't pass it as a prop
     // example: <Host/> is in this component. 'device' is
     // declared at the top. don't pass it in as a prop
-
-  function handleThrowButtonClick(e) {
-    e.stopPropagation();
-    console.log('click')
-    let outcome = 15;
-    if (!yootAnimation) {
-      setYootAnimation(outcome)
-    }
-  }
 
   return (<>
       {/* <Perf/> */}
@@ -697,7 +702,7 @@ export default function Game() {
         { yootAnimation && <YootNew
           setAnimation={setYootAnimation} 
           animation={yootAnimation}
-          scale={0.25}
+          scale={0.22}
           position={[0, 2, 0]}
         /> }
         <YootButtonNew
@@ -705,7 +710,7 @@ export default function Game() {
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
           clickHandler={e => handleThrowButtonClick(e)}
-          enabled={!Boolean(yootAnimation)}
+          enabled={yootActive && !Boolean(yootAnimation)}
         />
         <SettingsButton 
         position={layout[device].game.settings.position}

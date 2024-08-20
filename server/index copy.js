@@ -100,7 +100,13 @@ const roomSchema = new mongoose.Schema(
       flag: Boolean,
       player: String // User ID
     },
-    yootAnimation: Number,
+    yootThrowValues: [{
+      _id: Number,
+      positionInHand: { x: Number, y: Number, z: Number },
+      rotation: { x: Number, y: Number, z: Number, w: Number},
+      yImpulse: Number,
+      torqueImpulse: { x: Number, y: Number, z: Number }
+    }],
     pregameOutcome: String,
     selection: {
       tile: Number,
@@ -185,12 +191,12 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
-        if ('yootAnimation' in data.updateDescription.updatedFields) {
-          let yootAnimation = data.fullDocument.yootAnimation
+        if ('yootThrowValues' in data.updateDescription.updatedFields) {
+          let yootThrowValues = data.fullDocument.yootThrowValues
           let yootThrown = data.fullDocument.yootThrown
           let currentTeam = data.fullDocument.turn.team
           let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
-          io.to(userSocketId).emit('throwYoot', { yootAnimation, yootThrown, throwCount })
+          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown, throwCount })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')
@@ -264,7 +270,7 @@ io.on("connect", async (socket) => {
           flag: false,
           player: ''
         }, // To not trigger the throw twice in the server
-        yootAnimation: null,
+        yootThrowValues: null,
         pregameOutcome: null,
         selection: null,
         legalTiles: {},
@@ -280,7 +286,8 @@ io.on("connect", async (socket) => {
           type: '',
           num: -2,
           time: Date.now()
-        }
+        },
+        // turnAlertActive: true
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -497,14 +504,7 @@ io.on("connect", async (socket) => {
     }
   })
 
-  function pickYootAnimation() {
-    let numAnimations = 33;
-    let randomNum = Math.random();
-    let randomAnimationIndex = Math.floor(randomNum * numAnimations) + 1
-    return randomAnimationIndex
-  }
   socket.on("throwYoot", async ({ roomId }) => {
-    console.log('throw yoot')
     let user;
     
     // Find user who made the request
@@ -522,17 +522,19 @@ io.on("connect", async (socket) => {
 
         // Update throw values
         // Update thrown flag so subsequent requests don't trigger a throw
+
         await Room.findOneAndUpdate(
           { 
             _id: roomId
           }, 
           { 
             $set: { 
-              yootAnimation: pickYootAnimation(),
+              yootThrowValues: generateForceVectors(room.gamePhase),
               yootThrown: {
                 flag: true,
                 player: user._id
               },
+              // turnAlertActive: false
             },
             $inc: {
               [`teams.${user.team}.throws`]: -1
@@ -602,8 +604,6 @@ io.on("connect", async (socket) => {
   }
 
   socket.on("recordThrow", async ({ move, roomId }) => {
-
-    console.log('[recordThrow] move', move)
 
     let user;
     try {
