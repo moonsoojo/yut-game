@@ -10,6 +10,10 @@ import Moon from './meshes/Moon';
 import layout from './layout';
 import Pointer from './meshes/Pointer';
 import { Text3D } from '@react-three/drei';
+import { WolfConstellation } from './meshes/WolfConstellation';
+import { RhinoConstellation } from './meshes/RhinoConstellation';
+import { PegasusConstellation } from './meshes/PegasusConstellation';
+import { TaurusConstellation } from './meshes/TaurusConstellation';
 
 // Accept flag to enable click
 // Pass flag to Tile component

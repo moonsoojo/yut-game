@@ -14,7 +14,7 @@ export default function App () {
 
   const created = ({ gl }) =>
   {
-      gl.setClearColor('#000b18', 1)
+      gl.setClearColor('#121216', 1)
   }
 
   // Responsive UI

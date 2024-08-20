@@ -5,7 +5,7 @@
 // on finish, play the throw alert
 // what about the move list?
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { LoopOnce } from 'three'
 import { useAnimations, useGLTF } from '@react-three/drei';
 import animationToThrow from './animationToThrow';
@@ -20,13 +20,11 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
   const { actions, mixer } = useAnimations(animations, group)
   const params = useParams();
   const [hasTurn] = useAtom(hasTurnAtom)
+  const [sleepCount, setSleepCount] = useState(0);
 
   useEffect(() => {
     const fn = () => { 
-      if (hasTurn) {
-        socket.emit("recordThrow", { move: animationToThrow[animation], roomId: params.id })
-        setAnimation(null)
-      }
+      setSleepCount(prev => prev+1)
     }
     mixer.addEventListener('finished', fn);
     return () => {
@@ -42,6 +40,18 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
       }
     }
   }, [animation])
+
+  useEffect(() => {
+    console.log(`[YootNew] sleepCount ${sleepCount}`)
+    if (sleepCount === 4) {
+      if (hasTurn) {
+        socket.emit("recordThrow", { move: animationToThrow[animation], roomId: params.id })
+      }
+      // if not reset, yoots will not rotate correctly on throw
+      setAnimation(null)
+      setSleepCount(0);
+    }
+  }, [sleepCount])
 
   return <group ref={group} scale={scale} position={position} dispose={null}>
     <group name="Scene" position={[0, 0, 0]}>
