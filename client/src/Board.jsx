@@ -303,5 +303,10 @@ export default function Board({
         <meshBasicMaterial color='grey'/>
       </mesh>
     </group>
+    
+    <WolfConstellation position={[2.2,0,-1.8]} scale={0.7}/>
+    <RhinoConstellation position={[2.3,0,2]} scale={0.13}/>
+    <PegasusConstellation position={[-2.4, 0, 2.1]} scale={0.09}/>
+    <TaurusConstellation position={[-1.8,0,-1]} scale={0.8} rotation={[-Math.PI/2, 0, Math.PI/16]}/>
   </animated.group>;
 }

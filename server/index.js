@@ -178,7 +178,7 @@ async function addUser(socket, name) {
 
 // Room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
-  console.log(`[Room.watch] data`, data)
+  // console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
@@ -516,6 +516,7 @@ io.on("connect", async (socket) => {
     const nakProb = 0.02
     const probs = [doProb, backdoProb, geProb, gulProb, yootProb, moProb, nakProb]
     const randomNum = Math.random()
+    console.log(`[pickOutcome] randomNum`, randomNum)
     if (randomNum < sumArray(probs.slice(0, 1))) {
       return 1
     } else if (randomNum >= sumArray(probs.slice(0, 1)) && randomNum < sumArray(probs.slice(0, 2))) {

@@ -1168,12 +1168,12 @@ export default {
         scale: [1.3, 1.3, 1.3]
       },
       chat: {
-        position: [-4.7,0,6.2],
+        position: [-4.7,0,6],
         rotation: [-Math.PI/2, 0, 0],
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
-          height: '235px',
+          height: '280px',
           width: '220px',
           padding: '10px',
           fontSize: '24px',
@@ -1273,7 +1273,7 @@ export default {
         }
       },
       piecesSection: {
-        position: [-0.8, 0, 8],
+        position: [-0.6, 0, 7.3],
         emptyPieces: {
           positions: [
             [0, 0, -0.3],
@@ -1286,15 +1286,15 @@ export default {
           rotation: [0, 0, 0],
           positions: [
             [0, 0, -1],
-            [1.5, 0, -1],
-            [0, 0, 0.5],
-            [1.5, 0, 0.5]
+            [1.2, 0, -1],
+            [0, 0, 0.2],
+            [1.2, 0, 0.2]
           ],
-          scale: 1.5
+          scale: 1.3
         }
       },
       moveList: {
-        position: [2, 0, 5],
+        position: [-1.2, 0, 9],
         rotation: [-Math.PI/2, 0, 0],
         tokenScale: 0.8,
         tokenPosition: [0.5, 0, 0.5]
@@ -1314,9 +1314,9 @@ export default {
         scale: 1.2
       },
       yootButton: {
-        position: [0, 0, 7.5],
+        position: [3.2, 0, 8],
         rotation: [0, Math.PI/2, 0],
-        scale: 1.15
+        scale: 1.2
       },
       throwCount: {
         position: [1.5, 0, 9],
