@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGLTF } from "@react-three/drei";
 
-export default function CurvedArrow({position, scale, rotation, color}) {
+export default function CurvedArrow({position, scale=1, rotation, color}) {
   const { nodes, materials } = useGLTF("/models/curved-arrow.glb");
   let scaleArray;
   if (scale.length === 3) {

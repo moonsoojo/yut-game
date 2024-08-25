@@ -14,6 +14,7 @@ import { WolfConstellation } from './meshes/WolfConstellation';
 import { RhinoConstellation } from './meshes/RhinoConstellation';
 import { PegasusConstellation } from './meshes/PegasusConstellation';
 import { TaurusConstellation } from './meshes/TaurusConstellation';
+import CurvedArrow from './meshes/CurvedArrow';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -51,9 +52,9 @@ export default function Board({
   // Circle
   for (let i = 0; i < NUM_STARS; i++) {
     let position = [
-      -Math.cos(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
+      -Math.cos(((i + 5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
       0,
-      Math.sin(((i + 7.5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
+      Math.sin(((i + 5) * (Math.PI * 2)) / NUM_STARS) * tileRadius,
     ];
     tileComponents.push(
       <Tile 
@@ -74,10 +75,10 @@ export default function Board({
   const radiusShortcut2 = 1.7;
 
   let position20 = [
-    Math.sin(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -94,10 +95,10 @@ export default function Board({
     />
   );
   let position21 = [
-    Math.sin(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((10 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((10 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -131,10 +132,10 @@ export default function Board({
   );
 
   let position23 = [
-    Math.sin(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -151,10 +152,10 @@ export default function Board({
     />
   );
   let position24 = [
-    Math.sin(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((0 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((0 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -171,10 +172,10 @@ export default function Board({
     />
   );
   let position25 = [
-    Math.sin(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -191,10 +192,10 @@ export default function Board({
     />
   );
   let position26 = [
-    Math.sin(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((15 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((15 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -211,10 +212,10 @@ export default function Board({
     />
   );
   let position27 = [
-    Math.sin(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
     0,
-    Math.cos(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut2,
   ]
   tileComponents.push(
@@ -231,10 +232,10 @@ export default function Board({
     />
   );
   let position28 = [
-    Math.sin(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.sin(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
     0,
-    Math.cos(((5 - 2.5) * (Math.PI * 2)) / NUM_STARS) *
+    Math.cos(((5 - 5) * (Math.PI * 2)) / NUM_STARS) *
       radiusShortcut1,
   ]
   tileComponents.push(
@@ -266,43 +267,38 @@ export default function Board({
         Start
         <meshStandardMaterial color='limegreen'/>
       </Text3D>
-      <mesh
-        position={layout[device].board.startEarth.helperArrow.position}
-        rotation={layout[device].board.startEarth.helperArrow.rotation}
-        scale={layout[device].board.startEarth.helperArrow.scale}
-      >
-        <Pointer
-          color={layout[device].board.startEarth.helperArrow.color}
-          animate={false}
-        />
-      </mesh>
+      <CurvedArrow 
+      color='limegreen' 
+      position={layout[device].board.startEarth.helperArrow.position} 
+      scale={layout[device].board.startEarth.helperArrow.scale} 
+      rotation={layout[device].board.startEarth.helperArrow.rotation}/>
     </group>}
     <group name='helper-arrows'>
-      <mesh position={[2.9, 0, -2.9]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+      <mesh name='mars-top' position={[4.8, 0, -1]} rotation={[Math.PI/2, 0, Math.PI - Math.PI/32]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[2.8, 0, -4.1]} rotation={[Math.PI/2, 0, Math.PI*3/4]}>
+      <mesh name='mars-left' position={[4, 0, 0]} rotation={[Math.PI/2, 0, Math.PI/2]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[-2.8, 0, -2.8]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+      <mesh name='saturn-left' position={[-1, 0, -4.9]} rotation={[Math.PI/2, 0, Math.PI/2 - Math.PI/32]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[-4.2, 0, -2.8]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+      <mesh name='saturn-bottom' position={[0, 0, -4]} rotation={[Math.PI/2, 0, 0]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[-2.8, 0, 4.1]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+      <mesh name='neptune-bottom' position={[-4.9, 0, 0.9]} rotation={[Math.PI/2, 0, -Math.PI/32]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[0.75, 0, 0.75]} rotation={[Math.PI/2, 0, -Math.PI/4]}>
+      <mesh name='moon-bottom' position={[0, 0, 1.1]} rotation={[Math.PI/2, 0, 0]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>
-      <mesh position={[-0.75, 0, 0.75]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+      <mesh name='moon-left' position={[-1.1, 0, 0]} rotation={[Math.PI/2, 0, Math.PI/2]}>
         <coneGeometry args={[0.08, 0.3, 8]}/>
         <meshBasicMaterial color='grey'/>
       </mesh>

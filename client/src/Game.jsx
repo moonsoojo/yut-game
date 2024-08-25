@@ -139,6 +139,25 @@ export default function Game() {
         }
       }
 
+      const letsPlayTextMaterial = new MeshStandardMaterial({ color: new Color('yellow') });
+      const letsPlayBackgroundMaterial = new MeshStandardMaterial({ color: new Color('yellow'), transparent: true, opacity: 0.05 });
+      const letsPlayButton = useRef()
+      useFrame((state) => {
+        const time = state.clock.elapsedTime
+        // letsPlayButton.current.scale.x = Math.sin(time * 2) * 0.1 + 1
+        // letsPlayButton.current.scale.y = Math.sin(time * 2) * 0.1 + 1
+        // letsPlayButton.current.scale.z = Math.sin(time * 2) * 0.1 + 1
+        if (Math.floor(time*1.3) % 2 === 0) {
+          letsPlayTextMaterial.color.r = 0
+          letsPlayTextMaterial.color.g = 0.3
+          letsPlayTextMaterial.color.b = 0
+        } else {
+          letsPlayTextMaterial.color.r = 1
+          letsPlayTextMaterial.color.g = 1
+          letsPlayTextMaterial.color.b = 0
+        }
+      })
+
       const springs = useSpring({
         from: {
           scale: 0
@@ -156,8 +175,7 @@ export default function Game() {
       })
   
       return <animated.group name='animated-group' scale={springs.scale}>
-        <group name='lets-play-button-active' 
-        position={position}>
+        <group name='lets-play-button-active' position={position} ref={letsPlayButton}>
           <mesh 
             position={[0, 0, 0]} 
             rotation={[0, 0, 0]} 
@@ -165,20 +183,22 @@ export default function Game() {
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
             onPointerDown={handlePointerDown}
+            material={letsPlayBackgroundMaterial}
           >
             <cylinderGeometry args={[1, 1, 0.1, 48]}/>
-            <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} />
+            {/* <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} /> */}
           </mesh>
           <Text3D
-              font="fonts/Luckiest Guy_Regular.json"
-              position={layout[device].game.letsPlayButton.activeButton.text.position}
-              rotation={layout[device].game.letsPlayButton.activeButton.text.rotation}
-              size={layout[device].game.letsPlayButton.activeButton.text.size}
-              height={layout[device].game.letsPlayButton.activeButton.text.height}
-              lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
+            font="fonts/Luckiest Guy_Regular.json"
+            position={layout[device].game.letsPlayButton.activeButton.text.position}
+            rotation={layout[device].game.letsPlayButton.activeButton.text.rotation}
+            size={layout[device].game.letsPlayButton.activeButton.text.size}
+            height={layout[device].game.letsPlayButton.activeButton.text.height}
+            lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
+            material={letsPlayTextMaterial}
           >
               {`Let's\nPlay!`}
-              <meshStandardMaterial color={hover ? 'green' : 'yellow'}/>
+              {/* <meshStandardMaterial color={hover ? 'green' : 'yellow'}/> */}
           </Text3D>
         </group>
       </animated.group>
@@ -651,7 +671,7 @@ export default function Game() {
           rotation={layout[device].game.chat.rotation}
           scale={layout[device].game.chat.scale}
         /> }
-        <InviteButton position={layout[device].game.invite.position}/>
+        {/* <InviteButton position={layout[device].game.invite.position}/> */}
         {/* <DiscordButton position={layout[device].game.discord.position}/> */}
         { disconnect && <DisconnectModal
           position={layout[device].game.disconnectModal.position}
@@ -664,7 +684,6 @@ export default function Game() {
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}
-            rotation={[0,-Math.PI/4,0]}
             scale={1}
             tiles={tiles}
             legalTiles={legalTiles}
@@ -704,13 +723,13 @@ export default function Game() {
           scale={0.22}
           position={[0, 2, 0]}
         /> }
-        <YootButtonNew
+        { (gamePhase === 'pregame' || gamePhase === 'game') && <YootButtonNew
           position={layout[device].game.yootButton.position}
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
           clickHandler={e => handleThrowButtonClick(e)}
           enabled={yootActive && !Boolean(yootAnimation)}
-        />
+        />}
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>

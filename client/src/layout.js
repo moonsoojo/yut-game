@@ -1038,7 +1038,7 @@ export default {
     },
     game: {
       letsPlayButton: {
-        position: [0.6,0,7.7],
+        position: [3.7,0,7.7],
         rotation: [-Math.PI / 2, 0, 0],
         disabledButton: {
           position: [-0.5,0,0.5],
@@ -1174,7 +1174,7 @@ export default {
         box: {
           borderRadius: '5px',
           height: '235px',
-          width: '240px',
+          width: '220px',
           padding: '10px',
           fontSize: '24px',
         },
@@ -1192,8 +1192,8 @@ export default {
         size: 0.3,
         height: 0.01,
         text: {
-          content: `copy room\nlink to share`,
-          position: [-1.35, 0.025, -0.15]
+          content: `copy room\nlink`,
+          position: [-1.5, 0.025, -9.7]
         },
         copiedText: {
           position: [-1.35, 0.025, -0.75]
@@ -1273,7 +1273,7 @@ export default {
         }
       },
       piecesSection: {
-        position: [2.5, 0, 8],
+        position: [-0.8, 0, 8],
         emptyPieces: {
           positions: [
             [0, 0, -0.3],
@@ -1363,17 +1363,17 @@ export default {
     },
     board: {
       startEarth: {
-        position: [4.5, 0, 3.5],
+        position: [2.5, 0, 5.5],
         text: {
-          position: [0,0,0],
+          position: [-0.9,0,0.4],
           rotation: [-Math.PI/2, 0, 0],
           fontSize: 15,
         },
         helperArrow: {
-          position: [0.3,0,-0.5],
-          rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
+          position: [0.3, 0, -0.4],
+          rotation: [Math.PI, -Math.PI/2 - Math.PI/8 - Math.PI/32, 0],
           color: 'limegreen',
-          scale: [0.9,0.9,0.9]
+          scale: [0.2, 0.1, 0.5]
         },
       },
     },
@@ -2786,17 +2786,17 @@ export default {
     },
     board: {
       startEarth: {
-        position: [5.2, 0, 2.6],
+        position: [2.5, 0, 5.5],
         text: {
-          position: [0,0,0],
+          position: [-0.9,0,0.4],
           rotation: [-Math.PI/2, 0, 0],
           fontSize: 15,
         },
         helperArrow: {
-          position: [0.3,0,-0.5],
-          rotation: [0,Math.PI/4 + Math.PI/32 * 7,Math.PI/2],
+          position: [0.3, 0, -0.4],
+          rotation: [Math.PI, -Math.PI/2 - Math.PI/8 - Math.PI/32, 0],
           color: 'limegreen',
-          scale: [0.9,0.9,0.9]
+          scale: [0.2, 0.1, 0.5]
         },
       },
     },

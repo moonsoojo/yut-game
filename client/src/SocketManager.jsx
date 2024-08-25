@@ -203,7 +203,7 @@ export const SocketManager = () => {
       // Enable yoot button if client has the turn and his team 
       // has at least one throw and there is a player on the team
       // and the thrown flag is off
-      if (room.gamePhase === "lobby" || (room.teams[currentTeam].players.length > 0 && 
+      if ((room.gamePhase === "pregame" || room.gamePhase === 'game') && (room.teams[currentTeam].players.length > 0 && 
       clientHasTurn(socket.id, room.teams, room.turn) &&
       room.teams[currentTeam].throws > 0 && !room.yootThrown.flag)) {
         setYootActive(true)
