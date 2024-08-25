@@ -8,10 +8,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { LoopOnce } from 'three'
 import { useAnimations, useGLTF } from '@react-three/drei';
-import animationToThrow from './animationToThrow';
 import { socket } from './SocketManager';
 import { useParams } from 'wouter';
-import { clientAtom, hasTurnAtom } from './GlobalState';
+import { clientAtom, hasTurnAtom, yootOutcomeAtom } from './GlobalState';
 import { useAtom } from 'jotai';
 
 export default function YootNew({ setAnimation, animation, scale, position }) {
@@ -21,6 +20,7 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
   const params = useParams();
   const [hasTurn] = useAtom(hasTurnAtom)
   const [sleepCount, setSleepCount] = useState(0);
+  const [yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
 
   useEffect(() => {
     const fn = () => { 
@@ -45,10 +45,11 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
     console.log(`[YootNew] sleepCount ${sleepCount}`)
     if (sleepCount === 4) {
       if (hasTurn) {
-        socket.emit("recordThrow", { move: animationToThrow[animation], roomId: params.id })
+        socket.emit("recordThrow", { move: yootOutcome, roomId: params.id })
       }
       // if not reset, yoots will not rotate correctly on throw
       setAnimation(null)
+      setYootOutcome(null)
       setSleepCount(0);
     }
   }, [sleepCount])

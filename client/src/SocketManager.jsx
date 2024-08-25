@@ -7,7 +7,8 @@ import {
   boomTextAtom, 
   pregameAlertAtom, 
   clientAtom, 
-  disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom, yootAnimationAtom } from "./GlobalState.jsx";
+  disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom, yootAnimationAtom, 
+  yootOutcomeAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -72,6 +73,7 @@ export const SocketManager = () => {
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
 
   const [_yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom)
+  const [_yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
 
   useEffect(() => {
 
@@ -320,7 +322,8 @@ export const SocketManager = () => {
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootAnimation, yootThrown, throwCount }) => {
+    socket.on('throwYoot', ({ yootOutcome, yootAnimation, yootThrown, throwCount }) => {
+      setYootOutcome(yootOutcome)
       setYootAnimation(yootAnimation)
       setYootThrown(yootThrown)
       setThrowCount(throwCount)
