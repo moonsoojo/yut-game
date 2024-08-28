@@ -392,8 +392,7 @@ export default function Game() {
     }
 
     function handlePointerDown(e) {
-      e.stopPropagation();
-      navigator.clipboard.writeText(window.location.href)
+      e.stopPropagation();  
       api.start({
         from: {
           opacity: 1

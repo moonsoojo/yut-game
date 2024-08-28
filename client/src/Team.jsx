@@ -2,13 +2,14 @@ import React, { useRef, useState } from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
 import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, hostNameAtom, turnAtom } from './GlobalState';
-import { Html, Text3D } from '@react-three/drei';
+import { Html, MeshDistortMaterial, Text3D } from '@react-three/drei';
 import Piece from './components/Piece';
 import { formatName, pieceStatus } from './helpers/helpers';
 import { Color, MeshStandardMaterial } from 'three';
 import Yoot from './Yoot';
 import YootMesh from './meshes/YootMesh';
 import { useFrame } from '@react-three/fiber';
+import { animated, useSpring } from '@react-spring/three';
 
 export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [teams] = useAtom(teamsAtom)
@@ -207,6 +208,13 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     const [hover, setHover] = useState(false);
     const button = useRef();
 
+    const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+    const [springs, api] = useSpring(() => ({        
+      from: {
+        opacity: 0, 
+      }
+    }))
+
     useFrame((state) => {
       const time = state.clock.elapsedTime
       button.current.scale.x = Math.sin(time)*0.05 + 1
@@ -224,7 +232,34 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     }
     function handleClick(e) {
       e.stopPropagation()
-      console.log('click')
+
+      // works on safari and chrome browsers
+      var inputc = document.body.appendChild(document.createElement("input"));
+      inputc.value = window.location.href;
+      inputc.select();
+      document.execCommand('copy');
+      inputc.parentNode.removeChild(inputc);
+      console.log('copied')
+
+      // animation
+      api.start({
+        from: {
+          opacity: 1
+        },
+        to: [
+          {
+            opacity: 1
+          },
+          { 
+            opacity: 0,
+            delay: 500,
+            config: {
+              tension: 170,
+              friction: 26
+            }
+          }
+        ]
+      })
     }
     return <group position={position} ref={button}>
       <group name='background' position={[4/2-0.15, 0.5/2-0.1, -0.1]}>
@@ -263,6 +298,35 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
         <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
         {`copy room link`}
       </Text3D>
+      <group name='copied-alert' position={[0, 0.9, 0.5]}>
+        <Text3D 
+          name='copied-tooltip'
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[0,0,0]}
+          rotation={[0, 0, 0]}
+          size={layout[device].game.invite.size}
+          height={layout[device].game.invite.height}
+        >
+          copied!
+          <AnimatedMeshDistortMaterial
+            speed={5}
+            distort={0}
+            color='yellow'
+            transparent
+            opacity={springs.opacity}
+          />
+        </Text3D>
+        <mesh position={[0.7, 0.1, 0]} rotation={[Math.PI/2, 0, 0]} scale={[1.1, 1, 0.5]}>
+          <cylinderGeometry args={[1, 1, 0.01, 20]}/>
+          <AnimatedMeshDistortMaterial 
+            speed={5}
+            distort={0}
+            color='black'
+            transparent
+            opacity={springs.opacity}
+          />
+        </mesh>
+      </group>
     </group>
   }
 
