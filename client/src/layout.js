@@ -1323,9 +1323,15 @@ export default {
         orientation: 'downUp'
       },
       scoreButtons: {
-        position: [1.9, 0, 4.9],
+        text: "touch\ndown",
+        textSize: 0.6,
+        lineHeight: 0.8,
+        position: [-1.2, 0, 6.9],
         rotation: [-Math.PI/2, 0, 0],
-        scale: 0.8
+        scale: 0.8,
+        buttons: {
+          position: [0, -1, 0]
+        }
       },
       mainAlert: {
         position: [0, 0.3, 7],
@@ -2746,9 +2752,15 @@ export default {
         orientation: 'downUp'
       },
       scoreButtons: {
+        text: 'touchdown',
+        textSize: 0.4,
+        lineHeight: 1,
         position: [4.5, 0, 4.5],
         rotation: [-Math.PI/2, 0, 0],
-        scale: 1
+        scale: 1,
+        buttons: {
+          position: [0, 0, 0]
+        }
       },
       mainAlert: {
         position: [0, 0.3, 6],

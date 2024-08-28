@@ -737,13 +737,17 @@ export default function Game() {
           position={layout[device].game.rulebookButton.position}
           scale={layout[device].game.rulebookButton.scale}
         />
-        <PiecesSection 
+        { ((device === 'portrait' && !(29 in legalTiles)) || device === 'landscapeDesktop') && <PiecesSection 
         position={layout[device].game.piecesSection.position}
         device={device}
-        />
+        /> }
         { (29 in legalTiles) && <ScoreButtons
           position={layout[device].game.scoreButtons.position}
           rotation={layout[device].game.scoreButtons.rotation}
+          buttonPos={layout[device].game.scoreButtons.buttons.position}
+          text={layout[device].game.scoreButtons.text}
+          textSize={layout[device].game.scoreButtons.textSize}
+          lineHeight={layout[device].game.scoreButtons.lineHeight}
           legalTiles={legalTiles}
         /> }
         <PiecesOnBoard/>

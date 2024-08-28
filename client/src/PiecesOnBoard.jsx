@@ -132,9 +132,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[0][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[0][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -145,9 +145,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*1, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[0][0]*1, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[0][2]*1, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[0][2]*1, 1) * responsiveScale,
                         ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -277,9 +277,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[1][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[1][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[1][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[1][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -290,9 +290,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[1][0]*1, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[1][0]*1, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*1, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[1][2]*1, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[1][2]*1, 1) * responsiveScale,
                         ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -420,9 +420,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[2][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[2][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[2][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -433,9 +433,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                       position: [
-                          roundNum(3.5 + idOffsets[2][0]*1, 1) * responsiveScale,
+                          roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
                           roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[2][2]*1, 1) * responsiveScale,
+                          roundNum(4.5 + idOffsets[2][2]*1, 1) * responsiveScale,
                       ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -707,9 +707,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[0][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[0][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[0][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -720,9 +720,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                       position: [
-                          roundNum(3.5 + idOffsets[0][0]*1, 1) * responsiveScale,
+                          roundNum(0 + idOffsets[0][0]*1, 1) * responsiveScale,
                           roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[0][2]*1, 1) * responsiveScale,
+                          roundNum(4.5 + idOffsets[0][2]*1, 1) * responsiveScale,
                       ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -852,9 +852,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[1][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[1][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[1][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[1][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -865,9 +865,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                       position: [
-                          roundNum(3.5 + idOffsets[1][0]*1, 1) * responsiveScale,
+                          roundNum(0 + idOffsets[1][0]*1, 1) * responsiveScale,
                           roundNum(0 + heightOffset + idOffsets[1][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[1][2]*1, 1) * responsiveScale,
+                          roundNum(4.5 + idOffsets[1][2]*1, 1) * responsiveScale,
                       ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -997,9 +997,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[2][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[2][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[2][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -1010,9 +1010,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                       position: [
-                          roundNum(3.5 + idOffsets[2][0]*1, 1) * responsiveScale,
+                          roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
                           roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[2][2]*1, 1) * responsiveScale,
+                          roundNum(4.5 + idOffsets[2][2]*1, 1) * responsiveScale,
                       ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -1141,9 +1141,9 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[3][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[3][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[3][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[3][2]*2, 1) * responsiveScale,
+                            roundNum(4 + idOffsets[3][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
                         welcomeTextScale: 1,
@@ -1154,9 +1154,9 @@ export default function PiecesOnBoard() {
                     },
                     {
                       position: [
-                          roundNum(3.5 + idOffsets[3][0]*1, 1) * responsiveScale,
+                          roundNum(0 + idOffsets[3][0]*1, 1) * responsiveScale,
                           roundNum(0 + heightOffset + idOffsets[3][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[3][2]*1, 1) * responsiveScale,
+                          roundNum(4.5 + idOffsets[3][2]*1, 1) * responsiveScale,
                       ],
                         scale: 0,
                         welcomeTextScale: 0,
@@ -1361,9 +1361,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[0][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[0][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[0][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[0][2], 1) * responsiveScale,
             ]}
             scale={springs0_0.sizeTwink}
         />
@@ -1385,9 +1385,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[1][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[1][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[1][2], 1) * responsiveScale,
             ]}
             scale={springs0_1.sizeTwink}
         />
@@ -1409,9 +1409,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[2][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[2][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[2][2], 1) * responsiveScale,
             ]}
             scale={springs0_2.sizeTwink}
         />
@@ -1433,9 +1433,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[3][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[3][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[3][2], 1) * responsiveScale,
             ]}
             scale={springs0_3.sizeTwink}
         />
@@ -1457,9 +1457,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[0][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[0][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[0][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[0][2], 1) * responsiveScale,
             ]}
             scale={springs1_0.sizeTwink}
         />
@@ -1481,9 +1481,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[1][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[1][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[1][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[1][2], 1) * responsiveScale,
             ]}
             scale={springs1_1.sizeTwink}
         />
@@ -1505,9 +1505,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[2][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[2][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[2][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[2][2], 1) * responsiveScale,
             ]}
             scale={springs1_2.sizeTwink}
         />
@@ -1528,9 +1528,9 @@ export default function PiecesOnBoard() {
         />
         <Polaris                         
             position={[
-                roundNum(3.5 + idOffsets[3][0], 1) * responsiveScale,
+                roundNum(0 + idOffsets[3][0], 1) * responsiveScale,
                 roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
-                roundNum(3.5 + idOffsets[3][2], 1) * responsiveScale,
+                roundNum(4.5 + idOffsets[3][2], 1) * responsiveScale,
             ]}
             scale={springs1_3.sizeTwink}
         />

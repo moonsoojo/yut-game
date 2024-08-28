@@ -8,9 +8,7 @@ function randomNumberBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-export default function StarsShader({ position=[0,0,0], count=1000, size=5 }) {
-  const radius1MinNeptune = 30;
-  const radius1MaxNeptune = 50;
+export default function StarsShader({ position=[0,0,0], count=1000 }) {
   const colorOneHex = '#FFFFFF';
   const colorTwoHex = '#C2DAFF';
   const positions1 = new Float32Array(count * 3);
@@ -22,14 +20,6 @@ export default function StarsShader({ position=[0,0,0], count=1000, size=5 }) {
 
   for (let i = 0; i < count; i++) {
     const i3 = i * 3;
-  
-    // let radius1 = randomNumberBetween(radius1MinNeptune, radius1MaxNeptune);
-    // let polarAngle = Math.random() * (Math.PI);
-    // let azimuthAngle = Math.random() * (Math.PI * 2);
-
-    let height = 50;
-    let width = 50;
-    let length = 50;
   
     const randomX1 = randomNumberBetween(-25, 25);
     const randomY1 = randomNumberBetween(-75, -25);

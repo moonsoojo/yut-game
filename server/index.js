@@ -298,7 +298,7 @@ io.on("connect", async (socket) => {
     try {
       let user = await User.findOne({ 'socketId': socket.id }).exec()
       let room;
-      console.log(`[joinRoom] user`, user)
+      // console.log(`[joinRoom] user`, user)
       if (user.roomId && user.roomId.valueOf() === roomId) { // Use value saved in local storage
         if (user.team === -1) {
           room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
@@ -320,7 +320,7 @@ io.on("connect", async (socket) => {
     try {
       let user = await User.findOne({ 'socketId': socket.id })
       let room = await Room.findById(roomId)
-      console.log(`[joinRoom] room`, room)
+      // console.log(`[joinRoom] room`, room)
       if (room.host === null) {
         room.host = user._id
         room.save()
@@ -544,12 +544,14 @@ io.on("connect", async (socket) => {
       '5': [43],
       '0': [1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 18],
     }
+    console.log(`[pickAnimation] outcome ${outcome}`)
     const listOfAnimations = outcomeToPseudoIndex[outcome]
     let pseudoIndex = listOfAnimations[Math.floor(Math.random() * listOfAnimations.length)]
+    console.log(`[pickAnimation] length of animations ${listOfAnimations.length}, pseudoIndex ${pseudoIndex}`)
     return pseudoIndex
   }
+
   socket.on("throwYoot", async ({ roomId }) => {
-    console.log('throw yoot')
     let user;
     
     // Find user who made the request
