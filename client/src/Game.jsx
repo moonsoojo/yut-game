@@ -34,6 +34,9 @@ import {
   helperTilesAtom,
   winnerAtom,
   clientAtom,
+  joinTeamAtom,
+  yootAnimationAtom,
+  yootActiveAtom,
 } from "./GlobalState.jsx";
 import Rocket from "./meshes/Rocket.jsx";
 import Ufo from "./meshes/Ufo.jsx";
@@ -48,10 +51,19 @@ import { formatName } from "./helpers/helpers.js";
 import { useFrame } from "@react-three/fiber";
 import Star from "./meshes/Star.jsx";
 import GameLog from "./GameLog.jsx";
+import HowToPlay from "./HowToPlay.jsx";
+
+// react spring
+import { MeshDistortMaterial } from '@react-three/drei'
+import { WolfConstellation } from "./meshes/WolfConstellation.jsx";
+import { RhinoConstellation } from "./meshes/RhinoConstellation.jsx";
+import { PegasusConstellation } from "./meshes/PegasusConstellation.jsx";
+import { TaurusConstellation } from "./meshes/TaurusConstellation.jsx";
+import YootNew from "./YootNew.jsx";
+import YootButtonNew from "./YootButtonNew.jsx";
 
 // There should be no state
 export default function Game() {
-  console.log(`[Game]`)
   
   const [device] = useAtom(deviceAtom)
   const [disconnect] = useAtom(disconnectAtom)
@@ -63,28 +75,29 @@ export default function Game() {
   const [helperTiles] = useAtom(helperTilesAtom)
   const [tiles] = useAtom(tilesAtom)
   const [winner] = useAtom(winnerAtom)
-  const params = useParams();
-
-  
   const [readyToStart] = useAtom(readyToStartAtom)
   const [hostName] = useAtom(hostNameAtom)
+  const [showRulebook, setShowRulebook] = useState(false);
+  const [client] = useAtom(clientAtom)
+
+  const [yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom);
+  const [yootActive] = useAtom(yootActiveAtom)
+  
+  const params = useParams();
 
   useEffect(() => {
     socket.emit('joinRoom', { roomId: params.id })
   }, [])
 
   function LetsPlayButton({ position }) {
-    console.log(`[Game][LetsPlayButton]`)
-    const [client] = useAtom(clientAtom)
-    
     function DisabledButton({ position, scale }) {
       return <group position={position} scale={scale}>
         <mesh>
-          <boxGeometry args={[1.4, 0.03, 1.2]}/>
+          <boxGeometry args={[1.5, 0.03, 1.3]}/>
           <meshStandardMaterial color='grey'/>
         </mesh>
         <mesh>
-          <boxGeometry args={[1.35, 0.04, 1.15]}/>
+          <boxGeometry args={[1.4, 0.04, 1.2]}/>
           <meshStandardMaterial color='black'/>
         </mesh>
         <Text3D
@@ -95,13 +108,13 @@ export default function Game() {
           height={layout[device].game.letsPlayButton.disabledButton.text.height}
           lineHeight={layout[device].game.letsPlayButton.disabledButton.text.lineHeight}
         >
-          {`lets\nplay!`}
+          {`waiting\nfor\nplayers`}
           <meshStandardMaterial color='grey'/>
         </Text3D>
       </group>
     }
 
-    function ActivatedButton() {
+    function ActivatedButton({ position }) {
 
       const [hover, setHover] = useState(false)
   
@@ -126,6 +139,25 @@ export default function Game() {
         }
       }
 
+      const letsPlayTextMaterial = new MeshStandardMaterial({ color: new Color('yellow') });
+      const letsPlayBackgroundMaterial = new MeshStandardMaterial({ color: new Color('yellow'), transparent: true, opacity: 0.05 });
+      const letsPlayButton = useRef()
+      useFrame((state) => {
+        const time = state.clock.elapsedTime
+        // letsPlayButton.current.scale.x = Math.sin(time * 2) * 0.1 + 1
+        // letsPlayButton.current.scale.y = Math.sin(time * 2) * 0.1 + 1
+        // letsPlayButton.current.scale.z = Math.sin(time * 2) * 0.1 + 1
+        if (Math.floor(time*1.3) % 2 === 0) {
+          letsPlayTextMaterial.color.r = 0
+          letsPlayTextMaterial.color.g = 0.3
+          letsPlayTextMaterial.color.b = 0
+        } else {
+          letsPlayTextMaterial.color.r = 1
+          letsPlayTextMaterial.color.g = 1
+          letsPlayTextMaterial.color.b = 0
+        }
+      })
+
       const springs = useSpring({
         from: {
           scale: 0
@@ -143,8 +175,7 @@ export default function Game() {
       })
   
       return <animated.group name='animated-group' scale={springs.scale}>
-        <group name='lets-play-button-active' 
-        position={layout[device].game.letsPlayButton.activeButton.position} >
+        <group name='lets-play-button-active' position={position} ref={letsPlayButton}>
           <mesh 
             position={[0, 0, 0]} 
             rotation={[0, 0, 0]} 
@@ -152,29 +183,63 @@ export default function Game() {
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
             onPointerDown={handlePointerDown}
+            material={letsPlayBackgroundMaterial}
           >
             <cylinderGeometry args={[1, 1, 0.1, 48]}/>
-            <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} />
+            {/* <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} /> */}
           </mesh>
           <Text3D
-              font="fonts/Luckiest Guy_Regular.json"
-              position={layout[device].game.letsPlayButton.activeButton.text.position}
-              rotation={layout[device].game.letsPlayButton.activeButton.text.rotation}
-              size={layout[device].game.letsPlayButton.activeButton.text.size}
-              height={layout[device].game.letsPlayButton.activeButton.text.height}
-              lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
+            font="fonts/Luckiest Guy_Regular.json"
+            position={layout[device].game.letsPlayButton.activeButton.text.position}
+            rotation={layout[device].game.letsPlayButton.activeButton.text.rotation}
+            size={layout[device].game.letsPlayButton.activeButton.text.size}
+            height={layout[device].game.letsPlayButton.activeButton.text.height}
+            lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
+            material={letsPlayTextMaterial}
           >
               {`Let's\nPlay!`}
-              <meshStandardMaterial color={hover ? 'green' : 'yellow'}/>
+              {/* <meshStandardMaterial color={hover ? 'green' : 'yellow'}/> */}
           </Text3D>
         </group>
       </animated.group>
     }
 
+    function WaitingForHostButton({ position, scale }) {
+      return <group position={position} scale={scale}>
+        <mesh>
+          <boxGeometry args={[1.5, 0.03, 1.3]}/>
+          <meshStandardMaterial color='grey'/>
+        </mesh>
+        <mesh>
+          <boxGeometry args={[1.4, 0.04, 1.2]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <Text3D
+          font="fonts/Luckiest Guy_Regular.json"
+          position={layout[device].game.letsPlayButton.waitingForHostButton.text.position}
+          rotation={layout[device].game.letsPlayButton.waitingForHostButton.text.rotation}
+          size={layout[device].game.letsPlayButton.waitingForHostButton.text.size}
+          height={layout[device].game.letsPlayButton.waitingForHostButton.text.height}
+          lineHeight={layout[device].game.letsPlayButton.waitingForHostButton.text.lineHeight}
+        >
+          {`waiting\nfor\nhost`}
+          <meshStandardMaterial color='grey'/>
+        </Text3D>
+      </group>
+    }
 
     return <>
       { hostName === client.name && gamePhase === 'lobby' && <group position={position}>
-        { readyToStart ? <ActivatedButton/> : <DisabledButton 
+        { readyToStart ? <ActivatedButton
+        position={layout[device].game.letsPlayButton.activeButton.position}/> : <DisabledButton 
+        position={layout[device].game.letsPlayButton.disabledButton.position}
+        scale={layout[device].game.letsPlayButton.disabledButton.scale}
+        /> }
+      </group> }
+      { hostName !== client.name && gamePhase === 'lobby' && <group position={position}>
+        { readyToStart ? <WaitingForHostButton
+        position={layout[device].game.letsPlayButton.waitingForHostButton.position}
+        scale={layout[device].game.letsPlayButton.waitingForHostButton.scale}/> : <DisabledButton 
         position={layout[device].game.letsPlayButton.disabledButton.position}
         scale={layout[device].game.letsPlayButton.disabledButton.scale}
         /> }
@@ -182,68 +247,121 @@ export default function Game() {
     </>
   }
 
-  function HostName({ position, rotation }) {
-    const [hostName] = useAtom(hostNameAtom)
-    return <group position={position} rotation={rotation}>
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        size={layout[device].game.hostName.size}
-        height={layout[device].game.hostName.height}
-      >
-        {`HOST: ${hostName}`}
-        <meshStandardMaterial color='yellow'/>
-      </Text3D>
-    </group>
-  }
+  function InitialJoinTeamModal({ position }) {
+    const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom)
+    // e.stopPropagation doesn't stop tile from being clicked
+    
+    const [joinRocketsHover, setJoinRocketsHover] = useState(false)
+    const [joinUfosHover, setJoinUfosHover] = useState(false)
 
-  function CurrentPlayer({ position, pieceScale }) {
-    const [teams] = useAtom(teamsAtom)
-
-    // If player disconnects, and there's no player remaining in the team,
-    // don't display a name
-    const player = teams[turn.team].players[turn.players[turn.team]]
-    const name = player ? player.name : ''
-
+    function handleJoinRocketsPointerEnter(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(true)
+    }
+    function handleJoinRocketsPointerLeave(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(false)
+    }
+    function handleJoinRocketsClick(e) {
+      e.stopPropagation()
+      setJoinRocketsHover(false)
+      setJoinTeam(0)
+    }
+    function handleJoinUfosPointerEnter(e) {
+      e.stopPropagation()
+      setJoinUfosHover(true)
+    }
+    function handleJoinUfosPointerLeave(e) {
+      e.stopPropagation()
+      setJoinUfosHover(false)
+    }
+    function handleJoinUfosClick(e) {
+      e.stopPropagation()
+      setJoinUfosHover(false)
+      setJoinTeam(1)
+    }
     return <group position={position}>
-      { turn.team === 0 && <Rocket
-        position={[0, 0, 0]}
-        rotation={[0, 0, 0]}
-        scale={pieceScale}
-        animation={null}
-      />}
-      { turn.team === 1 && <Ufo
-        position={[0, 0, 0.2]}
-        rotation={[0, 0, 0]}
-        scale={pieceScale}
-        animation={null}
-      />}
-      <Text3D
-        font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].game.currentPlayer.text.position}
-        rotation={layout[device].game.currentPlayer.text.rotation}
-        size={layout[device].game.currentPlayer.text.size}
-        height={layout[device].game.currentPlayer.text.height}
-      >
-        {`${formatName(name)}`}
-        <meshStandardMaterial color='yellow'/>
-      </Text3D>
+      { joinTeam === null && <group name='pick-a-team-modal'>
+        <group name='background'>
+          <mesh>
+            <boxGeometry args={[7.6, 0.01, 5]}/>
+            <meshStandardMaterial color='yellow'/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[7.5, 0.02, 4.9]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+        </group>
+        <Text3D name='guide-text'
+          font="fonts/Luckiest Guy_Regular.json"
+          position={[-2,0.03,-1.5]}
+          rotation={[-Math.PI/2, 0, 0]}
+          size={0.5}
+          height={0.01}
+        >
+          pick a team
+          <meshStandardMaterial color='yellow'/>
+        </Text3D>
+        <group name='join-rockets-button' position={[-1.8, 0.02, 0.3]}>
+          <mesh>
+            <boxGeometry args={[3.4, 0.01, 2.5]}/>
+            <meshStandardMaterial color={ joinRocketsHover ? 'green' : 'red' }/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[3.3, 0.02, 2.4]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <mesh 
+            name='wrapper'
+            onPointerEnter={e => handleJoinRocketsPointerEnter(e)}
+            onPointerLeave={e => handleJoinRocketsPointerLeave(e)}
+            onClick={e => handleJoinRocketsClick(e)}
+          >
+            <boxGeometry args={[3.4, 0.02, 2.5]}/>
+            <meshStandardMaterial transparent opacity={0}/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-1.4,0.03,-0.3]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.5}
+            height={0.01}
+          >
+            {`join the\nrockets`}
+            <meshStandardMaterial color={ joinRocketsHover ? 'green' : 'red' }/>
+          </Text3D>
+        </group>
+        <group name='join-ufos-button' position={[1.8, 0.02, 0.3]}>
+          <mesh>
+            <boxGeometry args={[3.4, 0.01, 2.5]}/>
+            <meshStandardMaterial color={ joinUfosHover ? 'green' : 'turquoise' }/>
+          </mesh>
+          <mesh>
+            <boxGeometry args={[3.3, 0.02, 2.4]}/>
+            <meshStandardMaterial color='black'/>
+          </mesh>
+          <mesh 
+            name='wrapper'
+            onPointerEnter={e => handleJoinUfosPointerEnter(e)}
+            onPointerLeave={e => handleJoinUfosPointerLeave(e)}
+            onClick={e => handleJoinUfosClick(e)}
+          >
+            <boxGeometry args={[3.4, 0.02, 2.5]}/>
+            <meshStandardMaterial transparent opacity={0}/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json"
+            position={[-1.4,0.03,-0.3]}
+            rotation={[-Math.PI/2, 0, 0]}
+            size={0.5}
+            height={0.01}
+          >
+            {`join the\nufos`}
+            <meshStandardMaterial color={ joinUfosHover ? 'green' : 'turquoise' }/>
+          </Text3D>
+        </group>
+      </group>}
     </group>
-  }
-
-  function handleInvite() {
-
-  }
-
-  function handleDiscord() {
-
-  }
-
-  function handleRules() {
-
-  }
-
-  function handleSettings() {
-
   }
 
   // Animations
@@ -255,31 +373,56 @@ export default function Game() {
   })
 
   function InviteButton({ position }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+
+    const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+    const [hover, setHover] = useState(false);
+    const [springs, api] = useSpring(() => ({        
+      from: {
+        opacity: 0, 
+      }
+    }))
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true)
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false);
     }
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('invite button click')
+      navigator.clipboard.writeText(window.location.href)
+      api.start({
+        from: {
+          opacity: 1
+        },
+        to: [
+          {
+            opacity: 1
+          },
+          { 
+            opacity: 0,
+            delay: 500,
+            config: {
+              tension: 170,
+              friction: 26
+            }
+          }
+        ]
+      })
     }
 
     return <group position={position}>
-      <mesh
-        material={yellowMaterial}
-      >
-        <boxGeometry args={[1.5, 0.03, 0.55]}/>
+      <mesh>
+        <boxGeometry args={layout[device].game.invite.outerBox.args}/>
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </mesh>
       <mesh>
-        <boxGeometry args={[1.45, 0.04, 0.5]}/>
+        <boxGeometry args={layout[device].game.invite.innerBox.args}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -288,45 +431,64 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[
+          layout[device].game.invite.outerBox.args[0], 
+          0.1, 
+          layout[device].game.invite.outerBox.args[2], 
+        ]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={[-0.61, 0.025, 0.15]}
+        position={layout[device].game.invite.text.position}
         rotation={[-Math.PI/2, 0, 0]}
         size={layout[device].game.invite.size}
         height={layout[device].game.invite.height}
-        material={yellowMaterial}
       >
-        Invite
+        {layout[device].game.invite.text.content}
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
+      </Text3D>
+      <Text3D 
+        name='copied-tooltip'
+        font="fonts/Luckiest Guy_Regular.json"
+        position={layout[device].game.invite.copiedText.position}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={layout[device].game.invite.size}
+        height={layout[device].game.invite.height}
+      >
+        copied!
+        <AnimatedMeshDistortMaterial
+          speed={5}
+          distort={0}
+          color='yellow'
+          transparent
+          opacity={springs.opacity}
+        />
       </Text3D>
     </group>
   }
 
   function DiscordButton({ position }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+    const [hover, setHover] = useState(false);
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true);
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false);
     }
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('discord button click')
     }
 
     return <group position={position}>
-      <mesh
-        material={yellowMaterial}
-      >
+      <mesh>
         <boxGeometry args={[1.83, 0.03, 0.55]}/>
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </mesh>
       <mesh>
         <boxGeometry args={[1.77, 0.04, 0.5]}/>
@@ -338,7 +500,7 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[1.83, 0.1, 0.55]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
@@ -347,9 +509,9 @@ export default function Game() {
         rotation={[-Math.PI/2, 0, 0]}
         size={layout[device].game.discord.size}
         height={layout[device].game.discord.height}
-        material={yellowMaterial}
       >
         DISCORD
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
       </Text3D>
     </group>
   }
@@ -376,10 +538,10 @@ export default function Game() {
       <mesh
         material={yellowMaterial}
       >
-        <boxGeometry args={[2.05, 0.03, 0.55]}/>
+        <boxGeometry args={[2.1, 0.03, 0.55]}/>
       </mesh>
       <mesh>
-        <boxGeometry args={[2, 0.04, 0.5]}/>
+        <boxGeometry args={[2.05, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -405,31 +567,34 @@ export default function Game() {
   }
 
   function RulebookButton({ position, scale }) {
-    const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
+    const [hover, setHover] = useState(false)
 
     function handlePointerEnter(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('green')
+      setHover(true)
     }
 
     function handlePointerLeave(e) {
       e.stopPropagation();
-      yellowMaterial.color = new Color('yellow')
+      setHover(false)
     }
 
     function handlePointerDown(e) {
       e.stopPropagation();
-      console.log('rulebook button click')
+      if (showRulebook) {
+        setShowRulebook(false)
+      } else {
+        setShowRulebook(true)
+      }
     }
 
     return <group position={position} scale={scale}>
-      <mesh
-        material={yellowMaterial}
-      >
-        <boxGeometry args={[1.4, 0.03, 0.55]}/>
+      <mesh>
+        <boxGeometry args={[1.5, 0.03, 0.6]}/>
+        <meshStandardMaterial color={ hover || showRulebook ? 'green': 'yellow' }/>
       </mesh>
       <mesh>
-        <boxGeometry args={[1.35, 0.04, 0.5]}/>
+        <boxGeometry args={[1.45, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
       <mesh 
@@ -438,20 +603,30 @@ export default function Game() {
         onPointerLeave={e => handlePointerLeave(e)}
         onPointerDown={e => handlePointerDown(e)}
       >
-        <boxGeometry args={[1.2, 0.1, 0.6]}/>
+        <boxGeometry args={[1.5, 0.1, 0.6]}/>
         <meshStandardMaterial transparent opacity={0}/>
       </mesh>
       <Text3D
         font="fonts/Luckiest Guy_Regular.json"
-        position={layout[device].game.rulebookButton.text.position}
-        rotation={layout[device].game.rulebookButton.text.rotation}
-        size={layout[device].game.rulebookButton.text.size}
-        height={layout[device].game.rulebookButton.text.height}
-        material={yellowMaterial}
+        position={[-0.6,0.02,0.15]}
+        rotation={[-Math.PI/2, 0, 0]}
+        size={0.3}
+        height={0.01}
       >
         Rules
+        <meshStandardMaterial color={ hover || showRulebook ? 'green': 'yellow' }/>
       </Text3D>
     </group>
+  }
+
+  function handleThrowButtonClick(e) {
+    e.stopPropagation();
+
+    socket.emit('throwYoot', { roomId: params.id })
+
+    // send 'throw yoot' to server
+    // on animation finish
+    // send 'record throw' to server
   }
 
   // UI prop guideline
@@ -496,8 +671,8 @@ export default function Game() {
           rotation={layout[device].game.chat.rotation}
           scale={layout[device].game.chat.scale}
         /> }
-        <InviteButton position={layout[device].game.invite.position}/>
-        <DiscordButton position={layout[device].game.discord.position}/>
+        {/* <InviteButton position={layout[device].game.invite.position}/> */}
+        {/* <DiscordButton position={layout[device].game.discord.position}/> */}
         { disconnect && <DisconnectModal
           position={layout[device].game.disconnectModal.position}
           rotation={layout[device].game.disconnectModal.rotation}
@@ -509,7 +684,6 @@ export default function Game() {
         <animated.group position={boardPosition} scale={boardScale}>
           <Board 
             position={[0,0,0]}
-            rotation={[0,0,0]}
             scale={1}
             tiles={tiles}
             legalTiles={legalTiles}
@@ -543,21 +717,37 @@ export default function Game() {
             <meshStandardMaterial color="limegreen"/>
           </Text3D>
         </group>}
-        <Yoot device={device}/>
+        { yootAnimation && <YootNew
+          setAnimation={setYootAnimation} 
+          animation={yootAnimation}
+          scale={0.22}
+          position={[0, 2, 0]}
+        /> }
+        { (gamePhase === 'pregame' || gamePhase === 'game') && <YootButtonNew
+          position={layout[device].game.yootButton.position}
+          rotation={layout[device].game.yootButton.rotation}
+          scale={layout[device].game.yootButton.scale}
+          clickHandler={e => handleThrowButtonClick(e)}
+          enabled={yootActive && !Boolean(yootAnimation)}
+        />}
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>
         <RulebookButton 
-        position={layout[device].game.rulebookButton.position}
-        scale={layout[device].game.rulebookButton.scale}
+          position={layout[device].game.rulebookButton.position}
+          scale={layout[device].game.rulebookButton.scale}
         />
-        <PiecesSection 
+        { ((device === 'portrait' && !(29 in legalTiles)) || device === 'landscapeDesktop') && <PiecesSection 
         position={layout[device].game.piecesSection.position}
         device={device}
-        />
+        /> }
         { (29 in legalTiles) && <ScoreButtons
           position={layout[device].game.scoreButtons.position}
           rotation={layout[device].game.scoreButtons.rotation}
+          buttonPos={layout[device].game.scoreButtons.buttons.position}
+          text={layout[device].game.scoreButtons.text}
+          textSize={layout[device].game.scoreButtons.textSize}
+          lineHeight={layout[device].game.scoreButtons.lineHeight}
           legalTiles={legalTiles}
         /> }
         <PiecesOnBoard/>
@@ -567,12 +757,25 @@ export default function Game() {
           tokenScale={layout[device].game.moveList.tokenScale}
           tokenPosition={layout[device].game.moveList.tokenPosition}
         /> }
-        </animated.group>
-      }
+      </animated.group> }
       { gamePhase === 'finished' && <animated.group scale={winScreenScale}>
         { (gamePhase === 'finished' && winner === 0) && <RocketsWin/>}
         { (gamePhase === 'finished' && winner === 1) && <UfosWin/>}
       </animated.group> }
+      { showRulebook && gamePhase !== 'finished' && <group>
+        <mesh name='blocker' position={[0.5,8,3]}>
+          <boxGeometry args={layout[device].game.rulebook.blocker.args}/>
+          <meshStandardMaterial color='black' transparent opacity={0.95}/>
+        </mesh>
+        <HowToPlay 
+          device={device} 
+          position={layout[device].game.rulebook.position} 
+          scale={0.8}
+          closeButton={true}
+          setShowRulebook={setShowRulebook}
+        />
+      </group>}
+      { parseInt(client.team) === -1 && <InitialJoinTeamModal position={[0, 2.7, 1]} />}
     </>
   );
 }

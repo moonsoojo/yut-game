@@ -29,7 +29,6 @@ export default function Cursor({
       0.9 * scaleArray[2]
     ]
   }
-  console.log(scaleArray, scaleArrayOuter)
 
   return (
     <animated.group

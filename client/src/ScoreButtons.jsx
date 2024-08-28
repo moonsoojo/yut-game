@@ -4,7 +4,7 @@ import { socket } from "./SocketManager";
 import { useParams } from "wouter";
 import * as THREE from 'three';
 
-export default function ScoreButtons({ position, rotation, scale, legalTiles }) {
+export default function ScoreButtons({ position, rotation, scale, legalTiles, text, buttonPos, textSize }) {
   
   const params = useParams()
 
@@ -89,12 +89,13 @@ export default function ScoreButtons({ position, rotation, scale, legalTiles }) 
     <Text3D 
       font="/fonts/Luckiest Guy_Regular.json" 
       height={0.01} 
-      size={0.4}
+      size={textSize}
+      lineHeight={0.8}
     >
-      {`score with`}
+      {text}
       <meshStandardMaterial color='limegreen'/>
     </Text3D>
-    <group>
+    <group position={buttonPos}>
       {legalTiles[29].map( (value, index) => ( // must use parentheses instead of brackets
         <MoveToken 
           moveInfo={value} 

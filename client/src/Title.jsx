@@ -34,7 +34,7 @@ export default function Title({ position, rotation, scale, setDisplay }) {
         height={0.01}
         position={[0, -1, 0]}
       >
-        GAME
+        NORI
         <meshStandardMaterial color={hover ? "green": "yellow"} />
       </Text3D>
       <mesh 

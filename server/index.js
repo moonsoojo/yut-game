@@ -100,13 +100,8 @@ const roomSchema = new mongoose.Schema(
       flag: Boolean,
       player: String // User ID
     },
-    yootThrowValues: [{
-      _id: Number,
-      positionInHand: { x: Number, y: Number, z: Number },
-      rotation: { x: Number, y: Number, z: Number, w: Number},
-      yImpulse: Number,
-      torqueImpulse: { x: Number, y: Number, z: Number }
-    }],
+    yootOutcome: Number,
+    yootAnimation: Number,
     pregameOutcome: String,
     selection: {
       tile: Number,
@@ -183,7 +178,7 @@ async function addUser(socket, name) {
 
 // Room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
-  console.log(`[Room.watch] data`, data)
+  // console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
@@ -191,12 +186,13 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
-        if ('yootThrowValues' in data.updateDescription.updatedFields) {
-          let yootThrowValues = data.fullDocument.yootThrowValues
+        if ('yootAnimation' in data.updateDescription.updatedFields) {
+          let yootOutcome = data.fullDocument.yootOutcome
+          let yootAnimation = data.fullDocument.yootAnimation
           let yootThrown = data.fullDocument.yootThrown
           let currentTeam = data.fullDocument.turn.team
           let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
-          io.to(userSocketId).emit('throwYoot', { yootThrowValues, yootThrown, throwCount })
+          io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, yootThrown, throwCount })
         } else {
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')
@@ -270,7 +266,8 @@ io.on("connect", async (socket) => {
           flag: false,
           player: ''
         }, // To not trigger the throw twice in the server
-        yootThrowValues: null,
+        yootOutcome: null,
+        yootAnimation: null,
         pregameOutcome: null,
         selection: null,
         legalTiles: {},
@@ -286,8 +283,7 @@ io.on("connect", async (socket) => {
           type: '',
           num: -2,
           time: Date.now()
-        },
-        // turnAlertActive: true
+        }
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -302,7 +298,7 @@ io.on("connect", async (socket) => {
     try {
       let user = await User.findOne({ 'socketId': socket.id }).exec()
       let room;
-      console.log(`[joinRoom] user`, user)
+      // console.log(`[joinRoom] user`, user)
       if (user.roomId && user.roomId.valueOf() === roomId) { // Use value saved in local storage
         if (user.team === -1) {
           room = await Room.findOneAndUpdate({ _id: roomId }, { $addToSet: { "spectators": user._id }}).exec()
@@ -324,7 +320,7 @@ io.on("connect", async (socket) => {
     try {
       let user = await User.findOne({ 'socketId': socket.id })
       let room = await Room.findById(roomId)
-      console.log(`[joinRoom] room`, room)
+      // console.log(`[joinRoom] room`, room)
       if (room.host === null) {
         room.host = user._id
         room.save()
@@ -504,6 +500,57 @@ io.on("connect", async (socket) => {
     }
   })
 
+  function sumArray(array) {
+    return array.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+  }
+
+  function pickOutcome() {
+    // return outcome
+    // front end maps outcome to an animation
+    const doProb = 0.15
+    const backdoProb = 0.05
+    const geProb = 0.3
+    const gulProb = 0.33
+    const yootProb = 0.12
+    const moProb = 0.03
+    const nakProb = 0.02
+    const probs = [doProb, backdoProb, geProb, gulProb, yootProb, moProb, nakProb]
+    const randomNum = Math.random()
+    console.log(`[pickOutcome] randomNum`, randomNum)
+    if (randomNum < sumArray(probs.slice(0, 1))) {
+      return 1
+    } else if (randomNum >= sumArray(probs.slice(0, 1)) && randomNum < sumArray(probs.slice(0, 2))) {
+      return -1
+    } else if (randomNum >= sumArray(probs.slice(0, 2)) && randomNum < sumArray(probs.slice(0, 3))) {
+      return 2
+    } else if (randomNum >= sumArray(probs.slice(0, 3)) && randomNum < sumArray(probs.slice(0, 4))) {
+      return 3
+    } else if (randomNum >= sumArray(probs.slice(0, 4)) && randomNum < sumArray(probs.slice(0, 5))) {
+      return 4
+    } else if (randomNum >= sumArray(probs.slice(0, 5)) && randomNum < sumArray(probs.slice(0, 6))) {
+      return 5
+    } else if (randomNum >= sumArray(probs.slice(0, 6)) && randomNum < sumArray(probs.slice(0, 7))) {
+      return 0
+    }
+  }
+
+  function pickAnimation(outcome) {
+    const outcomeToPseudoIndex = {
+      '1': [14, 22, 25, 42],
+      '-1': [59, 60],
+      '2': [8, 13, 15, 16, 23, 28, 30, 31, 32, 35, 38, 39, 40, 48, 49, 50, 52, 54, 57, 58],
+      '3': [2, 17, 21, 24, 29, 34, 36, 37, 41, 46, 47, 51, 53, 55, 56],
+      '4': [19, 20, 26, 27, 33, 44, 45],
+      '5': [43],
+      '0': [1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 18],
+    }
+    console.log(`[pickAnimation] outcome ${outcome}`)
+    const listOfAnimations = outcomeToPseudoIndex[outcome]
+    let pseudoIndex = listOfAnimations[Math.floor(Math.random() * listOfAnimations.length)]
+    console.log(`[pickAnimation] length of animations ${listOfAnimations.length}, pseudoIndex ${pseudoIndex}`)
+    return pseudoIndex
+  }
+
   socket.on("throwYoot", async ({ roomId }) => {
     let user;
     
@@ -520,21 +567,21 @@ io.on("connect", async (socket) => {
       // Check thrown flag again because client takes time to update its state
       if (room.teams[user.team].throws > 0 && !room.yootThrown.flag) {
 
-        // Update throw values
-        // Update thrown flag so subsequent requests don't trigger a throw
-
+        // remove 'yootThrown' - maybe needed for thrower disconnecting
+        const outcome = pickOutcome()
+        const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 
             _id: roomId
           }, 
           { 
             $set: { 
-              yootThrowValues: generateForceVectors(room.gamePhase),
+              yootOutcome: outcome,
+              yootAnimation: animation,
               yootThrown: {
                 flag: true,
                 player: user._id
               },
-              // turnAlertActive: false
             },
             $inc: {
               [`teams.${user.team}.throws`]: -1
@@ -604,6 +651,8 @@ io.on("connect", async (socket) => {
   }
 
   socket.on("recordThrow", async ({ move, roomId }) => {
+
+    console.log('[recordThrow] move', move)
 
     let user;
     try {
