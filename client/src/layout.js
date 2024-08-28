@@ -1168,12 +1168,12 @@ export default {
         scale: [1.3, 1.3, 1.3]
       },
       chat: {
-        position: [-4.7,0,6],
+        position: [-4.7,0,5.6],
         rotation: [-Math.PI/2, 0, 0],
         scale: [0.5, 0.5, 0.5],
         box: {
           borderRadius: '5px',
-          height: '280px',
+          height: '320px',
           width: '220px',
           padding: '10px',
           fontSize: '24px',
