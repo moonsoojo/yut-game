@@ -2543,10 +2543,11 @@ export default {
           maxLength: 12
         },
         join: {
-          position: [3, 0, 0.45],
+          position: [3.1, 0, 0.45],
           rotation: [-Math.PI / 2, 0, 0],
           size: 0.3,
-          height: 0.01
+          height: 0.01,
+          scale: 1.2,
         },
         pregameRoll: {
           position: [3.4, 0, 0.5],
@@ -2582,10 +2583,11 @@ export default {
           maxLength: 12
         },
         join: {
-          position: [3.1, 0, 0.5],
+          position: [3.2, 0, 0.5],
           rotation: [-Math.PI / 2, 0, 0],
           size: 0.3,
-          height: 0.01
+          height: 0.01,
+          scale: 1.2,
         },
         pregameRoll: {
           position: [3.5, 0, 0.6],

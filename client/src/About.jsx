@@ -170,7 +170,7 @@ export default function About(props) {
         size={layout[props.device].about.mainDescription.size}
         height={0.01}
     >
-      {`Two teams throw wooden dice (yoot)\nto move their pieces on the board. The\none that moves four pieces back to\nthe start first wins.`}
+      {`Two teams throw the yoot (dice) to\nmove their pieces on the board. The\none that moves four pieces back to\nthe start first wins.`}
       <meshStandardMaterial color='yellow'/>
     </Text3D>
     <group>

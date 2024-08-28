@@ -4,9 +4,6 @@ import { useAtom } from "jotai";
 import layout from "./layout.js";
 import { useSpring, animated } from '@react-spring/three';
 
-// custom components
-import Chatbox from "./Chatbox.jsx";
-import Yoot from "./Yoot.jsx";
 import Board from "./Board.jsx";
 import PiecesSection from "./PiecesSection.jsx";
 import Team from "./Team.jsx";
@@ -28,7 +25,6 @@ import {
   disconnectAtom, 
   gamePhaseAtom, 
   turnAtom,
-  teamsAtom,
   legalTilesAtom,
   tilesAtom,
   helperTilesAtom,
@@ -38,8 +34,6 @@ import {
   yootAnimationAtom,
   yootActiveAtom,
 } from "./GlobalState.jsx";
-import Rocket from "./meshes/Rocket.jsx";
-import Ufo from "./meshes/Ufo.jsx";
 import MoveList from "./MoveList.jsx";
 import PiecesOnBoard from "./PiecesOnBoard.jsx";
 import ScoreButtons from "./ScoreButtons.jsx";
@@ -47,18 +41,12 @@ import RocketsWin from "./RocketsWin.jsx";
 import UfosWin from "./UfosWin.jsx";
 import { Text3D } from "@react-three/drei";
 import { Color, MeshStandardMaterial } from "three";
-import { formatName } from "./helpers/helpers.js";
 import { useFrame } from "@react-three/fiber";
-import Star from "./meshes/Star.jsx";
 import GameLog from "./GameLog.jsx";
 import HowToPlay from "./HowToPlay.jsx";
 
 // react spring
 import { MeshDistortMaterial } from '@react-three/drei'
-import { WolfConstellation } from "./meshes/WolfConstellation.jsx";
-import { RhinoConstellation } from "./meshes/RhinoConstellation.jsx";
-import { PegasusConstellation } from "./meshes/PegasusConstellation.jsx";
-import { TaurusConstellation } from "./meshes/TaurusConstellation.jsx";
 import YootNew from "./YootNew.jsx";
 import YootButtonNew from "./YootButtonNew.jsx";
 
@@ -90,8 +78,18 @@ export default function Game() {
   }, [])
 
   function LetsPlayButton({ position }) {
+
+
     function DisabledButton({ position, scale }) {
-      return <group position={position} scale={scale}>
+      const button = useRef();
+
+      useFrame((state) => {
+        const time = state.clock.elapsedTime
+        button.current.scale.x = Math.sin(time)*0.1 + scale
+        button.current.scale.y = Math.sin(time)*0.1 + scale
+        button.current.scale.z = Math.sin(time)*0.1 + scale
+      })
+      return <group position={position} scale={scale} ref={button}>
         <mesh>
           <boxGeometry args={[1.5, 0.03, 1.3]}/>
           <meshStandardMaterial color='grey'/>
@@ -204,7 +202,7 @@ export default function Game() {
       </animated.group>
     }
 
-    function WaitingForHostButton({ position, scale }) {
+    function WaitingForHostButton({ position, scale }) {    
       return <group position={position} scale={scale}>
         <mesh>
           <boxGeometry args={[1.5, 0.03, 1.3]}/>
@@ -228,7 +226,7 @@ export default function Game() {
       </group>
     }
 
-    return <>
+    return <group>
       { hostName === client.name && gamePhase === 'lobby' && <group position={position}>
         { readyToStart ? <ActivatedButton
         position={layout[device].game.letsPlayButton.activeButton.position}/> : <DisabledButton 
@@ -244,7 +242,7 @@ export default function Game() {
         scale={layout[device].game.letsPlayButton.disabledButton.scale}
         /> }
       </group> }
-    </>
+    </group>
   }
 
   function InitialJoinTeamModal({ position }) {

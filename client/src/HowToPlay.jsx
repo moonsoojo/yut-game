@@ -54,7 +54,7 @@ export default function HowToPlay({
   setShowRulebook=null
 }) {
   
-  const [page, setPage] = useState(5)
+  const [page, setPage] = useState(0)
 
   const [pageTimeout, setPageTimeout] = useState(null)
   useEffect(() => {

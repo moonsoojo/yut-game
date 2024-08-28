@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import layout from './layout';
 import { useAtom } from 'jotai';
 import { joinTeamAtom, clientAtom, teamsAtom, gamePhaseAtom, hostNameAtom, turnAtom } from './GlobalState';
@@ -42,10 +42,12 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     >
       <mesh
         material={yellowMaterial}
+        name='background-outer'
       >
         <boxGeometry args={[1.15, 0.03, 0.55]}/>
       </mesh>
-      <mesh>
+      <mesh
+        name='background-inner'>
         <boxGeometry args={[1.1, 0.04, 0.5]}/>
         <meshStandardMaterial color='black'/>
       </mesh>
@@ -195,6 +197,72 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
           </group>
         </group>
       ))}
+      {/* add 'copy link to share' if game hasn't started yet */}
+      <CopyLink position={[0.1, -teams[team].players.length * 0.5-0.1, 0]}/>
+    </group>
+  }
+
+  // place under playerIds
+  function CopyLink({ position }) {
+    const [hover, setHover] = useState(false);
+    const button = useRef();
+
+    useFrame((state) => {
+      const time = state.clock.elapsedTime
+      button.current.scale.x = Math.sin(time)*0.05 + 1
+      button.current.scale.y = Math.sin(time)*0.05 + 1
+      button.current.scale.z = Math.sin(time)*0.05 + 1
+    })
+
+    function handlePointerEnter(e) {
+      e.stopPropagation()
+      setHover(true)
+    }
+    function handlePointerLeave(e) {
+      e.stopPropagation()
+      setHover(false)
+    }
+    function handleClick(e) {
+      e.stopPropagation()
+      console.log('click')
+    }
+    return <group position={position} ref={button}>
+      <group name='background' position={[4/2-0.15, 0.5/2-0.1, -0.1]}>
+        <mesh 
+          name='background-outer' 
+          rotation={[Math.PI/2, 0, 0]}
+        >
+          <boxGeometry args={[4, 0.01, 0.7]}/>
+          <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
+        </mesh>
+        <mesh 
+          name='background-inner' 
+          rotation={[Math.PI/2, 0, 0]}
+        >
+          <boxGeometry args={[3.95, 0.02, 0.65]}/>
+          <meshStandardMaterial color='black'/>
+        </mesh>
+        <mesh 
+        name='wrapper' 
+        rotation={[Math.PI/2, 0, 0]}
+        onPointerEnter={(e) => handlePointerEnter(e)}
+        onPointerLeave={(e) => handlePointerLeave(e)}
+        onClick={(e) => handleClick(e)}
+        >
+          <boxGeometry args={[4, 0.03, 0.7]}/>
+          <meshStandardMaterial transparent opacity={0}/>
+        </mesh>
+      </group>
+      <Text3D
+        font="fonts/Luckiest Guy_Regular.json"
+        position={[0,0,-0.08]}
+        rotation={[0, 0, 0]}
+        size={0.35}
+        height={0.01}
+      >
+        <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
+        {`copy room link`}
+      </Text3D>
     </group>
   }
 
@@ -224,5 +292,6 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
     />
     {/* player ids */}
     <PlayerIds/>
+    {/* copy link */}
   </group>
 }
