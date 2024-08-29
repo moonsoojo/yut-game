@@ -16,9 +16,9 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
   const [gamePhase] = useAtom(gamePhaseAtom);
   const [hostName] = useAtom(hostNameAtom);
   const [turn] = useAtom(turnAtom)
+  const [client] = useAtom(clientAtom);
 
   function JoinTeamButton() {
-    const [client] = useAtom(clientAtom);
     const [joinTeam, setJoinTeam] = useAtom(joinTeamAtom);
     const yellowMaterial = new MeshStandardMaterial({ color: new Color('yellow')});
 
@@ -199,7 +199,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
         </group>
       ))}
       {/* add 'copy link to share' if game hasn't started yet */}
-      <CopyLink position={[0.1, -teams[team].players.length * 0.5-0.1, 0]}/>
+      { gamePhase === 'lobby' && client.team !== -1 && <CopyLink position={[0.1, -teams[team].players.length * 0.5-0.1, 0]}/> }
     </group>
   }
 
@@ -298,7 +298,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
         <meshStandardMaterial color={ hover ? 'green' : 'yellow' }/>
         {`copy room link`}
       </Text3D>
-      <group name='copied-alert' position={[0, 0.9, 0.5]}>
+      <group name='copied-alert' position={[0, 0.7, 0.5]}>
         <Text3D 
           name='copied-tooltip'
           font="fonts/Luckiest Guy_Regular.json"
@@ -311,7 +311,7 @@ export default function Team({ position=[0,0,0], scale=1, team, device }) {
           <AnimatedMeshDistortMaterial
             speed={5}
             distort={0}
-            color='yellow'
+            color='green'
             transparent
             opacity={springs.opacity}
           />
