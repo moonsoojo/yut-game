@@ -47,12 +47,12 @@ export default function Experience() {
       lightRotation = {[80.1,0.0,0.0]}
       lightMultiplier = {1.5}
     /> */}
-    <MainAlert/> 
+    {/* <MainAlert/> 
     <PregameAlert/>
     <ThrowAlert 
     position={[0,0,4.5]} 
     rotation={[0, Math.PI/2, 0]} 
-    initialScale={1}/>
-    <Alert/>
+    initialScale={1}/> */}
+    <Alert position={[0,0,0]} rotation={[0,Math.PI/2,0]}/>
   </group>
 }

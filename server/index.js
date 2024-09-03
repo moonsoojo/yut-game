@@ -130,6 +130,7 @@ const roomSchema = new mongoose.Schema(
     moveResult: Object,
     throwResult: Object,
     results: [Number],
+    serverEvent: String
   },
   {
     versionKey: false,
@@ -139,16 +140,6 @@ const roomSchema = new mongoose.Schema(
 
 const User = mongoose.model('users', userSchema)
 const Room = mongoose.model('rooms', roomSchema)
-
-// yoot throw
-// if thrown and client disconnects
-// display a button to claim turn for other players on his team
-// mark player's name as disconnected
-  // check for existing player by matching the name on rejoin
-// on return
-// if thrown
-  // add a throw
-  // reset flag on record result
 
 async function addUser(socket, name) {
   try {
@@ -178,14 +169,16 @@ async function addUser(socket, name) {
 
 // Room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
-  // console.log(`[Room.watch] data`, data)
+  console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
+    console.log(`[Room.watch] users`, users)
     for (const user of users) {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
+        console.log(`[Room.watch] userSocketId`, userSocketId)
         if ('yootAnimation' in data.updateDescription.updatedFields) {
           let yootOutcome = data.fullDocument.yootOutcome
           let yootAnimation = data.fullDocument.yootAnimation
@@ -193,7 +186,21 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
           let currentTeam = data.fullDocument.turn.team
           let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
           io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, yootThrown, throwCount })
+        } else if ('serverEvent' in data.updateDescription.updatedFields) {
+          const serverEvent = data.updateDescription.updatedFields.serverEvent
+          if (serverEvent === "gameStart") {
+            console.log(`[Room.watch] gameStart`)
+            let roomPopulated = await Room.findById(data.documentKey._id)
+            .populate('teams.players') // only update the throw count of the current team
+            .exec()
+            io.to(userSocketId).emit("gameStart", {
+              teams: roomPopulated.teams,
+              gamePhase: data.fullDocument.gamePhase,
+              turn: data.fullDocument.turn,
+            })
+          }
         } else {
+          console.log(`[Room.watch] room`)
           let roomPopulated = await Room.findById(data.documentKey._id)
           .populate('spectators')
           .populate('host')
@@ -283,7 +290,8 @@ io.on("connect", async (socket) => {
           type: '',
           num: -2,
           time: Date.now()
-        }
+        },
+        serverEvent: ''
       })
       await room.save();
       console.log('[createRoom] room', room)
@@ -422,7 +430,7 @@ io.on("connect", async (socket) => {
   }
 
   socket.on("startGame", async ({ roomId }) => {
-
+    console.log(`[startGame]`)
     try {
 
       const room = await Room.findOne({ _id: roomId }).populate('host')
@@ -442,6 +450,7 @@ io.on("connect", async (socket) => {
           [`teams.${newTurn.team}.throws`]: 1,
           gamePhase: "pregame",
           turn: newTurn,
+          serverEvent: "gameStart"
         },
         $push: {
           gameLogs: {

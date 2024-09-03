@@ -101,7 +101,6 @@ export default function PiecesOnBoard() {
     const heightOffset = 0.9
 
     function startCheck(tile, lastPath) {
-        console.log()
         const condition0 = (tile === 0 && lastPath[0] === 1)
         const condition1 = (tile <= 5 && lastPath[0] === 0)
         return (condition0 || condition1)

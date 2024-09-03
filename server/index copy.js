@@ -140,16 +140,6 @@ const roomSchema = new mongoose.Schema(
 const User = mongoose.model('users', userSchema)
 const Room = mongoose.model('rooms', roomSchema)
 
-// yoot throw
-// if thrown and client disconnects
-// display a button to claim turn for other players on his team
-// mark player's name as disconnected
-  // check for existing player by matching the name on rejoin
-// on return
-// if thrown
-  // add a throw
-  // reset flag on record result
-
 async function addUser(socket, name) {
   try {
     let user;
@@ -178,7 +168,7 @@ async function addUser(socket, name) {
 
 // Room stream listener
 Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
-  // console.log(`[Room.watch] data`, data)
+  console.log(`[Room.watch] data`, data)
   if (data.operationType === 'insert' || data.operationType === 'update') {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
@@ -820,7 +810,7 @@ io.on("connect", async (socket) => {
   })
 
   // Client only emits this event if it has the turn
-  socket.on("select", async ({ roomId, payload }) => {
+  socket.on("select", async ({ roomId, selection, legalTiles }) => {
     try {
       await Room.findOneAndUpdate(
         { 
@@ -828,7 +818,8 @@ io.on("connect", async (socket) => {
         }, 
         { 
           $set: { 
-            'selection': payload
+            'selection': selection === 'null' ? null : selection,
+            'legalTiles': legalTiles
           }
         }
       )

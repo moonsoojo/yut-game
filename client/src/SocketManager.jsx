@@ -329,6 +329,20 @@ export const SocketManager = () => {
       setThrowCount(throwCount)
     })
 
+    // client emits event to server
+    // server adds event type and emits an event to the client
+    // client takes event and displays alerts
+    socket.on('gameStart', ({ teams, gamePhase, turn }) => {
+      setTeams(teams) // only update the throw count of the current team
+      setGamePhase(gamePhase)
+      setTurn(turn)
+      // alert types: "gameStart", "pregamePass", "pregameTie", so on
+      // set current player name state
+      // if (alertType === 'gameStart') {
+      //   toAnimations: 'gameStartAlert' scale 1 -> 0, 'turnAlert' scale 0 -> 1 -> 0
+      // }
+    })
+
     socket.on('disconnect', () => {
       console.log("[disconnect]")
       setDisconnect(true);
