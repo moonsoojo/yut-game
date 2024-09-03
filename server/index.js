@@ -820,7 +820,7 @@ io.on("connect", async (socket) => {
   })
 
   // Client only emits this event if it has the turn
-  socket.on("select", async ({ roomId, payload }) => {
+  socket.on("select", async ({ roomId, selection, legalTiles }) => {
     try {
       await Room.findOneAndUpdate(
         { 
@@ -828,7 +828,8 @@ io.on("connect", async (socket) => {
         }, 
         { 
           $set: { 
-            'selection': payload
+            'selection': selection === 'null' ? null : selection,
+            'legalTiles': legalTiles
           }
         }
       )
@@ -851,7 +852,7 @@ io.on("connect", async (socket) => {
         }
       )
     } catch (err) {
-      console.log(`[select] error making selection`, err)
+      console.log(`[legalTiles] error making selection`, err)
     }
   });
 

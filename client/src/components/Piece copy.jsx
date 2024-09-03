@@ -6,136 +6,117 @@ import { useFrame } from "@react-three/fiber";
 import { getLegalTiles } from "../helpers/legalTiles";
 import Rocket from "../meshes/Rocket.jsx";
 import Ufo from "../meshes/Ufo.jsx";
-import { hasValidMove, isMyTurn } from '../helpers/helpers.js'
-import { turnAtom, teamsAtom, gamePhaseAtom, clientAtom, yootThrownAtom, selectionAtom } from "../GlobalState.jsx";
-import * as THREE from 'three';
+import { teamsAtom, gamePhaseAtom, yootThrownAtom, selectionAtom, tilesAtom, legalTilesAtom, hasTurnAtom, clientAtom, mainAlertAtom, animationPlayingAtom } from "../GlobalState.jsx";
+import { useParams } from "wouter";
+import { pieceStatus } from "../helpers/helpers.js";
+import { animated } from "@react-spring/three";
 
 export default function Piece ({
-  position,
-  rotation,
+  position=[0,0,0],
+  rotation=[0,0,0],
   tile,
   team,
   id,
-  scale,
-  animate=false
+  scale=1,
+  selectable=false,
+  selected=false,
+  onBoard=false,
 }) {
-  // console.log(`[Piece] animate`, animate) // true
-
   const [selection] = useAtom(selectionAtom);
-  const [teams] = useAtom(teamsAtom);
-  // const [tiles] = useAtom(tilesAtom)
-  const [turn] = useAtom(turnAtom);
-  const [gamePhase] = useAtom(gamePhaseAtom)
-  // const [legalTiles] = useAtom(legalTilesAtom);
+  const [legalTiles] = useAtom(legalTilesAtom)
   const [client] = useAtom(clientAtom)
-  const [thrown] = useAtom(yootThrownAtom)
+  const [teams] = useAtom(teamsAtom);
+  const [gamePhase] = useAtom(gamePhaseAtom)
+  const [yootThrown] = useAtom(yootThrownAtom)
+  const [tiles] = useAtom(tilesAtom)
+  const [hasTurn] = useAtom(hasTurnAtom)
+  const [animationPlaying] = useAtom(animationPlayingAtom)
+  const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
+  const params = useParams()
 
   const group = useRef();
   const wrapperMat = useRef();
-
-  // if tile == -1, scale = 1
-  // else, scale = 0.5
-  if (selection != null) {
-    if (selection.tile == -1) {
-      if (selection.pieces[0].id == id && selection.pieces[0].team == team) {
-        scale *= 1.3
-      }
-    } else {
-      if (selection.tile == tile) {
-        scale *= 1.3
-      }
-    }
-  }
-
-  useFrame((state, delta) => {
-    if (animate) {
-      group.current.scale.x = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
-      group.current.scale.y = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
-      group.current.scale.z = scale + Math.cos(state.clock.elapsedTime * 2.5) * 0.2 + (0.1 / 2)
-    } else {
-      group.current.scale.x = scale
-      group.current.scale.y = scale
-      group.current.scale.z = scale
-    }
-  });
+  const wrapper = useRef();
 
   function handlePointerEnter(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, client.id)) {
-      wrapperMat.current.opacity += 0.2;
-      document.body.style.cursor = "pointer";
-    }
+    // wrapperMat.current.opacity += 0.2;
+    document.body.style.cursor = "pointer";
   }
 
   function handlePointerLeave(event) {
     event.stopPropagation();
-    if (isMyTurn(turn, teams, client.id)) {
-      wrapperMat.current.opacity -= 0.2;
-      document.body.style.cursor = "default";
-    }
+    // wrapperMat.current.opacity -= 0.2;
+    document.body.style.cursor = "default";
   }
 
+  // Piece selected: bulge
+  // rocket shaking on selected
   function handlePointerDown(event) {
-    // use piece.status instead of tile == -1
-    // fixed in server room.teams.$.pieces schema
-    if (gamePhase === "game" && 
-    client.team == team && 
-    hasValidMove(teams[team].moves) && 
-    isMyTurn(turn, teams, client.id) &&
-    !thrown) {
+    if (gamePhase === "game" && hasTurn && client.team === team && !yootThrown.flag && !animationPlaying) {
       event.stopPropagation();
-      if (selection == null) {
-        let starting = tile == -1 ? true : false;
+      setMainAlert({ type: '' })
+      if (selection === null) {
         let pieces;
-        if (starting) {
-          pieces = [{tile, team, id, history: []}]
+        let history;
+        if (pieceStatus(tile) === 'home') {
+          history = []
+          pieces = [{tile, team, id, history}]
         } else {
+          history = tiles[tile][0].history
           pieces = tiles[tile];
         }
-        let history = tile == -1 ? [] : tiles[tile][0].history
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
-          socket.emit("legalTiles", { legalTiles })
-          socket.emit("select", { tile, pieces })
+          socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
+
+          socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
-          socket.emit("move", ({ destination: tile }))
+          socket.emit("move", { roomId: params.id, tile });
+        } else {
+          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+          socket.emit("select", { roomId: params.id, payload: null });
         }
-        socket.emit("legalTiles", {legalTiles: {}})
-        socket.emit("select", null);
       }
     }
   }
 
-  let wrapPosition = team == 0 ? [0, -0.4, 0.4] : [0, 0, 0]
-  position = team == 0 ? [position[0], position[1] + 0.2, position[2]-0.5] : position;
-
   return (
-    <group
+    <animated.group
       position={position}
       rotation={rotation}
       ref={group}
-      dispose={null}
       scale={scale}
     >
       <mesh
         castShadow
-        position={wrapPosition}
-        visible={true}
         rotation={[-Math.PI / 4, 0, 0]}
         onPointerDown={(event) => handlePointerDown(event)}
         onPointerOver={(event) => handlePointerEnter(event)}
         onPointerLeave={(event) => handlePointerLeave(event)}
+        ref={wrapper}
       >
         <sphereGeometry args={[0.55, 32, 16]} />
-        <meshStandardMaterial
+        <meshBasicMaterial
           transparent
           opacity={0}
           ref={wrapperMat}
+          depthWrite={false}
         />
       </mesh>
-      { team == 0 ? <Rocket animate={animate}/> : <Ufo/>}
-    </group>
+      { team === 0 ? <Rocket 
+      animationPlaying={animationPlaying}
+      selected={selected}
+      onBoard={onBoard}
+      selectable={selectable}
+      selection={selection}/> : <Ufo 
+      animationPlaying={animationPlaying}
+      selected={selected}
+      onBoard={onBoard}
+      selectable={selectable}
+      selection={selection}/>}
+    </animated.group>
   )      
 };

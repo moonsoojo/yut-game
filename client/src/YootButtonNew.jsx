@@ -1,7 +1,9 @@
 import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
+import { useAtom } from 'jotai';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
+import { animationPlayingAtom } from './GlobalState';
 
 export default function YootButtonNew({ position, rotation, scale, clickHandler, enabled }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
@@ -10,6 +12,8 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler,
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
+
+  const [animationPlaying] = useAtom(animationPlayingAtom)
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]

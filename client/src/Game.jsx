@@ -33,6 +33,7 @@ import {
   joinTeamAtom,
   yootAnimationAtom,
   yootActiveAtom,
+  animationPlayingAtom,
 } from "./GlobalState.jsx";
 import MoveList from "./MoveList.jsx";
 import PiecesOnBoard from "./PiecesOnBoard.jsx";
@@ -69,6 +70,7 @@ export default function Game() {
   const [client] = useAtom(clientAtom)
 
   const [yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom);
+  const [animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom);
   const [yootActive] = useAtom(yootActiveAtom)
   
   const params = useParams();
@@ -725,8 +727,8 @@ export default function Game() {
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
           clickHandler={e => handleThrowButtonClick(e)}
-          enabled={yootActive && !Boolean(yootAnimation)}
-        />}
+          enabled={yootActive && !Boolean(yootAnimation) && !animationPlaying}
+        /> }
         <SettingsButton 
         position={layout[device].game.settings.position}
         scale={layout[device].game.settings.scale}/>

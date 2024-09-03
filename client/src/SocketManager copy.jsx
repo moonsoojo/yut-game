@@ -3,7 +3,12 @@ import { useAtom } from "jotai";
 
 import { io } from "socket.io-client";
 
-import { boomTextAtom, pregameAlertAtom, clientAtom, disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom } from "./GlobalState.jsx";
+import { 
+  boomTextAtom, 
+  pregameAlertAtom, 
+  clientAtom, 
+  disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom, yootAnimationAtom, 
+  yootOutcomeAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -66,6 +71,9 @@ export const SocketManager = () => {
   const [_winner, setWinner] = useAtom(winnerAtom)
   // UI
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+
+  const [_yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom)
+  const [_yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
 
   useEffect(() => {
 
@@ -195,7 +203,7 @@ export const SocketManager = () => {
       // Enable yoot button if client has the turn and his team 
       // has at least one throw and there is a player on the team
       // and the thrown flag is off
-      if (room.gamePhase === "lobby" || (room.teams[currentTeam].players.length > 0 && 
+      if ((room.gamePhase === "pregame" || room.gamePhase === 'game') && (room.teams[currentTeam].players.length > 0 && 
       clientHasTurn(socket.id, room.teams, room.turn) &&
       room.teams[currentTeam].throws > 0 && !room.yootThrown.flag)) {
         setYootActive(true)
@@ -314,14 +322,10 @@ export const SocketManager = () => {
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootThrowValues, yootThrown, throwCount }) => {
-      setYootThrowValues(yootThrowValues)
+    socket.on('throwYoot', ({ yootOutcome, yootAnimation, yootThrown, throwCount }) => {
+      setYootOutcome(yootOutcome)
+      setYootAnimation(yootAnimation)
       setYootThrown(yootThrown)
-      // Disable the yoot button
-      setYootActive(false)
-      // Enable meteors
-      setInitialYootThrow(false)
-      // set throw count
       setThrowCount(throwCount)
     })
 

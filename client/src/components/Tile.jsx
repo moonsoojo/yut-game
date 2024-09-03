@@ -68,9 +68,7 @@ export default function Tile({
           let history = tiles[tile][0].history
           let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
           if (!(Object.keys(legalTiles).length == 0)) {
-            socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
-  
-            socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
+            socket.emit("select", { roomId: params.id, selection: { tile, pieces }, legalTiles })
           }
         }
       } else if (selection.tile != tile && legalTileInfo) {
@@ -78,10 +76,7 @@ export default function Tile({
         // When they're called separately, the order of operation is not kept
         socket.emit("move", { roomId: params.id, tile });
       } else {
-
-        socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-  
-        socket.emit("select", { roomId: params.id, payload: null });
+        socket.emit("select", { roomId: params.id, selection: null, legalTiles: {} });
 
       }
     }
@@ -136,25 +131,6 @@ export default function Tile({
     }
   })
 
-  // const actionPositionTable = {
-  //   0: [0, 0, 0],
-  //   1: [-1.6, 1, 0.4],
-  //   2: [-1.6, 1, 0.4],
-  //   3: [-1.6, 1, 0.4],
-  //   4: [-1.6, 1, 0.4],
-  //   5: [-1.6, 1, 0.4],
-  //   6: [0, 1, -1],
-  //   7: [0, 1, -1],
-  //   8: [0, 1, -1],
-  //   9: [0, 1, -1],
-  //   10: [0, 1, -1],
-  //   20: [0, 1, 2],
-  //   21: [0, 1, 2],
-  //   22: [0, 1, 2],
-  //   23: [0, 1, 2],
-  //   24: [0, 1, 2],
-  // }
-
   function PathNumHelper({pathNum}) {
     console.log(`[PathNumHelper] pathNum`, pathNum, `tile`, tile)
     const Move = ({ position }) => {
@@ -167,62 +143,9 @@ export default function Tile({
         { pathNum.move === 5 && <MoToken position={position} scale={0.7} rotation={[0, Math.PI/2, 0]}/>}
       </>
     }
-    // const Join = ({position}) => {
-    //   return <group name='pathNum' position={position}>
-    //     <mesh scale={[0.8, 1, 0.5]}>
-    //       <cylinderGeometry args={[1, 1, 0.1]}/>
-    //       <meshStandardMaterial color='black' transparent opacity={0.5}/>
-    //     </mesh>
-    //     <Text3D
-    //       font="fonts/Luckiest Guy_Regular.json"
-    //       position={[-0.5, 0.15, 0.19]}
-    //       rotation={[-Math.PI/2, 0, 0]}
-    //       size={0.35}
-    //       height={0.01}
-    //     >
-    //       {`join`}
-    //       <meshStandardMaterial color='yellow'/>
-    //     </Text3D>
-    //   </group>
-    // }
-    // const Catch = ({position}) => {
-    //   return <group name='pathNum' position={position}>
-    //     <mesh scale={[1, 1, 0.5]}>
-    //       <cylinderGeometry args={[1, 1, 0.1]}/>
-    //       <meshStandardMaterial color='black' transparent opacity={0.5}/>
-    //     </mesh>
-    //     <Text3D
-    //       font="fonts/Luckiest Guy_Regular.json"
-    //       position={[-0.68, 0.15, 0.2]}
-    //       rotation={[-Math.PI/2, 0, 0]}
-    //       size={0.35}
-    //       height={0.01}
-    //     >
-    //       {`catch`}
-    //       <meshStandardMaterial color='yellow'/>
-    //     </Text3D>
-    //   </group>
-    // }
-    const ActionMarker = ({position}) => {
-      return <group position={position} rotation={[-Math.PI/2, 0, 0]}>
-        <mesh position={[0,0,0]}>
-          <cylinderGeometry args={[0.1, 0.07, 0.3, 6]}/>
-          <meshStandardMaterial color='yellow'/>
-        </mesh>
-        <mesh position={[0,-0.33,0]}>
-          <sphereGeometry args={[0.09, 32, 16]}/>
-          <meshStandardMaterial color='yellow'/>
-        </mesh>
-      </group>
-    }
 
     return <>
       <Move position={[0.8,1.5,0]}/>
-      {/* { (pathNum.action === 'join' 
-      || pathNum.action === 'catch') 
-      && <ActionMarker position={[0.8,1.5,0.6]}/>} */}
-      {/* { pathNum.action === 'join' && <Join position={actionPositionTable[tile]}/>}
-      { pathNum.action === 'catch' && <Catch position={actionPositionTable[tile]}/>} */}
     </>
   }
 

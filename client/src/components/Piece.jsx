@@ -68,16 +68,16 @@ export default function Piece ({
         }
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
-          socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
+          // socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
 
-          socket.emit("select", { roomId: params.id, payload: { tile, pieces } })
+          socket.emit("select", { roomId: params.id, selection: { tile, pieces }, legalTiles })
         }
       } else {
         if (selection.tile != tile && tile in legalTiles) {
           socket.emit("move", { roomId: params.id, tile });
         } else {
-          socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
-          socket.emit("select", { roomId: params.id, payload: null });
+          // socket.emit("legalTiles", { roomId: params.id, legalTiles: {} })
+          socket.emit("select", { roomId: params.id, selection: null, legalTiles: {} });
         }
       }
     }
