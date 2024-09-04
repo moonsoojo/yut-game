@@ -54,7 +54,7 @@ export const SocketManager = () => {
   const [_pregameAlert, setPregameAlert] = useAtom(pregameAlertAtom)
   const [_throwAlert, setThrowAlert] = useAtom(throwAlertAtom)
   // Use state to check if the game phase changed
-  const [_gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
+  const [gamePhase, setGamePhase] = useAtom(gamePhaseAtom)
   const [_displayMoves, setDisplayMoves] = useAtom(displayMovesAtom)
   const [_selection, setSelection] = useAtom(selectionAtom)
   const [_legalTiles, setLegalTiles] = useAtom(legalTilesAtom)
@@ -341,6 +341,36 @@ export const SocketManager = () => {
       const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
       setCurrentPlayerName(currentPlayerName)
       setAlerts(['gameStart', 'turn'])
+      setYootActive(true)
+    })
+
+    socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {
+      console.log(`[SocketManager] recordThrow`)
+      setTeams(teams) // only update the throw count of the current team
+      setGamePhase(gamePhaseUpdate)
+      setTurn(turn)
+      
+      const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
+      setCurrentPlayerName(currentPlayerName)
+
+      setYootOutcome(yootOutcome)
+      // 'recordThrow' is not being called because setHasTurn(client) has not been called
+      
+      if (gamePhaseUpdate === 'pregame') {
+        if (pregameOutcome === 'pass') {
+          setAlerts(['yootOutcome', 'turn'])
+        } else if (pregameOutcome === 'tie') {
+          setAlerts(['yootOutcome', 'pregameTie', 'turn'])
+        }
+      } else if (gamePhase === 'pregame' && gamePhaseUpdate === 'game') {
+        if (pregameOutcome === '0') {
+          setAlerts(['yootOutcome', 'pregameRocketsWin', 'turn'])
+        } else if (pregameOutcome === '1') {
+          setAlerts(['yootOutcome', 'pregameRocketsWin', 'turn'])
+        }
+      } else { // game
+
+      }
     })
 
     socket.on('disconnect', () => {

@@ -174,6 +174,11 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
     // Emit document to all clients in the room
     let users = data.fullDocument.spectators.concat(data.fullDocument.teams[0].players.concat(data.fullDocument.teams[1].players))
     console.log(`[Room.watch] users`, users)
+    let roomPopulated = await Room.findById(data.documentKey._id)
+    .populate('spectators')
+    .populate('host')
+    .populate('teams.players')
+    .exec()
     for (const user of users) {
       try {
         let userFound = await User.findById(user, 'socketId').exec()
@@ -189,23 +194,23 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         } else if ('serverEvent' in data.updateDescription.updatedFields) {
           const serverEvent = data.updateDescription.updatedFields.serverEvent
           if (serverEvent === "gameStart") {
-            console.log(`[Room.watch] gameStart`)
-            let roomPopulated = await Room.findById(data.documentKey._id)
-            .populate('teams.players') // only update the throw count of the current team
-            .exec()
             io.to(userSocketId).emit("gameStart", {
               teams: roomPopulated.teams,
               gamePhase: data.fullDocument.gamePhase,
               turn: data.fullDocument.turn,
             })
+          } else if (serverEvent === "recordThrow") {
+            console.log(`[Room.watch][recordThrow]`)
+            io.to(userSocketId).emit("recordThrow", {
+              teams: roomPopulated.teams,
+              gamePhase: data.fullDocument.gamePhase,
+              turn: data.fullDocument.turn,
+              pregameOutcome: data.fullDocument.pregameOutcome,
+              yootOutcome: data.fullDocument.yootOutcome
+            })
           }
         } else {
           console.log(`[Room.watch] room`)
-          let roomPopulated = await Room.findById(data.documentKey._id)
-          .populate('spectators')
-          .populate('host')
-          .populate('teams.players')
-          .exec()
           io.to(userSocketId).emit('room', roomPopulated)
         }
       } catch (err) {
@@ -412,11 +417,9 @@ io.on("connect", async (socket) => {
   })
 
   function getHostTurn(room) {
-    console.log(`[getHostTurn] room`, room)
     const host = room.host
     let turn;
     room.teams[host.team].players.forEach(function (player, i) {
-      console.log(`[getHostTurn] i ${i}, player`, player._id.valueOf(), `host`, host._id.valueOf())
       if (player._id.valueOf() === host._id.valueOf()) {
         let playerIndices = [0, 0]
         playerIndices[host.team] = i
@@ -465,34 +468,6 @@ io.on("connect", async (socket) => {
       console.log(`[startGame] error starting game`, err)
     }
   })
-
-  function generateRandomNumberInRange(num, plusMinus) {
-    let result = num + Math.random() * plusMinus * (Math.random() > 0.5 ? 1 : -1);
-    console.log(`[generateRandomNumberInRange] result.toFixed(5)`, result.toFixed(5))
-    return result.toFixed(5)
-  };
-
-  function generateForceVectors(gamePhase) {
-    let initialYootPositions = JSON.parse(JSON.stringify(initialState.initialYootPositions[gamePhase]))
-    let initialYootRotations = JSON.parse(JSON.stringify(initialState.initialYootRotations))
-
-    const yootForceVectors = [];
-    for (let i = 0; i < 4; i++) {
-      yootForceVectors.push({
-        _id: i,
-        positionInHand: initialYootPositions[i],
-        rotation: initialYootRotations[i],
-        yImpulse: generateRandomNumberInRange(10, 3),
-        torqueImpulse: {
-          x: generateRandomNumberInRange(0.8, 0.3),
-          y: generateRandomNumberInRange(0.9, 0.3), // Spins vertically through the center
-          z: generateRandomNumberInRange(0.15, 0.3) // Spins through the middle axis
-        },
-      });
-    }
-    
-    return yootForceVectors
-  }
 
   socket.on("sendMessage", async ({ message, roomId }, callback) => {
     try {
@@ -814,6 +789,7 @@ io.on("connect", async (socket) => {
         }
 
         operation['$push']['gameLogs'] = { '$each': gameLogs }
+        operation['$set']['serverEvent'] = 'recordThrow'
 
         await Room.findOneAndUpdate(
           { 
