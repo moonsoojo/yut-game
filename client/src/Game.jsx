@@ -621,6 +621,7 @@ export default function Game() {
   function handleThrowButtonClick(e) {
     e.stopPropagation();
 
+    setAnimationPlaying(true)
     socket.emit('throwYoot', { roomId: params.id })
 
     // send 'throw yoot' to server

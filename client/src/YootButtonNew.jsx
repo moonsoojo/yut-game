@@ -5,7 +5,7 @@ import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { animationPlayingAtom } from './GlobalState';
 
-export default function YootButtonNew({ position, rotation, scale, clickHandler, enabled }) {
+export default function YootButtonNew({ position, rotation, scale, clickHandler }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
   const { scene } = useGLTF("/models/yoot-for-button.glb");
   const yootMaterials = useGLTF("/models/yoot-for-button.glb").materials
@@ -14,6 +14,7 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler,
   let buttonRef = useRef();
 
   const [animationPlaying] = useAtom(animationPlayingAtom)
+  const enabled = !animationPlaying
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]

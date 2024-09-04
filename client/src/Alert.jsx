@@ -6,7 +6,7 @@ import Ufo from "./meshes/Ufo";
 import { animated, useSpring } from "@react-spring/three";
 import Star from "./meshes/Star";
 import { useAtom } from "jotai";
-import { alertsAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
+import { alertsAtom, animationPlayingAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
 import { formatName } from "./helpers/helpers";
 import DoAlert from "./alerts/DoAlert";
 import GeAlert from "./alerts/GeAlert";
@@ -14,6 +14,7 @@ import GulAlert from "./alerts/GulAlert";
 import YootAlert from "./alerts/YootAlert";
 import MoAlert from "./alerts/MoAlert";
 import OutAlert from "./alerts/OutAlert";
+import BackdoAlert from "./alerts/BackdoAlert";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
@@ -21,12 +22,13 @@ export default function Alert({ position, rotation }) {
     
     const [alerts] = useAtom(alertsAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
+    const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
 
     const [springs, api] = useSpring(() => ({
       from: {
         turnAlertScale: 0,
-        gameStartScale: 0,
-        yootOutcomeScale: 0
+        gameStartAlertScale: 0,
+        yootOutcomeAlertScale: 0
       },
     }))
 
@@ -35,14 +37,14 @@ export default function Alert({ position, rotation }) {
       for (let i = 0; i < alerts.length; i++) {
         if (alerts[i] === 'gameStart') {
           animations.push({
-            gameStartScale: 1,
+            gameStartAlertScale: 1,
             config: {
                 tension: 170,
                 friction: 26
             },
           })
           animations.push({
-            gameStartScale: 0,
+            gameStartAlertScale: 0,
             config: {
                 tension: 170,
                 friction: 26
@@ -67,14 +69,14 @@ export default function Alert({ position, rotation }) {
           })
         } else if (alerts[i] === 'yootOutcome') {
           animations.push({
-            yootOutcomeScale: 1,
+            yootOutcomeAlertScale: 1,
             config: {
                 tension: 170,
                 friction: 26
             },
           })
           animations.push({
-            yootOutcomeScale: 0,
+            yootOutcomeAlertScale: 0,
             config: {
                 tension: 170,
                 friction: 26
@@ -92,12 +94,14 @@ export default function Alert({ position, rotation }) {
       console.log(`[Alert][useEffect] toAnimations`, toAnimations)
       api.start({
         from: {
-          turnAlertScale: 0
+          turnAlertScale: 0,
+          gameStartAlertScale: 0,
+          yootOutcomeAlertScale: 0
         },
         to: toAnimations,
         loop: false,
-        // onStart: () => setAnimationPlaying(true),
-        // onRest: () => setAnimationPlaying(false),
+        onStart: () => setAnimationPlaying(true),
+        onRest: () => setAnimationPlaying(false),
       })
     }, [alerts])
 
@@ -274,7 +278,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.gameStartScale}>
+      return <animated.group scale={springs.gameStartAlertScale}>
         <mesh
           castShadow
           receiveShadow
@@ -348,15 +352,17 @@ export default function Alert({ position, rotation }) {
     }
 
     function YootOutcomeAlert() {
+      console.log(`[Alert][YootOutcomeAlert]`)
       const [yootOutcome] = useAtom(yootOutcomeAtom)
+      console.log(`[Alert][YootOutcomeAlert] yootOutcome ${yootOutcome}`)
       return <animated.group scale={springs.yootOutcomeAlertScale}>
-        { yootOutcome === '1' && <DoAlert/> }
-        { yootOutcome === '-1' && <BackdoAlert/> }
-        { yootOutcome === '2' && <GeAlert/> }
-        { yootOutcome === '3' && <GulAlert/> }
-        { yootOutcome === '4' && <YootAlert/> }
-        { yootOutcome === '5' && <MoAlert/> }
-        { yootOutcome === '0' && <OutAlert/> }
+        { yootOutcome === 1 && <DoAlert/> }
+        { yootOutcome === -1 && <BackdoAlert/> }
+        { yootOutcome === 2 && <GeAlert/> }
+        { yootOutcome === 3 && <GulAlert/> }
+        { yootOutcome === 4 && <YootAlert/> }
+        { yootOutcome === 5 && <MoAlert/> }
+        { yootOutcome === 0 && <OutAlert/> }
       </animated.group>
     }
 

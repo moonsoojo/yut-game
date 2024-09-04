@@ -342,10 +342,13 @@ export const SocketManager = () => {
       setCurrentPlayerName(currentPlayerName)
       setAlerts(['gameStart', 'turn'])
       setYootActive(true)
+
+      setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
     socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {
       console.log(`[SocketManager] recordThrow`)
+      
       setTeams(teams) // only update the throw count of the current team
       setGamePhase(gamePhaseUpdate)
       setTurn(turn)
@@ -355,6 +358,7 @@ export const SocketManager = () => {
 
       setYootOutcome(yootOutcome)
       // 'recordThrow' is not being called because setHasTurn(client) has not been called
+      setHasTurn(clientHasTurn(socket.id, teams, turn))
       
       if (gamePhaseUpdate === 'pregame') {
         if (pregameOutcome === 'pass') {
