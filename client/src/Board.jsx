@@ -309,7 +309,7 @@ export default function Board({
     <WolfConstellation position={[-2.1,0,-1.2]} rotation={[-Math.PI/2, 0, 0]} scale={0.85}/>
     <RhinoConstellation position={[2.1,0,-1.3]} rotation={[-Math.PI/2, 0, 0]} scale={0.8}/>
     <PegasusConstellation position={[-2.4, 0, 2.1]} scale={0.09}/>
-    <TaurusConstellation position={[2.3, 0, 3.5]} scale={0.8} rotation={[-Math.PI/2, 0, Math.PI/16]}/>
+    {/* <TaurusConstellation position={[2.3, 0, 3.5]} scale={0.8} rotation={[-Math.PI/2, 0, Math.PI/16]}/> */}
     {/* <TaurusConstellationShiny meshDir={'taurus-constellation-dhazele-2.glb'} 
       lightTexDir={'lightTaurusTexture.png'}
       meshIndex={1} 
