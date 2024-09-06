@@ -666,12 +666,12 @@ io.on("connect", async (socket) => {
         if (room.gamePhase === "pregame") {
           console.log(`[recordThrow] gamePhase is pregame`)
           // Test code using different throw outcome
-          // if (user.team === 1) {
+          // if (user.team === 0) {
           //   move = 5;
           // } else {
           //   move = 4
           // }
-          move = 3;
+          // move = 3;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
 

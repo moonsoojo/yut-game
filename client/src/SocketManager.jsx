@@ -347,17 +347,21 @@ export const SocketManager = () => {
     })
 
     socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {
-      console.log(`[SocketManager] recordThrow`)
       
       setTeams(teams) // only update the throw count of the current team
-      setGamePhase(gamePhaseUpdate)
       setTurn(turn)
+      // this invocation is within a useEffect
+      // 'gamePhase' state is saved as the one loaded in component load because there's no dependency
+      let gamePhasePrev;
+      setGamePhase((prev) => {
+        gamePhasePrev = prev;
+        return gamePhaseUpdate
+      })
       
       const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
       setCurrentPlayerName(currentPlayerName)
 
       setYootOutcome(yootOutcome)
-      
       
       if (gamePhaseUpdate === 'pregame') {
         if (pregameOutcome === 'pass') {
@@ -365,11 +369,11 @@ export const SocketManager = () => {
         } else if (pregameOutcome === 'tie') {
           setAlerts(['yootOutcome', 'pregameTie', 'turn'])
         }
-      } else if (gamePhase === 'pregame' && gamePhaseUpdate === 'game') {
-        if (pregameOutcome === '0') {
+      } else if (gamePhasePrev === 'pregame' && gamePhaseUpdate === 'game') {
+        if (pregameOutcome === '0') { // changes from int to string
           setAlerts(['yootOutcome', 'pregameRocketsWin', 'turn'])
         } else if (pregameOutcome === '1') {
-          setAlerts(['yootOutcome', 'pregameRocketsWin', 'turn'])
+          setAlerts(['yootOutcome', 'pregameUfosWin', 'turn'])
         }
       } else { // game
 
@@ -377,6 +381,7 @@ export const SocketManager = () => {
       setAnimationPlaying(true)
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
+
 
     socket.on('disconnect', () => {
       console.log("[disconnect]")
@@ -389,4 +394,5 @@ export const SocketManager = () => {
       socket.off();
     }
   }, [])
+
 };

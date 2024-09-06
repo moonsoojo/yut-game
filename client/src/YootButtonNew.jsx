@@ -4,16 +4,19 @@ import { useAtom } from 'jotai';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
 import { animationPlayingAtom, hasTurnAtom } from './GlobalState';
+import { socket } from './SocketManager';
+import { useParams } from "wouter";
 
-export default function YootButtonNew({ position, rotation, scale, clickHandler }) {
+export default function YootButtonNew({ position, rotation, scale }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
   const { scene } = useGLTF("/models/yoot-for-button.glb");
   const yootMaterials = useGLTF("/models/yoot-for-button.glb").materials
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const yootNodes = useGraph(clone).nodes
   let buttonRef = useRef();
+  const params = useParams();
 
-  const [animationPlaying] = useAtom(animationPlayingAtom)
+  const [animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
   const enabled = !animationPlaying && hasTurn
 
@@ -39,6 +42,14 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler 
   }
   function handlePointerLeave() {
     document.body.style.cursor = "default";
+  }
+  function handleClick(e) {
+    e.stopPropagation();
+
+    if (enabled) {
+      setAnimationPlaying(true)
+      socket.emit('throwYoot', { roomId: params.id })
+    }
   }
 
   return <group 
@@ -125,7 +136,7 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler 
         position={[0, 0.1, 0]} 
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        onClick={clickHandler}
+        onClick={handleClick}
       >
         <boxGeometry args={[3, 0.3, 2]}/>
         <meshStandardMaterial transparent opacity={0}/>

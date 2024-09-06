@@ -618,17 +618,6 @@ export default function Game() {
     </group>
   }
 
-  function handleThrowButtonClick(e) {
-    e.stopPropagation();
-
-    setAnimationPlaying(true)
-    socket.emit('throwYoot', { roomId: params.id })
-
-    // send 'throw yoot' to server
-    // on animation finish
-    // send 'record throw' to server
-  }
-
   // UI prop guideline
   // Pass position, rotation and scale
   // pass device if component has another responsive attribute
@@ -727,7 +716,6 @@ export default function Game() {
           position={layout[device].game.yootButton.position}
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
-          clickHandler={e => handleThrowButtonClick(e)}
         /> }
         <SettingsButton 
         position={layout[device].game.settings.position}
