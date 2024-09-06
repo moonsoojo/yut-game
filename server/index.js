@@ -200,13 +200,17 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               turn: data.fullDocument.turn,
             })
           } else if (serverEvent === "recordThrow") {
-            console.log(`[Room.watch][recordThrow]`)
             io.to(userSocketId).emit("recordThrow", {
               teams: roomPopulated.teams,
               gamePhaseUpdate: data.fullDocument.gamePhase,
               turn: data.fullDocument.turn,
               pregameOutcome: data.fullDocument.pregameOutcome,
               yootOutcome: data.fullDocument.yootOutcome
+            })
+          } else if (serverEvent === "move") {
+            io.to(userSocketId).emit("move", {
+              teamsUpdate: roomPopulated.teams,
+              turnUpdate: data.fullDocument.turn
             })
           } else {
             console.log(`[Room.watch] room`)
@@ -793,6 +797,8 @@ io.on("connect", async (socket) => {
 
   // Client only emits this event if it has the turn
   socket.on("select", async ({ roomId, selection, legalTiles }) => {
+    // emit server event "select"
+    // disable yoot button
     try {
       await Room.findOneAndUpdate(
         { 
@@ -948,6 +954,7 @@ io.on("connect", async (socket) => {
       }
       
       operation['$push']['gameLogs'] = { '$each': gameLogs }
+      operation['$set']['serverEvent'] = 'move'
 
       await Room.findOneAndUpdate(
         { 

@@ -10,7 +10,8 @@ import {
   disconnectAtom, displayMovesAtom, gamePhaseAtom, hasTurnAtom, helperTilesAtom, hostNameAtom, initialYootThrowAtom, legalTilesAtom, mainAlertAtom, messagesAtom, particleSettingAtom, pieceTeam0Id0Atom, pieceTeam0Id1Atom, pieceTeam0Id2Atom, pieceTeam0Id3Atom, pieceTeam1Id0Atom, pieceTeam1Id1Atom, pieceTeam1Id2Atom, pieceTeam1Id3Atom, readyToStartAtom, roomAtom, selectionAtom, spectatorsAtom, teamsAtom, tilesAtom, turnAtom, winnerAtom, yootActiveAtom, yootThrowValuesAtom, yootThrownAtom, moveResultAtom, throwResultAtom, throwAlertAtom, turnAlertActiveAtom, animationPlayingAtom, throwCountAtom, gameLogsAtom, yootAnimationAtom, 
   yootOutcomeAtom,
   currentPlayerNameAtom,
-  alertsAtom} from "./GlobalState.jsx";
+  alertsAtom,
+  catchOutcomeAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -78,6 +79,7 @@ export const SocketManager = () => {
   const [_yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
   const [_currentPlayerName, setCurrentPlayerName] = useAtom(currentPlayerNameAtom)
   const [_alerts, setAlerts] = useAtom(alertsAtom)
+  const [_catchOutcome, setCatchOutcome] = useAtom(catchOutcomeAtom)
 
   useEffect(() => {
 
@@ -346,9 +348,7 @@ export const SocketManager = () => {
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
-    socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {
-      console.log(`[SocketManager][recordThrow] yootOutcome`, yootOutcome)
-      
+    socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {      
       setTeams(teams) // only update the throw count of the current team
       setTurn(turn)
       // this invocation is within a useEffect
@@ -388,6 +388,55 @@ export const SocketManager = () => {
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
+    function calculateNumPiecesCaught(piecesPrev, piecesUpdate) {
+      let numPiecesCaught = 0;
+      for (let i = 0; i < 4; i++) {
+        if (piecesUpdate[i].tile === -1 && piecesPrev[i].tile !== -1) {
+          numPiecesCaught++;
+        }
+      }
+      return numPiecesCaught;
+    }
+
+    socket.on('move', ({ teamsUpdate, turnUpdate }) => {
+   
+      let teamsPrev;
+      setTeams((prev) => {
+        teamsPrev = prev;
+        return teamsUpdate
+      }) // only update the throw count of the current team
+      let turnPrev;
+      setTurn((prev) => {
+        turnPrev = prev;
+        return turnUpdate
+      })
+      
+      const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
+      setCurrentPlayerName(currentPlayerName)
+      
+      // if out of moves, setAlerts(['turn'])
+      // else if catch, setAlerts([`catch${amount}`])
+        // check if any pieces returned home in the opposing team (turn didn't pass)
+      if (turnPrev !== turnUpdate) {
+        setAlerts(['turn'])
+      } else {
+        const opposingTeam = turnUpdate === 0 ? 1 : 0;
+        const opposingTeamPiecesPrev = teamsPrev[opposingTeam].pieces;
+        const opposingTeamPiecesUpdate = teamsUpdate[opposingTeam].pieces
+        let numPiecesCaught = calculateNumPiecesCaught(opposingTeamPiecesPrev, opposingTeamPiecesUpdate)
+        if (numPiecesCaught > 0) {
+          setAlerts([`catch`])
+          setCatchOutcome({
+            numPieces: numPiecesCaught,
+            teamCaught: opposingTeam
+          })
+        }
+      }
+
+      setAnimationPlaying(true)
+      // whenever turn could have changed
+      setHasTurn(clientHasTurn(socket.id, teamsUpdate, turnUpdate))
+    })
 
     socket.on('disconnect', () => {
       console.log("[disconnect]")

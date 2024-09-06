@@ -6,7 +6,7 @@ import Ufo from "./meshes/Ufo";
 import { animated, useSpring } from "@react-spring/three";
 import Star from "./meshes/Star";
 import { useAtom } from "jotai";
-import { alertsAtom, animationPlayingAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
+import { alertsAtom, animationPlayingAtom, catchOutcomeAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
 import { formatName } from "./helpers/helpers";
 import DoAlert from "./alerts/DoAlert";
 import GeAlert from "./alerts/GeAlert";
@@ -15,6 +15,7 @@ import YootAlert from "./alerts/YootAlert";
 import MoAlert from "./alerts/MoAlert";
 import OutAlert from "./alerts/OutAlert";
 import BackdoAlert from "./alerts/BackdoAlert";
+import Catch1RocketAlert from "./alerts/Catch1RocketAlert";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
@@ -31,7 +32,8 @@ export default function Alert({ position, rotation }) {
         yootOutcomeAlertScale: 0,
         pregameTieAlertScale: 0,
         pregameRocketsWinAlertScale: 0,
-        pregameUfosWinAlertScale: 0
+        pregameUfosWinAlertScale: 0,
+        catchAlertScale: 0
       },
     }))
 
@@ -134,15 +136,29 @@ export default function Alert({ position, rotation }) {
             },
             delay: 1000
           })
+        } else if (alerts[i] === 'catch') {
+          animations.push({
+            catchAlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            catchAlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
         }
       }
       return animations
     }
 
     useEffect(() => {
-      console.log(`[Alert][useEffect] alerts`, alerts)
       const toAnimations = transformAlertsToAnimations(alerts)
-      console.log(`[Alert][useEffect] toAnimations`, toAnimations)
       api.start({
         from: {
           turnAlertScale: 0,
@@ -162,7 +178,6 @@ export default function Alert({ position, rotation }) {
     // useSpring to animate via scale
 
     function TurnAlert() {
-      console.log(`[TurnAlert]`);
       const [currentPlayerName] = useAtom(currentPlayerNameAtom)
       const [turn] = useAtom(turnAtom)
       const borderMesh0Ref = useRef();
@@ -682,9 +697,7 @@ export default function Alert({ position, rotation }) {
     }
 
     function YootOutcomeAlert() {
-      console.log(`[Alert][YootOutcomeAlert]`)
       const [yootOutcome] = useAtom(yootOutcomeAtom)
-      console.log(`[Alert][YootOutcomeAlert] yootOutcome ${yootOutcome}`)
       return <animated.group scale={springs.yootOutcomeAlertScale}>
         { yootOutcome === 1 && <DoAlert/> }
         { yootOutcome === -1 && <BackdoAlert/> }
@@ -696,6 +709,20 @@ export default function Alert({ position, rotation }) {
       </animated.group>
     }
 
+    function CatchAlert() {
+      const [catchOutcome] = useAtom(catchOutcomeAtom)
+      return <animated.group scale={springs.catchAlertScale}>
+        { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }
+        {/* { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> }
+        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> }
+        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> }
+        { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 1 && <Catch1UfoAlert/> }
+        { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
+        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> }
+        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> } */}
+      </animated.group>
+    }
+
     return (gamePhase === 'pregame' || gamePhase === 'game') && <group position={position} rotation={rotation}>
       <TurnAlert/>
       <GameStartAlert/>
@@ -703,5 +730,6 @@ export default function Alert({ position, rotation }) {
       <PregameRocketsWinAlert/>
       <PregameUfosWinAlert/>
       <YootOutcomeAlert/>
+      <CatchAlert/>
     </group>
   }

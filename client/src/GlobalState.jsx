@@ -45,6 +45,10 @@ export const boomTextAtom = atom('')
 export const turnAlertActiveAtom = atom(false)
 export const yootAnimationAtom = atom(null)
 export const yootOutcomeAtom = atom(null)
+export const catchOutcomeAtom = atom({
+  numPieces: 0,
+  teamCaught: -1
+})
 
 export const pregameAlertAtom = atom({
   type: ''
