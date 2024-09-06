@@ -347,6 +347,7 @@ export const SocketManager = () => {
     })
 
     socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {
+      console.log(`[SocketManager][recordThrow] yootOutcome`, yootOutcome)
       
       setTeams(teams) // only update the throw count of the current team
       setTurn(turn)
@@ -375,9 +376,14 @@ export const SocketManager = () => {
         } else if (pregameOutcome === '1') {
           setAlerts(['yootOutcome', 'pregameUfosWin', 'turn'])
         }
-      } else { // game
-
+      } else if (gamePhaseUpdate === 'game') {
+        if (yootOutcome === 0) {
+          setAlerts(['yootOutcome', 'turn'])
+        } else {
+          setAlerts(['yootOutcome'])
+        }
       }
+
       setAnimationPlaying(true)
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })

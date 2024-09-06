@@ -675,12 +675,6 @@ io.on("connect", async (socket) => {
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
 
-          operation['$set']['throwResult'] = {
-            type: 'regular',
-            num: move,
-            time: Date.now()
-          }
-
           gameLogs.push(
             {
               logType: 'throw',
@@ -737,18 +731,13 @@ io.on("connect", async (socket) => {
           // } else {
           //   move = 5;
           // }
-          // move = Math.random() > 0.5 ? 1 : -1;
+          // move = 0;
           room.teams[user.team].moves[move]++;
 
           // Add bonus throw on Yoot and Mo
-          if (move === 4 || move === 5) {
+          if (room.yootOutcome === 4 || room.yootOutcome === 5) {
             operation['$inc'][`teams.${user.team}.throws`] = 1
             room.teams[user.team].throws++;
-            operation['$set']['throwResult'] = {
-              type: 'bonus',
-              num: move,
-              time: Date.now()
-            }
             
             gameLogs.push({
               logType: 'throw',
@@ -760,11 +749,6 @@ io.on("connect", async (socket) => {
               }
             })
           } else {
-            operation['$set']['throwResult'] = {
-              type: 'regular',
-              num: move,
-              time: Date.now()
-            }
             gameLogs.push({
               logType: 'throw',
               content: {
