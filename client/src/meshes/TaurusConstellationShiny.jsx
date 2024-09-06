@@ -126,7 +126,7 @@ const fragmentShader = `
 
 
 function TaurusConstellationShiny(props){
-     const meshRef = useRef();
+    const meshRef = useRef();
     const freshnellMesh = useRef();
     const lightRef = useRef();
     const {scene} = useThree();

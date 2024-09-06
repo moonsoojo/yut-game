@@ -31,7 +31,7 @@ export default function Experience() {
       colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
       colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
     />
-    <TaurusConstellationShiny 
+    {/* <TaurusConstellationShiny 
       meshDir={"taurus-constellation-dhazele-2.glb"} 
       lightTexDir={'lightTaurusTexture.png'}
       meshIndex={1} 
@@ -47,7 +47,7 @@ export default function Experience() {
       lightPosition = {new THREE.Vector3(-0.24,-0.0,-1.4)}
       lightRotation = {[80.1,0.0,0.0]}
       lightMultiplier = {1.3}
-    />
+    /> */}
     {/* <MainAlert/> 
     <PregameAlert/>
     <ThrowAlert 

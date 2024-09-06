@@ -184,15 +184,15 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
         console.log(`[Room.watch] userSocketId`, userSocketId)
-        if ('yootAnimation' in data.updateDescription.updatedFields) {
+        if ('yootAnimation' in data.updateDescription.updatedFields) { // what if it had the same value as the last animation?
           let yootOutcome = data.fullDocument.yootOutcome
           let yootAnimation = data.fullDocument.yootAnimation
           let yootThrown = data.fullDocument.yootThrown
           let currentTeam = data.fullDocument.turn.team
           let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
           io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, yootThrown, throwCount })
-        } else if ('serverEvent' in data.updateDescription.updatedFields) {
-          const serverEvent = data.updateDescription.updatedFields.serverEvent
+        } else {
+          const serverEvent = data.fullDocument.serverEvent
           if (serverEvent === "gameStart") {
             io.to(userSocketId).emit("gameStart", {
               teams: roomPopulated.teams,
@@ -208,10 +208,10 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               pregameOutcome: data.fullDocument.pregameOutcome,
               yootOutcome: data.fullDocument.yootOutcome
             })
+          } else {
+            console.log(`[Room.watch] room`)
+            io.to(userSocketId).emit('room', roomPopulated)
           }
-        } else {
-          console.log(`[Room.watch] room`)
-          io.to(userSocketId).emit('room', roomPopulated)
         }
       } catch (err) {
         console.log(`[Room.watch] error getting user's socket id`, err)
@@ -664,13 +664,14 @@ io.on("connect", async (socket) => {
 
         // Add move to team
         if (room.gamePhase === "pregame") {
+          console.log(`[recordThrow] gamePhase is pregame`)
           // Test code using different throw outcome
           // if (user.team === 1) {
           //   move = 5;
           // } else {
           //   move = 4
           // }
-          // move = 0;
+          move = 3;
           room.teams[user.team].pregameRoll = move
           operation['$set'][`teams.${user.team}.pregameRoll`] = move
 
@@ -789,6 +790,8 @@ io.on("connect", async (socket) => {
         }
 
         operation['$push']['gameLogs'] = { '$each': gameLogs }
+        
+        console.log(`[recordThrow] logging server event`)
         operation['$set']['serverEvent'] = 'recordThrow'
 
         await Room.findOneAndUpdate(

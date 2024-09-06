@@ -341,8 +341,8 @@ export const SocketManager = () => {
       const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
       setCurrentPlayerName(currentPlayerName)
       setAlerts(['gameStart', 'turn'])
-      setYootActive(true)
-
+      setAnimationPlaying(true)
+      // in order to turn off yoot at start
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
@@ -357,8 +357,7 @@ export const SocketManager = () => {
       setCurrentPlayerName(currentPlayerName)
 
       setYootOutcome(yootOutcome)
-      // 'recordThrow' is not being called because setHasTurn(client) has not been called
-      setHasTurn(clientHasTurn(socket.id, teams, turn))
+      
       
       if (gamePhaseUpdate === 'pregame') {
         if (pregameOutcome === 'pass') {
@@ -375,6 +374,8 @@ export const SocketManager = () => {
       } else { // game
 
       }
+      setAnimationPlaying(true)
+      setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
     socket.on('disconnect', () => {

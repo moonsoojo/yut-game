@@ -728,7 +728,6 @@ export default function Game() {
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
           clickHandler={e => handleThrowButtonClick(e)}
-          enabled={yootActive && !Boolean(yootAnimation) && !animationPlaying}
         /> }
         <SettingsButton 
         position={layout[device].game.settings.position}

@@ -3,7 +3,7 @@ import { useFrame, useGraph } from '@react-three/fiber';
 import { useAtom } from 'jotai';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import { animationPlayingAtom } from './GlobalState';
+import { animationPlayingAtom, hasTurnAtom } from './GlobalState';
 
 export default function YootButtonNew({ position, rotation, scale, clickHandler }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
@@ -14,7 +14,8 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler 
   let buttonRef = useRef();
 
   const [animationPlaying] = useAtom(animationPlayingAtom)
-  const enabled = !animationPlaying
+  const [hasTurn] = useAtom(hasTurnAtom)
+  const enabled = !animationPlaying && hasTurn
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
@@ -118,7 +119,7 @@ export default function YootButtonNew({ position, rotation, scale, clickHandler 
         rotation={[-Math.PI/2,-Math.PI/2,0, "YXZ"]}
       >
         THROW
-        <meshStandardMaterial color={ enabled ? "#963600" : "grey" }/>
+        <meshStandardMaterial color={ !!enabled ? "#963600" : "grey" }/>
       </Text3D>
       <mesh name='wrapper'
         position={[0, 0.1, 0]} 
