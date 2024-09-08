@@ -713,6 +713,7 @@ export default function Alert({ position, rotation }) {
     }
 
     function CatchAlert() {
+      console.log(`[Alert] catch alert`)
       const [catchOutcome] = useAtom(catchOutcomeAtom)
       return <animated.group scale={springs.catchAlertScale}>
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }

@@ -376,6 +376,7 @@ export const SocketManager = () => {
     }
 
     socket.on("move", ({ teamsUpdate, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
+      console.log(`[SocketManager][move]`)
       let teamsPrev;
       setTeams((prev) => {
         teamsPrev = prev;
@@ -393,19 +394,24 @@ export const SocketManager = () => {
       // if out of moves, setAlerts(['turn'])
       // else if catch, setAlerts([`catch${amount}`])
         // check if any pieces returned home in the opposing team (turn didn't pass)
-      if (turnPrev !== turnUpdate) {
+      if (turnPrev.team !== turnUpdate.team) {
         setAlerts(['turn'])
       } else {
         const opposingTeam = turnUpdate === 0 ? 1 : 0;
         const opposingTeamPiecesPrev = teamsPrev[opposingTeam].pieces;
         const opposingTeamPiecesUpdate = teamsUpdate[opposingTeam].pieces
         let numPiecesCaught = calculateNumPiecesCaught(opposingTeamPiecesPrev, opposingTeamPiecesUpdate)
+        console.log(`[SocketManager][move] numPiecesCaught`, numPiecesCaught)
         if (numPiecesCaught > 0) {
+          console.log(`[SocketManager][move] catch`)
           setAlerts([`catch`])
           setCatchOutcome({
             numPieces: numPiecesCaught,
             teamCaught: opposingTeam
           })
+        } else {
+          console.log(`[SocketManager][move] regular move, still didn't change turn`)
+          setAlerts([])
         }
       }
 

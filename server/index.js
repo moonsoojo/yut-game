@@ -563,7 +563,18 @@ io.on("connect", async (socket) => {
       if (room.teams[user.team].throws > 0 && !room.yootThrown.flag) {
 
         // remove 'yootThrown' - maybe needed for thrower disconnecting
-        const outcome = pickOutcome()
+        // const outcome = pickOutcome()
+        // for testing
+        let outcome;
+        if (room.gamePhase === 'pregame') {
+          if (room.turn.team === 0) {
+            outcome = 5
+          } else {
+            outcome = 4
+          }
+        } else if (room.gamePhase === 'game') {
+          outcome = 3
+        }
         const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 

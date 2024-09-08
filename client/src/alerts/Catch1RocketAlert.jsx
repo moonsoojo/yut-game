@@ -10,6 +10,7 @@ import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
 export default function Catch1RocketAlert({ position, rotation }) {
+  console.log(`[Catch1RocketAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   const [turn] = useAtom(turnAtom)
 
