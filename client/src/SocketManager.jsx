@@ -11,7 +11,8 @@ import {
   yootOutcomeAtom,
   currentPlayerNameAtom,
   alertsAtom,
-  catchOutcomeAtom} from "./GlobalState.jsx";
+  catchOutcomeAtom,
+  pieceAnimationPlayingAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
 
 const ENDPOINT = 'localhost:5000';
@@ -48,7 +49,6 @@ export const SocketManager = () => {
   const [_hasTurn, setHasTurn] = useAtom(hasTurnAtom)
   const [_boomText, setBoomText] = useAtom(boomTextAtom)
   const [_mainAlert, setMainAlert] = useAtom(mainAlertAtom)
-  const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [_turnAlertActive, setTurnAlertActive] = useAtom(turnAlertActiveAtom)
   const [_moveResult, setMoveResult] = useAtom(moveResultAtom)
   const [_throwResult, setThrowResult] = useAtom(throwResultAtom)
@@ -75,11 +75,15 @@ export const SocketManager = () => {
   // UI
   const [_particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
 
+  // animations
   const [_yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom)
   const [_yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
   const [_currentPlayerName, setCurrentPlayerName] = useAtom(currentPlayerNameAtom)
   const [_alerts, setAlerts] = useAtom(alertsAtom)
   const [_catchOutcome, setCatchOutcome] = useAtom(catchOutcomeAtom)
+  const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
+  const [_pieceAnimationPlaying, setPieceAnimationPlaying] = useAtom(pieceAnimationPlayingAtom)
+
 
   useEffect(() => {
 
@@ -406,6 +410,7 @@ export const SocketManager = () => {
       }
 
       setAnimationPlaying(true)
+      setPieceAnimationPlaying(true)
       // whenever turn could have changed
       setHasTurn(clientHasTurn(socket.id, teamsUpdate, turnUpdate))
       setLegalTiles(legalTiles)

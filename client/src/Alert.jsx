@@ -5,8 +5,8 @@ import Rocket from "./meshes/Rocket";
 import Ufo from "./meshes/Ufo";
 import { animated, useSpring } from "@react-spring/three";
 import Star from "./meshes/Star";
-import { useAtom } from "jotai";
-import { alertsAtom, animationPlayingAtom, catchOutcomeAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
+import { useAtom, useAtomValue } from "jotai";
+import { alertsAtom, animationPlayingAtom, catchOutcomeAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, pieceAnimationPlayingAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
 import { formatName } from "./helpers/helpers";
 import DoAlert from "./alerts/DoAlert";
 import GeAlert from "./alerts/GeAlert";
@@ -24,6 +24,7 @@ export default function Alert({ position, rotation }) {
     const [alerts] = useAtom(alertsAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
+    const pieceAnimationPlaying = useAtomValue(pieceAnimationPlayingAtom)
 
     const [springs, api] = useSpring(() => ({
       from: {
@@ -159,20 +160,22 @@ export default function Alert({ position, rotation }) {
 
     useEffect(() => {
       const toAnimations = transformAlertsToAnimations(alerts)
-      api.start({
-        from: {
-          turnAlertScale: 0,
-          gameStartAlertScale: 0,
-          yootOutcomeAlertScale: 0,
-          pregameTieAlertScale: 0,
-          pregameUfosWinAlertScale: 0,
-        },
-        to: toAnimations,
-        loop: false,
-        onStart: () => setAnimationPlaying(true),
-        onRest: () => setAnimationPlaying(false),
-      })
-    }, [alerts])
+      if (!pieceAnimationPlaying) {
+        api.start({
+          from: {
+            turnAlertScale: 0,
+            gameStartAlertScale: 0,
+            yootOutcomeAlertScale: 0,
+            pregameTieAlertScale: 0,
+            pregameUfosWinAlertScale: 0,
+          },
+          to: toAnimations,
+          loop: false,
+          onStart: () => setAnimationPlaying(true),
+          onRest: () => setAnimationPlaying(false),
+        })
+      }
+    }, [alerts, pieceAnimationPlaying])
 
     // make 'game start!' component and 'turn' component
     // useSpring to animate via scale

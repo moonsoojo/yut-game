@@ -69,6 +69,7 @@ export const throwResultAtom = atom({
   time: 0
 })
 export const animationPlayingAtom = atom(false)
+export const pieceAnimationPlayingAtom = atom(false)
 export const displayMovesAtom = atom({})
 export const legalTilesAtom = atom({})
 export const helperTilesAtom = atom({})
