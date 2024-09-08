@@ -7,7 +7,7 @@ import { animationPlayingAtom, hasTurnAtom } from './GlobalState';
 import { socket } from './SocketManager';
 import { useParams } from "wouter";
 
-export default function YootButtonNew({ position, rotation, scale }) {
+export default function YootButtonNew({ position, rotation, scale, hasThrow }) {
   const { nodes, materials } = useGLTF("/models/rounded-rectangle.glb");
   const { scene } = useGLTF("/models/yoot-for-button.glb");
   const yootMaterials = useGLTF("/models/yoot-for-button.glb").materials
@@ -18,7 +18,7 @@ export default function YootButtonNew({ position, rotation, scale }) {
 
   const [animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
-  const enabled = !animationPlaying && hasTurn // add "hasThrow"
+  const enabled = !animationPlaying && hasTurn && hasThrow // add "hasThrow"
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]

@@ -189,14 +189,6 @@ export const SocketManager = () => {
 
       setGamePhase((lastPhase) => {
         if (lastPhase === 'pregame' && room.gamePhase === 'game') {
-          setPregameAlert({
-            type: 'gameStart',
-            team: room.turn.team
-          })
-          const turnAlert = makeTurnAlertObj(room)
-          console.log('[setGamePhase] set main alert')
-          setMainAlert(turnAlert)
-          // setTurnAlertActive(true)
         } else if (lastPhase === 'finished' && room.gamePhase === 'lobby') {
           // Reset fireworks from win screen
           setParticleSetting(null)
@@ -238,25 +230,6 @@ export const SocketManager = () => {
           setMainAlert(turnAlert)
         }
         return room.turn
-      })
-
-      setThrowResult((prevResult) => {
-        if (prevResult.time !== room.throwResult.time) {
-          if (room.throwResult.type === 'bonus') {
-            console.log('[setThrowResult] set main alert')
-            setMainAlert({
-              type: 'throw',
-              num: room.throwResult.num,
-              time: room.throwResult.time
-            })
-          } else {
-            setThrowAlert({
-              num: room.throwResult.num,
-              time: room.throwResult.time
-            })
-          }
-        }
-        return room.throwResult
       })
 
       if (room.gamePhase === 'game') {
@@ -398,8 +371,7 @@ export const SocketManager = () => {
       return numPiecesCaught;
     }
 
-    socket.on('move', ({ teamsUpdate, turnUpdate }) => {
-   
+    socket.on("move", ({ teamsUpdate, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
       let teamsPrev;
       setTeams((prev) => {
         teamsPrev = prev;
@@ -411,7 +383,7 @@ export const SocketManager = () => {
         return turnUpdate
       })
       
-      const currentPlayerName = teams[turn.team].players[turn.players[turn.team]].name
+      const currentPlayerName = teamsUpdate[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
       setCurrentPlayerName(currentPlayerName)
       
       // if out of moves, setAlerts(['turn'])
@@ -436,6 +408,25 @@ export const SocketManager = () => {
       setAnimationPlaying(true)
       // whenever turn could have changed
       setHasTurn(clientHasTurn(socket.id, teamsUpdate, turnUpdate))
+      setLegalTiles(legalTiles)
+      setTiles(tiles)
+      setPieceTeam0Id0(teamsUpdate[0].pieces[0])
+      setPieceTeam0Id1(teamsUpdate[0].pieces[1])
+      setPieceTeam0Id2(teamsUpdate[0].pieces[2])
+      setPieceTeam0Id3(teamsUpdate[0].pieces[3])
+      setPieceTeam1Id0(teamsUpdate[1].pieces[0])
+      setPieceTeam1Id1(teamsUpdate[1].pieces[1])
+      setPieceTeam1Id2(teamsUpdate[1].pieces[2])
+      setPieceTeam1Id3(teamsUpdate[1].pieces[3])
+      setSelection(selection)
+      setGameLogs(gameLogs)
+    })
+
+    socket.on('select', ({ selection, legalTiles }) => { //receive
+   
+      // handle
+      setSelection(selection)
+      setLegalTiles(legalTiles)
     })
 
     socket.on('disconnect', () => {

@@ -53,7 +53,7 @@ export default function Piece ({
   // Piece selected: bulge
   // rocket shaking on selected
   function handlePointerDown(event) {
-    if (gamePhase === "game" && hasTurn && client.team === team && !yootThrown.flag && !animationPlaying) {
+    if (gamePhase === "game" && hasTurn && client.team === team && !animationPlaying) {
       event.stopPropagation();
       setMainAlert({ type: '' })
       if (selection === null) {
@@ -69,7 +69,6 @@ export default function Piece ({
         let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
         if (!(Object.keys(legalTiles).length == 0)) {
           // socket.emit("legalTiles", { roomId: client.roomId, legalTiles })
-
           socket.emit("select", { roomId: params.id, selection: { tile, pieces }, legalTiles })
         }
       } else {

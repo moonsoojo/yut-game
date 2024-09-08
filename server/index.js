@@ -127,8 +127,6 @@ const roomSchema = new mongoose.Schema(
         }
       ]
     ],
-    moveResult: Object,
-    throwResult: Object,
     results: [Number],
     serverEvent: String
   },
@@ -210,7 +208,16 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
           } else if (serverEvent === "move") {
             io.to(userSocketId).emit("move", {
               teamsUpdate: roomPopulated.teams,
-              turnUpdate: data.fullDocument.turn
+              turnUpdate: data.fullDocument.turn,
+              legalTiles: data.fullDocument.legalTiles,
+              tiles: data.fullDocument.tiles,
+              gameLogs: data.fullDocument.gameLogs,
+              selection: data.fullDocument.selection
+            })
+          } else if (serverEvent === "select") {
+            io.to(userSocketId).emit("select", {
+              selection: data.fullDocument.selection,
+              legalTiles: data.fullDocument.legalTiles
             })
           } else {
             console.log(`[Room.watch] room`)
@@ -807,7 +814,8 @@ io.on("connect", async (socket) => {
         { 
           $set: { 
             'selection': selection === 'null' ? null : selection,
-            'legalTiles': legalTiles
+            'legalTiles': legalTiles,
+            'serverEvent': 'select'
           }
         }
       )
@@ -897,12 +905,6 @@ io.on("connect", async (socket) => {
 
         // Catch
         if (occupyingTeam != movingTeam) {
-          operation['$set']['moveResult'] = {
-            type: 'catch',
-            team: movingTeam,
-            amount: tiles[to].length,
-            tile: to
-          }
           for (let piece of tiles[to]) {
             piece.tile = -1
             piece.history = []

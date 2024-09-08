@@ -57,21 +57,20 @@ export default function Tile({
   }
 
   function handlePointerDown(event) {
-    console.log(`[Tile] click`)
     event.stopPropagation();
     const team = client.team
     let pieces = tiles[tile]
-    if (gamePhase === "game" && hasTurn && !yootThrown.flag && !animationPlaying) {
+    if (gamePhase === "game" && hasTurn && !animationPlaying) {
       setMainAlert({ type: '' })
       if (selection === null) {
         if (pieces.length > 0 && pieces[0].team === team) {
           let history = tiles[tile][0].history
           let legalTiles = getLegalTiles(tile, teams[team].moves, teams[team].pieces, history)
-          if (!(Object.keys(legalTiles).length == 0)) {
+          if (!(Object.keys(legalTiles).length === 0)) {
             socket.emit("select", { roomId: params.id, selection: { tile, pieces }, legalTiles })
           }
         }
-      } else if (selection.tile != tile && legalTileInfo) {
+      } else if (selection.tile !== tile && legalTileInfo) {
         // Server clears legalTiles and selection
         // When they're called separately, the order of operation is not kept
         socket.emit("move", { roomId: params.id, tile });

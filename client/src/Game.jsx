@@ -34,6 +34,7 @@ import {
   yootAnimationAtom,
   yootActiveAtom,
   animationPlayingAtom,
+  teamsAtom,
 } from "./GlobalState.jsx";
 import MoveList from "./MoveList.jsx";
 import PiecesOnBoard from "./PiecesOnBoard.jsx";
@@ -68,6 +69,7 @@ export default function Game() {
   const [hostName] = useAtom(hostNameAtom)
   const [showRulebook, setShowRulebook] = useState(false);
   const [client] = useAtom(clientAtom)
+  const [teams] = useAtom(teamsAtom)
 
   const [yootAnimation, setYootAnimation] = useAtom(yootAnimationAtom);
   const [animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom);
@@ -716,6 +718,7 @@ export default function Game() {
           position={layout[device].game.yootButton.position}
           rotation={layout[device].game.yootButton.rotation}
           scale={layout[device].game.yootButton.scale}
+          hasThrow={teams[turn.team].throws > 0}
         /> }
         <SettingsButton 
         position={layout[device].game.settings.position}
