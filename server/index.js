@@ -96,10 +96,6 @@ const roomSchema = new mongoose.Schema(
       ref: 'users'
     },
     gamePhase: String,
-    yootThrown: {
-      flag: Boolean,
-      player: String // User ID
-    },
     yootOutcome: Number,
     yootAnimation: Number,
     pregameOutcome: String,
@@ -182,14 +178,7 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
         let userFound = await User.findById(user, 'socketId').exec()
         let userSocketId = userFound.socketId
         console.log(`[Room.watch] userSocketId`, userSocketId)
-        if ('yootAnimation' in data.updateDescription.updatedFields) { // what if it had the same value as the last animation?
-          let yootOutcome = data.fullDocument.yootOutcome
-          let yootAnimation = data.fullDocument.yootAnimation
-          let yootThrown = data.fullDocument.yootThrown
-          let currentTeam = data.fullDocument.turn.team
-          let throwCount = data.updateDescription.updatedFields[`teams.${currentTeam}.throws`]
-          io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, yootThrown, throwCount })
-        } else {
+
           const serverEvent = data.fullDocument.serverEvent
           if (serverEvent === "gameStart") {
             io.to(userSocketId).emit("gameStart", {
@@ -219,11 +208,18 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               selection: data.fullDocument.selection,
               legalTiles: data.fullDocument.legalTiles
             })
+          } else if (serverEvent === "throwYoot") {
+            let yootOutcome = data.fullDocument.yootOutcome
+            let yootAnimation = data.fullDocument.yootAnimation
+            let currentTeam = data.fullDocument.turn.team
+            let throwCount = data.fullDocument.teams[currentTeam].throws
+            let teams = roomPopulated.teams
+            let turn = data.fullDocument.turn
+            io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, throwCount, teams, turn })
           } else {
             console.log(`[Room.watch] room`)
             io.to(userSocketId).emit('room', roomPopulated)
           }
-        }
       } catch (err) {
         console.log(`[Room.watch] error getting user's socket id`, err)
       }
@@ -285,10 +281,6 @@ io.on("connect", async (socket) => {
           team: -1,
           players: [0, 0]
         },
-        yootThrown: {
-          flag: false,
-          player: ''
-        }, // To not trigger the throw twice in the server
         yootOutcome: null,
         yootAnimation: null,
         pregameOutcome: null,
@@ -559,22 +551,20 @@ io.on("connect", async (socket) => {
     try {
       let room = await Room.findOne({ _id: roomId })
 
-      // Check thrown flag again because client takes time to update its state
-      if (room.teams[user.team].throws > 0 && !room.yootThrown.flag) {
+      if (room.teams[user.team].throws > 0) {
 
-        // remove 'yootThrown' - maybe needed for thrower disconnecting
-        // const outcome = pickOutcome()
+        const outcome = pickOutcome()
         // for testing
-        let outcome;
-        if (room.gamePhase === 'pregame') {
-          if (room.turn.team === 0) {
-            outcome = 5
-          } else {
-            outcome = 4
-          }
-        } else if (room.gamePhase === 'game') {
-          outcome = 3
-        }
+        // let outcome;
+        // if (room.gamePhase === 'pregame') {
+        //   if (room.turn.team === 0) {
+        //     outcome = 5
+        //   } else {
+        //     outcome = 4
+        //   }
+        // } else if (room.gamePhase === 'game') {
+        //   outcome = 1
+        // }
         const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 
@@ -584,10 +574,7 @@ io.on("connect", async (socket) => {
             $set: { 
               yootOutcome: outcome,
               yootAnimation: animation,
-              yootThrown: {
-                flag: true,
-                player: user._id
-              },
+              serverEvent: 'throwYoot'
             },
             $inc: {
               [`teams.${user.team}.throws`]: -1
@@ -674,140 +661,131 @@ io.on("connect", async (socket) => {
     try {
       let room = await Room.findOne({ _id: roomId })  
 
-      // Check if user threw the yoot
-      if (user._id.valueOf() === room.yootThrown.player.valueOf()) { // room.yootThrown.player is a string
+      // on yoot or mo, if gamePhase is 'game', add 'bonus: true' to 'content'.
+      // else, add 'bonus: false'
+      let gameLogs = [] 
 
-        // Reset flag so client can activate the throw button again
-        operation['$set']['yootThrown.flag'] = false
+      // Add move to team
+      if (room.gamePhase === "pregame") {
+        // Test code using different throw outcome
+        // if (user.team === 0) {
+        //   move = 5;
+        // } else {
+        //   move = 4
+        // }
+        // move = 3;
+        room.teams[user.team].pregameRoll = move
+        operation['$set'][`teams.${user.team}.pregameRoll`] = move
 
-        // on yoot or mo, if gamePhase is 'game', add 'bonus: true' to 'content'.
-        // else, add 'bonus: false'
-        let gameLogs = [] 
-
-        // Add move to team
-        if (room.gamePhase === "pregame") {
-          console.log(`[recordThrow] gamePhase is pregame`)
-          // Test code using different throw outcome
-          // if (user.team === 0) {
-          //   move = 5;
-          // } else {
-          //   move = 4
-          // }
-          // move = 3;
-          room.teams[user.team].pregameRoll = move
-          operation['$set'][`teams.${user.team}.pregameRoll`] = move
-
+        gameLogs.push(
+          {
+            logType: 'throw',
+            content: {
+              playerName: user.name,
+              team: user.team,
+              move: move,
+              bonus: false
+            }
+          }
+        )
+        
+        const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)
+        if (outcome === "pass") {
+          const newTurn = passTurn(room.turn, room.teams)
+          operation['$set']['turn'] = newTurn
+          operation['$set']['pregameOutcome'] = outcome
+          operation['$inc'][`teams.${newTurn.team}.throws`] = 1
+        } else if (outcome === "tie") {
+          const newTurn = passTurn(room.turn, room.teams)
+          operation['$set']['turn'] = newTurn
+          operation['$set']['pregameOutcome'] = outcome
+          operation['$set']['teams.0.pregameRoll'] = null
+          operation['$set']['teams.1.pregameRoll'] = null
+          operation['$inc'][`teams.${newTurn.team}.throws`] = 1
           gameLogs.push(
             {
-              logType: 'throw',
+              logType: 'pregameResult',
               content: {
-                playerName: user.name,
-                team: user.team,
-                move: move,
-                bonus: false
+                team: -1
               }
             }
           )
+        } else {
+          // 'outcome' is the winning team index
+          const newTurn = setTurn(room.turn, outcome)
+          operation['$set']['turn'] = newTurn
+          operation['$set']['pregameOutcome'] = outcome.toString()
+          operation['$set']['gamePhase'] = 'game'
+          operation['$inc'][`teams.${outcome}.throws`] = 1
+          gameLogs.push(
+            {
+              logType: 'pregameResult',
+              content: {
+                team: outcome
+              }
+            }
+          )
+        }
+      } else if (room.gamePhase === "game") {
+        // Test code using different throw outcome
+        // if (user.team === 1) {
+        //   move = 1;
+        // } else {
+        //   move = 5;
+        // }
+        // move = 0;
+        room.teams[user.team].moves[move]++;
+
+        // Add bonus throw on Yoot and Mo
+        if (room.yootOutcome === 4 || room.yootOutcome === 5) {
+          operation['$inc'][`teams.${user.team}.throws`] = 1
+          room.teams[user.team].throws++;
           
-          const outcome = comparePregameRolls(room.teams[0].pregameRoll, room.teams[1].pregameRoll)
-          if (outcome === "pass") {
-            const newTurn = passTurn(room.turn, room.teams)
-            operation['$set']['turn'] = newTurn
-            operation['$set']['pregameOutcome'] = outcome
-            operation['$inc'][`teams.${newTurn.team}.throws`] = 1
-          } else if (outcome === "tie") {
-            const newTurn = passTurn(room.turn, room.teams)
-            operation['$set']['turn'] = newTurn
-            operation['$set']['pregameOutcome'] = outcome
-            operation['$set']['teams.0.pregameRoll'] = null
-            operation['$set']['teams.1.pregameRoll'] = null
-            operation['$inc'][`teams.${newTurn.team}.throws`] = 1
-            gameLogs.push(
-              {
-                logType: 'pregameResult',
-                content: {
-                  team: -1
-                }
-              }
-            )
-          } else {
-            // 'outcome' is the winning team index
-            const newTurn = setTurn(room.turn, outcome)
-            operation['$set']['turn'] = newTurn
-            operation['$set']['pregameOutcome'] = outcome.toString()
-            operation['$set']['gamePhase'] = 'game'
-            operation['$inc'][`teams.${outcome}.throws`] = 1
-            gameLogs.push(
-              {
-                logType: 'pregameResult',
-                content: {
-                  team: outcome
-                }
-              }
-            )
-          }
-        } else if (room.gamePhase === "game") {
-          // Test code using different throw outcome
-          // if (user.team === 1) {
-          //   move = 1;
-          // } else {
-          //   move = 5;
-          // }
-          // move = 0;
-          room.teams[user.team].moves[move]++;
-
-          // Add bonus throw on Yoot and Mo
-          if (room.yootOutcome === 4 || room.yootOutcome === 5) {
-            operation['$inc'][`teams.${user.team}.throws`] = 1
-            room.teams[user.team].throws++;
-            
-            gameLogs.push({
-              logType: 'throw',
-              content: {
-                playerName: user.name,
-                team: user.team,
-                move: move,
-                bonus: true
-              }
-            })
-          } else {
-            gameLogs.push({
-              logType: 'throw',
-              content: {
-                playerName: user.name,
-                team: user.team,
-                move: move,
-                bonus: false
-              }
-            })
-          }
-
-          // If user threw out of bounds, pass turn
-          // Call .toObject() on moves to leave out the mongoose methods
-          if (room.teams[user.team].throws === 0 && 
-          isEmptyMoves(room.teams[user.team].moves.toObject())) {
-            const newTurn = passTurn(room.turn, room.teams)
-            operation['$set']['turn'] = newTurn
-            operation['$set'][`teams.${user.team}.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
-            operation['$inc'][`teams.${newTurn.team}.throws`] = 1
-          } else {
-            operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
-          }
+          gameLogs.push({
+            logType: 'throw',
+            content: {
+              playerName: user.name,
+              team: user.team,
+              move: move,
+              bonus: true
+            }
+          })
+        } else {
+          gameLogs.push({
+            logType: 'throw',
+            content: {
+              playerName: user.name,
+              team: user.team,
+              move: move,
+              bonus: false
+            }
+          })
         }
 
-        operation['$push']['gameLogs'] = { '$each': gameLogs }
-        
-        console.log(`[recordThrow] logging server event`)
-        operation['$set']['serverEvent'] = 'recordThrow'
-
-        await Room.findOneAndUpdate(
-          { 
-            _id: roomId, 
-          }, 
-          operation
-        )
-
+        // If user threw out of bounds, pass turn
+        // Call .toObject() on moves to leave out the mongoose methods
+        if (room.teams[user.team].throws === 0 && 
+        isEmptyMoves(room.teams[user.team].moves.toObject())) {
+          const newTurn = passTurn(room.turn, room.teams)
+          operation['$set']['turn'] = newTurn
+          operation['$set'][`teams.${user.team}.moves`] = JSON.parse(JSON.stringify(initialState.initialMoves))
+          operation['$inc'][`teams.${newTurn.team}.throws`] = 1
+        } else {
+          operation['$inc'][`teams.${user.team}.moves.${move}`] = 1
+        }
       }
+
+      operation['$push']['gameLogs'] = { '$each': gameLogs }
+      
+      console.log(`[recordThrow] logging server event`)
+      operation['$set']['serverEvent'] = 'recordThrow'
+
+      await Room.findOneAndUpdate(
+        { 
+          _id: roomId, 
+        }, 
+        operation
+      )
     } catch (err) {
       console.log(`[recordThrow] error recording throw`, err)
     }
@@ -1106,10 +1084,6 @@ io.on("connect", async (socket) => {
       operation['$set']['legalTiles'] = {}
       operation['$set']['selection'] = null
       operation['$set']['pregameOutcome'] = null
-      operation['$set']['yootThrown'] = {
-        flag: false,
-        player: ''
-      }
       operation['$set']['turn'] = {
         team: -1,
         // team: generateRandomNumberInRange(1, 1) > 1 ? 0 : 1,

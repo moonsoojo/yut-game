@@ -305,11 +305,11 @@ export const SocketManager = () => {
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootOutcome, yootAnimation, yootThrown, throwCount }) => {
+    socket.on('throwYoot', ({ yootOutcome, yootAnimation, throwCount, teams, turn }) => {
       setYootOutcome(yootOutcome)
       setYootAnimation(yootAnimation)
-      setYootThrown(yootThrown)
       setThrowCount(throwCount)
+      setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
     socket.on('gameStart', ({ teams, gamePhase, turn }) => {

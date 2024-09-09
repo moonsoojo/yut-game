@@ -197,8 +197,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id0.tile, pieceTeam0Id0.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -342,8 +342,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id1.tile, pieceTeam0Id1.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -485,8 +485,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id2.tile, pieceTeam0Id2.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -628,8 +628,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam0Id3.tile, pieceTeam0Id3.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -772,8 +772,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id0.tile, pieceTeam1Id0.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -917,8 +917,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id1.tile, pieceTeam1Id1.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -1062,8 +1062,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id2.tile, pieceTeam1Id2.lastPath)) {
                 const toAnimations = path.map((value) => {
@@ -1206,8 +1206,8 @@ export default function PiecesOnBoard() {
                         }
                     ],
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
-                    onRest: () => setPieceAnimationPlaying(false),
+                    // onStart: () => setPieceAnimationPlaying(true),
+                    // onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (startCheck(pieceTeam1Id3.tile, pieceTeam1Id3.lastPath)) {
                 const toAnimations = path.map((value) => {
