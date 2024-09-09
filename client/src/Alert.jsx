@@ -23,12 +23,15 @@ import Catch3RocketAlert from "./alerts/Catch3RocketAlert";
 import Catch3UfoAlert from "./alerts/Catch3UfoAlert";
 import Catch4RocketAlert from "./alerts/Catch4RocketAlert";
 import Catch4UfoAlert from "./alerts/Catch4UfoAlert";
+import YootAlertPregame from "./alerts/YootAlertPregame";
+import MoAlertPregame from "./alerts/MoAlertPregame";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
     const { nodes, materials } = useGLTF('models/alert-background.glb')
     
     const [alerts] = useAtom(alertsAtom)
+    const [yootOutcome] = useAtom(yootOutcomeAtom)
     const [gamePhase] = useAtom(gamePhaseAtom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
     const pieceAnimationPlaying = useAtomValue(pieceAnimationPlayingAtom)
@@ -37,7 +40,13 @@ export default function Alert({ position, rotation }) {
       from: {
         turnAlertScale: 0,
         gameStartAlertScale: 0,
-        yootOutcomeAlertScale: 0,
+        yootOutcome1AlertScale: 0,
+        yootOutcome2AlertScale: 0,
+        yootOutcome3AlertScale: 0,
+        yootOutcome4PregameAlertScale: 0,
+        yootOutcome5PregameAlertScale: 0,
+        yootOutcome4AlertScale: 0,
+        yootOutcome5AlertScale: 0,
         pregameTieAlertScale: 0,
         pregameRocketsWinAlertScale: 0,
         pregameUfosWinAlertScale: 0,
@@ -80,16 +89,112 @@ export default function Alert({ position, rotation }) {
             },
             delay: 1000
           })
-        } else if (alerts[i] === 'yootOutcome') {
+        } else if (alerts[i] === 'yootOutcome1') {
           animations.push({
-            yootOutcomeAlertScale: 1,
+            yootOutcome1AlertScale: 1,
             config: {
                 tension: 170,
                 friction: 26
             },
           })
           animations.push({
-            yootOutcomeAlertScale: 0,
+            yootOutcome1AlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome2') {
+          animations.push({
+            yootOutcome2AlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome2AlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome3') {
+          animations.push({
+            yootOutcome3AlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome3AlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome4Pregame') {
+          animations.push({
+            yootOutcome4PregameAlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome4PregameAlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome5Pregame') {
+          animations.push({
+            yootOutcome5PregameAlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome5PregameAlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome4') {
+          animations.push({
+            yootOutcome4AlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome4AlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
+        } else if (alerts[i] === 'yootOutcome5') {
+          animations.push({
+            yootOutcome5AlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            yootOutcome5AlertScale: 0,
             config: {
                 tension: 170,
                 friction: 26
@@ -172,7 +277,13 @@ export default function Alert({ position, rotation }) {
           from: {
             turnAlertScale: 0,
             gameStartAlertScale: 0,
-            yootOutcomeAlertScale: 0,
+            yootOutcome1AlertScale: 0,
+            yootOutcome2AlertScale: 0,
+            yootOutcome3AlertScale: 0,
+            yootOutcome4PregameAlertScale: 0,
+            yootOutcome5PregameAlertScale: 0,
+            yootOutcome4AlertScale: 0,
+            yootOutcome5AlertScale: 0,
             pregameTieAlertScale: 0,
             pregameUfosWinAlertScale: 0,
           },
@@ -706,18 +817,42 @@ export default function Alert({ position, rotation }) {
       </animated.group>
     }
 
-    function YootOutcomeAlert() {
-      const [yootOutcome] = useAtom(yootOutcomeAtom)
-      return <animated.group scale={springs.yootOutcomeAlertScale}>
-        { yootOutcome === 1 && <DoAlert/> }
-        { yootOutcome === -1 && <BackdoAlert/> }
-        { yootOutcome === 2 && <GeAlert/> }
-        { yootOutcome === 3 && <GulAlert/> }
-        { yootOutcome === 4 && <YootAlert/> }
-        { yootOutcome === 5 && <MoAlert/> }
-        { yootOutcome === 0 && <OutAlert/> }
+    function YootOutcome1Alert() {
+      return <animated.group scale={springs.yootOutcome1AlertScale}>
+        <DoAlert/>
       </animated.group>
     }
+    function YootOutcome2Alert() {
+      return <animated.group scale={springs.yootOutcome2AlertScale}>
+        <GeAlert/>
+      </animated.group>
+    }
+    function YootOutcome3Alert() {
+      return <animated.group scale={springs.yootOutcome3AlertScale}>
+        <GulAlert/>
+      </animated.group>
+    }
+    function YootOutcome4PregameAlert() {
+      return <animated.group scale={springs.yootOutcome4PregameAlertScale}>
+        <YootAlertPregame/>
+      </animated.group>
+    }
+    function YootOutcome5PregameAlert() {
+      return <animated.group scale={springs.yootOutcome5PregameAlertScale}>
+        <MoAlertPregame/>
+      </animated.group>
+    }
+    function YootOutcome4Alert() {
+      return <animated.group scale={springs.yootOutcome4AlertScale}>
+        <YootAlert/>
+      </animated.group>
+    }
+    function YootOutcome5Alert() {
+      return <animated.group scale={springs.yootOutcome5AlertScale}>
+        <MoAlert/>
+      </animated.group>
+    }
+
 
     function CatchAlert() {
       const [catchOutcome] = useAtom(catchOutcomeAtom)
@@ -739,7 +874,13 @@ export default function Alert({ position, rotation }) {
       <PregameTieAlert/>
       <PregameRocketsWinAlert/>
       <PregameUfosWinAlert/>
-      <YootOutcomeAlert/>
+      <YootOutcome1Alert/>
+      <YootOutcome2Alert/>
+      <YootOutcome3Alert/>
+      <YootOutcome4PregameAlert/>
+      <YootOutcome5PregameAlert/>
+      <YootOutcome4Alert/>
+      <YootOutcome5Alert/>
       <CatchAlert/>
     </group>
   }

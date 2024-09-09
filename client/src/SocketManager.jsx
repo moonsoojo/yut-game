@@ -343,22 +343,35 @@ export const SocketManager = () => {
       setYootOutcome(yootOutcome)
       
       if (gamePhaseUpdate === 'pregame') {
+        let yootOutcomeAlertName;
+        if (yootOutcome === 4 || yootOutcome === 5) {
+          yootOutcomeAlertName = `yootOutcome${yootOutcome}Pregame`
+        } else {
+          yootOutcomeAlertName = `yootOutcome${yootOutcome}`
+        }
         if (pregameOutcome === 'pass') {
-          setAlerts(['yootOutcome', 'turn'])
+          setAlerts([yootOutcomeAlertName, 'turn'])
         } else if (pregameOutcome === 'tie') {
-          setAlerts(['yootOutcome', 'pregameTie', 'turn'])
+          setAlerts([yootOutcomeAlertName, 'pregameTie', 'turn'])
         }
       } else if (gamePhasePrev === 'pregame' && gamePhaseUpdate === 'game') {
+        let yootOutcomeAlertName;
+        if (yootOutcome === 4 || yootOutcome === 5) {
+          yootOutcomeAlertName = `yootOutcome${yootOutcome}Pregame`
+        } else {
+          yootOutcomeAlertName = `yootOutcome${yootOutcome}`
+        }
         if (pregameOutcome === '0') { // changes from int to string
-          setAlerts(['yootOutcome', 'pregameRocketsWin', 'turn'])
+          setAlerts([yootOutcomeAlertName, 'pregameRocketsWin', 'turn'])
         } else if (pregameOutcome === '1') {
-          setAlerts(['yootOutcome', 'pregameUfosWin', 'turn'])
+          setAlerts([yootOutcomeAlertName, 'pregameUfosWin', 'turn'])
         }
       } else if (gamePhaseUpdate === 'game') {
+        let yootOutcomeAlertName = `yootOutcome${yootOutcome}`
         if (yootOutcome === 0) {
-          setAlerts(['yootOutcome', 'turn'])
+          setAlerts([yootOutcomeAlertName, 'turn'])
         } else {
-          setAlerts(['yootOutcome'])
+          setAlerts([yootOutcomeAlertName])
         }
       }
 
