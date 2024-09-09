@@ -21,6 +21,8 @@ import Catch2RocketAlert from "./alerts/Catch2RocketAlert";
 import Catch2UfoAlert from "./alerts/Catch2UfoAlert";
 import Catch3RocketAlert from "./alerts/Catch3RocketAlert";
 import Catch3UfoAlert from "./alerts/Catch3UfoAlert";
+import Catch4RocketAlert from "./alerts/Catch4RocketAlert";
+import Catch4UfoAlert from "./alerts/Catch4UfoAlert";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
@@ -723,11 +725,11 @@ export default function Alert({ position, rotation }) {
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }
         { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> }
         { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> }
-        {/* { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> } */}
+        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> }
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 1 && <Catch1UfoAlert/> }
         { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
         { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> }
-        {/* { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> } */}
+        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> }
       </animated.group>
     }
 

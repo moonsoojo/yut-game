@@ -185,6 +185,7 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               teams: roomPopulated.teams,
               gamePhase: data.fullDocument.gamePhase,
               turn: data.fullDocument.turn,
+              gameLogs: data.fullDocument.gameLogs
             })
           } else if (serverEvent === "recordThrow") {
             io.to(userSocketId).emit("recordThrow", {
@@ -192,7 +193,8 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               gamePhaseUpdate: data.fullDocument.gamePhase,
               turn: data.fullDocument.turn,
               pregameOutcome: data.fullDocument.pregameOutcome,
-              yootOutcome: data.fullDocument.yootOutcome
+              yootOutcome: data.fullDocument.yootOutcome,
+              gameLogs: data.fullDocument.gameLogs
             })
           } else if (serverEvent === "move") {
             io.to(userSocketId).emit("move", {
@@ -553,18 +555,18 @@ io.on("connect", async (socket) => {
 
       if (room.teams[user.team].throws > 0) {
 
-        // const outcome = pickOutcome()
+        const outcome = pickOutcome()
         // for testing
-        let outcome;
-        if (room.gamePhase === 'pregame') {
-          if (room.turn.team === 0) {
-            outcome = 5
-          } else {
-            outcome = 4
-          }
-        } else if (room.gamePhase === 'game') {
-          outcome = 1
-        }
+        // let outcome;
+        // if (room.gamePhase === 'pregame') {
+        //   if (room.turn.team === 1) {
+        //     outcome = 5
+        //   } else {
+        //     outcome = 4
+        //   }
+        // } else if (room.gamePhase === 'game') {
+        //   outcome = 1
+        // }
         const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 

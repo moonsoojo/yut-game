@@ -312,7 +312,7 @@ export const SocketManager = () => {
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
-    socket.on('gameStart', ({ teams, gamePhase, turn }) => {
+    socket.on('gameStart', ({ teams, gamePhase, turn, gameLogs }) => {
       setTeams(teams) // only update the throw count of the current team
       setGamePhase(gamePhase)
       setTurn(turn)
@@ -323,9 +323,10 @@ export const SocketManager = () => {
       setAnimationPlaying(true)
       // in order to turn off yoot at start
       setHasTurn(clientHasTurn(socket.id, teams, turn))
+      setGameLogs(gameLogs)
     })
 
-    socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome }) => {      
+    socket.on('recordThrow', ({ teams, gamePhaseUpdate, turn, pregameOutcome, yootOutcome, gameLogs }) => {      
       setTeams(teams) // only update the throw count of the current team
       setTurn(turn)
       // this invocation is within a useEffect
@@ -363,6 +364,7 @@ export const SocketManager = () => {
 
       setAnimationPlaying(true)
       setHasTurn(clientHasTurn(socket.id, teams, turn))
+      setGameLogs(gameLogs)
     })
 
     function calculateNumPiecesCaught(piecesPrev, piecesUpdate) {
