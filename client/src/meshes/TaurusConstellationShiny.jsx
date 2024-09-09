@@ -2,7 +2,6 @@ import React, {useRef, useMemo} from 'react'
 import {useFrame, useLoader, useThree} from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import System from 'three-nebula'
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
 
 
@@ -61,7 +60,7 @@ const lightFragmentShader = `
     float glistenColor = ((sin(((Position.x * glistenScale)/67.0)-time*glistenSpeed*2.1)+1.0)/2.0);
     float glistenColor2 = ((cos(((Position.y * glistenScale)/140.0)-time*glistenSpeed*1.0)+1.0)/2.0);
     float glistenColor3 = ((sin(((Position.x * glistenScale)/76.0)+time*glistenSpeed*1.9)+1.0)/2.0);
-    float glistenColor4 = ((cos(((Position.y * glistenScale)/80.0)+time*glistenSpeed*0.9)+1.0)/2.0);
+    float glistenColor4 = ((cos(((Position.y * glistenScale)/80.0)+time*glistenSpeed*5.9)+1.0)/2.0);
     glistenColor = (glistenColor+glistenColor2+glistenColor3+glistenColor4)/20.0;
     float alpha = texture2D(maskTexture,texUV).a;
     float multiplier = max(1.0,colorMultiplier);
@@ -71,28 +70,6 @@ const lightFragmentShader = `
   }
 
 `
-
-const fragmentFreshnellShader =  `
-
-  varying vec2 vUv;
-  varying vec3 Position;
-  varying vec3 EyeVector;
-  varying vec3 Normal;
-  varying vec3 vNN;
-
-  float Freshnel(vec3 eyeVector, vec3 worldNormal){
-    return pow(-min(dot(eyeVector,normalize(worldNormal)),0.0),5.0);
-  }
-
-  void main(){
-    float brightness = Freshnel(EyeVector, vNN) * 1.2;
-    float mask = Freshnel(EyeVector,vNN) * 0.7;
-    mask = 1.-mask;
-    //brightness += pow(brightness,1.);
-    gl_FragColor = vec4(brightness * 0.5,brightness*0.5,brightness,brightness * mask * 2.);
-  }
-
-`;
 
 const fragmentShader = `
 
@@ -134,6 +111,8 @@ function TaurusConstellationShiny(props){
     const lightTexture = useLoader(TextureLoader, 'textures/'+props.lightTexDir);
     const caustic = useLoader(TextureLoader, 'textures/caustics/caust00.png');
     
+    console.log(lightTexture);
+
     var baseColor = new THREE.Vector4(0.5,0.5,0.5,1.0);
     var lightColor;
     var glistenSpeed = 4.0;
@@ -171,8 +150,8 @@ function TaurusConstellationShiny(props){
     }
 
     useFrame((state, delta)=>{
-      meshRef.current.material.uniforms.time.value = state.clock.elapsedTime;
-      lightRef.current.material.uniforms.time.value = state.clock.elapsedTime;
+      meshRef.current.material.uniforms.time.value = state.clock.getElapsedTime();
+      lightRef.current.material.uniforms.time.value = state.clock.getElapsedTime();
     });
 
     const ConstelationUniform = useMemo(()=>({
@@ -183,7 +162,7 @@ function TaurusConstellationShiny(props){
       glistenScale : {type : 'f', value: glistenScale * props.scale},
       extrudeVal : {type : 'f', value : 0},
       lightTexture : {type:"t", value : caustic}
-    }), []);
+    }),[baseColor,glistenSpeed, glistenColorMultiplier, glistenScale, props.scale, caustic ]);
 
     var MaterialConstelation = new THREE.ShaderMaterial({
       extensions:{
@@ -196,20 +175,6 @@ function TaurusConstellationShiny(props){
       fragmentShader:fragmentShader,
     });
 
-    var MaterialConstelationFreshnell = new THREE.ShaderMaterial({
-      extensions:{
-        derivatives: "extension GL_OES_standard_derivatives : enable"
-      },
-      uniforms:{
-        extrudeVal : {type : 'f', value : extrudeVal}
-      },
-      blending : THREE.NormalBlending,
-      side : THREE.FrontSide,
-      transparent: true,
-      vertexShader:vertexShader,
-      fragmentShader:fragmentFreshnellShader
-    })
-
     const MaterialLightUniform = useMemo(()=>({
       time :{value : 0},
       baseColor : {value: lightColor},
@@ -220,7 +185,7 @@ function TaurusConstellationShiny(props){
       scale : {value : props.lightScale},
       maskTexture : {type:"t", value : lightTexture},
       lightTexture : {type:"t", value : caustic}
-    }), []);
+    }),[lightColor, lightMultiplier,glistenSpeed,glistenColorMultiplier,glistenScale, props.scale, props.lightScale, lightTexture,caustic]);
 
     var MaterialLightSphere = new THREE.ShaderMaterial({
       extensions:{
@@ -233,6 +198,8 @@ function TaurusConstellationShiny(props){
       vertexShader : lightVertexShader,
       fragmentShader : lightFragmentShader
     });
+
+
     return(
         <group {...props} dispose={null}>
             <mesh
