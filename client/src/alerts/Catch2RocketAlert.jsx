@@ -9,7 +9,7 @@ import { animated, useSpring } from "@react-spring/three";
 import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
-export default function Catch1RocketAlert({ position, rotation }) {
+export default function Catch2RocketAlert({ position, rotation }) {
   console.log(`[Catch1RocketAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   const [turn] = useAtom(turnAtom)
@@ -128,9 +128,14 @@ export default function Catch1RocketAlert({ position, rotation }) {
         <meshStandardMaterial color='turquoise'/>
       </mesh>
       <Rocket 
-        position={[1, 0.6, 0.8]} 
+        position={[1, 0.6, 0.65]} 
         rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
-        scale={0.6}
+        scale={0.7}
+      />
+      <Rocket 
+        position={[0.8, 0.6, 0.9]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
+        scale={0.7}
       />
       <group position={[1, 0.3, 0.8]} scale={1.3}>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>

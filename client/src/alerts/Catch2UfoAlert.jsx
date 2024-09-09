@@ -9,7 +9,7 @@ import { animated, useSpring } from "@react-spring/three";
 import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
-export default function Catch1RocketAlert({ position, rotation }) {
+export default function Catch2UfoAlert({ position, rotation }) {
   console.log(`[Catch1RocketAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   const [turn] = useAtom(turnAtom)
@@ -113,26 +113,32 @@ export default function Catch1RocketAlert({ position, rotation }) {
       <meshStandardMaterial color='black' opacity={0.7} transparent/>
     </mesh>
     <group name='catch-picture'>
-      <Ufo
-        position={[0.9, 0.4, -0.9]} 
-        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
-        scale={0.9}
-        glassOpacity={0.3}
-      />
-      <mesh position={[1, 0.4, -0.2]}>
-        <sphereGeometry args={[0.05, 32, 16]}/>
-        <meshStandardMaterial color='turquoise'/>
-      </mesh>
-      <mesh position={[1, 0.4, 0.1]}>
-        <sphereGeometry args={[0.05, 32, 16]}/>
-        <meshStandardMaterial color='turquoise'/>
-      </mesh>
-      <Rocket 
-        position={[1, 0.6, 0.8]} 
+      <Rocket
+        position={[1, 0.4, -1]} 
         rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
-        scale={0.6}
+        scale={1}
       />
-      <group position={[1, 0.3, 0.8]} scale={1.3}>
+      <mesh position={[0.9, 0.4, -0.3]}>
+        <sphereGeometry args={[0.05, 32, 16]}/>
+        <meshStandardMaterial color='red'/>
+      </mesh>
+      <mesh position={[0.9, 0.4, 0]}>
+        <sphereGeometry args={[0.05, 32, 16]}/>
+        <meshStandardMaterial color='red'/>
+      </mesh>
+      <Ufo 
+        position={[0.9, 0.5, 1]} 
+        rotation={[Math.PI/2, -Math.PI/16 * 8, Math.PI/2]} 
+        scale={0.7}
+        glassOpacity={0.1}
+      />
+      <Ufo 
+        position={[1.1, 0.5, 0.5]} 
+        rotation={[Math.PI/2, -Math.PI/16 * 8, Math.PI/2]} 
+        scale={0.7}
+        glassOpacity={0.1}
+      />
+      <group position={[0.9, 0.3, 0.8]} scale={1.3}>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
         <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
@@ -146,7 +152,7 @@ export default function Catch1RocketAlert({ position, rotation }) {
       height={0.1}
     >
       CATCH!
-      <meshStandardMaterial color='turquoise'/>
+      <meshStandardMaterial color='red'/>
     </Text3D>
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
@@ -156,28 +162,28 @@ export default function Catch1RocketAlert({ position, rotation }) {
       height={0.1}
     >
       BONUS THROW
-      <meshStandardMaterial color='turquoise'/>
+      <meshStandardMaterial color='red'/>
     </Text3D>
     <group ref={borderMesh0Ref}>
       <YootEmoji/>
     </group>
     <group ref={borderMesh1Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
     <group ref={borderMesh2Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
     <group ref={borderMesh3Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
     <group ref={borderMesh4Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
     <group ref={borderMesh5Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
     <group ref={borderMesh6Ref}>
-      <Star scale={0.2} color='turquoise'/>
+      <Star scale={0.2} color='red'/>
     </group>
   </animated.group>
 }

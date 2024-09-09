@@ -112,7 +112,7 @@ export default function Catch1UfoAlert({ position, rotation }) {
     >
       <meshStandardMaterial color='black' opacity={0.7} transparent/>
     </mesh>
-    return <group name='catch-picture'>
+    <group name='catch-picture'>
       <Rocket
         position={[1, 0.4, -1]} 
         rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 

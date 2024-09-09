@@ -557,7 +557,7 @@ io.on("connect", async (socket) => {
         // for testing
         let outcome;
         if (room.gamePhase === 'pregame') {
-          if (room.turn.team === 1) {
+          if (room.turn.team === 0) {
             outcome = 5
           } else {
             outcome = 4
