@@ -391,13 +391,10 @@ export const SocketManager = () => {
       const currentPlayerName = teamsUpdate[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
       setCurrentPlayerName(currentPlayerName)
       
-      // if out of moves, setAlerts(['turn'])
-      // else if catch, setAlerts([`catch${amount}`])
-        // check if any pieces returned home in the opposing team (turn didn't pass)
       if (turnPrev.team !== turnUpdate.team) {
         setAlerts(['turn'])
       } else {
-        const opposingTeam = turnUpdate === 0 ? 1 : 0;
+        const opposingTeam = turnUpdate.team === 0 ? 1 : 0;
         const opposingTeamPiecesPrev = teamsPrev[opposingTeam].pieces;
         const opposingTeamPiecesUpdate = teamsUpdate[opposingTeam].pieces
         let numPiecesCaught = calculateNumPiecesCaught(opposingTeamPiecesPrev, opposingTeamPiecesUpdate)

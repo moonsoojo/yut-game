@@ -16,6 +16,7 @@ import MoAlert from "./alerts/MoAlert";
 import OutAlert from "./alerts/OutAlert";
 import BackdoAlert from "./alerts/BackdoAlert";
 import Catch1RocketAlert from "./alerts/Catch1RocketAlert";
+import Catch1UfoAlert from "./alerts/Catch1UfoAlert";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
@@ -713,15 +714,14 @@ export default function Alert({ position, rotation }) {
     }
 
     function CatchAlert() {
-      console.log(`[Alert] catch alert`)
       const [catchOutcome] = useAtom(catchOutcomeAtom)
       return <animated.group scale={springs.catchAlertScale}>
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }
-        {/* { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> }
-        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> }
-        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> }
+        {/* { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> } */}
+        {/* { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> } */}
+        {/* { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> } */}
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 1 && <Catch1UfoAlert/> }
-        { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
+        {/* { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
         { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> }
         { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> } */}
       </animated.group>
