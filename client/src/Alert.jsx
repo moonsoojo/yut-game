@@ -19,6 +19,8 @@ import Catch1RocketAlert from "./alerts/Catch1RocketAlert";
 import Catch1UfoAlert from "./alerts/Catch1UfoAlert";
 import Catch2RocketAlert from "./alerts/Catch2RocketAlert";
 import Catch2UfoAlert from "./alerts/Catch2UfoAlert";
+import Catch3RocketAlert from "./alerts/Catch3RocketAlert";
+import Catch3UfoAlert from "./alerts/Catch3UfoAlert";
 
 export default function Alert({ position, rotation }) {
     console.log(`[Alert]`);
@@ -154,7 +156,7 @@ export default function Alert({ position, rotation }) {
                 tension: 170,
                 friction: 26
             },
-            delay: 1000
+            delay: 1500
           })
         }
       }
@@ -720,11 +722,11 @@ export default function Alert({ position, rotation }) {
       return <animated.group scale={springs.catchAlertScale}>
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }
         { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> }
-        {/* { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> } */}
+        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> }
         {/* { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> } */}
         { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 1 && <Catch1UfoAlert/> }
         { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
-        {/* { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> } */}
+        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> }
         {/* { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> } */}
       </animated.group>
     }

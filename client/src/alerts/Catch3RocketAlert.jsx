@@ -9,7 +9,7 @@ import { animated, useSpring } from "@react-spring/three";
 import { turnAtom } from "../GlobalState";
 import { useAtom } from "jotai";
 
-export default function Catch1RocketAlert({ position, rotation }) {
+export default function Catch3RocketAlert({ position, rotation }) {
   console.log(`[Catch1RocketAlert]`)
   const { nodes, materials } = useGLTF('models/alert-background.glb')
   const [turn] = useAtom(turnAtom)
@@ -102,6 +102,59 @@ export default function Catch1RocketAlert({ position, rotation }) {
     e.stopPropagation();
   }
 
+  function UfoCatchRocket() {
+    const rocketGroupRef0 = useRef()
+    const rocketGroupRef1 = useRef()
+    const rocketGroupRef2 = useRef()
+    const rocketGroupRefs = [rocketGroupRef0, rocketGroupRef1, rocketGroupRef2]
+    useFrame((state, delta) => {
+      for (let i = 0; i < rocketGroupRefs.length; i++) {
+        rocketGroupRefs[i].current.rotation.x = state.clock.elapsedTime + i * 0.5
+        rocketGroupRefs[i].current.rotation.y = state.clock.elapsedTime + i * 0.3
+        rocketGroupRefs[i].current.rotation.z = state.clock.elapsedTime + i * 0.6
+      }
+    })
+    return <group name='catch-picture'>
+      <Ufo
+        position={[0.9, 0.4, -0.9]} 
+        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
+        scale={1}
+        glassOpacity={0.3}
+      />
+      <mesh position={[0.9, 0.4, -0.2]}>
+        <sphereGeometry args={[0.05, 32, 16]}/>
+        <meshStandardMaterial color='turquoise'/>
+      </mesh>
+      <mesh position={[0.9, 0.4, 0.1]}>
+        <sphereGeometry args={[0.05, 32, 16]}/>
+        <meshStandardMaterial color='turquoise'/>
+      </mesh>
+      <group ref={rocketGroupRef0} position={[0.8, 0.4, 0.6]} >
+        <Rocket 
+          rotation={[Math.PI/2, -Math.PI/8 * 7, Math.PI/2]} 
+          scale={0.6}
+        />
+      </group>
+      <group ref={rocketGroupRef1} position={[0.8, 0.4, 1]} >
+        <Rocket 
+          rotation={[Math.PI/2, -Math.PI/8 * 7, Math.PI/2]} 
+          scale={0.6}
+        />
+      </group>
+      <group ref={rocketGroupRef2} position={[1.2, 0.4, 0.8]} >
+        <Rocket 
+          rotation={[Math.PI/2, -Math.PI/8 * 7, Math.PI/2]} 
+          scale={0.6}
+        />
+      </group>
+      <group position={[0.9, 0.3, 0.8]} scale={1.5}>
+        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>
+        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
+        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
+      </group>
+    </group>
+  }
+
   return <animated.group position={position} rotation={rotation} scale={springs.scale} onPointerDown={(e) => handleAlertClick(e)}>
     <mesh
       castShadow
@@ -112,32 +165,7 @@ export default function Catch1RocketAlert({ position, rotation }) {
     >
       <meshStandardMaterial color='black' opacity={0.7} transparent/>
     </mesh>
-    <group name='catch-picture'>
-      <Ufo
-        position={[0.9, 0.4, -0.9]} 
-        rotation={[Math.PI/2, -Math.PI/8 * 4, Math.PI/2]} 
-        scale={0.9}
-        glassOpacity={0.3}
-      />
-      <mesh position={[1, 0.4, -0.2]}>
-        <sphereGeometry args={[0.05, 32, 16]}/>
-        <meshStandardMaterial color='turquoise'/>
-      </mesh>
-      <mesh position={[1, 0.4, 0.1]}>
-        <sphereGeometry args={[0.05, 32, 16]}/>
-        <meshStandardMaterial color='turquoise'/>
-      </mesh>
-      <Rocket 
-        position={[1, 0.6, 0.8]} 
-        rotation={[Math.PI/2, -Math.PI/8 * 5, Math.PI/2]} 
-        scale={0.6}
-      />
-      <group position={[1, 0.3, 0.8]} scale={1.3}>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[1, 2, 1]} color='#E73D3D'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.8, 3, 0.8]} color='orange'/>
-        <BamImage position={[0, 0, 0]} rotation={[0, -Math.PI, 0]} scale={[0.6, 4, 0.6]} color='yellow'/>
-      </group>
-    </group>
+    <UfoCatchRocket/>
     <Text3D
       font="fonts/Luckiest Guy_Regular.json"
       rotation={[Math.PI/2, Math.PI, Math.PI/2]}
