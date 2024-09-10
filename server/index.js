@@ -211,13 +211,21 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               legalTiles: data.fullDocument.legalTiles
             })
           } else if (serverEvent === "throwYoot") {
-            let yootOutcome = data.fullDocument.yootOutcome
-            let yootAnimation = data.fullDocument.yootAnimation
-            let currentTeam = data.fullDocument.turn.team
-            let throwCount = data.fullDocument.teams[currentTeam].throws
-            let teams = roomPopulated.teams
-            let turn = data.fullDocument.turn
-            io.to(userSocketId).emit('throwYoot', { yootOutcome, yootAnimation, throwCount, teams, turn })
+            io.to(userSocketId).emit('throwYoot', { 
+              yootOutcome: data.fullDocument.yootOutcome, 
+              yootAnimation: data.fullDocument.yootAnimation, 
+              teams: roomPopulated.teams, 
+              turn: data.fullDocument.turn
+            })
+          } else if (serverEvent === "score") {
+            io.to(userSocketId).emit('score', { 
+              teams: roomPopulated.teams, 
+              turnUpdate: data.fullDocument.turn,
+              legalTiles: data.fullDocument.legalTiles,
+              tiles: data.fullDocument.tiles,
+              gameLogs: data.fullDocument.gameLogs,
+              selection: data.fullDocument.selection
+            })
           } else {
             console.log(`[Room.watch] room`)
             io.to(userSocketId).emit('room', roomPopulated)
@@ -555,18 +563,18 @@ io.on("connect", async (socket) => {
 
       if (room.teams[user.team].throws > 0) {
 
-        const outcome = pickOutcome()
+        // const outcome = pickOutcome()
         // for testing
-        // let outcome;
-        // if (room.gamePhase === 'pregame') {
-        //   if (room.turn.team === 1) {
-        //     outcome = 5
-        //   } else {
-        //     outcome = 4
-        //   }
-        // } else if (room.gamePhase === 'game') {
-        //   outcome = 1
-        // }
+        let outcome;
+        if (room.gamePhase === 'pregame') {
+          if (room.turn.team === 0) {
+            outcome = 5
+          } else {
+            outcome = 4
+          }
+        } else if (room.gamePhase === 'game') {
+          outcome = 5
+        }
         const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 
@@ -1059,6 +1067,7 @@ io.on("connect", async (socket) => {
       }
 
       operation['$push']['gameLogs'] = { '$each' : gameLogs }
+      operation['$set']['serverEvent'] = 'score'
 
       await Room.findOneAndUpdate(
         { 

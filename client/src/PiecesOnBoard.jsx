@@ -155,6 +155,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -300,6 +301,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -443,6 +445,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -586,6 +589,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -730,6 +734,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -875,6 +880,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -1020,6 +1026,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -1164,6 +1171,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
+                        delay: 1000
                     },
                     {
                         sizeTwink: 0.1,
@@ -1282,8 +1290,8 @@ export default function PiecesOnBoard() {
           borderMesh6Ref
         ]
 
-        const height = 1.1
-        const width = 1.8
+        const height = 1.7
+        const width = 2.5
         useFrame((state, delta) => {
           for (let i = 0; i < borderMeshRefs.length; i++) {      
             borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
@@ -1301,35 +1309,35 @@ export default function PiecesOnBoard() {
             </mesh>
             <Text3D
                 font="fonts/Luckiest Guy_Regular.json" 
-                position={[-1.1, 0.1, -0.1]}
+                position={[-1.4, 0.1, -0.1]}
                 rotation={[-Math.PI/2, 0, 0]}
                 height={0.01}
                 lineHeight={0.9} 
-                size={0.35}
+                size={0.46}
             >
-                {`Welcome\nBack!`}
+                {`Welcome\n     Back!`}
                 <meshStandardMaterial color='yellow'/>
             </Text3D>
             <group ref={borderMesh0Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
             <group ref={borderMesh1Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
             <group ref={borderMesh2Ref}>
-                <Star scale={0.1} color='yellow'/>
+                <Star scale={0.15} color='yellow'/>
             </group>
             <group ref={borderMesh3Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
             <group ref={borderMesh4Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
             <group ref={borderMesh5Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
             <group ref={borderMesh6Ref}>
-                <Star scale={0.1} color='yellow' />
+                <Star scale={0.15} color='yellow' />
             </group>
         </animated.group>
     }

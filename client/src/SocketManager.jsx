@@ -305,10 +305,9 @@ export const SocketManager = () => {
 
     // hybrid: yoot thrown should not be set in room update.
     // it should only be updated on throw yoot (from the server).
-    socket.on('throwYoot', ({ yootOutcome, yootAnimation, throwCount, teams, turn }) => {
+    socket.on('throwYoot', ({ yootOutcome, yootAnimation, teams, turn }) => {
       setYootOutcome(yootOutcome)
       setYootAnimation(yootAnimation)
-      setThrowCount(throwCount)
       setHasTurn(clientHasTurn(socket.id, teams, turn))
     })
 
@@ -441,6 +440,42 @@ export const SocketManager = () => {
       setPieceTeam1Id1(teamsUpdate[1].pieces[1])
       setPieceTeam1Id2(teamsUpdate[1].pieces[2])
       setPieceTeam1Id3(teamsUpdate[1].pieces[3])
+      setSelection(selection)
+      setGameLogs(gameLogs)
+    })
+
+    socket.on("score", ({ teams, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
+      console.log(`[SocketManager][score]`)
+      setTeams(teams)
+      let turnPrev;
+      setTurn((prev) => {
+        turnPrev = prev;
+        return turnUpdate
+      })
+      
+      const currentPlayerName = teams[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
+      setCurrentPlayerName(currentPlayerName)
+      
+      if (turnPrev.team !== turnUpdate.team) {
+        setAlerts(['turn'])
+        setAnimationPlaying(true)
+      } else {
+        setAlerts([])
+      }
+
+      setPieceAnimationPlaying(true)
+      // whenever turn could have changed
+      setHasTurn(clientHasTurn(socket.id, teams, turnUpdate))
+      setLegalTiles(legalTiles)
+      setTiles(tiles)
+      setPieceTeam0Id0(teams[0].pieces[0])
+      setPieceTeam0Id1(teams[0].pieces[1])
+      setPieceTeam0Id2(teams[0].pieces[2])
+      setPieceTeam0Id3(teams[0].pieces[3])
+      setPieceTeam1Id0(teams[1].pieces[0])
+      setPieceTeam1Id1(teams[1].pieces[1])
+      setPieceTeam1Id2(teams[1].pieces[2])
+      setPieceTeam1Id3(teams[1].pieces[3])
       setSelection(selection)
       setGameLogs(gameLogs)
     })

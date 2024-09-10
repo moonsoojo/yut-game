@@ -1,9 +1,9 @@
 import { Text3D, useGLTF } from '@react-three/drei';
 import { useFrame, useGraph } from '@react-three/fiber';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useMemo, useRef } from 'react';
 import { SkeletonUtils } from 'three-stdlib';
-import { animationPlayingAtom, hasTurnAtom } from './GlobalState';
+import { animationPlayingAtom, hasTurnAtom, pieceAnimationPlayingAtom } from './GlobalState';
 import { socket } from './SocketManager';
 import { useParams } from "wouter";
 
@@ -17,8 +17,9 @@ export default function YootButtonNew({ position, rotation, scale, hasThrow }) {
   const params = useParams();
 
   const [animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
+  const pieceAnimationPlaying = useAtomValue(pieceAnimationPlayingAtom)
   const [hasTurn] = useAtom(hasTurnAtom)
-  const enabled = !animationPlaying && hasTurn && hasThrow // add "hasThrow"
+  const enabled = !animationPlaying && !pieceAnimationPlaying && hasTurn && hasThrow // add "hasThrow"
 
   const scaleOuter = [1.4, -0.079, 1]
   const scaleInner = [scaleOuter[0] - 0.1, scaleOuter[1]+0.2, scaleOuter[2]-0.1]
