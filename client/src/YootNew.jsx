@@ -10,10 +10,11 @@ import { LoopOnce } from 'three'
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { socket } from './SocketManager';
 import { useParams } from 'wouter';
-import { clientAtom, hasTurnAtom, yootOutcomeAtom } from './GlobalState';
-import { useAtom } from 'jotai';
+import { clientAtom, gamePhaseAtom, hasTurnAtom, particleSettingAtom, yootOutcomeAtom } from './GlobalState';
+import { useAtom, useAtomValue } from 'jotai';
+import meteorSettings from './particles/Meteors';
 
-export default function YootNew({ setAnimation, animation, scale, position }) {
+export default function YootNew({ setAnimation, animation, scale, position, device }) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('models/yoot-animated.glb')
   const { actions, mixer } = useAnimations(animations, group)
@@ -21,6 +22,8 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
   const [hasTurn] = useAtom(hasTurnAtom)
   const [sleepCount, setSleepCount] = useState(0);
   const [yootOutcome, setYootOutcome] = useAtom(yootOutcomeAtom)
+  const [particleSetting, setParticleSetting] = useAtom(particleSettingAtom)
+  const gamePhase = useAtomValue(gamePhaseAtom)
 
   useEffect(() => {
     const fn = () => { 
@@ -46,6 +49,9 @@ export default function YootNew({ setAnimation, animation, scale, position }) {
     if (sleepCount === 4) {
       if (hasTurn) {
         socket.emit("recordThrow", { move: yootOutcome, roomId: params.id })
+      }
+      if (gamePhase === 'game' && (yootOutcome === 4 || yootOutcome === 5)) {
+        setParticleSetting({ emitters: meteorSettings(device) })
       }
       // if not reset, yoots will not rotate correctly on throw
       setAnimation(null)
