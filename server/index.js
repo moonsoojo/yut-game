@@ -224,7 +224,9 @@ Room.watch([], { fullDocument: 'updateLookup' }).on('change', async (data) => {
               legalTiles: data.fullDocument.legalTiles,
               tiles: data.fullDocument.tiles,
               gameLogs: data.fullDocument.gameLogs,
-              selection: data.fullDocument.selection
+              selection: data.fullDocument.selection,
+              results: data.fullDocument.results,
+              gamePhase: data.fullDocument.gamePhase
             })
           } else {
             console.log(`[Room.watch] room`)

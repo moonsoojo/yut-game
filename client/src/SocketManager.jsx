@@ -444,8 +444,7 @@ export const SocketManager = () => {
       setGameLogs(gameLogs)
     })
 
-    socket.on("score", ({ teams, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
-      console.log(`[SocketManager][score]`)
+    socket.on("score", ({ teams, turnUpdate, legalTiles, tiles, gameLogs, selection, gamePhase, results }) => {
       setTeams(teams)
       let turnPrev;
       setTurn((prev) => {
@@ -478,6 +477,8 @@ export const SocketManager = () => {
       setPieceTeam1Id3(teams[1].pieces[3])
       setSelection(selection)
       setGameLogs(gameLogs)
+      setGamePhase(gamePhase)
+      setWinner(results[results.length-1])
     })
 
     socket.on('select', ({ selection, legalTiles }) => { //receive
