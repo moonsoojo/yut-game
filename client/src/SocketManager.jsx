@@ -390,6 +390,9 @@ export const SocketManager = () => {
     }
 
     socket.on("move", ({ teamsUpdate, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
+      // alert for join
+      // set position based on where piece is joined
+      // set camera zoom farther so piece position isn't different in mobile and landscape
       console.log(`[SocketManager][move]`)
       let teamsPrev;
       setTeams((prev) => {
