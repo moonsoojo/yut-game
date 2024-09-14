@@ -18,6 +18,8 @@ import GameCamera from './GameCamera';
 import StarsShader from './shader/stars/StarsShader';
 import Rocket from './meshes/Rocket';
 import Ufo from './meshes/Ufo';
+import MilkyWay from './shader/MilkyWay';
+import * as THREE from 'three';
 
 export default function Home2() {
 
@@ -289,5 +291,16 @@ export default function Home2() {
     </group>
     
     <StarsShader count={1000} size={0.2}/>
+    
+    {/* stops on re-render */}
+    <MilkyWay
+      rotation={[-Math.PI/2, 0, -35.0]} 
+      position={[4, -1, -0.5]} 
+      scale={10}
+      brightness={0.3}
+      colorTint1={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint2={new THREE.Vector4(0, 1, 1, 1.0)}
+      colorTint3={new THREE.Vector4(0, 1, 1, 1.0)}
+    />
   </>
 }
