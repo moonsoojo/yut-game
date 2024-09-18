@@ -14,7 +14,6 @@ import TaurusConstellationShiny from './meshes/TaurusConstellationShiny';
 import Alert from "./Alert.jsx";
 
 export default function Experience() {
-  console.log(`[Experience]`)
   return <group>
     {/* add game */}
     <Game/>

@@ -27,7 +27,6 @@ import YootAlertPregame from "./alerts/YootAlertPregame";
 import MoAlertPregame from "./alerts/MoAlertPregame";
 
 export default function Alert({ position, rotation }) {
-    console.log(`[Alert]`);
     const { nodes, materials } = useGLTF('models/alert-background.glb')
     
     const [alerts] = useAtom(alertsAtom)
@@ -269,6 +268,13 @@ export default function Alert({ position, rotation }) {
       }
       return animations
     }
+
+    // score animation: piece movement without alert and twink
+    // end with scaling down instead of scaling up and down
+    // add score alert here
+    // on rest, fire it
+    // onStart of that alert, CreateRandomFirework with use hook
+    // increase fireworks with number of finishes
 
     useEffect(() => {
       const toAnimations = transformAlertsToAnimations(alerts)
