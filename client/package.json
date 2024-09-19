@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "decimal.js": "^10.4.3",
     "firebase": "^10.7.1",
+    "gsap": "^3.12.5",
     "jotai": "^2.3.1",
     "leva": "^0.9.35",
     "mongodb": "^6.5.0",

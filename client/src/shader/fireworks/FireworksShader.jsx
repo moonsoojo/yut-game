@@ -25,17 +25,18 @@ export function useFireworksShader() {
     })
 
     const textures = [
-        useLoader(TextureLoader, 'textures/particles/1.png'),
-        useLoader(TextureLoader, 'textures/particles/2.png'),
-        useLoader(TextureLoader, 'textures/particles/3.png'),
-        useLoader(TextureLoader, 'textures/particles/4.png'),
-        useLoader(TextureLoader, 'textures/particles/5.png'),
+        // useLoader(TextureLoader, 'textures/particles/1.png'),
+        // useLoader(TextureLoader, 'textures/particles/2.png'),
+        // useLoader(TextureLoader, 'textures/particles/3.png'),
+        // useLoader(TextureLoader, 'textures/particles/4.png'),
+        // useLoader(TextureLoader, 'textures/particles/5.png'),
         useLoader(TextureLoader, 'textures/particles/6.png'),
-        useLoader(TextureLoader, 'textures/particles/7.png'),
-        useLoader(TextureLoader, 'textures/particles/8.png'),
+        // useLoader(TextureLoader, 'textures/particles/7.png'),
+        // useLoader(TextureLoader, 'textures/particles/8.png'),
     ]
 
     function CreateFirework({count, position, size, texture, radius, color}) {
+        console.log('CreateFirework')
         const positionsArray = new Float32Array(count * 3)
         const sizesArray = new Float32Array(count)
         const timeMultipliersArray = new Float32Array(count)
@@ -100,17 +101,17 @@ export function useFireworksShader() {
     }
 
     function CreateRandomFirework() {
-        const count = Math.round(400 + Math.random() * 1000);
+        const count = Math.round(600 + Math.random() * 400);
         const position = new THREE.Vector3(
             (Math.random()-0.5) * 2, 
             Math.random(),
             (Math.random()-0.5) * 2, 
         )
-        const size = 0.15 + Math.random() * 0.06
+        const size = 0.15 + Math.random() * 0.04
         const texture = textures[Math.floor(Math.random() * textures.length)]
-        const radius = 0.8 + Math.random() * 0.6
+        const radius = 0.6 + Math.random() * 0.4
         const color = new THREE.Color();
-        color.setHSL(Math.random(), 1, 0.7)
+        color.setHSL(Math.random(), 1, 0.6)
         CreateFirework({
             count,
             position,
@@ -121,5 +122,5 @@ export function useFireworksShader() {
         })
     }
 
-    return CreateRandomFirework;
+    return [CreateFirework];
 }

@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { useGLTF, Text3D } from "@react-three/drei";
 import Rocket from "./meshes/Rocket";
@@ -6,6 +6,7 @@ import Ufo from "./meshes/Ufo";
 import { animated, useSpring } from "@react-spring/three";
 import Star from "./meshes/Star";
 import { useAtom, useAtomValue } from "jotai";
+import * as THREE from 'three';
 import { alertsAtom, animationPlayingAtom, catchOutcomeAtom, currentPlayerNameAtom, gamePhaseAtom, mainAlertAtom, pieceAnimationPlayingAtom, teamsAtom, turnAtom, yootOutcomeAtom } from "./GlobalState";
 import { formatName } from "./helpers/helpers";
 import DoAlert from "./alerts/DoAlert";
@@ -25,6 +26,8 @@ import Catch4RocketAlert from "./alerts/Catch4RocketAlert";
 import Catch4UfoAlert from "./alerts/Catch4UfoAlert";
 import YootAlertPregame from "./alerts/YootAlertPregame";
 import MoAlertPregame from "./alerts/MoAlertPregame";
+import { useFireworksShader } from "./shader/fireworks/FireworksShader";
+import { TextureLoader } from 'three/src/loaders/TextureLoader'
 
 export default function Alert({ position, rotation }) {
     const { nodes, materials } = useGLTF('models/alert-background.glb')
@@ -34,6 +37,18 @@ export default function Alert({ position, rotation }) {
     const [gamePhase] = useAtom(gamePhaseAtom)
     const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
     const pieceAnimationPlaying = useAtomValue(pieceAnimationPlayingAtom)
+    const [CreateFirework] = useFireworksShader();
+    // adding it in useEffect throws uncaught Promise
+    const fireworkTextures = [
+      // useLoader(TextureLoader, 'textures/particles/1.png'),
+      // useLoader(TextureLoader, 'textures/particles/2.png'),
+      useLoader(TextureLoader, 'textures/particles/3.png'),
+      // useLoader(TextureLoader, 'textures/particles/4.png'),
+      useLoader(TextureLoader, 'textures/particles/5.png'),
+      useLoader(TextureLoader, 'textures/particles/6.png'),
+      // useLoader(TextureLoader, 'textures/particles/7.png'),
+      useLoader(TextureLoader, 'textures/particles/8.png'),
+    ]
 
     const [springs, api] = useSpring(() => ({
       from: {
@@ -49,7 +64,8 @@ export default function Alert({ position, rotation }) {
         pregameTieAlertScale: 0,
         pregameRocketsWinAlertScale: 0,
         pregameUfosWinAlertScale: 0,
-        catchAlertScale: 0
+        catchAlertScale: 0,
+        scoreAlertScale: 0,
       },
     }))
 
@@ -264,6 +280,22 @@ export default function Alert({ position, rotation }) {
             },
             delay: 1500
           })
+        } else if (alerts[i] === 'score') {
+          animations.push({
+            scoreAlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            scoreAlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1500
+          })
         }
       }
       return animations
@@ -276,8 +308,62 @@ export default function Alert({ position, rotation }) {
     // onStart of that alert, CreateRandomFirework with use hook
     // increase fireworks with number of finishes
 
+
+    function launchScoreFireworks() {
+
+      // firework 1 - left
+      const count = Math.round(700 + Math.random() * 400);
+      const position = new THREE.Vector3(
+          -1.8 + Math.random()*0.1, 
+          0,
+          -0.9 + Math.random()*0.2, 
+      )
+
+      const size = 0.15 + Math.random() * 0.04
+      const texture = fireworkTextures[Math.floor(Math.random() * fireworkTextures.length)]
+      const radius = 1.0 + Math.random() * 0.2
+      const color = new THREE.Color();
+      color.setHSL(0.01, 1, 0.6)
+
+      CreateFirework({ count, position, size, texture, radius, color });
+
+      // firework 2 - right
+      setTimeout(() => {
+        // setting 2
+        const count = Math.round(700 + Math.random() * 300);
+        const position = new THREE.Vector3(
+            1.8 + Math.random()*0.1, 
+            0,
+            -0.9 + Math.random()*0.2, 
+        )
+        const size = 0.15 + Math.random() * 0.04
+        const texture = fireworkTextures[Math.floor(Math.random() * fireworkTextures.length)]
+        const radius = 1.0 + Math.random() * 0.2
+        const color = new THREE.Color();
+        color.setHSL(0.01, 1, 0.6)
+        CreateFirework({ count, position, size, texture, radius, color });
+      }, 500)
+
+      // firework 3 - middle
+      setTimeout(() => {
+        const count = Math.round(600 + Math.random() * 400);
+        const position = new THREE.Vector3(
+            0, 
+            0,
+            -1.9 + Math.random() * 0.1, 
+        )
+        const size = 0.15 + Math.random() * 0.04
+        const texture = fireworkTextures[Math.floor(Math.random() * fireworkTextures.length)]
+        const radius = 1.0 + Math.random() * 0.2
+        const color = new THREE.Color();
+        color.setHSL(0.01, 1, 0.6)
+        CreateFirework({ count, position, size, texture, radius, color });
+      }, 1000)
+    }
+
     useEffect(() => {
       const toAnimations = transformAlertsToAnimations(alerts)
+      console.log('alertOutside')
       if (!pieceAnimationPlaying) {
         api.start({
           from: {
@@ -292,12 +378,19 @@ export default function Alert({ position, rotation }) {
             yootOutcome5AlertScale: 0,
             pregameTieAlertScale: 0,
             pregameUfosWinAlertScale: 0,
+            catchAlertScale: 0,
+            scoreAlertScale: 0,
           },
           to: toAnimations,
           loop: false,
           onStart: () => setAnimationPlaying(true),
           onRest: () => setAnimationPlaying(false),
         })
+        
+        // if I add it in 'onStart' it will trigger on every element of the 'to' array
+        if (alerts[0] === 'score') {
+          launchScoreFireworks()
+        }
       }
     }, [alerts, pieceAnimationPlaying])
 
@@ -859,7 +952,6 @@ export default function Alert({ position, rotation }) {
       </animated.group>
     }
 
-
     function CatchAlert() {
       const [catchOutcome] = useAtom(catchOutcomeAtom)
       return <animated.group scale={springs.catchAlertScale}>
@@ -873,6 +965,74 @@ export default function Alert({ position, rotation }) {
         { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> }
       </animated.group>
     }
+
+    function ScoreAlert() {
+      const borderMesh0Ref = useRef();
+      const borderMesh1Ref = useRef();
+      const borderMesh2Ref = useRef();
+      const borderMesh3Ref = useRef();
+      const borderMesh4Ref = useRef();
+      const borderMesh5Ref = useRef();
+      const borderMesh6Ref = useRef();
+      const borderMeshRefs = [
+        borderMesh0Ref,
+        borderMesh1Ref,
+        borderMesh2Ref,
+        borderMesh3Ref,
+        borderMesh4Ref,
+        borderMesh5Ref,
+        borderMesh6Ref
+      ]
+
+      const height = 1.7
+      const width = 2.5
+      useFrame((state, delta) => {
+        for (let i = 0; i < borderMeshRefs.length; i++) {      
+          borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
+          borderMeshRefs[i].current.position.y = 0.05
+          borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
+        }
+      })
+
+      return <animated.group scale={springs.scoreAlertScale} rotation={[0,-Math.PI/2,0]}>
+          <mesh scale={[width, 1,height]}>
+              <cylinderGeometry args={[1, 1, 0.01, 32]}/>
+              <meshStandardMaterial color='black' transparent opacity={0.9}/>
+          </mesh>
+          <Text3D
+              font="fonts/Luckiest Guy_Regular.json" 
+              position={[-1.4, 0.1, -0.1]}
+              rotation={[-Math.PI/2, 0, 0]}
+              height={0.01}
+              lineHeight={0.9} 
+              size={0.46}
+          >
+              {`Welcome\n     Back!`}
+              <meshStandardMaterial color='yellow'/>
+          </Text3D>
+          <group ref={borderMesh0Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+          <group ref={borderMesh1Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+          <group ref={borderMesh2Ref}>
+              <Star scale={0.15} color='yellow'/>
+          </group>
+          <group ref={borderMesh3Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+          <group ref={borderMesh4Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+          <group ref={borderMesh5Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+          <group ref={borderMesh6Ref}>
+              <Star scale={0.15} color='yellow' />
+          </group>
+      </animated.group>
+  }
 
     return (gamePhase === 'pregame' || gamePhase === 'game') && <group position={position} rotation={rotation}>
       <TurnAlert/>
@@ -888,5 +1048,6 @@ export default function Alert({ position, rotation }) {
       <YootOutcome4Alert/>
       <YootOutcome5Alert/>
       <CatchAlert/>
+      <ScoreAlert/>
     </group>
   }

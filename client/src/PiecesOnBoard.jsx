@@ -114,7 +114,7 @@ export default function PiecesOnBoard() {
     useEffect(() => {
         const path = pieceTeam0Id0.lastPath
         if (path.length > 0) {
-            if (path[path.length-1] === 29) {
+            if (path[path.length-1] === 29) { // Score
                 const pathToEarth = path.slice(0, path.length-1)
                 const toAnimations = pathToEarth.map((value) => {
                     return {
@@ -134,12 +134,11 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[0][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[0][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
@@ -147,32 +146,14 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[0][0]*1, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
-                            roundNum(4.5 + idOffsets[0][2]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[0][2]*1, 1) * responsiveScale,
                         ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 300
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)

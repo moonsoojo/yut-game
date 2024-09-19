@@ -459,12 +459,14 @@ export const SocketManager = () => {
       setCurrentPlayerName(currentPlayerName)
       
       if (turnPrev.team !== turnUpdate.team) {
-        setAlerts(['turn'])
-        setAnimationPlaying(true)
+        setAlerts(['score', 'turn'])
+        // increase length by num scored
       } else {
-        setAlerts([])
+        setAlerts(['score'])
+        // increase length by num scored
       }
 
+      setAnimationPlaying(true)
       setPieceAnimationPlaying(true)
       // whenever turn could have changed
       setHasTurn(clientHasTurn(socket.id, teams, turnUpdate))

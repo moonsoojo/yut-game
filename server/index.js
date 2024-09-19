@@ -565,18 +565,18 @@ io.on("connect", async (socket) => {
 
       if (room.teams[user.team].throws > 0) {
 
-        const outcome = pickOutcome()
+        // const outcome = pickOutcome()
         // for testing
-        // let outcome;
-        // if (room.gamePhase === 'pregame') {
-        //   if (room.turn.team === 0) {
-        //     outcome = 5
-        //   } else {
-        //     outcome = 4
-        //   }
-        // } else if (room.gamePhase === 'game') {
-        //   outcome = 5
-        // }
+        let outcome;
+        if (room.gamePhase === 'pregame') {
+          if (room.turn.team === 0) {
+            outcome = 5
+          } else {
+            outcome = 4
+          }
+        } else if (room.gamePhase === 'game') {
+          outcome = 5
+        }
         const animation = pickAnimation(outcome)
         await Room.findOneAndUpdate(
           { 
