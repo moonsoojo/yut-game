@@ -18,6 +18,7 @@ import CurvedArrow from './meshes/CurvedArrow';
 import TaurusConstellationShiny from './meshes/TaurusConstellationShiny';
 import * as THREE from 'three';
 import { AriesConstellation } from './meshes/AriesConstellation';
+import DottedTaurus from './shader/dottedTaurus.jsx/DottedTaurus';
 
 // Accept flag to enable click
 // Pass flag to Tile component
@@ -310,24 +311,26 @@ export default function Board({
     <WolfConstellation position={[-2.1,0,-1.2]} rotation={[-Math.PI/2, 0, 0]} scale={0.85}/>
     <RhinoConstellation position={[2.1,0,-1.3]} rotation={[-Math.PI/2, 0, 0]} scale={0.8}/>
     {/* <PegasusConstellation position={[-2.4, 0, 2.1]} scale={0.09}/> */}
-    <AriesConstellation position={[-2.2,0,3.9]} rotation={[-Math.PI/2, 0, 0]} scale={0.77}/>
+    <AriesConstellation position={[-1.9,0,3.4]} rotation={[-Math.PI/2, 0, 0]} scale={0.7}/>
     {/* <TaurusConstellation position={[2.3, 0, 3.5]} scale={0.8} rotation={[-Math.PI/2, 0, Math.PI/16]}/> */}
-    <TaurusConstellationShiny 
+    {/* <TaurusConstellationShiny 
       meshDir={"taurus-constellation-dhazele-2.glb"} 
       lightTexDir={'lightTaurusTexture.png'}
       meshIndex={1} 
+      rotation={[0, Math.PI/64, 0]}
       position={[1.2,0.0,1.85]} 
-      scale={0.9} rotation={[0,0.0,0.0]} 
-      baseColor={new THREE.Vector4(0.4,0.5,0.8,1.0)} 
-      glistenSpeed={2.0} 
-      glistenScale={500.0} 
-      glistenColorMultiplier={2.1}
+      scale={0.9}
+      baseColor={new THREE.Vector4(0.4,0.5,0.8,1.0)}
+      glistenSpeed={1.5} 
+      glistenScale={1000.0} 
+      glistenColorMultiplier={2}
       extrudeVal={0.15}
       lightColor={new THREE.Vector4(0.2, 0.3, 0.5, 0.2)}
-      lightScale={3.0}
-      lightPosition = {new THREE.Vector3(-0.24,-0.0,-1.4)}
+      lightScale={3.2}
+      lightPosition = {new THREE.Vector3(-0.2,-0.0,-1.4)}
       lightRotation = {[80.1,0.0,0.0]}
-      lightMultiplier = {1.3}
-    />
+      lightMultiplier = {2}
+    /> */}
+    <DottedTaurus position={[2.2, 0, 2.1]} scale={0.9}/>
   </animated.group>;
 }

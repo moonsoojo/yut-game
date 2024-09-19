@@ -272,7 +272,7 @@ export default function Home2() {
         <Board 
           showStart={true} 
           interactive={false}/>
-        <Pieces/>
+        {/* <Pieces/> */}
       </group> }
       { display === 'about' && <About 
         device={device}

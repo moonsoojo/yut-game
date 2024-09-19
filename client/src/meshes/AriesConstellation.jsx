@@ -14,7 +14,7 @@ export function AriesConstellation(props) {
           receiveShadow
           geometry={nodes.BezierCurve001.geometry}
           material={materials['Material.003']}
-          position={[0.596, -0.214, 1.705]}
+          position={[0,0,0]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.977}
         />

@@ -76,30 +76,7 @@ const lightFragmentShader = `
     vec3 result = vec3(baseColor.r, baseColor.g , baseColor.b );
     gl_FragColor = vec4((result*multiplier),alpha);
   }
-
 `
-
-const fragmentFreshnellShader =  `
-
-  varying vec2 vUv;
-  varying vec3 Position;
-  varying vec3 EyeVector;
-  varying vec3 Normal;
-  varying vec3 vNN;
-
-  float Freshnel(vec3 eyeVector, vec3 worldNormal){
-    return pow(-min(dot(eyeVector,normalize(worldNormal)),0.0),5.0);
-  }
-
-  void main(){
-    float brightness = Freshnel(EyeVector, vNN) * 1.2;
-    float mask = Freshnel(EyeVector,vNN) * 0.7;
-    mask = 1.-mask;
-    //brightness += pow(brightness,1.);
-    gl_FragColor = vec4(brightness * 0.5,brightness*0.5,brightness,brightness * mask * 2.);
-  }
-
-`;
 
 const fragmentShader = `
 
