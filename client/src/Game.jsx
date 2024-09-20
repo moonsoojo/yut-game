@@ -83,7 +83,6 @@ export default function Game() {
 
   function LetsPlayButton({ position }) {
 
-
     function DisabledButton({ position, scale }) {
       const button = useRef();
 
@@ -118,7 +117,7 @@ export default function Game() {
 
     function ActivatedButton({ position }) {
 
-      const [hover, setHover] = useState(false)
+      const [_hover, setHover] = useState(false)
   
       const backdropHeight = layout[device].game.letsPlayButton.activeButton.backdropHeight
       const backdropWidth = layout[device].game.letsPlayButton.activeButton.backdropWidth
@@ -146,9 +145,6 @@ export default function Game() {
       const letsPlayButton = useRef()
       useFrame((state) => {
         const time = state.clock.elapsedTime
-        // letsPlayButton.current.scale.x = Math.sin(time * 2) * 0.1 + 1
-        // letsPlayButton.current.scale.y = Math.sin(time * 2) * 0.1 + 1
-        // letsPlayButton.current.scale.z = Math.sin(time * 2) * 0.1 + 1
         if (Math.floor(time*1.3) % 2 === 0) {
           letsPlayTextMaterial.color.r = 0
           letsPlayTextMaterial.color.g = 0.3
@@ -188,7 +184,6 @@ export default function Game() {
             material={letsPlayBackgroundMaterial}
           >
             <cylinderGeometry args={[1, 1, 0.1, 48]}/>
-            {/* <meshStandardMaterial color={hover ? 'yellow' : 'green'} transparent opacity={hover ? 0.3 : 0.1} /> */}
           </mesh>
           <Text3D
             font="fonts/Luckiest Guy_Regular.json"
@@ -199,8 +194,7 @@ export default function Game() {
             lineHeight={layout[device].game.letsPlayButton.activeButton.text.lineHeight}
             material={letsPlayTextMaterial}
           >
-              {`Let's\nPlay!`}
-              {/* <meshStandardMaterial color={hover ? 'green' : 'yellow'}/> */}
+            {`Let's\nPlay!`}
           </Text3D>
         </group>
       </animated.group>

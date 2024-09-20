@@ -37,10 +37,7 @@ export default function JoinTeamModal({ position, rotation, scale }) {
     } else {
       setAlert("")
       socket.emit("joinTeam", { team: joinTeam, name }, ({ player }) => {
-        if (player) {
-          // localStorage.setItem('yootGame', JSON.stringify({
-          //   ...player
-          // }))
+        if (player) { // refactor into mongodb stream
           setName('')
           setJoinTeam(null);
         }

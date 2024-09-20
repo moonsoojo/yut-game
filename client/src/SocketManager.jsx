@@ -14,6 +14,7 @@ import {
   catchOutcomeAtom,
   pieceAnimationPlayingAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
+import { useParams } from "wouter";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -84,6 +85,7 @@ export const SocketManager = () => {
   const [_animationPlaying, setAnimationPlaying] = useAtom(animationPlayingAtom)
   const [_pieceAnimationPlaying, setPieceAnimationPlaying] = useAtom(pieceAnimationPlayingAtom)
 
+  // const params = useParams();
 
   useEffect(() => {
 
@@ -99,6 +101,22 @@ export const SocketManager = () => {
     })
     
     // socket.on('connect_failed', err => { console.log("[connect_failed]", err); setDisconnect(true) })
+
+    function findAndStoreClient(spectators, teams) {
+      // Find client from users
+      let users = teams[0].players.concat(teams[1].players.concat(spectators))
+
+      // Set it in global store and local storage
+      for (const user of users) {
+        if (user.socketId === socket.id) {
+          console.log('client found')
+          setClient(user)
+          localStorage.setItem('yootGame', JSON.stringify({
+            ...user
+          }))
+        }
+      }
+    }
 
     socket.on('room', (room) => {
       console.log(`[SocketManager] room`, room)
@@ -159,16 +177,7 @@ export const SocketManager = () => {
           setHostName(room.host.name)
       }
 
-      // Find client from users
-      let users = room.teams[0].players.concat(room.teams[1].players.concat(room.spectators))
-      for (const user of users) {
-        if (user.socketId === socket.id) {
-          setClient(user)
-          localStorage.setItem('yootGame', JSON.stringify({
-            ...user
-          }))
-        }
-      }
+      findAndStoreClient(room.spectators, room.teams);
 
       if (room.gamePhase === 'pregame' && room.yootThrown.player && !room.yootThrown.flag && (room.teams[0].pregameRoll === null) && (room.teams[1].pregameRoll === null)) {
         setPregameAlert({
@@ -492,11 +501,43 @@ export const SocketManager = () => {
       setWinner(results[results.length-1])
     })
 
-    socket.on('select', ({ selection, legalTiles }) => { //receive
-   
+    socket.on("select", ({ selection, legalTiles }) => { //receive
       // handle
       setSelection(selection)
       setLegalTiles(legalTiles)
+    })
+
+    socket.on("joinRoom", ({ spectators, teams, host, gamePhase }) => {
+      console.log("[joinRoom]")
+      setSpectators(spectators)
+      setTeams(teams);
+      setHostName(host.name)
+
+      findAndStoreClient(spectators, teams)
+      
+      if (gamePhase === 'lobby' && 
+        teams[0].players.length > 0 && 
+        teams[1].players.length > 0) {
+          setReadyToStart(true)
+        } else {
+          setReadyToStart(false)
+        }
+    })
+    
+    socket.on("joinTeam", ({ spectators, teams, gamePhase }) => {
+      console.log("[joinTeam]")
+      setSpectators(spectators)
+      setTeams(teams);
+      
+      findAndStoreClient(spectators, teams)
+      
+      if (gamePhase === 'lobby' && 
+        teams[0].players.length > 0 && 
+        teams[1].players.length > 0) {
+          setReadyToStart(true)
+        } else {
+          setReadyToStart(false)
+        }
     })
 
     socket.on('disconnect', () => {
