@@ -24,17 +24,6 @@ export function useFireworksShader() {
         sizes.resolution.set(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio)
     })
 
-    const textures = [
-        // useLoader(TextureLoader, 'textures/particles/1.png'),
-        // useLoader(TextureLoader, 'textures/particles/2.png'),
-        // useLoader(TextureLoader, 'textures/particles/3.png'),
-        // useLoader(TextureLoader, 'textures/particles/4.png'),
-        // useLoader(TextureLoader, 'textures/particles/5.png'),
-        useLoader(TextureLoader, 'textures/particles/6.png'),
-        // useLoader(TextureLoader, 'textures/particles/7.png'),
-        // useLoader(TextureLoader, 'textures/particles/8.png'),
-    ]
-
     function CreateFirework({count, position, size, texture, radius, color}) {
         console.log('CreateFirework')
         const positionsArray = new Float32Array(count * 3)
@@ -63,7 +52,6 @@ export function useFireworksShader() {
 
         texture.flipY = false;
 
-        // const firework = useRef();
         const geometry = new THREE.BufferGeometry()
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positionsArray, 3))
         geometry.setAttribute('aSize', new THREE.Float32BufferAttribute(sizesArray, 1))
@@ -86,7 +74,6 @@ export function useFireworksShader() {
         const points = new THREE.Points(geometry, material)
         points.position.copy(position)
         const destroy = () => { // may need to run on component unmount as well
-            console.log('destroy')
             scene.remove(points)
             geometry.dispose()
             material.dispose()
@@ -98,28 +85,6 @@ export function useFireworksShader() {
         )
 
         scene.add(points)
-    }
-
-    function CreateRandomFirework() {
-        const count = Math.round(600 + Math.random() * 400);
-        const position = new THREE.Vector3(
-            (Math.random()-0.5) * 2, 
-            Math.random(),
-            (Math.random()-0.5) * 2, 
-        )
-        const size = 0.15 + Math.random() * 0.04
-        const texture = textures[Math.floor(Math.random() * textures.length)]
-        const radius = 0.6 + Math.random() * 0.4
-        const color = new THREE.Color();
-        color.setHSL(Math.random(), 1, 0.6)
-        CreateFirework({
-            count,
-            position,
-            size,
-            texture,
-            radius,
-            color
-        })
     }
 
     return [CreateFirework];

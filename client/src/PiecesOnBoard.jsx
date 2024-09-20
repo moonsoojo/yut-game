@@ -153,7 +153,7 @@ export default function PiecesOnBoard() {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 300
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -161,11 +161,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id0.tile)) {
@@ -231,7 +230,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -261,12 +260,11 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[1][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[1][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[1][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
@@ -274,32 +272,14 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[1][0]*1, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*1, 1) * responsiveScale,
-                            roundNum(4.5 + idOffsets[1][2]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[1][2]*1, 1) * responsiveScale,
                         ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -307,11 +287,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id1.tile)) {
@@ -375,7 +354,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -405,45 +384,26 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[2][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[2][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
-                          roundNum(4.5 + idOffsets[2][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[2][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -451,11 +411,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id2.tile)) {
@@ -519,7 +478,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -547,47 +506,28 @@ export default function PiecesOnBoard() {
                 const scoreAnimation = [
                     {
                         position: [
-                            roundNum(3.5 + idOffsets[3][0]*2, 1) * responsiveScale,
+                            roundNum(0 + idOffsets[3][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[3][1]*2, 1) * responsiveScale,
-                            roundNum(3.5 + idOffsets[3][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[3][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(3.5 + idOffsets[3][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[3][1]*1, 1) * responsiveScale,
-                          roundNum(3.5 + idOffsets[3][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[3][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[3][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[3][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -595,11 +535,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam0Id3.tile)) {
@@ -664,7 +603,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -694,45 +633,26 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[0][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[0][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[0][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[0][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(0 + idOffsets[0][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
-                          roundNum(4.5 + idOffsets[0][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[0][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[0][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[0][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -740,11 +660,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id0.tile)) {
@@ -810,7 +729,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -840,45 +759,26 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[1][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[1][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[1][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[1][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(0 + idOffsets[1][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[1][1]*1, 1) * responsiveScale,
-                          roundNum(4.5 + idOffsets[1][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[1][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[1][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[1][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -886,11 +786,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id1.tile)) {
@@ -930,7 +829,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else {
@@ -956,7 +855,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -986,45 +885,26 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[2][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[2][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[2][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[2][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
-                          roundNum(4.5 + idOffsets[2][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[2][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[2][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[2][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -1032,11 +912,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id2.tile)) {
@@ -1076,7 +955,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else {
@@ -1101,7 +980,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
@@ -1131,45 +1010,26 @@ export default function PiecesOnBoard() {
                         position: [
                             roundNum(0 + idOffsets[3][0]*2, 1) * responsiveScale,
                             roundNum(0 + heightOffset + idOffsets[3][1]*2, 1) * responsiveScale,
-                            roundNum(4 + idOffsets[3][2]*2, 1) * responsiveScale,
+                            roundNum(4.5 + idOffsets[3][2]*2, 1) * responsiveScale,
                         ],
                         scale: 1.5,
-                        welcomeTextScale: 1,
                         config: {
-                            tension: 130,
+                            tension: 170,
                             friction: 26
                         }
                     },
                     {
-                      position: [
-                          roundNum(0 + idOffsets[3][0]*1, 1) * responsiveScale,
-                          roundNum(0 + heightOffset + idOffsets[3][1]*1, 1) * responsiveScale,
-                          roundNum(4.5 + idOffsets[3][2]*1, 1) * responsiveScale,
-                      ],
+                        position: [
+                            roundNum(0 + idOffsets[3][0]*1, 1) * responsiveScale,
+                            roundNum(0 + heightOffset + idOffsets[3][1]*1, 1) * responsiveScale,
+                            roundNum(5 + idOffsets[3][2]*1, 1) * responsiveScale,
+                        ],
                         scale: 0,
-                        welcomeTextScale: 0,
                         config: {
                             tension: 170,
                             friction: 26
                         },
-                        delay: 1000
-                    },
-                    {
-                        sizeTwink: 0.1,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
-                        delay: generateRandomNumberInRange(150, 100)
-                    },
-                    {
-                        sizeTwink: 0,
-                        config: {
-                            tension: 5000,
-                            friction: 100,
-                            mass: 0.1
-                        },
+                        delay: 500
                     },
                 ]
                 let animations = toAnimations.concat(scoreAnimation)
@@ -1177,11 +1037,10 @@ export default function PiecesOnBoard() {
                     from: {
                         position: animations[0].position,
                         scale: responsiveScale,
-                        welcomeTextScale: 0,
                     },
                     to: animations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else if (caughtCheck(gamePhase, pieceTeam1Id3.tile)) {
@@ -1221,7 +1080,7 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             } else {
@@ -1246,82 +1105,12 @@ export default function PiecesOnBoard() {
                     },
                     to: toAnimations13,
                     loop: false,
-                    onStart: () => setPieceAnimationPlaying(true),
+                    // onStart: () => setPieceAnimationPlaying(true),
                     onRest: () => setPieceAnimationPlaying(false),
                 })
             }
         }
     }, [pieceTeam1Id3])
-
-    function WelcomeBackText({ position, scale }) {
-        const borderMesh0Ref = useRef();
-        const borderMesh1Ref = useRef();
-        const borderMesh2Ref = useRef();
-        const borderMesh3Ref = useRef();
-        const borderMesh4Ref = useRef();
-        const borderMesh5Ref = useRef();
-        const borderMesh6Ref = useRef();
-        const borderMeshRefs = [
-          borderMesh0Ref,
-          borderMesh1Ref,
-          borderMesh2Ref,
-          borderMesh3Ref,
-          borderMesh4Ref,
-          borderMesh5Ref,
-          borderMesh6Ref
-        ]
-
-        const height = 1.7
-        const width = 2.5
-        useFrame((state, delta) => {
-          for (let i = 0; i < borderMeshRefs.length; i++) {      
-            borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
-            borderMeshRefs[i].current.position.y = 0.05
-            borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
-          }
-        })
-
-        return <animated.group
-        position={position}
-        scale={scale}>
-            <mesh scale={[width, 1,height]}>
-                <cylinderGeometry args={[1, 1, 0.01, 32]}/>
-                <meshStandardMaterial color='black' transparent opacity={0.9}/>
-            </mesh>
-            <Text3D
-                font="fonts/Luckiest Guy_Regular.json" 
-                position={[-1.4, 0.1, -0.1]}
-                rotation={[-Math.PI/2, 0, 0]}
-                height={0.01}
-                lineHeight={0.9} 
-                size={0.46}
-            >
-                {`Welcome\n     Back!`}
-                <meshStandardMaterial color='yellow'/>
-            </Text3D>
-            <group ref={borderMesh0Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-            <group ref={borderMesh1Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-            <group ref={borderMesh2Ref}>
-                <Star scale={0.15} color='yellow'/>
-            </group>
-            <group ref={borderMesh3Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-            <group ref={borderMesh4Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-            <group ref={borderMesh5Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-            <group ref={borderMesh6Ref}>
-                <Star scale={0.15} color='yellow' />
-            </group>
-        </animated.group>
-    }
     
     const [teams] = useAtom(teamsAtom)
     function hasValidMoveBoard(team) {
@@ -1348,19 +1137,6 @@ export default function PiecesOnBoard() {
             selected={pieceSelected(selection, 0, 0)}
             onBoard={true}
         />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[0][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[0][2], 1) * responsiveScale,
-            ]}
-            scale={springs0_0.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs0_0.welcomeTextScale}
-        />
         <Piece 
             team={0} 
             id={1} 
@@ -1371,19 +1147,6 @@ export default function PiecesOnBoard() {
             selected={pieceSelected(selection, 1, 0)}
             onBoard={true}
             animation='onBoard'
-        />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[1][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[1][2], 1) * responsiveScale,
-            ]}
-            scale={springs0_1.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs0_1.welcomeTextScale}
         />
         <Piece 
             team={0} 
@@ -1396,19 +1159,6 @@ export default function PiecesOnBoard() {
             onBoard={true}
             animation='onBoard'
         />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[2][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[2][2], 1) * responsiveScale,
-            ]}
-            scale={springs0_2.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs0_2.welcomeTextScale}
-        />
         <Piece 
             team={0} 
             id={3} 
@@ -1419,19 +1169,6 @@ export default function PiecesOnBoard() {
             selected={pieceSelected(selection, 3, 0)}
             onBoard={true}
             animation='onBoard'
-        />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[3][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[3][2], 1) * responsiveScale,
-            ]}
-            scale={springs0_3.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs0_3.welcomeTextScale}
         />
         <Piece 
             team={1} 
@@ -1444,19 +1181,6 @@ export default function PiecesOnBoard() {
             onBoard={true}
             animation='onBoard'
         />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[0][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[0][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[0][2], 1) * responsiveScale,
-            ]}
-            scale={springs1_0.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs1_0.welcomeTextScale}
-        />
         <Piece 
             team={1} 
             id={1} 
@@ -1467,19 +1191,6 @@ export default function PiecesOnBoard() {
             selected={pieceSelected(selection, 1, 1)}
             onBoard={true}
             animation='onBoard'
-        />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[1][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[1][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[1][2], 1) * responsiveScale,
-            ]}
-            scale={springs1_1.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs1_1.welcomeTextScale}
         />
         <Piece 
             team={1} 
@@ -1492,18 +1203,6 @@ export default function PiecesOnBoard() {
             onBoard={true}
             animation='onBoard'
         />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[2][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[2][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[2][2], 1) * responsiveScale,
-            ]}
-            scale={springs1_2.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs1_2.welcomeTextScale}/>
         <Piece 
             team={1} 
             id={3} 
@@ -1514,19 +1213,6 @@ export default function PiecesOnBoard() {
             selected={pieceSelected(selection, 3, 1)}
             onBoard={true}
             animation='onBoard'
-        />
-        <Polaris                         
-            position={[
-                roundNum(0 + idOffsets[3][0], 1) * responsiveScale,
-                roundNum(0 + heightOffset + idOffsets[3][1], 1) * responsiveScale,
-                roundNum(4.5 + idOffsets[3][2], 1) * responsiveScale,
-            ]}
-            scale={springs1_3.sizeTwink}
-        />
-        <WelcomeBackText 
-            position={layout[device].game.welcomeBackText.position} 
-            rotation={layout[device].game.welcomeBackText.rotation} 
-            scale={springs1_3.welcomeTextScale}
         />
     </>
 }

@@ -393,7 +393,6 @@ export const SocketManager = () => {
       // alert for join
       // set position based on where piece is joined
       // set camera zoom farther so piece position isn't different in mobile and landscape
-      console.log(`[SocketManager][move]`)
       let teamsPrev;
       setTeams((prev) => {
         teamsPrev = prev;
@@ -447,39 +446,56 @@ export const SocketManager = () => {
       setGameLogs(gameLogs)
     })
 
-    socket.on("score", ({ teams, turnUpdate, legalTiles, tiles, gameLogs, selection, gamePhase, results }) => {
-      setTeams(teams)
+    function calculateNumPiecesScored(piecesPrev, piecesUpdate) {
+      let numPiecesScored = 0;
+      for (let i = 0; i < 4; i++) {
+        if (piecesUpdate[i].tile === 29 && piecesPrev[i].tile !== 29) {
+          numPiecesScored++;
+        }
+      }
+      return numPiecesScored;
+    }
+
+    socket.on("score", ({ teamsUpdate, turnUpdate, legalTiles, tiles, gameLogs, selection, gamePhase, results }) => {
+      let teamsPrev;
+      setTeams((prev) => {
+        teamsPrev = prev;
+        return teamsUpdate
+      })
       let turnPrev;
       setTurn((prev) => {
         turnPrev = prev;
         return turnUpdate
       })
       
-      const currentPlayerName = teams[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
+      const currentPlayerName = teamsUpdate[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
       setCurrentPlayerName(currentPlayerName)
       
+      const alerts = []
+      const scoringTeamPiecesPrev = teamsPrev[turnPrev.team].pieces;
+      const scoringTeamPiecesUpdate = teamsUpdate[turnPrev.team].pieces
+      let numPiecesScored = calculateNumPiecesScored(scoringTeamPiecesPrev, scoringTeamPiecesUpdate)
+      alerts.push(`score${turnPrev.team}${numPiecesScored}`)
+
       if (turnPrev.team !== turnUpdate.team) {
-        setAlerts(['score', 'turn'])
-        // increase length by num scored
-      } else {
-        setAlerts(['score'])
-        // increase length by num scored
+        alerts.push('turn')
       }
 
+      setAlerts(alerts)
       setAnimationPlaying(true)
       setPieceAnimationPlaying(true)
       // whenever turn could have changed
-      setHasTurn(clientHasTurn(socket.id, teams, turnUpdate))
+      setHasTurn(clientHasTurn(socket.id, teamsUpdate, turnUpdate))
       setLegalTiles(legalTiles)
       setTiles(tiles)
-      setPieceTeam0Id0(teams[0].pieces[0])
-      setPieceTeam0Id1(teams[0].pieces[1])
-      setPieceTeam0Id2(teams[0].pieces[2])
-      setPieceTeam0Id3(teams[0].pieces[3])
-      setPieceTeam1Id0(teams[1].pieces[0])
-      setPieceTeam1Id1(teams[1].pieces[1])
-      setPieceTeam1Id2(teams[1].pieces[2])
-      setPieceTeam1Id3(teams[1].pieces[3])
+      setPieceTeam0Id0(teamsUpdate[0].pieces[0])
+      setPieceTeam0Id1(teamsUpdate[0].pieces[1])
+      setPieceTeam0Id2(teamsUpdate[0].pieces[2])
+      setPieceTeam0Id3(teamsUpdate[0].pieces[3])
+      setPieceTeam1Id0(teamsUpdate[1].pieces[0])
+      setPieceTeam1Id1(teamsUpdate[1].pieces[1])
+      setPieceTeam1Id2(teamsUpdate[1].pieces[2])
+      setPieceTeam1Id3(teamsUpdate[1].pieces[3])
       setSelection(selection)
       setGameLogs(gameLogs)
       setGamePhase(gamePhase)
