@@ -264,7 +264,9 @@ export default function Alert({ position, rotation }) {
             },
             delay: 1000
           })
-        } else if (alerts[i] === 'catch') {
+        } else if (alerts[i].includes('catch')) {
+          const numCaught = parseInt(alerts[0][6]);
+          const delay = 1800 + (numCaught > 2 ? 500 : 0)
           animations.push({
             catchAlertScale: 1,
             config: {
@@ -278,7 +280,7 @@ export default function Alert({ position, rotation }) {
                 tension: 170,
                 friction: 26
             },
-            delay: 1500
+            delay: delay
           })
         } else if (alerts[i].includes('score')) {
           const numScored = parseInt(alerts[0][6]);
@@ -301,14 +303,6 @@ export default function Alert({ position, rotation }) {
       }
       return animations
     }
-
-    // score animation: piece movement without alert and twink
-    // end with scaling down instead of scaling up and down
-    // add score alert here
-    // on rest, fire it
-    // onStart of that alert, CreateRandomFirework with use hook
-    // increase fireworks with number of finishes
-
 
     function launchScoreFireworks(team, numScored) {
       console.log(`[launchScoreFireworks] ${team} ${numScored}`)
@@ -1123,16 +1117,17 @@ export default function Alert({ position, rotation }) {
     }
 
     function CatchAlert() { // refactor like score alert with substring matching
-      const [catchOutcome] = useAtom(catchOutcomeAtom)
+      const teamCaught = alerts[0] && parseInt(alerts[0][5]);
+      const numCaught = alerts[0] && parseInt(alerts[0][6]);
       return <animated.group scale={springs.catchAlertScale}>
-        { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 0 && <Catch1RocketAlert/> }
-        { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 0 && <Catch2RocketAlert/> }
-        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 0 && <Catch3RocketAlert/> }
-        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 0 && <Catch4RocketAlert/> }
-        { catchOutcome.numPieces === 1 && catchOutcome.teamCaught === 1 && <Catch1UfoAlert/> }
-        { catchOutcome.numPieces === 2 && catchOutcome.teamCaught === 1 && <Catch2UfoAlert/> }
-        { catchOutcome.numPieces === 3 && catchOutcome.teamCaught === 1 && <Catch3UfoAlert/> }
-        { catchOutcome.numPieces === 4 && catchOutcome.teamCaught === 1 && <Catch4UfoAlert/> }
+        { numCaught === 1 && teamCaught === 0 && <Catch1RocketAlert/> }
+        { numCaught === 2 && teamCaught === 0 && <Catch2RocketAlert/> }
+        { numCaught === 3 && teamCaught === 0 && <Catch3RocketAlert/> }
+        { numCaught === 4 && teamCaught === 0 && <Catch4RocketAlert/> }
+        { numCaught === 1 && teamCaught === 1 && <Catch1UfoAlert/> }
+        { numCaught === 2 && teamCaught === 1 && <Catch2UfoAlert/> }
+        { numCaught === 3 && teamCaught === 1 && <Catch3UfoAlert/> }
+        { numCaught === 4 && teamCaught === 1 && <Catch4UfoAlert/> }
       </animated.group>
     }
 

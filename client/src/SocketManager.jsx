@@ -390,9 +390,6 @@ export const SocketManager = () => {
     }
 
     socket.on("move", ({ teamsUpdate, turnUpdate, legalTiles, tiles, gameLogs, selection }) => {
-      // alert for join
-      // set position based on where piece is joined
-      // set camera zoom farther so piece position isn't different in mobile and landscape
       let teamsPrev;
       setTeams((prev) => {
         teamsPrev = prev;
@@ -414,16 +411,9 @@ export const SocketManager = () => {
         const opposingTeamPiecesPrev = teamsPrev[opposingTeam].pieces;
         const opposingTeamPiecesUpdate = teamsUpdate[opposingTeam].pieces
         let numPiecesCaught = calculateNumPiecesCaught(opposingTeamPiecesPrev, opposingTeamPiecesUpdate)
-        console.log(`[SocketManager][move] numPiecesCaught`, numPiecesCaught)
         if (numPiecesCaught > 0) {
-          console.log(`[SocketManager][move] catch`)
-          setAlerts([`catch`])
-          setCatchOutcome({
-            numPieces: numPiecesCaught,
-            teamCaught: opposingTeam
-          })
+          setAlerts([`catch${opposingTeam}${numPiecesCaught}`])
         } else {
-          console.log(`[SocketManager][move] regular move, still didn't change turn`)
           setAlerts([])
         }
       }
