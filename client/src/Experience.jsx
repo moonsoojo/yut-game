@@ -47,6 +47,6 @@ export default function Experience() {
       lightRotation = {[80.1,0.0,0.0]}
       lightMultiplier = {1.3}
     /> */}
-    <Alert position={[0,1,0]} rotation={[0,Math.PI/2,0]}/>
+    <Alert position={[0,1,0]} rotation={[0,0,0]}/>
   </group>
 }

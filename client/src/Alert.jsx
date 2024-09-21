@@ -28,6 +28,7 @@ import YootAlertPregame from "./alerts/YootAlertPregame";
 import MoAlertPregame from "./alerts/MoAlertPregame";
 import { useFireworksShader } from "./shader/fireworks/FireworksShader";
 import { TextureLoader } from 'three/src/loaders/TextureLoader'
+import tilePositions from './tilePositions';
 
 export default function Alert({ position, rotation }) {
     const { nodes, materials } = useGLTF('models/alert-background.glb')
@@ -66,6 +67,7 @@ export default function Alert({ position, rotation }) {
         pregameUfosWinAlertScale: 0,
         catchAlertScale: 0,
         scoreAlertScale: 0,
+        joinAlertScale: 0
       },
     }))
 
@@ -299,6 +301,22 @@ export default function Alert({ position, rotation }) {
             },
             delay: 1200 + 350 * numScored
           })
+        } else if (alerts[i].includes('join')) {
+          animations.push({
+            joinAlertScale: 1,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+          })
+          animations.push({
+            joinAlertScale: 0,
+            config: {
+                tension: 170,
+                friction: 26
+            },
+            delay: 1000
+          })
         }
       }
       return animations
@@ -523,6 +541,59 @@ export default function Alert({ position, rotation }) {
         }, 1000)
       }
     }
+    
+    const cameraOffset = 0.4
+    // by quadrant
+    const joinAlertPositions = {
+      0: [
+          -Math.cos(((1 + 5) * (Math.PI * 2)) / 20) * 5 + 0.7,
+          0.1,
+          Math.sin(((1 + 5) * (Math.PI * 2)) / 20) * 5 + cameraOffset - 2.8,
+      ],
+      1: [
+        -Math.cos(((1 + 5) * (Math.PI * 2)) / 20) * 5 + 0.6,
+        0.5,
+        Math.sin(((1 + 5) * (Math.PI * 2)) / 20) * 5 + cameraOffset - 6.7,
+      ],
+      2: [
+        -Math.cos(((1 + 5) * (Math.PI * 2)) / 20) * 5 - 3.6,
+        0.5,
+        Math.sin(((1 + 5) * (Math.PI * 2)) / 20) * 5 + cameraOffset - 6.7,
+      ],
+      3: [
+        -Math.cos(((1 + 5) * (Math.PI * 2)) / 20) * 5 - 3.6,
+        0.5,
+        Math.sin(((1 + 5) * (Math.PI * 2)) / 20) * 5 + cameraOffset - 2.8,
+      ],
+    }
+    // test this function
+    // input: tile
+    // output: position
+    // expect quadrant output
+    function tileToQuadrant(tile) {
+      let positionQuadrant = 0;
+      if (tile >= 1 && tile <= 4) {
+        positionQuadrant = 0
+      } else if (tile >= 5 && tile <= 9) {
+        positionQuadrant = 1
+      } else if (tile >= 10 && tile <= 14) {
+        positionQuadrant = 2
+      } else if (tile >= 15 && tile <= 19) {
+        positionQuadrant = 3
+      } else if (tile >= 20 && tile <= 21) {
+        positionQuadrant = 1
+      } else if (tile >= 22 && tile <= 24) {
+        positionQuadrant = 2
+      } else if (tile >= 25 && tile <= 26) {
+        positionQuadrant = 2
+      } else if (tile >= 27 && tile <= 28) {
+        positionQuadrant = 3
+      }
+      return positionQuadrant
+    }
+    function addSpark(position) {
+      console.log('addSpark')
+    }
 
     useEffect(() => {
       const toAnimations = transformAlertsToAnimations(alerts)
@@ -542,6 +613,7 @@ export default function Alert({ position, rotation }) {
             pregameUfosWinAlertScale: 0,
             catchAlertScale: 0,
             scoreAlertScale: 0,
+            joinAlertScale: 0,
           },
           to: toAnimations,
           loop: false,
@@ -554,6 +626,11 @@ export default function Alert({ position, rotation }) {
           const team = parseInt(alerts[0][5]);
           const numScored = parseInt(alerts[0][6]);
           launchScoreFireworks(team, numScored)
+        } else if (alerts[0] && alerts[0].includes('join')) {
+          const alertString = alerts[0]
+          const tile = parseInt(alertString.substring(4, alertString.length));
+          const position = joinAlertPositions[tileToQuadrant(tile)]
+          addSpark(position)
         }
       }
     }, [alerts, pieceAnimationPlaying])
@@ -598,7 +675,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.turnAlertScale}>
+      return <animated.group scale={springs.turnAlertScale} rotation={[0, Math.PI/2, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -730,7 +807,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.gameStartAlertScale}>
+      return <animated.group scale={springs.gameStartAlertScale} rotation={[0, Math.PI/2, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -818,7 +895,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.pregameTieAlertScale}>
+      return <animated.group scale={springs.pregameTieAlertScale} rotation={[0, Math.PI/2, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -917,7 +994,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.pregameRocketsWinAlertScale}>
+      return <animated.group scale={springs.pregameRocketsWinAlertScale} rotation={[0, Math.PI/2, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -1012,7 +1089,7 @@ export default function Alert({ position, rotation }) {
         }
       })
 
-      return <animated.group scale={springs.pregameUfosWinAlertScale}>
+      return <animated.group scale={springs.pregameUfosWinAlertScale} rotation={[0, Math.PI/2, 0]}> 
         <mesh
           castShadow
           receiveShadow
@@ -1081,37 +1158,37 @@ export default function Alert({ position, rotation }) {
     }
 
     function YootOutcome1Alert() {
-      return <animated.group scale={springs.yootOutcome1AlertScale}>
+      return <animated.group scale={springs.yootOutcome1AlertScale} rotation={[0, Math.PI/2, 0]}>
         <DoAlert/>
       </animated.group>
     }
     function YootOutcome2Alert() {
-      return <animated.group scale={springs.yootOutcome2AlertScale}>
+      return <animated.group scale={springs.yootOutcome2AlertScale} rotation={[0, Math.PI/2, 0]}>
         <GeAlert/>
       </animated.group>
     }
     function YootOutcome3Alert() {
-      return <animated.group scale={springs.yootOutcome3AlertScale}>
+      return <animated.group scale={springs.yootOutcome3AlertScale} rotation={[0, Math.PI/2, 0]}>
         <GulAlert/>
       </animated.group>
     }
     function YootOutcome4PregameAlert() {
-      return <animated.group scale={springs.yootOutcome4PregameAlertScale}>
+      return <animated.group scale={springs.yootOutcome4PregameAlertScale} rotation={[0, Math.PI/2, 0]}>
         <YootAlertPregame/>
       </animated.group>
     }
     function YootOutcome5PregameAlert() {
-      return <animated.group scale={springs.yootOutcome5PregameAlertScale}>
+      return <animated.group scale={springs.yootOutcome5PregameAlertScale} rotation={[0, Math.PI/2, 0]}>
         <MoAlertPregame/>
       </animated.group>
     }
     function YootOutcome4Alert() {
-      return <animated.group scale={springs.yootOutcome4AlertScale}>
+      return <animated.group scale={springs.yootOutcome4AlertScale} rotation={[0, Math.PI/2, 0]}>
         <YootAlert/>
       </animated.group>
     }
     function YootOutcome5Alert() {
-      return <animated.group scale={springs.yootOutcome5AlertScale}>
+      return <animated.group scale={springs.yootOutcome5AlertScale} rotation={[0, Math.PI/2, 0]}> 
         <MoAlert/>
       </animated.group>
     }
@@ -1197,7 +1274,81 @@ export default function Alert({ position, rotation }) {
               <Star scale={0.15} color='yellow' />
           </group>
       </animated.group>
-  }
+    }
+
+    function JoinAlert() {      
+      const alertString = alerts[0]
+      let tile = alertString && parseInt(alertString.substring(4, alertString.length));;
+      // specific location for each tile
+      const position = joinAlertPositions[tileToQuadrant(tile)]
+
+      const borderMesh0Ref = useRef();
+      const borderMesh1Ref = useRef();
+      const borderMesh2Ref = useRef();
+      const borderMesh3Ref = useRef();
+      const borderMesh4Ref = useRef();
+      const borderMesh5Ref = useRef();
+      const borderMesh6Ref = useRef();
+      const borderMeshRefs = [
+        borderMesh0Ref,
+        borderMesh1Ref,
+        borderMesh2Ref,
+        borderMesh3Ref,
+        borderMesh4Ref,
+        borderMesh5Ref,
+        borderMesh6Ref
+      ]
+
+      const height = 0.8
+      const width = 1.5
+      const starScale = 0.12
+      useFrame((state, delta) => {
+        for (let i = 0; i < borderMeshRefs.length; i++) {      
+          borderMeshRefs[i].current.position.x = Math.cos(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * width
+          borderMeshRefs[i].current.position.y = 0.05
+          borderMeshRefs[i].current.position.z = Math.sin(state.clock.elapsedTime / 2 + 2 * Math.PI/borderMeshRefs.length * i) * height
+        }
+      })
+
+      return <animated.group position={position} scale={springs.joinAlertScale} rotation={[0,0,0]}>
+          <mesh scale={[width, 1,height]}>
+            <cylinderGeometry args={[1, 1, 0.01, 32]}/>
+            <meshStandardMaterial color='black' transparent opacity={0.9}/>
+          </mesh>
+          <Text3D
+            font="fonts/Luckiest Guy_Regular.json" 
+            position={[-1.0, 0.1, 0.2]}
+            rotation={[-Math.PI/2, 0, 0]}
+            height={0.01}
+            lineHeight={0.9} 
+            size={0.4}
+          >
+            {`joined!`}
+            <meshStandardMaterial color='green'/>
+          </Text3D>
+          <group ref={borderMesh0Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+          <group ref={borderMesh1Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+          <group ref={borderMesh2Ref}>
+            <Star scale={starScale} color='green'/>
+          </group>
+          <group ref={borderMesh3Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+          <group ref={borderMesh4Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+          <group ref={borderMesh5Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+          <group ref={borderMesh6Ref}>
+            <Star scale={starScale} color='green' />
+          </group>
+      </animated.group>
+    }
 
     return (gamePhase === 'pregame' || gamePhase === 'game') && <group position={position} rotation={rotation}>
       <TurnAlert/>
@@ -1214,5 +1365,6 @@ export default function Alert({ position, rotation }) {
       <YootOutcome5Alert/>
       <CatchAlert/>
       <ScoreAlert/>
+      <JoinAlert/>
     </group>
   }

@@ -14,7 +14,7 @@ import {
   catchOutcomeAtom,
   pieceAnimationPlayingAtom} from "./GlobalState.jsx";
 import { clientHasTurn } from "./helpers/helpers.js";
-import { useParams } from "wouter";
+import { checkJoin } from "./SocketManagerHelper.js";
 
 const ENDPOINT = 'localhost:5000';
 
@@ -216,7 +216,7 @@ export const SocketManager = () => {
       // and the thrown flag is off
       if ((room.gamePhase === "pregame" || room.gamePhase === 'game') && (room.teams[currentTeam].players.length > 0 && 
       clientHasTurn(socket.id, room.teams, room.turn) &&
-      room.teams[currentTeam].throws > 0 && !room.yootThrown.flag)) {
+      room.teams[currentTeam].throws > 0)) {
         setYootActive(true)
       } else {
         setYootActive(false)
@@ -413,20 +413,27 @@ export const SocketManager = () => {
       const currentPlayerName = teamsUpdate[turnUpdate.team].players[turnUpdate.players[turnUpdate.team]].name
       setCurrentPlayerName(currentPlayerName)
       
+      let alerts = []
+      let joined = checkJoin(teamsPrev[turnPrev.team].pieces, teamsUpdate[turnPrev.team].pieces)
+      if (joined.result) {
+        alerts.push(`join${joined.tile}`)
+      }
+
       if (turnPrev.team !== turnUpdate.team) {
-        setAlerts(['turn'])
+        alerts.push('turn')
       } else {
         const opposingTeam = turnUpdate.team === 0 ? 1 : 0;
         const opposingTeamPiecesPrev = teamsPrev[opposingTeam].pieces;
         const opposingTeamPiecesUpdate = teamsUpdate[opposingTeam].pieces
         let numPiecesCaught = calculateNumPiecesCaught(opposingTeamPiecesPrev, opposingTeamPiecesUpdate)
         if (numPiecesCaught > 0) {
-          setAlerts([`catch${opposingTeam}${numPiecesCaught}`])
+          alerts.push(`catch${opposingTeam}${numPiecesCaught}`)
         } else {
-          setAlerts([])
+          alerts = []
         }
       }
 
+      setAlerts(alerts)
       setAnimationPlaying(true)
       setPieceAnimationPlaying(true)
       // whenever turn could have changed
